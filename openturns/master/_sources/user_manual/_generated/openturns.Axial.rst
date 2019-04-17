@@ -12,8 +12,8 @@ Axial
     center = [0.5, 1.5]
     levels = [4, 8, 16]
 
-    myPlane = ot.Axial(center, levels)
-    sample = myPlane.generate()
+    experiment = ot.Axial(center, levels)
+    sample = experiment.generate()
 
     # Create the graph
     graph = ot.Graph(sample.getName(), "x1", "x2", True, "")

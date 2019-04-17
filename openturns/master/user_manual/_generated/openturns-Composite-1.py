@@ -6,8 +6,8 @@ from openturns.viewer import View
 center = [0.5, 1.5]
 levels = [4, 8, 16]
 
-myPlane = ot.Composite(center, levels)
-sample = myPlane.generate()
+experiment = ot.Composite(center, levels)
+sample = experiment.generate()
 
 # Create the graph
 graph = ot.Graph(sample.getName(), "x1", "x2", True, "")
