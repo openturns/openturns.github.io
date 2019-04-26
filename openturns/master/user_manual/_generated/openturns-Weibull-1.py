@@ -5,6 +5,8 @@ if ot.Weibull().__class__.__name__ == 'Bernoulli':
     distribution = ot.Bernoulli(0.7)
 elif ot.Weibull().__class__.__name__ == 'Binomial':
     distribution = ot.Binomial(5, 0.2)
+elif ot.Weibull().__class__.__name__ == 'Hypergeometric':
+    distribution = ot.Hypergeometric(10, 4, 7)
 elif ot.Weibull().__class__.__name__ == 'ComposedDistribution':
     copula = ot.IndependentCopula(2)
     marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
