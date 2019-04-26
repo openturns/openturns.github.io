@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Least squares problems numerical methods &#8212; OpenTURNS  documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Isoprobabilistic transformations" href="isoprobabilistic_transformation.html" />
+    <link rel="prev" title="Optimization Algorithms" href="optimization_algorithm.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="isoprobabilistic_transformation.html" title="Isoprobabilistic transformations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="optimization_algorithm.html" title="Optimization Algorithms"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="numerical_methods.html" accesskey="U">Numerical methods</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="optimization_algorithm.html"
+                        title="previous chapter">Optimization Algorithms</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="isoprobabilistic_transformation.html"
+                        title="next chapter">Isoprobabilistic transformations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/numerical_methods/least_squares.rst"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="least-squares-problems-numerical-methods">
+<span id="least-squares"></span><h1>Least squares problems numerical methods<a class="headerlink" href="#least-squares-problems-numerical-methods" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line">This section presents numerical methods that can be used in order to
+solve least squares problems, which can be encountered when the
+construction of a <em>response surface</em> (i.e. of a meta-model) is of
+interest, or when one wishes to perform a statistical regression.</div>
+</div>
+<div class="line-block">
+<div class="line">Given a matrix <img class="math" src="../../_images/math/b3cda447ace5737cf2cbf24c683f59de7dc88077.svg" alt="\matr{\Psi}~\in~\Rset^{N\times P}"/>, <img class="math" src="../../_images/math/d11eba16be3d8799c5a651a7349b1746b36d98fb.svg" alt="N&gt;P"/>,
+and a vector <img class="math" src="../../_images/math/b6621f00b8b4d00fcaedba5784f497807853dc06.svg" alt="\underline{y}~\in~\Rset^{N}"/>, we want to find a
+vector <img class="math" src="../../_images/math/41caa39e756ebedce5996cc3c9a4f11d30b39fb5.svg" alt="\underline{a}~\in \Rset^{P}"/> such that
+<img class="math" src="../../_images/math/13868ef5c06050e8f1a480c3fc95c86b0cf0a79f.svg" alt="\matr{\Psi}\: \underline{a}"/> is the best approximation to
+<img class="math" src="../../_images/math/8d2ba6d8f6cd7474256a980e3253c6fb781c2d3a.svg" alt="\underline{y}"/> in the least squares sense. Mathematically
+speaking, we want to solve the following minimization problem:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/e02e8d65f85b5b0934c01629bb5c763cdfb42dab.svg" alt="\min_{\underline{a}} \, \, = \, \, \left\| \; \matr{\Psi} \, \underline{a} \, - \, \underline{y} \; \right\|_2"/></p>
+</div><p>In the following, it is assumed that the rank of matrix
+<img class="math" src="../../_images/math/b8dc07d12c48fde312dc83c6dc8f36649a5affcf.svg" alt="\matr{\Psi}"/> is equal to <img class="math" src="../../_images/math/e0fde8ec3d50ff9a9427da10ed550f58e0c8e397.svg" alt="P"/>.</p>
+</div></blockquote>
+<div class="line-block">
+<div class="line">Several algorithms can be applied to compute the least squares
+solution, as shown in the sequel.</div>
+</div>
+<p><strong>Method of normal equations</strong></p>
+<div class="line-block">
+<div class="line">It is shown that the solution of the least squares problem satisfies
+the so-called <em>normal equations</em>, which read using a matrix notation:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/e79aade85e3269a1f2e9add7b6324f15d52b80c9.svg" alt="\matr{\Psi}^{\mbox{\scriptsize \textsf{T}}} \; \matr{\Psi} \; \underline{a} \, \, = \, \, \matr{\Psi}^{\mbox{\scriptsize \textsf{T}}} \; \underline{y}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">The matrix
+<img class="math" src="../../_images/math/b218f534064399f65ba2a151a6d3e901e7dedf13.svg" alt="\matr{C} \equiv \matr{\Psi}^{\mbox{\scriptsize \textsf{T}}} \; \matr{\Psi}"/>
+is symmetric and positive definite. The system can be solved using the
+following Cholesky factorization:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/324faf3f1e395d936db4050319cf4c38d79d778e.svg" alt="\matr{C} \, \, = \, \, \matr{R}^{\mbox{\scriptsize \textsf{T}}} \; \matr{R}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">where <img class="math" src="../../_images/math/f632aeccc57addf9350a776dca946df0c65aba09.svg" alt="\matr{R}"/> is an upper triangular matrix with positive
+diagonal entries. Solving the normal equations is equivalent to
+solving the two following triangular systems, which can be easily
+solved by backwards substitution:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/461b8fcb9dc36a7bef962f58fa9bdc012e0e3245.svg" alt="\begin{aligned}
+    \matr{R}^{\mbox{\scriptsize \textsf{T}}} \; \underline{z} \, \, = \, \, \matr{\Psi}^{\mbox{\scriptsize \textsf{T}}} \; \underline{y}
+    \qquad , \qquad \matr{R} \; \underline{a} \, \, = \, \, \underline{z}
+  \end{aligned}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">It has to be noted that this theoretical approach is seldom used in
+practice though. Indeed the resulting least squares solution is quite
+sensitive to a small change in the data (i.e. in <img class="math" src="../../_images/math/8d2ba6d8f6cd7474256a980e3253c6fb781c2d3a.svg" alt="\underline{y}"/>
+and <img class="math" src="../../_images/math/b8dc07d12c48fde312dc83c6dc8f36649a5affcf.svg" alt="\matr{\Psi}"/>). More precisely, the normal equations are
+always more badly conditioned than the original overdetermined system,
+as their condition number is squared compared to the original problem:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/b564449bf06c8877e23d1f7c43147417ddddfb78.svg" alt="\kappa(\matr{\Psi}^{\mbox{\scriptsize \textsf{T}}} \; \matr{\Psi}) \, \, = \, \, \kappa(\matr{\Psi})^2"/></p>
+</div><p>As a consequence more robust numerical methods should be adopted.</p>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><strong>Method based on QR factorization</strong></div>
+</div>
+<div class="line-block">
+<div class="line">It is shown that the matrix <img class="math" src="../../_images/math/b8dc07d12c48fde312dc83c6dc8f36649a5affcf.svg" alt="\matr{\Psi}"/> can be factorized as
+follows:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/98c3f416b92f294a42ba4b5ee3c37790a5d27eb3.svg" alt="\matr{\Psi} \, \, = \, \, \matr{Q} \; \matr{R}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">where <img class="math" src="../../_images/math/0b8a88e26ade306debb0cdb0a2593c4879bb90d5.svg" alt="\matr{Q}"/> is a <img class="math" src="../../_images/math/e5fa696008624bbb4544f764ae5cd7c73d4c7450.svg" alt="N"/>-by-<img class="math" src="../../_images/math/e0fde8ec3d50ff9a9427da10ed550f58e0c8e397.svg" alt="P"/>-matrix with
+<em>orthonormal</em> columns and <img class="math" src="../../_images/math/f632aeccc57addf9350a776dca946df0c65aba09.svg" alt="\matr{R}"/> is a
+<img class="math" src="../../_images/math/e0fde8ec3d50ff9a9427da10ed550f58e0c8e397.svg" alt="P"/>-by-<img class="math" src="../../_images/math/e0fde8ec3d50ff9a9427da10ed550f58e0c8e397.svg" alt="P"/>-upper triangular matrix. Such a <em>QR
+decomposition</em> may be constructed using several schemes, such as
+<em>Gram-Schmidt orthogonalization</em>, <em>Householder reflections</em> or <em>Givens
+rotations</em>.</div>
+</div>
+<div class="line-block">
+<div class="line">In this setup the least squares problem is equivalent to solving:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/07cd933204867cfdacb97e00c553ab75ab02a400.svg" alt="\matr{R} \; \underline{a} \, \, = \, \, \matr{Q}^{\mbox{\scriptsize \textsf{T}}} \; \underline{y}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">This upper triangular system can be solved using backwards
+substitution.</div>
+</div>
+<div class="line-block">
+<div class="line">The solving scheme based on Householder QR factorization leads to a
+relative error that is proportional to:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/20cbddb190694bf82a09c846c142344503afd401.svg" alt="\kappa(\matr{\Psi}) + \|\underline{r}\|_2 \kappa(\matr{\Psi})^2"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">where
+<img class="math" src="../../_images/math/637ae45e477a113e5da4cd61852263b755b20efe.svg" alt="\underline{r} = \matr{\Psi} \, \underline{a} \, - \, \underline{y}"/>.
+Thus this error is expected to be much smaller than the one associated
+with the normal equations provided that the residual
+<img class="math" src="../../_images/math/16b44335a815e911bebf929b9f2f5faf66e6f4f9.svg" alt="\underline{r}"/> is “small”.</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Method based on singular value decomposition</strong></div>
+</div>
+<div class="line-block">
+<div class="line">The so-called <em>singular value decomposition</em> (SVD) of matrix
+<img class="math" src="../../_images/math/b8dc07d12c48fde312dc83c6dc8f36649a5affcf.svg" alt="\matr{\Psi}"/> reads:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/3eadf244bbf788263150511507cc8632f3d5256e.svg" alt="\matr{\Psi} \quad = \quad \matr{U} \; \matr{S} \; \matr{V}^{\mbox{\scriptsize \textsf{T}}}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">where <img class="math" src="../../_images/math/530b5c8491c82087d292baa71bf80fabbbbd06ea.svg" alt="\matr{U}~\in \Rset^{N \times N}"/> and
+<img class="math" src="../../_images/math/4ab0f1be98e45d6237cc2b4cadc41a96e0b476d5.svg" alt="\matr{V}~\in \Rset^{P \times P}"/> are orthogonal matrices, and
+<img class="math" src="../../_images/math/9b24b28dfc448bf2323cb361b2566a70f1a128ab.svg" alt="\matr{S}~\in \Rset^{N \times P}"/> can be cast as:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/024136e9ae1b205341fa945833064542c8b2098c.svg" alt="\begin{aligned}
+    \matr{S} \quad = \quad \left(
+    \begin{array}{c}
+      \matr{S}_1 \\
+      \matr{0} \\
+    \end{array}
+    \right)
+  \end{aligned}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">In the previous equation, <img class="math" src="../../_images/math/f2b0049013c6ed50b3df638d938919db3c531845.svg" alt="\matr{S}_1~\in \Rset^{P \times P}"/>
+is a diagonal matrix containing the singular values
+<img class="math" src="../../_images/math/dceb8be261d4ff4d55c5c50083ebc264757f3e1c.svg" alt="\sigma_1 \geq \sigma_2 \geq \dots \geq \sigma_P &gt; 0"/> of
+<img class="math" src="../../_images/math/b8dc07d12c48fde312dc83c6dc8f36649a5affcf.svg" alt="\matr{\Psi}"/>.</div>
+</div>
+<div class="line-block">
+<div class="line">It can be shown that the least squares solution is equal to:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/7dc5dea96fab7aff5065eff72d89b5bd58225ba1.svg" alt="\begin{aligned}
+    \widehat{\underline{a}} \quad = \quad \matr{V} \; \left( \begin{array}{c}
+      \matr{S}_1^{-1} \\
+      \matr{0}  \\
+    \end{array}\right)
+    \; \matr{U}^{\mbox{\scriptsize \textsf{T}}} \; \underline{y}
+  \end{aligned}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">In practice it is not common to compute a “full” SVD as shown above.
+Instead, it is often sufficient and more economical in terms of time
+and memory to compute a <em>reduced</em> version of SVD. The latter reads:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/9234f62969af78cfba9eb922841971ff9b2f6c5e.svg" alt="\matr{\Psi} \quad = \quad \matr{U}_1 \; \matr{S}_1 \; \matr{V}^{\mbox{\scriptsize \textsf{T}}}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">where <img class="math" src="../../_images/math/72e72fef9cedfb5bd2a9b8027a572dd1939bee41.svg" alt="\matr{U}_1"/> is obtained by extracting the <img class="math" src="../../_images/math/e0fde8ec3d50ff9a9427da10ed550f58e0c8e397.svg" alt="P"/>
+first columns of <img class="math" src="../../_images/math/7c67a351348d3c8a9f4cbb79f78164a959c9fc22.svg" alt="\matr{U}"/>.</div>
+</div>
+<div class="line-block">
+<div class="line">Note that it is also possible to perform SVD in case of a
+rank-deficient matrix <img class="math" src="../../_images/math/b8dc07d12c48fde312dc83c6dc8f36649a5affcf.svg" alt="\matr{\Psi}"/>. In this case the resulting
+vector <img class="math" src="../../_images/math/7b773c68be3295236b2dc02a88a51aab3bea1474.svg" alt="\widehat{\underline{a}}"/> corresponds to the <em>minimum
+norm</em> least squares solution.</div>
+</div>
+<div class="line-block">
+<div class="line">The computational cost of the method is proportional to
+<img class="math" src="../../_images/math/5f628c75fe8eb0268aaaf7274d77fd41b3babaf8.svg" alt="(NP^2 + P^3)"/> with a factor ranging from 4 to 10, depending on
+the numerical scheme used to compute the SVD decomposition. This cost
+is higher than those associated with the normal equations and with QR
+factorization. However SVD is relevant insofar as it provides a very
+valuable information, that is the singular values of matrix
+<img class="math" src="../../_images/math/b8dc07d12c48fde312dc83c6dc8f36649a5affcf.svg" alt="\matr{\Psi}"/>.</div>
+</div>
+<p><strong>Comparison of the methods</strong></p>
+<p>Several conclusions may be drawn concerning the various methods
+considered so far:</p>
+<ul class="simple">
+<li><p>If <img class="math" src="../../_images/math/660a85506910db016d317c9c760587b7989f9064.svg" alt="N \approx P"/>, normal equations and Householder QR
+factorization require about the same computational work. If
+<img class="math" src="../../_images/math/f343e5aab228efa1138591f7dfdaebd0f2c79c7c.svg" alt="N &gt;&gt; P"/>, then the QR approach requires about twice as much
+work as normal equations.</p></li>
+<li><p>However QR appears to be more accurate than normal equations, so it
+should be almost always preferred in practice.</p></li>
+<li><p>SVD is also robust but it reveals the most computationally expensive
+scheme. Nonetheless the singular values are obtained as a by-product,
+which may be particularly useful for analytical and computational
+purposes.</p></li>
+</ul>
+<div class="topic">
+<p class="topic-title first">API:</p>
+<ul class="simple">
+<li><p>See the available <a class="reference internal" href="../../user_manual/response_surface/functional_chaos_expansion.html#least-squares-methods"><span class="std std-ref">least squares methods</span></a>.</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.PenalizedLeastSquaresAlgorithm.html#openturns.PenalizedLeastSquaresAlgorithm" title="openturns.PenalizedLeastSquaresAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">PenalizedLeastSquaresAlgorithm</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title first">References:</p>
+<ul class="simple">
+<li><ol class="upperalpha simple">
+<li><p>Bjorck, 1996, “Numerical methods for least squares problems”, SIAM Press, Philadelphia, PA.</p></li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="isoprobabilistic_transformation.html" title="Isoprobabilistic transformations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="optimization_algorithm.html" title="Optimization Algorithms"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="numerical_methods.html" >Numerical methods</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2018 Airbus-EDF-IMACS-Phimeca.
+      Last updated on Jan 01, 2018.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>

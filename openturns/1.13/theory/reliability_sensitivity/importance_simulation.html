@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Importance Simulation &#8212; OpenTURNS  documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Directional Simulation" href="directional_simulation.html" />
+    <link rel="prev" title="Monte Carlo simulation" href="monte_carlo_simulation.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="directional_simulation.html" title="Directional Simulation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="monte_carlo_simulation.html" title="Monte Carlo simulation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="monte_carlo_simulation.html"
+                        title="previous chapter">Monte Carlo simulation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="directional_simulation.html"
+                        title="next chapter">Directional Simulation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/reliability_sensitivity/importance_simulation.rst"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="importance-simulation">
+<span id="id1"></span><h1>Importance Simulation<a class="headerlink" href="#importance-simulation" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line">Let us note
+<img class="math" src="../../_images/math/36dda003750d696850dfde99fa5026fe1eb481d0.svg" alt="\cD_f = \{\ux \in \Rset^{n} | g(\ux,\underline{d}) \leq 0\}"/>.
+The goal is to estimate the following probability:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/00163ff0ae24a10cd73a91a25c21bc325197b398.svg" alt="\begin{aligned}
+    P_f &amp;=&amp; \int_{\cD_f} f_{\uX}(\ux)d\ux\\
+    &amp;=&amp; \int_{\Rset^{n}} \mathbf{1}_{\{g(\ux,\underline{d}) \:\leq 0\: \}}f_{\uX}(\ux)d\ux\\
+    &amp;=&amp; \Prob {\{g(\uX,\underline{d}) \leq 0\}}
+  \end{aligned}"/></p>
+</div></div></blockquote>
+<div class="line-block">
+<div class="line">This is a sampling-based method. The main idea of the Importance
+Sampling method is to replace the initial probability distribution of
+the input variables by a more “efficient” one. “Efficient” means that
+more events will be counted in the failure domain <img class="math" src="../../_images/math/61c3b562be11872d5ced43d2cc4b3b7f89b22c38.svg" alt="\cD_f"/> and
+thus reduce the variance of the estimator of the probability of
+exceeding a threshold. Let <img class="math" src="../../_images/math/da1084571d061c82ffb092858b083522371e4cc8.svg" alt="\underline{Y}"/> be a random vector
+such that its probability density function
+<img class="math" src="../../_images/math/c470aadb89c52695193dedb0635e5f10dd242dd7.svg" alt="f_{\underline{Y}}(\underline{y}) &gt; 0"/> almost everywhere in the
+domain <img class="math" src="../../_images/math/61c3b562be11872d5ced43d2cc4b3b7f89b22c38.svg" alt="\cD_f"/>,</div>
+</div>
+<div class="math">
+<p><img src="../../_images/math/1d68c0530d6c8c2575b8667f182cfa7d0b045626.svg" alt="\begin{aligned}
+    P_f &amp;=&amp; \int_{\Rset^{n}} \mathbf{1}_{\{g(\ux,\underline{d}) \leq 0 \}}f_{\uX}(\ux)d\ux\\
+    &amp;=&amp; \int_{\Rset^{n}} \mathbf{1}_{\{g(\ux,\underline{d}) \leq 0 \}} \frac{f_{\uX}(\ux)}{f_{\underline{Y}}(\ux)}f_{\underline{Y}}(\ux)d\ux
+  \end{aligned}"/></p>
+</div><p>The estimator built by Importance Sampling method is:</p>
+<div class="math">
+<p><img src="../../_images/math/e862fa0ea757ff5d989c0357243549b43f23dc25.svg" alt="\begin{aligned}
+    \hat{P}_{f,IS}^N = \frac{1}{N}\sum_{i=1}^N \mathbf{1}_{\{g(\underline{Y}_{\:i}),\underline{d}) \leq 0 \}}\frac{f_{\uX}(\underline{Y}_{\:i})}{f_{\underline{Y}}(\underline{Y}_{\:i})}
+  \end{aligned}"/></p>
+</div><p>where:</p>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/e5fa696008624bbb4544f764ae5cd7c73d4c7450.svg" alt="N"/> is the total number of computations,</p></li>
+<li><p>the random vectors <img class="math" src="../../_images/math/c40e675501726e7f1df59f316e7baf8940cb7319.svg" alt="\{\underline{Y}_i, i=1\hdots N\}"/> are
+independent, identically distributed and following the probability
+density function <img class="math" src="../../_images/math/8c573842b3b0aaa3294d0f333c07543303b524f3.svg" alt="f_{\uY}"/></p></li>
+</ul>
+<p><strong>Confidence Intervals</strong></p>
+<div class="line-block">
+<div class="line">With the notations,</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/df6587cb188c675e5fcbf28e969dc47180ce2023.svg" alt="\begin{aligned}
+    \mu_N &amp;=&amp; \frac{1}{N}\sum_{i=1}^N \mathbf{1}_{\{g(\underline{y}_{\:i}),\underline{d}) \leq 0 \}}\frac{f_{\uX}(\underline{y}_{\:i})}{f_{\underline{Y}}(\underline{y}_{\:i})}\\
+    \sigma_N^2 &amp;=&amp; \frac{1}{N}\sum_{i=1}^N (\mathbf{1}_{\{g(\underline{y}_i),\underline{d}) \leq 0 \}}\frac{f_{\uX}(\underline{y}_{\:i})}{f_{\underline{Y}}(\underline{y}_{\:i})} - \mu_N)^2
+  \end{aligned}"/></p>
+</div></div></blockquote>
+<p>The asymptotic confidence interval of order <img class="math" src="../../_images/math/6736630e294a512b93692952241280258f868eae.svg" alt="1-\alpha"/> associated
+to the estimator <img class="math" src="../../_images/math/4dc79ef347269c6752b1f69b894f2e60bae86b80.svg" alt="P_{f,IS}^N"/> is</p>
+<div class="math">
+<p><img src="../../_images/math/5391fe1237c9df54a19721d3adf2e3a786d2c71f.svg" alt="\begin{aligned}
+    [ \mu_N - \frac{q_{1-\alpha / 2} . \sigma_N}{\sqrt{N}} \: ; \: \mu_N + \frac{q_{1-\alpha / 2} . \sigma_N}{\sqrt{N}} ]
+  \end{aligned}"/></p>
+</div><p>where <img class="math" src="../../_images/math/3b40ce2f93fc10a01959772f9943b62e7ab92a78.svg" alt="q_{1-\alpha /2}"/> is the <img class="math" src="../../_images/math/a4e325672be830381bae298401d3e4da25dd0517.svg" alt="1-\alpha / 2"/> quantile from
+the standard distribution <img class="math" src="../../_images/math/1a9cc0ab895a951d5e446ac2da5726606cf210df.svg" alt="\cN(0,1)"/>.</p>
+<p>This method could also be found under the name “Strategic Sampling”,
+“Ponderated Sampling” or “Biased Sampling” (even if this estimator is
+not biased as it gives exactly the same result).</p>
+<div class="topic">
+<p class="topic-title first">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.ProbabilitySimulationAlgorithm.html#openturns.ProbabilitySimulationAlgorithm" title="openturns.ProbabilitySimulationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProbabilitySimulationAlgorithm</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.ImportanceSamplingExperiment.html#openturns.ImportanceSamplingExperiment" title="openturns.ImportanceSamplingExperiment"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImportanceSamplingExperiment</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title first">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../examples/reliability_sensitivity/estimate_probability_importance_sampling.html"><span class="doc">Probability estimation: importance simulation</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title first">References:</p>
+<ul class="simple">
+<li><p>W.G. Cochran. Sampling Techniques. John Wiley and Sons, 1977.</p></li>
+<li><p>M.H. Kalos et P.A. Monte Carlo Methods, volume I: Basics. John Wiley and Sons, 1986.</p></li>
+<li><p>R.Y. Rubinstein. Simulation and the Monte Carlo Method. John Wiley and Sons, 1981.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="directional_simulation.html" title="Directional Simulation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="monte_carlo_simulation.html" title="Monte Carlo simulation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2018 Airbus-EDF-IMACS-Phimeca.
+      Last updated on Jan 01, 2018.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>
