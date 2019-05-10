@@ -1,0 +1,28 @@
+var classOptimizationResult =
+[
+    [ "OptimizationResult", "classOptimizationResult.html#ab90d2c7e6d81d7a0cb9148ad0caec111", null ],
+    [ "OptimizationResult", "classOptimizationResult.html#ae5824d8f4f955aaab31929ff9348da47", null ],
+    [ "OptimizationResult", "classOptimizationResult.html#a2ff0f7bba66a23af591b5cc0710ab8fa", null ],
+    [ "__repr__", "classOptimizationResult.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
+    [ "clone", "classOptimizationResult.html#a0596364185e0ad971094ea7e7dc5a57f", null ],
+    [ "drawErrorHistory", "classOptimizationResult.html#a4554f6d63cadec1501b1f27981093c54", null ],
+    [ "drawOptimalValueHistory", "classOptimizationResult.html#af5a49b9898aa577ca15af0729f46cebd", null ],
+    [ "getAbsoluteError", "classOptimizationResult.html#a41757dbdf2c25561b8763f1cefad7865", null ],
+    [ "getConstraintError", "classOptimizationResult.html#acfb532b3558787ee13b94c983089a338", null ],
+    [ "getInputSample", "classOptimizationResult.html#a16e908e8ca32b805c6941ea1666efcd4", null ],
+    [ "getRelativeError", "classOptimizationResult.html#a505920d749a066d122f9c54b56676c43", null ],
+    [ "getResidualError", "classOptimizationResult.html#a18d1d5566e95639b7a71795fe9f7db04", null ],
+    [ "load", "classOptimizationResult.html#a671dbd62908a9393439f7eb49d3d4834", null ],
+    [ "save", "classOptimizationResult.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
+    [ "setAbsoluteError", "classOptimizationResult.html#a292907f635e8c19f77541b0fb48f0086", null ],
+    [ "setConstraintError", "classOptimizationResult.html#af71bc23fa58096858aec0cd67a95a291", null ],
+    [ "setEvaluationNumber", "classOptimizationResult.html#a9b78882b0180722b19c7b9404c037cd3", null ],
+    [ "setIterationNumber", "classOptimizationResult.html#a891a17fa40916822cd0b841a439bb9c7", null ],
+    [ "setLagrangeMultipliers", "classOptimizationResult.html#a2df7a07c12316b7fbcb743ce1971ef26", null ],
+    [ "setOptimalPoint", "classOptimizationResult.html#a9e7c77d496be47cd43686ec62cb00d7c", null ],
+    [ "setOptimalValue", "classOptimizationResult.html#af48449f532f76520e43a12d2c36a8550", null ],
+    [ "setProblem", "classOptimizationResult.html#a42591657253a722a03b8c7a76ac5ffb3", null ],
+    [ "setRelativeError", "classOptimizationResult.html#a5464c4640ec89ea0549e538e15679e26", null ],
+    [ "setResidualError", "classOptimizationResult.html#a1db80319b5940f69001b86e7ce98ac7d", null ],
+    [ "store", "classOptimizationResult.html#a8c058cb7f2b827170d7562e4b3e10296", null ]
+];
