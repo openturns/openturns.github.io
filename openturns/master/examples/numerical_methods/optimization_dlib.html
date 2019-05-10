@@ -1,0 +1,715 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Optimization using dlib &#8212; OpenTURNS  documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Deterministic design of experiments" href="deterministic_design.html" />
+    <link rel="prev" title="Optimization using NLopt" href="optimization_nlopt.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="deterministic_design.html" title="Deterministic design of experiments"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="optimization_nlopt.html" title="Optimization using NLopt"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="numerical_methods.html" accesskey="U">Numerical methods</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Optimization using dlib</a><ul>
+<li><a class="reference internal" href="#Solving-an-unconstrained-problem-with-conjugate-gradient-algorithm">Solving an unconstrained problem with conjugate gradient algorithm</a></li>
+<li><a class="reference internal" href="#Solving-problem-with-bounds,-using-LBFGS-strategy">Solving problem with bounds, using LBFGS strategy</a></li>
+<li><a class="reference internal" href="#Solving-least-squares-problem">Solving least squares problem</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="optimization_nlopt.html"
+                        title="previous chapter">Optimization using NLopt</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="deterministic_design.html"
+                        title="next chapter">Deterministic design of experiments</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/numerical_methods/optimization_dlib.ipynb"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Optimization-using-dlib">
+<h1>Optimization using dlib<a class="headerlink" href="#Optimization-using-dlib" title="Permalink to this headline">¶</a></h1>
+<p>In this example we are going to explore optimization using OpenTURNS’ <a class="reference external" href="http://dlib.net/">dlib</a> interface.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="kn">as</span> <span class="nn">ot</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># List available algorithms</span>
+<span class="k">for</span> <span class="n">algo</span> <span class="ow">in</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dlib</span><span class="o">.</span><span class="n">GetAlgorithmNames</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">algo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CG
+BFGS
+LBFGS
+Newton
+Global
+LSQ
+LSQLM
+TrustRegion
+</pre></div></div>
+</div>
+<p>More details on dlib algorithms are available <a class="reference external" href="http://dlib.net/optimization.html">here</a>.</p>
+<div class="section" id="Solving-an-unconstrained-problem-with-conjugate-gradient-algorithm">
+<h2>Solving an unconstrained problem with conjugate gradient algorithm<a class="headerlink" href="#Solving-an-unconstrained-problem-with-conjugate-gradient-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>The following example will demonstrate the use of dlib conjugate gradient algorithm to find the minimum of <a class="reference external" href="https://en.wikipedia.org/wiki/Rosenbrock_function">Rosenbrock function</a>. The optimal point can be computed analytically, and its value is [1.0, 1.0].</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the problem based on Rosebrock function</span>
+<span class="n">rosenbrock</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;(1-x1)^2+(x2-x1^2)^2&#39;</span><span class="p">])</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">(</span><span class="n">rosenbrock</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># The optimization algorithm is instanciated from the problem to solve and the name of the algorithm</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dlib</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span><span class="s1">&#39;CG&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Dlib algorithm, type &quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getAlgorithmName</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Maximum iteration number: &quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMaximumIterationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Maximum evaluation number: &quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMaximumEvaluationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Maximum absolute error: &quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMaximumAbsoluteError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Maximum relative error: &quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMaximumRelativeError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Maximum residual error: &quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMaximumResidualError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Maximum constraint error: &quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMaximumConstraintError</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Dlib algorithm, type  CG
+Maximum iteration number:  100
+Maximum evaluation number:  100
+Maximum absolute error:  1e-05
+Maximum relative error:  1e-05
+Maximum residual error:  1e-05
+Maximum constraint error:  1e-05
+</pre></div></div>
+</div>
+<p>When using conjugate gradient, BFGS/LBFGS, Newton, least squares or trust region methods, optimization proceeds until one of the following criteria is met:</p>
+<ul class="simple">
+<li><p>the errors (absolute, relative, residual, constraint) are all below the limits set by the user ;</p></li>
+<li><p>the process reaches the maximum number of iterations or function evaluations.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Adjust number of iterations/evaluations</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumIterationNumber</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumEvaluationNumber</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumAbsoluteError</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumRelativeError</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumResidualError</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Solve the problem</span>
+<span class="n">startingPoint</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setStartingPoint</span><span class="p">(</span><span class="n">startingPoint</span><span class="p">)</span>
+
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-6-809af21facf7&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> algo<span class="ansi-blue-fg">.</span>setStartingPoint<span class="ansi-blue-fg">(</span>startingPoint<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span>
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg"> </span>algo<span class="ansi-blue-fg">.</span>run<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/DEV/OT/dlib/build/install/lib/python3.6/site-packages/openturns/optim.py</span> in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3667</span>     <span class="ansi-green-fg">def</span> run<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   3668</span>         <span class="ansi-blue-fg">&#34;&#34;&#34;Performs the actual optimization process. Results are stored in the :class:`~openturns.OptimizationResult` parameter of the :class:`~openturns.Dlib` object.&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">-&gt; 3669</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> _optim<span class="ansi-blue-fg">.</span>Dlib_run<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3670</span>
+<span class="ansi-green-intense-fg ansi-bold">   3671</span>
+
+<span class="ansi-red-fg">RuntimeError</span>: NotYetImplementedException : Error: not yet implemented search strategy
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Retrieve results</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x^ = &#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;f(x^) = &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration number: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Evaluation number: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getEvaluationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Absolute error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getAbsoluteError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Relative error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getRelativeError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Residual error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getResidualError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Constraint error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getConstraintError</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+x^ =  []
+f(x^) =  []
+Iteration number:  0
+Evaluation number:  2617199536
+Absolute error:  -1.0
+Relative error:  -1.0
+Residual error:  -1.0
+Constraint error:  -1.0
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Solving-problem-with-bounds,-using-LBFGS-strategy">
+<h2>Solving problem with bounds, using LBFGS strategy<a class="headerlink" href="#Solving-problem-with-bounds,-using-LBFGS-strategy" title="Permalink to this headline">¶</a></h2>
+<p>In the following example, the input variables will be bounded so the function global optimal point is not included in the search interval.</p>
+<p>The problem will be solved using LBFGS strategy, which allows the user to limit the amount of memory used by the optimization process.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the bounds and the problem</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+<span class="n">boundedProblem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">(</span><span class="n">rosenbrock</span><span class="p">,</span><span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">(),</span><span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">(),</span><span class="n">bounds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the Dlib algorithm</span>
+<span class="n">boundedAlgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dlib</span><span class="p">(</span><span class="n">boundedProblem</span><span class="p">,</span><span class="s2">&quot;LBFGS&quot;</span><span class="p">)</span>
+<span class="n">boundedAlgo</span><span class="o">.</span><span class="n">setMaxSize</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># Default value for LBFGS&#39; maxSize parameter is 10</span>
+
+<span class="n">startingPoint</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
+<span class="n">boundedAlgo</span><span class="o">.</span><span class="n">setStartingPoint</span><span class="p">(</span><span class="n">startingPoint</span><span class="p">)</span>
+
+<span class="n">boundedAlgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Retrieve results</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">boundedAlgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x^ = &#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;f(x^) = &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration number: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Evaluation number: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getEvaluationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Absolute error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getAbsoluteError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Relative error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getRelativeError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Residual error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getResidualError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Constraint error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getConstraintError</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+x^ =  [0.8,0.64]
+f(x^) =  [0.04]
+Iteration number:  6
+Evaluation number:  10
+Absolute error:  0.0
+Relative error:  0.0
+Residual error:  0.0
+Constraint error:  0.0
+</pre></div></div>
+</div>
+<p><strong>Remark:</strong> The bounds defined for input variables are always strictly respected when using dlib algorithms. Consequently, the constraint error is always 0.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Draw optimal value history</span>
+<span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_dlib_17_0.png" src="../../_images/examples_numerical_methods_optimization_dlib_17_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Solving-least-squares-problem">
+<h2>Solving least squares problem<a class="headerlink" href="#Solving-least-squares-problem" title="Permalink to this headline">¶</a></h2>
+<p>In least squares problem, the user provides the residual function to minimize. Here the underlying OptimizationProblem is defined as a LeastSquaresProblem.</p>
+<p>dlib least squares algorithms use the same stop criteria as CG, BFGS/LBFGS and Newton algorithms. However, optimization will stop earlier if no significant improvement can be achieved during the process.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define residual function</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a + b * exp(-c *x^2)&#39;</span><span class="p">])</span>
+<span class="n">p_ref</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span> <span class="c1"># Reference a, b, c</span>
+<span class="n">modelx</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">p_ref</span><span class="p">)</span>
+
+<span class="c1"># Generate reference sample (with normal noise)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">modelx</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="n">m</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">residualFunction</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="n">modelx</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">modelx</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Definition of residual as ot.PythonFunction and optimization problem</span>
+<span class="n">residual</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">residualFunction</span><span class="p">)</span>
+<span class="n">lsqProblem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresProblem</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Definition of Dlib solver, setting starting point</span>
+<span class="n">lsqAlgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dlib</span><span class="p">(</span><span class="n">lsqProblem</span><span class="p">,</span> <span class="s2">&quot;LSQ&quot;</span><span class="p">)</span>
+<span class="n">lsqAlgo</span><span class="o">.</span><span class="n">setStartingPoint</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">])</span>
+
+<span class="n">lsqAlgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Retrieve results</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">lsqAlgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;x^ = &#39;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;f(x^) = &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration number: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Evaluation number: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getEvaluationNumber</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Absolute error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getAbsoluteError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Relative error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getRelativeError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Residual error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getResidualError</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Constraint error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getConstraintError</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+x^ =  [2.85896,1.22527,0.5]
+f(x^) =  [1.75844e-24]
+Iteration number:  7
+Evaluation number:  8
+Absolute error:  9.54581691077606e-07
+Relative error:  3.0300438666759535e-07
+Residual error:  4.047934634381944e-13
+Constraint error:  0.0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Draw errors history</span>
+<span class="n">result</span><span class="o">.</span><span class="n">drawErrorHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_dlib_23_0.png" src="../../_images/examples_numerical_methods_optimization_dlib_23_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Draw optimal value history</span>
+<span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_dlib_24_0.png" src="../../_images/examples_numerical_methods_optimization_dlib_24_0.png" />
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="deterministic_design.html" title="Deterministic design of experiments"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="optimization_nlopt.html" title="Optimization using NLopt"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="numerical_methods.html" >Numerical methods</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2018 Airbus-EDF-IMACS-Phimeca.
+      Last updated on Jan 01, 2018.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>
