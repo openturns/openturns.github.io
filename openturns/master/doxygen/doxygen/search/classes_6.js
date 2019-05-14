@@ -3,6 +3,7 @@ var searchData=
   ['gamma',['Gamma',['../classGamma.html',1,'']]],
   ['gammafactory',['GammaFactory',['../classGammaFactory.html',1,'']]],
   ['gammamusigma',['GammaMuSigma',['../classGammaMuSigma.html',1,'']]],
+  ['gaussianlinearcalibration',['GaussianLinearCalibration',['../classGaussianLinearCalibration.html',1,'']]],
   ['gaussianprocess',['GaussianProcess',['../classGaussianProcess.html',1,'']]],
   ['gausskronrod',['GaussKronrod',['../classGaussKronrod.html',1,'']]],
   ['gausskronrodrule',['GaussKronrodRule',['../classGaussKronrodRule.html',1,'']]],

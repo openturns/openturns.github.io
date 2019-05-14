@@ -10,7 +10,6 @@ var classLinearLeastSquares =
     [ "getInputFunction", "classLinearLeastSquares.html#a7a761b8b51f40b605d85d5006d7ba068", null ],
     [ "getLinear", "classLinearLeastSquares.html#a2bf71920c69913636bcfff2dffdfb88b", null ],
     [ "getMetaModel", "classLinearLeastSquares.html#ac9ee76e14ffcf76e83bb531fee9380bd", null ],
-    [ "getResponseSurface", "classLinearLeastSquares.html#a19643414f4091729b1943ed134f4ff9f", null ],
     [ "load", "classLinearLeastSquares.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "run", "classLinearLeastSquares.html#a13a43e6d814de94978c515cb084873b1", null ],
     [ "save", "classLinearLeastSquares.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],

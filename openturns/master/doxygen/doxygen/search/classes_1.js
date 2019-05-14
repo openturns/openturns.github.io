@@ -21,7 +21,6 @@ var searchData=
   ['bipartitegraph',['BipartiteGraph',['../classBipartiteGraph.html',1,'']]],
   ['bisection',['Bisection',['../classBisection.html',1,'']]],
   ['blendedstep',['BlendedStep',['../classBlendedStep.html',1,'']]],
-  ['blue',['BLUE',['../classBLUE.html',1,'']]],
   ['bootstrapexperiment',['BootstrapExperiment',['../classBootstrapExperiment.html',1,'']]],
   ['boundingvolumehierarchy',['BoundingVolumeHierarchy',['../classBoundingVolumeHierarchy.html',1,'']]],
   ['box',['Box',['../classBox.html',1,'']]],

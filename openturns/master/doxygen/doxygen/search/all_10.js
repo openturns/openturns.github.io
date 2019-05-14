@@ -23,7 +23,7 @@ var searchData=
   ['parseoptions',['parseOptions',['../namespaceTest.html#a30f02ec3b4880a32c36e98bc3a4a2936',1,'Test']]],
   ['partialgradient',['partialGradient',['../classAbsoluteExponential.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'AbsoluteExponential::partialGradient()'],['../classCovarianceModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'CovarianceModel::partialGradient()'],['../classCovarianceModelImplementation.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'CovarianceModelImplementation::partialGradient()'],['../classDiracCovarianceModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'DiracCovarianceModel::partialGradient()'],['../classExponentialModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'ExponentialModel::partialGradient()'],['../classFractionalBrownianMotionModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'FractionalBrownianMotionModel::partialGradient()'],['../classGeneralizedExponential.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'GeneralizedExponential::partialGradient()'],['../classMaternModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'MaternModel::partialGradient()'],['../classProductCovarianceModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'ProductCovarianceModel::partialGradient()'],['../classRankMCovarianceModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'RankMCovarianceModel::partialGradient()'],['../classSquaredExponential.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'SquaredExponential::partialGradient()'],['../classTensorizedCovarianceModel.html#ae0defe867ddf6ee6175b1f42bfdc1694',1,'TensorizedCovarianceModel::partialGradient()']]],
   ['partialpearson',['PartialPearson',['../classHypothesisTest.html#a216c17832db8bee43ba80002cb513afe',1,'HypothesisTest']]],
-  ['partialregression',['PartialRegression',['../classHypothesisTest.html#a2b34c91a650771e5cacf7620cffaf3d1',1,'HypothesisTest::PartialRegression()'],['../classLinearModelTest.html#a5fa03d27bcd28463501134f261e05239',1,'LinearModelTest::PartialRegression()']]],
+  ['partialregression',['PartialRegression',['../classLinearModelTest.html#a5fa03d27bcd28463501134f261e05239',1,'LinearModelTest']]],
   ['partialspearman',['PartialSpearman',['../classHypothesisTest.html#ada8956bf9438cee6712cd57093c2ba4e',1,'HypothesisTest']]],
   ['path',['Path',['../classPath.html',1,'']]],
   ['pcc',['PCC',['../classCorrelationAnalysis.html#a1d941289bd86d2aa20e06e029ecba602',1,'CorrelationAnalysis']]],
@@ -149,6 +149,5 @@ var searchData=
   ['psi_5f',['psi_',['../classApproximationAlgorithmImplementation.html#a71d014b8094db04230aa16cd2c83122c',1,'ApproximationAlgorithmImplementation::psi_()'],['../classAdaptiveStrategyImplementation.html#a28bce1e309671fde44873ac8775574ba',1,'AdaptiveStrategyImplementation::Psi_()']]],
   ['psi_5fk_5fp_5f',['Psi_k_p_',['../classAdaptiveStrategyImplementation.html#a02f29e65895ce18ed1db268e6ba17830',1,'AdaptiveStrategyImplementation']]],
   ['pspearmancorrelation',['pSpearmanCorrelation',['../classDistFunc.html#acbd5c4586a7c8c5e03c1cb5a49baf4e6',1,'DistFunc']]],
-  ['ptr_5f',['ptr_',['../classPointer.html#adc09bbc18d94ad7fc7baca2f8fafbebc',1,'Pointer']]],
-  ['pvalues_5f',['pValues_',['../classLinearModel.html#a0dcbce8e637dc934f8030014fdd8a8be',1,'LinearModel']]]
+  ['ptr_5f',['ptr_',['../classPointer.html#adc09bbc18d94ad7fc7baca2f8fafbebc',1,'Pointer']]]
 ];

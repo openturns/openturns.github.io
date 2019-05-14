@@ -59,7 +59,7 @@ var searchData=
   ['truncatednormalfactory',['TruncatedNormalFactory',['../classTruncatedNormalFactory.html',1,'TruncatedNormalFactory'],['../classTruncatedNormalFactory.html#ad0aa8e94743980c880c0f33070112468',1,'TruncatedNormalFactory::TruncatedNormalFactory()']]],
   ['tty',['TTY',['../structTTY.html',1,'']]],
   ['tuples',['Tuples',['../classTuples.html',1,'Tuples'],['../classTuples.html#af2a0723886419c078f22bec55e3dac9b',1,'Tuples::Tuples()']]],
-  ['twosampleskolmogorov',['TwoSamplesKolmogorov',['../classFittingTest.html#a68cddb146d193795430f76435139993d',1,'FittingTest::TwoSamplesKolmogorov()'],['../classHypothesisTest.html#a68cddb146d193795430f76435139993d',1,'HypothesisTest::TwoSamplesKolmogorov()']]],
+  ['twosampleskolmogorov',['TwoSamplesKolmogorov',['../classHypothesisTest.html#a68cddb146d193795430f76435139993d',1,'HypothesisTest']]],
   ['type',['type',['../classException.html#a11ca79d8d71dae701dee034f2bf47464',1,'Exception']]],
   ['typedcollectioninterfaceobject',['TypedCollectionInterfaceObject',['../classTypedCollectionInterfaceObject.html',1,'TypedCollectionInterfaceObject&lt; T &gt;'],['../classTypedCollectionInterfaceObject.html#ab1c5580fcdd3dc01d5b54cc15b963762',1,'TypedCollectionInterfaceObject::TypedCollectionInterfaceObject()']]],
   ['typedinterfaceobject',['TypedInterfaceObject',['../classTypedInterfaceObject.html',1,'TypedInterfaceObject&lt; T &gt;'],['../classTypedInterfaceObject.html#a7396f0151acc5f3b18e6bb70c84f70bf',1,'TypedInterfaceObject::TypedInterfaceObject()']]],

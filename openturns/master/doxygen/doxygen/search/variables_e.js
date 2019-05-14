@@ -21,6 +21,5 @@ var searchData=
   ['proxy_5f',['proxy_',['../classLeastSquaresMethodImplementation.html#adfa1fd2fd7cf5d443c7f0de3ac5802d1',1,'LeastSquaresMethodImplementation']]],
   ['psi_5f',['psi_',['../classApproximationAlgorithmImplementation.html#a71d014b8094db04230aa16cd2c83122c',1,'ApproximationAlgorithmImplementation::psi_()'],['../classAdaptiveStrategyImplementation.html#a28bce1e309671fde44873ac8775574ba',1,'AdaptiveStrategyImplementation::Psi_()']]],
   ['psi_5fk_5fp_5f',['Psi_k_p_',['../classAdaptiveStrategyImplementation.html#a02f29e65895ce18ed1db268e6ba17830',1,'AdaptiveStrategyImplementation']]],
-  ['ptr_5f',['ptr_',['../classPointer.html#adc09bbc18d94ad7fc7baca2f8fafbebc',1,'Pointer']]],
-  ['pvalues_5f',['pValues_',['../classLinearModel.html#a0dcbce8e637dc934f8030014fdd8a8be',1,'LinearModel']]]
+  ['ptr_5f',['ptr_',['../classPointer.html#adc09bbc18d94ad7fc7baca2f8fafbebc',1,'Pointer']]]
 ];

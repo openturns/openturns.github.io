@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['deprecated_20list',['Deprecated List',['../deprecated.html',1,'']]]
+  ['openturns_20api_20documentation',['OpenTURNS API documentation',['../index.html',1,'']]]
 ];

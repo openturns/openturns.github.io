@@ -10,7 +10,6 @@ var classQuadraticTaylor =
     [ "getLinear", "classQuadraticTaylor.html#a2bf71920c69913636bcfff2dffdfb88b", null ],
     [ "getMetaModel", "classQuadraticTaylor.html#ac9ee76e14ffcf76e83bb531fee9380bd", null ],
     [ "getQuadratic", "classQuadraticTaylor.html#a1e5254a4badb144ffcd29d93f15c11e4", null ],
-    [ "getResponseSurface", "classQuadraticTaylor.html#a19643414f4091729b1943ed134f4ff9f", null ],
     [ "load", "classQuadraticTaylor.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "run", "classQuadraticTaylor.html#a13a43e6d814de94978c515cb084873b1", null ],
     [ "save", "classQuadraticTaylor.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]

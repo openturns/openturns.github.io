@@ -5,7 +5,6 @@ var classOptimizationProblem =
     [ "OptimizationProblem", "classOptimizationProblem.html#ab98fc293b720aeb12c27f742f53c6767", null ],
     [ "OptimizationProblem", "classOptimizationProblem.html#abef7cb07e625cf16329281485eac7c27", null ],
     [ "OptimizationProblem", "classOptimizationProblem.html#a06e06d8e70cbd81be7e72addd7c18555", null ],
-    [ "OptimizationProblem", "classOptimizationProblem.html#a8f009e260d481597c275aa11e9056a61", null ],
     [ "__repr__", "classOptimizationProblem.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "__str__", "classOptimizationProblem.html#a52e42d2cad038d44d425597aa45f4234", null ],
     [ "getBounds", "classOptimizationProblem.html#ae6679f66f730731af4aafd0d00f3444b", null ],

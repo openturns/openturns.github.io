@@ -166,6 +166,8 @@ var hierarchy =
     [ "CorrelationAnalysis", "classCorrelationAnalysis.html", null ],
     [ "CSVParserState", "structCSVParserState.html", null ],
     [ "DistFunc", "classDistFunc.html", null ],
+    [ "DlibBfgsSearchStrategy", "classDlibBfgsSearchStrategy.html", null ],
+    [ "DlibConjugateGradientSearchStrategy", "classDlibConjugateGradientSearchStrategy.html", null ],
     [ "Exception", "classException.html", [
       [ "ConfigurationFileParsingException", "classConfigurationFileParsingException.html", null ],
       [ "DynamicLibraryException", "classDynamicLibraryException.html", null ],
@@ -192,7 +194,6 @@ var hierarchy =
     [ "IdFactory", "classIdFactory.html", null ],
     [ "KDNearestNeighboursFinder", "classKDNearestNeighboursFinder.html", null ],
     [ "LINEARLEASTSQUARESCALIBRATION", "classLINEARLEASTSQUARESCALIBRATION.html", null ],
-    [ "LinearModelFactory", "classLinearModelFactory.html", null ],
     [ "LinearModelTest", "classLinearModelTest.html", null ],
     [ "log", "classlog.html", null ],
     [ "Log_init", "structLog__init.html", null ],
@@ -312,6 +313,7 @@ var hierarchy =
             [ "BoxCoxTransform", "classBoxCoxTransform.html", null ],
             [ "DatabaseFunction", "classDatabaseFunction.html", null ],
             [ "DistributionTransformation", "classDistributionTransformation.html", null ],
+            [ "DlibFunction", "classDlibFunction.html", null ],
             [ "DualLinearCombinationFunction", "classDualLinearCombinationFunction.html", null ],
             [ "IdentityFunction", "classIdentityFunction.html", null ],
             [ "IndicatorFunction", "classIndicatorFunction.html", null ],
@@ -325,13 +327,17 @@ var hierarchy =
           ] ]
         ] ],
         [ "TypedInterfaceObject< GradientImplementation >", "classTypedInterfaceObject.html", [
-          [ "Gradient", "classGradient.html", null ]
+          [ "Gradient", "classGradient.html", [
+            [ "DlibGradient", "classDlibGradient.html", null ]
+          ] ]
         ] ],
         [ "TypedInterfaceObject< GraphImplementation >", "classTypedInterfaceObject.html", [
           [ "Graph", "classGraph.html", null ]
         ] ],
         [ "TypedInterfaceObject< HessianImplementation >", "classTypedInterfaceObject.html", [
-          [ "Hessian", "classHessian.html", null ]
+          [ "Hessian", "classHessian.html", [
+            [ "DlibHessian", "classDlibHessian.html", null ]
+          ] ]
         ] ],
         [ "TypedInterfaceObject< HistoryStrategyImplementation >", "classTypedInterfaceObject.html", [
           [ "HistoryStrategy", "classHistoryStrategy.html", null ]
@@ -514,7 +520,7 @@ var hierarchy =
         [ "BoxCoxFactory", "classBoxCoxFactory.html", null ],
         [ "Cache< KeyType, ValueType >", "classCache.html", null ],
         [ "CalibrationAlgorithmImplementation", "classCalibrationAlgorithmImplementation.html", [
-          [ "BLUE", "classBLUE.html", null ]
+          [ "GaussianLinearCalibration", "classGaussianLinearCalibration.html", null ]
         ] ],
         [ "CalibrationResult", "classCalibrationResult.html", null ],
         [ "CalibrationStrategyImplementation", "classCalibrationStrategyImplementation.html", null ],
@@ -938,7 +944,6 @@ var hierarchy =
         ] ],
         [ "LevelSetMesher", "classLevelSetMesher.html", null ],
         [ "LinearLeastSquares", "classLinearLeastSquares.html", null ],
-        [ "LinearModel", "classLinearModel.html", null ],
         [ "LinearModelAnalysis", "classLinearModelAnalysis.html", null ],
         [ "LinearTaylor", "classLinearTaylor.html", null ],
         [ "LowDiscrepancySequenceImplementation", "classLowDiscrepancySequenceImplementation.html", [
@@ -982,6 +987,7 @@ var hierarchy =
           [ "AbdoRackwitz", "classAbdoRackwitz.html", null ],
           [ "Ceres", "classCeres.html", null ],
           [ "CMinpack", "classCMinpack.html", null ],
+          [ "Dlib", "classDlib.html", null ],
           [ "EfficientGlobalOptimization", "classEfficientGlobalOptimization.html", null ],
           [ "MultiStart", "classMultiStart.html", null ],
           [ "NLopt", "classNLopt.html", null ],

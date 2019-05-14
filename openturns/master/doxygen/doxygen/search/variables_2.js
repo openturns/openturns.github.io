@@ -9,7 +9,6 @@ var searchData=
   ['colorcodes',['ColorCodes',['../classDrawableImplementation.html#ab553a4fb587cd4d37efcda3b2ffa3c02',1,'DrawableImplementation']]],
   ['conditioneddistribution_5f',['conditionedDistribution_',['../classBayesDistribution.html#a01abc5b3fcfd9882e8e19e085bb5b784',1,'BayesDistribution']]],
   ['conditioningdistribution_5f',['conditioningDistribution_',['../classBayesDistribution.html#aebb546bb798247f5d7f3273f12646767',1,'BayesDistribution']]],
-  ['confidenceintervals_5f',['confidenceIntervals_',['../classLinearModel.html#a431b2ab393eb4eb0b605c0e242eab527',1,'LinearModel']]],
   ['confidencelevel_5f',['confidenceLevel_',['../classSobolIndicesAlgorithmImplementation.html#a5d60e2b37e70427da263340883880b9f',1,'SobolIndicesAlgorithmImplementation']]],
   ['conservedpsi_5fk_5franks_5f',['conservedPsi_k_ranks_',['../classBasisSequenceFactoryImplementation.html#a9cba48fe7860f78361b80dcccd42af31',1,'BasisSequenceFactoryImplementation::conservedPsi_k_ranks_()'],['../classAdaptiveStrategyImplementation.html#a9cba48fe7860f78361b80dcccd42af31',1,'AdaptiveStrategyImplementation::conservedPsi_k_ranks_()']]],
   ['controlprobability_5f',['controlProbability_',['../classPostAnalyticalSimulation.html#a13f4ae6c5b59fc8b0cb064f985a2424c',1,'PostAnalyticalSimulation']]],

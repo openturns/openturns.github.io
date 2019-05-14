@@ -44,7 +44,7 @@ var searchData=
   ['truncatednormal',['TruncatedNormal',['../classTruncatedNormal.html#a43d92ca1d4921a2be11abb961519897f',1,'TruncatedNormal::TruncatedNormal()'],['../classTruncatedNormal.html#a38c09a3bc657d4e148a2d730e5d6b177',1,'TruncatedNormal::TruncatedNormal(const Scalar mu, const Scalar sigma, const Scalar a, const Scalar b)']]],
   ['truncatednormalfactory',['TruncatedNormalFactory',['../classTruncatedNormalFactory.html#ad0aa8e94743980c880c0f33070112468',1,'TruncatedNormalFactory']]],
   ['tuples',['Tuples',['../classTuples.html#af2a0723886419c078f22bec55e3dac9b',1,'Tuples']]],
-  ['twosampleskolmogorov',['TwoSamplesKolmogorov',['../classFittingTest.html#a68cddb146d193795430f76435139993d',1,'FittingTest::TwoSamplesKolmogorov()'],['../classHypothesisTest.html#a68cddb146d193795430f76435139993d',1,'HypothesisTest::TwoSamplesKolmogorov()']]],
+  ['twosampleskolmogorov',['TwoSamplesKolmogorov',['../classHypothesisTest.html#a68cddb146d193795430f76435139993d',1,'HypothesisTest']]],
   ['type',['type',['../classException.html#a11ca79d8d71dae701dee034f2bf47464',1,'Exception']]],
   ['typedcollectioninterfaceobject',['TypedCollectionInterfaceObject',['../classTypedCollectionInterfaceObject.html#ab1c5580fcdd3dc01d5b54cc15b963762',1,'TypedCollectionInterfaceObject']]],
   ['typedinterfaceobject',['TypedInterfaceObject',['../classTypedInterfaceObject.html#a7396f0151acc5f3b18e6bb70c84f70bf',1,'TypedInterfaceObject']]]
