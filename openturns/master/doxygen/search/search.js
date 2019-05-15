@@ -12,10 +12,10 @@ var indexSectionsWithContent =
   2: "begkost",
   3: "h",
   4: "_abcdefghijklmnopqrstuvwxz~",
-  5: "abcdefhiklmnopqrstuvwxy",
+  5: "abcdefghiklmnopqrstuvwxy",
   6: "abcdefilpstu",
   7: "amop",
-  8: "do"
+  8: "o"
 };
 
 var indexSectionNames =

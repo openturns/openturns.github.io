@@ -1,5 +1,5 @@
 var classKDNearestNeighboursFinder =
 [
-    [ "KDNearestNeighboursFinder", "classKDNearestNeighboursFinder.html#ac97d2b397910571a8e16db278fced986", null ],
-    [ "getNearestNeighboursIndices", "classKDNearestNeighboursFinder.html#ad76910f6880a34e0b686af7885b1f754", null ]
+    [ "KDNearestNeighboursFinder", "classKDNearestNeighboursFinder.html#aa8e174ef2b800ebc7ce7fa5a0ce0fb76", null ],
+    [ "getNearestNeighboursIndices", "classKDNearestNeighboursFinder.html#a911c57d10c1a2988bddb3b99c1f969f2", null ]
 ];

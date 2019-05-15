@@ -1,8 +1,9 @@
 var classMinCopula =
 [
-    [ "MinCopula", "classMinCopula.html#a5f310003bd1cdf4a2fe03d8b8a59d1c1", null ],
+    [ "MinCopula", "classMinCopula.html#a9ee6a5c574d95cab713d9aea332faac8", null ],
     [ "__repr__", "classMinCopula.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classMinCopula.html#a769f7804f8128dfe09483cfc6528a9b9", null ],
+    [ "computeEntropy", "classMinCopula.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "getInverseIsoProbabilisticTransformation", "classMinCopula.html#a75082ff6e07a7f4534160f9e80d1ba2b", null ],
     [ "getIsoProbabilisticTransformation", "classMinCopula.html#ac91c4e70ddbce6eb0ead3103365f80d9", null ],
     [ "getKendallTau", "classMinCopula.html#a9771c38a4cc87c8c0e696b4a0fa96612", null ],

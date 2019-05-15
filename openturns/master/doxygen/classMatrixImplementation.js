@@ -20,6 +20,7 @@ var classMatrixImplementation =
     [ "convertPosition", "classMatrixImplementation.html#addba32c6216edb8efeed86199434341a", null ],
     [ "genPower", "classMatrixImplementation.html#ac6ead195028081dbc6793c54322067a0", null ],
     [ "genProd", "classMatrixImplementation.html#a985ff979c4b841b10b2fedfd818e2990", null ],
+    [ "genSampleProd", "classMatrixImplementation.html#afcb5924f08897dcad1fe91a72f358e6f", null ],
     [ "genVectProd", "classMatrixImplementation.html#af3626bc88cd0307f5dbcc563796ca7f3", null ],
     [ "getColumn", "classMatrixImplementation.html#a9b6ff00ca6f13bdf3bc48fb8eef29256", null ],
     [ "getDimension", "classMatrixImplementation.html#aa2ecd0f05f7350ab14b8dd1ba6b95fc0", null ],
@@ -43,6 +44,7 @@ var classMatrixImplementation =
     [ "operator/", "classMatrixImplementation.html#ab4f747cb59d74ab0348e47ed122840e5", null ],
     [ "operator/=", "classMatrixImplementation.html#a005136497c85ea7a04c76c79f693fe72", null ],
     [ "operator==", "classMatrixImplementation.html#af9bf3e23e38ce9255ee8f809b5932e12", null ],
+    [ "reshape", "classMatrixImplementation.html#aa41c25f76a15d2bc85794dcbb92a2ac1", null ],
     [ "save", "classMatrixImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
     [ "solveLinearSystemCov", "classMatrixImplementation.html#ac72a9e244bfee5b06052ef1e9555ac02", null ],
     [ "solveLinearSystemRect", "classMatrixImplementation.html#a2e62eac325b9f96ce101fb538ee25c81", null ],
@@ -53,7 +55,7 @@ var classMatrixImplementation =
     [ "transpose", "classMatrixImplementation.html#a1dd72da0997176d75867fa9c5304456a", null ],
     [ "triangularize", "classMatrixImplementation.html#abd34c347405b13a7748ca5154f04bf74", null ],
     [ "triangularProd", "classMatrixImplementation.html#ab0f486031ce5a43254c92adb2c2bffb5", null ],
-    [ "triangularVectProd", "classMatrixImplementation.html#ab660d2ad8cdaee7293e56db1b90f9a41", null ],
+    [ "triangularVectProd", "classMatrixImplementation.html#abf9de2d33a0b39b5a256df8c6b7caade", null ],
     [ "operator*", "classMatrixImplementation.html#a68fef9e758fcb97f6e2cc9563de71896", null ],
     [ "nbRows_", "classMatrixImplementation.html#a2da311d268665f20c379fd49608961c9", null ]
 ];

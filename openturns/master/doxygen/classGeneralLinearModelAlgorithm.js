@@ -2,9 +2,7 @@ var classGeneralLinearModelAlgorithm =
 [
     [ "GeneralLinearModelAlgorithm", "classGeneralLinearModelAlgorithm.html#a521f6d59b236a903ee2e213037573818", null ],
     [ "GeneralLinearModelAlgorithm", "classGeneralLinearModelAlgorithm.html#aefaa4c42f1eea73e7ad69a340f0de77b", null ],
-    [ "GeneralLinearModelAlgorithm", "classGeneralLinearModelAlgorithm.html#ac94100cd525c70f2ba5b8dcc93fe8f30", null ],
     [ "GeneralLinearModelAlgorithm", "classGeneralLinearModelAlgorithm.html#a612b16ad5561ded4c5895f828e8c1357", null ],
-    [ "GeneralLinearModelAlgorithm", "classGeneralLinearModelAlgorithm.html#a38803eb541258db1c7be07d601867175", null ],
     [ "__repr__", "classGeneralLinearModelAlgorithm.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classGeneralLinearModelAlgorithm.html#aa6616a20a4f14d903490a36feef2ab19", null ],
     [ "getInputSample", "classGeneralLinearModelAlgorithm.html#a16e908e8ca32b805c6941ea1666efcd4", null ],

@@ -7,5 +7,6 @@ var classSobolSequence =
     [ "load", "classSobolSequence.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "save", "classSobolSequence.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
     [ "base_", "classSobolSequence.html#a2d66ec4b24cbb14d4c173daab7ab97b2", null ],
+    [ "MaximumNumberOfDimension", "classSobolSequence.html#af257e5ce9de0268f76ac9978699c8184", null ],
     [ "seed_", "classSobolSequence.html#aa78866a6aa396843d9d0c693e1716da9", null ]
 ];

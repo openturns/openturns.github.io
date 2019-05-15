@@ -1,7 +1,8 @@
 var classOptimizationResult =
 [
     [ "OptimizationResult", "classOptimizationResult.html#ab90d2c7e6d81d7a0cb9148ad0caec111", null ],
-    [ "OptimizationResult", "classOptimizationResult.html#ae8a3d68b36331ddc96b77094e9e6572d", null ],
+    [ "OptimizationResult", "classOptimizationResult.html#ae5824d8f4f955aaab31929ff9348da47", null ],
+    [ "OptimizationResult", "classOptimizationResult.html#a2ff0f7bba66a23af591b5cc0710ab8fa", null ],
     [ "__repr__", "classOptimizationResult.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classOptimizationResult.html#a0596364185e0ad971094ea7e7dc5a57f", null ],
     [ "drawErrorHistory", "classOptimizationResult.html#a4554f6d63cadec1501b1f27981093c54", null ],
@@ -15,6 +16,7 @@ var classOptimizationResult =
     [ "save", "classOptimizationResult.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
     [ "setAbsoluteError", "classOptimizationResult.html#a292907f635e8c19f77541b0fb48f0086", null ],
     [ "setConstraintError", "classOptimizationResult.html#af71bc23fa58096858aec0cd67a95a291", null ],
+    [ "setEvaluationNumber", "classOptimizationResult.html#a9b78882b0180722b19c7b9404c037cd3", null ],
     [ "setIterationNumber", "classOptimizationResult.html#a891a17fa40916822cd0b841a439bb9c7", null ],
     [ "setLagrangeMultipliers", "classOptimizationResult.html#a2df7a07c12316b7fbcb743ce1971ef26", null ],
     [ "setOptimalPoint", "classOptimizationResult.html#a9e7c77d496be47cd43686ec62cb00d7c", null ],

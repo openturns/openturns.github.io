@@ -1,6 +1,6 @@
 var classComposedGradient =
 [
-    [ "ComposedGradient", "classComposedGradient.html#a3ebe3ecaf9b46cd6dd86f0a591cb3303", null ],
+    [ "ComposedGradient", "classComposedGradient.html#a3b5f6b73c0dff05904e020e59fb9f39d", null ],
     [ "__repr__", "classComposedGradient.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classComposedGradient.html#a6b9adabd575449e3fdc4c0f1f3308450", null ],
     [ "getInputDimension", "classComposedGradient.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],

@@ -7,7 +7,7 @@ var classProjectionStrategyImplementation =
     [ "ProjectionStrategyImplementation", "classProjectionStrategyImplementation.html#ac39ae60770abf2a34e468660b892b227", null ],
     [ "__repr__", "classProjectionStrategyImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classProjectionStrategyImplementation.html#af9bb0aea346b0ae2df9575b44abd8bcd", null ],
-    [ "computeCoefficients", "classProjectionStrategyImplementation.html#a2b9aecbee3dea58e4e3e20b7982a4e7d", null ],
+    [ "computeCoefficients", "classProjectionStrategyImplementation.html#a33026dd1354daabcee0466fdaa23e85c", null ],
     [ "getCoefficients", "classProjectionStrategyImplementation.html#ac4318bcf57ee512d89c9f2613eef3709", null ],
     [ "getRelativeError", "classProjectionStrategyImplementation.html#a505920d749a066d122f9c54b56676c43", null ],
     [ "getResidual", "classProjectionStrategyImplementation.html#a4c69325d62e06f93f13ab5f67da56f72", null ],

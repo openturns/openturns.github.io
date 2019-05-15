@@ -8,7 +8,7 @@ var classRice =
     [ "getRealization", "classRice.html#a0d4b97f8839923cace807a6ec462ec6e", null ],
     [ "getStandardDeviation", "classRice.html#aebd7966ce58afe6240311091e25e85bb", null ],
     [ "getStandardMoment", "classRice.html#a65eece260bc494736c6ecf68575521cb", null ],
-    [ "getStandardRepresentative", "classRice.html#a0fe782d3e056905c77e7fd07cf87d1dc", null ],
+    [ "getStandardRepresentative", "classRice.html#a9a66e8166d101b1deb042314415581cd", null ],
     [ "load", "classRice.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "operator==", "classRice.html#adbd15ed1c556dffc2ff99ed1b1da4a92", null ],
     [ "save", "classRice.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],

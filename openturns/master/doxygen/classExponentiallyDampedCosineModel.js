@@ -1,6 +1,6 @@
 var classExponentiallyDampedCosineModel =
 [
-    [ "ExponentiallyDampedCosineModel", "classExponentiallyDampedCosineModel.html#a52b4e8fafc1379df79028fb92fb2ea5f", null ],
+    [ "ExponentiallyDampedCosineModel", "classExponentiallyDampedCosineModel.html#a6d8f2447c3775559cc98cba495854559", null ],
     [ "ExponentiallyDampedCosineModel", "classExponentiallyDampedCosineModel.html#a951db4b9236f88e4ef9e43fd2c6642a0", null ],
     [ "__repr__", "classExponentiallyDampedCosineModel.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "__str__", "classExponentiallyDampedCosineModel.html#a52e42d2cad038d44d425597aa45f4234", null ],

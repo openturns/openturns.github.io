@@ -7,6 +7,7 @@ var classHistoryStrategyImplementation =
     [ "getSample", "classHistoryStrategyImplementation.html#a39efe23b32b6acf2803eca059f5ff607", null ],
     [ "load", "classHistoryStrategyImplementation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "save", "classHistoryStrategyImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
+    [ "setDimension", "classHistoryStrategyImplementation.html#ae51b3cf0228fa05f601452e1441a49f3", null ],
     [ "store", "classHistoryStrategyImplementation.html#aa3ab08ce496dcd9af3611efff594bf00", null ],
     [ "isInitialized_", "classHistoryStrategyImplementation.html#a621a73584d6bc0954cbf94511e73e0c2", null ],
     [ "sample_", "classHistoryStrategyImplementation.html#a3d4aae66109891928b621a6437b234f2", null ]

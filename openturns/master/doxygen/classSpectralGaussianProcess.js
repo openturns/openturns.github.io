@@ -2,9 +2,7 @@ var classSpectralGaussianProcess =
 [
     [ "TriangularComplexMatrixPersistentCollection", "classSpectralGaussianProcess.html#ae1c2e71d05508d1ca117aefc131cc199", null ],
     [ "SpectralGaussianProcess", "classSpectralGaussianProcess.html#a7e2dc57642342a60fcf7e37c502b7fbb", null ],
-    [ "SpectralGaussianProcess", "classSpectralGaussianProcess.html#a8f8a028be4158a81eb9d713b2e02f0ba", null ],
     [ "SpectralGaussianProcess", "classSpectralGaussianProcess.html#a16d29b120e233aa898e3fc855ec31f55", null ],
-    [ "SpectralGaussianProcess", "classSpectralGaussianProcess.html#a4877db15d6010722801b41b11097ac12", null ],
     [ "SpectralGaussianProcess", "classSpectralGaussianProcess.html#a3f8d692f7f961274912d11547d87f4f8", null ],
     [ "__repr__", "classSpectralGaussianProcess.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "__str__", "classSpectralGaussianProcess.html#a52e42d2cad038d44d425597aa45f4234", null ],

@@ -4,7 +4,7 @@ var classKPermutationsDistribution =
     [ "KPermutationsDistribution", "classKPermutationsDistribution.html#a936ac8a5de568f4f32fa6586f746296b", null ],
     [ "__repr__", "classKPermutationsDistribution.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classKPermutationsDistribution.html#a7eec62c1a4b43b788ef5db9709a88c99", null ],
-    [ "getMarginal", "classKPermutationsDistribution.html#a397075bac73024f1b9c462c32af1ba92", null ],
+    [ "getMarginal", "classKPermutationsDistribution.html#a63b8f0aa3b6bcd9654be5ee0853b2c4c", null ],
     [ "getParametersCollection", "classKPermutationsDistribution.html#a56a569d370a33450d3019b85b797d0bb", null ],
     [ "getRealization", "classKPermutationsDistribution.html#a0d4b97f8839923cace807a6ec462ec6e", null ],
     [ "load", "classKPermutationsDistribution.html#a671dbd62908a9393439f7eb49d3d4834", null ],

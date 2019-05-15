@@ -2,7 +2,7 @@ var classStaircase =
 [
     [ "Staircase", "classStaircase.html#a844b23bb392d2e7b84f44be037297429", null ],
     [ "Staircase", "classStaircase.html#a08711a13b0cf3ab04e8949b7ffadfc1d", null ],
-    [ "Staircase", "classStaircase.html#a53cb655f17f44e11bae77afdb4b7790d", null ],
+    [ "Staircase", "classStaircase.html#a1a59debaed2ee0969198f4a28141b27c", null ],
     [ "Staircase", "classStaircase.html#a89abb7d0b0a902da988356fb0406a7e1", null ],
     [ "__repr__", "classStaircase.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "checkData", "classStaircase.html#ad5ea32fbc0758f56f1a249dc50e54d35", null ],

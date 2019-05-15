@@ -1,6 +1,5 @@
 var classOT_1_1SimulatedAnnealingLHS =
 [
-    [ "SimulatedAnnealingLHS", "classOT_1_1SimulatedAnnealingLHS.html#afa2647a50a14e3a95f397d4ee6502ed3", null ],
     [ "SimulatedAnnealingLHS", "classOT_1_1SimulatedAnnealingLHS.html#abcc786ed064022ab683ceb6d33fe6229", null ],
     [ "SimulatedAnnealingLHS", "classOT_1_1SimulatedAnnealingLHS.html#a0898ada7076dd7b1023ad6f88d387f0f", null ],
     [ "__repr__", "classOT_1_1SimulatedAnnealingLHS.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],

@@ -1,9 +1,9 @@
 var classTrendTransform =
 [
     [ "TrendTransform", "classTrendTransform.html#a089d649055b6d35ee006b38269565fc5", null ],
-    [ "TrendTransform", "classTrendTransform.html#ac01e63ebdbe22ea12896a79bc12c138f", null ],
-    [ "TrendTransform", "classTrendTransform.html#a59aefc883fbd7e0ff7a32f654553c9b2", null ],
-    [ "TrendTransform", "classTrendTransform.html#ae038b9c7e02f3bcb688819a3d59ce698", null ],
+    [ "TrendTransform", "classTrendTransform.html#a306378ffb28ae122da99e21963c53e46", null ],
+    [ "TrendTransform", "classTrendTransform.html#a39e34d0c38b7447c6a9ba250c8b799ea", null ],
+    [ "TrendTransform", "classTrendTransform.html#a844ccb5f265c99e2d95149eba68b0d41", null ],
     [ "__repr__", "classTrendTransform.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classTrendTransform.html#aef104ee879413a5e62d99e28eadd9b52", null ],
     [ "getInverse", "classTrendTransform.html#abd779159086e21e2a916af6ac5078c3f", null ],

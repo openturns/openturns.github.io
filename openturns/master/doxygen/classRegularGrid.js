@@ -8,7 +8,6 @@ var classRegularGrid =
     [ "follows", "classRegularGrid.html#a6cffc09ab34ed9d0664fa9d1392b2cee", null ],
     [ "getEnd", "classRegularGrid.html#afbe6ac8be818d0c9f7118a2e3a8c21a4", null ],
     [ "getN", "classRegularGrid.html#a48a6567255c9687b2ea4a3da01b0c7e1", null ],
-    [ "getNearestVertexIndex", "classRegularGrid.html#a88f07d6012266a2394f14fb90bb83d2e", null ],
     [ "getStart", "classRegularGrid.html#a1365c2e9508588c43db9f16b63896868", null ],
     [ "getStep", "classRegularGrid.html#ae01640a5469992f476628503a391368e", null ],
     [ "getValue", "classRegularGrid.html#a7fdd896c4c4bfc5d0cc267395c73fe06", null ],

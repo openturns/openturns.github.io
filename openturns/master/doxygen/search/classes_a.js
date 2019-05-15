@@ -10,7 +10,6 @@ var searchData=
   ['karhunenloeveresultimplementation',['KarhunenLoeveResultImplementation',['../classKarhunenLoeveResultImplementation.html',1,'']]],
   ['karhunenloevesvdalgorithm',['KarhunenLoeveSVDAlgorithm',['../classKarhunenLoeveSVDAlgorithm.html',1,'']]],
   ['kdnearestneighboursfinder',['KDNearestNeighboursFinder',['../classKDNearestNeighboursFinder.html',1,'']]],
-  ['kdnode',['KDNode',['../structKDTree_1_1KDNode.html',1,'KDTree']]],
   ['kdtree',['KDTree',['../classKDTree.html',1,'']]],
   ['kernelmixture',['KernelMixture',['../classKernelMixture.html',1,'']]],
   ['kernelsmoothing',['KernelSmoothing',['../classKernelSmoothing.html',1,'']]],

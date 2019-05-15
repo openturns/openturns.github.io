@@ -22,6 +22,7 @@ var searchData=
   ['bisection',['Bisection',['../classBisection.html',1,'']]],
   ['blendedstep',['BlendedStep',['../classBlendedStep.html',1,'']]],
   ['bootstrapexperiment',['BootstrapExperiment',['../classBootstrapExperiment.html',1,'']]],
+  ['boundingvolumehierarchy',['BoundingVolumeHierarchy',['../classBoundingVolumeHierarchy.html',1,'']]],
   ['box',['Box',['../classBox.html',1,'']]],
   ['boxcoxevaluation',['BoxCoxEvaluation',['../classBoxCoxEvaluation.html',1,'']]],
   ['boxcoxfactory',['BoxCoxFactory',['../classBoxCoxFactory.html',1,'']]],

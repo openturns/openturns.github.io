@@ -3,6 +3,7 @@ var classQRMethod =
     [ "QRMethod", "classQRMethod.html#a6a1a747d6a33d7992149fdaf21de4220", null ],
     [ "QRMethod", "classQRMethod.html#a6db2a24692c30ff4d9dcc7c37ccbf9cd", null ],
     [ "QRMethod", "classQRMethod.html#a604eadbc0fb110cc8f7b32ec0f6eef5e", null ],
+    [ "QRMethod", "classQRMethod.html#a8ebe02066be5837a162abe3580d7ef89", null ],
     [ "__repr__", "classQRMethod.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classQRMethod.html#a0737ffb4c6dadb269bb95a2828e0df87", null ],
     [ "load", "classQRMethod.html#a671dbd62908a9393439f7eb49d3d4834", null ],

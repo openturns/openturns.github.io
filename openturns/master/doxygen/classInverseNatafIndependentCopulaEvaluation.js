@@ -1,6 +1,6 @@
 var classInverseNatafIndependentCopulaEvaluation =
 [
-    [ "InverseNatafIndependentCopulaEvaluation", "classInverseNatafIndependentCopulaEvaluation.html#a85a8a53edb3cb17a6f57617a6c750ade", null ],
+    [ "InverseNatafIndependentCopulaEvaluation", "classInverseNatafIndependentCopulaEvaluation.html#af1158d80c1c9cd8cf3ee5adb0344f610", null ],
     [ "__repr__", "classInverseNatafIndependentCopulaEvaluation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classInverseNatafIndependentCopulaEvaluation.html#ac46fec3a4bd8f0c09ae72a6004eb5c47", null ],
     [ "getInputDimension", "classInverseNatafIndependentCopulaEvaluation.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],

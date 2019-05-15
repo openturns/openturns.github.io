@@ -1,6 +1,6 @@
 var classHaltonSequence =
 [
-    [ "HaltonSequence", "classHaltonSequence.html#ac3f9795a2f6bd299e8370c460bb0ab9b", null ],
+    [ "HaltonSequence", "classHaltonSequence.html#abc2e572b0e4181da80c8cd10605b48ab", null ],
     [ "__repr__", "classHaltonSequence.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classHaltonSequence.html#aeddd59d9277380075c14896a3ff1c09c", null ],
     [ "initialize", "classHaltonSequence.html#a6fb1f8b616f10103d2bd3af046666af8", null ],

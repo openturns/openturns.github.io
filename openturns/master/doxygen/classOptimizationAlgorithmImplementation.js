@@ -2,7 +2,7 @@ var classOptimizationAlgorithmImplementation =
 [
     [ "ProgressCallback", "classOptimizationAlgorithmImplementation.html#a63b6e11e57e048e0209d70ed38da2613", null ],
     [ "StopCallback", "classOptimizationAlgorithmImplementation.html#a3e1021b01c7b7bc221a05c4c3beb7686", null ],
-    [ "OptimizationAlgorithmImplementation", "classOptimizationAlgorithmImplementation.html#aa30c778e86e729aa55aaf6f24f3c3eeb", null ],
+    [ "OptimizationAlgorithmImplementation", "classOptimizationAlgorithmImplementation.html#aa38b66860eaca660d327eb01921150e4", null ],
     [ "OptimizationAlgorithmImplementation", "classOptimizationAlgorithmImplementation.html#a9c5c7ef41bb8fd02c048f64452d45a6f", null ],
     [ "__repr__", "classOptimizationAlgorithmImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "checkProblem", "classOptimizationAlgorithmImplementation.html#a965a4e4905feb0de6469fd107890b9a4", null ],

@@ -4,7 +4,7 @@ var classCurve =
     [ "Curve", "classCurve.html#a5a197c60c32dbb983d4ef051f6796b69", null ],
     [ "Curve", "classCurve.html#aea44014b69abae1c7f94f15cf920b270", null ],
     [ "Curve", "classCurve.html#afea5b2095f6c3ed7dc265f94536b0352", null ],
-    [ "Curve", "classCurve.html#a73e08e6e7127ff2298c39000827d736c", null ],
+    [ "Curve", "classCurve.html#ad0733c8283dbb913404d6875f54c2554", null ],
     [ "__repr__", "classCurve.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "checkData", "classCurve.html#ad5ea32fbc0758f56f1a249dc50e54d35", null ],
     [ "clone", "classCurve.html#a9d76a11e8b271042c86f7eb381a76d65", null ],

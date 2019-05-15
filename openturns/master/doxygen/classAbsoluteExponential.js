@@ -1,6 +1,6 @@
 var classAbsoluteExponential =
 [
-    [ "AbsoluteExponential", "classAbsoluteExponential.html#a1b5fefffb85e29050ea6859ae5fc61a9", null ],
+    [ "AbsoluteExponential", "classAbsoluteExponential.html#aa45f354453433d2e11c6a548312fdef5", null ],
     [ "AbsoluteExponential", "classAbsoluteExponential.html#a1f856bf1452e0a9584caa33af583e90e", null ],
     [ "AbsoluteExponential", "classAbsoluteExponential.html#ac9efc189c55369b92680612bf3abadeb", null ],
     [ "__repr__", "classAbsoluteExponential.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],

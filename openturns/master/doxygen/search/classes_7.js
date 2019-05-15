@@ -8,6 +8,7 @@ var searchData=
   ['haselgrovesequence',['HaselgroveSequence',['../classHaselgroveSequence.html',1,'']]],
   ['hermitefactory',['HermiteFactory',['../classHermiteFactory.html',1,'']]],
   ['hermitianmatrix',['HermitianMatrix',['../classHermitianMatrix.html',1,'']]],
+  ['hessian',['Hessian',['../classHessian.html',1,'']]],
   ['hessianimplementation',['HessianImplementation',['../classHessianImplementation.html',1,'']]],
   ['histogram',['Histogram',['../classHistogram.html',1,'']]],
   ['histogramfactory',['HistogramFactory',['../classHistogramFactory.html',1,'']]],
@@ -16,5 +17,6 @@ var searchData=
   ['historystrategyimplementation',['HistoryStrategyImplementation',['../classHistoryStrategyImplementation.html',1,'']]],
   ['hmatrix',['HMatrix',['../classHMatrix.html',1,'']]],
   ['hyperbolicanisotropicenumeratefunction',['HyperbolicAnisotropicEnumerateFunction',['../classHyperbolicAnisotropicEnumerateFunction.html',1,'']]],
+  ['hypergeometric',['Hypergeometric',['../classHypergeometric.html',1,'']]],
   ['hypothesistest',['HypothesisTest',['../classHypothesisTest.html',1,'']]]
 ];

@@ -13,6 +13,8 @@ var searchData=
   ['rayleigh',['Rayleigh',['../classRayleigh.html',1,'']]],
   ['rayleighfactory',['RayleighFactory',['../classRayleighFactory.html',1,'']]],
   ['regulargrid',['RegularGrid',['../classRegularGrid.html',1,'']]],
+  ['regulargridenclosingsimplex',['RegularGridEnclosingSimplex',['../classRegularGridEnclosingSimplex.html',1,'']]],
+  ['regulargridnearestneighbour',['RegularGridNearestNeighbour',['../classRegularGridNearestNeighbour.html',1,'']]],
   ['resourcemap',['ResourceMap',['../classResourceMap.html',1,'']]],
   ['resourcemap_5finit',['ResourceMap_init',['../structResourceMap__init.html',1,'']]],
   ['reversehaltonsequence',['ReverseHaltonSequence',['../classReverseHaltonSequence.html',1,'']]],

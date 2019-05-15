@@ -4,6 +4,7 @@ var classFisherSnedecor =
     [ "FisherSnedecor", "classFisherSnedecor.html#a671ce011fc3421972ea6e14b9b3dbf09", null ],
     [ "__repr__", "classFisherSnedecor.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classFisherSnedecor.html#a25e7716ab20952000f9586eeb367e4f1", null ],
+    [ "computeEntropy", "classFisherSnedecor.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "getKurtosis", "classFisherSnedecor.html#a1b10762c4a8965762f6441d5080858bb", null ],
     [ "getParameterDescription", "classFisherSnedecor.html#ab197ca4929709450d800f6e8f90ff837", null ],
     [ "getRealization", "classFisherSnedecor.html#a0d4b97f8839923cace807a6ec462ec6e", null ],

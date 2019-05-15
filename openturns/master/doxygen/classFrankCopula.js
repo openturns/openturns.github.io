@@ -8,6 +8,7 @@ var classFrankCopula =
     [ "computeArchimedeanGeneratorDerivative", "classFrankCopula.html#a44a5f4d042ed949f592502e279e67653", null ],
     [ "computeArchimedeanGeneratorSecondDerivative", "classFrankCopula.html#a8bf947f64237dbf4f87674b73bb1dad0", null ],
     [ "computeCDFGradient", "classFrankCopula.html#a1755fd53f31859b7fca68e4532d77f15", null ],
+    [ "computeEntropy", "classFrankCopula.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computeInverseArchimedeanGenerator", "classFrankCopula.html#aa0824e52b534c9b62344f93a4731cd94", null ],
     [ "computePDFGradient", "classFrankCopula.html#a66c5b8f77a67777407ad686976b52abc", null ],
     [ "getKendallTau", "classFrankCopula.html#a9771c38a4cc87c8c0e696b4a0fa96612", null ],

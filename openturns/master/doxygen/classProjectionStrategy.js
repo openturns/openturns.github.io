@@ -5,7 +5,7 @@ var classProjectionStrategy =
     [ "ProjectionStrategy", "classProjectionStrategy.html#a2407bd4b11e265618453cfc5a10eaba0", null ],
     [ "__repr__", "classProjectionStrategy.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "__str__", "classProjectionStrategy.html#a52e42d2cad038d44d425597aa45f4234", null ],
-    [ "computeCoefficients", "classProjectionStrategy.html#a2b9aecbee3dea58e4e3e20b7982a4e7d", null ],
+    [ "computeCoefficients", "classProjectionStrategy.html#a33026dd1354daabcee0466fdaa23e85c", null ],
     [ "getCoefficients", "classProjectionStrategy.html#ac4318bcf57ee512d89c9f2613eef3709", null ],
     [ "getRelativeError", "classProjectionStrategy.html#a505920d749a066d122f9c54b56676c43", null ],
     [ "getResidual", "classProjectionStrategy.html#a4c69325d62e06f93f13ab5f67da56f72", null ],

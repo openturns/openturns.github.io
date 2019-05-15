@@ -16,6 +16,7 @@ var classAdaptiveStrategyImplementation =
     [ "conservedPsi_k_ranks_", "classAdaptiveStrategyImplementation.html#a9cba48fe7860f78361b80dcccd42af31", null ],
     [ "I_p_", "classAdaptiveStrategyImplementation.html#ae2fc0a713660c30a94e106e93ec8d8c5", null ],
     [ "maximumDimension_", "classAdaptiveStrategyImplementation.html#a3b410b6473563e5fe87499befdea3f43", null ],
+    [ "Psi_", "classAdaptiveStrategyImplementation.html#a28bce1e309671fde44873ac8775574ba", null ],
     [ "Psi_k_p_", "classAdaptiveStrategyImplementation.html#a02f29e65895ce18ed1db268e6ba17830", null ],
     [ "removedPsi_k_ranks_", "classAdaptiveStrategyImplementation.html#a9d0145640f0c65f6d96512a8d08690f9", null ]
 ];

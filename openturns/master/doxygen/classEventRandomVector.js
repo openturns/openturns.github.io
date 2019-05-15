@@ -7,6 +7,8 @@ var classEventRandomVector =
     [ "getDimension", "classEventRandomVector.html#aa2ecd0f05f7350ab14b8dd1ba6b95fc0", null ],
     [ "getDomain", "classEventRandomVector.html#a8d5892c9b4f3c21260e77fabfda29cf0", null ],
     [ "getOperator", "classEventRandomVector.html#a4357cc8f408945b02c11aec7e78e5f96", null ],
+    [ "getParameter", "classEventRandomVector.html#a07a2baf2e35aa00cc5c567019e387849", null ],
+    [ "getParameterDescription", "classEventRandomVector.html#ab197ca4929709450d800f6e8f90ff837", null ],
     [ "getRealization", "classEventRandomVector.html#a0d4b97f8839923cace807a6ec462ec6e", null ],
     [ "getSample", "classEventRandomVector.html#a7647098a1ba018c2f54a76e10de9a3bb", null ],
     [ "getThreshold", "classEventRandomVector.html#a448f333fdd30cc10e106860d49e574db", null ],

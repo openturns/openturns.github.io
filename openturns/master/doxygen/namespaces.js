@@ -2,6 +2,7 @@ var namespaces =
 [
     [ "BetaFunctions", "namespaceBetaFunctions.html", null ],
     [ "ExponentialIntegralFunctions", "namespaceExponentialIntegralFunctions.html", null ],
+    [ "exprtk", "namespaceexprtk.html", null ],
     [ "GammaFunctions", "namespaceGammaFunctions.html", null ],
     [ "KFactorFunctions", "namespaceKFactorFunctions.html", null ],
     [ "OpenTURNS", "namespaceOpenTURNS.html", null ],

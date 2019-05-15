@@ -5,6 +5,7 @@ var classBernoulli =
     [ "__repr__", "classBernoulli.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classBernoulli.html#a544f13bf604652b4f3b034d17be8572c", null ],
     [ "computeCharacteristicFunction", "classBernoulli.html#aea62f54641fcd42da8777d9292156754", null ],
+    [ "computeEntropy", "classBernoulli.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computeGeneratingFunction", "classBernoulli.html#ad2b927f555c62fe616548b03c6f614db", null ],
     [ "getKurtosis", "classBernoulli.html#a1b10762c4a8965762f6441d5080858bb", null ],
     [ "getParameterDescription", "classBernoulli.html#ab197ca4929709450d800f6e8f90ff837", null ],

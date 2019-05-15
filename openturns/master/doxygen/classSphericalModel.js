@@ -1,6 +1,6 @@
 var classSphericalModel =
 [
-    [ "SphericalModel", "classSphericalModel.html#a7b1789e6499e5bbf8d0b9c97c856e77a", null ],
+    [ "SphericalModel", "classSphericalModel.html#a9d11453e7e7f7a0e5315935065ea67fd", null ],
     [ "SphericalModel", "classSphericalModel.html#a86d6931280d523aa5f0c94a3474d9cf3", null ],
     [ "__repr__", "classSphericalModel.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "__str__", "classSphericalModel.html#a52e42d2cad038d44d425597aa45f4234", null ],

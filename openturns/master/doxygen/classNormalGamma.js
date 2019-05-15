@@ -4,6 +4,7 @@ var classNormalGamma =
     [ "NormalGamma", "classNormalGamma.html#a0c2025850149c5afd4db45713093961f", null ],
     [ "__repr__", "classNormalGamma.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classNormalGamma.html#a3a8d67f3efd18982db8daf96eaf1d09d", null ],
+    [ "computeEntropy", "classNormalGamma.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computeProbability", "classNormalGamma.html#a78185007ba06ede4c4900f0d7d19e177", null ],
     [ "getKurtosis", "classNormalGamma.html#a1b10762c4a8965762f6441d5080858bb", null ],
     [ "getParameterDescription", "classNormalGamma.html#ab197ca4929709450d800f6e8f90ff837", null ],

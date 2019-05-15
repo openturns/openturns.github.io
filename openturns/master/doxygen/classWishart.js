@@ -4,6 +4,7 @@ var classWishart =
     [ "Wishart", "classWishart.html#a07b58061ae674ff4c95a7f2dcb3e52da", null ],
     [ "__repr__", "classWishart.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classWishart.html#a9b61a1fd8fcb220a00aa0440b3f8b554", null ],
+    [ "computeEntropy", "classWishart.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "getParameterDescription", "classWishart.html#ab197ca4929709450d800f6e8f90ff837", null ],
     [ "getParametersCollection", "classWishart.html#a764fc5bdbde66c50a8a28c841553ef08", null ],
     [ "getRealization", "classWishart.html#a0d4b97f8839923cace807a6ec462ec6e", null ],

@@ -2,6 +2,7 @@ var classAggregatedGradient =
 [
     [ "AggregatedGradient", "classAggregatedGradient.html#a4d28d397642c6072a91b5dc7f90c443b", null ],
     [ "AggregatedGradient", "classAggregatedGradient.html#a7344baa46faa8e5c24c108ac6b28448a", null ],
+    [ "AggregatedGradient", "classAggregatedGradient.html#a0ca552047ef006a9c151fb18bc030606", null ],
     [ "__repr__", "classAggregatedGradient.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classAggregatedGradient.html#a1b442e01cebd330aa42e1b51e76eea0e", null ],
     [ "getInputDimension", "classAggregatedGradient.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],

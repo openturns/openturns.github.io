@@ -2,7 +2,7 @@ var classBarPlot =
 [
     [ "BarPlot", "classBarPlot.html#af1a91cd0cea4dd499f09e58b0cf68487", null ],
     [ "BarPlot", "classBarPlot.html#a096b88bf73a9e03f1638e53a835ff6e4", null ],
-    [ "BarPlot", "classBarPlot.html#a98859e089445a54243b0e97d85eece6a", null ],
+    [ "BarPlot", "classBarPlot.html#a25be3b713cd9f2b73fae63ada09dc9e7", null ],
     [ "BarPlot", "classBarPlot.html#a566a0be94543df8d6e0b0c8b76faadd0", null ],
     [ "__repr__", "classBarPlot.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "checkData", "classBarPlot.html#ad5ea32fbc0758f56f1a249dc50e54d35", null ],

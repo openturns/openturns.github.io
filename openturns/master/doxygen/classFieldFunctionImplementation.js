@@ -1,7 +1,7 @@
 var classFieldFunctionImplementation =
 [
-    [ "FieldFunctionImplementation", "classFieldFunctionImplementation.html#a596f487d4f2c7274938420c9ffefc656", null ],
-    [ "FieldFunctionImplementation", "classFieldFunctionImplementation.html#a412e670b6932b9fd0baadd99a993dcc8", null ],
+    [ "FieldFunctionImplementation", "classFieldFunctionImplementation.html#aa21e5b5af8179f82ad335d53bc88270c", null ],
+    [ "FieldFunctionImplementation", "classFieldFunctionImplementation.html#a32c7b54f31639fedcdc038f20f74ff7d", null ],
     [ "__repr__", "classFieldFunctionImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classFieldFunctionImplementation.html#a2e7c49a75ea7d103f9b011c28eedd81f", null ],
     [ "getCallsNumber", "classFieldFunctionImplementation.html#a0d2965fb3adf5cbc9d7739afe51c8eab", null ],
@@ -9,18 +9,19 @@ var classFieldFunctionImplementation =
     [ "getMarginal", "classFieldFunctionImplementation.html#a45b079ad502ed0c29a3bcfacfa9664f6", null ],
     [ "getMarginal", "classFieldFunctionImplementation.html#ada496a469014e66587ec109195c6b334", null ],
     [ "getOutputDimension", "classFieldFunctionImplementation.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "getOutputMesh", "classFieldFunctionImplementation.html#af8af03b3137338a6cd1e686489e010c4", null ],
-    [ "getSpatialDimension", "classFieldFunctionImplementation.html#a2d8e53b66769c64ec86f6d06ef53a716", null ],
+    [ "isActingPointwise", "classFieldFunctionImplementation.html#a9f9eb3a7d37c2b4ba4fc9934132d1408", null ],
     [ "load", "classFieldFunctionImplementation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator()", "classFieldFunctionImplementation.html#afcf236316d96265685426e1f6b6287c3", null ],
+    [ "operator()", "classFieldFunctionImplementation.html#a87505f761ea4aac20ea3b60c9ddcb022", null ],
     [ "operator==", "classFieldFunctionImplementation.html#a1efd80a5f05beba1866a43c1a5411970", null ],
     [ "save", "classFieldFunctionImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
     [ "setInputDescription", "classFieldFunctionImplementation.html#abfd538a52d0be0e16b86d798e35d9efb", null ],
+    [ "setInputMesh", "classFieldFunctionImplementation.html#a2e2eded0e22dbb27220a0dea3439d26c", null ],
     [ "setOutputDescription", "classFieldFunctionImplementation.html#a9d8cb4b2ed14b47907b3a032a9b5ba92", null ],
-    [ "callsNumber_", "classFieldFunctionImplementation.html#a50640530d69bea9c9cb9e04c75166761", null ],
+    [ "setOutputMesh", "classFieldFunctionImplementation.html#a789fd35876fc11ef10cdc4f32ce05c51", null ],
+    [ "callsNumber_", "classFieldFunctionImplementation.html#a3a53ce5b1e9ec264fc0905870c004446", null ],
     [ "inputDescription_", "classFieldFunctionImplementation.html#a157419a81a05dd5edcf3290796bb600f", null ],
     [ "inputDimension_", "classFieldFunctionImplementation.html#af652a1cac8a38d9247dd2f8dbb8e365d", null ],
+    [ "inputMesh_", "classFieldFunctionImplementation.html#a0983ed9de4ebaf756bf1f92c759a2bb3", null ],
     [ "outputDescription_", "classFieldFunctionImplementation.html#acc992ef404fc3a0163f198889b138512", null ],
-    [ "outputDimension_", "classFieldFunctionImplementation.html#a438a22cdc06cecd7e0e9cd88a8ce900e", null ],
-    [ "spatialDimension_", "classFieldFunctionImplementation.html#a563c0a993633c463fe9ee9db4846ae00", null ]
+    [ "outputDimension_", "classFieldFunctionImplementation.html#a438a22cdc06cecd7e0e9cd88a8ce900e", null ]
 ];

@@ -15,7 +15,7 @@ var classSklarCopula =
     [ "getParameterDescription", "classSklarCopula.html#ab197ca4929709450d800f6e8f90ff837", null ],
     [ "getParametersCollection", "classSklarCopula.html#a025f0ca39944ee12700aa05435aa6bce", null ],
     [ "getRealization", "classSklarCopula.html#a0d4b97f8839923cace807a6ec462ec6e", null ],
-    [ "getStandardDistribution", "classSklarCopula.html#a272717f7f6c3958820464adc6daa60f0", null ],
+    [ "getStandardDistribution", "classSklarCopula.html#a8d1ec6c8f2c68819c866f486a4184450", null ],
     [ "hasEllipticalCopula", "classSklarCopula.html#a69bcb60a2e4bd4e1c63eaf788977d420", null ],
     [ "hasIndependentCopula", "classSklarCopula.html#aaf062d994afda1714b6ebc5e493c8aee", null ],
     [ "load", "classSklarCopula.html#a671dbd62908a9393439f7eb49d3d4834", null ],

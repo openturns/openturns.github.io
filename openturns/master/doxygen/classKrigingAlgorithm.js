@@ -2,9 +2,7 @@ var classKrigingAlgorithm =
 [
     [ "KrigingAlgorithm", "classKrigingAlgorithm.html#a57ad7906874baae7e1fc5d9d7d711848", null ],
     [ "KrigingAlgorithm", "classKrigingAlgorithm.html#a99adb86f81161b1291c96f421dbb7f83", null ],
-    [ "KrigingAlgorithm", "classKrigingAlgorithm.html#afd0436c8b76d4bb41dbab18adb579014", null ],
     [ "KrigingAlgorithm", "classKrigingAlgorithm.html#ae6a3e28770f3fae2e8c50e76f30214bd", null ],
-    [ "KrigingAlgorithm", "classKrigingAlgorithm.html#adfadecb8d257b6471b6cbd8f9a678d6d", null ],
     [ "__repr__", "classKrigingAlgorithm.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classKrigingAlgorithm.html#acafe7804e6a1e176a4d98a9019c3252a", null ],
     [ "computeGamma", "classKrigingAlgorithm.html#a2ef03abf497148f46cf767c936841a5f", null ],

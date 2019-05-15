@@ -9,10 +9,8 @@ var classSpectralModel =
     [ "computeStandardRepresentative", "classSpectralModel.html#ae1f809f2d2d7e9f3bb9f762291342d56", null ],
     [ "draw", "classSpectralModel.html#ada222fc438af908da4eed18d466a25fb", null ],
     [ "getAmplitude", "classSpectralModel.html#a55d15af6fb5f916bdf820ddd769c8f5c", null ],
-    [ "getDimension", "classSpectralModel.html#aa2ecd0f05f7350ab14b8dd1ba6b95fc0", null ],
     [ "getOutputCorrelation", "classSpectralModel.html#af0d728150c0fcd5bc26268e24ec5b3dd", null ],
     [ "getOutputDimension", "classSpectralModel.html#a23c94eef235026e36299f22a979f96a5", null ],
     [ "getScale", "classSpectralModel.html#a1e3880e67aa98c54e96e4160284fa17a", null ],
-    [ "getSpatialCorrelation", "classSpectralModel.html#aca97a39d629c7f0ab9dd700607310087", null ],
     [ "operator()", "classSpectralModel.html#a3f47a3b95243ead50ac6ed520c4817a0", null ]
 ];

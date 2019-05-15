@@ -2,7 +2,7 @@ var classBasisSequenceFactoryImplementation =
 [
     [ "BasisSequenceFactoryImplementation", "classBasisSequenceFactoryImplementation.html#ad0f7090e77d65bd162949d9dc0aab0bb", null ],
     [ "__repr__", "classBasisSequenceFactoryImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "build", "classBasisSequenceFactoryImplementation.html#a567c321b94b69565b2bdea23b0d688c5", null ],
+    [ "build", "classBasisSequenceFactoryImplementation.html#aaa831bea7ce15d439626d5ab9aa313cf", null ],
     [ "clone", "classBasisSequenceFactoryImplementation.html#a8aba141f5173f5e272a1c028995f5516", null ],
     [ "load", "classBasisSequenceFactoryImplementation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "save", "classBasisSequenceFactoryImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],

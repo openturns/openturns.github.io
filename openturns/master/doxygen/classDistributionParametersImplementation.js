@@ -1,6 +1,6 @@
 var classDistributionParametersImplementation =
 [
-    [ "DistributionParametersImplementation", "classDistributionParametersImplementation.html#a65f0657ddd7afddeda058ae02d7696f1", null ],
+    [ "DistributionParametersImplementation", "classDistributionParametersImplementation.html#a8982eaa4e19fd4c20859941e56d85125", null ],
     [ "__repr__", "classDistributionParametersImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classDistributionParametersImplementation.html#acab341ad9abaff0718153f7612d84ae7", null ],
     [ "evaluate", "classDistributionParametersImplementation.html#a400f24fad65b3698ad4135cf4414a479", null ],

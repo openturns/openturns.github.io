@@ -1,6 +1,6 @@
 var classTimeSeries =
 [
-    [ "TimeSeries", "classTimeSeries.html#ab1091434661b0040327365c29e7a858d", null ],
+    [ "TimeSeries", "classTimeSeries.html#ab23fa5e29fa4062e597a71f8750e1672", null ],
     [ "TimeSeries", "classTimeSeries.html#a7ab6cb4714e29b871000270fd714a45b", null ],
     [ "TimeSeries", "classTimeSeries.html#af76b8750bdccd938d6f03ad52c61bcae", null ],
     [ "TimeSeries", "classTimeSeries.html#a804fd779999b5020880849bb00d727cd", null ],

@@ -3,6 +3,7 @@ var classCholeskyMethod =
     [ "CholeskyMethod", "classCholeskyMethod.html#a76de06c2adf85efb45aead7fc222aaa5", null ],
     [ "CholeskyMethod", "classCholeskyMethod.html#aff77846cf0d1ceec03ce796b473103cf", null ],
     [ "CholeskyMethod", "classCholeskyMethod.html#a2b37dfc9c1c6abb2a123a827fd6af73f", null ],
+    [ "CholeskyMethod", "classCholeskyMethod.html#a8420078213613cc7e34fd1ef5c42617e", null ],
     [ "__repr__", "classCholeskyMethod.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classCholeskyMethod.html#a5c3aab85f8e7f66ded366f1eddca2e87", null ],
     [ "load", "classCholeskyMethod.html#a671dbd62908a9393439f7eb49d3d4834", null ],

@@ -9,6 +9,8 @@ var searchData=
   ['indicatorevaluation',['IndicatorEvaluation',['../classIndicatorEvaluation.html',1,'']]],
   ['indicatorfunction',['IndicatorFunction',['../classIndicatorFunction.html',1,'']]],
   ['indices',['Indices',['../classIndices.html',1,'']]],
+  ['indicescollection',['IndicesCollection',['../classIndicesCollection.html',1,'']]],
+  ['indicescollectionimplementation',['IndicesCollectionImplementation',['../classIndicesCollectionImplementation.html',1,'']]],
   ['integrationalgorithm',['IntegrationAlgorithm',['../classIntegrationAlgorithm.html',1,'']]],
   ['integrationalgorithmimplementation',['IntegrationAlgorithmImplementation',['../classIntegrationAlgorithmImplementation.html',1,'']]],
   ['integrationstrategy',['IntegrationStrategy',['../classIntegrationStrategy.html',1,'']]],

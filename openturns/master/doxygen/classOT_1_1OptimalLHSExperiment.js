@@ -8,6 +8,5 @@ var classOT_1_1OptimalLHSExperiment =
     [ "getResult", "classOT_1_1OptimalLHSExperiment.html#a7fc44b85e42b2b841a8615bdf2a10301", null ],
     [ "getSpaceFilling", "classOT_1_1OptimalLHSExperiment.html#af43ae0555ff9f13633e26d28ff65b055", null ],
     [ "load", "classOT_1_1OptimalLHSExperiment.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "rankTransform", "classOT_1_1OptimalLHSExperiment.html#a063a197c8ab74576eae13c5b7267d387", null ],
     [ "save", "classOT_1_1OptimalLHSExperiment.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
 ];

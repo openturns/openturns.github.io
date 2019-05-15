@@ -9,6 +9,7 @@ var classFunctionalChaosAlgorithm =
     [ "FunctionalChaosAlgorithm", "classFunctionalChaosAlgorithm.html#ad3a5de58bdc8ef88ebaa361fe5b97242", null ],
     [ "FunctionalChaosAlgorithm", "classFunctionalChaosAlgorithm.html#a7ad4a36b763bb18f3690c460e7ea593d", null ],
     [ "__repr__", "classFunctionalChaosAlgorithm.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
+    [ "BuildDistribution", "classFunctionalChaosAlgorithm.html#aba574540032089b9debffdcffab64ecf", null ],
     [ "clone", "classFunctionalChaosAlgorithm.html#a4d7ab90b7e225ae246601256b8181bff", null ],
     [ "getInputSample", "classFunctionalChaosAlgorithm.html#a16e908e8ca32b805c6941ea1666efcd4", null ],
     [ "getResult", "classFunctionalChaosAlgorithm.html#a316abea9cf72e5a7072e47854a358c6a", null ],

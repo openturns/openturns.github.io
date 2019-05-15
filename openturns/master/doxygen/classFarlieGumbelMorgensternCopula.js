@@ -5,6 +5,7 @@ var classFarlieGumbelMorgensternCopula =
     [ "__repr__", "classFarlieGumbelMorgensternCopula.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classFarlieGumbelMorgensternCopula.html#a6bc4ab27ca6c32e9716a01ae9bd83be1", null ],
     [ "computeCDFGradient", "classFarlieGumbelMorgensternCopula.html#a1755fd53f31859b7fca68e4532d77f15", null ],
+    [ "computeEntropy", "classFarlieGumbelMorgensternCopula.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computePDFGradient", "classFarlieGumbelMorgensternCopula.html#a66c5b8f77a67777407ad686976b52abc", null ],
     [ "getKendallTau", "classFarlieGumbelMorgensternCopula.html#a9771c38a4cc87c8c0e696b4a0fa96612", null ],
     [ "getParameterDescription", "classFarlieGumbelMorgensternCopula.html#ab197ca4929709450d800f6e8f90ff837", null ],

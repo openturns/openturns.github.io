@@ -1,6 +1,5 @@
 var classProcessImplementation =
 [
-    [ "Antecedent", "classProcessImplementation.html#a9b9a07d0df767a93aa4c3643fbf0d15d", null ],
     [ "ProcessImplementation", "classProcessImplementation.html#a441f6ddaea5b37a1405db33cb12a13ff", null ],
     [ "__repr__", "classProcessImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classProcessImplementation.html#a86db3bef855e470e9b1242d2c6084e1b", null ],
@@ -8,12 +7,11 @@ var classProcessImplementation =
     [ "getCovarianceModel", "classProcessImplementation.html#a5104bbe6e745896589790f7977d75d1e", null ],
     [ "getFuture", "classProcessImplementation.html#a2c27bd3bf69e3b227f2b33d346b921f7", null ],
     [ "getInputDimension", "classProcessImplementation.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getMarginal", "classProcessImplementation.html#a14d10145f235aadb5f5e2ec5d5f0c665", null ],
-    [ "getMarginal", "classProcessImplementation.html#a5eaebcb3436de8757b8eb0f612681b6f", null ],
+    [ "getMarginal", "classProcessImplementation.html#ab63dcceea94e55dafe5ebbd140a69756", null ],
+    [ "getMarginal", "classProcessImplementation.html#ad4c5b957766baa89bd4f832e0fc84a9d", null ],
     [ "getMesh", "classProcessImplementation.html#a736066e832bb8153161d763b9c86788d", null ],
     [ "getRealization", "classProcessImplementation.html#a2cab6046466e53410cae847d13065cc0", null ],
     [ "getSample", "classProcessImplementation.html#ad1f2e484efb315c0845fd73582658d5c", null ],
-    [ "getSpatialDimension", "classProcessImplementation.html#a2d8e53b66769c64ec86f6d06ef53a716", null ],
     [ "getTimeGrid", "classProcessImplementation.html#a1268679f95a55d5d18e8d49fcf61c83c", null ],
     [ "getTrend", "classProcessImplementation.html#a70d6bdd46b4ef2c4140b25c8a281fe2e", null ],
     [ "isComposite", "classProcessImplementation.html#a3c0015acbe40690cccc6927220773817", null ],

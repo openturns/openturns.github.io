@@ -23,7 +23,7 @@ var classEllipticalDistribution =
     [ "getParametersCollection", "classEllipticalDistribution.html#afef76a94711106885171ad7d639977e9", null ],
     [ "getSigma", "classEllipticalDistribution.html#affa61de5e707d54c219bf137b2be7064", null ],
     [ "getStandardDeviation", "classEllipticalDistribution.html#aebd7966ce58afe6240311091e25e85bb", null ],
-    [ "getStandardDistribution", "classEllipticalDistribution.html#a242c4cbcf423f4b692021590ac65602f", null ],
+    [ "getStandardDistribution", "classEllipticalDistribution.html#a8d1ec6c8f2c68819c866f486a4184450", null ],
     [ "hasEllipticalCopula", "classEllipticalDistribution.html#a69bcb60a2e4bd4e1c63eaf788977d420", null ],
     [ "isElliptical", "classEllipticalDistribution.html#aa3ad14a830b0df5a94e8de5755ed1054", null ],
     [ "load", "classEllipticalDistribution.html#a671dbd62908a9393439f7eb49d3d4834", null ],

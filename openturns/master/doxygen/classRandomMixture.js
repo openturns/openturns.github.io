@@ -20,8 +20,8 @@ var classRandomMixture =
     [ "getDistributionCollection", "classRandomMixture.html#a3496121471dcff2302c50c47faf434ec", null ],
     [ "getFFTAlgorithm", "classRandomMixture.html#a68870c8defd14adac2e2ba42bbf060ab", null ],
     [ "getKurtosis", "classRandomMixture.html#a1b10762c4a8965762f6441d5080858bb", null ],
-    [ "getMarginal", "classRandomMixture.html#a1a1ece5dde36dca539e84b44ae3646f6", null ],
-    [ "getMarginal", "classRandomMixture.html#a0f28ed0081e75b15c2e051966bef833e", null ],
+    [ "getMarginal", "classRandomMixture.html#ad5e07db5e637a83037483e25b69c0db5", null ],
+    [ "getMarginal", "classRandomMixture.html#a63b8f0aa3b6bcd9654be5ee0853b2c4c", null ],
     [ "getParameterDescription", "classRandomMixture.html#ab197ca4929709450d800f6e8f90ff837", null ],
     [ "getParametersCollection", "classRandomMixture.html#ae409165a35d6f0050746c11f0f6d5e3f", null ],
     [ "getPositionIndicator", "classRandomMixture.html#ab3e361d883a3cc3ca6efae61d091f610", null ],
@@ -29,6 +29,7 @@ var classRandomMixture =
     [ "getSample", "classRandomMixture.html#a7647098a1ba018c2f54a76e10de9a3bb", null ],
     [ "getSkewness", "classRandomMixture.html#aaa630775c847e713c83f808677591c27", null ],
     [ "getStandardDeviation", "classRandomMixture.html#aebd7966ce58afe6240311091e25e85bb", null ],
+    [ "getWeights", "classRandomMixture.html#a84aaa6d7b47e5dcd764a711e58530e59", null ],
     [ "hasEllipticalCopula", "classRandomMixture.html#a69bcb60a2e4bd4e1c63eaf788977d420", null ],
     [ "hasIndependentCopula", "classRandomMixture.html#aaf062d994afda1714b6ebc5e493c8aee", null ],
     [ "isContinuous", "classRandomMixture.html#adfa121c637ea23192f72ffe8960834d0", null ],
@@ -49,6 +50,5 @@ var classRandomMixture =
     [ "setParameter", "classRandomMixture.html#ac6de3c1654d6f98c39ec022dba595a94", null ],
     [ "setPDFPrecision", "classRandomMixture.html#ae9af56f7ffdd3800e8d6718b786bfd80", null ],
     [ "setReferenceBandwidth", "classRandomMixture.html#a5a8757f171c9128eedcae2159aaa7b7f", null ],
-    [ "setWeights", "classRandomMixture.html#ae3babb4fbf7b6c874d1458029d9f304a", null ],
     [ "AddPDFOn1DGridPolicy", "classRandomMixture.html#a187e103d9fb505b4924703ff30d41682", null ]
 ];

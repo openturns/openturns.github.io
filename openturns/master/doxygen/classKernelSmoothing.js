@@ -2,7 +2,7 @@ var classKernelSmoothing =
 [
     [ "KernelSmoothing", "classKernelSmoothing.html#a494f522232fff45aae44b7c02a0f7d99", null ],
     [ "KernelSmoothing", "classKernelSmoothing.html#ac96db92f8e7563dcb7419c7363596aba", null ],
-    [ "build", "classKernelSmoothing.html#a78d2ee1aba7237ba72f86897993ef0b6", null ],
+    [ "build", "classKernelSmoothing.html#a2061434cada6a9e1991a8d5508f4252e", null ],
     [ "clone", "classKernelSmoothing.html#a870c460a44a178a60f8a9120382b470a", null ],
     [ "computeMixedBandwidth", "classKernelSmoothing.html#a80a987eed8092741640f10a0e69243c2", null ],
     [ "computePluginBandwidth", "classKernelSmoothing.html#a001a66194ae7b88563cc68e16ae1ae51", null ],

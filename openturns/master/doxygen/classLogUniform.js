@@ -5,6 +5,7 @@ var classLogUniform =
     [ "__repr__", "classLogUniform.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classLogUniform.html#adbfdd64c7b498b83d0ca8aa8c32d785a", null ],
     [ "computeCharacteristicFunction", "classLogUniform.html#aea62f54641fcd42da8777d9292156754", null ],
+    [ "computeEntropy", "classLogUniform.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "getKurtosis", "classLogUniform.html#a1b10762c4a8965762f6441d5080858bb", null ],
     [ "getParameterDescription", "classLogUniform.html#ab197ca4929709450d800f6e8f90ff837", null ],
     [ "getRealization", "classLogUniform.html#a0d4b97f8839923cace807a6ec462ec6e", null ],

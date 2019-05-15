@@ -26,7 +26,7 @@ var classDrawable =
     [ "getLegend", "classDrawable.html#af8517b047abb9441e4948a2f22059ef3", null ],
     [ "getLevels", "classDrawable.html#a48a22dd565dde74f4895ead0e20e78ac", null ],
     [ "getLineStyle", "classDrawable.html#adff0ac4c0316ebbd2e927655a9e1321b", null ],
-    [ "getLineWidth", "classDrawable.html#a701e5a6b0bdd06bbc42d7e105c2824b3", null ],
+    [ "getLineWidth", "classDrawable.html#adc02a5b5cb7123838568ba0378ae1fd5", null ],
     [ "getOrigin", "classDrawable.html#aed833e41d973519570cb54c54bc7ac4f", null ],
     [ "getPalette", "classDrawable.html#a2d269f9b5b43b0288839aa6f92738d23", null ],
     [ "getPattern", "classDrawable.html#a6d24eed3a540cdf924c7d516418e936b", null ],

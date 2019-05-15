@@ -7,7 +7,7 @@ var classLeastSquaresStrategy =
     [ "LeastSquaresStrategy", "classLeastSquaresStrategy.html#a0b081a06433a24c446700303d4bb73de", null ],
     [ "__repr__", "classLeastSquaresStrategy.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classLeastSquaresStrategy.html#a7b3d8a2977faba283c77243f8818d9f5", null ],
-    [ "computeCoefficients", "classLeastSquaresStrategy.html#a2b9aecbee3dea58e4e3e20b7982a4e7d", null ],
+    [ "computeCoefficients", "classLeastSquaresStrategy.html#a33026dd1354daabcee0466fdaa23e85c", null ],
     [ "load", "classLeastSquaresStrategy.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "save", "classLeastSquaresStrategy.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
 ];

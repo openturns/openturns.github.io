@@ -1,9 +1,21 @@
 var searchData=
 [
-  ['textannotations_5f',['textAnnotations_',['../classText.html#a92e9b6716309e98003bf1a82dc39b07d',1,'Text']]],
-  ['textpositions_5f',['textPositions_',['../classText.html#afab0c09e5c59f88423dd2dc94c701758',1,'Text']]],
-  ['threshold_5f',['threshold_',['../classKarhunenLoeveAlgorithmImplementation.html#aa1d44f3c8e73cab59856a0562388d1e2',1,'KarhunenLoeveAlgorithmImplementation::threshold_()'],['../classKarhunenLoeveResultImplementation.html#aa1d44f3c8e73cab59856a0562388d1e2',1,'KarhunenLoeveResultImplementation::threshold_()']]],
-  ['totalorderindiceinterval_5f',['totalOrderIndiceInterval_',['../classSobolIndicesAlgorithmImplementation.html#a1335731e06c508ae208890b64e2c1dcd',1,'SobolIndicesAlgorithmImplementation']]],
-  ['transitionfunction_5f',['transitionFunction_',['../classODESolverImplementation.html#afe76c27781ebdfacdb2e56a16b6a04bd',1,'ODESolverImplementation']]],
-  ['trend_5f',['trend_',['../classGaussianProcess.html#a9af5390440e2be40bfdf79542fe8b1d2',1,'GaussianProcess']]]
+  ['sample_5f',['sample_',['../classHistoryStrategyImplementation.html#a3d4aae66109891928b621a6437b234f2',1,'HistoryStrategyImplementation']]],
+  ['samplingmethod_5f',['samplingMethod_',['../classGaussianProcess.html#a1b61a1e487a4f17755471109eaaac9af',1,'GaussianProcess']]],
+  ['scale_5f',['scale_',['../classCovarianceModelImplementation.html#a2775c8477dc929b9621bcf2c46823fbb',1,'CovarianceModelImplementation::scale_()'],['../classSpectralModelImplementation.html#a2775c8477dc929b9621bcf2c46823fbb',1,'SpectralModelImplementation::scale_()']]],
+  ['secondorderindices_5f',['secondOrderIndices_',['../classSobolIndicesAlgorithmImplementation.html#ab0a8afb42222ae55b8e7d26d95d5c434',1,'SobolIndicesAlgorithmImplementation']]],
+  ['seed_5f',['seed_',['../classSobolSequence.html#aa78866a6aa396843d9d0c693e1716da9',1,'SobolSequence']]],
+  ['shape_5f',['shape_',['../classEllipticalDistribution.html#ac79b3c90b48502d4a99d8b02808e5ff4',1,'EllipticalDistribution']]],
+  ['shift_5f',['shift_',['../classBoxCoxEvaluation.html#abb2c47b1c1aca7bbc8e2ddc3e795fe41',1,'BoxCoxEvaluation::shift_()'],['../classInverseBoxCoxEvaluation.html#abb2c47b1c1aca7bbc8e2ddc3e795fe41',1,'InverseBoxCoxEvaluation::shift_()']]],
+  ['shuffle_5f',['shuffle_',['../classLHS.html#a7002e31bef5e91a45fa7a5c115394f6c',1,'LHS']]],
+  ['sigma_5f',['sigma_',['../classEllipticalDistribution.html#a33cf2b302b97f138a8f2b3b149fc0f28',1,'EllipticalDistribution']]],
+  ['simplices_5f',['simplices_',['../classEnclosingSimplexAlgorithmImplementation.html#a2e1e68540617a731a391691b5ae2c743',1,'EnclosingSimplexAlgorithmImplementation']]],
+  ['size_5f',['size_',['../classIndicesCollectionImplementation.html#af701da7dbf5af05aee9740482ca58bd2',1,'IndicesCollectionImplementation::size_()'],['../classSobolIndicesAlgorithmImplementation.html#af701da7dbf5af05aee9740482ca58bd2',1,'SobolIndicesAlgorithmImplementation::size_()'],['../classWeightedExperimentImplementation.html#af701da7dbf5af05aee9740482ca58bd2',1,'WeightedExperimentImplementation::size_()']]],
+  ['solver_5f',['solver_',['../classBoxCoxFactory.html#afa7eff232212b764b73dd11c04f1a15b',1,'BoxCoxFactory::solver_()'],['../classMeixnerDistribution.html#afa7eff232212b764b73dd11c04f1a15b',1,'MeixnerDistribution::solver_()'],['../classOrderStatisticsMarginalChecker.html#afa7eff232212b764b73dd11c04f1a15b',1,'OrderStatisticsMarginalChecker::solver_()'],['../classARMALikelihoodFactory.html#afa7eff232212b764b73dd11c04f1a15b',1,'ARMALikelihoodFactory::solver_()'],['../classWhittleFactory.html#afa7eff232212b764b73dd11c04f1a15b',1,'WhittleFactory::solver_()']]],
+  ['standarddistribution_5f',['standardDistribution_',['../classPostAnalyticalSimulation.html#a1aa068f72745d0ec777e529c27373545',1,'PostAnalyticalSimulation']]],
+  ['standardevent_5f',['standardEvent_',['../classPostAnalyticalSimulation.html#ac4eca9304de562ca250b9c3ea7fb0a60',1,'PostAnalyticalSimulation']]],
+  ['start_5f',['start_',['../classRegularGridNearestNeighbour.html#a56762d5496437895bed2e122c7dda31b',1,'RegularGridNearestNeighbour']]],
+  ['success',['Success',['../classTest_1_1ExitCode.html#a19fe2565f40325b15477a2f1e8cad621',1,'Test::ExitCode']]],
+  ['supportepsilon_5f',['supportEpsilon_',['../classDiscreteDistribution.html#a7323a3054a44b3b79f0b98532c45c315',1,'DiscreteDistribution']]],
+  ['symbolcodes',['SymbolCodes',['../classDrawableImplementation.html#a1bbc3c817899b4a5a969413c73984fb0',1,'DrawableImplementation']]]
 ];

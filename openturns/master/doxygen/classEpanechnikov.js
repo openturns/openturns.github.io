@@ -4,6 +4,7 @@ var classEpanechnikov =
     [ "__repr__", "classEpanechnikov.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classEpanechnikov.html#a6d93d6f671c91fb54e22fc344b763ef2", null ],
     [ "computeCDFGradient", "classEpanechnikov.html#a1755fd53f31859b7fca68e4532d77f15", null ],
+    [ "computeEntropy", "classEpanechnikov.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computePDFGradient", "classEpanechnikov.html#a66c5b8f77a67777407ad686976b52abc", null ],
     [ "getKurtosis", "classEpanechnikov.html#a1b10762c4a8965762f6441d5080858bb", null ],
     [ "getParameter", "classEpanechnikov.html#a07a2baf2e35aa00cc5c567019e387849", null ],

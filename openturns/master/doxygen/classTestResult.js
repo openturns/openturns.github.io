@@ -1,7 +1,7 @@
 var classTestResult =
 [
     [ "TestResult", "classTestResult.html#a434977b0f85d921ae7a2f7ae506576cf", null ],
-    [ "TestResult", "classTestResult.html#a5d66b78e4194223f6f8c36932ff2d70d", null ],
+    [ "TestResult", "classTestResult.html#ae1ae50ddb79516bfc0b7667eb5048663", null ],
     [ "__repr__", "classTestResult.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classTestResult.html#a180f35f3a5f70b78205718c974685856", null ],
     [ "getBinaryQualityMeasure", "classTestResult.html#a2b5fca52479540fa356ba5029be31828", null ],

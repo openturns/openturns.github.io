@@ -1,11 +1,12 @@
 var classIndependentCopula =
 [
-    [ "IndependentCopula", "classIndependentCopula.html#aefb25d76cf448975df840c349445c9b6", null ],
+    [ "IndependentCopula", "classIndependentCopula.html#a086afbf3e1f20e068a595b6e6b57ead2", null ],
     [ "__repr__", "classIndependentCopula.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classIndependentCopula.html#a2ac7c64331466275488ab47cb2d6dbd1", null ],
     [ "computeBilateralConfidenceIntervalWithMarginalProbability", "classIndependentCopula.html#a8bb6d3e9d5bbea4d098fa17d767655f3", null ],
     [ "computeCDFGradient", "classIndependentCopula.html#a1755fd53f31859b7fca68e4532d77f15", null ],
     [ "computeConditionalDDF", "classIndependentCopula.html#a0929aea4cb419fe63781acf011841636", null ],
+    [ "computeEntropy", "classIndependentCopula.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computeMinimumVolumeIntervalWithMarginalProbability", "classIndependentCopula.html#aacd476f607594691be6467be58422776", null ],
     [ "computeMinimumVolumeLevelSetWithThreshold", "classIndependentCopula.html#a695f5b8c6261e597765f4bb3fd0d575c", null ],
     [ "computePDFGradient", "classIndependentCopula.html#a66c5b8f77a67777407ad686976b52abc", null ],

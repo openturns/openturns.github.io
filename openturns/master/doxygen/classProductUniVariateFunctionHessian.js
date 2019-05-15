@@ -1,5 +1,6 @@
 var classProductUniVariateFunctionHessian =
 [
+    [ "ProductUniVariateFunctionHessian", "classProductUniVariateFunctionHessian.html#ad765496aa00687ff70df4ebe3f3f6536", null ],
     [ "ProductUniVariateFunctionHessian", "classProductUniVariateFunctionHessian.html#a351dd215f57fb6c28dbffb70b76e6d1f", null ],
     [ "__repr__", "classProductUniVariateFunctionHessian.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classProductUniVariateFunctionHessian.html#a43356fcb19072e77371b2a701f2cc71e", null ],

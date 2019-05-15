@@ -2,6 +2,7 @@ var classAggregatedHessian =
 [
     [ "AggregatedHessian", "classAggregatedHessian.html#ab88330f0c1e46d30ba00d7dc7129135f", null ],
     [ "AggregatedHessian", "classAggregatedHessian.html#aab65efca9282266502d725a425b228ee", null ],
+    [ "AggregatedHessian", "classAggregatedHessian.html#a855d4b08a6073cf0fd5ac87c6b2f64a8", null ],
     [ "__repr__", "classAggregatedHessian.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classAggregatedHessian.html#a3fb23211e365c4601ab78480ffee4960", null ],
     [ "getInputDimension", "classAggregatedHessian.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],

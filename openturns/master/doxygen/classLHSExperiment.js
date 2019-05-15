@@ -6,7 +6,7 @@ var classLHSExperiment =
     [ "__repr__", "classLHSExperiment.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classLHSExperiment.html#a1c4137276f41b5810849a893883877aa", null ],
     [ "ComputeShuffle", "classLHSExperiment.html#aededf0af805e88bda2c5872a5b20abc0", null ],
-    [ "generateWithWeights", "classLHSExperiment.html#a9fc7558dd00e630390ccf82b92f22988", null ],
+    [ "generateStandard", "classLHSExperiment.html#a5b3d9cec02da5579a3445d100e20cb8a", null ],
     [ "getAlwaysShuffle", "classLHSExperiment.html#a32ddadeec2369d2f2305cff179ac26da", null ],
     [ "getRandomShift", "classLHSExperiment.html#a5aceaad1173f986b743c4fb15f3333c6", null ],
     [ "getShuffle", "classLHSExperiment.html#ace142659b08022433e7afadcca51f0df", null ],

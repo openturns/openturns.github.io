@@ -1,6 +1,6 @@
 var classSquaredExponential =
 [
-    [ "SquaredExponential", "classSquaredExponential.html#a63d820281303c8dbec457ca1dabc1799", null ],
+    [ "SquaredExponential", "classSquaredExponential.html#acf03f75db9d0050653ed843218a66294", null ],
     [ "SquaredExponential", "classSquaredExponential.html#a2ca9637d85733a3ad56d2255f12586c1", null ],
     [ "SquaredExponential", "classSquaredExponential.html#a4f962919eca757bccac5c8b0d2479595", null ],
     [ "__repr__", "classSquaredExponential.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],

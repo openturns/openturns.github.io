@@ -6,6 +6,7 @@ var classComposedCopula =
     [ "__repr__", "classComposedCopula.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classComposedCopula.html#a9ded9c5b43c98220f1b049ad22155b28", null ],
     [ "computeCDFGradient", "classComposedCopula.html#a1755fd53f31859b7fca68e4532d77f15", null ],
+    [ "computeEntropy", "classComposedCopula.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computePDFGradient", "classComposedCopula.html#a66c5b8f77a67777407ad686976b52abc", null ],
     [ "computeProbability", "classComposedCopula.html#a78185007ba06ede4c4900f0d7d19e177", null ],
     [ "getInverseIsoProbabilisticTransformation", "classComposedCopula.html#a41035d17507f02a4a0b8fdcb4ea092bf", null ],

@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['lambda_5f',['lambda_',['../classBoxCoxEvaluation.html#aad7ab13f452bb9a3d793c836ad647c17',1,'BoxCoxEvaluation::lambda_()'],['../classInverseBoxCoxEvaluation.html#aad7ab13f452bb9a3d793c836ad647c17',1,'InverseBoxCoxEvaluation::lambda_()']]],
-  ['legend_5f',['legend_',['../classDrawableImplementation.html#af6bade012b00be3bf9ac2ed49fd49618',1,'DrawableImplementation']]],
-  ['linestyle_5f',['lineStyle_',['../classDrawableImplementation.html#aefe686a3c15924cc36efabb6a8551199',1,'DrawableImplementation']]],
-  ['linewidth_5f',['lineWidth_',['../classDrawableImplementation.html#a447c5bc60f8c13c50e65f54aed379385',1,'DrawableImplementation']]],
-  ['linkfunction_5f',['linkFunction_',['../classBayesDistribution.html#a76e4ed7805cdc6fd8a7ba83669284998',1,'BayesDistribution']]]
+  ['k_5f',['k_',['../classKFold.html#a0e6c2522b798e140c4413182e76f8ccc',1,'KFold']]],
+  ['keys_5f',['keys_',['../classCache.html#a2f448c21d0bed29f7e1f0f5fb5517d9a',1,'Cache']]]
 ];

@@ -5,6 +5,7 @@ var classGeometric =
     [ "__repr__", "classGeometric.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
     [ "clone", "classGeometric.html#a97d8b72be01abbcc2a020ec45c422802", null ],
     [ "computeCharacteristicFunction", "classGeometric.html#aea62f54641fcd42da8777d9292156754", null ],
+    [ "computeEntropy", "classGeometric.html#a1e205fd8eb057d23cc57b593e6d7f25f", null ],
     [ "computeGeneratingFunction", "classGeometric.html#ad2b927f555c62fe616548b03c6f614db", null ],
     [ "getKurtosis", "classGeometric.html#a1b10762c4a8965762f6441d5080858bb", null ],
     [ "getParameterDescription", "classGeometric.html#ab197ca4929709450d800f6e8f90ff837", null ],

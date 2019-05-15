@@ -3,6 +3,7 @@ var classPostAnalyticalSimulation =
     [ "PostAnalyticalSimulation", "classPostAnalyticalSimulation.html#a6c979f2807a82d990f4b096a03c9fbbe", null ],
     [ "PostAnalyticalSimulation", "classPostAnalyticalSimulation.html#a9f9df43ef08d0dbedca61dff6261e394", null ],
     [ "__repr__", "classPostAnalyticalSimulation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
+    [ "clone", "classPostAnalyticalSimulation.html#ab6b1cd34cd88369a9656a97647bc9294", null ],
     [ "getAnalyticalResult", "classPostAnalyticalSimulation.html#a055736d4448f05386abbbba54539a38e", null ],
     [ "getControlProbability", "classPostAnalyticalSimulation.html#a7012b27749139536cfd6c91e72cb3661", null ],
     [ "load", "classPostAnalyticalSimulation.html#a671dbd62908a9393439f7eb49d3d4834", null ],

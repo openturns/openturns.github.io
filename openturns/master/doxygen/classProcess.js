@@ -15,7 +15,6 @@ var classProcess =
     [ "getMesh", "classProcess.html#a736066e832bb8153161d763b9c86788d", null ],
     [ "getRealization", "classProcess.html#a2cab6046466e53410cae847d13065cc0", null ],
     [ "getSample", "classProcess.html#ad1f2e484efb315c0845fd73582658d5c", null ],
-    [ "getSpatialDimension", "classProcess.html#a2d8e53b66769c64ec86f6d06ef53a716", null ],
     [ "getTimeGrid", "classProcess.html#a1268679f95a55d5d18e8d49fcf61c83c", null ],
     [ "getTrend", "classProcess.html#a70d6bdd46b4ef2c4140b25c8a281fe2e", null ],
     [ "isComposite", "classProcess.html#a3c0015acbe40690cccc6927220773817", null ],

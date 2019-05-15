@@ -1,6 +1,6 @@
 var classGeneralizedExponential =
 [
-    [ "GeneralizedExponential", "classGeneralizedExponential.html#ae5022e2d3976db69b7bf4c2ee8da3a15", null ],
+    [ "GeneralizedExponential", "classGeneralizedExponential.html#a34edf4125fb493dc2dd5590ce8ab2e89", null ],
     [ "GeneralizedExponential", "classGeneralizedExponential.html#abaf1e9c7b8b22162f274fb12c91b9be0", null ],
     [ "GeneralizedExponential", "classGeneralizedExponential.html#a8977e0c0c7732d7b9675de5ecbc507a0", null ],
     [ "__repr__", "classGeneralizedExponential.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],

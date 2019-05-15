@@ -11,7 +11,7 @@ var classMeixnerDistribution =
     [ "getRealization", "classMeixnerDistribution.html#a0d4b97f8839923cace807a6ec462ec6e", null ],
     [ "getSkewness", "classMeixnerDistribution.html#aaa630775c847e713c83f808677591c27", null ],
     [ "getStandardDeviation", "classMeixnerDistribution.html#aebd7966ce58afe6240311091e25e85bb", null ],
-    [ "getStandardRepresentative", "classMeixnerDistribution.html#a269bdd10b4d741833d910ccf19da192e", null ],
+    [ "getStandardRepresentative", "classMeixnerDistribution.html#a9a66e8166d101b1deb042314415581cd", null ],
     [ "initializeOptimizationAlgorithmParameter", "classMeixnerDistribution.html#ac06502479352665159fd64b7cb974ebd", null ],
     [ "isElliptical", "classMeixnerDistribution.html#aa3ad14a830b0df5a94e8de5755ed1054", null ],
     [ "load", "classMeixnerDistribution.html#a671dbd62908a9393439f7eb49d3d4834", null ],

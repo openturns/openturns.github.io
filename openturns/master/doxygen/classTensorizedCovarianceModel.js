@@ -7,7 +7,7 @@ var classTensorizedCovarianceModel =
     [ "__str__", "classTensorizedCovarianceModel.html#a52e42d2cad038d44d425597aa45f4234", null ],
     [ "clone", "classTensorizedCovarianceModel.html#aed33c8616e384e2892745ec89f94b247", null ],
     [ "getCollection", "classTensorizedCovarianceModel.html#adb36effe8fda51a4a803c58f42445fd3", null ],
-    [ "getMarginal", "classTensorizedCovarianceModel.html#afa11f614ad19631b8d1c1b8f4b8e4d7c", null ],
+    [ "getMarginal", "classTensorizedCovarianceModel.html#a04c1b2bda49903a27da8b0c8de430cf5", null ],
     [ "isDiagonal", "classTensorizedCovarianceModel.html#aacebf9485baccd67f6b9a110d357fadb", null ],
     [ "isStationary", "classTensorizedCovarianceModel.html#a5beed5d10583687ff910df317ca1981a", null ],
     [ "load", "classTensorizedCovarianceModel.html#a671dbd62908a9393439f7eb49d3d4834", null ],

@@ -9,7 +9,7 @@ var classNonCentralStudent =
     [ "getSkewness", "classNonCentralStudent.html#aaa630775c847e713c83f808677591c27", null ],
     [ "getStandardDeviation", "classNonCentralStudent.html#aebd7966ce58afe6240311091e25e85bb", null ],
     [ "getStandardMoment", "classNonCentralStudent.html#a65eece260bc494736c6ecf68575521cb", null ],
-    [ "getStandardRepresentative", "classNonCentralStudent.html#ab62f0d280643b5a35ac3e3cc5467f53f", null ],
+    [ "getStandardRepresentative", "classNonCentralStudent.html#a9a66e8166d101b1deb042314415581cd", null ],
     [ "load", "classNonCentralStudent.html#a671dbd62908a9393439f7eb49d3d4834", null ],
     [ "operator==", "classNonCentralStudent.html#aa75d432f374c2a6b07fa994c725adb7d", null ],
     [ "save", "classNonCentralStudent.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],

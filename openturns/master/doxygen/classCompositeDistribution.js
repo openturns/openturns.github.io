@@ -11,6 +11,7 @@ var classCompositeDistribution =
     [ "getParameterDescription", "classCompositeDistribution.html#ab197ca4929709450d800f6e8f90ff837", null ],
     [ "getParametersCollection", "classCompositeDistribution.html#a1432ad21b44285169f4b6d28a2b0f012", null ],
     [ "getRealization", "classCompositeDistribution.html#a0d4b97f8839923cace807a6ec462ec6e", null ],
+    [ "getSingularities", "classCompositeDistribution.html#a162b6cf7112c0f40fa3ed7fc8889f752", null ],
     [ "isContinuous", "classCompositeDistribution.html#adfa121c637ea23192f72ffe8960834d0", null ],
     [ "isDiscrete", "classCompositeDistribution.html#ad7dae69fcf6be1f67640d8bf78015cb7", null ],
     [ "load", "classCompositeDistribution.html#a671dbd62908a9393439f7eb49d3d4834", null ],

@@ -16,7 +16,7 @@ var classParametrizedDistribution =
     [ "getSkewness", "classParametrizedDistribution.html#aaa630775c847e713c83f808677591c27", null ],
     [ "getStandardDeviation", "classParametrizedDistribution.html#aebd7966ce58afe6240311091e25e85bb", null ],
     [ "getStandardMoment", "classParametrizedDistribution.html#a65eece260bc494736c6ecf68575521cb", null ],
-    [ "getStandardRepresentative", "classParametrizedDistribution.html#adeac1fe9d43a5b12e3bce24aef58ac41", null ],
+    [ "getStandardRepresentative", "classParametrizedDistribution.html#a9a66e8166d101b1deb042314415581cd", null ],
     [ "isContinuous", "classParametrizedDistribution.html#adfa121c637ea23192f72ffe8960834d0", null ],
     [ "isElliptical", "classParametrizedDistribution.html#aa3ad14a830b0df5a94e8de5755ed1054", null ],
     [ "load", "classParametrizedDistribution.html#a671dbd62908a9393439f7eb49d3d4834", null ],
