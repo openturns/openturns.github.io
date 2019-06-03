@@ -100,7 +100,7 @@
 <p>Refer to <a class="reference internal" href="../../theory/data_analysis/bayesian_calibration.html#bayesian-calibration"><span class="std std-ref">Bayesian calibration</span></a>, <a class="reference internal" href="../../theory/data_analysis/metropolis_hastings.html#metropolis-hastings"><span class="std std-ref">The Metropolis-Hastings Algorithm</span></a>.</p>
 <dl>
 <dt>Available constructor:</dt><dd><p>RandomWalkMetropolisHastings(<em>prior, conditional, observations, initialState, proposal</em>)</p>
-<p>RandomWalkMetropolisHastings(<em>prior, conditional, model, parameters, observations, initialState, proposal</em>)</p>
+<p>RandomWalkMetropolisHastings(<em>prior, conditional, model, modelParameters, observations, initialState, proposal</em>)</p>
 </dd>
 </dl>
 <dl class="field-list">
@@ -112,14 +112,23 @@ model.</p>
 <dt><strong>conditional</strong><span class="classifier"><a class="reference internal" href="openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></a></span></dt><dd><p>Required distribution to define the likelihood of the underlying Bayesian
 statistical model.</p>
 </dd>
-<dt><strong>model</strong><span class="classifier"><a class="reference internal" href="openturns.Function.html#openturns.Function" title="openturns.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a></span></dt><dd><p>Function required to define the likelihood.</p>
+<dt><strong>model</strong><span class="classifier"><a class="reference internal" href="openturns.Function.html#openturns.Function" title="openturns.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a></span></dt><dd><p>Function required to define the likelihood. 
+The dimension of the output of the <cite>model</cite> argument must be equal 
+to the dimension of the <cite>setParameter</cite> method of the <cite>conditional</cite> argument.</p>
 </dd>
-<dt><strong>observations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Observations required to define the likelihood.</p>
+<dt><strong>observations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Observations required to define the likelihood. 
+If a <cite>model</cite> argument is specified, the <cite>observations</cite> correspond 
+to the output of the <cite>model</cite>.</p>
 </dd>
 <dt><strong>initialState</strong><span class="classifier">sequence of float</span></dt><dd><p>Initial state of the Monte-Carlo Markov chain on which the Sampler is
-based.</p>
+based.
+The dimension of the <cite>initialState</cite> must be equal to the dimension of the <cite>prior</cite>.</p>
 </dd>
-<dt><strong>parameters</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Parameters of the model to be fixed.</p>
+<dt><strong>modelParameters</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Parameters of the model to be fixed. 
+The dimension of the <cite>modelParameters</cite> argument must 
+be equal to the dimension of the <cite>setParameter</cite> method of the <cite>model</cite> argument. 
+The size of the <cite>modelParameters</cite> variable must 
+be equal to the size of the <cite>observations</cite> argument.</p>
 </dd>
 <dt><strong>proposal</strong><span class="classifier">list of <a class="reference internal" href="openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></a></span></dt><dd><p>Distributions from which the transition kernels of the
 <a class="reference internal" href="openturns.MCMC.html#openturns.MCMC" title="openturns.MCMC"><code class="xref py py-class docutils literal notranslate"><span class="pre">MCMC</span></code></a> are defined, as explained hereafter. In the
@@ -166,10 +175,10 @@ realizations.</p>
 <span class="gp">... </span>     <span class="o">-</span><span class="mf">13.0812290405651</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y_obs</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">obsDim</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">obsSize</span><span class="p">,</span> <span class="n">chainDim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modelParameters</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">obsSize</span><span class="p">,</span> <span class="n">chainDim</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obsSize</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">chainDim</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mf">9.0</span><span class="p">)</span> <span class="o">**</span> <span class="n">j</span>
+<span class="gp">... </span>        <span class="n">modelParameters</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mf">9.0</span><span class="p">)</span> <span class="o">**</span> <span class="n">j</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fullModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span>
 <span class="gp">... </span>         <span class="p">[</span><span class="s1">&#39;p1&#39;</span><span class="p">,</span> <span class="s1">&#39;p2&#39;</span><span class="p">,</span> <span class="s1">&#39;p3&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">],</span>
@@ -193,13 +202,8 @@ realizations.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Conditional distribution y~N(z, 1.0)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conditional</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create a metropolis-hastings sampler</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># prior =a distribution of dimension chainDim, the a priori distribution of the parameter</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># conditional =a distribution of dimension 1, the observation error on the output</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># model =the link between the parameters and the output</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># y_obs =noisy observations of the output</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># mu0 =starting point of the chain</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomWalkMetropolisHastings</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">prior</span><span class="p">,</span> <span class="n">conditional</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">proposalColl</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">prior</span><span class="p">,</span> <span class="n">conditional</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">modelParameters</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">proposalColl</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span><span class="o">.</span><span class="n">setCalibrationStrategyPerComponent</span><span class="p">(</span><span class="n">calibrationColl</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span><span class="o">.</span><span class="n">setBurnIn</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span><span class="o">.</span><span class="n">setThinning</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -1358,7 +1362,7 @@ and <img class="math" src="../../_images/math/14feef167e3dd938706565e34c0c9ac190
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/1d2392273.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/e4645c15e.
     </div>
   </body>
 </html>
