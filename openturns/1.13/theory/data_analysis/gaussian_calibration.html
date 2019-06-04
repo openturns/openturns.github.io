@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gaussian calibration &#8212; OpenTURNS  documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The Metropolis-Hastings Algorithm" href="metropolis_hastings.html" />
+    <link rel="prev" title="Code calibration" href="code_calibration.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="metropolis_hastings.html" title="The Metropolis-Hastings Algorithm"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="code_calibration.html" title="Code calibration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" accesskey="U">Data analysis</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Gaussian calibration</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#bayesian-calibration">Bayesian calibration</a></li>
+<li><a class="reference internal" href="#posterior-distribution">Posterior distribution</a></li>
+<li><a class="reference internal" href="#map-estimator">MAP estimator</a></li>
+<li><a class="reference internal" href="#regularity-of-solutions-of-the-gaussian-calibration">Regularity of solutions of the Gaussian Calibration</a></li>
+<li><a class="reference internal" href="#non-linear-gaussian-calibration-3dvar">Non Linear Gaussian Calibration : 3DVAR</a></li>
+<li><a class="reference internal" href="#solving-the-non-linear-gaussian-calibration-problem">Solving the Non Linear Gaussian Calibration Problem</a></li>
+<li><a class="reference internal" href="#linear-gaussian-calibration-bayesian-blue">Linear Gaussian Calibration : bayesian BLUE</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="code_calibration.html"
+                        title="previous chapter">Code calibration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="metropolis_hastings.html"
+                        title="next chapter">The Metropolis-Hastings Algorithm</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/data_analysis/gaussian_calibration.rst"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="gaussian-calibration">
+<span id="id1"></span><h1>Gaussian calibration<a class="headerlink" href="#gaussian-calibration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>We consider a computer model <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> (i.e. a deterministic function)
+to calibrate:</p>
+<div class="math">
+<p><img src="../../_images/math/9f49db277cf592902918865210125f6ebded81fb.svg" alt="\vect{z} = \vect{h}(\vect{x}, \vect{\theta}),"/></p>
+</div><p>where</p>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/8077df93b9758dcbb1128d71e0d0f9133f729041.svg" alt="\vect{x} \in \Rset^{d_x}"/> is the input vector;</p></li>
+<li><p><img class="math" src="../../_images/math/d3763f9c774e765811ea160c1cb6839ad3f0b66b.svg" alt="\vect{z} \in \Rset^{d_z}"/> is the output vector;</p></li>
+<li><p><img class="math" src="../../_images/math/2daddf92ff7e9c9d366af38d721a52ad71e20526.svg" alt="\vect{\theta} \in \Rset^{d_h}"/> are the unknown parameters of
+<img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> to calibrate.</p></li>
+</ul>
+<p>Let <img class="math" src="../../_images/math/a80c46f52279dd7b948b64be8831e4bdd94c1232.svg" alt="n \in \Nset"/> be the number of observations.
+The standard hypothesis of the probabilistic calibration is:</p>
+<div class="math">
+<p><img src="../../_images/math/3a53496fd61f6f86a8a4ca444ba97c1edbbe6ac1.svg" alt="\vect{Y}^i = \vect{z}^i + \vect{\varepsilon}^i,"/></p>
+</div><p>for <img class="math" src="../../_images/math/d529b0e8b32da302913af2c4a6c906ecf7bfcfb0.svg" alt="i=1,...,n"/> where <img class="math" src="../../_images/math/75c6d8fb5196ab673a30ca0d1fb69f3546c890eb.svg" alt="\vect{\varepsilon}^i"/> is a random measurement error.</p>
+<p>The goal of gaussian calibration is to estimate <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>, based on
+observations of <img class="math" src="../../_images/math/6dd74dfb7ff6eff513acaa90195f45bb6f794012.svg" alt="n"/> inputs <img class="math" src="../../_images/math/92b76a303e6f711b70231db1b4e4c1c5646db73e.svg" alt="(\vect{x}^1, \ldots, \vect{x}^n)"/>
+and the associated <img class="math" src="../../_images/math/6dd74dfb7ff6eff513acaa90195f45bb6f794012.svg" alt="n"/> observations of the output
+<img class="math" src="../../_images/math/34f9e038f42186a630512e54acbf98618ef649b6.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/>.
+In other words, the calibration process reduces the discrepancy between
+the observations <img class="math" src="../../_images/math/34f9e038f42186a630512e54acbf98618ef649b6.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/> and the
+predictions <img class="math" src="../../_images/math/7c06f9e802dd680dffb991606c3550d182e4d459.svg" alt="\vect{h}(\vect{\theta})"/>.
+Given that <img class="math" src="../../_images/math/34f9e038f42186a630512e54acbf98618ef649b6.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/> are realizations of a
+random variable, the estimate of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>, denoted by
+<img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>, is also a random variable.
+Hence, the secondary goal of calibration is to estimate the distribution of
+<img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/> representing the uncertainty of the calibration
+process.</p>
+<p>In the remaining of this section, the input <img class="math" src="../../_images/math/6c832448293a542d07cabec15a9c1ff32c6f7667.svg" alt="\vect{x}"/> is not involved
+anymore in the equations.
+This is why we simplify the equation into:</p>
+<div class="math">
+<p><img src="../../_images/math/c63fbed172a7c4a71955c9784b74b4e0b9e7efeb.svg" alt="\vect{z} = \vect{h}(\vect{\theta})."/></p>
+</div></div>
+<div class="section" id="bayesian-calibration">
+<h2>Bayesian calibration<a class="headerlink" href="#bayesian-calibration" title="Permalink to this headline">¶</a></h2>
+<p>The bayesian calibration framework is based on two hypotheses.</p>
+<p>The first hypothesis is that the parameter <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> has
+a known distribution, called the <em>prior</em> distribution, and denoted by <img class="math" src="../../_images/math/1f2222ee6bc406b1c2273997c9ec35eab611fc11.svg" alt="p(\vect{\theta})"/>.</p>
+<p>The second hypothesis is that the output observations <img class="math" src="../../_images/math/34f9e038f42186a630512e54acbf98618ef649b6.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/>
+are sampled from a known conditional distribution denoted by <img class="math" src="../../_images/math/94561a490b80558fdae0a6267c1289de8b6c3b33.svg" alt="p(\vect{y} | \vect{\theta})"/>.</p>
+<p>For any <img class="math" src="../../_images/math/276bbcac1764e97a4e2efdf09ba7e50daf6a57d5.svg" alt="\vect{y}\in\Rset^{d_z}"/> such that <img class="math" src="../../_images/math/2717ba5618d7b8116102451ddc5a480c07c5b830.svg" alt="p(\vect{y})&gt;0"/>, the Bayes theorem implies
+that the conditional distribution of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> given <img class="math" src="../../_images/math/8b54d324b80a3dc63c7f8259eff1fdde897e13cc.svg" alt="\vect{y}"/> is:</p>
+<div class="math">
+<p><img src="../../_images/math/701d90ed74ddc3a42ab79f5d749043b73cc5e715.svg" alt="p(\vect{\theta} | \vect{y}) = \frac{p(\vect{y} | \vect{\theta}) p(\vect{\theta})}{p(\vect{y})}"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>.</p>
+<p>The denominator of the previous Bayes fraction is independent of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>, so that
+the posterior distribution is proportional to the numerator:</p>
+<div class="math">
+<p><img src="../../_images/math/5749978fed05dbaaba08b0c6dcf0cbf747df0396.svg" alt="p(\vect{\theta} | \vect{y}) \propto  p(\vect{y} | \vect{\theta}) p(\vect{\theta})."/></p>
+</div><p>for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>.</p>
+<p>In the gaussian calibration, the two previous distributions are assumed to be gaussian.</p>
+<p>More precisely, we make the hypothesis that the parameter <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>
+has the gaussian distribution:</p>
+<div class="math">
+<p><img src="../../_images/math/a29645568727d7eb8db651e8286114920fed2528.svg" alt="\vect{\theta} \sim \mathcal{N}(\vect{\mu}, B),"/></p>
+</div><p>where <img class="math" src="../../_images/math/5fa17675e92c616eb7fcd99dd4f9c77aea937d39.svg" alt="\vect{\mu}\in\Rset^{d_h}"/> is the mean of the gaussian prior distribution,
+which is named the <em>background</em> and <img class="math" src="../../_images/math/4880ad6cfd0068ece81bae4a11dc853442be41fe.svg" alt="B\in\Rset^{d_h \times d_h}"/> is the covariance
+matrix of the parameter.</p>
+<p>Secondly, we make the hypothesis that the output observations have the conditional gaussian distribution:</p>
+<div class="math">
+<p><img src="../../_images/math/dd597fee189694cac57e2af9ab932007c17038ca.svg" alt="\vect{y} | \vect{\theta} \sim \mathcal{N}(\vect{h}(\vect{\theta}), R),"/></p>
+</div><p>where <img class="math" src="../../_images/math/2e845a7dbd0db73ff43ee38f7429160dd78747e7.svg" alt="R\in\Rset^{d_z \times d_z}"/> is the covariance
+matrix of the output observations.</p>
+</div>
+<div class="section" id="posterior-distribution">
+<h2>Posterior distribution<a class="headerlink" href="#posterior-distribution" title="Permalink to this headline">¶</a></h2>
+<p>Denote by <img class="math" src="../../_images/math/c4c407f97421612e146b2b33944542e4c9a1ed1b.svg" alt="\|\cdot\|_B"/> the Mahalanobis distance associated with the matrix
+<img class="math" src="../../_images/math/028ef6b4d77889ca7610308bd161db1b0f76c613.svg" alt="B"/> :</p>
+<div class="math">
+<p><img src="../../_images/math/732cd3688046276a88e6c04da097c211817daf8d.svg" alt="\|\vect{\theta}-\vect{\mu} \|^2_B = (\vect{\theta}-\vect{\mu} )^T B^{-1} (\vect{\theta}-\vect{\mu} ),"/></p>
+</div><p>for any <img class="math" src="../../_images/math/7ea832fe55499aaaa56a2574c293ad7051964a7f.svg" alt="\vect{\theta},\vect{\mu} \in \Rset^{d_h}"/>.
+Denote by <img class="math" src="../../_images/math/e6c1e3304f255b5319b5b6e1c97ee255336d5637.svg" alt="\|\cdot\|_R"/> the Mahalanobis distance associated with the matrix
+<img class="math" src="../../_images/math/4c1e61a97a8d13c6c03c93620bfc12a522de5efb.svg" alt="R"/> :</p>
+<div class="math">
+<p><img src="../../_images/math/764e599015ae529392bd9788e2aa455822540dfd.svg" alt="\|\vect{y}-H(\vect{\theta})\|^2_R = (\vect{y}-H(\vect{\theta}))^T R^{-1} (\vect{y}-H(\vect{\theta}))."/></p>
+</div><p>for any <img class="math" src="../../_images/math/2daddf92ff7e9c9d366af38d721a52ad71e20526.svg" alt="\vect{\theta} \in \Rset^{d_h}"/> and any <img class="math" src="../../_images/math/b1adf1c81d7b4a86daeea30c06bb4a0c3e7b53a4.svg" alt="\vect{y} \in \Rset^{d_z}"/>.
+Therefore, the posterior distribution of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> given the observations <img class="math" src="../../_images/math/8b54d324b80a3dc63c7f8259eff1fdde897e13cc.svg" alt="\vect{y}"/> is :</p>
+<div class="math">
+<p><img src="../../_images/math/3dec7e0b40695f85355e70747b35ab67330cf99b.svg" alt="p(\vect{\theta}|\vect{y}) \propto \exp\left( -\frac{1}{2} \left( \|\vect{y}-H(\vect{\theta})\|^2_R
++ \|\vect{\theta}-\vect{\mu} \|^2_B \right) \right)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>.</p>
+</div>
+<div class="section" id="map-estimator">
+<h2>MAP estimator<a class="headerlink" href="#map-estimator" title="Permalink to this headline">¶</a></h2>
+<p>The maximum of the posterior distribution of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> given the observations <img class="math" src="../../_images/math/8b54d324b80a3dc63c7f8259eff1fdde897e13cc.svg" alt="\vect{y}"/> is
+reached at :</p>
+<div class="math">
+<p><img src="../../_images/math/f74d5d4017994e105fe031935d5ac5deae701c07.svg" alt="\hat{\vect{\theta}} = arg min_{\vect{\theta}\in\Rset^{d_h}} \frac{1}{2} \left( \|\vect{y} - H(\vect{\theta})\|^2_R
++ \|\vect{\theta}-\vect{\mu} \|^2_B \right)."/></p>
+</div><p>It is called the <em>maximum a posteriori posterior</em> estimator or
+<em>MAP</em> estimator.</p>
+</div>
+<div class="section" id="regularity-of-solutions-of-the-gaussian-calibration">
+<h2>Regularity of solutions of the Gaussian Calibration<a class="headerlink" href="#regularity-of-solutions-of-the-gaussian-calibration" title="Permalink to this headline">¶</a></h2>
+<p>The gaussian calibration is a tradeoff, so that the
+second expression acts as a <em>spring</em> which pulls the parameter
+<img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> closer to the background <img class="math" src="../../_images/math/11f544f586ee762775393fc0da4416d9252b840c.svg" alt="\vect{\mu}"/>
+(depending on the “spring constant” <img class="math" src="../../_images/math/028ef6b4d77889ca7610308bd161db1b0f76c613.svg" alt="B"/>,
+meanwhile getting as close a possible to the observations.
+Depending on the matrix <img class="math" src="../../_images/math/028ef6b4d77889ca7610308bd161db1b0f76c613.svg" alt="B"/>, the computation may have
+better regularity properties than the plain non linear least squares problem.</p>
+</div>
+<div class="section" id="non-linear-gaussian-calibration-3dvar">
+<h2>Non Linear Gaussian Calibration : 3DVAR<a class="headerlink" href="#non-linear-gaussian-calibration-3dvar" title="Permalink to this headline">¶</a></h2>
+<p>The cost function of the gaussian nonlinear calibration problem is :</p>
+<div class="math">
+<p><img src="../../_images/math/b2058f4af865f64342e24a7357c168862e0cdacb.svg" alt="C(\vect{\theta}) = \frac{1}{2}\|\vect{y}-H(\vect{\theta})\|^2_R
++ \frac{1}{2}\|\vect{\theta}-\vect{\mu} \|^2_B"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>.</p>
+<p>The goal of the non linear gaussian calibration is to find the
+value of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> which minimizes the cost function <img class="math" src="../../_images/math/8386434e075badbe111200fc04360b61ebad2dab.svg" alt="C"/>.
+In general, this involves using a nonlinear unconstrained optimization solver.</p>
+<p>Let <img class="math" src="../../_images/math/d3d6993f0224aae8df1a9a60c4a27e373f1aa8c7.svg" alt="J \in \Rset^{n \times d_h}"/> be the Jacobian matrix made of the
+partial derivatives of <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> with respect to <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/c6eace205fb62eddc7f224afa5c4425e994b8c91.svg" alt="J(\vect{\theta}) = \frac{\partial \vect{h}}{\partial \vect{\theta}}."/></p>
+</div><p>The Jacobian matrix of the cost function <img class="math" src="../../_images/math/8386434e075badbe111200fc04360b61ebad2dab.svg" alt="C"/> can be expressed
+depending on the matrices <img class="math" src="../../_images/math/4c1e61a97a8d13c6c03c93620bfc12a522de5efb.svg" alt="R"/> and <img class="math" src="../../_images/math/028ef6b4d77889ca7610308bd161db1b0f76c613.svg" alt="B"/> and the Jacobian matrix
+of the function <img class="math" src="../../_images/math/3705c7b4bf3c7d8b4b36c516001a1c2580d06fed.svg" alt="h"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/c6cb25b11e1f976abc1cf240ce7c57a2297573d0.svg" alt="\frac{d }{d\vect{\theta}} C(\vect{\theta})
+= B^{-1} (\vect{\theta}-\vect{\mu}) + J(\vect{\theta})^T R^{-1} (H(\vect{\theta}) - \vect{y})"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>.</p>
+<p>The Hessian matrix of the cost function is</p>
+<div class="math">
+<p><img src="../../_images/math/261cf20a9bde4bb1dd1023c225debb705f04e410.svg" alt="\frac{d^2 }{d\vect{\theta}^2} C(\vect{\theta})
+= B^{-1}  + J(\vect{\theta})^T R^{-1} J(\vect{\theta})"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>.</p>
+<p>If the covariance matrix <img class="math" src="../../_images/math/028ef6b4d77889ca7610308bd161db1b0f76c613.svg" alt="B"/> is positive definite,
+then the Hessian matrix of the cost function is positive definite.
+Under this hypothesis, the solution of the nonlinear gaussian calibration is unique.</p>
+</div>
+<div class="section" id="solving-the-non-linear-gaussian-calibration-problem">
+<h2>Solving the Non Linear Gaussian Calibration Problem<a class="headerlink" href="#solving-the-non-linear-gaussian-calibration-problem" title="Permalink to this headline">¶</a></h2>
+<p>The implementation of the resolution of the gaussian non linear calibration
+problem involves the Cholesky decomposition of the covariance matrices <img class="math" src="../../_images/math/028ef6b4d77889ca7610308bd161db1b0f76c613.svg" alt="B"/>
+and <img class="math" src="../../_images/math/4c1e61a97a8d13c6c03c93620bfc12a522de5efb.svg" alt="R"/>.
+This allows to transform the sum of two Mahalanobis distances into a single
+euclidian norm.
+This leads to a classical non linear least squares problem.</p>
+</div>
+<div class="section" id="linear-gaussian-calibration-bayesian-blue">
+<h2>Linear Gaussian Calibration : bayesian BLUE<a class="headerlink" href="#linear-gaussian-calibration-bayesian-blue" title="Permalink to this headline">¶</a></h2>
+<p>We make the hypothesis that $h$ is linear with respect to <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>,
+i.e., for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>, we have :</p>
+<div class="math">
+<p><img src="../../_images/math/f0632f7e2f506994de309249f8f7a8993a5421ea.svg" alt="h(\vect{\theta}) = h(\vect{\mu}) + J(\vect{\theta}-\vect{\mu} ),"/></p>
+</div><p>where <img class="math" src="../../_images/math/0bcebee2c04a49a5e1a979dea40543ba8d448a01.svg" alt="J"/> is the constant Jacobian matrix of <img class="math" src="../../_images/math/3705c7b4bf3c7d8b4b36c516001a1c2580d06fed.svg" alt="h"/>.</p>
+<p>Let <img class="math" src="../../_images/math/f7e91120558a8faa9fb201f6d08d77644cca06c0.svg" alt="A"/> be the matrix:</p>
+<div class="math">
+<p><img src="../../_images/math/a8784f5985d443f0672a8ddb717b42ced66ee524.svg" alt="A^{-1} = B^{-1} + J^T R^{-1} J."/></p>
+</div><p>We denote by <img class="math" src="../../_images/math/4d4fc4619034ef06c4ba4ba04495d1078101af05.svg" alt="K"/> the Kalman matrix:</p>
+<div class="math">
+<p><img src="../../_images/math/83771d6a30300a2ea4b67fb35d91abc715f930d5.svg" alt="K = A J^T R^{-1}."/></p>
+</div><p>The maximum of the posterior distribution of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> given the
+observations <img class="math" src="../../_images/math/8b54d324b80a3dc63c7f8259eff1fdde897e13cc.svg" alt="\vect{y}"/> is:</p>
+<div class="math">
+<p><img src="../../_images/math/e1355fa1401fd96115b0775df42557dc0eaa2e27.svg" alt="\hat{\vect{\theta}} = \vect{\mu} + K (\vect{y} - H(\vect{\mu}))."/></p>
+</div><p>It can be proved that:</p>
+<div class="math">
+<p><img src="../../_images/math/851b816f453a082c75398cb68fad35fb78045443.svg" alt="p(\vect{\theta} | \vect{y}) \propto
+\exp\left(\frac{1}{2} (\vect{\theta} - \hat{\vect{\theta}})^T A^{-1} (\vect{\theta} - \hat{\vect{\theta}}) \right)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b78f85ae3f6f07c38beac420b92be80697e3d845.svg" alt="\vect{\theta}\in\Rset^{d_h}"/>.</p>
+<p>This implies:</p>
+<div class="math">
+<p><img src="../../_images/math/1e54284c137ab7c6fa46d99f883501107e110376.svg" alt="\hat{\vect{\theta}} \sim \mathcal{N}(\vect{\theta},A)"/></p>
+</div><div class="topic">
+<p class="topic-title first">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.GaussianLinearCalibration.html#openturns.GaussianLinearCalibration" title="openturns.GaussianLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.GaussianNonLinearCalibration.html#openturns.GaussianNonLinearCalibration" title="openturns.GaussianNonLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title first">References:</p>
+<ul class="simple">
+<li><ol class="upperalpha simple" start="14">
+<li><ol class="upperalpha simple" start="8">
+<li><p>Bingham and John M. Fry (2010). <em>Regression, Linear Models in Statistics</em>, Springer Undergraduate Mathematics Series. Springer.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="19">
+<li><p>Huet, A. Bouvier, M.A. Poursat, and E. Jolivet (2004). <em>Statistical Tools for Nonlinear Regression</em>, Springer.</p></li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="3">
+<li><ol class="upperalpha simple" start="5">
+<li><p>Rasmussen and C. K. I. Williams (2006), <em>Gaussian Processes for Machine Learning</em>, The MIT Press.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="metropolis_hastings.html" title="The Metropolis-Hastings Algorithm"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="code_calibration.html" title="Code calibration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" >Data analysis</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2019 Airbus-EDF-IMACS-Phimeca.
+      Last updated on Jun 04, 2019.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+    </div>
+  </body>
+</html>

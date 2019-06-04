@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="NonLinearLeastSquaresCalibration" href="openturns.NonLinearLeastSquaresCalibration.html" />
-    <link rel="prev" title="GaussianLinearCalibration" href="openturns.GaussianLinearCalibration.html" />
+    <link rel="prev" title="Calibration" href="../calibration.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -50,7 +50,7 @@
           <a href="openturns.NonLinearLeastSquaresCalibration.html" title="NonLinearLeastSquaresCalibration"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="openturns.GaussianLinearCalibration.html" title="GaussianLinearCalibration"
+          <a href="../calibration.html" title="Calibration"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -61,8 +61,8 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="openturns.GaussianLinearCalibration.html"
-                        title="previous chapter">GaussianLinearCalibration</a></p>
+  <p class="topless"><a href="../calibration.html"
+                        title="previous chapter">Calibration</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="openturns.NonLinearLeastSquaresCalibration.html"
                         title="next chapter">NonLinearLeastSquaresCalibration</a></p>
@@ -107,17 +107,17 @@
 <dd class="field-odd"><dl>
 <dt><strong>model</strong><span class="classifier"><a class="reference internal" href="openturns.Function.html#openturns.Function" title="openturns.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a></span></dt><dd><p>The parametric function to be calibrated.</p>
 </dd>
-<dt><strong>inputObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The sample of input values of the model linked to the observations.</p>
+<dt><strong>inputObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The sample of input observations.</p>
 </dd>
-<dt><strong>outputObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The sample of output values of the model linked to the observations.</p>
+<dt><strong>outputObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The sample of output observations.</p>
 </dd>
-<dt><strong>candidate</strong><span class="classifier">sequence of float</span></dt><dd><p>The a priori value of the parameter.</p>
-</dd>
-<dt><strong>parameterCovariance</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The covariance of the parameter prior distribution.</p>
-</dd>
-<dt><strong>errorCovariance</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The covariance of the observations error.</p>
+<dt><strong>candidate</strong><span class="classifier">sequence of float</span></dt><dd><p>The reference value of the parameter.</p>
 </dd>
 <dt><strong>methodName</strong><span class="classifier">str</span></dt><dd><p>The name of the least-squares method to use for the calibration. By default, equal to <em>SVD</em>. Possible values are <em>SVD</em>, <em>QR</em>, <em>Cholesky</em>.</p>
+</dd>
+<dt><strong>modelObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The sample of output values of the model.</p>
+</dd>
+<dt><strong>gradientObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The Jacobian matrix of the model with respect to the parameter.</p>
 </dd>
 </dl>
 </dd>
@@ -130,6 +130,18 @@
 </div>
 <p class="rubric">Notes</p>
 <p>LinearLeastSquaresCalibration is the minimum variance estimator of the parameter of a given model under the assumption that this parameter acts linearly in the model.</p>
+<p>The prior distribution of the parameter is a <a class="reference internal" href="openturns.Dirac.html#openturns.Dirac" title="openturns.Dirac"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dirac</span></code></a>.</p>
+<p>The posterior distribution of the parameter is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a> and reflects the 
+variability of the optimum parameter depending on the observation sample. 
+The associated covariance matrix may be regularized depending on the value of the 
+key <cite>LinearLeastSquaresCalibration-Regularization</cite> in the <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>. 
+Let us denote by <img class="math" src="../../_images/math/22797a6c342161d054349e07fe8d53bed2efe0d0.svg" alt="s_1"/> the smallest singular value of the covariance matrix. 
+The default value of the <cite>LinearLeastSquaresCalibration-Regularization</cite>, zero, 
+ensures that the singular values of the covariance matrix are left unmodified.  
+If this parameter is set to a nonzero, relatively small, value denoted by <img class="math" src="../../_images/math/9a300ade7bc1eacbcf2b70c516c7ccc93bf3d915.svg" alt="\epsilon"/>, 
+then all singular values of the covariance matrix are increased by <img class="math" src="../../_images/math/0b66649fa9a97ef3ba725807ef90ca175afd9b2d.svg" alt="\epsilon s_1"/>.</p>
+<p>The resulting distribution of the output error is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a> with a zero mean 
+and a diagonal covariance matrix computed from the residuals.</p>
 <p class="rubric">Examples</p>
 <p>Calibrate a nonlinear model using linear least-squares:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
@@ -507,7 +519,7 @@ structure containing all the results.</p>
           <a href="openturns.NonLinearLeastSquaresCalibration.html" title="NonLinearLeastSquaresCalibration"
              >next</a> |</li>
         <li class="right" >
-          <a href="openturns.GaussianLinearCalibration.html" title="GaussianLinearCalibration"
+          <a href="../calibration.html" title="Calibration"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
