@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Code calibration &#8212; OpenTURNS  documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Gaussian calibration" href="gaussian_calibration.html" />
+    <link rel="prev" title="Bayesian calibration" href="bayesian_calibration.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="gaussian_calibration.html" title="Gaussian calibration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="bayesian_calibration.html" title="Bayesian calibration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" accesskey="U">Data analysis</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Code calibration</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#least-squares">Least squares</a></li>
+<li><a class="reference internal" href="#linear-least-squares">Linear least squares</a></li>
+<li><a class="reference internal" href="#non-linear-least-squares">Non Linear Least squares</a></li>
+<li><a class="reference internal" href="#least-squares-and-minimization-of-likelihood">Least squares and minimization of likelihood</a></li>
+<li><a class="reference internal" href="#regularization-and-ill-conditionned-problems">Regularization and ill-conditionned problems</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bayesian_calibration.html"
+                        title="previous chapter">Bayesian calibration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="gaussian_calibration.html"
+                        title="next chapter">Gaussian calibration</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/data_analysis/code_calibration.rst"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="code-calibration">
+<span id="id1"></span><h1>Code calibration<a class="headerlink" href="#code-calibration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>We consider a computer model <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> (i.e. a deterministic function)
+to calibrate:</p>
+<div class="math">
+<p><img src="../../_images/math/13a7dac046c181abc76d233e8e12aa5293b06f59.svg" alt="\begin{aligned}
+    \vect{z} = \vect{h}(\vect{x}, \vect{\theta}),
+\end{aligned}"/></p>
+</div><p>where</p>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/8077df93b9758dcbb1128d71e0d0f9133f729041.svg" alt="\vect{x} \in \Rset^{d_x}"/> is the input vector;</p></li>
+<li><p><img class="math" src="../../_images/math/d3763f9c774e765811ea160c1cb6839ad3f0b66b.svg" alt="\vect{z} \in \Rset^{d_z}"/> is the output vector;</p></li>
+<li><p><img class="math" src="../../_images/math/2daddf92ff7e9c9d366af38d721a52ad71e20526.svg" alt="\vect{\theta} \in \Rset^{d_h}"/> are the unknown parameters of
+<img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> to calibrate.</p></li>
+</ul>
+<p>Let <img class="math" src="../../_images/math/a80c46f52279dd7b948b64be8831e4bdd94c1232.svg" alt="n \in \Nset"/> be the number of observations.
+The standard hypothesis of the probabilistic calibration is:</p>
+<div class="math">
+<p><img src="../../_images/math/3ce7bb4f36fce6976a71f2c20ee307c47c4222d5.svg" alt="\begin{aligned}
+    \vect{Y}^i = \vect{z}^i + \vect{\varepsilon}^i,
+\end{aligned}"/></p>
+</div><p>for <img class="math" src="../../_images/math/d529b0e8b32da302913af2c4a6c906ecf7bfcfb0.svg" alt="i=1,...,n"/> where <img class="math" src="../../_images/math/75c6d8fb5196ab673a30ca0d1fb69f3546c890eb.svg" alt="\vect{\varepsilon}^i"/> is a random measurement error such that:</p>
+<div class="math">
+<p><img src="../../_images/math/6c1c88b3d8fa25b6c99b04b0a71d5e62e91438a7.svg" alt="\begin{aligned}
+    E(\varepsilon)=\vect{0} \in \Rset^{d_z}, \qquad Cov(\varepsilon)=\Sigma \in \Rset^{d_z\times d_z},
+\end{aligned}"/></p>
+</div><p>where <img class="math" src="../../_images/math/5a0f1711e2f2294611901e68f554181beb8740fb.svg" alt="\Sigma"/> is the error covariance matrix.</p>
+<p>The goal of calibration is to estimate <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>, based on
+observations of <img class="math" src="../../_images/math/6dd74dfb7ff6eff513acaa90195f45bb6f794012.svg" alt="n"/> inputs <img class="math" src="../../_images/math/92b76a303e6f711b70231db1b4e4c1c5646db73e.svg" alt="(\vect{x}^1, \ldots, \vect{x}^n)"/>
+and the associated <img class="math" src="../../_images/math/6dd74dfb7ff6eff513acaa90195f45bb6f794012.svg" alt="n"/> observations of the output
+<img class="math" src="../../_images/math/34f9e038f42186a630512e54acbf98618ef649b6.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/>.
+In other words, the calibration process reduces the discrepancy between
+the observations <img class="math" src="../../_images/math/34f9e038f42186a630512e54acbf98618ef649b6.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/> and the
+predictions <img class="math" src="../../_images/math/7c06f9e802dd680dffb991606c3550d182e4d459.svg" alt="\vect{h}(\vect{\theta})"/>.
+Given that <img class="math" src="../../_images/math/34f9e038f42186a630512e54acbf98618ef649b6.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/> are realizations of a
+random variable, the estimate of <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>, denoted by
+<img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>, is also a random variable.
+Hence, the secondary goal of calibration is to estimate the distribution of
+<img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/> representing the uncertainty of the calibration
+process.</p>
+<p>The standard observation model makes the hypothesis that the covariance matrix
+of the error is diagonal, i.e.</p>
+<div class="math">
+<p><img src="../../_images/math/0a93af4bb1e314dbc1e64a6bf74e14706acd88e6.svg" alt="\begin{aligned}
+    \Sigma = \sigma^2 {\bf I}
+\end{aligned}"/></p>
+</div><p>where <img class="math" src="../../_images/math/908b46ea973576cdffc8d9a5309eb608749f51fa.svg" alt="\sigma^2 \in \Rset"/> is the constant observation error variance.</p>
+<p>In the remaining of this section, the input <img class="math" src="../../_images/math/6c832448293a542d07cabec15a9c1ff32c6f7667.svg" alt="\vect{x}"/> is not involved
+anymore in the equations.
+This is why we simplify the equation into:</p>
+<div class="math">
+<p><img src="../../_images/math/252060c3a8410295e052ecdf4b02b7214c2e6506.svg" alt="\begin{aligned}
+    \vect{z} = \vect{h}(\vect{\theta}).
+\end{aligned}"/></p>
+</div></div>
+<div class="section" id="least-squares">
+<h2>Least squares<a class="headerlink" href="#least-squares" title="Permalink to this headline">¶</a></h2>
+<p>The residuals is the difference between the observations and the predictions:</p>
+<div class="math">
+<p><img src="../../_images/math/ee4bd6e6fecaed646fe03173ee4102811077508f.svg" alt="\begin{aligned}
+    \vect{r}^i = \vect{y}^i - \vect{h}(\vect{\theta})^i
+\end{aligned}"/></p>
+</div><p>for <img class="math" src="../../_images/math/d529b0e8b32da302913af2c4a6c906ecf7bfcfb0.svg" alt="i=1,...,n"/>.
+The method of least squares minimizes the square of the euclidian norm
+of the residuals.
+This is why the least squares method is based on the cost function <img class="math" src="../../_images/math/8386434e075badbe111200fc04360b61ebad2dab.svg" alt="C"/> defined by:</p>
+<div class="math">
+<p><img src="../../_images/math/75b57071efa5e5efd443e82d193c6849e9d179a1.svg" alt="\begin{aligned}
+    C(\vect{\theta}) = \frac{1}{2} \|\vect{y} - \vect{h}(\vect{\theta})\|^2 = \frac{1}{2} \sum_{i=1}^n \left( \vect{y}^i - \vect{h}(\vect{\theta})^i \right)^2,
+\end{aligned}"/></p>
+</div><p>for any <img class="math" src="../../_images/math/2daddf92ff7e9c9d366af38d721a52ad71e20526.svg" alt="\vect{\theta} \in \Rset^{d_h}"/>.</p>
+<p>The least squares method minimizes the cost function <img class="math" src="../../_images/math/8386434e075badbe111200fc04360b61ebad2dab.svg" alt="C"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/8eb791821f1e1c3a1b0a2b86f4e7e0172d13f1fa.svg" alt="\begin{aligned}
+    \hat{\vect{\theta}} = \argmin_{\vect{\theta} \in \Rset^{d_h}} \frac{1}{2} \|\vect{y} - \vect{h}(\vect{\theta})\|^2.
+\end{aligned}"/></p>
+</div><p>The unbiased estimator of the variance is:</p>
+<div class="math">
+<p><img src="../../_images/math/64a54b55b620f0e04fa83bd4953ae0803b8a5629.svg" alt="\begin{aligned}
+    \hat{\sigma}^2 = \frac{\|\vect{y} - \vect{h}(\vect{\theta})\|^2}{n - d_h}.
+\end{aligned}"/></p>
+</div><p>Notice that the previous estimator is not the maximum likelihood estimator (which is biased).</p>
+</div>
+<div class="section" id="linear-least-squares">
+<h2>Linear least squares<a class="headerlink" href="#linear-least-squares" title="Permalink to this headline">¶</a></h2>
+<p>In the particular case where the deterministic function <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> is linear
+with respect to the parameter <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>, then the method
+reduces to the linear least squares.
+Let <img class="math" src="../../_images/math/d3d6993f0224aae8df1a9a60c4a27e373f1aa8c7.svg" alt="J \in \Rset^{n \times d_h}"/> be the Jacobian matrix made of the
+partial derivatives of <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> with respect to <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/4a7061c95fd561d8738658b78a126fd4769fac9d.svg" alt="\begin{aligned}
+    J(\vect{\theta}) = \frac{\partial \vect{h}}{\partial \vect{\theta}}.
+\end{aligned}"/></p>
+</div><p>Let <img class="math" src="../../_images/math/f5b1307ebd62318c401d2d0e5acbd97c1bdd471e.svg" alt="\vect{\mu} \in \Rset^{d_h}"/> be a reference value of the parameter <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>.
+Let us denote by <img class="math" src="../../_images/math/a2bcb4612fdfc777f9feb459ee8c1954840f428f.svg" alt="J=J(\vect{\mu})"/> the value of the Jacobian at the reference point <img class="math" src="../../_images/math/11f544f586ee762775393fc0da4416d9252b840c.svg" alt="\vect{\mu}"/>.
+Since the function is, by hypothesis, linear, the Jacobian is independent of the
+point where it is evaluated.
+Since <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> is linear, it is equal to its Taylor expansion:</p>
+<div class="math">
+<p><img src="../../_images/math/7a9652ee284f2e6f422a60bb95b414fd5f9cfd9a.svg" alt="\begin{aligned}
+    \vect{h}(\vect{\theta}) = \vect{h}(\vect{\mu}) + J (\vect{\theta} - \vect{\mu}),
+\end{aligned}"/></p>
+</div><p>for any <img class="math" src="../../_images/math/2daddf92ff7e9c9d366af38d721a52ad71e20526.svg" alt="\vect{\theta} \in \Rset^{d_h}"/>.</p>
+<p>The corresponding linear least squares problem is:</p>
+<div class="math">
+<p><img src="../../_images/math/f32ca14989d275067c03220cf7d80b93833d276d.svg" alt="\begin{aligned}
+    \hat{\vect{\theta}} = \argmin_{\vect{\theta} \in \Rset^{d_h}} \frac{1}{2} \|\vect{y} - \vect{h}(\vect{\mu}) + J (\vect{\theta} - \vect{\mu})\|^2.
+\end{aligned}"/></p>
+</div><p>The Gauss-Markov theorem applied to this problem states that the solution is:</p>
+<div class="math">
+<p><img src="../../_images/math/9e4177324e64878573a4bd2f782e40f256960fa1.svg" alt="\begin{aligned}
+    \hat{\vect{\theta}} = \vect{\mu} + \left(J^T J\right)^{-1} J^T ( \vect{y} - \vect{h}(\vect{\mu})).
+\end{aligned}"/></p>
+</div><p>The previous equations are the <em>normal equations</em>.
+Notice, however, that the previous linear system of equations is not implemented as is,
+i.e. we generally do not compute and invert the Gram matrix <img class="math" src="../../_images/math/2db61cb0cf56769b104c51543201d1de1a76557b.svg" alt="J^T J"/>.
+Alternatively, various orthogonalization methods such as the QR or the SVD decomposition can
+be used to solve the linear least squares problem so that potential ill-conditionning
+of the normal equations is mitigated.</p>
+<p>This estimator can be proved to be the best linear unbiased estimator, the <em>BLUE</em>, that is,
+among the unbiased linear estimators, it is the one which minimizes the variance of the estimator.</p>
+<p>Assume that the random observations are gaussian:</p>
+<div class="math">
+<p><img src="../../_images/math/476869f02a5f17818ebbe7cb23d5a90d7c447af0.svg" alt="\begin{aligned}
+    \varepsilon \sim \mathcal{N}(\vect{0},\sigma^2 {\bf I}).
+\end{aligned}"/></p>
+</div><p>Therefore, the distribution of <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/> is:</p>
+<div class="math">
+<p><img src="../../_images/math/f33aeb1cd40970ebc21fdf2bb32c67f6ad25cd48.svg" alt="\begin{aligned}
+    \hat{\vect{\theta}} \sim \mathcal{N}(\vect{\theta},\sigma^2 J^T J).
+\end{aligned}"/></p>
+</div></div>
+<div class="section" id="non-linear-least-squares">
+<h2>Non Linear Least squares<a class="headerlink" href="#non-linear-least-squares" title="Permalink to this headline">¶</a></h2>
+<p>In the general case where the function <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/> is non linear
+with respect to the parameter <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/>, then the resolution
+involves a non linear least squares optimization algorithm.
+Instead of directly minimizing the squared euclidian norm of the residuals,
+most implementations rely on the residual vector, which lead to an improved accuracy.</p>
+<p>The difficulty in the nonlinear least squares is that, compared to the
+linear situation, the theory does not provide the distribution
+of <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/> anymore.</p>
+<p>There are two practical solutions to overcome this limitation.</p>
+<ul class="simple">
+<li><p>bootstrap,</p></li>
+<li><p>linearization.</p></li>
+</ul>
+<p>The bootstrap method is based on the following
+experiment.
+Provided that we can generate a set of input and output observations,
+we can compute the corresponding value of the parameter <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>.
+Reproducing this sampling experiment a large number of times would allow
+to get the distribution of the estimated parameter <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>.
+In practice, we only have one single sample of <img class="math" src="../../_images/math/6dd74dfb7ff6eff513acaa90195f45bb6f794012.svg" alt="n"/> observations.
+If this sample is large enough and correctly represents the variability
+of the observations, the bootstrap method allows to generate
+observations resamples, which, in turn, allow to get a sample of
+<img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>.
+An approximate distribution of <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/> can then be computed
+based on kernel smoothing, for example.
+In order to get a relatively accurate distribution of <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>, the
+boostrap sample size must be large enough.
+Hence, this method requires to solve a number of optimization problems, which can be
+time consuming.</p>
+<p>Alternatively, we can linearize the function <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/>
+in the neighbourhood of the solution <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/> and use the
+gaussian distribution associated with the linear least squares.
+This method is efficient, but only accurate when the function <img class="math" src="../../_images/math/bf84d6e8d7dc85104817337bb690ed4490c62af6.svg" alt="\vect{h}"/>
+is approximately linear with respect to <img class="math" src="../../_images/math/92d5da4b5b7cf33edae27ed66b6e0aed7c035fd6.svg" alt="\vect{\theta}"/> in the
+neighbourhood of <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>.</p>
+</div>
+<div class="section" id="least-squares-and-minimization-of-likelihood">
+<h2>Least squares and minimization of likelihood<a class="headerlink" href="#least-squares-and-minimization-of-likelihood" title="Permalink to this headline">¶</a></h2>
+<p>A link between the method of least squares and the method of maximum
+likelihood can be done provided that two hypotheses are satisfied.
+The first hypothesis is that the random output observations <img class="math" src="../../_images/math/9baa9ffe2ae8a7c66ce67581445d48519a122117.svg" alt="\vect{y}^i"/> are independent.
+The second hypothesis is that the random measurement error <img class="math" src="../../_images/math/937f89e761edb6f4c6375629bbe8e787f42a1616.svg" alt="\vect{\varepsilon}"/>
+has the gaussian distribution.
+In this particular case, it can be shown that the solution of the least squares
+problem maximizes the likelihood.</p>
+<p>This is the reason why, after a least squares calibration has been performed,
+the distribution of the residuals may be interesting to analyze.
+Indeed, if the distribution of the residuals is gaussian and if the outputs
+are independent, then the least squares estimator is the maximum likelihood estimator,
+which gives a richer interpretation to the solution.</p>
+</div>
+<div class="section" id="regularization-and-ill-conditionned-problems">
+<h2>Regularization and ill-conditionned problems<a class="headerlink" href="#regularization-and-ill-conditionned-problems" title="Permalink to this headline">¶</a></h2>
+<p>If a problem is ill-conditionned, a small change in the observations can
+generate a large change in the estimate <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>.
+Hence, for problems which are ill-conditionned, calibration methods may include
+some regularization features.</p>
+<p>An ill-conditionned problem may appear in the particular case where the
+Jacobian matrix <img class="math" src="../../_images/math/0bcebee2c04a49a5e1a979dea40543ba8d448a01.svg" alt="J"/> is rank-degenerate.
+For example, suppose that a linear least squares problem is considered,
+where some linear combinations of the columns of <img class="math" src="../../_images/math/0bcebee2c04a49a5e1a979dea40543ba8d448a01.svg" alt="J"/> are linearily dependent.
+This implies that there is a linear subspace of the parameter space <img class="math" src="../../_images/math/3bea3d5a7bd2cf1a6cb72e1aa99a08b83e3c3708.svg" alt="\hat{\vect{\theta}}"/>
+such that linear combinations of the parameters do not have any
+impact on the output.
+In this case, it is not possible to estimate the projection of the solution on that
+particular subpace.
+Gaussian calibration is a way of mitigating this situation, by
+constraining the solution to be <em>not too far away</em> from a reference solution,
+named the <em>prior</em>.</p>
+<div class="topic">
+<p class="topic-title first">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.LinearLeastSquaresCalibration.html#openturns.LinearLeastSquaresCalibration" title="openturns.LinearLeastSquaresCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearLeastSquaresCalibration</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration" title="openturns.NonLinearLeastSquaresCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">NonLinearLeastSquaresCalibration</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title first">References:</p>
+<ul class="simple">
+<li><ol class="upperalpha simple" start="14">
+<li><ol class="upperalpha simple" start="8">
+<li><p>Bingham and John M. Fry (2010). <em>Regression, Linear Models in Statistics</em>, Springer Undergraduate Mathematics Series. Springer.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="19">
+<li><p>Huet, A. Bouvier, M.A. Poursat, and E. Jolivet (2004). <em>Statistical Tools for Nonlinear Regression</em>, Springer.</p></li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="3">
+<li><ol class="upperalpha simple" start="5">
+<li><p>Rasmussen and C. K. I. Williams (2006), <em>Gaussian Processes for Machine Learning</em>, The MIT Press.</p></li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="gaussian_calibration.html" title="Gaussian calibration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="bayesian_calibration.html" title="Bayesian calibration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" >Data analysis</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2019 Airbus-EDF-IMACS-Phimeca.
+      Last updated on Jun 05, 2019.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.
+    </div>
+  </body>
+</html>
