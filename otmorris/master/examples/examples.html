@@ -59,12 +59,14 @@
 <span class="c1"># Define experiments in [0,1]^20</span>
 <span class="c1"># p-levels</span>
 <span class="n">p</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">morris_experiment</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">MorrisExperimentGrid</span><span class="p">([</span><span class="n">p</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">morris_experiment</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">MorrisExperimentGrid</span><span class="p">([</span><span class="n">p</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="c1"># [0,1]^d</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">morris_experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">otmorris</span><span class="o">.</span><span class="n">MorrisFunction</span><span class="p">())</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="c1"># Evaluate Elementary effects (ee)</span>
-<span class="n">ee</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">Morris</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">ee</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">Morris</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
 <span class="c1"># Compute mu/sigma</span>
 <span class="n">mean</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">getMeanAbsoluteElementaryEffects</span><span class="p">()</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">getStandardDeviationElementaryEffects</span><span class="p">()</span>
@@ -82,19 +84,22 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="kn">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">otmorris</span>
 <span class="kn">from</span> <span class="nn">otmorris.plot_sensitivity</span> <span class="kn">import</span> <span class="n">PlotEE</span>
+
 <span class="c1"># Number of trajectories</span>
 <span class="n">r</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="c1"># Define an LHS experiment of size 50</span>
-<span class="n">lhsSize</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">lhsDesign</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">MorrisExperimentLHS</span><span class="o">.</span><span class="n">GenerateLHS</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">lhsSize</span><span class="p">)</span>
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="c1"># Define an LHS experiment of size 50 in [0, 1]^20</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="n">lhs_experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">lhsDesign</span> <span class="o">=</span> <span class="n">lhs_experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="n">morris_experiment</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">MorrisExperimentLHS</span><span class="p">(</span><span class="n">lhsDesign</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="c1"># [0, 1]^2</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">morris_experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">otmorris</span><span class="o">.</span><span class="n">MorrisFunction</span><span class="p">())</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="c1"># Evaluate Elementary effects (ee)</span>
-<span class="n">ee</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">Morris</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">ee</span> <span class="o">=</span> <span class="n">otmorris</span><span class="o">.</span><span class="n">Morris</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
 <span class="c1"># Compute mu/sigma</span>
 <span class="n">mean</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">getMeanAbsoluteElementaryEffects</span><span class="p">()</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">getStandardDeviationElementaryEffects</span><span class="p">()</span>
