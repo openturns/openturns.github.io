@@ -1,0 +1,1199 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Calibration of the deflection of a tube &#8212; OpenTURNS 1.14dev documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Bayesian calibration of a computer code" href="bayesian_calibration.html" />
+    <link rel="prev" title="Calibration of the logistic model" href="calibration_logistic.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="bayesian_calibration.html" title="Bayesian calibration of a computer code"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="calibration_logistic.html" title="Calibration of the logistic model"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.14dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="calibration.html" accesskey="U">Calibration</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Calibration of the deflection of a tube</a><ul>
+<li><a class="reference internal" href="#Description">Description</a></li>
+<li><a class="reference internal" href="#References">References</a></li>
+<li><a class="reference internal" href="#Create-a-calibration-problem">Create a calibration problem</a></li>
+<li><a class="reference internal" href="#Setting-up-the-calibration">Setting up the calibration</a></li>
+<li><a class="reference internal" href="#A-visualisation-class">A visualisation class</a></li>
+<li><a class="reference internal" href="#Calibration-with-gaussian-non-linear-least-squares">Calibration with gaussian non linear least squares</a></li>
+<li><a class="reference internal" href="#Analysis-of-the-results">Analysis of the results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="calibration_logistic.html"
+                        title="previous chapter">Calibration of the logistic model</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bayesian_calibration.html"
+                        title="next chapter">Bayesian calibration of a computer code</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/calibration/calibration_deflection_tube.ipynb"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Calibration-of-the-deflection-of-a-tube">
+<h1>Calibration of the deflection of a tube<a class="headerlink" href="#Calibration-of-the-deflection-of-a-tube" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Description">
+<h2>Description<a class="headerlink" href="#Description" title="Permalink to this headline">¶</a></h2>
+<p>We consider the deflection of a tube under a vertical stress.</p>
+<p>The parameters of the model are:</p>
+<ul class="simple">
+<li><p>F : the strength,</p></li>
+<li><p>L : the length of the tube,</p></li>
+<li><p>a : position of the force,</p></li>
+<li><p>D : external diameter of the tube,</p></li>
+<li><p>d : internal diameter of the tube,</p></li>
+<li><p>E : Young modulus.</p></li>
+</ul>
+<p>The following figure presents the internal and external diameter of the tube:</p>
+<p>The area moment of inertia of the cross section about the neutral axis of a round tube (i.e. perpendicular to the section) with external and internal diameters <img class="math" src="../../_images/math/1e352767b2810bb261e4ced1d65ba8e1161c8bb1.svg" alt="D" style="vertical-align: 0px"/> and <img class="math" src="../../_images/math/5da6e6d65e4ae3032c58fe8c94955247fc4ebe22.svg" alt="d" style="vertical-align: 0px"/> are:</p>
+<div class="math">
+<p><img src="../../_images/math/85fd6362e89f7279ffac17949d79093c0758609f.svg" alt="I = \frac{\pi (D^4-d^4)}{32}."/></p>
+</div><p>The vertical deflection at point <img class="math" src="../../_images/math/cadfc6ebc0f03b8a4a4037f21724f5d85271b3df.svg" alt="x=a" style="vertical-align: 0px"/> is:</p>
+<div class="math">
+<p><img src="../../_images/math/c100d56132b35e3c50d8e9a89f67099384f08f2d.svg" alt="g_1(X) =
+- F \frac{a^2 (L-a)^2}{3 E L I},"/></p>
+</div><p>where <img class="math" src="../../_images/math/62a48f9beb949d4917bf493e9a4f373fa0db4af0.svg" alt="X=(F,L,a,D,d,E)" style="vertical-align: -4px"/>. The angle of the tube at the left end is:</p>
+<div class="math">
+<p><img src="../../_images/math/2a5df1bc802de6a37e38c2bb3345a0848d410c83.svg" alt="g_2(X) =
+- F \frac{b (L^2-b^2)}{6 E L I},"/></p>
+</div><p>and the angle of the tube at the right end is:</p>
+<div class="math">
+<p><img src="../../_images/math/af84e85adb0c43e0c20f8d9148673ef28c91f836.svg" alt="g_3(X) =
+F \frac{a (L^2-a^2)}{6 E L I}."/></p>
+</div><p>The following table presents the distributions of the random variables. These variables are assumed to be independent.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Distribution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>F</p></td>
+<td><p>Normal(1,0.1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>L</p></td>
+<td><p>Normal(1.5,0.01)</p></td>
+</tr>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>Uniform(0.7,1.2)</p></td>
+</tr>
+<tr class="row-odd"><td><p>D</p></td>
+<td><p>Triangular(0.75,0.8,0.85)</p></td>
+</tr>
+<tr class="row-even"><td><p>d</p></td>
+<td><p>Triangular(0.09,0.1,0.11)</p></td>
+</tr>
+<tr class="row-odd"><td><p>E</p></td>
+<td><p>Normal(200000,2000)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Deflection of beams by Russ Elliott. <a class="reference external" href="http://www.clag.org.uk/beam.html">http://www.clag.org.uk/beam.html</a></p></li>
+<li><p><a class="reference external" href="https://upload.wikimedia.org/wikipedia/commons/f/ff/Simple_beam_with_offset_load.svg">https://upload.wikimedia.org/wikipedia/commons/f/ff/Simple_beam_with_offset_load.svg</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Deflection_(engineering">https://en.wikipedia.org/wiki/Deflection_(engineering</a>)</p></li>
+<li><p><a class="reference external" href="https://mechanicalc.com/reference/beam-deflection-tables">https://mechanicalc.com/reference/beam-deflection-tables</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Second_moment_of_area">https://en.wikipedia.org/wiki/Second_moment_of_area</a></p></li>
+<li><p>Shigley’s Mechanical Engineering Design (9th Edition), Richard G. Budynas, J. Keith Nisbettn, McGraw Hill (2011)</p></li>
+<li><p>Mechanics of Materials (7th Edition), James M. Gere, Barry J. Goodno, Cengage Learning (2009)</p></li>
+<li><p>Statics and Mechanics of Materials (5th Edition), Ferdinand Beer, E. Russell Johnston, Jr., John DeWolf, David Mazurek. Mc Graw Hill (2011) Chapter 15: deflection of beams.</p></li>
+</ul>
+</div>
+<div class="section" id="Create-a-calibration-problem">
+<h2>Create a calibration problem<a class="headerlink" href="#Create-a-calibration-problem" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="kn">as</span> <span class="nn">ot</span>
+</pre></div>
+</div>
+</div>
+<p>We use the variable names <code class="docutils literal notranslate"><span class="pre">De</span></code> for the external diameter and <code class="docutils literal notranslate"><span class="pre">di</span></code> for the internal diameter because the symbolic function engine is not case sensitive, hence the variable names <code class="docutils literal notranslate"><span class="pre">D</span></code> and <code class="docutils literal notranslate"><span class="pre">d</span></code> would not be distiguished.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputsvars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;De&quot;</span><span class="p">,</span><span class="s2">&quot;di&quot;</span><span class="p">,</span><span class="s2">&quot;E&quot;</span><span class="p">]</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;var I:=pi_*(De^4-di^4)/32; var b:=L-a; g1:=-F*a^2*(L-a)^2/(3*E*L*I); g2:=-F*b*(L^2-b^2)/(6*E*L*I); g3:=F*a*(L^2-a^2)/(6*E*L*I)&quot;</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span><span class="n">inputsvars</span><span class="p">,[</span><span class="s2">&quot;g1&quot;</span><span class="p">,</span><span class="s2">&quot;g2&quot;</span><span class="p">,</span><span class="s2">&quot;g3&quot;</span><span class="p">],</span><span class="n">formula</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">setOutputDescription</span><span class="p">([</span><span class="s2">&quot;Deflection&quot;</span><span class="p">,</span><span class="s2">&quot;Left angle&quot;</span><span class="p">,</span><span class="s2">&quot;Right angle&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">XF</span><span class="o">=</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">XE</span><span class="o">=</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">200000</span><span class="p">,</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">XF</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Force&quot;</span><span class="p">])</span>
+<span class="n">XE</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Young Modulus&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">XL</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">Xa</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">XD</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">Xd</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">XL</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Longueur&quot;</span><span class="p">])</span>
+<span class="n">Xa</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Location&quot;</span><span class="p">])</span>
+<span class="n">XD</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;External diameter&quot;</span><span class="p">])</span>
+<span class="n">Xd</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Internal diameter&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">XF</span><span class="p">,</span><span class="n">XL</span><span class="p">,</span><span class="n">Xa</span><span class="p">,</span><span class="n">XD</span><span class="p">,</span><span class="n">Xd</span><span class="p">,</span><span class="n">XE</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">inputSample</span> <span class="o">=</span> <span class="n">inputDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)</span>
+<span class="n">inputSample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>Force</TH><TH>Longueur</TH><TH>Location</TH><TH>External diameter</TH><TH>Internal diameter</TH><TH>Young Modulus</TH></TR>
+<TR><TD>0</TD><TD>1.0608201651218765</TD><TD>1.5</TD><TD>1.0</TD><TD>0.8</TD><TD>0.1</TD><TD>196966.07036307675</TD></TR>
+<TR><TD>1</TD><TD>0.8733826897783343</TD><TD>1.5</TD><TD>1.0</TD><TD>0.8</TD><TD>0.1</TD><TD>197401.2408213367</TD></TR>
+<TR><TD>2</TD><TD>0.9561734380039586</TD><TD>1.5</TD><TD>1.0</TD><TD>0.8</TD><TD>0.1</TD><TD>200460.74487807832</TD></TR>
+<TR><TD>3</TD><TD>1.1205478200828576</TD><TD>1.5</TD><TD>1.0</TD><TD>0.8</TD><TD>0.1</TD><TD>193805.25155946863</TD></TR>
+<TR><TD>4</TD><TD>0.7818614765383486</TD><TD>1.5</TD><TD>1.0</TD><TD>0.8</TD><TD>0.1</TD><TD>200026.45999395067</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputDeflection</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">outputDeflection</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>Deflection</TH><TH>Left angle</TH><TH>Right angle</TH></TR>
+<TR><TD>0</TD><TD>-7.442589066378747e-06</TD><TD>-1.4885178132757494e-05</TD><TD>1.8606472665946867e-05</TD></TR>
+<TR><TD>1</TD><TD>-6.114041697475519e-06</TD><TD>-1.2228083394951039e-05</TD><TD>1.52851042436888e-05</TD></TR>
+<TR><TD>2</TD><TD>-6.591451026631792e-06</TD><TD>-1.3182902053263584e-05</TD><TD>1.647862756657948e-05</TD></TR>
+<TR><TD>3</TD><TD>-7.98984857356334e-06</TD><TD>-1.597969714712668e-05</TD><TD>1.997462143390835e-05</TD></TR>
+<TR><TD>4</TD><TD>-5.401520898870577e-06</TD><TD>-1.0803041797741154e-05</TD><TD>1.3503802247176442e-05</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">observationNoiseSigma</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1e-6</span><span class="p">,</span><span class="mf">0.05e-5</span><span class="p">,</span><span class="mf">0.05e-5</span><span class="p">]</span>
+<span class="n">observationNoiseCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">observationNoiseCovariance</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">observationNoiseSigma</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">noiseSigma</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],</span><span class="n">observationNoiseCovariance</span><span class="p">)</span>
+<span class="n">sampleObservationNoise</span> <span class="o">=</span> <span class="n">noiseSigma</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)</span>
+<span class="n">observedOutput</span> <span class="o">=</span> <span class="n">outputDeflection</span> <span class="o">+</span> <span class="n">sampleObservationNoise</span>
+<span class="n">observedOutput</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>Deflection</TH><TH>Left angle</TH><TH>Right angle</TH></TR>
+<TR><TD>0</TD><TD>-7.356762209314677e-06</TD><TD>-1.5338461089948315e-05</TD><TD>1.814806773342329e-05</TD></TR>
+<TR><TD>1</TD><TD>-5.997719622988609e-06</TD><TD>-1.2077124238651994e-05</TD><TD>1.553026987801388e-05</TD></TR>
+<TR><TD>2</TD><TD>-6.543908569160418e-06</TD><TD>-1.3577254181436902e-05</TD><TD>1.614390297308445e-05</TD></TR>
+<TR><TD>3</TD><TD>-8.003641369111095e-06</TD><TD>-1.646546275829769e-05</TD><TD>1.9380702536539273e-05</TD></TR>
+<TR><TD>4</TD><TD>-5.258700570801308e-06</TD><TD>-1.1097656728695641e-05</TD><TD>1.2637714263644793e-05</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">observedInput</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">observedInput</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputSample</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># F</span>
+<span class="n">observedInput</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputSample</span><span class="p">[:,</span><span class="mi">5</span><span class="p">]</span> <span class="c1"># E</span>
+<span class="n">observedInput</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Force&quot;</span><span class="p">,</span><span class="s2">&quot;Young Modulus&quot;</span><span class="p">])</span>
+<span class="n">observedInput</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>Force</TH><TH>Young Modulus</TH></TR>
+<TR><TD>0</TD><TD>1.0608201651218765</TD><TD>196966.07036307675</TD></TR>
+<TR><TD>1</TD><TD>0.8733826897783343</TD><TD>197401.2408213367</TD></TR>
+<TR><TD>2</TD><TD>0.9561734380039586</TD><TD>200460.74487807832</TD></TR>
+<TR><TD>3</TD><TD>1.1205478200828576</TD><TD>193805.25155946863</TD></TR>
+<TR><TD>4</TD><TD>0.7818614765383486</TD><TD>200026.45999395067</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fullSample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">fullSample</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">observedInput</span>
+<span class="n">fullSample</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">observedOutput</span>
+<span class="n">fullSample</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Force&quot;</span><span class="p">,</span><span class="s2">&quot;Young&quot;</span><span class="p">,</span><span class="s2">&quot;Deflection&quot;</span><span class="p">,</span><span class="s2">&quot;Left Angle&quot;</span><span class="p">,</span><span class="s2">&quot;Right Angle&quot;</span><span class="p">])</span>
+<span class="n">fullSample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>Force</TH><TH>Young</TH><TH>Deflection</TH><TH>Left Angle</TH><TH>Right Angle</TH></TR>
+<TR><TD>0</TD><TD>1.0608201651218765</TD><TD>196966.07036307675</TD><TD>-7.356762209314677e-06</TD><TD>-1.5338461089948315e-05</TD><TD>1.814806773342329e-05</TD></TR>
+<TR><TD>1</TD><TD>0.8733826897783343</TD><TD>197401.2408213367</TD><TD>-5.997719622988609e-06</TD><TD>-1.2077124238651994e-05</TD><TD>1.553026987801388e-05</TD></TR>
+<TR><TD>2</TD><TD>0.9561734380039586</TD><TD>200460.74487807832</TD><TD>-6.543908569160418e-06</TD><TD>-1.3577254181436902e-05</TD><TD>1.614390297308445e-05</TD></TR>
+<TR><TD>3</TD><TD>1.1205478200828576</TD><TD>193805.25155946863</TD><TD>-8.003641369111095e-06</TD><TD>-1.646546275829769e-05</TD><TD>1.9380702536539273e-05</TD></TR>
+<TR><TD>4</TD><TD>0.7818614765383486</TD><TD>200026.45999395067</TD><TD>-5.258700570801308e-06</TD><TD>-1.1097656728695641e-05</TD><TD>1.2637714263644793e-05</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ot</span><span class="o">.</span><span class="n">Pairs</span><span class="p">(</span><span class="n">fullSample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_deflection_tube_16_0.png" src="../../_images/examples_calibration_calibration_deflection_tube_16_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Setting-up-the-calibration">
+<h2>Setting up the calibration<a class="headerlink" href="#Setting-up-the-calibration" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">XL</span> <span class="o">=</span> <span class="mf">1.4</span> <span class="c1"># Exact : 1.5</span>
+<span class="n">Xa</span> <span class="o">=</span> <span class="mf">1.2</span> <span class="c1"># Exact : 1.0</span>
+<span class="n">XD</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="c1"># Exact : 0.8</span>
+<span class="n">Xd</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="c1"># Exact : 0.1</span>
+<span class="n">thetaPrior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="n">XL</span><span class="p">,</span><span class="n">Xa</span><span class="p">,</span><span class="n">XD</span><span class="p">,</span><span class="n">Xd</span><span class="p">])</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sigmaXL</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">XL</span>
+<span class="n">sigmaXa</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">Xa</span>
+<span class="n">sigmaXD</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">XD</span>
+<span class="n">sigmaXd</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">Xd</span>
+<span class="n">parameterCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">parameterCovariance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaXL</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">parameterCovariance</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaXa</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">parameterCovariance</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaXD</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">parameterCovariance</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaXd</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">parameterCovariance</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[[ 0.0196 0      0      0      ]<br>
+ [ 0      0.0144 0      0      ]<br>
+ [ 0      0      0.0049 0      ]<br>
+ [ 0      0      0      0.0004 ]]</p></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">calibratedIndices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">calibrationFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">calibratedIndices</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sigmaObservation</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2e-6</span><span class="p">,</span><span class="mf">0.03e-5</span><span class="p">,</span><span class="mf">0.03e-5</span><span class="p">]</span> <span class="c1"># Exact : 0.1e-6</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">errorCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">errorCovariance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaObservation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">errorCovariance</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaObservation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">errorCovariance</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaObservation</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">calibrationFunction</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">thetaPrior</span><span class="p">)</span>
+<span class="n">predictedOutput</span> <span class="o">=</span> <span class="n">calibrationFunction</span><span class="p">(</span><span class="n">observedInput</span><span class="p">)</span>
+<span class="n">predictedOutput</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>Deflection</TH><TH>Left angle</TH><TH>Right angle</TH></TR>
+<TR><TD>0</TD><TD>-3.154534354474193e-06</TD><TD>-1.0515114514913978e-05</TD><TD>1.7087061086735213e-05</TD></TR>
+<TR><TD>1</TD><TD>-2.591430805511134e-06</TD><TD>-8.638102685037113e-06</TD><TD>1.4036916863185308e-05</TD></TR>
+<TR><TD>2</TD><TD>-2.79378029928786e-06</TD><TD>-9.312600997626203e-06</TD><TD>1.5132976621142579e-05</TD></TR>
+<TR><TD>3</TD><TD>-3.3864897803118274e-06</TD><TD>-1.1288299267706095e-05</TD><TD>1.8343486310022407e-05</TD></TR>
+<TR><TD>4</TD><TD>-2.2894295372118615e-06</TD><TD>-7.631431790706208e-06</TD><TD>1.2401076659897585e-05</TD></TR>
+</TABLE></div>
+</div>
+</div>
+<div class="section" id="A-visualisation-class">
+<h2>A visualisation class<a class="headerlink" href="#A-visualisation-class" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A graphics class to analyze the results of calibration.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="kn">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="kn">as</span> <span class="nn">otv</span>
+
+<span class="k">class</span> <span class="nc">CalibrationAnalysis</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">calibrationResult</span><span class="p">,</span><span class="n">model</span><span class="p">,</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the prior and posterior distribution of the calibrated parameter theta.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        calibrationResult : :class:`~openturns.calibrationResult`</span>
+<span class="sd">            The result of a calibration.</span>
+
+<span class="sd">        model : 2-d sequence of float</span>
+<span class="sd">            The function to calibrate.</span>
+
+<span class="sd">        inputObservations : :class:`~openturns.Sample`</span>
+<span class="sd">            The sample of input values of the model linked to the observations.</span>
+
+<span class="sd">        outputObservations : 2-d sequence of float</span>
+<span class="sd">            The sample of output values of the model linked to the observations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span> <span class="o">=</span> <span class="n">calibrationResult</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span> <span class="o">=</span> <span class="n">inputObservations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span> <span class="o">=</span> <span class="n">outputObservations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span> <span class="o">=</span> <span class="mi">6</span> <span class="c1"># inch</span>
+        <span class="c1"># Compute yAtPrior</span>
+        <span class="n">meanPrior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPrior</span><span class="p">()</span><span class="o">.</span><span class="n">getMean</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">meanPrior</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="o">=</span><span class="n">model</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">)</span>
+        <span class="c1"># Compute yAtPosterior</span>
+        <span class="n">meanPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span><span class="o">.</span><span class="n">getMean</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">meanPosterior</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="o">=</span><span class="n">model</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">drawParameterDistributions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the prior and posterior distribution of the calibrated parameter theta.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thetaPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPrior</span><span class="p">()</span>
+        <span class="n">thetaDescription</span> <span class="o">=</span> <span class="n">thetaPrior</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+        <span class="n">thetaPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
+        <span class="n">thetaDim</span> <span class="o">=</span> <span class="n">thetaPosterior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">thetaDim</span><span class="p">):</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">thetaDescription</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+            <span class="c1"># Prior distribution</span>
+            <span class="n">thetaPrior_i</span> <span class="o">=</span> <span class="n">thetaPrior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">priorPDF</span> <span class="o">=</span> <span class="n">thetaPrior_i</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+            <span class="n">priorPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">])</span>
+            <span class="n">priorPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Prior&quot;</span><span class="p">])</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">priorPDF</span><span class="p">)</span>
+            <span class="c1"># Posterior distribution</span>
+            <span class="n">thetaPosterior_i</span> <span class="o">=</span> <span class="n">thetaPosterior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">postPDF</span> <span class="o">=</span> <span class="n">thetaPosterior_i</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+            <span class="n">postPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">])</span>
+            <span class="n">postPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Posterior&quot;</span><span class="p">])</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">postPDF</span><span class="p">)</span>
+            <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            If the prior is a Dirac, set the vertical axis bounds to the posterior.</span>
+<span class="sd">            Otherwise, the Dirac set to [0,1], where the 1 can be much larger</span>
+<span class="sd">            than the maximum PDF of the posterior.</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">thetaPrior_i</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">==</span><span class="s2">&quot;Dirac&quot;</span><span class="p">):</span>
+                <span class="c1"># The vertical (PDF) bounds of the posterior</span>
+                <span class="n">postbb</span> <span class="o">=</span> <span class="n">postPDF</span><span class="o">.</span><span class="n">getBoundingBox</span><span class="p">()</span>
+                <span class="n">pdf_upper</span> <span class="o">=</span> <span class="n">postbb</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">pdf_lower</span> <span class="o">=</span> <span class="n">postbb</span><span class="o">.</span><span class="n">getLowerBound</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># Set these bounds to the graph</span>
+                <span class="n">bb</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">getBoundingBox</span><span class="p">()</span>
+                <span class="n">graph_upper</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()</span>
+                <span class="n">graph_upper</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf_upper</span>
+                <span class="n">bb</span><span class="o">.</span><span class="n">setUpperBound</span><span class="p">(</span><span class="n">graph_upper</span><span class="p">)</span>
+                <span class="n">graph_lower</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">getLowerBound</span><span class="p">()</span>
+                <span class="n">graph_lower</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf_lower</span>
+                <span class="n">bb</span><span class="o">.</span><span class="n">setLowerBound</span><span class="p">(</span><span class="n">graph_lower</span><span class="p">)</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">setBoundingBox</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span>
+            <span class="c1"># Add it to the graphics</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">thetaDim</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">fig</span>
+
+    <span class="k">def</span> <span class="nf">drawObservationsVsPredictions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the output of the model depending</span>
+<span class="sd">        on the output observations before and after calibration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ySize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="n">yDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;Observations&quot;</span><span class="p">,</span><span class="s2">&quot;Predictions&quot;</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+        <span class="c1"># Plot the diagonal</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">ySize</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">outputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="o">*</span><span class="n">yDim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yDim</span><span class="p">):</span>
+                <span class="n">outputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">yDim</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">graph</span>
+
+    <span class="k">def</span> <span class="nf">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the output of the model depending</span>
+<span class="sd">        on the output observations before and after calibration.</span>
+<span class="sd">        Can manage only 1D samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">yDim</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">ydescription</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+        <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> Observations&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> Predictions&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">xlabel</span><span class="p">,</span><span class="n">ylabel</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+        <span class="c1"># Plot the diagonal</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span> <span class="n">outputObservations</span><span class="p">)</span>
+            <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output observations are not 1D.&#39;</span><span class="p">)</span>
+        <span class="c1"># Plot the predictions before</span>
+        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yPriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span> <span class="n">outputAtPrior</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Prior&quot;</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output prior predictions are not 1D.&#39;</span><span class="p">)</span>
+        <span class="c1"># Plot the predictions after</span>
+        <span class="n">yPosteriorDim</span> <span class="o">=</span> <span class="n">outputAtPosterior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yPosteriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span> <span class="n">outputAtPosterior</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Posterior&quot;</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output posterior predictions are not 1D.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">graph</span>
+
+    <span class="k">def</span> <span class="nf">drawResiduals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the distribution of the residuals and</span>
+<span class="sd">        the distribution of the observation errors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ySize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="n">yDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">yPriorSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">observationsError</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawResiduals1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsError</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">ySize</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">outputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">observationsError</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+            <span class="c1"># In this case, we cannot draw observationsError ; just</span>
+            <span class="c1"># pass the required input argument, but it is not actually used.</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawResiduals1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsError</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">observationsError</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="o">*</span><span class="n">yDim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yDim</span><span class="p">):</span>
+                <span class="n">outputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">observationsErrorYi</span> <span class="o">=</span> <span class="n">observationsError</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawResiduals1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsErrorYi</span><span class="p">)</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">yDim</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">graph</span>
+
+    <span class="k">def</span> <span class="nf">_drawResiduals1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsError</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the distribution of the residuals and</span>
+<span class="sd">        the distribution of the observation errors.</span>
+<span class="sd">        Can manage only 1D samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ydescription</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+        <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> Residuals&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Residuals analysis&quot;</span><span class="p">,</span><span class="n">xlabel</span><span class="p">,</span><span class="s2">&quot;Probability distribution function&quot;</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+        <span class="n">yDim</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">yPosteriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">yPriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">posteriorResiduals</span> <span class="o">=</span> <span class="n">outputObservations</span> <span class="o">-</span> <span class="n">outputAtPrior</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
+            <span class="n">fittedDist</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">posteriorResiduals</span><span class="p">)</span>
+            <span class="n">residualPDF</span> <span class="o">=</span> <span class="n">fittedDist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">])</span>
+            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Prior&quot;</span><span class="p">])</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">residualPDF</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output prior observations are not 1D.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">yPosteriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">posteriorResiduals</span> <span class="o">=</span> <span class="n">outputObservations</span> <span class="o">-</span> <span class="n">outputAtPosterior</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
+            <span class="n">fittedDist</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">posteriorResiduals</span><span class="p">)</span>
+            <span class="n">residualPDF</span> <span class="o">=</span> <span class="n">fittedDist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">])</span>
+            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Posterior&quot;</span><span class="p">])</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">residualPDF</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output posterior observations are not 1D.&#39;</span><span class="p">)</span>
+        <span class="c1"># Plot the distribution of the observation errors</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">observationsError</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># In the other case, we just do not plot</span>
+            <span class="n">obserrgraph</span> <span class="o">=</span> <span class="n">observationsError</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+            <span class="n">obserrgraph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span><span class="p">])</span>
+            <span class="n">obserrgraph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Observation errors&quot;</span><span class="p">])</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">obserrgraph</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">graph</span>
+
+    <span class="k">def</span> <span class="nf">drawObservationsVsInputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the observed output of the model depending</span>
+<span class="sd">        on the observed input before and after calibration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="n">ySize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="n">xDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">yDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">xdescription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+        <span class="n">ydescription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+        <span class="c1"># Observations</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">xDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">xSize</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ySize</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">inputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">outputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">xDim</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">,</span> <span class="n">yDim</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xDim</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yDim</span><span class="p">):</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">xDim</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="n">i</span>
+                    <span class="n">inputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">outputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
+                    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">yDim</span><span class="p">,</span> <span class="n">xDim</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">graph</span>
+
+    <span class="k">def</span> <span class="nf">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots the observed output of the model depending</span>
+<span class="sd">        on the observed input before and after calibration.</span>
+<span class="sd">        Can manage only 1D samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xDim</span> <span class="o">=</span> <span class="n">inputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">xDim</span><span class="o">!=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Input observations are not 1D.&#39;</span><span class="p">)</span>
+        <span class="n">yDim</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="n">xdescription</span> <span class="o">=</span> <span class="n">inputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+        <span class="n">ydescription</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">xdescription</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">True</span><span class="p">,</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+        <span class="c1"># Observations</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output observations are not 1D.&#39;</span><span class="p">)</span>
+        <span class="c1"># Model outputs before calibration</span>
+        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yPriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Prior&quot;</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output prior predictions are not 1D.&#39;</span><span class="p">)</span>
+        <span class="c1"># Model outputs after calibration</span>
+        <span class="n">yPosteriorDim</span> <span class="o">=</span> <span class="n">outputAtPosterior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yPosteriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">)</span>
+            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Posterior&quot;</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output posterior predictions are not 1D.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Calibration-with-gaussian-non-linear-least-squares">
+<h2>Calibration with gaussian non linear least squares<a class="headerlink" href="#Calibration-with-gaussian-non-linear-least-squares" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianNonLinearCalibration</span><span class="p">(</span><span class="n">calibrationFunction</span><span class="p">,</span> <span class="n">observedInput</span><span class="p">,</span> <span class="n">observedOutput</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">,</span> <span class="n">parameterCovariance</span><span class="p">,</span> <span class="n">errorCovariance</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">calibrationResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Analysis-of-the-results">
+<h2>Analysis of the results<a class="headerlink" href="#Analysis-of-the-results" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">thetaMAP</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
+<span class="n">thetaMAP</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[1.49042,0.991571,0.798252,0.199874]</p></div>
+</div>
+<p>Compute a 95% confidence interval for each marginal.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">thetaPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">dim</span> <span class="o">=</span> <span class="n">thetaPosterior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">thetaPosterior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">computeBilateralConfidenceInterval</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[1.4721, 1.514]
+[0.969123, 1.02096]
+[0.794538, 0.802743]
+[0.199868, 0.199879]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mypcr</span> <span class="o">=</span> <span class="n">CalibrationAnalysis</span><span class="p">(</span><span class="n">calibrationResult</span><span class="p">,</span><span class="n">calibrationFunction</span><span class="p">,</span> <span class="n">observedInput</span><span class="p">,</span> <span class="n">observedOutput</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_deflection_tube_35_0.png" src="../../_images/examples_calibration_calibration_deflection_tube_35_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_deflection_tube_36_0.png" src="../../_images/examples_calibration_calibration_deflection_tube_36_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_deflection_tube_37_0.png" src="../../_images/examples_calibration_calibration_deflection_tube_37_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_deflection_tube_38_0.png" src="../../_images/examples_calibration_calibration_deflection_tube_38_0.png" />
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="bayesian_calibration.html" title="Bayesian calibration of a computer code"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="calibration_logistic.html" title="Calibration of the logistic model"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.14dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="calibration.html" >Calibration</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2019 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Sep 16, 2019.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/73585d7c5.
+    </div>
+  </body>
+</html>
