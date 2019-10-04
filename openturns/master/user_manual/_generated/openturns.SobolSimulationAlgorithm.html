@@ -124,17 +124,33 @@ At the end of each iteration we update the global distribution of the indices.</
 <p class="rubric">Notes</p>
 <p>The algorithm can operate on a multivariate model <img class="math" src="../../_images/math/51916a9aa71f574e1426044f0bc2d637b6160cde.svg" alt="f" style="vertical-align: -3px"/>, in this case it operates on aggregated indices.</p>
 <p>Several estimators are available (Saltelli, Jansen, …).</p>
-<p>The algorithms stops when, on all components, first and total order indices haved been estimated with enough precision or the first order indices are
-<em>separable</em> from the total order indices:</p>
-<div class="math">
-<p><img src="../../_images/math/6afde3dd4eb694aefa146062f1631e0f60a32fe9.svg" alt="\forall{j}
-
-\Phi^{F}_j(1-\alpha)-\Phi^{F}_j(\alpha) \leq \epsilon \cap \Phi^{T}_j(1-\alpha)-\Phi^{T}_j(\alpha) \leq \epsilon
-
-or
-
-\Phi^{T}_j(\alpha) \ge \Phi^{F}_j(1-\alpha)"/></p>
-</div><p class="rubric">Examples</p>
+<p>Let us denote by $n_X$ the number of input variables. 
+For any $j=1,…,n_X$, let us denote by $Phi_j^F$ (resp. $Phi_j^T$) the cumulated distribution 
+function of the gaussian asymptotic distribution of the estimator 
+of the Sobol’ first (resp. total) order indice.
+Let $alphain[0,1]$ be the level of the confidence interval and $epsilonin(0,1]$ the 
+length of this confidence interval. 
+The algorithms stops when, on all components, at least one of the following conditions 
+is satisfied: 
+- first and total order indices haved been estimated with enough precision or  
+- the first order indices can be <em>separated</em> from the total order indices.</p>
+<p>The precision is said to be sufficient if the length of the $alpha$-level confidence interval 
+is smaller than $epsilon$:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>\<span class="n">Phi_j</span><span class="o">^</span><span class="n">F</span><span class="p">)</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}(</span><span class="mi">1</span><span class="o">-</span>\<span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>\<span class="n">Phi_j</span><span class="o">^</span><span class="n">F</span><span class="p">)</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}(</span>\<span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> \<span class="n">leq</span> \<span class="n">epsilon</span> \<span class="n">textrm</span><span class="p">{</span> <span class="ow">and</span> <span class="p">}</span> 
+<span class="p">(</span>\<span class="n">Phi_j</span><span class="o">^</span><span class="n">T</span><span class="p">)</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}(</span><span class="mi">1</span><span class="o">-</span>\<span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>\<span class="n">Phi_j</span><span class="o">^</span><span class="n">T</span><span class="p">)</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">}(</span>\<span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> \<span class="n">leq</span> \<span class="n">epsilon</span>
+</pre></div>
+</div>
+<p>for all <img class="math" src="../../_images/math/3dc9daf17a5143c8127aca81be4a57ce19b24c92.svg" alt="j=1,...,n_X" style="vertical-align: -3px"/>.</p>
+<p>The first order indices can be <em>separated</em> from the total order indices if:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>\<span class="n">Phi</span><span class="o">^</span><span class="p">{</span><span class="n">T</span><span class="p">}</span><span class="n">_j</span><span class="p">(</span>\<span class="n">alpha</span><span class="p">)</span> \<span class="n">ge</span> \<span class="n">Phi</span><span class="o">^</span><span class="p">{</span><span class="n">F</span><span class="p">}</span><span class="n">_j</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span>\<span class="n">alpha</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for all <img class="math" src="../../_images/math/3dc9daf17a5143c8127aca81be4a57ce19b24c92.svg" alt="j=1,...,n_X" style="vertical-align: -3px"/>.</p>
+<p>The second criteria allows to stop when the algorithm has detected an interaction 
+between input variables with sufficient precision.</p>
+<p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
@@ -892,7 +908,7 @@ and its variance during the simulation algorithm.</p>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/65c8a324c.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/f92c3af5b.
     </div>
   </body>
 </html>
