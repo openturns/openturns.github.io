@@ -118,7 +118,63 @@
 </div>
 <p class="rubric">Notes</p>
 <p>This structure is created from a FunctionalChaosResult in order to evaluate the
-Sobol indices associated to the polynomial chaos decomposition of the model.</p>
+Sobol indices associated to the polynomial chaos decomposition of the model. 
+The SobolIndicesAlgorithm.DrawSobolIndices static method can be used to 
+draw the indices.</p>
+<p class="rubric">Examples</p>
+<p>Create a polynomial chaos for the Ishigami function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
+</pre></div>
+</div>
+<p>Create the function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">formula</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sin(X1) + 7. * sin(X2)^2 + 0.1 * X3^4 * sin(X1)&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">,</span> <span class="s1">&#39;X2&#39;</span><span class="p">,</span> <span class="s1">&#39;X3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span><span class="n">input_names</span><span class="p">,</span> <span class="n">formula</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create the probabilistic model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distributionList</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">distributionList</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create a training sample
+&gt;&gt;&gt; N = 100 
+&gt;&gt;&gt; inputTrain = distribution.getSample(N)
+&gt;&gt;&gt; outputTrain = g(inputTrain)</p>
+<p>Create the chaos:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chaosalgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chaosalgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">chaosalgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Print Sobol’ indices :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chaosSI</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#print( chaosSI.summary() )</span>
+</pre></div>
+</div>
+<p>Get first order Sobol’ indices for X0:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">0.3400236...</span>
+</pre></div>
+</div>
+<p>Get total order Sobol’ indices for X0:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolTotalIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">0.4940954...</span>
+</pre></div>
+</div>
+<p>Get first order Sobol’ indices for group [X0,X1]:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolGroupedIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">0.7882764...</span>
+</pre></div>
+</div>
+<p>Get total order Sobol’ indices for group [X1,X2]:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolGroupedTotalIndex</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="go">0.6599763...</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -142,33 +198,36 @@ Sobol indices associated to the polynomial chaos decomposition of the model.</p>
 <td><p>Accessor to the object’s shadowed id.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getSobolGroupedIndex" title="openturns.FunctionalChaosSobolIndices.getSobolGroupedIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSobolGroupedIndex</span></code></a>(self, \*args)</p></td>
-<td><p>Get the grouped Sobol indices.</p></td>
+<td><p>Get the grouped Sobol first order indices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getSobolIndex" title="openturns.FunctionalChaosSobolIndices.getSobolIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSobolIndex</span></code></a>(self, \*args)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getSobolGroupedTotalIndex" title="openturns.FunctionalChaosSobolIndices.getSobolGroupedTotalIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSobolGroupedTotalIndex</span></code></a>(self, \*args)</p></td>
+<td><p>Get the grouped Sobol total order indices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getSobolIndex" title="openturns.FunctionalChaosSobolIndices.getSobolIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSobolIndex</span></code></a>(self, \*args)</p></td>
 <td><p>Get the Sobol indices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getSobolTotalIndex" title="openturns.FunctionalChaosSobolIndices.getSobolTotalIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSobolTotalIndex</span></code></a>(self, \*args)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getSobolTotalIndex" title="openturns.FunctionalChaosSobolIndices.getSobolTotalIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSobolTotalIndex</span></code></a>(self, \*args)</p></td>
 <td><p>Get the total Sobol indices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getVisibility" title="openturns.FunctionalChaosSobolIndices.getVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVisibility</span></code></a>(self)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.getVisibility" title="openturns.FunctionalChaosSobolIndices.getVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVisibility</span></code></a>(self)</p></td>
 <td><p>Accessor to the object’s visibility state.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.hasName" title="openturns.FunctionalChaosSobolIndices.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>(self)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.hasName" title="openturns.FunctionalChaosSobolIndices.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>(self)</p></td>
 <td><p>Test if the object is named.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.hasVisibleName" title="openturns.FunctionalChaosSobolIndices.hasVisibleName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasVisibleName</span></code></a>(self)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.hasVisibleName" title="openturns.FunctionalChaosSobolIndices.hasVisibleName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasVisibleName</span></code></a>(self)</p></td>
 <td><p>Test if the object has a distinguishable name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.setName" title="openturns.FunctionalChaosSobolIndices.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(self, name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.setName" title="openturns.FunctionalChaosSobolIndices.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(self, name)</p></td>
 <td><p>Accessor to the object’s name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.setShadowedId" title="openturns.FunctionalChaosSobolIndices.setShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setShadowedId</span></code></a>(self, id)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.setShadowedId" title="openturns.FunctionalChaosSobolIndices.setShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setShadowedId</span></code></a>(self, id)</p></td>
 <td><p>Accessor to the object’s shadowed id.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.setVisibility" title="openturns.FunctionalChaosSobolIndices.setVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setVisibility</span></code></a>(self, visible)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.setVisibility" title="openturns.FunctionalChaosSobolIndices.setVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setVisibility</span></code></a>(self, visible)</p></td>
 <td><p>Accessor to the object’s visibility state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.summary" title="openturns.FunctionalChaosSobolIndices.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>(self)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.FunctionalChaosSobolIndices.summary" title="openturns.FunctionalChaosSobolIndices.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>(self)</p></td>
 <td><p>Summary accessor.</p></td>
 </tr>
 </tbody>
@@ -252,7 +311,7 @@ Sobol indices associated to the polynomial chaos decomposition of the model.</p>
 <dl class="method">
 <dt id="openturns.FunctionalChaosSobolIndices.getSobolGroupedIndex">
 <code class="sig-name descname">getSobolGroupedIndex</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.FunctionalChaosSobolIndices.getSobolGroupedIndex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the grouped Sobol indices.</p>
+<dd><p>Get the grouped Sobol first order indices.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
@@ -263,7 +322,28 @@ Sobol indices associated to the polynomial chaos decomposition of the model.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>s</strong><span class="classifier">float</span></dt><dd><p>The grouped Sobol indice.</p>
+<dt><strong>s</strong><span class="classifier">float</span></dt><dd><p>The grouped Sobol first order indice.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="openturns.FunctionalChaosSobolIndices.getSobolGroupedTotalIndex">
+<code class="sig-name descname">getSobolGroupedTotalIndex</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.FunctionalChaosSobolIndices.getSobolGroupedTotalIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the grouped Sobol total order indices.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>i</strong><span class="classifier">int or sequence of int, <img class="math" src="../../../_images/math/54040724551208539af9e6371dffb31b45434721.svg" alt="0 \leq i &lt; d - 1" style="vertical-align: -2px"/></span></dt><dd><p>Indice(s) of the variable(s) we want the associated grouped Sobol indices.
+<img class="math" src="../../../_images/math/5da6e6d65e4ae3032c58fe8c94955247fc4ebe22.svg" alt="d" style="vertical-align: 0px"/> is the dimension of the input variables.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>s</strong><span class="classifier">float</span></dt><dd><p>The grouped Sobol total order indice.</p>
 </dd>
 </dl>
 </dd>
@@ -448,7 +528,7 @@ Default value is 0</p>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/a401aab4a.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/9842723b0.
     </div>
   </body>
 </html>
