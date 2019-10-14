@@ -16,8 +16,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Advanced kriging" href="kriging_advanced.html" />
-    <link rel="prev" title="Meta modeling" href="meta_modeling.html" />
+    <link rel="next" title="Create a kriging metamodel in one dimension" href="kriging_1D.html" />
+    <link rel="prev" title="Configuring the trend in Kriging" href="kriging_beam_trend.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -47,10 +47,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="kriging_advanced.html" title="Advanced kriging"
+          <a href="kriging_1D.html" title="Create a kriging metamodel in one dimension"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="meta_modeling.html" title="Meta modeling"
+          <a href="kriging_beam_trend.html" title="Configuring the trend in Kriging"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.14dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -61,11 +61,11 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="meta_modeling.html"
-                        title="previous chapter">Meta modeling</a></p>
+  <p class="topless"><a href="kriging_beam_trend.html"
+                        title="previous chapter">Configuring the trend in Kriging</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="kriging_advanced.html"
-                        title="next chapter">Advanced kriging</a></p>
+  <p class="topless"><a href="kriging_1D.html"
+                        title="next chapter">Create a kriging metamodel in one dimension</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -293,12 +293,15 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Create-a-metamodel-using-Kriging">
 <h1>Create a metamodel using Kriging<a class="headerlink" href="#Create-a-metamodel-using-Kriging" title="Permalink to this headline">¶</a></h1>
-<p>In this basic example we are going to create a global approximation of a model response using a kriging model.</p>
-<p>Here</p>
+<p>In this basic example we are going to create an approximation of a model response using a kriging model. We consider a bidimensional function with gaussian inputs. Then we create a kriging metamodel with a constant basis and a <code class="docutils literal notranslate"><span class="pre">SquaredExponential</span></code> covariance.</p>
+<p>We consider the function</p>
 <div class="math">
-<p><img src="../../_images/math/b39b3338d4930a0ceef2f74baef0dfd1a430eee4.svg" alt="h(x) = cos(x_1 + x_2)"/></p>
+<p><img src="../../_images/math/647ed9149756a5b85c0a5a7762d8afcbac15b31b.svg" alt="g(X) = \cos(X_1 + X_2)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/ead616bd73d5ba4dfd74d656a02f6674592cb3ea.svg" alt="\mathbf{X}\in\mathbb{R}^2" style="vertical-align: -1px"/>. We assume that <img class="math" src="../../_images/math/62d59fb7f8f04bccb5f423e857e56202c3105759.svg" alt="X_1" style="vertical-align: -2px"/> and <img class="math" src="../../_images/math/20725757d04eeeb6cb8640e563c83209178ff65c.svg" alt="X_2" style="vertical-align: -2px"/> have a gaussian distribution :</p>
+<div class="math">
+<p><img src="../../_images/math/c7295193cc2f3d251c0526b2f09317941801a630.svg" alt="X_1 \sim \mathcal{N}(0,1) \textrm{ and } X_2 \sim \mathcal{N}(0,1)."/></p>
 </div><div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -307,68 +310,89 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>We define the model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># prepare some X/Y data</span>
-<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">dimension</span> <span class="o">=</span> <span class="mi">2</span>
+<span></span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">]</span>
 <span class="n">formulas</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cos(x1 + x2)&#39;</span><span class="p">]</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span><span class="n">input_names</span><span class="p">,</span> <span class="n">formulas</span><span class="p">)</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
-<span class="n">x</span>  <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We generate a simple Monte-Carlo input sample and evaluate the corresponding output sample.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+<span class="n">samplesize</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">x</span>  <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">samplesize</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>Then we create a kriging metamodel, using a constant trend and a squared exponential covariance model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># create a kriging model</span>
-<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">0.1</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-<span class="n">responseSurface</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+<span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<p>It is not so easy to visualize a bidimensional function. In order to simplify the graphics, we consider the value of the function at the input <img class="math" src="../../_images/math/d5258d1bd4410a982a8dae32e724027389914021.svg" alt="x_{1,ref}=0.5" style="vertical-align: -5px"/>. This amounts to create a <code class="docutils literal notranslate"><span class="pre">ParametricFunction</span></code> where the first variable <img class="math" src="../../_images/math/f9ab76de582090cc13867f72b128a142a0780c1a.svg" alt="x_1" style="vertical-align: -2px"/> (at input index 0) is set to <img class="math" src="../../_images/math/cc9a2f2f4d1b5a419336e88da0c813a27f09618c.svg" alt="0.5" style="vertical-align: 0px"/>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># plot 2nd output of our model with x1=0.5</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">responseSurface</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">])</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">])</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">getDrawable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span></span><span class="n">x1ref</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">metamodelAtXref</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">metamodel</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">x1ref</span><span class="p">])</span>
+<span class="n">modelAtXref</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">x1ref</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>For this given value of <img class="math" src="../../_images/math/f9ab76de582090cc13867f72b128a142a0780c1a.svg" alt="x_1" style="vertical-align: -2px"/>, we plot the model and the metamodel with <img class="math" src="../../_images/math/3fe752e8253fd4ce3f9403978b408263ee38f02a.svg" alt="x_2" style="vertical-align: -2px"/> from its 1% up to its 99% quantile. We configure the X title to “X2” because the default setting would state that this axis is the first value of the parametric function, which default name is “X0”.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x2min</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">computeQuantile</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">x2max</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">computeQuantile</span><span class="p">(</span><span class="mf">0.99</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">metamodelAtXref</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">x2min</span><span class="p">,</span> <span class="n">x2max</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Kriging&quot;</span><span class="p">])</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">modelAtXref</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">x2min</span><span class="p">,</span> <span class="n">x2max</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Model&quot;</span><span class="p">])</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s1">&#39;red&#39;</span><span class="p">])</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Sample size = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">samplesize</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X2&quot;</span><span class="p">)</span>
 <span class="n">graph</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_kriging_5_0.svg" src="../../_images/examples_meta_modeling_kriging_5_0.svg" /></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
+<img alt="../../_images/examples_meta_modeling_kriging_12_0.png" src="../../_images/examples_meta_modeling_kriging_12_0.png" />
 </div>
 </div>
+<p>As we can see, the metamodel is quite accurate in this case. The metamodel is very close to the model in the center of the domain, where the density of the input distribution is highest.</p>
 </div>
 
 
@@ -384,10 +408,10 @@ div.rendered_html tbody tr:hover {
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="kriging_advanced.html" title="Advanced kriging"
+          <a href="kriging_1D.html" title="Create a kriging metamodel in one dimension"
              >next</a> |</li>
         <li class="right" >
-          <a href="meta_modeling.html" title="Meta modeling"
+          <a href="kriging_beam_trend.html" title="Configuring the trend in Kriging"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.14dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -398,7 +422,7 @@ div.rendered_html tbody tr:hover {
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/dbf20bb65.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/6f8023c0d.
     </div>
   </body>
 </html>
