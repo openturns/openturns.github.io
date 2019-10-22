@@ -12,6 +12,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -293,9 +294,9 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Create-a-general-linear-model-metamodel">
 <h1>Create a general linear model metamodel<a class="headerlink" href="#Create-a-general-linear-model-metamodel" title="Permalink to this headline">¶</a></h1>
-<p>In this basic example we are going to create a global approximation of a model response using a general linear model.</p>
+<p>In this basic example we are going to create a global approximation of a model response using a general linear model. We show how to use the <code class="docutils literal notranslate"><span class="pre">GeneralLinearModelAlgorithm</span></code> class, which estimates the parameters of the model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -304,13 +305,13 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>We create a model and a sample from this model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># prepare some X/Y data</span>
-<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">dimension</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">]</span>
 <span class="n">formulas</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cos(x1 + x2)&#39;</span><span class="p">]</span>
@@ -321,38 +322,96 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>We create a <code class="docutils literal notranslate"><span class="pre">GeneralLinearModelAlgorithm</span></code> based on a linear basis. The <code class="docutils literal notranslate"><span class="pre">run</span></code> method estimats the coefficients of the trend and the hyperparameters of the covariance model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># create a functional chaos model</span>
-<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GeneralLinearModelAlgorithm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-<span class="n">responseSurface</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<p>We see that the trend coefficients have been estimated.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># plot 2nd output of our model with x1=0.5</span>
-<span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">responseSurface</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">])</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[class=Point name=Unnamed dimension=3 values=[-0.111515,-0.0142378,-0.0129734]]
+</pre></div>
+</div>
+</div>
+<p>The parameters of the covariance models also have been estimated.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>SquaredExponential(scale=[0.810148,1.52486], amplitude=[0.404099])</p></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">getMetaModel</span></code> method returns the metamodel where the parameters have been estimated.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">responseSurface</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Plot the output of our model depending on <code class="docutils literal notranslate"><span class="pre">x2</span></code> with <code class="docutils literal notranslate"><span class="pre">x1=0.5</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">xmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">5.</span>
+<span class="n">x1value</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">parametricModelGraph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">x1value</span><span class="p">])</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">)</span>
+<span class="n">parametricModelGraph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;red&quot;</span><span class="p">])</span>
+<span class="n">graphMetamodel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">responseSurface</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">x1value</span><span class="p">])</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">)</span>
+<span class="n">graphMetamodel</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">])</span>
+<span class="n">parametricModelGraph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphMetamodel</span><span class="p">)</span>
+<span class="n">parametricModelGraph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Model&quot;</span><span class="p">,</span><span class="s2">&quot;Meta-Model&quot;</span><span class="p">])</span>
+<span class="n">parametricModelGraph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+<span class="n">parametricModelGraph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_general_linear_model_5_0.svg" src="../../_images/examples_meta_modeling_general_linear_model_5_0.svg" /></div>
+<img alt="../../_images/examples_meta_modeling_general_linear_model_14_0.png" src="../../_images/examples_meta_modeling_general_linear_model_14_0.png" />
 </div>
+</div>
+<p>We see that the metamodel is equal to the trend because it takes into account the fact that the mean of the gaussian process is zero.</p>
+<p>This <code class="docutils literal notranslate"><span class="pre">GeneralLinearModelAlgorithm</span></code> class is the main building block of the <code class="docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code>. This is why most basic use cases are based on the <code class="docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code> instead of the <code class="docutils literal notranslate"><span class="pre">GeneralLinearModelAlgorithm</span></code>, because this allows to condition the gaussian process.</p>
 </div>
 
 
@@ -382,7 +441,7 @@ div.rendered_html tbody tr:hover {
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/57c8997bf.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/010829da9.
     </div>
   </body>
 </html>
