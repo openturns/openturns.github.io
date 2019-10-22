@@ -61,6 +61,18 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Advanced polynomial chaos construction</a><ul>
+<li><a class="reference internal" href="#Define-the-model-and-the-input-distribution">Define the model and the input distribution</a></li>
+<li><a class="reference internal" href="#STEP-1:-Construction-of-the-multivariate-orthonormal-basis">STEP 1: Construction of the multivariate orthonormal basis</a></li>
+<li><a class="reference internal" href="#STEP-2:-Truncature-strategy-of-the-multivariate-orthonormal-basis">STEP 2: Truncature strategy of the multivariate orthonormal basis</a></li>
+<li><a class="reference internal" href="#STEP-3:-Evaluation-strategy-of-the-approximation-coefficients">STEP 3: Evaluation strategy of the approximation coefficients</a></li>
+<li><a class="reference internal" href="#STEP-4:-Creation-of-the-Functional-Chaos-Algorithm">STEP 4: Creation of the Functional Chaos Algorithm</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="functional_chaos.html"
                         title="previous chapter">Create a polynomial chaos metamodel</a></p>
@@ -296,12 +308,25 @@ div.rendered_html tbody tr:hover {
 <h1>Advanced polynomial chaos construction<a class="headerlink" href="#Advanced-polynomial-chaos-construction" title="Permalink to this headline">¶</a></h1>
 <p>In this example we are going to expose advanced elements in the construction of a polynomial chaos algorithm:</p>
 <ul class="simple">
-<li><p>Construction of the multivariate orthonormal basis</p></li>
-<li><p>Truncature strategy of the multivariate orthonormal basis</p></li>
-<li><p>Evaluation strategy of the approximation coefficients</p></li>
+<li><p>construction of the multivariate orthonormal basis,</p></li>
+<li><p>truncature strategy of the multivariate orthonormal basis,</p></li>
+<li><p>evaluation strategy of the approximation coefficients.</p></li>
 </ul>
+<p>In this example, we consider the following function <img class="math" src="../../_images/math/fc49dae7f81190b79d72773f856f305918c35adf.svg" alt="\mathbb{R}^4 \rightarrow \mathbb{R}" style="vertical-align: 0px"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/3795092b6f2a3b77cc4f9d8b716244d9b7c203c8.svg" alt="g(\mathbf{x}) = 1+x_1 x_2 + 2 x_3^2+x_4^4"/></p>
+</div><p>for any <img class="math" src="../../_images/math/5a4e773fdea3a8a03d3f6b27f1461e74d732b78d.svg" alt="x_1,x_2,x_3,x_4\in\mathbb{R}" style="vertical-align: -3px"/>.</p>
+<p>We assume that the inputs have normal, uniform, gamma and beta distributions :</p>
+<div class="math">
+<p><img src="../../_images/math/7d1dbdc2e4b3a76b2c62816b9b510a2e161aa8f3.svg" alt="X_1 \sim \mathcal{N}(0,1), \qquad
+X_2 \sim \mathcal{U}(-1,1), \qquad
+X_3 \sim \mathcal{G}(2.75,1), \qquad
+X_4 \sim \mathcal{B}(2.5,1,-1,2),"/></p>
+</div><p>and <img class="math" src="../../_images/math/62d59fb7f8f04bccb5f423e857e56202c3105759.svg" alt="X_1" style="vertical-align: -2px"/>, <img class="math" src="../../_images/math/20725757d04eeeb6cb8640e563c83209178ff65c.svg" alt="X_2" style="vertical-align: -2px"/>, <img class="math" src="../../_images/math/95abe78c151b2cb0c10ff82e5a32d90ffddbea56.svg" alt="X_3" style="vertical-align: -2px"/> and <img class="math" src="../../_images/math/d220dfa06e506690a533ab69839921454742f64f.svg" alt="X_4" style="vertical-align: -2px"/> are independent.</p>
+<div class="section" id="Define-the-model-and-the-input-distribution">
+<h2>Define the model and the input distribution<a class="headerlink" href="#Define-the-model-and-the-input-distribution" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -311,44 +336,86 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-
-<span></span><span class="c1"># Create a function R^n --&gt; R^p</span>
-<span class="c1"># For example R^4 --&gt; R</span>
-<span class="n">myModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">,</span> <span class="s1">&#39;x4&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;1+x1*x2 + 2*x3^2+x4^4&#39;</span><span class="p">])</span>
-
-<span class="c1"># Create a distribution of dimension n</span>
-<span class="c1"># for example n=3 with indpendent components</span>
-<span class="n">Xdist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gamma</span><span class="p">(</span><span class="mf">2.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)])</span>
-
-<span class="c1"># Dimension of the input random vector</span>
-<span class="n">dim</span> <span class="o">=</span> <span class="mi">4</span>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">,</span> <span class="s1">&#39;x4&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;1+x1*x2 + 2*x3^2+x4^4&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
+<p>Create a distribution of dimension 4.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#############################################################</span>
-<span class="c1"># STEP 1: Construction of the multivariate orthonormal basis</span>
-<span class="c1">#############################################################</span>
-
-<span class="c1"># Create the univariate polynomial family collection</span>
-<span class="c1"># which regroups the polynomial families for each direction</span>
-<span class="n">polyColl</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PolynomialFamilyCollection</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
-<span class="c1"># For information, with the Krawtchouk and Charlier families :</span>
-<span class="n">polyColl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrawtchoukFactory</span><span class="p">()</span>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gamma</span><span class="p">(</span><span class="mf">2.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputDimension</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">inputDimension</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="STEP-1:-Construction-of-the-multivariate-orthonormal-basis">
+<h2>STEP 1: Construction of the multivariate orthonormal basis<a class="headerlink" href="#STEP-1:-Construction-of-the-multivariate-orthonormal-basis" title="Permalink to this headline">¶</a></h2>
+<p>Create the univariate polynomial family collection which regroups the polynomial families for each direction.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">polyColl</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PolynomialFamilyCollection</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We could use the Krawtchouk and Charlier families (for discrete distributions).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">polyColl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrawtchoukFactory</span><span class="p">()</span>
 <span class="n">polyColl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CharlierFactory</span><span class="p">()</span>
-<span class="c1"># for information, with the automatic selection</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Xdist</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
-    <span class="n">polyColl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">StandardDistributionPolynomialFactory</span><span class="p">(</span><span class="n">Xdist</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<span class="c1"># We overload these factories as they are dedicated to discrete distributions</span>
-<span class="n">polyColl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HermiteFactory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>We could also use the automatic selection of the polynomial which corresponds to the distribution: this is done with the <code class="docutils literal notranslate"><span class="pre">StandardDistributionPolynomialFactory</span></code> class.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">):</span>
+    <span class="n">marginal</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">polyColl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">StandardDistributionPolynomialFactory</span><span class="p">(</span><span class="n">marginal</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>In our specific case, we use specific polynomial factories.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">polyColl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HermiteFactory</span><span class="p">()</span>
 <span class="n">polyColl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LegendreFactory</span><span class="p">()</span>
 <span class="n">polyColl</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LaguerreFactory</span><span class="p">(</span><span class="mf">2.75</span><span class="p">)</span>
 <span class="c1"># Parameter for the Jacobi factory : &#39;Probabilty&#39; encoded with 1</span>
@@ -356,46 +423,51 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>Create the enumeration function.</p>
+<p>The first possibility is to use the <code class="docutils literal notranslate"><span class="pre">LinearEnumerateFunction</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Create the enumeration function</span>
-<span class="c1"># LinearEnumerateFunction</span>
-<span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearEnumerateFunction</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
-
-<span class="c1"># HyperbolicAnisotropicEnumerateFunction</span>
-<span class="n">q</span> <span class="o">=</span> <span class="mf">0.4</span>
-<span class="n">enumerateFunction_1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HyperbolicAnisotropicEnumerateFunction</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+<span></span><span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearEnumerateFunction</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>Another possibility is to use the <code class="docutils literal notranslate"><span class="pre">HyperbolicAnisotropicEnumerateFunction</span></code>, which gives less weight to interactions.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Create the multivariate orthonormal basis</span>
-<span class="c1"># which is the the cartesian product of the univariate basis</span>
-<span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
-    <span class="n">polyColl</span><span class="p">,</span> <span class="n">enumerateFunction</span><span class="p">)</span>
+<span></span><span class="n">q</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">enumerateFunction_1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HyperbolicAnisotropicEnumerateFunction</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>Create the multivariate orthonormal basis which is the the cartesian product of the univariate basis.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span><span class="n">polyColl</span><span class="p">,</span> <span class="n">enumerateFunction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Ask how many polynomials have total degrees equal to k=5.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Ask how many polynomials have degrees equal to k=5</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>
+<span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getStrataCardinal</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -403,18 +475,18 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>Ask how many polynomials have degrees lower or equal to k=5.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Ask how many polynomials have degrees inferior or equal to k=5</span>
-<span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span></span><span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -422,97 +494,94 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>Give the k-th term of the multivariate basis. To calculate its degree, add the integers.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Give the k-th term of the multivariate basis</span>
-<span class="c1"># To calculate its degree, add the integers</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>
+<span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">enumerateFunction</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>[2,0,0,0]<br>
-</p></div>
+<p>[2,0,0,0]</p></div>
 </div>
+<p>Build a term of the basis as a NumericalMathFunction. Generally, we do not need to construct manually any term, all terms are constructed automatically by a strategy of construction of the basis.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Build a term of the basis as a NumericalMathFunction</span>
-<span class="c1"># Generally, we do not need to construct manually any term,</span>
-<span class="c1"># all terms are constructed automatically by a strategy of construction of</span>
-<span class="c1"># the basis</span>
-<span class="n">i</span> <span class="o">=</span> <span class="mi">5</span>
+<span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">Psi_i</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 <span class="n">Psi_i</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>-0.707107 + 0.707107 * x0^2<br>
-</p></div>
+<p>-0.707107 + 0.707107 * x0^2</p></div>
 </div>
+<p>Get the measure mu associated to the multivariate basis.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Get the measure mu associated to the multivariate basis</span>
-<span class="n">distributionMu</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getMeasure</span><span class="p">()</span>
+<span></span><span class="n">distributionMu</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getMeasure</span><span class="p">()</span>
 <span class="n">distributionMu</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>ComposedDistribution(Normal(mu = 0, sigma = 1), Uniform(a = -1, b = 1), Gamma(k = 3.75, lambda = 1, gamma = 0), Beta(r = 2.5, t = 3.5, a = -1, b = 1), IndependentCopula(dimension = 4))<br>
-</p></div>
+<p>ComposedDistribution(Normal(mu = 0, sigma = 1), Uniform(a = -1, b = 1), Gamma(k = 3.75, lambda = 1, gamma = 0), Beta(alpha = 2.5, beta = 1, a = -1, b = 1), IndependentCopula(dimension = 4))</p></div>
 </div>
+</div>
+<div class="section" id="STEP-2:-Truncature-strategy-of-the-multivariate-orthonormal-basis">
+<h2>STEP 2: Truncature strategy of the multivariate orthonormal basis<a class="headerlink" href="#STEP-2:-Truncature-strategy-of-the-multivariate-orthonormal-basis" title="Permalink to this headline">¶</a></h2>
+<p>FixedStrategy : all the polynomials af degree lower or equal to 2 which corresponds to the 15 first ones.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">####################################################################</span>
-<span class="c1"># STEP 2: Truncature strategy of the multivariate orthonormal basis</span>
-<span class="c1">#############################################################</span>
-<span class="c1"># FixedStrategy :</span>
-<span class="c1"># all the polynomials af degree &lt;=2</span>
-<span class="c1"># which corresponds to the 15 first ones</span>
-<span class="n">p</span> <span class="o">=</span> <span class="mi">15</span>
+<span></span><span class="n">p</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">truncatureBasisStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-
-<span class="c1"># SequentialStrategy :</span>
-<span class="c1"># among the maximumCardinalBasis = 100 first polynomials</span>
-<span class="c1"># of the multivariate basis those verfying the convergence criterion,</span>
-<span class="n">maximumCardinalBasis</span> <span class="o">=</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+<p>SequentialStrategy : among the maximumCardinalBasis = 100 first polynomials of the multivariate basis those verfying the convergence criterion.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">maximumCardinalBasis</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">truncatureBasisStrategy_1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SequentialStrategy</span><span class="p">(</span>
     <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">maximumCardinalBasis</span><span class="p">)</span>
-
-<span class="c1"># CleaningStrategy :</span>
-<span class="c1"># among the maximumConsideredTerms = 500 first polynomials,</span>
-<span class="c1"># those which have the mostSignificant = 50 most significant contributions</span>
-<span class="c1"># with significance criterion significanceFactor = 10^(-4)</span>
-<span class="c1"># The True boolean indicates if we are interested</span>
-<span class="c1"># in the online monitoring of the current basis update</span>
-<span class="c1"># (removed or added coefficients)</span>
-<span class="n">maximumConsideredTerms</span> <span class="o">=</span> <span class="mi">500</span>
+</pre></div>
+</div>
+</div>
+<p>CleaningStrategy : among the maximumConsideredTerms = 500 first polynomials, those which have the mostSignificant = 50 most significant contributions with significance criterion significanceFactor equal to <img class="math" src="../../_images/math/681c2a2cd72c83e998327c8172fa6919d6f767aa.svg" alt="10^{-4}" style="vertical-align: 0px"/> The <code class="docutils literal notranslate"><span class="pre">True</span></code> boolean indicates if we are interested in the online monitoring of the current basis update (removed or added coefficients).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">maximumConsideredTerms</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">mostSignificant</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">significanceFactor</span> <span class="o">=</span> <span class="mf">1.0e-4</span>
 <span class="n">truncatureBasisStrategy_2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CleaningStrategy</span><span class="p">(</span>
@@ -520,58 +589,77 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="STEP-3:-Evaluation-strategy-of-the-approximation-coefficients">
+<h2>STEP 3: Evaluation strategy of the approximation coefficients<a class="headerlink" href="#STEP-3:-Evaluation-strategy-of-the-approximation-coefficients" title="Permalink to this headline">¶</a></h2>
+<p>The technique illustrated is the Least Squares technique where the points come from an design of experiments. Here : the Monte Carlo sampling technique.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">################################################################</span>
-<span class="c1"># STEP 3: Evaluation strategy of the approximation coefficients</span>
-<span class="c1">#############################################################</span>
-<span class="c1"># The technique illustrated is the Least Squares technique</span>
-<span class="c1"># where the points come from an design of experiments</span>
-<span class="c1"># Here : the Monte Carlo sampling technique</span>
-<span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">100</span>
+<span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">evaluationCoeffStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span>
     <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">))</span>
-
-<span class="c1"># You can specify the approximation algorithm</span>
-<span class="c1"># This is the algorithm that generates a sequence of basis using Least</span>
-<span class="c1"># Angle Regression</span>
-<span class="n">basisSequenceFactory</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LARS</span><span class="p">()</span>
-
-<span class="c1"># This algorithm estimates the empirical error on each sub-basis using</span>
-<span class="c1"># Leave One Out strategy</span>
-<span class="n">fittingAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrectedLeaveOneOut</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>You can specify the approximation algorithm. This is the algorithm that generates a sequence of basis using Least Angle Regression.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">basisSequenceFactory</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LARS</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>This algorithm estimates the empirical error on each sub-basis using Leave One Out strategy.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fittingAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrectedLeaveOneOut</span><span class="p">()</span>
 <span class="c1"># Finally the metamodel selection algorithm embbeded in LeastSquaresStrategy</span>
 <span class="n">approximationAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">(</span>
     <span class="n">basisSequenceFactory</span><span class="p">,</span> <span class="n">fittingAlgorithm</span><span class="p">)</span>
 <span class="n">evaluationCoeffStrategy_2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span>
     <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">),</span> <span class="n">approximationAlgorithm</span><span class="p">)</span>
-
-<span class="c1"># Try integration</span>
-<span class="n">marginalDegrees</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+</pre></div>
+</div>
+</div>
+<p>Try integration.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">marginalDegrees</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">inputDimension</span>
 <span class="n">evaluationCoeffStrategy_3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntegrationStrategy</span><span class="p">(</span>
     <span class="n">ot</span><span class="o">.</span><span class="n">GaussProductExperiment</span><span class="p">(</span><span class="n">distributionMu</span><span class="p">,</span> <span class="n">marginalDegrees</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="STEP-4:-Creation-of-the-Functional-Chaos-Algorithm">
+<h2>STEP 4: Creation of the Functional Chaos Algorithm<a class="headerlink" href="#STEP-4:-Creation-of-the-Functional-Chaos-Algorithm" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm</span></code> class combines</p>
+<ul class="simple">
+<li><p>the model : <code class="docutils literal notranslate"><span class="pre">model</span></code></p></li>
+<li><p>the distribution of the input random vector : <code class="docutils literal notranslate"><span class="pre">distribution</span></code></p></li>
+<li><p>the truncature strategy of the multivariate basis</p></li>
+<li><p>and the evaluation strategy of the coefficients</p></li>
+</ul>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#####################################################</span>
-<span class="c1"># STEP 4: Creation of the Functional Chaos Algorithm</span>
-<span class="c1">#############################################################</span>
-<span class="c1"># FunctionalChaosAlgorithm :</span>
-<span class="c1"># combination of the model : myModel</span>
-<span class="c1"># the distribution of the input random vector : Xdist</span>
-<span class="c1"># the truncature strategy of the multivariate basis</span>
-<span class="c1"># and the evaluation strategy of the coefficients</span>
-<span class="n">polynomialChaosAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
-    <span class="n">myModel</span><span class="p">,</span> <span class="n">Xdist</span><span class="p">,</span> <span class="n">truncatureBasisStrategy</span><span class="p">,</span> <span class="n">evaluationCoeffStrategy</span><span class="p">)</span>
+<span></span><span class="n">polynomialChaosAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">truncatureBasisStrategy</span><span class="p">,</span> <span class="n">evaluationCoeffStrategy</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -603,7 +691,7 @@ div.rendered_html tbody tr:hover {
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/7b9d06464.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/d0b0c9245.
     </div>
   </body>
 </html>
