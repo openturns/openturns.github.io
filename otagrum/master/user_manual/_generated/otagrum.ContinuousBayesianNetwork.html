@@ -48,25 +48,43 @@
 <dl class="class">
 <dt id="otagrum.ContinuousBayesianNetwork">
 <em class="property">class </em><code class="sig-prename descclassname">otagrum.</code><code class="sig-name descname">ContinuousBayesianNetwork</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork" title="Permalink to this definition">¶</a></dt>
-<dd><p>ContinuousBayesianNetwork distribution.</p>
+<dd><p>ContinuousBayesianNetwork class represents a copula bayesian network (CBN), that is
+a bayesian networks parameterized by local conditional copula functions for each
+node. The scope of each copula function is the node and its parents.</p>
+<dl class="simple">
+<dt>Available constructor:</dt><dd><p>ContinuousBayesianNetwork(<em>NamedDAG, DistributionCollection</em>)</p>
+</dd>
+</dl>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
-<dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>Underlying junction tree</p>
+<dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>The structure of the CBN</p>
 </dd>
-<dt><strong>jointDistributions</strong><span class="classifier">sequence of <a class="reference external" href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>Collection of joint distributions</p>
+<dt><strong>jointDistributions</strong><span class="classifier"><a class="reference external" href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.DistributionCollection.html#openturns.DistributionCollection" title="(in OpenTURNS v1.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.DistributionCollection</span></code></a></span></dt><dd><p>Collection of local conditional copula functions</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
+<p>Create a CBN from a DAG structure and a collection of distributions</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">otagrum</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyAgrum</span> <span class="k">as</span> <span class="nn">gum</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">BayesNet</span><span class="o">.</span><span class="n">fastPrototype</span><span class="p">(</span><span class="s1">&#39;A-&gt;B-&gt;C-&gt;D;E-&gt;A-&gt;C&lt;-E&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">BayesNet</span><span class="o">.</span><span class="n">fastPrototype</span><span class="p">(</span><span class="s1">&#39;A-&gt;C-&gt;B;&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ndag</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">NamedDAG</span><span class="p">(</span><span class="n">bn</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">jointDistributions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1">#distribution = otagrum.ContinuousBayesianNetwork(ndag, jointDistributions)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndag</span><span class="o">.</span><span class="n">getSize</span><span class="p">()):</span>
+<span class="gp">... </span>    <span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">ndag</span><span class="o">.</span><span class="n">getParents</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+<span class="gp">... </span>            <span class="n">R</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="gp">... </span>    <span class="n">jointDistributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">getCopula</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cbn</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousBayesianNetwork</span><span class="p">(</span><span class="n">ndag</span><span class="p">,</span> <span class="n">jointDistributions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Draw a sample from the joint distribution encoded by the CBN</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span> <span class="o">=</span> <span class="n">cbn</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -293,7 +311,7 @@
 <td><p>Dispersion indicator accessor.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDistributionCollection" title="otagrum.ContinuousBayesianNetwork.getDistributionCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDistributionCollection</span></code></a>(self)</p></td>
-<td><p>Distribution collection accessor.</p></td>
+<td><p>The collection of local conditional copulas.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getId" title="otagrum.ContinuousBayesianNetwork.getId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getId</span></code></a>(self)</p></td>
 <td><p>Accessor to the object’s id.</p></td>
@@ -332,7 +350,7 @@
 <td><p>Accessor to the object’s name.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getNamedDAG" title="otagrum.ContinuousBayesianNetwork.getNamedDAG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNamedDAG</span></code></a>(self)</p></td>
-<td><p>Accessor to the DAG.</p></td>
+<td><p>The CBN structure.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getPDFEpsilon" title="otagrum.ContinuousBayesianNetwork.getPDFEpsilon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPDFEpsilon</span></code></a>(self)</p></td>
 <td><p>Accessor to the PDF computation precision.</p></td>
@@ -2717,11 +2735,11 @@ Only available for 1-d distributions.</p>
 <dl class="method">
 <dt id="otagrum.ContinuousBayesianNetwork.getDistributionCollection">
 <code class="sig-name descname">getDistributionCollection</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.getDistributionCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Distribution collection accessor.</p>
+<dd><p>The collection of local conditional copulas.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl>
-<dt><strong>jointDistributions</strong><span class="classifier">sequence of <a class="reference external" href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>Collection of joint distributions</p>
+<dt><strong>jointDistributions</strong><span class="classifier">sequence of <a class="reference external" href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.DistributionCollection.html#openturns.DistributionCollection" title="(in OpenTURNS v1.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.DistributionCollection</span></code></a></span></dt><dd><p>Collection of local conditional copulas</p>
 </dd>
 </dl>
 </dd>
@@ -3010,11 +3028,11 @@ if:</p>
 <dl class="method">
 <dt id="otagrum.ContinuousBayesianNetwork.getNamedDAG">
 <code class="sig-name descname">getNamedDAG</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.getNamedDAG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the DAG.</p>
+<dd><p>The CBN structure.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl>
-<dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>Underlying junction tree</p>
+<dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>The underlying NamedDAG</p>
 </dd>
 </dl>
 </dd>
@@ -3707,9 +3725,9 @@ function is of the form:</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
-<dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>Underlying junction tree</p>
+<dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>The underlying NamedDAG</p>
 </dd>
-<dt><strong>jointDistributions</strong><span class="classifier">sequence of <a class="reference external" href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>Collection of joint distributions</p>
+<dt><strong>jointDistributions</strong><span class="classifier">sequence of <a class="reference external" href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.DistributionCollection.html#openturns.DistributionCollection" title="(in OpenTURNS v1.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.DistributionCollection</span></code></a></span></dt><dd><p>The collection of local conditional copulas</p>
 </dd>
 </dl>
 </dd>
