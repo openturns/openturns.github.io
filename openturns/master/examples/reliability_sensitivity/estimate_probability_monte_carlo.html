@@ -17,8 +17,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Estimate a probability with LHS" href="estimate_probability_lhs.html" />
-    <link rel="prev" title="Event manipulation" href="event_manipulation.html" />
+    <link rel="next" title="Estimate a probability with Latin Hypercube Sampling" href="estimate_probability_lhs.html" />
+    <link rel="prev" title="Estimate a flooding probability" href="flood_model.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -48,10 +48,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="estimate_probability_lhs.html" title="Estimate a probability with LHS"
+          <a href="estimate_probability_lhs.html" title="Estimate a probability with Latin Hypercube Sampling"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="event_manipulation.html" title="Event manipulation"
+          <a href="flood_model.html" title="Estimate a flooding probability"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -61,12 +61,20 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Estimate a probability with Monte Carlo</a><ul>
+<li><a class="reference internal" href="#Introduction">Introduction</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="event_manipulation.html"
-                        title="previous chapter">Event manipulation</a></p>
+  <p class="topless"><a href="flood_model.html"
+                        title="previous chapter">Estimate a flooding probability</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="estimate_probability_lhs.html"
-                        title="next chapter">Estimate a probability with LHS</a></p>
+                        title="next chapter">Estimate a probability with Latin Hypercube Sampling</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -294,43 +302,59 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Estimate-a-probability-with-Monte-Carlo">
 <h1>Estimate a probability with Monte Carlo<a class="headerlink" href="#Estimate-a-probability-with-Monte-Carlo" title="Permalink to this headline">¶</a></h1>
-<p>In this basic example we are going to estimate a probability by means of a simulation algorithm.</p>
-<p>This model is a simple beam, restrained at one side and stressed by a traction load F at the other side.</p>
-<p>The geometry is supposed to be deterministic: the diameter D is fixed to D=20 mm.</p>
-<p>It is considered that failure occurs when the beam plastifies, i.e. when the axial stress gets bigger than the yield stress:</p>
+<p>In this example we estimate a probability by means of a simulation algorithm, the Monte-Carlo algorithm. To do this, we need the classes <code class="docutils literal notranslate"><span class="pre">MonteCarloExperiment</span></code> and <code class="docutils literal notranslate"><span class="pre">ProbabilitySimulationAlgorithm</span></code>.</p>
+<div class="section" id="Introduction">
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
+<p>We consider a simple beam stressed by a traction load F at both sides.</p>
+<p>The geometry is supposed to be deterministic; the diameter D is equal to:</p>
 <div class="math">
-<p><img src="../../_images/math/4aef83fa79705bf8a536732e73114015b5917fa7.svg" alt="\sigma_e = \frac{F}{\pi-D^2/4} \leq 0"/></p>
-</div><p>Therefore, the state limit G used here is:</p>
+<p><img src="../../_images/math/52670b99a194537ed2bf6cef58368d08e4ad3bc8.svg" alt="D=0.02 \textrm{ (m)}."/></p>
+</div><p>By definition, the yield stress is the load divided by the surface. Since the surface is <img class="math" src="../../_images/math/8fb937acaab372e3e06a16b15903f03cb9c20b1d.svg" alt="\pi D^2/4" style="vertical-align: -4px"/>, the stress is:</p>
 <div class="math">
-<p><img src="../../_images/math/fe6805a194e70c502f05bbf62168b3ca8709e716.svg" alt="G = \sigma_e - \frac{F}{\pi-D^2/4}"/></p>
-</div><p>Two independent random variables R and S are considered:</p>
-<ul>
-<li><p>R (the strength):</p>
+<p><img src="../../_images/math/3fd5b152f5de7574e86ba11bdd68ae8847770dd5.svg" alt="S = \frac{F}{\pi D^2/4}."/></p>
+</div><p>Failure occurs when the beam plastifies, i.e. when the axial stress gets larger than the yield stress:</p>
 <div class="math">
-<p><img src="../../_images/math/e26abf642eaab5a76176f854adf8770168752d6a.svg" alt="R = \sigma_e"/></p>
-</div></li>
-<li><p>S (the load):</p>
+<p><img src="../../_images/math/94a9a63a16e6e6febe5e24502eb9e0940feacd54.svg" alt="R - \frac{F}{\pi D^2/4} \leq 0"/></p>
+</div><p>where <img class="math" src="../../_images/math/ddc35335d91f00501b1be972e341ffcba6893269.svg" alt="R" style="vertical-align: 0px"/> is the strength.</p>
+<p>Therefore, the limit state function <img class="math" src="../../_images/math/daf5d7c387992bf10692cdce4fe67f557ccdd376.svg" alt="G" style="vertical-align: 0px"/> is:</p>
 <div class="math">
-<p><img src="../../_images/math/36c15d43f68c9e7c053deac14e543e753115e3a0.svg" alt="S = \frac{F}{\pi-D^2/4}"/></p>
-</div></li>
-</ul>
-<p>Stochastic model:</p>
-<ul class="simple">
-<li><p>F ~ Normal(75e3, 5e3) [N]</p></li>
-<li><p>R ~ LogNormal(300, 30) [N]</p></li>
-</ul>
-<p>Theoretical results:</p>
-<p>This two dimensional stochastic problem can be solved by calculating directly the failure probability:</p>
+<p><img src="../../_images/math/3307b094d6b025fb9aad3ba250d0101d1c2b0233.svg" alt="G(R,F) = R - \frac{F}{\pi D^2/4},"/></p>
+</div><p>for any <img class="math" src="../../_images/math/2be2e9242ac35320b0d4c6a5a0e9c0f543d6357b.svg" alt="R,F\in\mathbb{R}" style="vertical-align: -3px"/>.</p>
+<p>The value of the parameter <img class="math" src="../../_images/math/1e352767b2810bb261e4ced1d65ba8e1161c8bb1.svg" alt="D" style="vertical-align: 0px"/> is such that:</p>
 <div class="math">
-<p><img src="../../_images/math/8261cfcc087aa767d4bdf6d7dd925e1138edb127.svg" alt="P_f = \text{Prob}(R-S \leq 0) = \int_{r-s \leq 0} f_{R, S}(r, s)drds"/></p>
-</div><p>If R and S are independant, then:</p>
+<p><img src="../../_images/math/73085a413f095d44221cc011d6130d518dbd4861.svg" alt="D^2/4 = 10^{-4},"/></p>
+</div><p>which leads to the equation:</p>
 <div class="math">
-<p><img src="../../_images/math/584afb213161defa2b8e84ae1ec0a350e232fd2b.svg" alt="\int_{-\infty}^{+\infty}f_S(x)F_R(x)dx"/></p>
-</div><p>The numerical application gives:</p>
+<p><img src="../../_images/math/55f31f1bf9dc66fe87232cb99bf9f4ee51d27a7d.svg" alt="G(R,F) = R - \frac{F}{10^{-4} \pi}."/></p>
+</div><p>We consider the following distribution functions.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Distribution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R</p></td>
+<td><p>LogNormal(<img class="math" src="../../_images/math/9fc8a31f33da49977e26264f82f7b4631e998221.svg" alt="\mu_R=3\times 10^6" style="vertical-align: -3px"/>, <img class="math" src="../../_images/math/d353e4bc0ab29177072dd5473afafb4d535f50c3.svg" alt="\sigma_R=3\times 10^5" style="vertical-align: -2px"/>) [Pa]</p></td>
+</tr>
+<tr class="row-odd"><td><p>F</p></td>
+<td><p>Normal(<img class="math" src="../../_images/math/0f260ebf33fa584c79e25744560ec639550ed86f.svg" alt="\mu_F=750" style="vertical-align: -3px"/>, <img class="math" src="../../_images/math/f46b8fce99d20ea2110de0be1ac0f8d6560cf6ed.svg" alt="\sigma_F=50" style="vertical-align: -2px"/>) [N]</p></td>
+</tr>
+</tbody>
+</table>
+<p>where <img class="math" src="../../_images/math/7b91adfd12660722cddd1fea620900bd827f55f1.svg" alt="\mu_R=E(R)" style="vertical-align: -4px"/> and <img class="math" src="../../_images/math/71cc53fe6116538a842a068415f252851cc20ffa.svg" alt="\sigma_R^2=V(R)" style="vertical-align: -4px"/> are the mean and the variance of <img class="math" src="../../_images/math/ddc35335d91f00501b1be972e341ffcba6893269.svg" alt="R" style="vertical-align: 0px"/>.</p>
+<p>The failure probability is:</p>
 <div class="math">
-<p><img src="../../_images/math/0d95413bbcf61dc69fb723d0f65ea3b7badebcde.svg" alt="P_f = 0.0292"/></p>
+<p><img src="../../_images/math/235647e6d0254d55325c541ae104f06348e04b80.svg" alt="P_f = \text{Prob}(G(R,F) \leq 0)."/></p>
+</div><p>The exact <img class="math" src="../../_images/math/ed5fd9cb0e37b8e99156d14f92ce0f73fede7c28.svg" alt="P_f" style="vertical-align: -5px"/> is</p>
+<div class="math">
+<p><img src="../../_images/math/d20104ecf4a186f52e2cad83511221ec4c00a5b5.svg" alt="P_f = 0.02920."/></p>
 </div><div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -339,48 +363,48 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>Create the joint distribution of the parameters.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># create the joint distribution of the parameters</span>
-<span class="n">distribution_R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">(</span><span class="mf">300.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">getDistribution</span><span class="p">()</span>
+<span></span><span class="n">distribution_R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">(</span><span class="mf">300.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">getDistribution</span><span class="p">()</span>
 <span class="n">distribution_F</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">75e3</span><span class="p">,</span> <span class="mf">5e3</span><span class="p">)</span>
 <span class="n">marginals</span> <span class="o">=</span> <span class="p">[</span><span class="n">distribution_R</span><span class="p">,</span> <span class="n">distribution_F</span><span class="p">]</span>
 <span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">marginals</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>Create the model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># create the model</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;R-F/(pi_*100.0)&#39;</span><span class="p">])</span>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;R-F/(pi_*100.0)&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
+<p>Create the event whose probability we want to estimate.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># create the event we want to estimate the probability</span>
-<span class="n">vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+<span></span><span class="n">vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">vect</span><span class="p">)</span>
 <span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Less</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>Create a Monte Carlo algorithm.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># create a Monte Carlo algorithm</span>
-<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">()</span>
+<span></span><span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">()</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ProbabilitySimulationAlgorithm</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">experiment</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setMaximumCoefficientOfVariation</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">))</span>
@@ -388,13 +412,13 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>Retrieve results.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># retrieve results</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">probability</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Pf=&#39;</span><span class="p">,</span> <span class="n">probability</span><span class="p">)</span>
 </pre></div>
@@ -405,8 +429,9 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Pf= 0.02858192505510653
+Pf= 0.03029829767296579
 </pre></div></div>
+</div>
 </div>
 </div>
 
@@ -423,10 +448,10 @@ Pf= 0.02858192505510653
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="estimate_probability_lhs.html" title="Estimate a probability with LHS"
+          <a href="estimate_probability_lhs.html" title="Estimate a probability with Latin Hypercube Sampling"
              >next</a> |</li>
         <li class="right" >
-          <a href="event_manipulation.html" title="Event manipulation"
+          <a href="flood_model.html" title="Estimate a flooding probability"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -437,7 +462,7 @@ Pf= 0.02858192505510653
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/48f81dfcd.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/319a72f5d.
     </div>
   </body>
 </html>

@@ -1,0 +1,823 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Defining Python and symbolic functions: a quick start introduction to functions &#8212; OpenTURNS 1.15dev documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Create a symbolic function" href="symbolic_function.html" />
+    <link rel="prev" title="Functional modeling" href="functional_modeling.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="symbolic_function.html" title="Create a symbolic function"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="functional_modeling.html" title="Functional modeling"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="functional_modeling.html" accesskey="U">Functional modeling</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Defining Python and symbolic functions: a quick start introduction to functions</a><ul>
+<li><a class="reference internal" href="#Abstract">Abstract</a></li>
+<li><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li><a class="reference internal" href="#The-Python-function">The Python function</a></li>
+<li><a class="reference internal" href="#What-types-for-x-and-for-y-?">What types for x and for y ?</a></li>
+<li><a class="reference internal" href="#The-vectorized-Python-function">The vectorized Python function</a></li>
+<li><a class="reference internal" href="#How-to-manage-the-history">How to manage the history</a></li>
+<li><a class="reference internal" href="#Symbolic-functions">Symbolic functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="functional_modeling.html"
+                        title="previous chapter">Functional modeling</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="symbolic_function.html"
+                        title="next chapter">Create a symbolic function</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/functional_modeling/quick_start_functions.ipynb"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Defining-Python-and-symbolic-functions:-a-quick-start-introduction-to-functions">
+<h1>Defining Python and symbolic functions: a quick start introduction to functions<a class="headerlink" href="#Defining-Python-and-symbolic-functions:-a-quick-start-introduction-to-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Abstract">
+<h2>Abstract<a class="headerlink" href="#Abstract" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we show how to define Python and symbolic functions. Such functions can be evaluated by the library and used, for example, to propagate uncertainties. We focus on functions which have a vector input and a vector output.</p>
+</div>
+<div class="section" id="Introduction">
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
+<p>We consider the following example: * three input variables, * two outputs.</p>
+<p>Moreover, we assume that the input distribution has independent Gaussian marginals.</p>
+<p>The function is defined by the equations:</p>
+<div class="math">
+<p><img src="../../_images/math/e0a149677e678bacb434a5c777d396743d7f0abd.svg" alt="Y_1 = X_1 + X_2 + X_3"/></p>
+</div><p>and</p>
+<div class="math">
+<p><img src="../../_images/math/999600165844e6e6c4392206c4f9801dba726dee.svg" alt="Y_2 = X_1 - X_2 X_3"/></p>
+</div><p>for any <img class="math" src="../../_images/math/ae6593f28d55eeb3c5fa5dba5f5a1d887a155b04.svg" alt="X_1,X_2,X_3\mathbb{R}" style="vertical-align: -3px"/>.</p>
+<p>The exact expectation and standard deviation of the output random variable are presented in the following table.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Expectation</p></th>
+<th class="head"><p>Standard deviation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><img class="math" src="../../_images/math/c4a98b3850e4bc60f4b600a734d1a2e89d29bdc3.svg" alt="Y_1" style="vertical-align: -2px"/></p></td>
+<td><p>0</p></td>
+<td><p>1.732</p></td>
+</tr>
+<tr class="row-odd"><td><p><img class="math" src="../../_images/math/5e18d4ee5702f7531940d502408a10de0fdf4a2e.svg" alt="Y_2" style="vertical-align: -2px"/></p></td>
+<td><p>0</p></td>
+<td><p>1.415</p></td>
+</tr>
+</tbody>
+</table>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+</pre></div>
+</div>
+</div>
+<p>We first define the input random vector of the function.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">X0</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="n">inputDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">((</span><span class="n">X0</span><span class="p">,</span><span class="n">X1</span><span class="p">,</span><span class="n">X2</span><span class="p">))</span>
+<span class="n">inputRandomVector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">inputDistribution</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="The-Python-function">
+<h2>The Python function<a class="headerlink" href="#The-Python-function" title="Permalink to this headline">¶</a></h2>
+<p>Based on a Python function defined with the <code class="docutils literal notranslate"><span class="pre">def</span></code> keyword, the <code class="docutils literal notranslate"><span class="pre">PythonFunction</span></code> class creates a function.</p>
+<p>The simplest constructor of the <code class="docutils literal notranslate"><span class="pre">PythonFunction</span></code> class is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">PythonFunction</span> <span class="pre">(</span> <span class="pre">nbInputs</span> <span class="pre">,</span> <span class="pre">nbOutputs</span> <span class="pre">,</span> <span class="pre">myPythonFunc</span> <span class="pre">)</span></code></p>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nbInputs</span></code>: the number of inputs,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nbOutputs</span></code>: the number of outputs,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">myPythonFunc</span></code>: a Python function.</p></li>
+</ul>
+<p>The goal of the <code class="docutils literal notranslate"><span class="pre">PythonFunction</span></code> class are:</p>
+<ul class="simple">
+<li><p>to easily create a function in Python,</p></li>
+<li><p>use all the power of the Python libraries in order to evaluate the function.</p></li>
+</ul>
+<p>The function <code class="docutils literal notranslate"><span class="pre">mySimulator</span></code> has the calling sequence <code class="docutils literal notranslate"><span class="pre">y=mySimulator(x)</span></code> where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: the input of the function, a vector with <code class="docutils literal notranslate"><span class="pre">nbInputs</span></code> dimensions,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code>: the output of the function, a vector with <code class="docutils literal notranslate"><span class="pre">nbOutputs</span></code> dimensions.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">mySimulator</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">y0</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">y1</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">y</span>
+</pre></div>
+</div>
+</div>
+<p>We now define the <code class="docutils literal notranslate"><span class="pre">PythonFunction</span></code> object.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">myfunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span> <span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">2</span> <span class="p">,</span> <span class="n">mySimulator</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>This function can be evaluated using parentheses. It produces the same outputs as the <code class="docutils literal notranslate"><span class="pre">mySimulator</span></code> function.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">myfunction</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[6,-5]</p></div>
+</div>
+<p>However, the newly created <code class="docutils literal notranslate"><span class="pre">myfunction</span></code> has services that the basic Python function did not have. For example, we can create a <code class="docutils literal notranslate"><span class="pre">CompositeRandomVector</span></code> on top of it, by associating it to the input random vector.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputVect</span> <span class="o">=</span>  <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">myfunction</span><span class="p">,</span> <span class="n">inputRandomVector</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>In the following example, we estimate the output mean based on a simple Monte-Carlo experiment using 10000 function evaluations.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">montecarlosize</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">outputVect</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">montecarlosize</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">empiricalMean</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">empiricalMean</span><span class="p">)</span>
+<span class="n">empiricalSd</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">computeStandardDeviationPerComponent</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">empiricalSd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[-0.0166778,-0.0123527]
+[1.73359,1.39888]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="What-types-for-x-and-for-y-?">
+<h2>What types for x and for y ?<a class="headerlink" href="#What-types-for-x-and-for-y-?" title="Permalink to this headline">¶</a></h2>
+<p>Not all types are possible for the inputs and outputs of the <code class="docutils literal notranslate"><span class="pre">mySimulator</span></code> function. The following table present some of the available types. All in all, any type which can be converted to or from a “vector” can be managed by the <code class="docutils literal notranslate"><span class="pre">PythonFunction</span></code> class.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 58%" />
+<col style="width: 19%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Input X</p></th>
+<th class="head"><p>Output Y</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list</span></code> (Python)</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code> (Python)</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">array</span></code> (NumPy)</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Point</span></code> (OpenTURNS)</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="The-vectorized-Python-function">
+<h2>The vectorized Python function<a class="headerlink" href="#The-vectorized-Python-function" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">PythonFunction</span></code> class has a <code class="docutils literal notranslate"><span class="pre">func_sample</span></code> option which vectorizes the computation so that all the output values in the sample are computed from a single function call, without any <code class="docutils literal notranslate"><span class="pre">for</span></code> loop. To make this possible, the input and output is then a <code class="docutils literal notranslate"><span class="pre">Sample</span></code> instead of a <code class="docutils literal notranslate"><span class="pre">Point</span></code>. This often boosts performance (but not always).</p>
+<p>The calling sequence of a vectorized Python function is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mySimulator</span> <span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">y</span>
+
+<span class="n">myfunction</span> <span class="o">=</span> <span class="n">PythonFunction</span><span class="p">(</span><span class="n">nbInputs</span><span class="p">,</span> <span class="n">nbOutputs</span><span class="p">,</span> <span class="n">func_sample</span> <span class="o">=</span> <span class="n">mySimulator</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p>x: the input of the function, a <code class="docutils literal notranslate"><span class="pre">Sample</span></code> with size <code class="docutils literal notranslate"><span class="pre">nbExperiments</span></code> (<code class="docutils literal notranslate"><span class="pre">getSize</span></code>) and dimension <code class="docutils literal notranslate"><span class="pre">nbInputs</span></code> (<code class="docutils literal notranslate"><span class="pre">getDimension</span></code>),</p></li>
+<li><p>y: the output of the function</p>
+<ul>
+<li><p>a numpy <code class="docutils literal notranslate"><span class="pre">array</span></code> with <code class="docutils literal notranslate"><span class="pre">nbExperiments</span></code> rows and <code class="docutils literal notranslate"><span class="pre">nbOutputs</span></code> columns</p></li>
+<li><p>or a <code class="docutils literal notranslate"><span class="pre">Sample</span></code> with size <code class="docutils literal notranslate"><span class="pre">nbExperiments</span></code> and dimension <code class="docutils literal notranslate"><span class="pre">nbOutputs</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>In the following, we present an vectorization example based on the <code class="docutils literal notranslate"><span class="pre">numpy</span></code> module.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">mySimulatorVect</span> <span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Convert NumericalSample &gt; Array Numpy</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span> <span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Extract column 0</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span> <span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span> <span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span>
+    <span class="c1"># Stack the two rows</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span> <span class="p">((</span><span class="n">y0</span> <span class="p">,</span><span class="n">y1</span> <span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">transpose</span> <span class="p">()</span>
+    <span class="k">return</span> <span class="n">y</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">myfunctionVect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">func_sample</span> <span class="o">=</span> <span class="n">mySimulatorVect</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputVect</span> <span class="o">=</span>  <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">myfunctionVect</span><span class="p">,</span> <span class="n">inputRandomVector</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">montecarlosize</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">outputVect</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">montecarlosize</span><span class="p">)</span>
+
+<span class="n">empiricalMean</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">empiricalMean</span><span class="p">)</span>
+<span class="n">empiricalSd</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">computeStandardDeviationPerComponent</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">empiricalSd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[-0.00077008,-0.0165189]
+[1.74231,1.40859]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="How-to-manage-the-history">
+<h2>How to manage the history<a class="headerlink" href="#How-to-manage-the-history" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">MemoizeFunction</span></code> class defines a history system to store the calls to the function.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Methods</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enableHistory()</span></code></p></td>
+<td><p>enables the history (it is enabled by default)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">disableHistory()</span></code></p></td>
+<td><p>disables the history</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clearHistory()</span></code></p></td>
+<td><p>deletes the content of the history</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">getHistoryInput()</span></code></p></td>
+<td><p>a <code class="docutils literal notranslate"><span class="pre">Sample</span></code>, the history of inputs X</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">getHistoryOutput()</span></code></p></td>
+<td><p>a <code class="docutils literal notranslate"><span class="pre">Sample</span></code>, the history of outputs Y</p></td>
+</tr>
+</tbody>
+</table>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">myfunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span> <span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">2</span> <span class="p">,</span> <span class="n">mySimulator</span> <span class="p">)</span>
+<span class="n">myfunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">myfunction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputVariableOfInterest</span> <span class="o">=</span>  <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">myfunction</span><span class="p">,</span> <span class="n">inputRandomVector</span><span class="p">)</span>
+<span class="n">montecarlosize</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">outputVariableOfInterest</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">montecarlosize</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Get the history of input points.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">myfunction</span><span class="o">.</span><span class="n">getInputHistory</span><span class="p">()</span>
+<span class="n">inputs</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>v0</TH><TH>v1</TH><TH>v2</TH></TR>
+<TR><TD>0</TD><TD>-0.3426049407409974</TD><TD>-0.689636966867791</TD><TD>1.2430871864340118</TD></TR>
+<TR><TD>1</TD><TD>-2.1386534433938884</TD><TD>-1.4635227971736484</TD><TD>1.1026255045622082</TD></TR>
+<TR><TD>2</TD><TD>-0.6212716527604203</TD><TD>0.05683584819327807</TD><TD>-1.0104143995758796</TD></TR>
+<TR><TD>3</TD><TD>0.14094582372870545</TD><TD>0.5532786246426022</TD><TD>0.6904336896063326</TD></TR>
+<TR><TD>4</TD><TD>0.3056622172571174</TD><TD>-1.1365049525644593</TD><TD>1.692226509358007</TD></TR>
+<TR><TD>5</TD><TD>-1.5187990569006284</TD><TD>0.9695327429694076</TD><TD>-1.7656395366104742</TD></TR>
+<TR><TD>6</TD><TD>1.8603263783642712</TD><TD>1.2148796338903316</TD><TD>0.812872250567669</TD></TR>
+<TR><TD>7</TD><TD>0.32770564349706716</TD><TD>-0.6888171650020032</TD><TD>-2.011791373087136</TD></TR>
+<TR><TD>8</TD><TD>-0.39528325564911987</TD><TD>1.841280936503913</TD><TD>-1.3685050979414375</TD></TR>
+<TR><TD>9</TD><TD>0.45610178231733167</TD><TD>-0.1313743068548495</TD><TD>0.572819632121423</TD></TR>
+</TABLE></div>
+</div>
+</div>
+<div class="section" id="Symbolic-functions">
+<h2>Symbolic functions<a class="headerlink" href="#Symbolic-functions" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">SymbolicFunction</span></code> class can create symbolic functions whenever the function is simple enough to be expressed as a string.</p>
+<p>This has at least two significant advantages.</p>
+<ul class="simple">
+<li><p>It generally improves the performance.</p></li>
+<li><p>This allows to automatically evaluate the exact gradient and Hessian matrix.</p></li>
+</ul>
+<p>In practice, some functions cannot be expressed as a symbolic function: in this case, the Python function cannot be avoided.</p>
+<p>The calling sequence is the following:</p>
+<p><code class="docutils literal notranslate"><span class="pre">myfunction</span> <span class="pre">=</span> <span class="pre">SymbolicFunction(</span> <span class="pre">list_of_inputs,</span> <span class="pre">list_of_formulas)</span></code></p>
+<p>where</p>
+<ul class="simple">
+<li><p>list_of_inputs: a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">nbInputs</span></code> strings, the names of the input variables,</p></li>
+<li><p>list_of_formulas: a <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">nbOutputs</span></code> strings, the equations.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">myfunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">((</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span><span class="s2">&quot;x2&quot;</span><span class="p">),(</span><span class="s2">&quot;x0 + x1 + x2&quot;</span><span class="p">,</span><span class="s2">&quot;x0 - x1 * x2&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">SymbolicFunction</span></code>, like any other function, can also have a history.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">myfunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">myfunction</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputVect</span> <span class="o">=</span>  <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">myfunction</span><span class="p">,</span> <span class="n">inputRandomVector</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">montecarlosize</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">outputVect</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">montecarlosize</span><span class="p">)</span>
+<span class="n">empiricalMean</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">empiricalMean</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[-0.000337898,-0.00609942]
+</pre></div></div>
+</div>
+<p>Since the history is enabled, we can get the history of outputs of the function.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputs</span> <span class="o">=</span> <span class="n">myfunction</span><span class="o">.</span><span class="n">getOutputHistory</span><span class="p">()</span>
+<span class="n">outputs</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,:]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>v0</TH><TH>v1</TH></TR>
+<TR><TD>0</TD><TD>0.835068449085645</TD><TD>0.6082917234676658</TD></TR>
+<TR><TD>1</TD><TD>-1.5331063675958376</TD><TD>-0.3603107009663977</TD></TR>
+<TR><TD>2</TD><TD>0.3294989655386499</TD><TD>-0.5302618334408122</TD></TR>
+<TR><TD>3</TD><TD>1.6977751892527135</TD><TD>0.09262297601997455</TD></TR>
+<TR><TD>4</TD><TD>1.0671706780737071</TD><TD>-0.7204318270150004</TD></TR>
+<TR><TD>5</TD><TD>-0.3294656311476475</TD><TD>-0.043150705383642796</TD></TR>
+<TR><TD>6</TD><TD>-1.4948567574549438</TD><TD>-0.45129933759593865</TD></TR>
+<TR><TD>7</TD><TD>1.094295564406751</TD><TD>1.9061369435653874</TD></TR>
+<TR><TD>8</TD><TD>0.32610650078173403</TD><TD>0.14681166047125288</TD></TR>
+</TABLE></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="symbolic_function.html" title="Create a symbolic function"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="functional_modeling.html" title="Functional modeling"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="functional_modeling.html" >Functional modeling</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jan 01, 2018.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/319a72f5d.
+    </div>
+  </body>
+</html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Viscous free-fall metamodel &#8212; OpenTURNS 1.15dev documentation</title>
+    <title>Viscous free fall: metamodel of a field function &#8212; OpenTURNS 1.15dev documentation</title>
     <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -61,6 +61,19 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Viscous free fall: metamodel of a field function</a><ul>
+<li><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li><a class="reference internal" href="#Probabilistic-model">Probabilistic model</a></li>
+<li><a class="reference internal" href="#References">References</a></li>
+<li><a class="reference internal" href="#Define-the-model">Define the model</a></li>
+<li><a class="reference internal" href="#Compute-the-KL-decomposition-of-the-output">Compute the KL decomposition of the output</a></li>
+<li><a class="reference internal" href="#Validate-the-metamodel">Validate the metamodel</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="fieldfunction_metamodel.html"
                         title="previous chapter">Metamodel of a field function</a></p>
@@ -292,33 +305,71 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Viscous-free-fall-metamodel">
-<h1>Viscous free-fall metamodel<a class="headerlink" href="#Viscous-free-fall-metamodel" title="Permalink to this headline">¶</a></h1>
-<p>In the following example we are going to create a metamodel of the fall of a solid in a viscous fluid:</p>
+<div class="section" id="Viscous-free-fall:-metamodel-of-a-field-function">
+<h1>Viscous free fall: metamodel of a field function<a class="headerlink" href="#Viscous-free-fall:-metamodel-of-a-field-function" title="Permalink to this headline">¶</a></h1>
+<p>In this example, we present how to create the metamodel of a field function. This examples considers the free fall model. We first compute the Karhunen-Loève decomposition of a sample of trajectories. Then we create a create a polynomial chaos which takes the inputs and returns the KL decomposition modes as outputs. Finally, we create a metamodel by combining the KL decomposition and the polynomial chaos.</p>
+<div class="section" id="Introduction">
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
+<p>We consider an object inside a vertical cylinder which contains a viscous fluid. The fluid generates a drag force which limits the speed of the solid and we assume that the force depends linearily on the object speed:</p>
 <div class="math">
-<p><img src="../../_images/math/ca2d83c2c85416797a25ba6cb822a5591b256af8.svg" alt="m \frac{\delta v}{\delta t} = - m g - c v"/></p>
-</div><p>For a viscous fluid the atitude z admits an explicit solution:</p>
-<div class="math">
-<p><img src="../../_images/math/d6440bb939f9ee9894bac88fa2646b1d4cae3aaa.svg" alt="z(t) = z_0 + v_{inf} t + \tau (v_0 - v_{inf})(1 - e^{-\frac{t}{\tau}}) \forall t \in [0, t_{max}]"/></p>
-</div><p>With:</p>
+<p><img src="../../_images/math/26ec9a955fce0c0abc37f1b36da8a628da61d080.svg" alt="m \frac{dv}{dt} = - m g - c v"/></p>
+</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]" style="vertical-align: -4px"/> where:</p>
 <ul class="simple">
-<li><p><img class="math" src="../../_images/math/54520abcb124d8a92b62628e945a7d961eb43ab1.svg" alt="z" style="vertical-align: 0px"/> the altitude above the surface <img class="math" src="../../_images/math/aa7e8a983b183cd5f9697f35d4902d7d6f55dc5a.svg" alt="[m]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/bb4d1142535c3f6ae97ff2fef068acd80ae9a132.svg" alt="z_0" style="vertical-align: -2px"/> the initial altitude <img class="math" src="../../_images/math/aa7e8a983b183cd5f9697f35d4902d7d6f55dc5a.svg" alt="[m]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/658ae44ee69111e3048325f416f44d6080707928.svg" alt="g" style="vertical-align: -3px"/> the gravitational acceleration <img class="math" src="../../_images/math/8a142fffbe98732eea43f29b9337046e11be81e6.svg" alt="[m.s^{-2}]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m" style="vertical-align: 0px"/> the mass <img class="math" src="../../_images/math/4de6be7753609caccb2680c56747b51534b6d4b0.svg" alt="[kg]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/568c612d5051e128230b50daf0d8ea04d4fc3646.svg" alt="c" style="vertical-align: 0px"/> the linear drag coefficient <img class="math" src="../../_images/math/57b592d441c8146a60c6eea6e61b7c3e693988ab.svg" alt="[kg.s^{-1}]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/8fe381d8c314dd8928399dd8de9796f7079add11.svg" alt="v_0" style="vertical-align: -2px"/> the initial speed (upward) <img class="math" src="../../_images/math/5d3f566646a0a1c98c5b8602556a0bf0d1f617db.svg" alt="[m.s^{-1}]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t" style="vertical-align: 0px"/> the time <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/6912d6f07a22c82fb7f43654d7b3dcd63bc42ce7.svg" alt="v_{inf}=-\frac{m g}{c}" style="vertical-align: -6px"/> the limit speed <img class="math" src="../../_images/math/5d3f566646a0a1c98c5b8602556a0bf0d1f617db.svg" alt="[m.s^{-1}]" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/2aa16f1e55db6d8f27d94dd9d96ed74e1e34c9b4.svg" alt="\tau=\frac{m}{c}" style="vertical-align: -6px"/> time caracteristic <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]" style="vertical-align: -4px"/></p></li>
+<li><p><img class="math" src="../../_images/math/e337404c76e804095f49955989f1afeba88e14ce.svg" alt="v" style="vertical-align: 0px"/> is the speed <img class="math" src="../../_images/math/3e089dba72d0221acb9cd7e65dec1e8f109be9c5.svg" alt="[m/s]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t" style="vertical-align: 0px"/> is the time <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/bbb1e8e3de9b39bff8b6973f5b8864f566bdb617.svg" alt="t_{max}" style="vertical-align: -2px"/> is the maximum time <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/658ae44ee69111e3048325f416f44d6080707928.svg" alt="g" style="vertical-align: -3px"/> is the gravitational acceleration <img class="math" src="../../_images/math/8a142fffbe98732eea43f29b9337046e11be81e6.svg" alt="[m.s^{-2}]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m" style="vertical-align: 0px"/> is the mass <img class="math" src="../../_images/math/4de6be7753609caccb2680c56747b51534b6d4b0.svg" alt="[kg]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/568c612d5051e128230b50daf0d8ea04d4fc3646.svg" alt="c" style="vertical-align: 0px"/> is the linear drag coefficient <img class="math" src="../../_images/math/57b592d441c8146a60c6eea6e61b7c3e693988ab.svg" alt="[kg.s^{-1}]" style="vertical-align: -4px"/>.</p></li>
 </ul>
+<p>The previous differential equation has the exact solution:</p>
+<div class="math">
+<p><img src="../../_images/math/44bddbd97966da8b1edabfbcf3a292d9e9c78f23.svg" alt="z(t) = z_0 + v_{inf} t + \tau (v_0 - v_{inf})\left(1 - e^{-\frac{t}{\tau}}\right)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]" style="vertical-align: -4px"/></p>
+<p>where:</p>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/54520abcb124d8a92b62628e945a7d961eb43ab1.svg" alt="z" style="vertical-align: 0px"/> is the altitude above the surface <img class="math" src="../../_images/math/aa7e8a983b183cd5f9697f35d4902d7d6f55dc5a.svg" alt="[m]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/bb4d1142535c3f6ae97ff2fef068acd80ae9a132.svg" alt="z_0" style="vertical-align: -2px"/> is the initial altitude <img class="math" src="../../_images/math/aa7e8a983b183cd5f9697f35d4902d7d6f55dc5a.svg" alt="[m]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/8fe381d8c314dd8928399dd8de9796f7079add11.svg" alt="v_0" style="vertical-align: -2px"/> is the initial speed (upward) <img class="math" src="../../_images/math/5d3f566646a0a1c98c5b8602556a0bf0d1f617db.svg" alt="[m.s^{-1}]" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/ebd8f210f3a932c8e5e2e8ea5040b64166e6f06e.svg" alt="v_{inf}" style="vertical-align: -5px"/> is the limit speed <img class="math" src="../../_images/math/5d3f566646a0a1c98c5b8602556a0bf0d1f617db.svg" alt="[m.s^{-1}]" style="vertical-align: -4px"/>:</p></li>
+</ul>
+<div class="math">
+<p><img src="../../_images/math/a5c16cd060c4d8e8eb0f995484e595409830bfca.svg" alt="v_{inf}=-\frac{m g}{c}"/></p>
+</div><ul class="simple">
+<li><p><img class="math" src="../../_images/math/20de980d786f800acea0d00b9f248081b74ce860.svg" alt="\tau" style="vertical-align: 0px"/> is time caracteristic <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]" style="vertical-align: -4px"/>:</p></li>
+</ul>
+<div class="math">
+<p><img src="../../_images/math/f87a969894edb78bc352fc31fbd302b6dd969b1d.svg" alt="\tau=\frac{m}{c}."/></p>
+</div><p>The stationnary speed limit at infinite time is equal to <img class="math" src="../../_images/math/ebd8f210f3a932c8e5e2e8ea5040b64166e6f06e.svg" alt="v_{inf}" style="vertical-align: -5px"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/c09116a93c5473c6b4b53af62a0456352328552f.svg" alt="\lim_{t\rightarrow+\infty} v(t)= v_{inf}."/></p>
+</div><p>When there is no drag, i.e. when <img class="math" src="../../_images/math/bbc1072a3cbfa73a698d92ae32f73eecc1af859b.svg" alt="c=0" style="vertical-align: 0px"/>, the trajectory depends quadratically on <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t" style="vertical-align: 0px"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/48b77bbdd1a1f277440afee4ff03e7016853b8f5.svg" alt="z(t) = z_0 + v_0 t -g t^2"/></p>
+</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]" style="vertical-align: -4px"/>.</p>
+<p>Furthermore, when the solid touches the ground, we ensure that the altitude remains nonnegative, i.e. the final altitude is:</p>
+<div class="math">
+<p><img src="../../_images/math/57ddf95071fe008200cc14f3b15bb49be7b0086d.svg" alt="y(t) = \max(z(t),0)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]" style="vertical-align: -4px"/>.</p>
+</div>
+<div class="section" id="Probabilistic-model">
+<h2>Probabilistic model<a class="headerlink" href="#Probabilistic-model" title="Permalink to this headline">¶</a></h2>
 <p>The parameters <img class="math" src="../../_images/math/bb4d1142535c3f6ae97ff2fef068acd80ae9a132.svg" alt="z_0" style="vertical-align: -2px"/>, <img class="math" src="../../_images/math/8fe381d8c314dd8928399dd8de9796f7079add11.svg" alt="v_0" style="vertical-align: -2px"/>, <img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m" style="vertical-align: 0px"/> and <img class="math" src="../../_images/math/568c612d5051e128230b50daf0d8ea04d4fc3646.svg" alt="c" style="vertical-align: 0px"/> are probabilistic:</p>
 <ul class="simple">
-<li><p><img class="math" src="../../_images/math/48864ec6da2f5e310fe1755e2dc0f6637f356967.svg" alt="z_0 \sim \mathcal{U}(100, 150)" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/202f9e3fa6edba4b0caea782a7c448bc137bcb96.svg" alt="v_0 \sim \mathcal{N}(55, 10)" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/08141fd4142c35bfc56bcd65adbadbb8a1fae0f2.svg" alt="m \sim \mathcal{N}(80, 8)" style="vertical-align: -4px"/></p></li>
-<li><p><img class="math" src="../../_images/math/ce13b18da88ba809fa0ee149d9571f33f8bca99e.svg" alt="c \sim \mathcal{U}(0, 30)" style="vertical-align: -4px"/></p></li>
+<li><p><img class="math" src="../../_images/math/48864ec6da2f5e310fe1755e2dc0f6637f356967.svg" alt="z_0 \sim \mathcal{U}(100, 150)" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/202f9e3fa6edba4b0caea782a7c448bc137bcb96.svg" alt="v_0 \sim \mathcal{N}(55, 10)" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/08141fd4142c35bfc56bcd65adbadbb8a1fae0f2.svg" alt="m \sim \mathcal{N}(80, 8)" style="vertical-align: -4px"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/ce13b18da88ba809fa0ee149d9571f33f8bca99e.svg" alt="c \sim \mathcal{U}(0, 30)" style="vertical-align: -4px"/>.</p></li>
 </ul>
+</div>
+<div class="section" id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Steven C. Chapra. Applied numerical methods with Matlab for engineers and scientists, Third edition. 2012. Chapter 7, “Optimization”, p.182.</p></li>
+</ul>
+</div>
+<div class="section" id="Define-the-model">
+<h2>Define the model<a class="headerlink" href="#Define-the-model" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -326,19 +377,19 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linspace</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">maximum</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
 </div>
+<p>We first define the time grid associated with the model.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Some parameters</span>
-<span class="n">tmin</span><span class="o">=</span><span class="mf">0.0</span> <span class="c1"># Date minimale</span>
-<span class="n">tmax</span><span class="o">=</span><span class="mf">12.</span> <span class="c1"># Date maximale</span>
-<span class="n">gridsize</span><span class="o">=</span><span class="mi">100</span> <span class="c1"># Nombre de pas de temps</span>
+<span></span><span class="n">tmin</span><span class="o">=</span><span class="mf">0.0</span> <span class="c1"># Minimum time</span>
+<span class="n">tmax</span><span class="o">=</span><span class="mf">12.</span> <span class="c1"># Maximum time</span>
+<span class="n">gridsize</span><span class="o">=</span><span class="mi">100</span> <span class="c1"># Number of time steps</span>
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntervalMesher</span><span class="p">([</span><span class="n">gridsize</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">tmin</span><span class="p">,</span> <span class="n">tmax</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -348,89 +399,109 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># model function</span>
-<span class="k">def</span> <span class="nf">AltiFunc</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-    <span class="n">g</span>  <span class="o">=</span> <span class="mf">9.81</span>
-    <span class="n">z0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">v0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">m</span>  <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">c</span>  <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-    <span class="n">zmin</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-    <span class="n">tau</span><span class="o">=</span><span class="n">m</span><span class="o">/</span><span class="n">c</span>
-    <span class="n">vinf</span><span class="o">=-</span><span class="n">m</span><span class="o">*</span><span class="n">g</span><span class="o">/</span><span class="n">c</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">tmin</span><span class="p">,</span><span class="n">tmax</span><span class="p">,</span><span class="n">gridsize</span><span class="p">)</span>
-    <span class="n">z</span><span class="o">=</span><span class="n">z0</span><span class="o">+</span><span class="n">vinf</span><span class="o">*</span><span class="n">t</span><span class="o">+</span><span class="n">tau</span><span class="o">*</span><span class="p">(</span><span class="n">v0</span><span class="o">-</span><span class="n">vinf</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">t</span><span class="o">/</span><span class="n">tau</span><span class="p">))</span>
-    <span class="n">z</span><span class="o">=</span><span class="n">maximum</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">zmin</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[[</span><span class="n">zeta</span><span class="p">]</span> <span class="k">for</span> <span class="n">zeta</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
-<span class="n">alti</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonPointToFieldFunction</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">AltiFunc</span><span class="p">)</span>
+<span></span><span class="n">vertices</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<p>Creation of the input distribution.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Creation of the input distribution</span>
-<span class="n">distZ0</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
+<span></span><span class="n">distZ0</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
 <span class="n">distV0</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">55.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
 <span class="n">distM</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">)</span>
 <span class="n">distC</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span>
-<span class="n">distZmin</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">([</span><span class="mf">0.0</span><span class="p">])</span>
-<span class="n">distX</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">distZ0</span><span class="p">,</span> <span class="n">distV0</span><span class="p">,</span> <span class="n">distM</span><span class="p">,</span> <span class="n">distC</span><span class="p">,</span> <span class="n">distZmin</span><span class="p">])</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">distZ0</span><span class="p">,</span> <span class="n">distV0</span><span class="p">,</span> <span class="n">distM</span><span class="p">,</span> <span class="n">distC</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Sample the model</span>
-<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">inputSample</span> <span class="o">=</span> <span class="n">distX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
-<span class="n">outputSample</span> <span class="o">=</span> <span class="n">alti</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Draw some curves</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;Viscous free-fall&#39;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$t$&#39;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$z$&#39;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Drawable</span><span class="o">.</span><span class="n">ConvertFromHSV</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="p">(</span><span class="mf">360.0</span><span class="o">/</span><span class="n">size</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">getDrawables</span><span class="p">()))])</span>
-<span class="n">graph</span>
+<span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">dimension</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_viscous_fall_metamodel_7_0.png" src="../../_images/examples_meta_modeling_viscous_fall_metamodel_7_0.png" />
+<div class="highlight"><pre>
+4
+</pre></div></div>
+</div>
+<p>Then we define the Python function which computes the altitude at each time value. In order to compute all altitudes with a vectorized evaluation, we first convert the vertices into a Numpy <code class="docutils literal notranslate"><span class="pre">array</span></code> and use the Numpy functions<code class="docutils literal notranslate"><span class="pre">exp</span></code> and <code class="docutils literal notranslate"><span class="pre">maximum</span></code>: this increases the evaluation performance of the script.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">AltiFunc</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">g</span>  <span class="o">=</span> <span class="mf">9.81</span>
+    <span class="n">z0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">m</span>  <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">c</span>  <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">m</span> <span class="o">/</span> <span class="n">c</span>
+    <span class="n">vinf</span> <span class="o">=</span> <span class="o">-</span> <span class="n">m</span> <span class="o">*</span> <span class="n">g</span> <span class="o">/</span> <span class="n">c</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z0</span> <span class="o">+</span> <span class="n">vinf</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">v0</span> <span class="o">-</span> <span class="n">vinf</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="n">t</span> <span class="o">/</span> <span class="n">tau</span><span class="p">))</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[[</span><span class="n">zeta</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">zeta</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
+</pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
+<p>In order to create a <code class="docutils literal notranslate"><span class="pre">Function</span></code> from this Python function, we use the <code class="docutils literal notranslate"><span class="pre">PythonPointToFieldFunction</span></code> class. Since the altitude is the only output field, the third argument <code class="docutils literal notranslate"><span class="pre">outputDimension</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">1</span></code>. If we had computed the speed as an extra output field, we would have set <code class="docutils literal notranslate"><span class="pre">2</span></code> instead.</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Compute the KL decomposition of the output</span>
-<span class="n">size</span> <span class="o">=</span> <span class="mi">2000</span>
+<span></span><span class="n">outputDimension</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">alti</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonPointToFieldFunction</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">outputDimension</span><span class="p">,</span> <span class="n">AltiFunc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Compute a training sample.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">2000</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">inputSample</span> <span class="o">=</span> <span class="n">distX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="n">inputSample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
 <span class="n">outputSample</span> <span class="o">=</span> <span class="n">alti</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KarhunenLoeveSVDAlgorithm</span><span class="p">(</span><span class="n">outputSample</span><span class="p">,</span> <span class="mf">1.0e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Compute-the-KL-decomposition-of-the-output">
+<h2>Compute the KL decomposition of the output<a class="headerlink" href="#Compute-the-KL-decomposition-of-the-output" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KarhunenLoeveSVDAlgorithm</span><span class="p">(</span><span class="n">outputSample</span><span class="p">,</span> <span class="mf">1.0e-6</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">KLResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">scaledModes</span> <span class="o">=</span> <span class="n">KLResult</span><span class="o">.</span><span class="n">getScaledModesAsProcessSample</span><span class="p">()</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">scaledModes</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">scaledModes</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;KL modes&#39;</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$t$&#39;</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$z$&#39;</span><span class="p">)</span>
@@ -439,48 +510,82 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_viscous_fall_metamodel_8_0.png" src="../../_images/examples_meta_modeling_viscous_fall_metamodel_8_0.png" />
+<img alt="../../_images/examples_meta_modeling_viscous_fall_metamodel_19_0.png" src="../../_images/examples_meta_modeling_viscous_fall_metamodel_19_0.png" />
 </div>
 </div>
+<p>We create the <code class="docutils literal notranslate"><span class="pre">postProcessingKL</span></code> function which takes coefficients of the the K.-L. modes as inputs and returns the trajectories.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Meta-model</span>
-<span class="c1"># Here we have to suppress the Dirac component</span>
-<span class="n">alti</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PointToFieldConnection</span><span class="p">(</span><span class="n">alti</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;z0&quot;</span><span class="p">,</span> <span class="s2">&quot;v0&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;z0&quot;</span><span class="p">,</span> <span class="s2">&quot;v0&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">]))</span>
-<span class="n">inputSampleChaos</span> <span class="o">=</span> <span class="n">inputSample</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-
-<span class="n">postProcessing</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KarhunenLoeveLifting</span><span class="p">(</span><span class="n">KLResult</span><span class="p">)</span>
-<span class="n">outputSampleChaos</span> <span class="o">=</span> <span class="n">KLResult</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">outputSample</span><span class="p">)</span>
-
-<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">validationInputSample</span> <span class="o">=</span> <span class="n">distX</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span></span><span class="n">karhunenLoeveLiftingFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KarhunenLoeveLifting</span><span class="p">(</span><span class="n">KLResult</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">project</span></code> method computes the projection of the output sample (i.e. the trajectories) onto the K.-L. modes.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputSampleChaos</span> <span class="o">=</span> <span class="n">KLResult</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">outputSample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We limit the sampling size of the Kolmogorov selection in order to reduce the computational burden.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;FittingTest-KolmogorovSamplingSize&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We create a polynomial chaos metamodel which takes the input sample and returns the K.-L. modes.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSampleChaos</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">chaosMetamodel</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>The final metamodel is a composition of the KL lifting function and the polynomial chaos metamodel. In order to combine these two functions, we use the <code class="docutils literal notranslate"><span class="pre">PointToFieldConnection</span></code> class.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">metaModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PointToFieldConnection</span><span class="p">(</span><span class="n">karhunenLoeveLiftingFunction</span><span class="p">,</span> <span class="n">chaosMetamodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Validate-the-metamodel">
+<h2>Validate the metamodel<a class="headerlink" href="#Validate-the-metamodel" title="Permalink to this headline">¶</a></h2>
+<p>Create a validation sample.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">validationInputSample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
 <span class="n">validationOutputSample</span> <span class="o">=</span> <span class="n">alti</span><span class="p">(</span><span class="n">validationInputSample</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># First, using the most basic interface</span>
-<span class="c1"># We limit the sampling size of the Kolmogorov selection in order to reduce the computational burden</span>
-<span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;FittingTest-KolmogorovSamplingSize&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">inputSampleChaos</span><span class="p">,</span> <span class="n">outputSampleChaos</span><span class="p">)</span>
-<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="n">metaModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PointToFieldConnection</span><span class="p">(</span><span class="n">postProcessing</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -497,11 +602,14 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_viscous_fall_metamodel_11_0.png" src="../../_images/examples_meta_modeling_viscous_fall_metamodel_11_0.png" />
+<img alt="../../_images/examples_meta_modeling_viscous_fall_metamodel_33_0.png" src="../../_images/examples_meta_modeling_viscous_fall_metamodel_33_0.png" />
 </div>
+</div>
+<p>We see that the blue trajectories (i.e. the metamodel) are close to the red trajectories (i.e. the validation sample). This shows that the metamodel is quite accurate. However, we observe that the trajectory singularity that occurs when the object touches the ground (i.e. when <img class="math" src="../../_images/math/54520abcb124d8a92b62628e945a7d961eb43ab1.svg" alt="z" style="vertical-align: 0px"/> is equal to zero), makes the metamodel less accurate.</p>
 </div>
 </div>
 
@@ -532,7 +640,7 @@ div.rendered_html tbody tr:hover {
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/48f81dfcd.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/319a72f5d.
     </div>
   </body>
 </html>
