@@ -1,0 +1,615 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Generate random variates by inverting the CDF &#8212; OpenTURNS 1.15rc1 documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Create a copula" href="create_copula.html" />
+    <link rel="prev" title="Draw minimum volume level set in 2D" href="minimum_volume_level_set_2D.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="create_copula.html" title="Create a copula"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="minimum_volume_level_set_2D.html" title="Draw minimum volume level set in 2D"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" accesskey="U">Probabilistic modeling</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Generate random variates by inverting the CDF</a><ul>
+<li><a class="reference internal" href="#Abstract">Abstract</a></li>
+<li><a class="reference internal" href="#The-Weibull-distribution">The Weibull distribution</a></li>
+<li><a class="reference internal" href="#Loss-of-accuracy-when-the-probability-is-close-to-1">Loss of accuracy when the probability is close to 1</a></li>
+<li><a class="reference internal" href="#Generate-by-inversion:-histogram-and-density">Generate by inversion: histogram and density</a></li>
+<li><a class="reference internal" href="#Visualization-of-the-quantiles">Visualization of the quantiles</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="minimum_volume_level_set_2D.html"
+                        title="previous chapter">Draw minimum volume level set in 2D</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="create_copula.html"
+                        title="next chapter">Create a copula</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/probabilistic_modeling/generate_by_inversion.ipynb"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Generate-random-variates-by-inverting-the-CDF">
+<h1>Generate random variates by inverting the CDF<a class="headerlink" href="#Generate-random-variates-by-inverting-the-CDF" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Abstract">
+<h2>Abstract<a class="headerlink" href="#Abstract" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we show how to generate random variates by inversion of the cumulated distribution function. In simple situations, this method is rarely used in practice because of problems with performance, statistical quality of the generated random variates and numerical accuracy of the generated numbers when we use floating point numbers. However, it is an interesting method to know about because it is a building block for other algorithms and can be used to visualize the distribution of
+the generated numbers.</p>
+</div>
+<div class="section" id="The-Weibull-distribution">
+<h2>The Weibull distribution<a class="headerlink" href="#The-Weibull-distribution" title="Permalink to this headline">¶</a></h2>
+<p>Let <img class="math" src="../../_images/math/36b3ffa48ba8197c9a51ea075d657483e63b6453.svg" alt="\beta&gt;0" style="vertical-align: -3px"/> and <img class="math" src="../../_images/math/50364318b18df7add87d5897a6eaa33350beb994.svg" alt="\alpha&gt;0" style="vertical-align: 0px"/> be two real parameters: <img class="math" src="../../_images/math/233b263354a1b8b4463fe36dd42563b01bed21f3.svg" alt="\beta" style="vertical-align: -3px"/> is a shape parameter and <img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha" style="vertical-align: 0px"/> is a scale parameter.</p>
+<p>The cumulated distribution function of the Weibull distribution is:</p>
+<div class="math">
+<p><img src="../../_images/math/68b0d25592df193df72fd47e1a50c5520d806b58.svg" alt="F(x) = 1 - \exp\left(-\frac{x}{\alpha}\right)^\beta,"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b20a0de06484c6d1fc9c1dc285ed77bfb18d45c5.svg" alt="x\geq 0" style="vertical-align: -2px"/>.</p>
+<p>In some situations, this parameters are denoted by <img class="math" src="../../_images/math/ef0465c06e11707acd72ef2c2c20b0696d4c60ff.svg" alt="k=\beta" style="vertical-align: -3px"/> and <img class="math" src="../../_images/math/be8bf60345356f457e5683f20258d8bb2492660e.svg" alt="\lambda=\alpha" style="vertical-align: 0px"/>.</p>
+<p>The inverse of the CDF is:</p>
+<div class="math">
+<p><img src="../../_images/math/6c0950b5aa81843328e65691ce4f8302f029f744.svg" alt="F^{-1}(x) = \alpha \left(-\log(1-p)\right)^{\frac{1}{\beta}}"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b20a0de06484c6d1fc9c1dc285ed77bfb18d45c5.svg" alt="x\geq 0" style="vertical-align: -2px"/>.</p>
+<p>This is the <em>quantile</em> function, because it computes the quantile <img class="math" src="../../_images/math/9e54991ae27e91517d5a19d4a16366a2f56d86c5.svg" alt="F^{-1}(x)" style="vertical-align: -4px"/> depending on an outcome <img class="math" src="../../_images/math/865f48ab61e258cd6e57c005da1578de4b22f440.svg" alt="x" style="vertical-align: 0px"/>.</p>
+</div>
+<div class="section" id="Loss-of-accuracy-when-the-probability-is-close-to-1">
+<h2>Loss of accuracy when the probability is close to 1<a class="headerlink" href="#Loss-of-accuracy-when-the-probability-is-close-to-1" title="Permalink to this headline">¶</a></h2>
+<p>In practice, if the probability <img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p" style="vertical-align: -3px"/> is <em>very</em> close to 1, then the complementary probability <img class="math" src="../../_images/math/c62aea98fe79d5ab0ba541e2a0f28256133c067e.svg" alt="1-p" style="vertical-align: -3px"/> is close to zero. This can lead to a significant loss of accuracy when we evaluate the subtraction <img class="math" src="../../_images/math/c62aea98fe79d5ab0ba541e2a0f28256133c067e.svg" alt="1-p" style="vertical-align: -3px"/> with floating point numbers because <img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p" style="vertical-align: -3px"/> and 1 have lots of common digits. This is called a <em>loss of accuracy by catastrophic cancellation</em>, a problem which is common in extreme events.</p>
+<p>We can use the <img class="math" src="../../_images/math/f8eb740a7f7effaeec5927c95067b580632e6900.svg" alt="\textrm{expm1}" style="vertical-align: -3px"/> function, defined by the equation:</p>
+<div class="math">
+<p><img src="../../_images/math/ee213fcaae0d19f6a0e0d0c0885793b5e286189f.svg" alt="\textrm{expm1}(x) = \exp(x)-1,"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b83fb4ad9f34ff6d0292acb686d86927ce88a006.svg" alt="x\in\mathbb{R}" style="vertical-align: -1px"/>. This is <em>not</em> numerically equivalent to computing <code class="docutils literal notranslate"><span class="pre">exp</span></code> and then subtracting 1. Indeed, the <code class="docutils literal notranslate"><span class="pre">expm1</span></code> function is more accurate when its argument <code class="docutils literal notranslate"><span class="pre">x</span></code> is close to zero.</p>
+<p>The CDF is then:</p>
+<div class="math">
+<p><img src="../../_images/math/581bdde645e7a29dabf15ecdcd4d674c7d5eb078.svg" alt="F(x) = -\textrm{expm1} \left(\left(-\frac{x}{\alpha}\right)^\beta\right),"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b20a0de06484c6d1fc9c1dc285ed77bfb18d45c5.svg" alt="x\geq 0" style="vertical-align: -2px"/>.</p>
+<p>For the quantile function, we can use the <img class="math" src="../../_images/math/0e0ef0d5dbc850cf9c144532c66df4a57d22b9ee.svg" alt="\textrm{log1p}" style="vertical-align: -3px"/> function, defined by the equation:</p>
+<div class="math">
+<p><img src="../../_images/math/07e021b70cf19651e58ca43cb1c231b4efa5c775.svg" alt="\textrm{log1p}(x) = \log(1+x)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/70d0478dfcf66e7fa225e737e6f7898c1630ec82.svg" alt="x&gt;-1" style="vertical-align: -1px"/>.</p>
+<p>Therefore, the quantile function is:</p>
+<div class="math">
+<p><img src="../../_images/math/6063704f9e646d72e6ab708322a85251dd028b2e.svg" alt="F^{-1}(x) = \alpha \left(-\textrm{log1p}(-p)\right)^{\frac{1}{\beta}}"/></p>
+</div><p>pour <img class="math" src="../../_images/math/b20a0de06484c6d1fc9c1dc285ed77bfb18d45c5.svg" alt="x\geq 0" style="vertical-align: -2px"/>.</p>
+<p>In the following, we will not use these robust equations and this issue will not be taken into account.</p>
+</div>
+<div class="section" id="Generate-by-inversion:-histogram-and-density">
+<h2>Generate by inversion: histogram and density<a class="headerlink" href="#Generate-by-inversion:-histogram-and-density" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<p>The following function defines the quantile function of the Weibull distribution. (Of course, we could use the <code class="docutils literal notranslate"><span class="pre">computeQuantile</span></code> method of the <code class="docutils literal notranslate"><span class="pre">Weibull</span></code> class as well. This would create a simpler, but less interesting example: this is a trade off that we accept in order to better understand the algorithm.)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">weibullQ</span><span class="p">(</span><span class="n">argument</span><span class="p">):</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="n">argument</span>
+    <span class="n">quantile</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">beta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">quantile</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">quantileFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weibullQ</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We define the parameters of the Weibull distribution and create the parametric function.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">10.</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">quantile</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">quantileFunction</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">alpha</span><span class="p">,</span><span class="n">beta</span><span class="p">])</span>
+<span class="n">quantile</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>ParametricEvaluation(class=PythonEvaluation name=OpenTURNSPythonFunction, parameters positions=[1,2], parameters=[x1 : 1, x2 : 10], input positions=[0])</p></div>
+</div>
+<p>In the library, the uniform distribution is by default over the <img class="math" src="../../_images/math/604c36c065689c2cc20e761c907bcb4fa035aeba.svg" alt="[-1,1]" style="vertical-align: -4px"/> interval. To obtain a uniform distribution over <img class="math" src="../../_images/math/35553d8536d15adad653d39e5b507dbb08b6b885.svg" alt="[0,1]" style="vertical-align: -4px"/>, we need to set the bounds explicitly.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">U</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Then we generate a sample of size 1000 from the uniform distribution.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">uniformSample</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>To generate the numbers, we evaluate the quantile function on the uniform numbers.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">weibullSample</span> <span class="o">=</span> <span class="n">quantile</span><span class="p">(</span><span class="n">uniformSample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>In order to compare the results, we use the <code class="docutils literal notranslate"><span class="pre">WeibullMin</span></code> class (using the default value of the location parameter <img class="math" src="../../_images/math/d480cd56bb0b090e2bd732c1f4a85d115834b2aa.svg" alt="\gamma=0" style="vertical-align: -3px"/>).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">W</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">WeibullMin</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="n">beta</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">histo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">weibullSample</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">histo</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Weibull alpha=</span><span class="si">%s</span><span class="s2">, beta=</span><span class="si">%s</span><span class="s2">, n=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="n">beta</span><span class="p">,</span><span class="n">n</span><span class="p">))</span>
+<span class="n">histo</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Sample&quot;</span><span class="p">])</span>
+<span class="n">wpdf</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">wpdf</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">])</span>
+<span class="n">wpdf</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Weibull&quot;</span><span class="p">])</span>
+<span class="n">histo</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">wpdf</span><span class="p">)</span>
+<span class="n">histo</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_probabilistic_modeling_generate_by_inversion_19_0.png" src="../../_images/examples_probabilistic_modeling_generate_by_inversion_19_0.png" />
+</div>
+</div>
+<p>We see that the empirical histogram of the generated outcomes is close to the exact density of the Weibull distribution.</p>
+</div>
+<div class="section" id="Visualization-of-the-quantiles">
+<h2>Visualization of the quantiles<a class="headerlink" href="#Visualization-of-the-quantiles" title="Permalink to this headline">¶</a></h2>
+<p>We now want to understand the details of the algorithm. To do this, we need to compare the distribution of the uniform numbers with the distribution of the generated points.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">uniformSample</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">weibullSample</span> <span class="o">=</span> <span class="n">quantile</span><span class="p">(</span><span class="n">uniformSample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We sort the sample by increasing order.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">weibullSample</span>
+<span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">uniformSample</span>
+<span class="n">data</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;p&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">())</span>
+<span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,:]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>x</TH><TH>p</TH></TR>
+<TR><TD>0</TD><TD>0.6159410787897307</TD><TD>0.00782863698262859</TD></TR>
+<TR><TD>1</TD><TD>0.6738735110271081</TD><TD>0.019124825063157713</TD></TR>
+<TR><TD>2</TD><TD>0.71948944217764</TD><TD>0.03649193877930723</TD></TR>
+<TR><TD>3</TD><TD>0.736821724254262</TD><TD>0.04607046773214285</TD></TR>
+<TR><TD>4</TD><TD>0.74114867193246</TD><TD>0.0487797035823434</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">weibullSample</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">uniformSample</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Weibull alpha=</span><span class="si">%s</span><span class="s2">, beta=</span><span class="si">%s</span><span class="s2">, n=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="n">beta</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;U&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Add the CDF plot</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">()</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="c1"># Add the horizontal lines</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="n">weibullSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]],[</span><span class="n">uniformSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">uniformSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="c1"># Add the vertical lines</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="n">weibullSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">weibullSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]],[</span><span class="mf">0.</span><span class="p">,</span><span class="n">uniformSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_probabilistic_modeling_generate_by_inversion_29_0.png" src="../../_images/examples_probabilistic_modeling_generate_by_inversion_29_0.png" />
+</div>
+</div>
+<p>This graphics must be read from the U axis on the left to the blue curve (representing the CDF), and down to the X axis. We see that the horizontal lines on the U axis follow the uniform distribution. On the other hand, the vertical lines (on the X axis) follow the Weibull distribution.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="create_copula.html" title="Create a copula"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="minimum_volume_level_set_2D.html" title="Draw minimum volume level set in 2D"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" >Probabilistic modeling</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Apr 10, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/eae1d3b4f.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>ARMA process estimation &#8212; OpenTURNS 1.15rc1 documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Covariance models" href="covariance_model.html" />
+    <link rel="prev" title="ARMA stochastic process" href="arma_process.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="covariance_model.html" title="Covariance models"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="arma_process.html" title="ARMA stochastic process"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" accesskey="U">Probabilistic modeling</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="arma_process.html"
+                        title="previous chapter">ARMA stochastic process</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="covariance_model.html"
+                        title="next chapter">Covariance models</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/probabilistic_modeling/arma_estimation.rst"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="arma-process-estimation">
+<span id="arma-estimation"></span><h1>ARMA process estimation<a class="headerlink" href="#arma-process-estimation" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line">From the order <img class="math" src="../../_images/math/0bf406f9d05e40a8ff8711a8d1de9b744119f198.svg" alt="(p,q)" style="vertical-align: -4px"/> or a range of orders <img class="math" src="../../_images/math/2c5de69245793f2f384859652364f52d67222631.svg" alt="(p,q) \in Ind_p \times Ind_q" style="vertical-align: -5px"/>,
+where <img class="math" src="../../_images/math/013788726d9b79d17574a941cfe713854e5bd2d4.svg" alt="Ind_p = [p_1, p_2]" style="vertical-align: -5px"/>
+and <img class="math" src="../../_images/math/9d89ab09d7acb52e52002f4930701818f19f2586.svg" alt="Ind_q = [q_1, q_2]" style="vertical-align: -5px"/>, the methods aims to find the <em>best</em> model
+<img class="math" src="../../_images/math/226d13d2920a173e8b55e79daf7e3d3f7e793d31.svg" alt="ARMA(p,q)" style="vertical-align: -4px"/> that fits the data and estimate the
+corresponding coefficients. The <em>best</em> model is considered with
+respect to the <img class="math" src="../../_images/math/f38a3e9ea0e4139831e3544c3b1c467e9e19b756.svg" alt="AIC_c" style="vertical-align: -2px"/> criteria (corrected Akaike Information
+Criterion), defined by:</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/3712aa183a005c7cda2609cb5a3fe6ef30134816.svg" alt="AICc = -2\log L_w + 2(p + q + 1)\frac{m}{m - p - q - 2}"/></p>
+</div><p>where <img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m" style="vertical-align: 0px"/> is half the number of points of the time grid of the
+process sample (if the data are a process sample) or in a block of the
+time series (if the data are a time series).</p>
+</div></blockquote>
+<p>Two other criteria are computed for each order <img class="math" src="../../_images/math/0bf406f9d05e40a8ff8711a8d1de9b744119f198.svg" alt="(p,q)" style="vertical-align: -4px"/>:</p>
+<ul>
+<li><p>the AIC criterion:</p>
+<div class="math">
+<p><img src="../../_images/math/b32a11e068e80eb6da2d95cb77bdb6bc9464bacf.svg" alt="AIC = -2\log L_w + 2(p + q + 1)"/></p>
+</div></li>
+<li><p>and the BIC criterion:</p>
+<div class="math">
+<p><img src="../../_images/math/a386b2e7a70f85b7b5316922a7edc9622506b71b.svg" alt="BIC = -2\log L_w + 2(p + q + 1)\log(p + q + 1)"/></p>
+</div></li>
+</ul>
+<div class="line-block">
+<div class="line">The <em>BIC</em> criterion leads to a model that gives a better prediction;
+the <em>AIC</em> criterion selects the best model that fits the given data;
+the <img class="math" src="../../_images/math/f38a3e9ea0e4139831e3544c3b1c467e9e19b756.svg" alt="AIC_c" style="vertical-align: -2px"/> criterion improves the previous one by penalizing a
+too high order that would artificially fit to the data.</div>
+<div class="line">For each order <img class="math" src="../../_images/math/0bf406f9d05e40a8ff8711a8d1de9b744119f198.svg" alt="(p,q)" style="vertical-align: -4px"/>, the estimation of the coefficients
+<img class="math" src="../../_images/math/17e4185827790cc7847fee378310d53ff696a0b0.svg" alt="(a_k)_{1\leq k\leq p}" style="vertical-align: -5px"/>, <img class="math" src="../../_images/math/28b38182969a54f5942b8c27056abddd615b1cdd.svg" alt="(b_k)_{1\leq k\leq q}" style="vertical-align: -5px"/> and the
+variance <img class="math" src="../../_images/math/7dabcde7325f224a1ec280df7ac76466686c4959.svg" alt="\sigma^2" style="vertical-align: 0px"/> is done using the Whittle estimator which is
+based on the maximization of the likelihood function in the frequency
+domain.</div>
+<div class="line">The principle is detailed hereafter for the case of a time series: in
+the case of a process sample, the estimator is similar except for the
+periodogram which is computed differently.</div>
+<div class="line">We consider a time series associated to the time grid
+<img class="math" src="../../_images/math/f2bc56d6915c5fb73c7e72d6b789f73023e27b74.svg" alt="(t_0, \hdots, t_{n-1})" style="vertical-align: -4px"/> and a particular order <img class="math" src="../../_images/math/0bf406f9d05e40a8ff8711a8d1de9b744119f198.svg" alt="(p,q)" style="vertical-align: -4px"/>.
+Using the notation ([dim1]), the spectral density function of the
+<img class="math" src="../../_images/math/226d13d2920a173e8b55e79daf7e3d3f7e793d31.svg" alt="ARMA(p,q)" style="vertical-align: -4px"/> process writes:</div>
+</div>
+<div class="math" id="equation-arma-spectrum">
+<p><span class="eqno">(1)<a class="headerlink" href="#equation-arma-spectrum" title="Permalink to this equation">¶</a></span><img src="../../_images/math/b59a3c90378b433b58a7e26581a0eaa7c342a8b5.svg" alt="f(\lambda, \vect{\theta}, \sigma^2) = \frac{\sigma^2}{2 \pi} \frac{|1 + b_1 \exp(-i \lambda) + \ldots + b_q \exp(-i q \lambda)|^2}{|1 + a_1 \exp(-i \lambda) + \ldots + a_p \exp(-i p \lambda)|^2} = \frac{\sigma^2}{2 \pi} g(\lambda, \vect{\theta})"/></p>
+</div><p>where <img class="math" src="../../_images/math/4b68573d1db251e0c0444ea36953146dade45f22.svg" alt="\vect{\theta} = (a_1, a_2,...,a_p,b_1,...,b_q)" style="vertical-align: -5px"/> and
+<img class="math" src="../../_images/math/3683f1ec51f0ab172d6a0db065c52ad99c63ceef.svg" alt="\lambda" style="vertical-align: 0px"/> is the frequency value.</p>
+<p>The Whittle log-likelihood writes:</p>
+<div class="math" id="equation-arma-likelihood">
+<p><span class="eqno">(2)<a class="headerlink" href="#equation-arma-likelihood" title="Permalink to this equation">¶</a></span><img src="../../_images/math/28f7a1e02bcbd601942133fd923528c52b609c0a.svg" alt="\log L_w(\vect{\theta}, \sigma^2) = - \sum_{j=1}^{m} \log f(\lambda_j,  \vect{\theta}, \sigma^2) - \frac{1}{2 \pi} \sum_{j=1}^{m} \frac{I(\lambda_j)}{f(\lambda_j,  \vect{\theta}, \sigma^2)}"/></p>
+</div><p>where:</p>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/ef3d6592baea05f79a282952fb7e90fba4ba5869.svg" alt="I" style="vertical-align: 0px"/> is the non parametric estimate of the spectral density,
+expressed in the Fourier space (frequencies in <img class="math" src="../../_images/math/43ef027514aae4387900dfc8d71fbb06bdb4f304.svg" alt="[0,2\pi]" style="vertical-align: -4px"/>
+instead of <img class="math" src="../../_images/math/edbf0874d9aae43f1328b79099dc99b22f98d3e9.svg" alt="[-f_{max}, f_{max}]" style="vertical-align: -4px"/>). By default the Welch estimator is used.</p></li>
+<li><p><img class="math" src="../../_images/math/5d893981352edee21438bacbfc90a575f45c1a6d.svg" alt="\lambda_j" style="vertical-align: -5px"/> is the <img class="math" src="../../_images/math/1b24f85338732a22cf2f524b31795493641065a0.svg" alt="j-th" style="vertical-align: -3px"/> Fourier frequency,
+<img class="math" src="../../_images/math/2d41e20cd1a73716c7f150e6657a9304998c9ee7.svg" alt="\lambda_j = \frac{2 \pi j}{n}" style="vertical-align: -6px"/>, <img class="math" src="../../_images/math/2bd91c5c1bd287ba2416c54fa1f31c7b7d3d3160.svg" alt="j=1 \ldots m" style="vertical-align: -3px"/> with
+<img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m" style="vertical-align: 0px"/> the largest integer <img class="math" src="../../_images/math/8c52e334a77600a677e9b405ff2561d58cc66089.svg" alt="\leq \frac{n-1}{2}" style="vertical-align: -6px"/>.</p></li>
+</ul>
+<p>We estimate the <img class="math" src="../../_images/math/f0822cf4278fe8d11767e56a3783dbd2ce7a6e05.svg" alt="(p+q+1)" style="vertical-align: -4px"/> scalar coefficients by maximizing the
+log-likelihood function. The corresponding equations lead to the
+following relation:</p>
+<div class="math" id="equation-optsigma">
+<p><span class="eqno">(3)<a class="headerlink" href="#equation-optsigma" title="Permalink to this equation">¶</a></span><img src="../../_images/math/c5d738f1f4310791b1dee50112b111bc50b45ac8.svg" alt="\sigma^{2*} = \frac{1}{m} \sum_{j=1}^{m} \frac{I(\lambda_j)}{g(\lambda_j, \vect{\theta}^{*})}"/></p>
+</div><p>where <img class="math" src="../../_images/math/e990fac197111db2be6a0c84c20ed5d8f582a3ad.svg" alt="\vect{\theta}^{*}" style="vertical-align: 0px"/> maximizes:</p>
+<div class="math" id="equation-lik2">
+<p><span class="eqno">(4)<a class="headerlink" href="#equation-lik2" title="Permalink to this equation">¶</a></span><img src="../../_images/math/3be23db5e1c443ad31f03cd4ca2e944c2e24ca9d.svg" alt="\log L_w(\vect{\theta}) = m (\log(2 \pi) - 1) - m \log\left( \frac{1}{m} \sum_{j=1}^{m} \frac{I(\lambda_j)}{g(\lambda_j, \vect{\theta})}\right) - \sum_{j=1}^{m} g(\lambda_j, \vect{\theta})"/></p>
+</div><p>The Whitle estimation requires that:</p>
+<ul class="simple">
+<li><p>the determinant of the eigenvalues of the companion matrix
+associated to the polynomial <img class="math" src="../../_images/math/9ad18607390ce3ca05538ae653db46884b971da2.svg" alt="1 + a_1X + \dots + a_pX^p" style="vertical-align: -5px"/> are
+outside the unit disc,, which guarantees the stationarity of the
+process;</p></li>
+<li><p>the determinant of the eigenvalues of the companion matrix
+associated to the polynomial <img class="math" src="../../_images/math/83550404245c848c4fa6156581b2faf52628da73.svg" alt="1 + ba_1X + \dots + b_qX^q" style="vertical-align: -5px"/> are
+outside the unit disc, which guarantees the invertibility of the
+process.</p></li>
+</ul>
+<p><strong>Multivariate estimation</strong></p>
+<div class="line-block">
+<div class="line">Let <img class="math" src="../../_images/math/9c86e5db17f396e38fff2a7b1934e50dd33b3fff.svg" alt="(t_i, \vect{X}_i)_{0\leq i \leq n-1}" style="vertical-align: -4px"/> be a multivariate
+time series of dimension <img class="math" src="../../_images/math/5da6e6d65e4ae3032c58fe8c94955247fc4ebe22.svg" alt="d" style="vertical-align: 0px"/> generated by an ARMA process
+where <img class="math" src="../../_images/math/0bf406f9d05e40a8ff8711a8d1de9b744119f198.svg" alt="(p,q)" style="vertical-align: -4px"/> are supposed to
+be known. We assume that the white noise <img class="math" src="../../_images/math/1d9ab772a68d781a9a73c08e7953f063cd668479.svg" alt="\varepsilon" style="vertical-align: 0px"/> is
+distributed according to the normal distribution with zero mean and
+with covariance matrix
+<img class="math" src="../../_images/math/0430be3438a930fd3619280d2fa59f0846e15733.svg" alt="\mat{\Sigma}_{\varepsilon} = \sigma^2\mat{Q}" style="vertical-align: -3px"/> where
+<img class="math" src="../../_images/math/852b8a8f90e006c7223b54b6669a0345a24f2e05.svg" alt="|\mat{Q}| = 1" style="vertical-align: -4px"/> .</div>
+<div class="line">The normality of the white noise implies the normality of the process.
+If we note <img class="math" src="../../_images/math/0f3aab7433736d7a353d76be79836636859acd6f.svg" alt="\vect{W} = (\vect{X}_0, \hdots, \vect{X}_{n-1})" style="vertical-align: -4px"/>,
+then <img class="math" src="../../_images/math/4ec5997ac2da39833c2a2c6154661f1c83e2c780.svg" alt="\vect{W}" style="vertical-align: 0px"/> is normal with zero mean. Its covariance matrix
+writes
+<img class="math" src="../../_images/math/597e765cc61558749a03384b3e56c08e0f649455.svg" alt="\mathbb{E}(\vect{W}\vect{W}^t)= \sigma^2 \Sigma_{\vect{W}}" style="vertical-align: -4px"/>
+which depends on the coefficients <img class="math" src="../../_images/math/65df59ed7ba34d61de31316e75375e9781309026.svg" alt="(\mat{A}_k, \mat{B}_l)" style="vertical-align: -4px"/> for
+<img class="math" src="../../_images/math/c48fe9295327789b9d4f114397fb92928bc308f7.svg" alt="k = 1,\ldots,p" style="vertical-align: -3px"/> and <img class="math" src="../../_images/math/44820b739dc7b6ae15592f5aace74fdc93fd32cc.svg" alt="l = 1,\ldots, q" style="vertical-align: -3px"/> and on the matrix
+<img class="math" src="../../_images/math/3ef8288fc1ce7d9ace66f65978269a235e11f1f1.svg" alt="\mat{Q}" style="vertical-align: -3px"/>.</div>
+</div>
+<p>The likelihood of <img class="math" src="../../_images/math/4ec5997ac2da39833c2a2c6154661f1c83e2c780.svg" alt="\vect{W}" style="vertical-align: 0px"/> writes:</p>
+<div class="math" id="equation-likelihoodmv">
+<p><span class="eqno">(5)<a class="headerlink" href="#equation-likelihoodmv" title="Permalink to this equation">¶</a></span><img src="../../_images/math/924ef2c8e45b7d770a1997627521253f3003ee94.svg" alt="L(\vect{\beta}, \sigma^2 | \vect{W}) = (2 \pi \sigma^2) ^{-\frac{d n}{2}} |\Sigma_{w}|^{-\frac{1}{2}} \exp\left(- (2\sigma^2)^{-1}  \vect{W}^t \Sigma_{\vect{W}}^{-1}  \vect{W} \right)"/></p>
+</div><p>where
+<img class="math" src="../../_images/math/a50472d540a44705abc36d7b2cbd251b331855cb.svg" alt="\vect{\beta} = (\mat{A}_{k}, \mat{B}_{l}, \mat{Q}),\ k = 1,\ldots,p" style="vertical-align: -4px"/>,
+<img class="math" src="../../_images/math/44820b739dc7b6ae15592f5aace74fdc93fd32cc.svg" alt="l = 1,\ldots, q" style="vertical-align: -3px"/> and where <img class="math" src="../../_images/math/46e2baddebe117d1f0e82ca55f3fdbf008897729.svg" alt="|.|" style="vertical-align: -4px"/> denotes the determinant.</p>
+<p>The difficulty arises from the great size (<img class="math" src="../../_images/math/fca7fff017f2e1bfeb772c3fa49c41ee93ff0325.svg" alt="dn \times dn" style="vertical-align: -1px"/>) of
+<img class="math" src="../../_images/math/9dd7c02d58b1cb76368a53a7b2b2e72429cbd474.svg" alt="\Sigma_{\vect{W}}" style="vertical-align: -2px"/> which is a dense matrix in the general case.
+<a class="reference internal" href="../../bibliography.html#mauricio1995" id="id1"><span>[mauricio1995]</span></a> proposes an efficient algorithm to evaluate the likelihood
+function. The main point is to use a change of variable that leads to a
+block-diagonal sparse covariance matrix.</p>
+<p>The multivariate Whittle estimation requires that:</p>
+<ul class="simple">
+<li><p>the determinant of the eigenvalues of the companion matrix
+associated to the polynomial
+<img class="math" src="../../_images/math/7f37f94f6bf30fb6ab039266263f3be7d339fcbe.svg" alt="\mat{I} + \mat{A}_1\mat{X} + \dots + \mat{A}_p\mat{X}^p" style="vertical-align: -5px"/> are
+outside the unit disc, which guarantees the stationarity of the
+process;</p></li>
+<li><p>the determinant of the eigenvalues of the companion matrix
+associated to the polynomial
+<img class="math" src="../../_images/math/784780de8631afa6ea3281a274c97bef239a45c4.svg" alt="\mat{I} + \mat{B}_1\mat{X} + \dots + \mat{B}_q\mat{X}^q" style="vertical-align: -5px"/> are
+outside the unit disc, which guarantees the invertibility of the
+process.</p></li>
+</ul>
+<div class="topic">
+<p class="topic-title first">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.WhittleFactory.html#openturns.WhittleFactory" title="openturns.WhittleFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">WhittleFactory</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.WelchFactory.html#openturns.WelchFactory" title="openturns.WelchFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">WelchFactory</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.ARMA.html#openturns.ARMA" title="openturns.ARMA"><code class="xref py py-class docutils literal notranslate"><span class="pre">ARMA</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title first">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../examples/data_analysis/estimate_arma.html"><span class="doc">Estimate a scalar ARMA process</span></a></p></li>
+<li><p>See <a class="reference internal" href="../../examples/data_analysis/estimate_multivariate_arma.html"><span class="doc">Estimate a multivariate ARMA process</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="covariance_model.html" title="Covariance models"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="arma_process.html" title="ARMA stochastic process"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" >Probabilistic modeling</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Apr 10, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/eae1d3b4f.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,716 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Create a polynomial chaos metamodel &#8212; OpenTURNS 1.15rc1 documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Advanced polynomial chaos construction" href="functional_chaos_advanced_ctors.html" />
+    <link rel="prev" title="Create a polynomial chaos metamodel by integration on the cantilever beam" href="chaos_cantilever_beam_integration.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="functional_chaos_advanced_ctors.html" title="Advanced polynomial chaos construction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chaos_cantilever_beam_integration.html" title="Create a polynomial chaos metamodel by integration on the cantilever beam"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" accesskey="U">Meta modeling</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Create a polynomial chaos metamodel</a><ul>
+<li><a class="reference internal" href="#Compute-and-print-Sobol’-indices">Compute and print Sobol’ indices</a></li>
+<li><a class="reference internal" href="#Testing-the-sensitivity-to-the-degree">Testing the sensitivity to the degree</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chaos_cantilever_beam_integration.html"
+                        title="previous chapter">Create a polynomial chaos metamodel by integration on the cantilever beam</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="functional_chaos_advanced_ctors.html"
+                        title="next chapter">Advanced polynomial chaos construction</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/meta_modeling/functional_chaos.ipynb"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Create-a-polynomial-chaos-metamodel">
+<h1>Create a polynomial chaos metamodel<a class="headerlink" href="#Create-a-polynomial-chaos-metamodel" title="Permalink to this headline">¶</a></h1>
+<p>In this example we are going to create a global approximation of a model response using functional chaos.</p>
+<p>Let <img class="math" src="../../_images/math/92cb4c95b7fc9b99a0b22cb07c90a732064db084.svg" alt="h" style="vertical-align: 0px"/> be the function defined by:</p>
+<div class="math">
+<p><img src="../../_images/math/70be9498c59baeae8b3e0d1af7334bd7606b2a98.svg" alt="g(\mathbf{x}) = \left[\cos(x_1 + x_2), (x_2 + 1) e^{x_1}\right]"/></p>
+</div><p>for any <img class="math" src="../../_images/math/3d21d40c70efea227cf96bb00cd93cc744cdb6ff.svg" alt="\mathbf{x}\in\mathbb{R}^2" style="vertical-align: -1px"/>.</p>
+<p>We assume that</p>
+<div class="math">
+<p><img src="../../_images/math/c3ff2c1a8328e58a8b62aa3060c7c78dbae44467.svg" alt="X_1 \sim \mathcal{N}(0,1) \textrm{ and }
+X_2 \sim \mathcal{N}(0,1)"/></p>
+</div><p>and that <img class="math" src="../../_images/math/62d59fb7f8f04bccb5f423e857e56202c3105759.svg" alt="X_1" style="vertical-align: -2px"/> and <img class="math" src="../../_images/math/20725757d04eeeb6cb8640e563c83209178ff65c.svg" alt="X_2" style="vertical-align: -2px"/> are independent.</p>
+<p>An interesting point in this example is that the output is multivariate. This is why we are going to use the <code class="docutils literal notranslate"><span class="pre">getMarginal</span></code> method in the script in order to select the output marginal that we want to manage.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+</pre></div>
+</div>
+</div>
+<p>We first create the function <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">dimension</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">]</span>
+<span class="n">formulas</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cos(x1 + x2)&#39;</span><span class="p">,</span> <span class="s1">&#39;(x2 + 1) * exp(x1)&#39;</span><span class="p">]</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span><span class="n">input_names</span><span class="p">,</span> <span class="n">formulas</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Then we create a sample <code class="docutils literal notranslate"><span class="pre">inputSample</span></code> and compute the corresponding output sample <code class="docutils literal notranslate"><span class="pre">outputSample</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+<span class="n">samplesize</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">inputSample</span>  <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">samplesize</span><span class="p">)</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Create a functional chaos model. We reduce the sampling size for the automatic selection of distribution based on Kolmogorov test.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;FittingTest-KolmogorovSamplingSize&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Plot the second output of our model depending on <img class="math" src="../../_images/math/3fe752e8253fd4ce3f9403978b408263ee38f02a.svg" alt="x_2" style="vertical-align: -2px"/> with <img class="math" src="../../_images/math/4bbe18593709df7cf2af7f24565571a29354ba02.svg" alt="x_1=0.5" style="vertical-align: -2px"/>. In order to do this, we create a <code class="docutils literal notranslate"><span class="pre">ParametricFunction</span></code> and set the value of <img class="math" src="../../_images/math/f9ab76de582090cc13867f72b128a142a0780c1a.svg" alt="x_1" style="vertical-align: -2px"/>. Then we use the <code class="docutils literal notranslate"><span class="pre">getMarginal</span></code> method to extract the second output (which index is equal to 1).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x1index</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">x1value</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">x2min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.</span>
+<span class="n">x2max</span> <span class="o">=</span> <span class="mf">3.</span>
+<span class="n">outputIndex</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">metamodelParametric</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">metamodel</span><span class="p">,</span> <span class="p">[</span><span class="n">x1index</span><span class="p">],</span> <span class="p">[</span><span class="n">x1value</span><span class="p">])</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">metamodelParametric</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">outputIndex</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">x2min</span><span class="p">,</span> <span class="n">x2max</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Metamodel&quot;</span><span class="p">])</span>
+<span class="n">modelParametric</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">x1index</span><span class="p">],</span> <span class="p">[</span><span class="n">x1value</span><span class="p">])</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">modelParametric</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">outputIndex</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">x2min</span><span class="p">,</span> <span class="n">x2max</span><span class="p">)</span><span class="o">.</span><span class="n">getDrawable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Model&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;bottomright&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X2&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Metamodel Validation, output #</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">outputIndex</span><span class="p">))</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_meta_modeling_functional_chaos_11_0.png" src="../../_images/examples_meta_modeling_functional_chaos_11_0.png" />
+</div>
+</div>
+<p>We see that the metamodel fits approximately to the model, except perhaps for extreme values of <img class="math" src="../../_images/math/3fe752e8253fd4ce3f9403978b408263ee38f02a.svg" alt="x_2" style="vertical-align: -2px"/>. However, there is a better way of globally validating the metamodel, using the <code class="docutils literal notranslate"><span class="pre">MetaModelValidation</span></code> on a validation design of experiment.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">n_valid</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">inputTest</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
+<span class="n">outputTest</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The following function takes the <code class="docutils literal notranslate"><span class="pre">outputIndex</span></code> as input argument and plots the corresponding validation graphics.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">drawValidation</span><span class="p">(</span><span class="n">inputTest</span><span class="p">,</span><span class="n">outputTest</span><span class="p">,</span><span class="n">metamodel</span><span class="p">,</span><span class="n">outputIndex</span><span class="p">):</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">[:,</span><span class="n">outputIndex</span><span class="p">],</span> <span class="n">metamodel</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">outputIndex</span><span class="p">))</span>
+    <span class="n">Q2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computePredictivityFactor</span><span class="p">()</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Validation of output #</span><span class="si">%d</span><span class="s2">, Q2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">outputIndex</span><span class="p">,</span><span class="n">Q2</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<p>Let us first validate the first output.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputIndex</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">drawValidation</span><span class="p">(</span><span class="n">inputTest</span><span class="p">,</span><span class="n">outputTest</span><span class="p">,</span><span class="n">metamodel</span><span class="p">,</span><span class="n">outputIndex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_meta_modeling_functional_chaos_17_0.png" src="../../_images/examples_meta_modeling_functional_chaos_17_0.png" />
+</div>
+</div>
+<p>The coefficient of predictivity is not extremely satisfactory for this output, but is would be sufficient for a central dispersion study.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">outputIndex</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">drawValidation</span><span class="p">(</span><span class="n">inputTest</span><span class="p">,</span><span class="n">outputTest</span><span class="p">,</span><span class="n">metamodel</span><span class="p">,</span><span class="n">outputIndex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_meta_modeling_functional_chaos_19_0.png" src="../../_images/examples_meta_modeling_functional_chaos_19_0.png" />
+</div>
+</div>
+<p>The second output has a much more satisfactory Q2: only one single extreme point is far from the diagonal of the graphics.</p>
+<div class="section" id="Compute-and-print-Sobol’-indices">
+<h2>Compute and print Sobol’ indices<a class="headerlink" href="#Compute-and-print-Sobol’-indices" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">chaosSI</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chaosSI</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ input dimension: 2
+ output dimension: 2
+ basis size: 17
+ mean: [0.364321,1.46479]
+ std-dev: [0.742595,4.46299]
+------------------------------------------------------------
+Marginal: 0
+Index   | Multi-indice                  | Part of variance
+------------------------------------------------------------
+      6 | [1,1]                         | 0.308586
+     12 | [3,1]                         | 0.213701
+     14 | [2,2]                         | 0.173489
+      4 | [0,2]                         | 0.169134
+      3 | [2,0]                         | 0.134698
+------------------------------------------------------------
+
+
+------------------------------------------------------------
+Component | Sobol index            | Sobol total index
+------------------------------------------------------------
+        0 | 0.134698               | 0.830473
+        1 | 0.169527               | 0.865302
+------------------------------------------------------------
+
+Marginal: 1
+Index   | Multi-indice                  | Part of variance
+------------------------------------------------------------
+      7 | [5,0]                         | 0.274123
+     10 | [7,0]                         | 0.145929
+      6 | [1,1]                         | 0.143643
+      2 | [0,1]                         | 0.137542
+      1 | [1,0]                         | 0.113084
+      9 | [2,1]                         | 0.0710994
+      3 | [2,0]                         | 0.069416
+     12 | [3,1]                         | 0.036192
+------------------------------------------------------------
+
+
+------------------------------------------------------------
+Component | Sobol index            | Sobol total index
+------------------------------------------------------------
+        0 | 0.611483               | 0.862421
+        1 | 0.137579               | 0.388517
+------------------------------------------------------------
+
+
+</pre></div></div>
+</div>
+<p>Let us analyse the results of this global sensitivity analysis.</p>
+<ul class="simple">
+<li><p>We see that the first output involves significant multi-indices with total degree 4. The contribution of the interactions are very significant in this model.</p></li>
+<li><p>The second output involves multi-indices with total degrees from 1 to 7, with a significant contribution of multi-indices with total degress 5 and 7. The first variable is especially significant, with a significant contribution of the interactions.</p></li>
+</ul>
+<p>Draw Sobol’ indices.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sensitivityAnalysis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="n">first_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getSobolIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">)]</span>
+<span class="n">total_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getSobolTotalIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">input_names</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getInputDescription</span><span class="p">()</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawSobolIndices</span><span class="p">(</span><span class="n">input_names</span><span class="p">,</span> <span class="n">first_order</span><span class="p">,</span> <span class="n">total_order</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_meta_modeling_functional_chaos_26_0.png" src="../../_images/examples_meta_modeling_functional_chaos_26_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Testing-the-sensitivity-to-the-degree">
+<h2>Testing the sensitivity to the degree<a class="headerlink" href="#Testing-the-sensitivity-to-the-degree" title="Permalink to this headline">¶</a></h2>
+<p>With the specific constructor of <code class="docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm</span></code> that we use, the <code class="docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm-MaximumTotalDegree</span></code> in the <code class="docutils literal notranslate"><span class="pre">ResourceMap</span></code> configure the maximum degree explored by the algorithm. This degree is a trade-off.</p>
+<ul class="simple">
+<li><p>If the maximum degree is too low, the polynomial may miss some coefficients so that the quality is lower than possible.</p></li>
+<li><p>If the maximum degree is too large, the number of coefficients to explore is too large, so that the coefficients might be poorly estimated.</p></li>
+</ul>
+<p>This is why the following <code class="docutils literal notranslate"><span class="pre">for</span></code> loop explores various degrees to see the sensitivity of the metamodel predictivity depending on the degree.</p>
+<p>The default value of this parameter is 10.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">GetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;FunctionalChaosAlgorithm-MaximumTotalDegree&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+10
+</pre></div></div>
+</div>
+<p>This is why we explore the values from 5 to 15.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">degrees</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">numberOfDegrees</span> <span class="o">=</span> <span class="n">degrees</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="n">coefficientOfPredictivity</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">numberOfDegrees</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">maximumDegree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">):</span>
+    <span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;FunctionalChaosAlgorithm-MaximumTotalDegree&quot;</span><span class="p">,</span><span class="n">maximumDegree</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Maximum total degree =&quot;</span><span class="p">,</span> <span class="n">maximumDegree</span><span class="p">)</span>
+    <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">)</span>
+    <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+    <span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">outputIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">[:,</span><span class="n">outputIndex</span><span class="p">],</span> <span class="n">metamodel</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">outputIndex</span><span class="p">))</span>
+        <span class="n">Q2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computePredictivityFactor</span><span class="p">()</span>
+        <span class="n">coefficientOfPredictivity</span><span class="p">[</span><span class="n">maximumDegree</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="n">outputIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q2</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Maximum total degree = 5
+Maximum total degree = 6
+Maximum total degree = 7
+Maximum total degree = 8
+Maximum total degree = 9
+Maximum total degree = 10
+Maximum total degree = 11
+Maximum total degree = 12
+Maximum total degree = 13
+Maximum total degree = 14
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Predictivity&quot;</span><span class="p">,</span><span class="s2">&quot;Total degree&quot;</span><span class="p">,</span><span class="s2">&quot;Q2&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">degrees</span><span class="p">,</span><span class="n">coefficientOfPredictivity</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Output #0&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">degrees</span><span class="p">,</span><span class="n">coefficientOfPredictivity</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Output #1&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_meta_modeling_functional_chaos_32_0.png" src="../../_images/examples_meta_modeling_functional_chaos_32_0.png" />
+</div>
+</div>
+<p>We see that a total degree lower than 9 is not sufficient to describe the first output with good predictivity. However, the coefficient of predictivity drops when the total degree gets greater than 12. The predictivity of the second output seems to be much less satisfactory: a little more work would be required to improve the metamodel.</p>
+<p>In this situation, the following methods may be used.</p>
+<ul class="simple">
+<li><p>Since the distribution of the input is known, we may want to give this information to the <code class="docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm</span></code>. This prevents the algorithm from trying to fit the distribution which best fit to the data.</p></li>
+<li><p>We may want to customize the <code class="docutils literal notranslate"><span class="pre">adaptiveStrategy</span></code> by selecting an enumerate function which best fit to this particular situation. In this specific example, the interactions plays a great role so that the linear enumerate function may provide better results than the hyperbolic rule.</p></li>
+<li><p>We may want to customize the <code class="docutils literal notranslate"><span class="pre">projectionStrategy</span></code> by selecting an method to compute the coefficient which improves the estimation. Given that the function is symbolic and fast, it might be interesting to try an integration rule instead of the least squares method.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="functional_chaos_advanced_ctors.html" title="Advanced polynomial chaos construction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chaos_cantilever_beam_integration.html" title="Create a polynomial chaos metamodel by integration on the cantilever beam"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" >Meta modeling</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Apr 10, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/eae1d3b4f.
+    </div>
+  </body>
+</html>
