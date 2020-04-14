@@ -7,6 +7,8 @@ Distributions
 .. toctree::
     :maxdepth: 1
 
+    quick_start_guide_distributions.ipynb
+    overview_univariate_distributions.ipynb
     gaussian_distribution.ipynb
     geometric_distribution.ipynb
     draw_1d_distribution.ipynb
@@ -30,6 +32,7 @@ Distributions
     bayes_distribution.ipynb
     minimum_volume_level_set_1D.ipynb
     minimum_volume_level_set_2D.ipynb
+    generate_by_inversion.ipynb
 
 Copulas
 -------
@@ -60,6 +63,7 @@ Stochastic processes
     userdefined_covariance_model.ipynb
     gaussian_processes_comparison.ipynb
     gaussian_process_covariance.ipynb
+    gaussian_process_covariance_hmat.ipynb
     gaussian_process_spectral.ipynb
     parametric_spectral_density.ipynb
     userdefined_spectral_model.ipynb

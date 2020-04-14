@@ -7,12 +7,14 @@ Manage data and samples
 .. toctree::
     :maxdepth: 1
 
+    quick_start_point_and_sample.ipynb
     import_export_sample_csv.ipynb
     sample_manipulation.ipynb
     estimate_moments.ipynb
     sample_correlation.ipynb
     linear_regression.ipynb
     quantile_estimation_wilks.ipynb
+    sample_pandas.ipynb
 
 Sample analysis
 ---------------

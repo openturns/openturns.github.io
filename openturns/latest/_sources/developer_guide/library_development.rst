@@ -31,7 +31,7 @@ Or, you can pick up a stable version tarball:
 
 ::
 
-    curl -L https://github.com/openturns/openturns/archive/v1.12.tar.gz | tar xz
+    curl -L https://github.com/openturns/openturns/archive/v1.15.tar.gz | tar xz
     cd openturns-1.12
 
 Build openturns
@@ -290,7 +290,7 @@ by the following template:
     #
     #  CMakeLists.txt
     #
-    #  Copyright 2005-2019 Airbus-EDF-IMACS-ONERA-Phimeca
+    #  Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca
     #
     #  This library is free software: you can redistribute it and/or modify
     #  it under the terms of the GNU Lesser General Public License as published by

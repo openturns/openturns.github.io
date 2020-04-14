@@ -64,6 +64,9 @@ Bibliography
     `pdf <http://doc.openturns.org/papers/dubourg2011.pdf>`__
 .. [fang2006] K-T. Fang, R. Li, and A. Sudjianto. *Design and modeling for
     computer experiments.* Chapman & Hall CRC, 2006.
+.. [freedman1981] David Freedman, Persi Diaconis, *On the histogram as a density 
+    estimator: L2 theory*, December 1981, Probability Theory and Related Fields. 
+    57 (4): 453–476. 
 .. [gamboa2013] Gamboa, F., Janon, A., Klein, T. & Lagnoux, A. *Sensitivity
     analysis for multidimensional and functional outputs.* 2013.
     `pdf <http://doc.openturns.org/papers/gamboa2013.pdf>`__
@@ -126,6 +129,10 @@ Bibliography
     Management Science, vol 46. Springer, Boston, MA
     `pdf <http://doc.openturns.org/papers/lecuyer2005.pdf>`__
 .. [lemaire2009] Lemaire M., *Structural reliability*, John Wiley & Sons, 2009.
+.. [Lilliefors1967] *On the Kolmogorov-Smirnov Test for Normality with Mean and Variance Unknown*
+    Hubert W. Lilliefors
+    Journal of the American Statistical Association,
+    Vol. 62, No. 318. (Jun., 1967), pp. 399-402.
 .. [loader2000] Loader C. *Fast and Accurate Computation of Binomial Probabilities*,
     `pdf <http://octave.1599824.n4.nabble.com/attachment/3829107/0/loader2000Fast.pdf>`__
 .. [marsaglia1993] Marsaglia G. and Tsang W. W., *A Simple Method for Generating Gamma*,
@@ -145,10 +152,6 @@ Bibliography
     methods for selecting values of input variables in the analysis of output
     from a computer code.* Technometrics 21(2): 239-245.
     `pdf <http://doc.openturns.org/papers/mckay1979.pdf>`__
-.. [meza2007] J. C. Meza, R. A. Oliva, P. D. Hough, and P. J. Williams.,
-    *OPT++: an object oriented toolkit for nonlinear optimization*,
-    ACM Transactions on Mathematical Software, 33(2), 2007.
-    `pdf <http://doc.openturns.org/papers/meza2007.pdf>`__
 .. [minka2012] Thomas P. Minka,
     *Estimating a Dirichlet distribution*, Microsoft Research report, 2000 (revised 2003, 2009, 2012).
     `pdf <http://research.microsoft.com/en-us/um/people/minka/papers/dirichlet/minka-dirichlet.pdf>`__
@@ -197,6 +200,8 @@ Bibliography
     `pdf <http://doc.openturns.org/papers/saltelli2002.pdf>`__
 .. [saporta1990] Saporta, G. (1990). *Probabilités, Analyse de données et
     Statistique*, Technip
+.. [scott1992] David W. Scott (1992). *Multivariate density estimation*,  
+    John Wiley & Sons, Inc. 
 .. [simard2011] Simard, R. & L'Ecuyer, P. *Computing the Two-Sided Kolmogorov-
     Smirnov Distribution.* Journal of Statistical Software, 2011, 39(11), 1-18.
     `pdf <http://doc.openturns.org/papers/simard2011.pdf>`__
@@ -225,4 +230,3 @@ Bibliography
 .. [wand1994] Wand M.P, Jones M.C. *Kernel Smoothing*
     First Edition, Chapman & Hall, 1994.
 
-	       

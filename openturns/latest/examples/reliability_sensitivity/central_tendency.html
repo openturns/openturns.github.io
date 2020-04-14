@@ -4,15 +4,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Central tendency analysis &#8212; OpenTURNS 1.14 documentation</title>
+    <title>Central tendency analysis on the cantilever beam example &#8212; OpenTURNS 1.15rc1 documentation</title>
     <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,6 +29,7 @@
     <li><a href="http://www.openturns.org/">Home</a></li>
     <li><a href="../../install.html">Get it</a></li>
     <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
     <li><a href="https://github.com/openturns">Code</a></li>
     <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
   </ul>
@@ -53,7 +54,7 @@
         <li class="right" >
           <a href="reliability_sensitivity.html" title="Reliability, sensitivity"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.14 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li> 
@@ -61,6 +62,16 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Central tendency analysis on the cantilever beam example</a><ul>
+<li><a class="reference internal" href="#Taylor-expansion">Taylor expansion</a></li>
+<li><a class="reference internal" href="#Monte-Carlo-simulation">Monte-Carlo simulation</a></li>
+<li><a class="reference internal" href="#Central-dispersion-analysis-based-on-a-sample">Central dispersion analysis based on a sample</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="reliability_sensitivity.html"
                         title="previous chapter">Reliability, sensitivity</a></p>
@@ -83,7 +94,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -97,16 +108,16 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput,
-div.nbinput div.prompt,
-div.nbinput div.input_area,
-div.nbinput div[class*=highlight],
-div.nbinput div[class*=highlight] pre,
-div.nboutput,
-div.nbinput div.prompt,
-div.nbinput div.output_area,
-div.nboutput div[class*=highlight],
-div.nboutput div[class*=highlight] pre {
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
     background: none;
     border: none;
     padding: 0 0;
@@ -115,13 +126,13 @@ div.nboutput div[class*=highlight] pre {
 }
 
 /* avoid gaps between output lines */
-div.nboutput div[class*=highlight] pre {
+div.nboutput.container div[class*=highlight] pre {
     line-height: normal;
 }
 
 /* input/output containers */
-div.nbinput,
-div.nboutput {
+div.nbinput.container,
+div.nboutput.container {
     display: -webkit-flex;
     display: flex;
     align-items: flex-start;
@@ -129,35 +140,35 @@ div.nboutput {
     width: 100%;
 }
 @media (max-width: 540px) {
-    div.nbinput,
-    div.nboutput {
+    div.nbinput.container,
+    div.nboutput.container {
         flex-direction: column;
     }
 }
 
 /* input container */
-div.nbinput {
+div.nbinput.container {
     padding-top: 5px;
 }
 
 /* last container */
-div.nblast {
+div.nblast.container {
     padding-bottom: 5px;
 }
 
 /* input prompt */
-div.nbinput div.prompt pre {
+div.nbinput.container div.prompt pre {
     color: #307FC1;
 }
 
 /* output prompt */
-div.nboutput div.prompt pre {
+div.nboutput.container div.prompt pre {
     color: #BF5B3D;
 }
 
 /* all prompts */
-div.nbinput div.prompt,
-div.nboutput div.prompt {
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
     min-width: 7ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
@@ -165,56 +176,56 @@ div.nboutput div.prompt {
     flex: 0;
 }
 @media (max-width: 540px) {
-    div.nbinput div.prompt,
-    div.nboutput div.prompt {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
         text-align: left;
         padding: 0.4em;
     }
-    div.nboutput div.prompt.empty {
+    div.nboutput.container div.prompt.empty {
         padding: 0;
     }
 }
 
 /* disable scrollbars on prompts */
-div.nbinput div.prompt pre,
-div.nboutput div.prompt pre {
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
     overflow: hidden;
 }
 
 /* input/output area */
-div.nbinput div.input_area,
-div.nboutput div.output_area {
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
     padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
 }
 @media (max-width: 540px) {
-    div.nbinput div.input_area,
-    div.nboutput div.output_area {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
         width: 100%;
     }
 }
 
 /* input area */
-div.nbinput div.input_area {
+div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
-div.nboutput div[class*=MathJax] {
+div.nboutput.container div[class*=MathJax] {
     text-align: left !important;
 }
 
 /* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput div.math p {
+div.nboutput.container div.math p {
     text-align: left;
 }
 
 /* standard error */
-div.nboutput div.output_area.stderr {
+div.nboutput.container div.output_area.stderr {
     background: #fdd;
 }
 
@@ -292,26 +303,26 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Central-tendency-analysis">
-<h1>Central tendency analysis<a class="headerlink" href="#Central-tendency-analysis" title="Permalink to this headline">¶</a></h1>
-<p>In this example we are going to perform a central tendency analysis of a random variable Y using the various methods available.</p>
+<div class="section" id="Central-tendency-analysis-on-the-cantilever-beam-example">
+<h1>Central tendency analysis on the cantilever beam example<a class="headerlink" href="#Central-tendency-analysis-on-the-cantilever-beam-example" title="Permalink to this headline">¶</a></h1>
+<p>In this example we perform a central tendency analysis of a random variable Y using the various methods available. We consider the cantilever beam example and show how to use the <code class="docutils literal notranslate"><span class="pre">TaylorExpansionMoments</span></code> and <code class="docutils literal notranslate"><span class="pre">ExpectationSimulationAlgorithm</span></code> classes.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">openturns</span> <span class="kn">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 </pre></div>
 </div>
 </div>
+<p>Create the random variable of interest Y=g(X).</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Create the random variable of interest Y=f(X)</span>
-<span class="n">mean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]</span>
+<span></span><span class="n">mean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]</span>
 <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 <span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IdentityMatrix</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
@@ -324,28 +335,29 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<div class="section" id="Taylor-expansion">
+<h2>Taylor expansion<a class="headerlink" href="#Taylor-expansion" title="Permalink to this headline">¶</a></h2>
+<p>Perform Taylor approximation to get the expected value of Y and the importance factors.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Perform taylor approximation to get mean of Y, importance factors</span>
-<span class="n">taylor</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TaylorExpansionMoments</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span></span><span class="n">taylor</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TaylorExpansionMoments</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
 <span class="n">taylor_mean_fo</span> <span class="o">=</span> <span class="n">taylor</span><span class="o">.</span><span class="n">getMeanFirstOrder</span><span class="p">()</span>
 <span class="n">taylor_mean_so</span> <span class="o">=</span> <span class="n">taylor</span><span class="o">.</span><span class="n">getMeanSecondOrder</span><span class="p">()</span>
 <span class="n">taylor_cov</span> <span class="o">=</span> <span class="n">taylor</span><span class="o">.</span><span class="n">getCovariance</span><span class="p">()</span>
 <span class="n">taylor_if</span> <span class="o">=</span> <span class="n">taylor</span><span class="o">.</span><span class="n">getImportanceFactors</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;model evaluation calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getGradientCallsNumber</span><span class="p">())</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;model gradient calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getGradientCallsNumber</span><span class="p">())</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;model hessian calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getHessianCallsNumber</span><span class="p">())</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;taylor mean first order=&#39;</span><span class="p">,</span> <span class="n">taylor_mean_fo</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;taylor variance=&#39;</span><span class="p">,</span> <span class="n">taylor_cov</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;taylor importance factors=&#39;</span><span class="p">,</span> <span class="n">taylor_if</span><span class="p">)</span>
-<span class="n">taylor</span><span class="o">.</span><span class="n">drawImportanceFactors</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;model evaluation calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getGradientCallsNumber</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;model gradient calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getGradientCallsNumber</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;model hessian calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getHessianCallsNumber</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;taylor mean first order=&#39;</span><span class="p">,</span> <span class="n">taylor_mean_fo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;taylor variance=&#39;</span><span class="p">,</span> <span class="n">taylor_cov</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;taylor importance factors=&#39;</span><span class="p">,</span> <span class="n">taylor_if</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -358,28 +370,41 @@ taylor variance= [[ 2.0096 ]]
 taylor importance factors= [E : 0.000353857, F : 0.884642, L : 0.079618, I : 0.0353857]
 </pre></div></div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/examples_reliability_sensitivity_central_tendency_4_1.png" src="../../_images/examples_reliability_sensitivity_central_tendency_4_1.png" />
-</div>
-</div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Perform a Monte Carlo simulation of Y to estimate its mean</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ExpectationSimulationAlgorithm</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span></span><span class="n">taylor</span><span class="o">.</span><span class="n">drawImportanceFactors</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_reliability_sensitivity_central_tendency_8_0.png" src="../../_images/examples_reliability_sensitivity_central_tendency_8_0.png" />
+</div>
+</div>
+<p>We see that, at first order, the variable <img class="math" src="../../_images/math/604ed945c1dae899de5d6c15a426473a3f97c1a2.svg" alt="F" style="vertical-align: 0px"/> explains 88.5% of the variance of the output <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y" style="vertical-align: 0px"/>. On the other hand, the variable <img class="math" src="../../_images/math/7b093bea7d8744f39f2a40eafb4574ed61b97fc5.svg" alt="E" style="vertical-align: 0px"/> is not significant in the variance of the output: at first order, the random variable <img class="math" src="../../_images/math/7b093bea7d8744f39f2a40eafb4574ed61b97fc5.svg" alt="E" style="vertical-align: 0px"/> could be replaced by a constant with no change to the output variance.</p>
+</div>
+<div class="section" id="Monte-Carlo-simulation">
+<h2>Monte-Carlo simulation<a class="headerlink" href="#Monte-Carlo-simulation" title="Permalink to this headline">¶</a></h2>
+<p>Perform a Monte Carlo simulation of Y to estimate its mean.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ExpectationSimulationAlgorithm</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setCoefficientOfVariationCriterionType</span><span class="p">(</span><span class="s1">&#39;NONE&#39;</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;model evaluation calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;model evaluation calls number=&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">())</span>
 <span class="n">expectation_result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">expectation_mean</span> <span class="o">=</span> <span class="n">expectation_result</span><span class="o">.</span><span class="n">getExpectationEstimate</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;monte carlo mean=&#39;</span><span class="p">,</span> <span class="n">expectation_mean</span><span class="p">,</span> <span class="s1">&#39;var=&#39;</span><span class="p">,</span> <span class="n">expectation_result</span><span class="o">.</span><span class="n">getVarianceEstimate</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;monte carlo mean=&#39;</span><span class="p">,</span> <span class="n">expectation_mean</span><span class="p">,</span> <span class="s1">&#39;var=&#39;</span><span class="p">,</span> <span class="n">expectation_result</span><span class="o">.</span><span class="n">getVarianceEstimate</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -392,23 +417,24 @@ model evaluation calls number= 1001
 monte carlo mean= [1.39543] var= [0.00271142]
 </pre></div></div>
 </div>
+</div>
+<div class="section" id="Central-dispersion-analysis-based-on-a-sample">
+<h2>Central dispersion analysis based on a sample<a class="headerlink" href="#Central-dispersion-analysis-based-on-a-sample" title="Permalink to this headline">¶</a></h2>
+<p>Directly compute statistical moments based on a sample of Y. Sometimes the probabilistic model is not available and the study needs to start from the data.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Directly compute statistical moments on a sample of Y</span>
-<span class="c1"># sometimes the probabilistic model is not available and the study starts from the data</span>
-<span class="n">Y_s</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span></span><span class="n">Y_s</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">y_mean</span> <span class="o">=</span> <span class="n">Y_s</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
 <span class="n">y_stddev</span> <span class="o">=</span> <span class="n">Y_s</span><span class="o">.</span><span class="n">computeStandardDeviationPerComponent</span><span class="p">()</span>
 <span class="n">y_quantile_95p</span> <span class="o">=</span> <span class="n">Y_s</span><span class="o">.</span><span class="n">computeQuantilePerComponent</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;mean=&#39;</span><span class="p">,</span> <span class="n">y_mean</span><span class="p">,</span> <span class="s1">&#39;stddev=&#39;</span><span class="p">,</span> <span class="n">y_stddev</span><span class="p">,</span> <span class="s1">&#39;quantile@95%&#39;</span><span class="p">,</span> <span class="n">y_quantile_95p</span><span class="p">)</span>
-<span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">Y_s</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mean=&#39;</span><span class="p">,</span> <span class="n">y_mean</span><span class="p">,</span> <span class="s1">&#39;stddev=&#39;</span><span class="p">,</span> <span class="n">y_stddev</span><span class="p">,</span> <span class="s1">&#39;quantile@95%&#39;</span><span class="p">,</span> <span class="n">y_quantile_95p</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -416,12 +442,24 @@ monte carlo mean= [1.39543] var= [0.00271142]
 mean= [1.3887] stddev= [1.61762] quantile@95% [4.21421]
 </pre></div></div>
 </div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">Y_s</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Kernel smoothing approximation of the output distribution&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_reliability_sensitivity_central_tendency_6_1.png" src="../../_images/examples_reliability_sensitivity_central_tendency_6_1.png" />
+<img alt="../../_images/examples_reliability_sensitivity_central_tendency_16_0.png" src="../../_images/examples_reliability_sensitivity_central_tendency_16_0.png" />
+</div>
 </div>
 </div>
 </div>
@@ -444,16 +482,16 @@ mean= [1.3887] stddev= [1.61762] quantile@95% [4.21421]
         <li class="right" >
           <a href="reliability_sensitivity.html" title="Reliability, sensitivity"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.14 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2005-2019 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 13, 2019.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.0+/d55d642a6.
+        &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Apr 10, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/eae1d3b4f.
     </div>
   </body>
 </html>
