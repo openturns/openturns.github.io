@@ -1,0 +1,699 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Optimization of the Rastrigin test function &#8212; OpenTURNS 1.16dev documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Graphs" href="../graphs/graphs.html" />
+    <link rel="prev" title="Control algorithm termination" href="control_termination.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../graphs/graphs.html" title="Graphs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="control_termination.html" title="Control algorithm termination"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="numerical_methods.html" accesskey="U">Numerical methods</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Optimization of the Rastrigin test function</a><ul>
+<li><a class="reference internal" href="#Definition-of-the-problem">Definition of the problem</a></li>
+<li><a class="reference internal" href="#Plot-the-iso-values-of-the-objective-function">Plot the iso-values of the objective function</a></li>
+<li><a class="reference internal" href="#Define-the-starting-points">Define the starting points</a></li>
+<li><a class="reference internal" href="#Create-and-solve-the-optimization-problem">Create and solve the optimization problem</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="control_termination.html"
+                        title="previous chapter">Control algorithm termination</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../graphs/graphs.html"
+                        title="next chapter">Graphs</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/numerical_methods/optimization_rastrigin.ipynb"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Optimization-of-the-Rastrigin-test-function">
+<h1>Optimization of the Rastrigin test function<a class="headerlink" href="#Optimization-of-the-Rastrigin-test-function" title="Permalink to this headline">¶</a></h1>
+<p>The Rastrigin function is defined by:</p>
+<div class="math">
+<p><img src="../../_images/math/02471d16fd9665dc21ab673a394c4444dd3e0db4.svg" alt="f(\mathbf{x}) = A + \sum_{i=1}^n \left[x_i^2 - A\cos(2 \pi x_i)\right]"/></p>
+</div><p>where <img class="math" src="../../_images/math/379d6cf557372cbe80c705f0a212e2d487089861.svg" alt="A=10" style="vertical-align: 0px"/> and <img class="math" src="../../_images/math/b7b5bbe040f54c98d3ab47a893c7becc1684c10e.svg" alt="\mathbf{x}\in[-5.12,5.12]^n" style="vertical-align: -4px"/>.</p>
+<p>It has a global minimum at <img class="math" src="../../_images/math/403b18b735099fdb76858dcb5f2e184683940d5d.svg" alt="\mathbf{x} = \mathbf{0}" style="vertical-align: 0px"/> where <img class="math" src="../../_images/math/a498eb5d93c41666ac9f690878e029cf15a3a512.svg" alt="f(\mathbf{x})=0" style="vertical-align: -4px"/>.</p>
+<p>This function has several local minimas. This is why we use the <code class="docutils literal notranslate"><span class="pre">Multistart</span></code> algorithm. In our example, we consider the bidimensional case, i.e. <img class="math" src="../../_images/math/187207ff4accfa41467be7cc3b4c40f5d4ff6620.svg" alt="n=2" style="vertical-align: 0px"/>.</p>
+<p><em>Reference</em>: * Rastrigin, L. A. “Systems of extremal control.” Mir, Moscow (1974). * G. Rudolph. “Globale Optimierung mit parallelen Evolutionsstrategien”. Diplomarbeit. Department of Computer Science, University of Dortmund, July 1990.</p>
+<div class="section" id="Definition-of-the-problem">
+<h2>Definition of the problem<a class="headerlink" href="#Definition-of-the-problem" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">rastriginPy</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="mf">10.0</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rastriginPy</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[-8.0]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rastrigin</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rastriginPy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lowerbound</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.12</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+<span class="n">upperbound</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.12</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">xexact</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Plot-the-iso-values-of-the-objective-function">
+<h2>Plot the iso-values of the objective function<a class="headerlink" href="#Plot-the-iso-values-of-the-objective-function" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rastrigin</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">rastrigin</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">rastrigin</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Rastrigin function&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_rastrigin_11_0.png" src="../../_images/examples_numerical_methods_optimization_rastrigin_11_0.png" />
+</div>
+</div>
+<p>We see that the Rastrigin function has several local minimas. However, there is only one single global minimum at <img class="math" src="../../_images/math/a3a8e9b50928e58303c891780d1e2fed5829cde1.svg" alt="\mathbf{x}^\star=(0, 0)" style="vertical-align: -4px"/>.</p>
+</div>
+<div class="section" id="Define-the-starting-points">
+<h2>Define the starting points<a class="headerlink" href="#Define-the-starting-points" title="Permalink to this headline">¶</a></h2>
+<p>The starting points are computed from <code class="docutils literal notranslate"><span class="pre">Uniform</span></code> distributions in the input domain. We consider a set of 100 starting points.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">U</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.12</span><span class="p">,</span> <span class="mf">5.12</span><span class="p">)</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">U</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">startingPoints</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">rastrigin</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Rastrigin function&quot;</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">startingPoints</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_rastrigin_17_0.png" src="../../_images/examples_numerical_methods_optimization_rastrigin_17_0.png" />
+</div>
+</div>
+<p>We see that the starting points are randomly chosen in the input domain of the function.</p>
+</div>
+<div class="section" id="Create-and-solve-the-optimization-problem">
+<h2>Create and solve the optimization problem<a class="headerlink" href="#Create-and-solve-the-optimization-problem" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">(</span><span class="n">rastrigin</span><span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TNC</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">startingPoints</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">xoptim</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">()</span>
+<span class="n">xoptim</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[-2.40017e-13,4.84564e-10]</p></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">xexact</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[0.0, 0.0]
+</pre></div></div>
+</div>
+<p>We can see that the solver found a very accurate approximation of the exact solution.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getEvaluationNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+17
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputSample</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getInputSample</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">rastrigin</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Rastrigin function&quot;</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_rastrigin_28_0.png" src="../../_images/examples_numerical_methods_optimization_rastrigin_28_0.png" />
+</div>
+</div>
+<p>We see that the algorithm evaluated the function more often in the neighbourhood of the solution.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_rastrigin_30_0.png" src="../../_images/examples_numerical_methods_optimization_rastrigin_30_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rastrigin</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+54
+</pre></div></div>
+</div>
+<p>In order to see where the <code class="docutils literal notranslate"><span class="pre">rastrigin</span></code> function was evaluated, we use the <code class="docutils literal notranslate"><span class="pre">getInputHistory</span></code> method.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputSample</span> <span class="o">=</span> <span class="n">rastrigin</span><span class="o">.</span><span class="n">getInputHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">rastrigin</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Rastrigin function&quot;</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_optimization_rastrigin_34_0.png" src="../../_images/examples_numerical_methods_optimization_rastrigin_34_0.png" />
+</div>
+</div>
+<p>We see that the algorithm explored different regions of the space before finding the global minimum.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../graphs/graphs.html" title="Graphs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="control_termination.html" title="Control algorithm termination"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="numerical_methods.html" >Numerical methods</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jan 01, 2018.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/937ec671d.
+    </div>
+  </body>
+</html>

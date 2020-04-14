@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>EGO algorithm usage examples &#8212; OpenTURNS 1.16dev documentation</title>
+    <title>EfficientGlobalOptimization examples &#8212; OpenTURNS 1.16dev documentation</title>
     <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Optimization with constraints" href="optimization_constraints.html" />
-    <link rel="prev" title="Iterated Functions System" href="ifs.html" />
+    <link rel="next" title="Mix/max search using optimization" href="minmax_optimization.html" />
+    <link rel="prev" title="Optimization using bonmin" href="optimization_bonmin.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -49,10 +49,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="optimization_constraints.html" title="Optimization with constraints"
+          <a href="minmax_optimization.html" title="Mix/max search using optimization"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="ifs.html" title="Iterated Functions System"
+          <a href="optimization_bonmin.html" title="Optimization using bonmin"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -64,19 +64,31 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">EGO algorithm usage examples</a><ul>
-<li><a class="reference internal" href="#E.I.-formulation:-Ackley-test-case">E.I. formulation: Ackley test-case</a></li>
-<li><a class="reference internal" href="#AIE-formulation:-Branin-test-case">AIE formulation: Branin test-case</a></li>
+<li><a class="reference internal" href="#">EfficientGlobalOptimization examples</a><ul>
+<li><a class="reference internal" href="#Ackley-test-case">Ackley test-case</a><ul>
+<li><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li><a class="reference internal" href="#Define-the-problem">Define the problem</a></li>
+<li><a class="reference internal" href="#Create-the-initial-kriging">Create the initial kriging</a></li>
+<li><a class="reference internal" href="#Create-the-optimization-problem">Create the optimization problem</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Branin-test-case">Branin test-case</a><ul>
+<li><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li><a class="reference internal" href="#Define-the-problem">Define the problem</a></li>
+<li><a class="reference internal" href="#Create-the-initial-kriging">Create the initial kriging</a></li>
+<li><a class="reference internal" href="#Create-and-solve-the-problem">Create and solve the problem</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="ifs.html"
-                        title="previous chapter">Iterated Functions System</a></p>
+  <p class="topless"><a href="optimization_bonmin.html"
+                        title="previous chapter">Optimization using bonmin</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="optimization_constraints.html"
-                        title="next chapter">Optimization with constraints</a></p>
+  <p class="topless"><a href="minmax_optimization.html"
+                        title="next chapter">Mix/max search using optimization</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -302,205 +314,724 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="EGO-algorithm-usage-examples">
-<h1>EGO algorithm usage examples<a class="headerlink" href="#EGO-algorithm-usage-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="EfficientGlobalOptimization-examples">
+<h1>EfficientGlobalOptimization examples<a class="headerlink" href="#EfficientGlobalOptimization-examples" title="Permalink to this headline">¶</a></h1>
+<p>The EGO algorithm (Jones, 1998) is an adaptative optimization method based on kriging.</p>
+<p>An initial design of experiment is used to build a first metamodel. At each iteration a new point that maximizes a criterion is chosen as optimizer candidate.</p>
+<p>The criterion uses a tradeoff between the metamodel value and the conditional variance.</p>
+<p>Then the new point is evaluated using the original model and the metamodel is relearnt on the extended design of experiment.</p>
+<div class="section" id="Ackley-test-case">
+<h2>Ackley test-case<a class="headerlink" href="#Ackley-test-case" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Introduction">
+<h3>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h3>
+<p>The Ackley test case is a real function defined in dimension <img class="math" src="../../_images/math/5da6e6d65e4ae3032c58fe8c94955247fc4ebe22.svg" alt="d" style="vertical-align: 0px"/> where <img class="math" src="../../_images/math/5da6e6d65e4ae3032c58fe8c94955247fc4ebe22.svg" alt="d" style="vertical-align: 0px"/> is an integer.</p>
+<p>The Ackley function is defined by the equation:</p>
+<div class="math">
+<p><img src="../../_images/math/56f8b95d1ee4adbeaac46c4cf111777ba57553db.svg" alt="f(\mathbf{x}) = -a \exp\left(-b\sqrt{\frac{1}{d}\sum_{i=1}^d}x_i^2\right)-\exp\left(\frac{1}{d}\sum_{i=1}^d \cos(c x_i)\right)+a+\exp(1)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/bcba3fc848b30628b76d852f43c30b3291c6e719.svg" alt="\mathbf{x} \in [-15,15]^d" style="vertical-align: -4px"/>. However, we consider the smaller interval <img class="math" src="../../_images/math/d3c65a1356341d81f827ed7eb4352826f0ff6bdc.svg" alt="[-4,4]^d" style="vertical-align: -4px"/> in this example, for visual purposes.</p>
+<p>We use the dimension <img class="math" src="../../_images/math/a2ba26683589d643efa03acebd930ec0f58eb079.svg" alt="d=2" style="vertical-align: 0px"/> with the parameters <img class="math" src="../../_images/math/5239046a21a073166a0ff5da7f1f0debe56e2090.svg" alt="a=20" style="vertical-align: 0px"/>, <img class="math" src="../../_images/math/035abfa7c0986b233a0c9a7497624d4c91d2c4cb.svg" alt="b=0.2" style="vertical-align: 0px"/>, <img class="math" src="../../_images/math/4505027a49b5b81488d68bb13fc120306fdc4820.svg" alt="c=2\pi" style="vertical-align: 0px"/>.</p>
+<p>The solution is</p>
+<div class="math">
+<p><img src="../../_images/math/ad99a5f013d176fb3c786f01e606831b3aa1b165.svg" alt="\mathbf{x}^\star=(0,0,...,0)"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="../../_images/math/3a8e9721a23987e1460c651ea369a44bdd6b4601.svg" alt="f_{min} = f(\mathbf{x}^\star) = 0."/></p>
+</div></div>
+<div class="section" id="Define-the-problem">
+<h3>Define the problem<a class="headerlink" href="#Define-the-problem" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>from __future__ import print_function
-import openturns as ot
-import math as m
-import openturns.testing
-
-#ot.Log.Show(ot.Log.INFO)
-ot.TBB.Disable()
-
-
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">m</span>
 </pre></div>
 </div>
 </div>
-<p>The EGO algorithm (jones1998) is an adaptative optimization method based on kriging.</p>
-<p>An initial design of experiment is used to build a first metamodel. At each iteration a new point that maximizes a criterion is chosen as optimizer candidate.</p>
-<p>The criterion uses a tradeoff between the metamodel value and the conditional variance.</p>
-<p>Then the new point is evaluated using the original model and the metamodel is relearnt on the extended design of experiment.</p>
-<div class="section" id="E.I.-formulation:-Ackley-test-case">
-<h2>E.I. formulation: Ackley test-case<a class="headerlink" href="#E.I.-formulation:-Ackley-test-case" title="Permalink to this headline">¶</a></h2>
-<div class="math">
-<p><img src="../../_images/math/99ac2e1b55cb77c1e2a747536a9f203dc20bc6c2.svg" alt="f(x) = -a \exp\left(-b\sqrt{\frac{1}{d}\sum_{i=1}^d}x_i^2\right)-\exp\left(\frac{1}{d}\sum_{i=1}^d cos(c x_i)\right)+a+\exp(1)"/></p>
-</div><div class="math">
-<p><img src="../../_images/math/620d7dc0d294b16b988aa8d69baaac0f585b8cba.svg" alt="dimension = d, x \in [-15,15]^d, a=20, b=0.2, c=2\pi, \hat{x}=(0,0,...,0), f_{min} = 0"/></p>
-</div><div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span># ackley 2-d
-ot.RandomGenerator.SetSeed(0)
-dim = 2
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
 
+<span class="c1"># model</span>
+<span class="k">def</span> <span class="nf">ackley</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mf">20.0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">sumOfSquared</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">d</span>
+    <span class="n">sumOfCos</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="n">d</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="o">-</span> <span class="n">a</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sumOfSquared</span><span class="p">))</span> \
+        <span class="o">-</span> <span class="n">m</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">sumOfCos</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="p">]</span>
 
-# model
-def ackley(X):
-    a = 20.0
-    b = 0.2
-    c = 2.0 * m.pi
-    d = len(X)
-    f = -a * m.exp(-b*m.sqrt(sum(x**2 for x in X)/d)) - m.exp(sum(m.cos(c*x) for x in X)/d) + a + m.exp(1.0)
-    #print(X, f)
-    return [f]
-
-model = ot.PythonFunction(dim, 1, ackley)
-
-# problem
-problem = ot.OptimizationProblem()
-problem.setObjective(model)
-bounds = ot.Interval([-15.0] * dim, [15.0] * dim)
-problem.setBounds(bounds)
-
-# design
-center = [0.5] * dim
-levels = [2.0, 4.0, 8.0, 14.0]
-experiment = ot.Factorial(center, levels)
-inputSample = experiment.generate()
-outputSample = model(inputSample)
-
-# first kriging model
-covarianceModel = ot.SquaredExponential([2.50057] * dim, [0.1])
-basis = ot.ConstantBasisFactory(dim).build()
-kriging = ot.KrigingAlgorithm(inputSample, outputSample, covarianceModel, basis)
-kriging.run()
-
-# algo
-algo = ot.EfficientGlobalOptimization(problem, kriging.getResult())
-#solver = ot.NLopt(&#39;GN_ESCH&#39;)
-##solver = ot.NLopt(&#39;GN_MLSL&#39;)
-algo.setMaximumEvaluationNumber(5)
-algo.setMaximumAbsoluteError(1e-10)
-algo.setMaximumRelativeError(1e-10)
-algo.setMaximumResidualError(1e-10)
-algo.setMaximumConstraintError(1e-10)
-algo.setMultiStartExperimentSize(100) # number of multistart candidates improvement optim
-algo.setMultiStartNumber(20) # number of multistart points for improvement optim
-algo.setParameterEstimationPeriod(1) # relearn kriging parameters every X iteration
-algo.setImprovementFactor(1.0) # improvement stopping criterion factor
-algo.setCorrelationLengthFactor(1.0) # correlation length stopping criterion factor
-algo.run()
-result = algo.getResult()
-
-#print(&#39;1st pass result=&#39;, result)
-print(&#39;iteration=&#39;, result.getIterationNumber())
-#print(result.getInputSample())
-#print(result.getOutputSample())
-
-# local refinement
-algo2 = ot.NLopt(problem, &#39;LD_LBFGS&#39;)
-algo2.setStartingPoint(result.getOptimalPoint())
-algo2.run()
-result = algo2.getResult()
-
-
-result.drawOptimalValueHistory()
-
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ackley</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-iteration= 15
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/examples_numerical_methods_ego_5_1.svg" src="../../_images/examples_numerical_methods_ego_5_1.svg" /></div>
-</div>
-</div>
-<div class="section" id="AIE-formulation:-Branin-test-case">
-<h2>AIE formulation: Branin test-case<a class="headerlink" href="#AIE-formulation:-Branin-test-case" title="Permalink to this headline">¶</a></h2>
-<div class="math">
-<p><img src="../../_images/math/5f38664963cd5eea927a43c5ab615c5189704b2e.svg" alt="g(u_1, u_2) = \frac{(u_2-5.1\frac{u_1^2}{4\pi^2}+5\frac{u_1}{\pi}-6)^2+10(1-\frac{1}{8 \pi}) \times cos(u_1)+10-54.8104}{51.9496}"/></p>
-</div><div class="math">
-<p><img src="../../_images/math/867ab71def7e37a1d34d7f5046fd9859bb2398a7.svg" alt="t(x_1, x2) = 15 x_1 - 5, 15 x_2"/></p>
-</div><div class="math">
-<p><img src="../../_images/math/c81b255d86974b5cae08abc559847122d1c66ea4.svg" alt="f(x_1, x_2) = g \circ  t(x_1, x_2)"/></p>
-</div><div class="math">
-<p><img src="../../_images/math/5a8b97dbf00ad76d7279dedc984893140039780e.svg" alt="dimension = 2, x \in [0, 1]^2, \hat{x}=(0.123895, 0.818329),(0.542773, 0.151666),(0.961652, 0.165000), f_{min} = -1.04741"/></p>
-</div><p>This time the AEI formulation is used, the objective output should be 2-d with the noise variance.</p>
-<p>Here we assume a constant noise variance:</p>
-<div class="math">
-<p><img src="../../_images/math/ebc7d4c177032625d9651245333a52de78bd0bf3.svg" alt="\sigma_{\epsilon} = 0.96"/></p>
-</div><div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span># branin
-
-dim = 2
-
-# model
-branin = ot.SymbolicFunction([&#39;x1&#39;, &#39;x2&#39;], [&#39;((x2-(5.1/(4*pi_^2))*x1^2+5*x1/pi_-6)^2+10*(1-1/8*pi_)*cos(x1)+10-54.8104)/51.9496&#39;, &#39;0.96&#39;])
-transfo = ot.SymbolicFunction([&#39;u1&#39;, &#39;u2&#39;], [&#39;15*u1-5&#39;, &#39;15*u2&#39;])
-model = ot.ComposedFunction(branin, transfo)
-
-# problem
-problem = ot.OptimizationProblem()
-problem.setObjective(model)
-bounds = ot.Interval([0.0] * dim, [1.0] * dim)
-problem.setBounds(bounds)
-
-# design
-experiment = ot.Box([1, 1])
-inputSample = experiment.generate()
-modelEval = model(inputSample)
-outputSample = modelEval.getMarginal(0)
-
-
-# first kriging model
-covarianceModel = ot.SquaredExponential([0.3007, 0.2483], [0.981959])
-basis = ot.ConstantBasisFactory(dim).build()
-kriging = ot.KrigingAlgorithm(inputSample, outputSample, covarianceModel, basis)
-noise = [x[1] for x in modelEval]
-kriging.setNoise(noise)
-kriging.run()
-
-# algo
-algo = ot.EfficientGlobalOptimization(problem, kriging.getResult())
-algo.setNoiseModel(ot.SymbolicFunction([&#39;x1&#39;, &#39;x2&#39;], [&#39;0.96&#39;])) # assume constant noise var
-algo.setMaximumEvaluationNumber(5)
-algo.setImprovementFactor(0.05) # stop whe improvement is &lt; a% the current optimum
-algo.setAEITradeoff(0.66744898)
-algo.run()
-result = algo.getResult()
-#print(&#39;1st pass result=&#39;, result)
-print(&#39;iteration=&#39;, result.getIterationNumber())
-#print(result.getInputSample())
-#print(result.getOutputSample())
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-iteration= 7
-</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lowerbound</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="o">-</span><span class="mf">4.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="n">upperbound</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="mf">4.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">xexact</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fexact</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">xexact</span><span class="p">)</span>
+<span class="n">fexact</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[4.44089e-16]</p></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Ackley function&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_9_0.png" src="../../_images/examples_numerical_methods_ego_9_0.png" />
+</div>
+</div>
+<p>We see that the Ackley function has many local minimas. The global minimum, however, is unique and located at the center of the domain.</p>
+</div>
+<div class="section" id="Create-the-initial-kriging">
+<h3>Create the initial kriging<a class="headerlink" href="#Create-the-initial-kriging" title="Permalink to this headline">¶</a></h3>
+<p>Before using the EGO algorithm, we must create an initial kriging. In order to do this, we must create a design of experiment which fills the space. In this situation, the <code class="docutils literal notranslate"><span class="pre">LHSExperiment</span></code> is a good place to start (but other design of experiments may allow to better fill the space). We use a uniform distribution in order to create a LHS design with 50 points.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">listUniformDistributions</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">upperbound</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">listUniformDistributions</span><span class="p">)</span>
+<span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">sampleSize</span><span class="p">)</span>
+<span class="n">inputSample</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Initial LHS design of experiment - n=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sampleSize</span><span class="p">),</span> <span class="s2">&quot;$x_0$&quot;</span><span class="p">,</span> <span class="s2">&quot;$x_1$&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_13_0.png" src="../../_images/examples_numerical_methods_ego_13_0.png" />
+</div>
+</div>
+<p>We now create the kriging metamodel. We selected the <code class="docutils literal notranslate"><span class="pre">SquaredExponential</span></code> covariance model with a constant basis (the <code class="docutils literal notranslate"><span class="pre">MaternModel</span></code> may perform better in this case). We use default settings (1.0) for the scale parameters of the covariance model, but configure the amplitude to 0.1, which better corresponds to the properties of the Ackley function.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">kriging</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">kriging</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-the-optimization-problem">
+<h3>Create the optimization problem<a class="headerlink" href="#Create-the-optimization-problem" title="Permalink to this headline">¶</a></h3>
+<p>We finally create the <code class="docutils literal notranslate"><span class="pre">OptimizationProblem</span></code> and solve it with <code class="docutils literal notranslate"><span class="pre">EfficientGlobalOptimization</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">()</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>In order to show the various options, we configure them all, even if most could be left to default settings in this case.</p>
+<p>The most important method is <code class="docutils literal notranslate"><span class="pre">setMaximumEvaluationNumber</span></code> which limits the number of iterations that the algorithm can perform. In the Ackley example, we choose to perform 10 iterations of the algorithm.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">kriging</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumEvaluationNumber</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+10
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[0.00823952,-0.0479868]</p></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[0.199646]</p></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fexact</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[4.44089e-16]</p></div>
+</div>
+<p>Compared to the minimum function value, we see that the EGO algorithm provides solution which is not very accurate. However, the optimal point is in the neighbourhood of the exact solution, and this is quite an impressive success given the limited amount of function evaluations: only 60 evaluations for the initial DOE and 10 iterations of the EGO algorithm, for a total equal to 70 function evaluations.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_25_0.png" src="../../_images/examples_numerical_methods_ego_25_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputHistory</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getInputSample</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Ackley function. Initial : black bullet. Solution : green diamond.&quot;</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputHistory</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;diamond&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;forestgreen&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_27_0.png" src="../../_images/examples_numerical_methods_ego_27_0.png" />
+</div>
+</div>
+<p>We see that the initial (black) points are dispersed in the whole domain, while the solution points are much closer to the solution.</p>
+<p>However, the final solution produced by the EGO algorithm is not very accurate. This is why we finalize the process by adding a local optimization step.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NLopt</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="s1">&#39;LD_LBFGS&#39;</span><span class="p">)</span>
+<span class="n">algo2</span><span class="o">.</span><span class="n">setStartingPoint</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">())</span>
+<span class="n">algo2</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo2</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[-4.20584e-07,1.14354e-06]</p></div>
+</div>
+<p>The corrected solution is now extremely accurate.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_32_0.png" src="../../_images/examples_numerical_methods_ego_32_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Branin-test-case">
+<h2>Branin test-case<a class="headerlink" href="#Branin-test-case" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Introduction">
+<h3>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h3>
+<p>The Branin function is defined in 2 dimensions based on the functions <img class="math" src="../../_images/math/658ae44ee69111e3048325f416f44d6080707928.svg" alt="g" style="vertical-align: -3px"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/8953acaba516dc7bb0452c0523c88572fa739edc.svg" alt="g(u_1, u_2) = \frac{\left(u_2-5.1\frac{u_1^2}{4\pi^2}+5\frac{u_1}{\pi}-6\right)^2+10\left(1-\frac{1}{8 \pi}\right)  \cos(u_1)+10-54.8104}{51.9496}"/></p>
+</div><p>and <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t" style="vertical-align: 0px"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/87302303a4e8d2fe623b4dcb2134e985729f84d5.svg" alt="t(x_1, x2) = (15 x_1 - 5, 15 x_2)^T."/></p>
+</div><p>Finally, the Branin function is the composition of the two previous functions:</p>
+<div class="math">
+<p><img src="../../_images/math/923d76b863ecabd77d05e21d109fecf68a636140.svg" alt="f_{Branin}(x_1, x_2) = g \circ  t(x_1, x_2)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/0285bfbc7350b964ea02d04a4fbc3d85f4a0d214.svg" alt="\mathbf{x} \in [0, 1]^2" style="vertical-align: -4px"/>.</p>
+<p>There are three global minimas:</p>
+<div class="math">
+<p><img src="../../_images/math/fdb36218682835752c6a408796d81777b1cbc06a.svg" alt="\mathbf{x}^\star=(0.123895, 0.818329),"/></p>
+</div><div class="math">
+<p><img src="../../_images/math/28a00aa60aa879aa3d7889bd2efbfc5c0232c854.svg" alt="\mathbf{x}^\star=(0.542773, 0.151666),"/></p>
+</div><p>and :</p>
+<div class="math">
+<p><img src="../../_images/math/dff11c7093c70412e4aa47c72d23fb67a948846b.svg" alt="\mathbf{x}^\star=(0.961652, 0.165000)"/></p>
+</div><p>where the function value is:</p>
+<div class="math">
+<p><img src="../../_images/math/233090820958129fc2a1cf1dc95536b87c020dac.svg" alt="f_{min} = f_{Branin}(\mathbf{x}^\star) = -0.97947643837."/></p>
+</div><p>We assume that the output of the Branin function is noisy, with a gaussian noise. In other words, the objective function is:</p>
+<div class="math">
+<p><img src="../../_images/math/5cf9faadb0388c3aa7b64fbfc20c6de26ecd2e41.svg" alt="f(x_1, x_2) = f_{Branin}(x_1, x_2) + \epsilon"/></p>
+</div><p>where <img class="math" src="../../_images/math/0d105e8ee3d8ee933b1f68424693c02a02189d3a.svg" alt="\epsilon" style="vertical-align: 0px"/> is a random variable with gaussian distribution.</p>
+<p>This time the AEI formulation is used, meaning that the objective has two outputs: the first one is the objective function value and the second one is the noise variance.</p>
+<p>Here we assume a constant noise variance:</p>
+<div class="math">
+<p><img src="../../_images/math/260026324fa77f7009b44b2ecf4fd811210254f7.svg" alt="\sigma_{\epsilon} = 0.1."/></p>
+</div></div>
+<div class="section" id="Define-the-problem">
+<h3>Define the problem<a class="headerlink" href="#Define-the-problem" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">trueNoiseFunction</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="c1"># model</span>
+<span class="n">branin</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;((x2-(5.1/(4*pi_^2))*x1^2+5*x1/pi_-6)^2+10*(1-1/8*pi_)*cos(x1)+10-54.8104)/51.9496&#39;</span><span class="p">,</span>
+                              <span class="nb">str</span><span class="p">(</span><span class="n">trueNoiseFunction</span><span class="p">)])</span>
+<span class="n">transfo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span> <span class="s1">&#39;u2&#39;</span><span class="p">],</span>
+                              <span class="p">[</span><span class="s1">&#39;15*u1-5&#39;</span><span class="p">,</span> <span class="s1">&#39;15*u2&#39;</span><span class="p">])</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedFunction</span><span class="p">(</span><span class="n">branin</span><span class="p">,</span> <span class="n">transfo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">lowerbound</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="n">upperbound</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">xexact1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="mf">0.123895</span><span class="p">,</span><span class="mf">0.818329</span><span class="p">])</span>
+<span class="n">xexact2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="mf">0.542773</span><span class="p">,</span><span class="mf">0.151666</span><span class="p">])</span>
+<span class="n">xexact3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="mf">0.961652</span><span class="p">,</span><span class="mf">0.165000</span><span class="p">])</span>
+<span class="n">xexact</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">([</span><span class="n">xexact1</span><span class="p">,</span> <span class="n">xexact2</span><span class="p">,</span> <span class="n">xexact3</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fexact</span> <span class="o">=</span> <span class="n">objectiveFunction</span><span class="p">(</span><span class="n">xexact</span><span class="p">)</span>
+<span class="n">fexact</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>y0</TH></TR>
+<TR><TH>0</TH><TD>-0.9794764</TD></TR>
+<TR><TH>1</TH><TD>-0.9794764</TD></TR>
+<TR><TH>2</TH><TD>-0.9794764</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">objectiveFunction</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Branin function&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_41_0.png" src="../../_images/examples_numerical_methods_ego_41_0.png" />
+</div>
+</div>
+<p>The Branin function has three local minimas.</p>
+</div>
+<div class="section" id="Create-the-initial-kriging">
+<h3>Create the initial kriging<a class="headerlink" href="#Create-the-initial-kriging" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">sampleSize</span><span class="p">)</span>
+<span class="n">inputSample</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">modelEval</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">modelEval</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Initial LHS design of experiment - n=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sampleSize</span><span class="p">),</span> <span class="s2">&quot;$x_0$&quot;</span><span class="p">,</span> <span class="s2">&quot;$x_1$&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_45_0.png" src="../../_images/examples_numerical_methods_ego_45_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">kriging</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">noise</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">modelEval</span><span class="p">]</span>
+<span class="n">kriging</span><span class="o">.</span><span class="n">setNoise</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
+<span class="n">kriging</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-and-solve-the-problem">
+<h3>Create and solve the problem<a class="headerlink" href="#Create-and-solve-the-problem" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># problem</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">()</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We configure the maximum number of function evaluations to 20. We assume that the function is noisy, with a constant variance.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># algo</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">kriging</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+<span class="c1"># assume constant noise var</span>
+<span class="n">guessedNoiseFunction</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">noiseModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">guessedNoiseFunction</span><span class="p">)])</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setNoiseModel</span><span class="p">(</span><span class="n">noiseModel</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumEvaluationNumber</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+20
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[0.538732,0.16625]</p></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>[-0.978699]</p></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fexact</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<TABLE><TR><TD></TD><TH>y0</TH></TR>
+<TR><TH>0</TH><TD>-0.9794764</TD></TR>
+<TR><TH>1</TH><TD>-0.9794764</TD></TR>
+<TR><TH>2</TH><TD>-0.9794764</TD></TR>
+</TABLE></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">inputHistory</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getInputSample</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">objectiveFunction</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Branin function. Initial : black bullet. Solution : green diamond.&quot;</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputHistory</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;diamond&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;forestgreen&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_57_0.png" src="../../_images/examples_numerical_methods_ego_57_0.png" />
+</div>
+</div>
+<p>We see that the EGO algorithm found the second local minimum. Given the limited number of function evaluations, the other local minimas have not been explored.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_numerical_methods_ego_59_0.png" src="../../_images/examples_numerical_methods_ego_59_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span>
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -519,10 +1050,10 @@ iteration= 7
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="optimization_constraints.html" title="Optimization with constraints"
+          <a href="minmax_optimization.html" title="Mix/max search using optimization"
              >next</a> |</li>
         <li class="right" >
-          <a href="ifs.html" title="Iterated Functions System"
+          <a href="optimization_bonmin.html" title="Optimization using bonmin"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -533,7 +1064,7 @@ iteration= 7
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2018.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/f76d769ba.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/937ec671d.
     </div>
   </body>
 </html>
