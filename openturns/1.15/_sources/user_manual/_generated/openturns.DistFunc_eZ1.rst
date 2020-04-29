@@ -1,5 +1,5 @@
-DistFunc_eZ1
-======================
+openturns.DistFunc\_eZ1
+=======================
 
 .. currentmodule:: openturns
 

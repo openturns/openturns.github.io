@@ -1,5 +1,5 @@
-LinearModelTest_FullRegression
-========================================
+openturns.LinearModelTest\_FullRegression
+=========================================
 
 .. currentmodule:: openturns
 

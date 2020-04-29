@@ -1,5 +1,5 @@
-SpecFunc_ErfInverse
-=============================
+openturns.SpecFunc\_ErfInverse
+==============================
 
 .. currentmodule:: openturns
 

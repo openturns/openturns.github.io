@@ -1,5 +1,5 @@
-CorrelationAnalysis_SignedSRC
-=======================================
+openturns.CorrelationAnalysis\_SignedSRC
+========================================
 
 .. currentmodule:: openturns
 

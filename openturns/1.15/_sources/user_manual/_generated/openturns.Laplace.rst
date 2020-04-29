@@ -1,69 +1,5 @@
-Laplace distribution
-==================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Laplace().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.Laplace().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.Laplace().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.Laplace().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.Laplace().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.Laplace().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.Laplace().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.Laplace().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.Laplace().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.Laplace().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.Laplace().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.Laplace().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.Laplace().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.Laplace()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.Laplace
+=================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,159 @@ Laplace distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Laplace.__init__
+      ~Laplace.abs
+      ~Laplace.acos
+      ~Laplace.acosh
+      ~Laplace.asin
+      ~Laplace.asinh
+      ~Laplace.atan
+      ~Laplace.atanh
+      ~Laplace.cbrt
+      ~Laplace.computeBilateralConfidenceInterval
+      ~Laplace.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~Laplace.computeCDF
+      ~Laplace.computeCDFGradient
+      ~Laplace.computeCharacteristicFunction
+      ~Laplace.computeComplementaryCDF
+      ~Laplace.computeConditionalCDF
+      ~Laplace.computeConditionalDDF
+      ~Laplace.computeConditionalPDF
+      ~Laplace.computeConditionalQuantile
+      ~Laplace.computeDDF
+      ~Laplace.computeDensityGenerator
+      ~Laplace.computeDensityGeneratorDerivative
+      ~Laplace.computeDensityGeneratorSecondDerivative
+      ~Laplace.computeEntropy
+      ~Laplace.computeGeneratingFunction
+      ~Laplace.computeInverseSurvivalFunction
+      ~Laplace.computeLogCharacteristicFunction
+      ~Laplace.computeLogGeneratingFunction
+      ~Laplace.computeLogPDF
+      ~Laplace.computeLogPDFGradient
+      ~Laplace.computeMinimumVolumeInterval
+      ~Laplace.computeMinimumVolumeIntervalWithMarginalProbability
+      ~Laplace.computeMinimumVolumeLevelSet
+      ~Laplace.computeMinimumVolumeLevelSetWithThreshold
+      ~Laplace.computePDF
+      ~Laplace.computePDFGradient
+      ~Laplace.computeProbability
+      ~Laplace.computeQuantile
+      ~Laplace.computeRadialDistributionCDF
+      ~Laplace.computeScalarQuantile
+      ~Laplace.computeSequentialConditionalCDF
+      ~Laplace.computeSequentialConditionalDDF
+      ~Laplace.computeSequentialConditionalPDF
+      ~Laplace.computeSequentialConditionalQuantile
+      ~Laplace.computeSurvivalFunction
+      ~Laplace.computeUnilateralConfidenceInterval
+      ~Laplace.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~Laplace.cos
+      ~Laplace.cosh
+      ~Laplace.drawCDF
+      ~Laplace.drawLogPDF
+      ~Laplace.drawMarginal1DCDF
+      ~Laplace.drawMarginal1DLogPDF
+      ~Laplace.drawMarginal1DPDF
+      ~Laplace.drawMarginal1DSurvivalFunction
+      ~Laplace.drawMarginal2DCDF
+      ~Laplace.drawMarginal2DLogPDF
+      ~Laplace.drawMarginal2DPDF
+      ~Laplace.drawMarginal2DSurvivalFunction
+      ~Laplace.drawPDF
+      ~Laplace.drawQuantile
+      ~Laplace.drawSurvivalFunction
+      ~Laplace.exp
+      ~Laplace.getCDFEpsilon
+      ~Laplace.getCenteredMoment
+      ~Laplace.getCholesky
+      ~Laplace.getClassName
+      ~Laplace.getCopula
+      ~Laplace.getCorrelation
+      ~Laplace.getCovariance
+      ~Laplace.getDescription
+      ~Laplace.getDimension
+      ~Laplace.getDispersionIndicator
+      ~Laplace.getId
+      ~Laplace.getIntegrationNodesNumber
+      ~Laplace.getInverseCholesky
+      ~Laplace.getInverseIsoProbabilisticTransformation
+      ~Laplace.getIsoProbabilisticTransformation
+      ~Laplace.getKendallTau
+      ~Laplace.getKurtosis
+      ~Laplace.getLambda
+      ~Laplace.getLinearCorrelation
+      ~Laplace.getMarginal
+      ~Laplace.getMean
+      ~Laplace.getMoment
+      ~Laplace.getMu
+      ~Laplace.getName
+      ~Laplace.getPDFEpsilon
+      ~Laplace.getParameter
+      ~Laplace.getParameterDescription
+      ~Laplace.getParameterDimension
+      ~Laplace.getParametersCollection
+      ~Laplace.getPearsonCorrelation
+      ~Laplace.getPositionIndicator
+      ~Laplace.getProbabilities
+      ~Laplace.getRange
+      ~Laplace.getRealization
+      ~Laplace.getRoughness
+      ~Laplace.getSample
+      ~Laplace.getShadowedId
+      ~Laplace.getShapeMatrix
+      ~Laplace.getShiftedMoment
+      ~Laplace.getSingularities
+      ~Laplace.getSkewness
+      ~Laplace.getSpearmanCorrelation
+      ~Laplace.getStandardDeviation
+      ~Laplace.getStandardDistribution
+      ~Laplace.getStandardMoment
+      ~Laplace.getStandardRepresentative
+      ~Laplace.getSupport
+      ~Laplace.getVisibility
+      ~Laplace.hasEllipticalCopula
+      ~Laplace.hasIndependentCopula
+      ~Laplace.hasName
+      ~Laplace.hasVisibleName
+      ~Laplace.inverse
+      ~Laplace.isContinuous
+      ~Laplace.isCopula
+      ~Laplace.isDiscrete
+      ~Laplace.isElliptical
+      ~Laplace.isIntegral
+      ~Laplace.ln
+      ~Laplace.log
+      ~Laplace.setDescription
+      ~Laplace.setIntegrationNodesNumber
+      ~Laplace.setLambda
+      ~Laplace.setMu
+      ~Laplace.setName
+      ~Laplace.setParameter
+      ~Laplace.setParametersCollection
+      ~Laplace.setShadowedId
+      ~Laplace.setVisibility
+      ~Laplace.sin
+      ~Laplace.sinh
+      ~Laplace.sqr
+      ~Laplace.sqrt
+      ~Laplace.tan
+      ~Laplace.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Laplace.thisown
+   
    

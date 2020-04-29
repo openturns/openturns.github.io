@@ -1,5 +1,5 @@
-LinearModelTest_LinearModelDurbinWatson
-=================================================
+openturns.LinearModelTest\_LinearModelDurbinWatson
+==================================================
 
 .. currentmodule:: openturns
 

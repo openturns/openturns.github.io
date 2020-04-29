@@ -1,5 +1,5 @@
-SpecFunc_IncompleteBeta
-=================================
+openturns.SpecFunc\_IncompleteBeta
+==================================
 
 .. currentmodule:: openturns
 

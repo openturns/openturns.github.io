@@ -1,41 +1,5 @@
-ExtremeValueCopula
-========================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.ExtremeValueCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
-        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
-        copula = ot.EmpiricalBernsteinCopula(sample, 4)
-    elif ot.ExtremeValueCopula().__class__.__name__ == 'ExtremeValueCopula':
-        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-    elif ot.ExtremeValueCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
-        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
-    elif ot.ExtremeValueCopula().__class__.__name__ == 'NormalCopula':
-        R = ot.CorrelationMatrix(2)
-        R[1, 0] = 0.8
-        copula = ot.NormalCopula(R)
-    elif ot.ExtremeValueCopula().__class__.__name__ == 'SklarCopula':
-        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
-        copula =  ot.SklarCopula(student)
-    else:
-        copula = ot.ExtremeValueCopula()
-    if copula.getDimension() == 1:
-        copula = ot.ExtremeValueCopula(2)
-    copula.setDescription(['$u_1$', '$u_2$'])
-    pdf_graph = copula.drawPDF()
-    cdf_graph = copula.drawCDF()
-    fig = plt.figure(figsize=(10, 4))
-    pdf_axis = fig.add_subplot(121)
-    cdf_axis = fig.add_subplot(122)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
-    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
-    title = str(copula)[:100].split('\n')[0]
-    fig.suptitle(title)
+openturns.ExtremeValueCopula
+============================
 
 .. currentmodule:: openturns
 
@@ -43,4 +7,157 @@ ExtremeValueCopula
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ExtremeValueCopula.__init__
+      ~ExtremeValueCopula.abs
+      ~ExtremeValueCopula.acos
+      ~ExtremeValueCopula.acosh
+      ~ExtremeValueCopula.asin
+      ~ExtremeValueCopula.asinh
+      ~ExtremeValueCopula.atan
+      ~ExtremeValueCopula.atanh
+      ~ExtremeValueCopula.cbrt
+      ~ExtremeValueCopula.computeBilateralConfidenceInterval
+      ~ExtremeValueCopula.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~ExtremeValueCopula.computeCDF
+      ~ExtremeValueCopula.computeCDFGradient
+      ~ExtremeValueCopula.computeCharacteristicFunction
+      ~ExtremeValueCopula.computeComplementaryCDF
+      ~ExtremeValueCopula.computeConditionalCDF
+      ~ExtremeValueCopula.computeConditionalDDF
+      ~ExtremeValueCopula.computeConditionalPDF
+      ~ExtremeValueCopula.computeConditionalQuantile
+      ~ExtremeValueCopula.computeDDF
+      ~ExtremeValueCopula.computeDensityGenerator
+      ~ExtremeValueCopula.computeDensityGeneratorDerivative
+      ~ExtremeValueCopula.computeDensityGeneratorSecondDerivative
+      ~ExtremeValueCopula.computeEntropy
+      ~ExtremeValueCopula.computeGeneratingFunction
+      ~ExtremeValueCopula.computeInverseSurvivalFunction
+      ~ExtremeValueCopula.computeLogCharacteristicFunction
+      ~ExtremeValueCopula.computeLogGeneratingFunction
+      ~ExtremeValueCopula.computeLogPDF
+      ~ExtremeValueCopula.computeLogPDFGradient
+      ~ExtremeValueCopula.computeMinimumVolumeInterval
+      ~ExtremeValueCopula.computeMinimumVolumeIntervalWithMarginalProbability
+      ~ExtremeValueCopula.computeMinimumVolumeLevelSet
+      ~ExtremeValueCopula.computeMinimumVolumeLevelSetWithThreshold
+      ~ExtremeValueCopula.computePDF
+      ~ExtremeValueCopula.computePDFGradient
+      ~ExtremeValueCopula.computeProbability
+      ~ExtremeValueCopula.computeQuantile
+      ~ExtremeValueCopula.computeRadialDistributionCDF
+      ~ExtremeValueCopula.computeScalarQuantile
+      ~ExtremeValueCopula.computeSequentialConditionalCDF
+      ~ExtremeValueCopula.computeSequentialConditionalDDF
+      ~ExtremeValueCopula.computeSequentialConditionalPDF
+      ~ExtremeValueCopula.computeSequentialConditionalQuantile
+      ~ExtremeValueCopula.computeSurvivalFunction
+      ~ExtremeValueCopula.computeUnilateralConfidenceInterval
+      ~ExtremeValueCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~ExtremeValueCopula.cos
+      ~ExtremeValueCopula.cosh
+      ~ExtremeValueCopula.drawCDF
+      ~ExtremeValueCopula.drawLogPDF
+      ~ExtremeValueCopula.drawMarginal1DCDF
+      ~ExtremeValueCopula.drawMarginal1DLogPDF
+      ~ExtremeValueCopula.drawMarginal1DPDF
+      ~ExtremeValueCopula.drawMarginal1DSurvivalFunction
+      ~ExtremeValueCopula.drawMarginal2DCDF
+      ~ExtremeValueCopula.drawMarginal2DLogPDF
+      ~ExtremeValueCopula.drawMarginal2DPDF
+      ~ExtremeValueCopula.drawMarginal2DSurvivalFunction
+      ~ExtremeValueCopula.drawPDF
+      ~ExtremeValueCopula.drawQuantile
+      ~ExtremeValueCopula.drawSurvivalFunction
+      ~ExtremeValueCopula.exp
+      ~ExtremeValueCopula.getCDFEpsilon
+      ~ExtremeValueCopula.getCenteredMoment
+      ~ExtremeValueCopula.getCholesky
+      ~ExtremeValueCopula.getClassName
+      ~ExtremeValueCopula.getCopula
+      ~ExtremeValueCopula.getCorrelation
+      ~ExtremeValueCopula.getCovariance
+      ~ExtremeValueCopula.getDescription
+      ~ExtremeValueCopula.getDimension
+      ~ExtremeValueCopula.getDispersionIndicator
+      ~ExtremeValueCopula.getId
+      ~ExtremeValueCopula.getIntegrationNodesNumber
+      ~ExtremeValueCopula.getInverseCholesky
+      ~ExtremeValueCopula.getInverseIsoProbabilisticTransformation
+      ~ExtremeValueCopula.getIsoProbabilisticTransformation
+      ~ExtremeValueCopula.getKendallTau
+      ~ExtremeValueCopula.getKurtosis
+      ~ExtremeValueCopula.getLinearCorrelation
+      ~ExtremeValueCopula.getMarginal
+      ~ExtremeValueCopula.getMean
+      ~ExtremeValueCopula.getMoment
+      ~ExtremeValueCopula.getName
+      ~ExtremeValueCopula.getPDFEpsilon
+      ~ExtremeValueCopula.getParameter
+      ~ExtremeValueCopula.getParameterDescription
+      ~ExtremeValueCopula.getParameterDimension
+      ~ExtremeValueCopula.getParametersCollection
+      ~ExtremeValueCopula.getPearsonCorrelation
+      ~ExtremeValueCopula.getPickandFunction
+      ~ExtremeValueCopula.getPositionIndicator
+      ~ExtremeValueCopula.getProbabilities
+      ~ExtremeValueCopula.getRange
+      ~ExtremeValueCopula.getRealization
+      ~ExtremeValueCopula.getRoughness
+      ~ExtremeValueCopula.getSample
+      ~ExtremeValueCopula.getShadowedId
+      ~ExtremeValueCopula.getShapeMatrix
+      ~ExtremeValueCopula.getShiftedMoment
+      ~ExtremeValueCopula.getSingularities
+      ~ExtremeValueCopula.getSkewness
+      ~ExtremeValueCopula.getSpearmanCorrelation
+      ~ExtremeValueCopula.getStandardDeviation
+      ~ExtremeValueCopula.getStandardDistribution
+      ~ExtremeValueCopula.getStandardMoment
+      ~ExtremeValueCopula.getStandardRepresentative
+      ~ExtremeValueCopula.getSupport
+      ~ExtremeValueCopula.getVisibility
+      ~ExtremeValueCopula.hasEllipticalCopula
+      ~ExtremeValueCopula.hasIndependentCopula
+      ~ExtremeValueCopula.hasName
+      ~ExtremeValueCopula.hasVisibleName
+      ~ExtremeValueCopula.inverse
+      ~ExtremeValueCopula.isContinuous
+      ~ExtremeValueCopula.isCopula
+      ~ExtremeValueCopula.isDiscrete
+      ~ExtremeValueCopula.isElliptical
+      ~ExtremeValueCopula.isIntegral
+      ~ExtremeValueCopula.ln
+      ~ExtremeValueCopula.log
+      ~ExtremeValueCopula.setDescription
+      ~ExtremeValueCopula.setIntegrationNodesNumber
+      ~ExtremeValueCopula.setName
+      ~ExtremeValueCopula.setParameter
+      ~ExtremeValueCopula.setParametersCollection
+      ~ExtremeValueCopula.setPickandFunction
+      ~ExtremeValueCopula.setShadowedId
+      ~ExtremeValueCopula.setVisibility
+      ~ExtremeValueCopula.sin
+      ~ExtremeValueCopula.sinh
+      ~ExtremeValueCopula.sqr
+      ~ExtremeValueCopula.sqrt
+      ~ExtremeValueCopula.tan
+      ~ExtremeValueCopula.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ExtremeValueCopula.thisown
+   
    

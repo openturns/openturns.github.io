@@ -1,8 +1,5 @@
-VisualTest_DrawCDFplot
-================================
-
-.. plot:: pyplots/VisualTest_DrawCDFplot.py
-    :include-source: False
+openturns.VisualTest\_DrawCDFplot
+=================================
 
 .. currentmodule:: openturns
 

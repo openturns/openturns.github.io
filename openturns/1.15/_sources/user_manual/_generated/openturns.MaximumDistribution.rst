@@ -1,69 +1,5 @@
-MaximumDistribution distribution
-==========================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.MaximumDistribution().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.MaximumDistribution().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.MaximumDistribution().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.MaximumDistribution().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.MaximumDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.MaximumDistribution().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.MaximumDistribution().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.MaximumDistribution().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.MaximumDistribution().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.MaximumDistribution().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.MaximumDistribution().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.MaximumDistribution().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.MaximumDistribution().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.MaximumDistribution()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.MaximumDistribution
+=============================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,157 @@ MaximumDistribution distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MaximumDistribution.__init__
+      ~MaximumDistribution.abs
+      ~MaximumDistribution.acos
+      ~MaximumDistribution.acosh
+      ~MaximumDistribution.asin
+      ~MaximumDistribution.asinh
+      ~MaximumDistribution.atan
+      ~MaximumDistribution.atanh
+      ~MaximumDistribution.cbrt
+      ~MaximumDistribution.computeBilateralConfidenceInterval
+      ~MaximumDistribution.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~MaximumDistribution.computeCDF
+      ~MaximumDistribution.computeCDFGradient
+      ~MaximumDistribution.computeCharacteristicFunction
+      ~MaximumDistribution.computeComplementaryCDF
+      ~MaximumDistribution.computeConditionalCDF
+      ~MaximumDistribution.computeConditionalDDF
+      ~MaximumDistribution.computeConditionalPDF
+      ~MaximumDistribution.computeConditionalQuantile
+      ~MaximumDistribution.computeDDF
+      ~MaximumDistribution.computeDensityGenerator
+      ~MaximumDistribution.computeDensityGeneratorDerivative
+      ~MaximumDistribution.computeDensityGeneratorSecondDerivative
+      ~MaximumDistribution.computeEntropy
+      ~MaximumDistribution.computeGeneratingFunction
+      ~MaximumDistribution.computeInverseSurvivalFunction
+      ~MaximumDistribution.computeLogCharacteristicFunction
+      ~MaximumDistribution.computeLogGeneratingFunction
+      ~MaximumDistribution.computeLogPDF
+      ~MaximumDistribution.computeLogPDFGradient
+      ~MaximumDistribution.computeMinimumVolumeInterval
+      ~MaximumDistribution.computeMinimumVolumeIntervalWithMarginalProbability
+      ~MaximumDistribution.computeMinimumVolumeLevelSet
+      ~MaximumDistribution.computeMinimumVolumeLevelSetWithThreshold
+      ~MaximumDistribution.computePDF
+      ~MaximumDistribution.computePDFGradient
+      ~MaximumDistribution.computeProbability
+      ~MaximumDistribution.computeQuantile
+      ~MaximumDistribution.computeRadialDistributionCDF
+      ~MaximumDistribution.computeScalarQuantile
+      ~MaximumDistribution.computeSequentialConditionalCDF
+      ~MaximumDistribution.computeSequentialConditionalDDF
+      ~MaximumDistribution.computeSequentialConditionalPDF
+      ~MaximumDistribution.computeSequentialConditionalQuantile
+      ~MaximumDistribution.computeSurvivalFunction
+      ~MaximumDistribution.computeUnilateralConfidenceInterval
+      ~MaximumDistribution.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~MaximumDistribution.cos
+      ~MaximumDistribution.cosh
+      ~MaximumDistribution.drawCDF
+      ~MaximumDistribution.drawLogPDF
+      ~MaximumDistribution.drawMarginal1DCDF
+      ~MaximumDistribution.drawMarginal1DLogPDF
+      ~MaximumDistribution.drawMarginal1DPDF
+      ~MaximumDistribution.drawMarginal1DSurvivalFunction
+      ~MaximumDistribution.drawMarginal2DCDF
+      ~MaximumDistribution.drawMarginal2DLogPDF
+      ~MaximumDistribution.drawMarginal2DPDF
+      ~MaximumDistribution.drawMarginal2DSurvivalFunction
+      ~MaximumDistribution.drawPDF
+      ~MaximumDistribution.drawQuantile
+      ~MaximumDistribution.drawSurvivalFunction
+      ~MaximumDistribution.exp
+      ~MaximumDistribution.getCDFEpsilon
+      ~MaximumDistribution.getCenteredMoment
+      ~MaximumDistribution.getCholesky
+      ~MaximumDistribution.getClassName
+      ~MaximumDistribution.getCopula
+      ~MaximumDistribution.getCorrelation
+      ~MaximumDistribution.getCovariance
+      ~MaximumDistribution.getDescription
+      ~MaximumDistribution.getDimension
+      ~MaximumDistribution.getDispersionIndicator
+      ~MaximumDistribution.getDistribution
+      ~MaximumDistribution.getId
+      ~MaximumDistribution.getIntegrationNodesNumber
+      ~MaximumDistribution.getInverseCholesky
+      ~MaximumDistribution.getInverseIsoProbabilisticTransformation
+      ~MaximumDistribution.getIsoProbabilisticTransformation
+      ~MaximumDistribution.getKendallTau
+      ~MaximumDistribution.getKurtosis
+      ~MaximumDistribution.getLinearCorrelation
+      ~MaximumDistribution.getMarginal
+      ~MaximumDistribution.getMean
+      ~MaximumDistribution.getMoment
+      ~MaximumDistribution.getName
+      ~MaximumDistribution.getPDFEpsilon
+      ~MaximumDistribution.getParameter
+      ~MaximumDistribution.getParameterDescription
+      ~MaximumDistribution.getParameterDimension
+      ~MaximumDistribution.getParametersCollection
+      ~MaximumDistribution.getPearsonCorrelation
+      ~MaximumDistribution.getPositionIndicator
+      ~MaximumDistribution.getProbabilities
+      ~MaximumDistribution.getRange
+      ~MaximumDistribution.getRealization
+      ~MaximumDistribution.getRoughness
+      ~MaximumDistribution.getSample
+      ~MaximumDistribution.getShadowedId
+      ~MaximumDistribution.getShapeMatrix
+      ~MaximumDistribution.getShiftedMoment
+      ~MaximumDistribution.getSingularities
+      ~MaximumDistribution.getSkewness
+      ~MaximumDistribution.getSpearmanCorrelation
+      ~MaximumDistribution.getStandardDeviation
+      ~MaximumDistribution.getStandardDistribution
+      ~MaximumDistribution.getStandardMoment
+      ~MaximumDistribution.getStandardRepresentative
+      ~MaximumDistribution.getSupport
+      ~MaximumDistribution.getVisibility
+      ~MaximumDistribution.hasEllipticalCopula
+      ~MaximumDistribution.hasIndependentCopula
+      ~MaximumDistribution.hasName
+      ~MaximumDistribution.hasVisibleName
+      ~MaximumDistribution.inverse
+      ~MaximumDistribution.isContinuous
+      ~MaximumDistribution.isCopula
+      ~MaximumDistribution.isDiscrete
+      ~MaximumDistribution.isElliptical
+      ~MaximumDistribution.isIntegral
+      ~MaximumDistribution.ln
+      ~MaximumDistribution.log
+      ~MaximumDistribution.setDescription
+      ~MaximumDistribution.setDistribution
+      ~MaximumDistribution.setIntegrationNodesNumber
+      ~MaximumDistribution.setName
+      ~MaximumDistribution.setParameter
+      ~MaximumDistribution.setParametersCollection
+      ~MaximumDistribution.setShadowedId
+      ~MaximumDistribution.setVisibility
+      ~MaximumDistribution.sin
+      ~MaximumDistribution.sinh
+      ~MaximumDistribution.sqr
+      ~MaximumDistribution.sqrt
+      ~MaximumDistribution.tan
+      ~MaximumDistribution.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MaximumDistribution.thisown
+   
    

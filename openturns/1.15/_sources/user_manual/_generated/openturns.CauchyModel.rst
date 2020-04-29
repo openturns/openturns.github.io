@@ -1,27 +1,47 @@
-CauchyModel
-==========================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    spectralModel = ot.CauchyModel()
-    if spectralModel.getInputDimension() == 1:
-        spec_graph = spectralModel.draw(0, 0, True)
-        spec_graph.setXTitle('f')
-        spec_graph.setYTitle('Spectral Density')
-        spec_graph.setTitle(str(spectralModel))
-
-        fig = plt.figure(figsize=(10, 4))
-        spec_axis = fig.add_subplot(111)
-        View(spec_graph, figure=fig, axes=[spec_axis], add_legend=False)
+openturns.CauchyModel
+=====================
 
 .. currentmodule:: openturns
 
 .. autoclass:: CauchyModel
 
-  
+   
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CauchyModel.__init__
+      ~CauchyModel.computeStandardRepresentative
+      ~CauchyModel.draw
+      ~CauchyModel.getAmplitude
+      ~CauchyModel.getClassName
+      ~CauchyModel.getId
+      ~CauchyModel.getInputDimension
+      ~CauchyModel.getName
+      ~CauchyModel.getOutputCorrelation
+      ~CauchyModel.getOutputDimension
+      ~CauchyModel.getScale
+      ~CauchyModel.getShadowedId
+      ~CauchyModel.getVisibility
+      ~CauchyModel.hasName
+      ~CauchyModel.hasVisibleName
+      ~CauchyModel.setAmplitude
+      ~CauchyModel.setName
+      ~CauchyModel.setScale
+      ~CauchyModel.setShadowedId
+      ~CauchyModel.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CauchyModel.thisown
+   
    

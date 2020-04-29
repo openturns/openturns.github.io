@@ -1,8 +1,5 @@
-VisualTest_DrawLinearModel
-====================================
-
-.. plot:: pyplots/VisualTest_DrawLinearModel.py
-    :include-source: False
+openturns.VisualTest\_DrawLinearModel
+=====================================
 
 .. currentmodule:: openturns
 

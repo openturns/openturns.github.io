@@ -1,5 +1,5 @@
-DistFunc_logdPoisson
-==============================
+openturns.DistFunc\_logdPoisson
+===============================
 
 .. currentmodule:: openturns
 

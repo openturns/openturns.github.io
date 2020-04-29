@@ -1,5 +1,5 @@
-DistFunc_rDiscrete
-============================
+openturns.DistFunc\_rDiscrete
+=============================
 
 .. currentmodule:: openturns
 

@@ -1,5 +1,5 @@
-SpecFunc_Psi
-======================
+openturns.SpecFunc\_Psi
+=======================
 
 .. currentmodule:: openturns
 

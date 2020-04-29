@@ -1,4 +1,4 @@
-View
+openturns.viewer.View
 =====================
 
 .. currentmodule:: openturns.viewer
@@ -7,5 +7,24 @@ View
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~View.CheckDict
+      ~View.ShowAll
+      ~View.ToUnicode
+      ~View.__init__
+      ~View.close
+      ~View.getAxes
+      ~View.getFigure
+      ~View.save
+      ~View.show
+   
    
 
+   
+   
+   

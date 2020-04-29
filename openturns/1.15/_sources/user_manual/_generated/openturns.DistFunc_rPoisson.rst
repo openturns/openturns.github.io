@@ -1,5 +1,5 @@
-DistFunc_rPoisson
-===========================
+openturns.DistFunc\_rPoisson
+============================
 
 .. currentmodule:: openturns
 

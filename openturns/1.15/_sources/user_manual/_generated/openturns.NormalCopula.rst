@@ -1,41 +1,5 @@
-NormalCopula
-============================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.NormalCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
-        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
-        copula = ot.EmpiricalBernsteinCopula(sample, 4)
-    elif ot.NormalCopula().__class__.__name__ == 'ExtremeValueCopula':
-        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-    elif ot.NormalCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
-        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
-    elif ot.NormalCopula().__class__.__name__ == 'NormalCopula':
-        R = ot.CorrelationMatrix(2)
-        R[1, 0] = 0.8
-        copula = ot.NormalCopula(R)
-    elif ot.NormalCopula().__class__.__name__ == 'SklarCopula':
-        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
-        copula =  ot.SklarCopula(student)
-    else:
-        copula = ot.NormalCopula()
-    if copula.getDimension() == 1:
-        copula = ot.NormalCopula(2)
-    copula.setDescription(['$u_1$', '$u_2$'])
-    pdf_graph = copula.drawPDF()
-    cdf_graph = copula.drawCDF()
-    fig = plt.figure(figsize=(10, 4))
-    pdf_axis = fig.add_subplot(121)
-    cdf_axis = fig.add_subplot(122)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
-    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
-    title = str(copula)[:100].split('\n')[0]
-    fig.suptitle(title)
+openturns.NormalCopula
+======================
 
 .. currentmodule:: openturns
 
@@ -43,4 +7,157 @@ NormalCopula
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NormalCopula.GetCorrelationFromKendallCorrelation
+      ~NormalCopula.GetCorrelationFromSpearmanCorrelation
+      ~NormalCopula.__init__
+      ~NormalCopula.abs
+      ~NormalCopula.acos
+      ~NormalCopula.acosh
+      ~NormalCopula.asin
+      ~NormalCopula.asinh
+      ~NormalCopula.atan
+      ~NormalCopula.atanh
+      ~NormalCopula.cbrt
+      ~NormalCopula.computeBilateralConfidenceInterval
+      ~NormalCopula.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~NormalCopula.computeCDF
+      ~NormalCopula.computeCDFGradient
+      ~NormalCopula.computeCharacteristicFunction
+      ~NormalCopula.computeComplementaryCDF
+      ~NormalCopula.computeConditionalCDF
+      ~NormalCopula.computeConditionalDDF
+      ~NormalCopula.computeConditionalPDF
+      ~NormalCopula.computeConditionalQuantile
+      ~NormalCopula.computeDDF
+      ~NormalCopula.computeDensityGenerator
+      ~NormalCopula.computeDensityGeneratorDerivative
+      ~NormalCopula.computeDensityGeneratorSecondDerivative
+      ~NormalCopula.computeEntropy
+      ~NormalCopula.computeGeneratingFunction
+      ~NormalCopula.computeInverseSurvivalFunction
+      ~NormalCopula.computeLogCharacteristicFunction
+      ~NormalCopula.computeLogGeneratingFunction
+      ~NormalCopula.computeLogPDF
+      ~NormalCopula.computeLogPDFGradient
+      ~NormalCopula.computeMinimumVolumeInterval
+      ~NormalCopula.computeMinimumVolumeIntervalWithMarginalProbability
+      ~NormalCopula.computeMinimumVolumeLevelSet
+      ~NormalCopula.computeMinimumVolumeLevelSetWithThreshold
+      ~NormalCopula.computePDF
+      ~NormalCopula.computePDFGradient
+      ~NormalCopula.computeProbability
+      ~NormalCopula.computeQuantile
+      ~NormalCopula.computeRadialDistributionCDF
+      ~NormalCopula.computeScalarQuantile
+      ~NormalCopula.computeSequentialConditionalCDF
+      ~NormalCopula.computeSequentialConditionalDDF
+      ~NormalCopula.computeSequentialConditionalPDF
+      ~NormalCopula.computeSequentialConditionalQuantile
+      ~NormalCopula.computeSurvivalFunction
+      ~NormalCopula.computeUnilateralConfidenceInterval
+      ~NormalCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~NormalCopula.cos
+      ~NormalCopula.cosh
+      ~NormalCopula.drawCDF
+      ~NormalCopula.drawLogPDF
+      ~NormalCopula.drawMarginal1DCDF
+      ~NormalCopula.drawMarginal1DLogPDF
+      ~NormalCopula.drawMarginal1DPDF
+      ~NormalCopula.drawMarginal1DSurvivalFunction
+      ~NormalCopula.drawMarginal2DCDF
+      ~NormalCopula.drawMarginal2DLogPDF
+      ~NormalCopula.drawMarginal2DPDF
+      ~NormalCopula.drawMarginal2DSurvivalFunction
+      ~NormalCopula.drawPDF
+      ~NormalCopula.drawQuantile
+      ~NormalCopula.drawSurvivalFunction
+      ~NormalCopula.exp
+      ~NormalCopula.getCDFEpsilon
+      ~NormalCopula.getCenteredMoment
+      ~NormalCopula.getCholesky
+      ~NormalCopula.getClassName
+      ~NormalCopula.getCopula
+      ~NormalCopula.getCorrelation
+      ~NormalCopula.getCovariance
+      ~NormalCopula.getDescription
+      ~NormalCopula.getDimension
+      ~NormalCopula.getDispersionIndicator
+      ~NormalCopula.getId
+      ~NormalCopula.getIntegrationNodesNumber
+      ~NormalCopula.getInverseCholesky
+      ~NormalCopula.getInverseIsoProbabilisticTransformation
+      ~NormalCopula.getIsoProbabilisticTransformation
+      ~NormalCopula.getKendallTau
+      ~NormalCopula.getKurtosis
+      ~NormalCopula.getLinearCorrelation
+      ~NormalCopula.getMarginal
+      ~NormalCopula.getMean
+      ~NormalCopula.getMoment
+      ~NormalCopula.getName
+      ~NormalCopula.getPDFEpsilon
+      ~NormalCopula.getParameter
+      ~NormalCopula.getParameterDescription
+      ~NormalCopula.getParameterDimension
+      ~NormalCopula.getParametersCollection
+      ~NormalCopula.getPearsonCorrelation
+      ~NormalCopula.getPositionIndicator
+      ~NormalCopula.getProbabilities
+      ~NormalCopula.getRange
+      ~NormalCopula.getRealization
+      ~NormalCopula.getRoughness
+      ~NormalCopula.getSample
+      ~NormalCopula.getShadowedId
+      ~NormalCopula.getShapeMatrix
+      ~NormalCopula.getShiftedMoment
+      ~NormalCopula.getSingularities
+      ~NormalCopula.getSkewness
+      ~NormalCopula.getSpearmanCorrelation
+      ~NormalCopula.getStandardDeviation
+      ~NormalCopula.getStandardDistribution
+      ~NormalCopula.getStandardMoment
+      ~NormalCopula.getStandardRepresentative
+      ~NormalCopula.getSupport
+      ~NormalCopula.getVisibility
+      ~NormalCopula.hasEllipticalCopula
+      ~NormalCopula.hasIndependentCopula
+      ~NormalCopula.hasName
+      ~NormalCopula.hasVisibleName
+      ~NormalCopula.inverse
+      ~NormalCopula.isContinuous
+      ~NormalCopula.isCopula
+      ~NormalCopula.isDiscrete
+      ~NormalCopula.isElliptical
+      ~NormalCopula.isIntegral
+      ~NormalCopula.ln
+      ~NormalCopula.log
+      ~NormalCopula.setDescription
+      ~NormalCopula.setIntegrationNodesNumber
+      ~NormalCopula.setName
+      ~NormalCopula.setParameter
+      ~NormalCopula.setParametersCollection
+      ~NormalCopula.setShadowedId
+      ~NormalCopula.setVisibility
+      ~NormalCopula.sin
+      ~NormalCopula.sinh
+      ~NormalCopula.sqr
+      ~NormalCopula.sqrt
+      ~NormalCopula.tan
+      ~NormalCopula.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NormalCopula.thisown
+   
    

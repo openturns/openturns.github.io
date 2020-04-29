@@ -1,41 +1,5 @@
-FarlieGumbelMorgensternCopula
-==============================================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.FarlieGumbelMorgensternCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
-        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
-        copula = ot.EmpiricalBernsteinCopula(sample, 4)
-    elif ot.FarlieGumbelMorgensternCopula().__class__.__name__ == 'ExtremeValueCopula':
-        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-    elif ot.FarlieGumbelMorgensternCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
-        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
-    elif ot.FarlieGumbelMorgensternCopula().__class__.__name__ == 'NormalCopula':
-        R = ot.CorrelationMatrix(2)
-        R[1, 0] = 0.8
-        copula = ot.NormalCopula(R)
-    elif ot.FarlieGumbelMorgensternCopula().__class__.__name__ == 'SklarCopula':
-        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
-        copula =  ot.SklarCopula(student)
-    else:
-        copula = ot.FarlieGumbelMorgensternCopula()
-    if copula.getDimension() == 1:
-        copula = ot.FarlieGumbelMorgensternCopula(2)
-    copula.setDescription(['$u_1$', '$u_2$'])
-    pdf_graph = copula.drawPDF()
-    cdf_graph = copula.drawCDF()
-    fig = plt.figure(figsize=(10, 4))
-    pdf_axis = fig.add_subplot(121)
-    cdf_axis = fig.add_subplot(122)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
-    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
-    title = str(copula)[:100].split('\n')[0]
-    fig.suptitle(title)
+openturns.FarlieGumbelMorgensternCopula
+=======================================
 
 .. currentmodule:: openturns
 
@@ -43,4 +7,157 @@ FarlieGumbelMorgensternCopula
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FarlieGumbelMorgensternCopula.__init__
+      ~FarlieGumbelMorgensternCopula.abs
+      ~FarlieGumbelMorgensternCopula.acos
+      ~FarlieGumbelMorgensternCopula.acosh
+      ~FarlieGumbelMorgensternCopula.asin
+      ~FarlieGumbelMorgensternCopula.asinh
+      ~FarlieGumbelMorgensternCopula.atan
+      ~FarlieGumbelMorgensternCopula.atanh
+      ~FarlieGumbelMorgensternCopula.cbrt
+      ~FarlieGumbelMorgensternCopula.computeBilateralConfidenceInterval
+      ~FarlieGumbelMorgensternCopula.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~FarlieGumbelMorgensternCopula.computeCDF
+      ~FarlieGumbelMorgensternCopula.computeCDFGradient
+      ~FarlieGumbelMorgensternCopula.computeCharacteristicFunction
+      ~FarlieGumbelMorgensternCopula.computeComplementaryCDF
+      ~FarlieGumbelMorgensternCopula.computeConditionalCDF
+      ~FarlieGumbelMorgensternCopula.computeConditionalDDF
+      ~FarlieGumbelMorgensternCopula.computeConditionalPDF
+      ~FarlieGumbelMorgensternCopula.computeConditionalQuantile
+      ~FarlieGumbelMorgensternCopula.computeDDF
+      ~FarlieGumbelMorgensternCopula.computeDensityGenerator
+      ~FarlieGumbelMorgensternCopula.computeDensityGeneratorDerivative
+      ~FarlieGumbelMorgensternCopula.computeDensityGeneratorSecondDerivative
+      ~FarlieGumbelMorgensternCopula.computeEntropy
+      ~FarlieGumbelMorgensternCopula.computeGeneratingFunction
+      ~FarlieGumbelMorgensternCopula.computeInverseSurvivalFunction
+      ~FarlieGumbelMorgensternCopula.computeLogCharacteristicFunction
+      ~FarlieGumbelMorgensternCopula.computeLogGeneratingFunction
+      ~FarlieGumbelMorgensternCopula.computeLogPDF
+      ~FarlieGumbelMorgensternCopula.computeLogPDFGradient
+      ~FarlieGumbelMorgensternCopula.computeMinimumVolumeInterval
+      ~FarlieGumbelMorgensternCopula.computeMinimumVolumeIntervalWithMarginalProbability
+      ~FarlieGumbelMorgensternCopula.computeMinimumVolumeLevelSet
+      ~FarlieGumbelMorgensternCopula.computeMinimumVolumeLevelSetWithThreshold
+      ~FarlieGumbelMorgensternCopula.computePDF
+      ~FarlieGumbelMorgensternCopula.computePDFGradient
+      ~FarlieGumbelMorgensternCopula.computeProbability
+      ~FarlieGumbelMorgensternCopula.computeQuantile
+      ~FarlieGumbelMorgensternCopula.computeRadialDistributionCDF
+      ~FarlieGumbelMorgensternCopula.computeScalarQuantile
+      ~FarlieGumbelMorgensternCopula.computeSequentialConditionalCDF
+      ~FarlieGumbelMorgensternCopula.computeSequentialConditionalDDF
+      ~FarlieGumbelMorgensternCopula.computeSequentialConditionalPDF
+      ~FarlieGumbelMorgensternCopula.computeSequentialConditionalQuantile
+      ~FarlieGumbelMorgensternCopula.computeSurvivalFunction
+      ~FarlieGumbelMorgensternCopula.computeUnilateralConfidenceInterval
+      ~FarlieGumbelMorgensternCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~FarlieGumbelMorgensternCopula.cos
+      ~FarlieGumbelMorgensternCopula.cosh
+      ~FarlieGumbelMorgensternCopula.drawCDF
+      ~FarlieGumbelMorgensternCopula.drawLogPDF
+      ~FarlieGumbelMorgensternCopula.drawMarginal1DCDF
+      ~FarlieGumbelMorgensternCopula.drawMarginal1DLogPDF
+      ~FarlieGumbelMorgensternCopula.drawMarginal1DPDF
+      ~FarlieGumbelMorgensternCopula.drawMarginal1DSurvivalFunction
+      ~FarlieGumbelMorgensternCopula.drawMarginal2DCDF
+      ~FarlieGumbelMorgensternCopula.drawMarginal2DLogPDF
+      ~FarlieGumbelMorgensternCopula.drawMarginal2DPDF
+      ~FarlieGumbelMorgensternCopula.drawMarginal2DSurvivalFunction
+      ~FarlieGumbelMorgensternCopula.drawPDF
+      ~FarlieGumbelMorgensternCopula.drawQuantile
+      ~FarlieGumbelMorgensternCopula.drawSurvivalFunction
+      ~FarlieGumbelMorgensternCopula.exp
+      ~FarlieGumbelMorgensternCopula.getCDFEpsilon
+      ~FarlieGumbelMorgensternCopula.getCenteredMoment
+      ~FarlieGumbelMorgensternCopula.getCholesky
+      ~FarlieGumbelMorgensternCopula.getClassName
+      ~FarlieGumbelMorgensternCopula.getCopula
+      ~FarlieGumbelMorgensternCopula.getCorrelation
+      ~FarlieGumbelMorgensternCopula.getCovariance
+      ~FarlieGumbelMorgensternCopula.getDescription
+      ~FarlieGumbelMorgensternCopula.getDimension
+      ~FarlieGumbelMorgensternCopula.getDispersionIndicator
+      ~FarlieGumbelMorgensternCopula.getId
+      ~FarlieGumbelMorgensternCopula.getIntegrationNodesNumber
+      ~FarlieGumbelMorgensternCopula.getInverseCholesky
+      ~FarlieGumbelMorgensternCopula.getInverseIsoProbabilisticTransformation
+      ~FarlieGumbelMorgensternCopula.getIsoProbabilisticTransformation
+      ~FarlieGumbelMorgensternCopula.getKendallTau
+      ~FarlieGumbelMorgensternCopula.getKurtosis
+      ~FarlieGumbelMorgensternCopula.getLinearCorrelation
+      ~FarlieGumbelMorgensternCopula.getMarginal
+      ~FarlieGumbelMorgensternCopula.getMean
+      ~FarlieGumbelMorgensternCopula.getMoment
+      ~FarlieGumbelMorgensternCopula.getName
+      ~FarlieGumbelMorgensternCopula.getPDFEpsilon
+      ~FarlieGumbelMorgensternCopula.getParameter
+      ~FarlieGumbelMorgensternCopula.getParameterDescription
+      ~FarlieGumbelMorgensternCopula.getParameterDimension
+      ~FarlieGumbelMorgensternCopula.getParametersCollection
+      ~FarlieGumbelMorgensternCopula.getPearsonCorrelation
+      ~FarlieGumbelMorgensternCopula.getPositionIndicator
+      ~FarlieGumbelMorgensternCopula.getProbabilities
+      ~FarlieGumbelMorgensternCopula.getRange
+      ~FarlieGumbelMorgensternCopula.getRealization
+      ~FarlieGumbelMorgensternCopula.getRoughness
+      ~FarlieGumbelMorgensternCopula.getSample
+      ~FarlieGumbelMorgensternCopula.getShadowedId
+      ~FarlieGumbelMorgensternCopula.getShapeMatrix
+      ~FarlieGumbelMorgensternCopula.getShiftedMoment
+      ~FarlieGumbelMorgensternCopula.getSingularities
+      ~FarlieGumbelMorgensternCopula.getSkewness
+      ~FarlieGumbelMorgensternCopula.getSpearmanCorrelation
+      ~FarlieGumbelMorgensternCopula.getStandardDeviation
+      ~FarlieGumbelMorgensternCopula.getStandardDistribution
+      ~FarlieGumbelMorgensternCopula.getStandardMoment
+      ~FarlieGumbelMorgensternCopula.getStandardRepresentative
+      ~FarlieGumbelMorgensternCopula.getSupport
+      ~FarlieGumbelMorgensternCopula.getTheta
+      ~FarlieGumbelMorgensternCopula.getVisibility
+      ~FarlieGumbelMorgensternCopula.hasEllipticalCopula
+      ~FarlieGumbelMorgensternCopula.hasIndependentCopula
+      ~FarlieGumbelMorgensternCopula.hasName
+      ~FarlieGumbelMorgensternCopula.hasVisibleName
+      ~FarlieGumbelMorgensternCopula.inverse
+      ~FarlieGumbelMorgensternCopula.isContinuous
+      ~FarlieGumbelMorgensternCopula.isCopula
+      ~FarlieGumbelMorgensternCopula.isDiscrete
+      ~FarlieGumbelMorgensternCopula.isElliptical
+      ~FarlieGumbelMorgensternCopula.isIntegral
+      ~FarlieGumbelMorgensternCopula.ln
+      ~FarlieGumbelMorgensternCopula.log
+      ~FarlieGumbelMorgensternCopula.setDescription
+      ~FarlieGumbelMorgensternCopula.setIntegrationNodesNumber
+      ~FarlieGumbelMorgensternCopula.setName
+      ~FarlieGumbelMorgensternCopula.setParameter
+      ~FarlieGumbelMorgensternCopula.setParametersCollection
+      ~FarlieGumbelMorgensternCopula.setShadowedId
+      ~FarlieGumbelMorgensternCopula.setTheta
+      ~FarlieGumbelMorgensternCopula.setVisibility
+      ~FarlieGumbelMorgensternCopula.sin
+      ~FarlieGumbelMorgensternCopula.sinh
+      ~FarlieGumbelMorgensternCopula.sqr
+      ~FarlieGumbelMorgensternCopula.sqrt
+      ~FarlieGumbelMorgensternCopula.tan
+      ~FarlieGumbelMorgensternCopula.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FarlieGumbelMorgensternCopula.thisown
+   
    

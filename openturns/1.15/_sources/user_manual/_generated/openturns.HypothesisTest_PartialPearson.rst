@@ -1,5 +1,5 @@
-HypothesisTest_PartialPearson
-=======================================
+openturns.HypothesisTest\_PartialPearson
+========================================
 
 .. currentmodule:: openturns
 

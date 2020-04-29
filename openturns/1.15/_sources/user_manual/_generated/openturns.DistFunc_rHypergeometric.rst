@@ -1,5 +1,5 @@
-DistFunc_rHypergeometric
-==================================
+openturns.DistFunc\_rHypergeometric
+===================================
 
 .. currentmodule:: openturns
 

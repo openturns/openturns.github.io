@@ -1,69 +1,5 @@
-NonCentralChiSquare distribution
-==========================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.NonCentralChiSquare().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.NonCentralChiSquare().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.NonCentralChiSquare()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.NonCentralChiSquare
+=============================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,162 @@ NonCentralChiSquare distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NonCentralChiSquare.__init__
+      ~NonCentralChiSquare.abs
+      ~NonCentralChiSquare.acos
+      ~NonCentralChiSquare.acosh
+      ~NonCentralChiSquare.asin
+      ~NonCentralChiSquare.asinh
+      ~NonCentralChiSquare.atan
+      ~NonCentralChiSquare.atanh
+      ~NonCentralChiSquare.cbrt
+      ~NonCentralChiSquare.computeBilateralConfidenceInterval
+      ~NonCentralChiSquare.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~NonCentralChiSquare.computeCDF
+      ~NonCentralChiSquare.computeCDFGradient
+      ~NonCentralChiSquare.computeCharacteristicFunction
+      ~NonCentralChiSquare.computeComplementaryCDF
+      ~NonCentralChiSquare.computeConditionalCDF
+      ~NonCentralChiSquare.computeConditionalDDF
+      ~NonCentralChiSquare.computeConditionalPDF
+      ~NonCentralChiSquare.computeConditionalQuantile
+      ~NonCentralChiSquare.computeDDF
+      ~NonCentralChiSquare.computeDensityGenerator
+      ~NonCentralChiSquare.computeDensityGeneratorDerivative
+      ~NonCentralChiSquare.computeDensityGeneratorSecondDerivative
+      ~NonCentralChiSquare.computeEntropy
+      ~NonCentralChiSquare.computeGeneratingFunction
+      ~NonCentralChiSquare.computeInverseSurvivalFunction
+      ~NonCentralChiSquare.computeLogCharacteristicFunction
+      ~NonCentralChiSquare.computeLogGeneratingFunction
+      ~NonCentralChiSquare.computeLogPDF
+      ~NonCentralChiSquare.computeLogPDFGradient
+      ~NonCentralChiSquare.computeMinimumVolumeInterval
+      ~NonCentralChiSquare.computeMinimumVolumeIntervalWithMarginalProbability
+      ~NonCentralChiSquare.computeMinimumVolumeLevelSet
+      ~NonCentralChiSquare.computeMinimumVolumeLevelSetWithThreshold
+      ~NonCentralChiSquare.computePDF
+      ~NonCentralChiSquare.computePDFGradient
+      ~NonCentralChiSquare.computeProbability
+      ~NonCentralChiSquare.computeQuantile
+      ~NonCentralChiSquare.computeRadialDistributionCDF
+      ~NonCentralChiSquare.computeScalarQuantile
+      ~NonCentralChiSquare.computeSequentialConditionalCDF
+      ~NonCentralChiSquare.computeSequentialConditionalDDF
+      ~NonCentralChiSquare.computeSequentialConditionalPDF
+      ~NonCentralChiSquare.computeSequentialConditionalQuantile
+      ~NonCentralChiSquare.computeSurvivalFunction
+      ~NonCentralChiSquare.computeUnilateralConfidenceInterval
+      ~NonCentralChiSquare.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~NonCentralChiSquare.cos
+      ~NonCentralChiSquare.cosh
+      ~NonCentralChiSquare.drawCDF
+      ~NonCentralChiSquare.drawLogPDF
+      ~NonCentralChiSquare.drawMarginal1DCDF
+      ~NonCentralChiSquare.drawMarginal1DLogPDF
+      ~NonCentralChiSquare.drawMarginal1DPDF
+      ~NonCentralChiSquare.drawMarginal1DSurvivalFunction
+      ~NonCentralChiSquare.drawMarginal2DCDF
+      ~NonCentralChiSquare.drawMarginal2DLogPDF
+      ~NonCentralChiSquare.drawMarginal2DPDF
+      ~NonCentralChiSquare.drawMarginal2DSurvivalFunction
+      ~NonCentralChiSquare.drawPDF
+      ~NonCentralChiSquare.drawQuantile
+      ~NonCentralChiSquare.drawSurvivalFunction
+      ~NonCentralChiSquare.exp
+      ~NonCentralChiSquare.getCDFEpsilon
+      ~NonCentralChiSquare.getCenteredMoment
+      ~NonCentralChiSquare.getCholesky
+      ~NonCentralChiSquare.getClassName
+      ~NonCentralChiSquare.getCopula
+      ~NonCentralChiSquare.getCorrelation
+      ~NonCentralChiSquare.getCovariance
+      ~NonCentralChiSquare.getDescription
+      ~NonCentralChiSquare.getDimension
+      ~NonCentralChiSquare.getDispersionIndicator
+      ~NonCentralChiSquare.getId
+      ~NonCentralChiSquare.getIntegrationNodesNumber
+      ~NonCentralChiSquare.getInverseCholesky
+      ~NonCentralChiSquare.getInverseIsoProbabilisticTransformation
+      ~NonCentralChiSquare.getIsoProbabilisticTransformation
+      ~NonCentralChiSquare.getKendallTau
+      ~NonCentralChiSquare.getKurtosis
+      ~NonCentralChiSquare.getLambda
+      ~NonCentralChiSquare.getLinearCorrelation
+      ~NonCentralChiSquare.getMarginal
+      ~NonCentralChiSquare.getMaximumIteration
+      ~NonCentralChiSquare.getMean
+      ~NonCentralChiSquare.getMoment
+      ~NonCentralChiSquare.getName
+      ~NonCentralChiSquare.getNu
+      ~NonCentralChiSquare.getPDFEpsilon
+      ~NonCentralChiSquare.getParameter
+      ~NonCentralChiSquare.getParameterDescription
+      ~NonCentralChiSquare.getParameterDimension
+      ~NonCentralChiSquare.getParametersCollection
+      ~NonCentralChiSquare.getPearsonCorrelation
+      ~NonCentralChiSquare.getPositionIndicator
+      ~NonCentralChiSquare.getProbabilities
+      ~NonCentralChiSquare.getRange
+      ~NonCentralChiSquare.getRealization
+      ~NonCentralChiSquare.getRoughness
+      ~NonCentralChiSquare.getSample
+      ~NonCentralChiSquare.getShadowedId
+      ~NonCentralChiSquare.getShapeMatrix
+      ~NonCentralChiSquare.getShiftedMoment
+      ~NonCentralChiSquare.getSingularities
+      ~NonCentralChiSquare.getSkewness
+      ~NonCentralChiSquare.getSpearmanCorrelation
+      ~NonCentralChiSquare.getStandardDeviation
+      ~NonCentralChiSquare.getStandardDistribution
+      ~NonCentralChiSquare.getStandardMoment
+      ~NonCentralChiSquare.getStandardRepresentative
+      ~NonCentralChiSquare.getSupport
+      ~NonCentralChiSquare.getVisibility
+      ~NonCentralChiSquare.hasEllipticalCopula
+      ~NonCentralChiSquare.hasIndependentCopula
+      ~NonCentralChiSquare.hasName
+      ~NonCentralChiSquare.hasVisibleName
+      ~NonCentralChiSquare.inverse
+      ~NonCentralChiSquare.isContinuous
+      ~NonCentralChiSquare.isCopula
+      ~NonCentralChiSquare.isDiscrete
+      ~NonCentralChiSquare.isElliptical
+      ~NonCentralChiSquare.isIntegral
+      ~NonCentralChiSquare.ln
+      ~NonCentralChiSquare.log
+      ~NonCentralChiSquare.setDescription
+      ~NonCentralChiSquare.setIntegrationNodesNumber
+      ~NonCentralChiSquare.setLambda
+      ~NonCentralChiSquare.setMaximumIteration
+      ~NonCentralChiSquare.setName
+      ~NonCentralChiSquare.setNu
+      ~NonCentralChiSquare.setNuLambda
+      ~NonCentralChiSquare.setParameter
+      ~NonCentralChiSquare.setParametersCollection
+      ~NonCentralChiSquare.setShadowedId
+      ~NonCentralChiSquare.setVisibility
+      ~NonCentralChiSquare.sin
+      ~NonCentralChiSquare.sinh
+      ~NonCentralChiSquare.sqr
+      ~NonCentralChiSquare.sqrt
+      ~NonCentralChiSquare.tan
+      ~NonCentralChiSquare.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NonCentralChiSquare.thisown
+   
    

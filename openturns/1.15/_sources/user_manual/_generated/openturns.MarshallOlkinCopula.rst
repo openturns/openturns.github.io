@@ -1,41 +1,5 @@
-MarshallOlkinCopula
-==========================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.MarshallOlkinCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
-        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
-        copula = ot.EmpiricalBernsteinCopula(sample, 4)
-    elif ot.MarshallOlkinCopula().__class__.__name__ == 'ExtremeValueCopula':
-        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-    elif ot.MarshallOlkinCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
-        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
-    elif ot.MarshallOlkinCopula().__class__.__name__ == 'NormalCopula':
-        R = ot.CorrelationMatrix(2)
-        R[1, 0] = 0.8
-        copula = ot.NormalCopula(R)
-    elif ot.MarshallOlkinCopula().__class__.__name__ == 'SklarCopula':
-        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
-        copula =  ot.SklarCopula(student)
-    else:
-        copula = ot.MarshallOlkinCopula()
-    if copula.getDimension() == 1:
-        copula = ot.MarshallOlkinCopula(2)
-    copula.setDescription(['$u_1$', '$u_2$'])
-    pdf_graph = copula.drawPDF()
-    cdf_graph = copula.drawCDF()
-    fig = plt.figure(figsize=(10, 4))
-    pdf_axis = fig.add_subplot(121)
-    cdf_axis = fig.add_subplot(122)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
-    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
-    title = str(copula)[:100].split('\n')[0]
-    fig.suptitle(title)
+openturns.MarshallOlkinCopula
+=============================
 
 .. currentmodule:: openturns
 
@@ -43,4 +7,159 @@ MarshallOlkinCopula
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MarshallOlkinCopula.__init__
+      ~MarshallOlkinCopula.abs
+      ~MarshallOlkinCopula.acos
+      ~MarshallOlkinCopula.acosh
+      ~MarshallOlkinCopula.asin
+      ~MarshallOlkinCopula.asinh
+      ~MarshallOlkinCopula.atan
+      ~MarshallOlkinCopula.atanh
+      ~MarshallOlkinCopula.cbrt
+      ~MarshallOlkinCopula.computeBilateralConfidenceInterval
+      ~MarshallOlkinCopula.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~MarshallOlkinCopula.computeCDF
+      ~MarshallOlkinCopula.computeCDFGradient
+      ~MarshallOlkinCopula.computeCharacteristicFunction
+      ~MarshallOlkinCopula.computeComplementaryCDF
+      ~MarshallOlkinCopula.computeConditionalCDF
+      ~MarshallOlkinCopula.computeConditionalDDF
+      ~MarshallOlkinCopula.computeConditionalPDF
+      ~MarshallOlkinCopula.computeConditionalQuantile
+      ~MarshallOlkinCopula.computeDDF
+      ~MarshallOlkinCopula.computeDensityGenerator
+      ~MarshallOlkinCopula.computeDensityGeneratorDerivative
+      ~MarshallOlkinCopula.computeDensityGeneratorSecondDerivative
+      ~MarshallOlkinCopula.computeEntropy
+      ~MarshallOlkinCopula.computeGeneratingFunction
+      ~MarshallOlkinCopula.computeInverseSurvivalFunction
+      ~MarshallOlkinCopula.computeLogCharacteristicFunction
+      ~MarshallOlkinCopula.computeLogGeneratingFunction
+      ~MarshallOlkinCopula.computeLogPDF
+      ~MarshallOlkinCopula.computeLogPDFGradient
+      ~MarshallOlkinCopula.computeMinimumVolumeInterval
+      ~MarshallOlkinCopula.computeMinimumVolumeIntervalWithMarginalProbability
+      ~MarshallOlkinCopula.computeMinimumVolumeLevelSet
+      ~MarshallOlkinCopula.computeMinimumVolumeLevelSetWithThreshold
+      ~MarshallOlkinCopula.computePDF
+      ~MarshallOlkinCopula.computePDFGradient
+      ~MarshallOlkinCopula.computeProbability
+      ~MarshallOlkinCopula.computeQuantile
+      ~MarshallOlkinCopula.computeRadialDistributionCDF
+      ~MarshallOlkinCopula.computeScalarQuantile
+      ~MarshallOlkinCopula.computeSequentialConditionalCDF
+      ~MarshallOlkinCopula.computeSequentialConditionalDDF
+      ~MarshallOlkinCopula.computeSequentialConditionalPDF
+      ~MarshallOlkinCopula.computeSequentialConditionalQuantile
+      ~MarshallOlkinCopula.computeSurvivalFunction
+      ~MarshallOlkinCopula.computeUnilateralConfidenceInterval
+      ~MarshallOlkinCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~MarshallOlkinCopula.cos
+      ~MarshallOlkinCopula.cosh
+      ~MarshallOlkinCopula.drawCDF
+      ~MarshallOlkinCopula.drawLogPDF
+      ~MarshallOlkinCopula.drawMarginal1DCDF
+      ~MarshallOlkinCopula.drawMarginal1DLogPDF
+      ~MarshallOlkinCopula.drawMarginal1DPDF
+      ~MarshallOlkinCopula.drawMarginal1DSurvivalFunction
+      ~MarshallOlkinCopula.drawMarginal2DCDF
+      ~MarshallOlkinCopula.drawMarginal2DLogPDF
+      ~MarshallOlkinCopula.drawMarginal2DPDF
+      ~MarshallOlkinCopula.drawMarginal2DSurvivalFunction
+      ~MarshallOlkinCopula.drawPDF
+      ~MarshallOlkinCopula.drawQuantile
+      ~MarshallOlkinCopula.drawSurvivalFunction
+      ~MarshallOlkinCopula.exp
+      ~MarshallOlkinCopula.getAlpha
+      ~MarshallOlkinCopula.getBeta
+      ~MarshallOlkinCopula.getCDFEpsilon
+      ~MarshallOlkinCopula.getCenteredMoment
+      ~MarshallOlkinCopula.getCholesky
+      ~MarshallOlkinCopula.getClassName
+      ~MarshallOlkinCopula.getCopula
+      ~MarshallOlkinCopula.getCorrelation
+      ~MarshallOlkinCopula.getCovariance
+      ~MarshallOlkinCopula.getDescription
+      ~MarshallOlkinCopula.getDimension
+      ~MarshallOlkinCopula.getDispersionIndicator
+      ~MarshallOlkinCopula.getId
+      ~MarshallOlkinCopula.getIntegrationNodesNumber
+      ~MarshallOlkinCopula.getInverseCholesky
+      ~MarshallOlkinCopula.getInverseIsoProbabilisticTransformation
+      ~MarshallOlkinCopula.getIsoProbabilisticTransformation
+      ~MarshallOlkinCopula.getKendallTau
+      ~MarshallOlkinCopula.getKurtosis
+      ~MarshallOlkinCopula.getLinearCorrelation
+      ~MarshallOlkinCopula.getMarginal
+      ~MarshallOlkinCopula.getMean
+      ~MarshallOlkinCopula.getMoment
+      ~MarshallOlkinCopula.getName
+      ~MarshallOlkinCopula.getPDFEpsilon
+      ~MarshallOlkinCopula.getParameter
+      ~MarshallOlkinCopula.getParameterDescription
+      ~MarshallOlkinCopula.getParameterDimension
+      ~MarshallOlkinCopula.getParametersCollection
+      ~MarshallOlkinCopula.getPearsonCorrelation
+      ~MarshallOlkinCopula.getPositionIndicator
+      ~MarshallOlkinCopula.getProbabilities
+      ~MarshallOlkinCopula.getRange
+      ~MarshallOlkinCopula.getRealization
+      ~MarshallOlkinCopula.getRoughness
+      ~MarshallOlkinCopula.getSample
+      ~MarshallOlkinCopula.getShadowedId
+      ~MarshallOlkinCopula.getShapeMatrix
+      ~MarshallOlkinCopula.getShiftedMoment
+      ~MarshallOlkinCopula.getSingularities
+      ~MarshallOlkinCopula.getSkewness
+      ~MarshallOlkinCopula.getSpearmanCorrelation
+      ~MarshallOlkinCopula.getStandardDeviation
+      ~MarshallOlkinCopula.getStandardDistribution
+      ~MarshallOlkinCopula.getStandardMoment
+      ~MarshallOlkinCopula.getStandardRepresentative
+      ~MarshallOlkinCopula.getSupport
+      ~MarshallOlkinCopula.getVisibility
+      ~MarshallOlkinCopula.hasEllipticalCopula
+      ~MarshallOlkinCopula.hasIndependentCopula
+      ~MarshallOlkinCopula.hasName
+      ~MarshallOlkinCopula.hasVisibleName
+      ~MarshallOlkinCopula.inverse
+      ~MarshallOlkinCopula.isContinuous
+      ~MarshallOlkinCopula.isCopula
+      ~MarshallOlkinCopula.isDiscrete
+      ~MarshallOlkinCopula.isElliptical
+      ~MarshallOlkinCopula.isIntegral
+      ~MarshallOlkinCopula.ln
+      ~MarshallOlkinCopula.log
+      ~MarshallOlkinCopula.setAlpha
+      ~MarshallOlkinCopula.setBeta
+      ~MarshallOlkinCopula.setDescription
+      ~MarshallOlkinCopula.setIntegrationNodesNumber
+      ~MarshallOlkinCopula.setName
+      ~MarshallOlkinCopula.setParameter
+      ~MarshallOlkinCopula.setParametersCollection
+      ~MarshallOlkinCopula.setShadowedId
+      ~MarshallOlkinCopula.setVisibility
+      ~MarshallOlkinCopula.sin
+      ~MarshallOlkinCopula.sinh
+      ~MarshallOlkinCopula.sqr
+      ~MarshallOlkinCopula.sqrt
+      ~MarshallOlkinCopula.tan
+      ~MarshallOlkinCopula.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MarshallOlkinCopula.thisown
+   
    

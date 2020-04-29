@@ -1,5 +1,5 @@
-get_line_col
-=====================================
+openturns.coupling\_tools.get\_line\_col
+========================================
 
 .. currentmodule:: openturns.coupling_tools
 

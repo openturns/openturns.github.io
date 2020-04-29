@@ -1,41 +1,5 @@
-ClaytonCopula
-==============================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.ClaytonCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
-        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
-        copula = ot.EmpiricalBernsteinCopula(sample, 4)
-    elif ot.ClaytonCopula().__class__.__name__ == 'ExtremeValueCopula':
-        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-    elif ot.ClaytonCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
-        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
-    elif ot.ClaytonCopula().__class__.__name__ == 'NormalCopula':
-        R = ot.CorrelationMatrix(2)
-        R[1, 0] = 0.8
-        copula = ot.NormalCopula(R)
-    elif ot.ClaytonCopula().__class__.__name__ == 'SklarCopula':
-        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
-        copula =  ot.SklarCopula(student)
-    else:
-        copula = ot.ClaytonCopula()
-    if copula.getDimension() == 1:
-        copula = ot.ClaytonCopula(2)
-    copula.setDescription(['$u_1$', '$u_2$'])
-    pdf_graph = copula.drawPDF()
-    cdf_graph = copula.drawCDF()
-    fig = plt.figure(figsize=(10, 4))
-    pdf_axis = fig.add_subplot(121)
-    cdf_axis = fig.add_subplot(122)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
-    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
-    title = str(copula)[:100].split('\n')[0]
-    fig.suptitle(title)
+openturns.ClaytonCopula
+=======================
 
 .. currentmodule:: openturns
 
@@ -43,4 +7,161 @@ ClaytonCopula
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClaytonCopula.__init__
+      ~ClaytonCopula.abs
+      ~ClaytonCopula.acos
+      ~ClaytonCopula.acosh
+      ~ClaytonCopula.asin
+      ~ClaytonCopula.asinh
+      ~ClaytonCopula.atan
+      ~ClaytonCopula.atanh
+      ~ClaytonCopula.cbrt
+      ~ClaytonCopula.computeArchimedeanGenerator
+      ~ClaytonCopula.computeArchimedeanGeneratorDerivative
+      ~ClaytonCopula.computeArchimedeanGeneratorSecondDerivative
+      ~ClaytonCopula.computeBilateralConfidenceInterval
+      ~ClaytonCopula.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~ClaytonCopula.computeCDF
+      ~ClaytonCopula.computeCDFGradient
+      ~ClaytonCopula.computeCharacteristicFunction
+      ~ClaytonCopula.computeComplementaryCDF
+      ~ClaytonCopula.computeConditionalCDF
+      ~ClaytonCopula.computeConditionalDDF
+      ~ClaytonCopula.computeConditionalPDF
+      ~ClaytonCopula.computeConditionalQuantile
+      ~ClaytonCopula.computeDDF
+      ~ClaytonCopula.computeDensityGenerator
+      ~ClaytonCopula.computeDensityGeneratorDerivative
+      ~ClaytonCopula.computeDensityGeneratorSecondDerivative
+      ~ClaytonCopula.computeEntropy
+      ~ClaytonCopula.computeGeneratingFunction
+      ~ClaytonCopula.computeInverseArchimedeanGenerator
+      ~ClaytonCopula.computeInverseSurvivalFunction
+      ~ClaytonCopula.computeLogCharacteristicFunction
+      ~ClaytonCopula.computeLogGeneratingFunction
+      ~ClaytonCopula.computeLogPDF
+      ~ClaytonCopula.computeLogPDFGradient
+      ~ClaytonCopula.computeMinimumVolumeInterval
+      ~ClaytonCopula.computeMinimumVolumeIntervalWithMarginalProbability
+      ~ClaytonCopula.computeMinimumVolumeLevelSet
+      ~ClaytonCopula.computeMinimumVolumeLevelSetWithThreshold
+      ~ClaytonCopula.computePDF
+      ~ClaytonCopula.computePDFGradient
+      ~ClaytonCopula.computeProbability
+      ~ClaytonCopula.computeQuantile
+      ~ClaytonCopula.computeRadialDistributionCDF
+      ~ClaytonCopula.computeScalarQuantile
+      ~ClaytonCopula.computeSequentialConditionalCDF
+      ~ClaytonCopula.computeSequentialConditionalDDF
+      ~ClaytonCopula.computeSequentialConditionalPDF
+      ~ClaytonCopula.computeSequentialConditionalQuantile
+      ~ClaytonCopula.computeSurvivalFunction
+      ~ClaytonCopula.computeUnilateralConfidenceInterval
+      ~ClaytonCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~ClaytonCopula.cos
+      ~ClaytonCopula.cosh
+      ~ClaytonCopula.drawCDF
+      ~ClaytonCopula.drawLogPDF
+      ~ClaytonCopula.drawMarginal1DCDF
+      ~ClaytonCopula.drawMarginal1DLogPDF
+      ~ClaytonCopula.drawMarginal1DPDF
+      ~ClaytonCopula.drawMarginal1DSurvivalFunction
+      ~ClaytonCopula.drawMarginal2DCDF
+      ~ClaytonCopula.drawMarginal2DLogPDF
+      ~ClaytonCopula.drawMarginal2DPDF
+      ~ClaytonCopula.drawMarginal2DSurvivalFunction
+      ~ClaytonCopula.drawPDF
+      ~ClaytonCopula.drawQuantile
+      ~ClaytonCopula.drawSurvivalFunction
+      ~ClaytonCopula.exp
+      ~ClaytonCopula.getCDFEpsilon
+      ~ClaytonCopula.getCenteredMoment
+      ~ClaytonCopula.getCholesky
+      ~ClaytonCopula.getClassName
+      ~ClaytonCopula.getCopula
+      ~ClaytonCopula.getCorrelation
+      ~ClaytonCopula.getCovariance
+      ~ClaytonCopula.getDescription
+      ~ClaytonCopula.getDimension
+      ~ClaytonCopula.getDispersionIndicator
+      ~ClaytonCopula.getId
+      ~ClaytonCopula.getIntegrationNodesNumber
+      ~ClaytonCopula.getInverseCholesky
+      ~ClaytonCopula.getInverseIsoProbabilisticTransformation
+      ~ClaytonCopula.getIsoProbabilisticTransformation
+      ~ClaytonCopula.getKendallTau
+      ~ClaytonCopula.getKurtosis
+      ~ClaytonCopula.getLinearCorrelation
+      ~ClaytonCopula.getMarginal
+      ~ClaytonCopula.getMean
+      ~ClaytonCopula.getMoment
+      ~ClaytonCopula.getName
+      ~ClaytonCopula.getPDFEpsilon
+      ~ClaytonCopula.getParameter
+      ~ClaytonCopula.getParameterDescription
+      ~ClaytonCopula.getParameterDimension
+      ~ClaytonCopula.getParametersCollection
+      ~ClaytonCopula.getPearsonCorrelation
+      ~ClaytonCopula.getPositionIndicator
+      ~ClaytonCopula.getProbabilities
+      ~ClaytonCopula.getRange
+      ~ClaytonCopula.getRealization
+      ~ClaytonCopula.getRoughness
+      ~ClaytonCopula.getSample
+      ~ClaytonCopula.getShadowedId
+      ~ClaytonCopula.getShapeMatrix
+      ~ClaytonCopula.getShiftedMoment
+      ~ClaytonCopula.getSingularities
+      ~ClaytonCopula.getSkewness
+      ~ClaytonCopula.getSpearmanCorrelation
+      ~ClaytonCopula.getStandardDeviation
+      ~ClaytonCopula.getStandardDistribution
+      ~ClaytonCopula.getStandardMoment
+      ~ClaytonCopula.getStandardRepresentative
+      ~ClaytonCopula.getSupport
+      ~ClaytonCopula.getTheta
+      ~ClaytonCopula.getVisibility
+      ~ClaytonCopula.hasEllipticalCopula
+      ~ClaytonCopula.hasIndependentCopula
+      ~ClaytonCopula.hasName
+      ~ClaytonCopula.hasVisibleName
+      ~ClaytonCopula.inverse
+      ~ClaytonCopula.isContinuous
+      ~ClaytonCopula.isCopula
+      ~ClaytonCopula.isDiscrete
+      ~ClaytonCopula.isElliptical
+      ~ClaytonCopula.isIntegral
+      ~ClaytonCopula.ln
+      ~ClaytonCopula.log
+      ~ClaytonCopula.setDescription
+      ~ClaytonCopula.setIntegrationNodesNumber
+      ~ClaytonCopula.setName
+      ~ClaytonCopula.setParameter
+      ~ClaytonCopula.setParametersCollection
+      ~ClaytonCopula.setShadowedId
+      ~ClaytonCopula.setTheta
+      ~ClaytonCopula.setVisibility
+      ~ClaytonCopula.sin
+      ~ClaytonCopula.sinh
+      ~ClaytonCopula.sqr
+      ~ClaytonCopula.sqrt
+      ~ClaytonCopula.tan
+      ~ClaytonCopula.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClaytonCopula.thisown
+   
    

@@ -1,5 +1,5 @@
-DistFunc_kFactor
-==========================
+openturns.DistFunc\_kFactor
+===========================
 
 .. currentmodule:: openturns
 

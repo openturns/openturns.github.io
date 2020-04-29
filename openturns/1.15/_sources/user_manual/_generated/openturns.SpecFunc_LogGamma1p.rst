@@ -1,5 +1,5 @@
-SpecFunc_LogGamma1p
-=============================
+openturns.SpecFunc\_LogGamma1p
+==============================
 
 .. currentmodule:: openturns
 

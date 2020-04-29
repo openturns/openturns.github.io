@@ -1,8 +1,5 @@
-VisualTest_DrawKendallPlot
-====================================
-
-.. plot:: pyplots/VisualTest_DrawKendallPlot.py
-    :include-source: False
+openturns.VisualTest\_DrawKendallPlot
+=====================================
 
 .. currentmodule:: openturns
 

@@ -1,4 +1,4 @@
-PythonDistribution
+openturns.PythonDistribution
 ============================
 
 .. currentmodule:: openturns
@@ -7,5 +7,18 @@ PythonDistribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PythonDistribution.__init__
+      ~PythonDistribution.computeCDF
+      ~PythonDistribution.getDimension
+   
    
 
+   
+   
+   

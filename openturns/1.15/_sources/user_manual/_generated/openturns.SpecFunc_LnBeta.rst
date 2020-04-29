@@ -1,5 +1,5 @@
-SpecFunc_LnBeta
-=========================
+openturns.SpecFunc\_LnBeta
+==========================
 
 .. currentmodule:: openturns
 

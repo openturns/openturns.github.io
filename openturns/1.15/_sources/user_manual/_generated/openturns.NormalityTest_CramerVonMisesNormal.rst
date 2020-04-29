@@ -1,5 +1,5 @@
-NormalityTest_CramerVonMisesNormal
-============================================
+openturns.NormalityTest\_CramerVonMisesNormal
+=============================================
 
 .. currentmodule:: openturns
 

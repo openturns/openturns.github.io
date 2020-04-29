@@ -1,43 +1,5 @@
-HistogramFactory
-====================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    ot.RandomGenerator.SetSeed(0)
-    factory = ot.HistogramFactory()
-    ref = factory.build()
-    dimension = ref.getDimension()
-    if dimension <= 2:
-        if dimension == 1:
-            sample = ref.getSample(50)
-            distribution = factory.build(sample)
-            distribution.setDescription(['$t$'])
-            pdf_graph = distribution.drawPDF(256)
-            cloud = ot.Cloud(sample, ot.Sample(sample.getSize(), 1))
-            cloud.setColor('blue')
-            cloud.setPointStyle('fcircle')
-            pdf_graph.add(cloud)
-            pdf_graph.setTitle(str(distribution))
-            fig = plt.figure(figsize=(10, 4))
-            pdf_axis = fig.add_subplot(111)
-            View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        else:
-            sample = ref.getSample(500)
-            distribution = factory.build(sample)
-            distribution.setDescription(['$t_0$', '$t_1$'])
-            pdf_graph = distribution.drawPDF([256]*2)
-            cloud = ot.Cloud(sample)
-            cloud.setColor('red')
-            cloud.setPointStyle('fcircle')
-            pdf_graph.add(cloud)
-            pdf_graph.setTitle(str(distribution))
-            fig = plt.figure(figsize=(10, 4))
-            pdf_axis = fig.add_subplot(111)
-            View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.HistogramFactory
+==========================
 
 .. currentmodule:: openturns
 
@@ -45,4 +7,38 @@ HistogramFactory
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HistogramFactory.__init__
+      ~HistogramFactory.build
+      ~HistogramFactory.buildAsHistogram
+      ~HistogramFactory.buildEstimator
+      ~HistogramFactory.computeBandwidth
+      ~HistogramFactory.getBootstrapSize
+      ~HistogramFactory.getClassName
+      ~HistogramFactory.getId
+      ~HistogramFactory.getName
+      ~HistogramFactory.getShadowedId
+      ~HistogramFactory.getVisibility
+      ~HistogramFactory.hasName
+      ~HistogramFactory.hasVisibleName
+      ~HistogramFactory.setBootstrapSize
+      ~HistogramFactory.setName
+      ~HistogramFactory.setShadowedId
+      ~HistogramFactory.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HistogramFactory.thisown
+   
    

@@ -1,5 +1,5 @@
-CorrelationAnalysis_PCC
-=================================
+openturns.CorrelationAnalysis\_PCC
+==================================
 
 .. currentmodule:: openturns
 

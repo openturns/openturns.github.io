@@ -1,8 +1,5 @@
-VisualTest_DrawLinearModelResidual
-============================================
-
-.. plot:: pyplots/VisualTest_DrawLinearModelResidual.py
-    :include-source: False
+openturns.VisualTest\_DrawLinearModelResidual
+=============================================
 
 .. currentmodule:: openturns
 

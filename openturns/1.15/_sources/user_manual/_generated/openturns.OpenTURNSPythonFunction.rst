@@ -1,4 +1,4 @@
-OpenTURNSPythonFunction
+openturns.OpenTURNSPythonFunction
 =================================
 
 .. currentmodule:: openturns
@@ -7,5 +7,22 @@ OpenTURNSPythonFunction
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OpenTURNSPythonFunction.__init__
+      ~OpenTURNSPythonFunction.getInputDescription
+      ~OpenTURNSPythonFunction.getInputDimension
+      ~OpenTURNSPythonFunction.getOutputDescription
+      ~OpenTURNSPythonFunction.getOutputDimension
+      ~OpenTURNSPythonFunction.setInputDescription
+      ~OpenTURNSPythonFunction.setOutputDescription
+   
    
 
+   
+   
+   

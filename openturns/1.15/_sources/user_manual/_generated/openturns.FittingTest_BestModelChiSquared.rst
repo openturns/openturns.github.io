@@ -1,5 +1,5 @@
-FittingTest_BestModelChiSquared
-=========================================
+openturns.FittingTest\_BestModelChiSquared
+==========================================
 
 .. currentmodule:: openturns
 
