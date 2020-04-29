@@ -1,69 +1,5 @@
-Student distribution
-==================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Student().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.Student().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.Student().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.Student().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.Student().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.Student().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.Student().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.Student().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.Student().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.Student().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.Student().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.Student().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.Student().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.Student()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.Student
+=================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,167 @@ Student distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Student.__init__
+      ~Student.abs
+      ~Student.acos
+      ~Student.acosh
+      ~Student.asin
+      ~Student.asinh
+      ~Student.atan
+      ~Student.atanh
+      ~Student.cbrt
+      ~Student.computeBilateralConfidenceInterval
+      ~Student.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~Student.computeCDF
+      ~Student.computeCDFGradient
+      ~Student.computeCharacteristicFunction
+      ~Student.computeComplementaryCDF
+      ~Student.computeConditionalCDF
+      ~Student.computeConditionalDDF
+      ~Student.computeConditionalPDF
+      ~Student.computeConditionalQuantile
+      ~Student.computeDDF
+      ~Student.computeDensityGenerator
+      ~Student.computeDensityGeneratorDerivative
+      ~Student.computeDensityGeneratorSecondDerivative
+      ~Student.computeEntropy
+      ~Student.computeGeneratingFunction
+      ~Student.computeInverseSurvivalFunction
+      ~Student.computeLogCharacteristicFunction
+      ~Student.computeLogDensityGenerator
+      ~Student.computeLogGeneratingFunction
+      ~Student.computeLogPDF
+      ~Student.computeLogPDFGradient
+      ~Student.computeMinimumVolumeInterval
+      ~Student.computeMinimumVolumeIntervalWithMarginalProbability
+      ~Student.computeMinimumVolumeLevelSet
+      ~Student.computeMinimumVolumeLevelSetWithThreshold
+      ~Student.computePDF
+      ~Student.computePDFGradient
+      ~Student.computeProbability
+      ~Student.computeQuantile
+      ~Student.computeRadialDistributionCDF
+      ~Student.computeScalarQuantile
+      ~Student.computeSequentialConditionalCDF
+      ~Student.computeSequentialConditionalDDF
+      ~Student.computeSequentialConditionalPDF
+      ~Student.computeSequentialConditionalQuantile
+      ~Student.computeSurvivalFunction
+      ~Student.computeUnilateralConfidenceInterval
+      ~Student.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~Student.cos
+      ~Student.cosh
+      ~Student.denormalize
+      ~Student.drawCDF
+      ~Student.drawLogPDF
+      ~Student.drawMarginal1DCDF
+      ~Student.drawMarginal1DLogPDF
+      ~Student.drawMarginal1DPDF
+      ~Student.drawMarginal1DSurvivalFunction
+      ~Student.drawMarginal2DCDF
+      ~Student.drawMarginal2DLogPDF
+      ~Student.drawMarginal2DPDF
+      ~Student.drawMarginal2DSurvivalFunction
+      ~Student.drawPDF
+      ~Student.drawQuantile
+      ~Student.drawSurvivalFunction
+      ~Student.exp
+      ~Student.getCDFEpsilon
+      ~Student.getCenteredMoment
+      ~Student.getCholesky
+      ~Student.getClassName
+      ~Student.getCopula
+      ~Student.getCorrelation
+      ~Student.getCovariance
+      ~Student.getDescription
+      ~Student.getDimension
+      ~Student.getDispersionIndicator
+      ~Student.getId
+      ~Student.getIntegrationNodesNumber
+      ~Student.getInverseCholesky
+      ~Student.getInverseCorrelation
+      ~Student.getInverseIsoProbabilisticTransformation
+      ~Student.getIsoProbabilisticTransformation
+      ~Student.getKendallTau
+      ~Student.getKurtosis
+      ~Student.getLinearCorrelation
+      ~Student.getMarginal
+      ~Student.getMean
+      ~Student.getMoment
+      ~Student.getMu
+      ~Student.getName
+      ~Student.getNu
+      ~Student.getPDFEpsilon
+      ~Student.getParameter
+      ~Student.getParameterDescription
+      ~Student.getParameterDimension
+      ~Student.getParametersCollection
+      ~Student.getPearsonCorrelation
+      ~Student.getPositionIndicator
+      ~Student.getProbabilities
+      ~Student.getRange
+      ~Student.getRealization
+      ~Student.getRoughness
+      ~Student.getSample
+      ~Student.getShadowedId
+      ~Student.getShapeMatrix
+      ~Student.getShiftedMoment
+      ~Student.getSigma
+      ~Student.getSingularities
+      ~Student.getSkewness
+      ~Student.getSpearmanCorrelation
+      ~Student.getStandardDeviation
+      ~Student.getStandardDistribution
+      ~Student.getStandardMoment
+      ~Student.getStandardRepresentative
+      ~Student.getSupport
+      ~Student.getVisibility
+      ~Student.hasEllipticalCopula
+      ~Student.hasIndependentCopula
+      ~Student.hasName
+      ~Student.hasVisibleName
+      ~Student.inverse
+      ~Student.isContinuous
+      ~Student.isCopula
+      ~Student.isDiscrete
+      ~Student.isElliptical
+      ~Student.isIntegral
+      ~Student.ln
+      ~Student.log
+      ~Student.normalize
+      ~Student.setCorrelation
+      ~Student.setDescription
+      ~Student.setIntegrationNodesNumber
+      ~Student.setMean
+      ~Student.setMu
+      ~Student.setName
+      ~Student.setNu
+      ~Student.setParameter
+      ~Student.setParametersCollection
+      ~Student.setShadowedId
+      ~Student.setSigma
+      ~Student.setVisibility
+      ~Student.sin
+      ~Student.sinh
+      ~Student.sqr
+      ~Student.sqrt
+      ~Student.tan
+      ~Student.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Student.thisown
+   
    

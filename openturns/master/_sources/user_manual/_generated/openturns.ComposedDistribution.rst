@@ -1,69 +1,5 @@
-ComposedDistribution distribution
-============================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.ComposedDistribution().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.ComposedDistribution().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.ComposedDistribution().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.ComposedDistribution().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.ComposedDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.ComposedDistribution().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.ComposedDistribution().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.ComposedDistribution().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.ComposedDistribution().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.ComposedDistribution().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.ComposedDistribution().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.ComposedDistribution().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.ComposedDistribution().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.ComposedDistribution()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.ComposedDistribution
+==============================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,158 @@ ComposedDistribution distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ComposedDistribution.__init__
+      ~ComposedDistribution.abs
+      ~ComposedDistribution.acos
+      ~ComposedDistribution.acosh
+      ~ComposedDistribution.asin
+      ~ComposedDistribution.asinh
+      ~ComposedDistribution.atan
+      ~ComposedDistribution.atanh
+      ~ComposedDistribution.cbrt
+      ~ComposedDistribution.computeBilateralConfidenceInterval
+      ~ComposedDistribution.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~ComposedDistribution.computeCDF
+      ~ComposedDistribution.computeCDFGradient
+      ~ComposedDistribution.computeCharacteristicFunction
+      ~ComposedDistribution.computeComplementaryCDF
+      ~ComposedDistribution.computeConditionalCDF
+      ~ComposedDistribution.computeConditionalDDF
+      ~ComposedDistribution.computeConditionalPDF
+      ~ComposedDistribution.computeConditionalQuantile
+      ~ComposedDistribution.computeDDF
+      ~ComposedDistribution.computeDensityGenerator
+      ~ComposedDistribution.computeDensityGeneratorDerivative
+      ~ComposedDistribution.computeDensityGeneratorSecondDerivative
+      ~ComposedDistribution.computeEntropy
+      ~ComposedDistribution.computeGeneratingFunction
+      ~ComposedDistribution.computeInverseSurvivalFunction
+      ~ComposedDistribution.computeLogCharacteristicFunction
+      ~ComposedDistribution.computeLogGeneratingFunction
+      ~ComposedDistribution.computeLogPDF
+      ~ComposedDistribution.computeLogPDFGradient
+      ~ComposedDistribution.computeMinimumVolumeInterval
+      ~ComposedDistribution.computeMinimumVolumeIntervalWithMarginalProbability
+      ~ComposedDistribution.computeMinimumVolumeLevelSet
+      ~ComposedDistribution.computeMinimumVolumeLevelSetWithThreshold
+      ~ComposedDistribution.computePDF
+      ~ComposedDistribution.computePDFGradient
+      ~ComposedDistribution.computeProbability
+      ~ComposedDistribution.computeQuantile
+      ~ComposedDistribution.computeRadialDistributionCDF
+      ~ComposedDistribution.computeScalarQuantile
+      ~ComposedDistribution.computeSequentialConditionalCDF
+      ~ComposedDistribution.computeSequentialConditionalDDF
+      ~ComposedDistribution.computeSequentialConditionalPDF
+      ~ComposedDistribution.computeSequentialConditionalQuantile
+      ~ComposedDistribution.computeSurvivalFunction
+      ~ComposedDistribution.computeUnilateralConfidenceInterval
+      ~ComposedDistribution.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~ComposedDistribution.cos
+      ~ComposedDistribution.cosh
+      ~ComposedDistribution.drawCDF
+      ~ComposedDistribution.drawLogPDF
+      ~ComposedDistribution.drawMarginal1DCDF
+      ~ComposedDistribution.drawMarginal1DLogPDF
+      ~ComposedDistribution.drawMarginal1DPDF
+      ~ComposedDistribution.drawMarginal1DSurvivalFunction
+      ~ComposedDistribution.drawMarginal2DCDF
+      ~ComposedDistribution.drawMarginal2DLogPDF
+      ~ComposedDistribution.drawMarginal2DPDF
+      ~ComposedDistribution.drawMarginal2DSurvivalFunction
+      ~ComposedDistribution.drawPDF
+      ~ComposedDistribution.drawQuantile
+      ~ComposedDistribution.drawSurvivalFunction
+      ~ComposedDistribution.exp
+      ~ComposedDistribution.getCDFEpsilon
+      ~ComposedDistribution.getCenteredMoment
+      ~ComposedDistribution.getCholesky
+      ~ComposedDistribution.getClassName
+      ~ComposedDistribution.getCopula
+      ~ComposedDistribution.getCorrelation
+      ~ComposedDistribution.getCovariance
+      ~ComposedDistribution.getDescription
+      ~ComposedDistribution.getDimension
+      ~ComposedDistribution.getDispersionIndicator
+      ~ComposedDistribution.getDistributionCollection
+      ~ComposedDistribution.getId
+      ~ComposedDistribution.getIntegrationNodesNumber
+      ~ComposedDistribution.getInverseCholesky
+      ~ComposedDistribution.getInverseIsoProbabilisticTransformation
+      ~ComposedDistribution.getIsoProbabilisticTransformation
+      ~ComposedDistribution.getKendallTau
+      ~ComposedDistribution.getKurtosis
+      ~ComposedDistribution.getLinearCorrelation
+      ~ComposedDistribution.getMarginal
+      ~ComposedDistribution.getMean
+      ~ComposedDistribution.getMoment
+      ~ComposedDistribution.getName
+      ~ComposedDistribution.getPDFEpsilon
+      ~ComposedDistribution.getParameter
+      ~ComposedDistribution.getParameterDescription
+      ~ComposedDistribution.getParameterDimension
+      ~ComposedDistribution.getParametersCollection
+      ~ComposedDistribution.getPearsonCorrelation
+      ~ComposedDistribution.getPositionIndicator
+      ~ComposedDistribution.getProbabilities
+      ~ComposedDistribution.getRange
+      ~ComposedDistribution.getRealization
+      ~ComposedDistribution.getRoughness
+      ~ComposedDistribution.getSample
+      ~ComposedDistribution.getShadowedId
+      ~ComposedDistribution.getShapeMatrix
+      ~ComposedDistribution.getShiftedMoment
+      ~ComposedDistribution.getSingularities
+      ~ComposedDistribution.getSkewness
+      ~ComposedDistribution.getSpearmanCorrelation
+      ~ComposedDistribution.getStandardDeviation
+      ~ComposedDistribution.getStandardDistribution
+      ~ComposedDistribution.getStandardMoment
+      ~ComposedDistribution.getStandardRepresentative
+      ~ComposedDistribution.getSupport
+      ~ComposedDistribution.getVisibility
+      ~ComposedDistribution.hasEllipticalCopula
+      ~ComposedDistribution.hasIndependentCopula
+      ~ComposedDistribution.hasName
+      ~ComposedDistribution.hasVisibleName
+      ~ComposedDistribution.inverse
+      ~ComposedDistribution.isContinuous
+      ~ComposedDistribution.isCopula
+      ~ComposedDistribution.isDiscrete
+      ~ComposedDistribution.isElliptical
+      ~ComposedDistribution.isIntegral
+      ~ComposedDistribution.ln
+      ~ComposedDistribution.log
+      ~ComposedDistribution.setCopula
+      ~ComposedDistribution.setDescription
+      ~ComposedDistribution.setDistributionCollection
+      ~ComposedDistribution.setIntegrationNodesNumber
+      ~ComposedDistribution.setName
+      ~ComposedDistribution.setParameter
+      ~ComposedDistribution.setParametersCollection
+      ~ComposedDistribution.setShadowedId
+      ~ComposedDistribution.setVisibility
+      ~ComposedDistribution.sin
+      ~ComposedDistribution.sinh
+      ~ComposedDistribution.sqr
+      ~ComposedDistribution.sqrt
+      ~ComposedDistribution.tan
+      ~ComposedDistribution.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComposedDistribution.thisown
+   
    

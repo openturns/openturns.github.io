@@ -1,69 +1,5 @@
-ChiSquare distribution
-======================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.ChiSquare().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.ChiSquare().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.ChiSquare().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.ChiSquare().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.ChiSquare().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.ChiSquare().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.ChiSquare().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.ChiSquare().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.ChiSquare().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.ChiSquare().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.ChiSquare().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.ChiSquare().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.ChiSquare().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.ChiSquare()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.ChiSquare
+===================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,157 @@ ChiSquare distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ChiSquare.__init__
+      ~ChiSquare.abs
+      ~ChiSquare.acos
+      ~ChiSquare.acosh
+      ~ChiSquare.asin
+      ~ChiSquare.asinh
+      ~ChiSquare.atan
+      ~ChiSquare.atanh
+      ~ChiSquare.cbrt
+      ~ChiSquare.computeBilateralConfidenceInterval
+      ~ChiSquare.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~ChiSquare.computeCDF
+      ~ChiSquare.computeCDFGradient
+      ~ChiSquare.computeCharacteristicFunction
+      ~ChiSquare.computeComplementaryCDF
+      ~ChiSquare.computeConditionalCDF
+      ~ChiSquare.computeConditionalDDF
+      ~ChiSquare.computeConditionalPDF
+      ~ChiSquare.computeConditionalQuantile
+      ~ChiSquare.computeDDF
+      ~ChiSquare.computeDensityGenerator
+      ~ChiSquare.computeDensityGeneratorDerivative
+      ~ChiSquare.computeDensityGeneratorSecondDerivative
+      ~ChiSquare.computeEntropy
+      ~ChiSquare.computeGeneratingFunction
+      ~ChiSquare.computeInverseSurvivalFunction
+      ~ChiSquare.computeLogCharacteristicFunction
+      ~ChiSquare.computeLogGeneratingFunction
+      ~ChiSquare.computeLogPDF
+      ~ChiSquare.computeLogPDFGradient
+      ~ChiSquare.computeMinimumVolumeInterval
+      ~ChiSquare.computeMinimumVolumeIntervalWithMarginalProbability
+      ~ChiSquare.computeMinimumVolumeLevelSet
+      ~ChiSquare.computeMinimumVolumeLevelSetWithThreshold
+      ~ChiSquare.computePDF
+      ~ChiSquare.computePDFGradient
+      ~ChiSquare.computeProbability
+      ~ChiSquare.computeQuantile
+      ~ChiSquare.computeRadialDistributionCDF
+      ~ChiSquare.computeScalarQuantile
+      ~ChiSquare.computeSequentialConditionalCDF
+      ~ChiSquare.computeSequentialConditionalDDF
+      ~ChiSquare.computeSequentialConditionalPDF
+      ~ChiSquare.computeSequentialConditionalQuantile
+      ~ChiSquare.computeSurvivalFunction
+      ~ChiSquare.computeUnilateralConfidenceInterval
+      ~ChiSquare.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~ChiSquare.cos
+      ~ChiSquare.cosh
+      ~ChiSquare.drawCDF
+      ~ChiSquare.drawLogPDF
+      ~ChiSquare.drawMarginal1DCDF
+      ~ChiSquare.drawMarginal1DLogPDF
+      ~ChiSquare.drawMarginal1DPDF
+      ~ChiSquare.drawMarginal1DSurvivalFunction
+      ~ChiSquare.drawMarginal2DCDF
+      ~ChiSquare.drawMarginal2DLogPDF
+      ~ChiSquare.drawMarginal2DPDF
+      ~ChiSquare.drawMarginal2DSurvivalFunction
+      ~ChiSquare.drawPDF
+      ~ChiSquare.drawQuantile
+      ~ChiSquare.drawSurvivalFunction
+      ~ChiSquare.exp
+      ~ChiSquare.getCDFEpsilon
+      ~ChiSquare.getCenteredMoment
+      ~ChiSquare.getCholesky
+      ~ChiSquare.getClassName
+      ~ChiSquare.getCopula
+      ~ChiSquare.getCorrelation
+      ~ChiSquare.getCovariance
+      ~ChiSquare.getDescription
+      ~ChiSquare.getDimension
+      ~ChiSquare.getDispersionIndicator
+      ~ChiSquare.getId
+      ~ChiSquare.getIntegrationNodesNumber
+      ~ChiSquare.getInverseCholesky
+      ~ChiSquare.getInverseIsoProbabilisticTransformation
+      ~ChiSquare.getIsoProbabilisticTransformation
+      ~ChiSquare.getKendallTau
+      ~ChiSquare.getKurtosis
+      ~ChiSquare.getLinearCorrelation
+      ~ChiSquare.getMarginal
+      ~ChiSquare.getMean
+      ~ChiSquare.getMoment
+      ~ChiSquare.getName
+      ~ChiSquare.getNu
+      ~ChiSquare.getPDFEpsilon
+      ~ChiSquare.getParameter
+      ~ChiSquare.getParameterDescription
+      ~ChiSquare.getParameterDimension
+      ~ChiSquare.getParametersCollection
+      ~ChiSquare.getPearsonCorrelation
+      ~ChiSquare.getPositionIndicator
+      ~ChiSquare.getProbabilities
+      ~ChiSquare.getRange
+      ~ChiSquare.getRealization
+      ~ChiSquare.getRoughness
+      ~ChiSquare.getSample
+      ~ChiSquare.getShadowedId
+      ~ChiSquare.getShapeMatrix
+      ~ChiSquare.getShiftedMoment
+      ~ChiSquare.getSingularities
+      ~ChiSquare.getSkewness
+      ~ChiSquare.getSpearmanCorrelation
+      ~ChiSquare.getStandardDeviation
+      ~ChiSquare.getStandardDistribution
+      ~ChiSquare.getStandardMoment
+      ~ChiSquare.getStandardRepresentative
+      ~ChiSquare.getSupport
+      ~ChiSquare.getVisibility
+      ~ChiSquare.hasEllipticalCopula
+      ~ChiSquare.hasIndependentCopula
+      ~ChiSquare.hasName
+      ~ChiSquare.hasVisibleName
+      ~ChiSquare.inverse
+      ~ChiSquare.isContinuous
+      ~ChiSquare.isCopula
+      ~ChiSquare.isDiscrete
+      ~ChiSquare.isElliptical
+      ~ChiSquare.isIntegral
+      ~ChiSquare.ln
+      ~ChiSquare.log
+      ~ChiSquare.setDescription
+      ~ChiSquare.setIntegrationNodesNumber
+      ~ChiSquare.setName
+      ~ChiSquare.setNu
+      ~ChiSquare.setParameter
+      ~ChiSquare.setParametersCollection
+      ~ChiSquare.setShadowedId
+      ~ChiSquare.setVisibility
+      ~ChiSquare.sin
+      ~ChiSquare.sinh
+      ~ChiSquare.sqr
+      ~ChiSquare.sqrt
+      ~ChiSquare.tan
+      ~ChiSquare.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ChiSquare.thisown
+   
    

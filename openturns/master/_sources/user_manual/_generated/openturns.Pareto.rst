@@ -1,69 +1,5 @@
-Pareto distribution
-================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Pareto().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.Pareto().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.Pareto().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.Pareto().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.Pareto().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.Pareto().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.Pareto().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.Pareto().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.Pareto().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.Pareto().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.Pareto().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.Pareto().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.Pareto().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.Pareto()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.Pareto
+================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,161 @@ Pareto distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Pareto.__init__
+      ~Pareto.abs
+      ~Pareto.acos
+      ~Pareto.acosh
+      ~Pareto.asin
+      ~Pareto.asinh
+      ~Pareto.atan
+      ~Pareto.atanh
+      ~Pareto.cbrt
+      ~Pareto.computeBilateralConfidenceInterval
+      ~Pareto.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~Pareto.computeCDF
+      ~Pareto.computeCDFGradient
+      ~Pareto.computeCharacteristicFunction
+      ~Pareto.computeComplementaryCDF
+      ~Pareto.computeConditionalCDF
+      ~Pareto.computeConditionalDDF
+      ~Pareto.computeConditionalPDF
+      ~Pareto.computeConditionalQuantile
+      ~Pareto.computeDDF
+      ~Pareto.computeDensityGenerator
+      ~Pareto.computeDensityGeneratorDerivative
+      ~Pareto.computeDensityGeneratorSecondDerivative
+      ~Pareto.computeEntropy
+      ~Pareto.computeGeneratingFunction
+      ~Pareto.computeInverseSurvivalFunction
+      ~Pareto.computeLogCharacteristicFunction
+      ~Pareto.computeLogGeneratingFunction
+      ~Pareto.computeLogPDF
+      ~Pareto.computeLogPDFGradient
+      ~Pareto.computeMinimumVolumeInterval
+      ~Pareto.computeMinimumVolumeIntervalWithMarginalProbability
+      ~Pareto.computeMinimumVolumeLevelSet
+      ~Pareto.computeMinimumVolumeLevelSetWithThreshold
+      ~Pareto.computePDF
+      ~Pareto.computePDFGradient
+      ~Pareto.computeProbability
+      ~Pareto.computeQuantile
+      ~Pareto.computeRadialDistributionCDF
+      ~Pareto.computeScalarQuantile
+      ~Pareto.computeSequentialConditionalCDF
+      ~Pareto.computeSequentialConditionalDDF
+      ~Pareto.computeSequentialConditionalPDF
+      ~Pareto.computeSequentialConditionalQuantile
+      ~Pareto.computeSurvivalFunction
+      ~Pareto.computeUnilateralConfidenceInterval
+      ~Pareto.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~Pareto.cos
+      ~Pareto.cosh
+      ~Pareto.drawCDF
+      ~Pareto.drawLogPDF
+      ~Pareto.drawMarginal1DCDF
+      ~Pareto.drawMarginal1DLogPDF
+      ~Pareto.drawMarginal1DPDF
+      ~Pareto.drawMarginal1DSurvivalFunction
+      ~Pareto.drawMarginal2DCDF
+      ~Pareto.drawMarginal2DLogPDF
+      ~Pareto.drawMarginal2DPDF
+      ~Pareto.drawMarginal2DSurvivalFunction
+      ~Pareto.drawPDF
+      ~Pareto.drawQuantile
+      ~Pareto.drawSurvivalFunction
+      ~Pareto.exp
+      ~Pareto.getAlpha
+      ~Pareto.getBeta
+      ~Pareto.getCDFEpsilon
+      ~Pareto.getCenteredMoment
+      ~Pareto.getCholesky
+      ~Pareto.getClassName
+      ~Pareto.getCopula
+      ~Pareto.getCorrelation
+      ~Pareto.getCovariance
+      ~Pareto.getDescription
+      ~Pareto.getDimension
+      ~Pareto.getDispersionIndicator
+      ~Pareto.getGamma
+      ~Pareto.getId
+      ~Pareto.getIntegrationNodesNumber
+      ~Pareto.getInverseCholesky
+      ~Pareto.getInverseIsoProbabilisticTransformation
+      ~Pareto.getIsoProbabilisticTransformation
+      ~Pareto.getKendallTau
+      ~Pareto.getKurtosis
+      ~Pareto.getLinearCorrelation
+      ~Pareto.getMarginal
+      ~Pareto.getMean
+      ~Pareto.getMoment
+      ~Pareto.getName
+      ~Pareto.getPDFEpsilon
+      ~Pareto.getParameter
+      ~Pareto.getParameterDescription
+      ~Pareto.getParameterDimension
+      ~Pareto.getParametersCollection
+      ~Pareto.getPearsonCorrelation
+      ~Pareto.getPositionIndicator
+      ~Pareto.getProbabilities
+      ~Pareto.getRange
+      ~Pareto.getRealization
+      ~Pareto.getRoughness
+      ~Pareto.getSample
+      ~Pareto.getShadowedId
+      ~Pareto.getShapeMatrix
+      ~Pareto.getShiftedMoment
+      ~Pareto.getSingularities
+      ~Pareto.getSkewness
+      ~Pareto.getSpearmanCorrelation
+      ~Pareto.getStandardDeviation
+      ~Pareto.getStandardDistribution
+      ~Pareto.getStandardMoment
+      ~Pareto.getStandardRepresentative
+      ~Pareto.getSupport
+      ~Pareto.getVisibility
+      ~Pareto.hasEllipticalCopula
+      ~Pareto.hasIndependentCopula
+      ~Pareto.hasName
+      ~Pareto.hasVisibleName
+      ~Pareto.inverse
+      ~Pareto.isContinuous
+      ~Pareto.isCopula
+      ~Pareto.isDiscrete
+      ~Pareto.isElliptical
+      ~Pareto.isIntegral
+      ~Pareto.ln
+      ~Pareto.log
+      ~Pareto.setAlpha
+      ~Pareto.setBeta
+      ~Pareto.setDescription
+      ~Pareto.setGamma
+      ~Pareto.setIntegrationNodesNumber
+      ~Pareto.setName
+      ~Pareto.setParameter
+      ~Pareto.setParametersCollection
+      ~Pareto.setShadowedId
+      ~Pareto.setVisibility
+      ~Pareto.sin
+      ~Pareto.sinh
+      ~Pareto.sqr
+      ~Pareto.sqrt
+      ~Pareto.tan
+      ~Pareto.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Pareto.thisown
+   
    

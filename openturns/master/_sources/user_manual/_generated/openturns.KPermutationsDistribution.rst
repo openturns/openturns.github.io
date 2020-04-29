@@ -1,69 +1,5 @@
-KPermutationsDistribution distribution
-======================================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.KPermutationsDistribution().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.KPermutationsDistribution().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.KPermutationsDistribution()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.KPermutationsDistribution
+===================================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,161 @@ KPermutationsDistribution distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~KPermutationsDistribution.__init__
+      ~KPermutationsDistribution.abs
+      ~KPermutationsDistribution.acos
+      ~KPermutationsDistribution.acosh
+      ~KPermutationsDistribution.asin
+      ~KPermutationsDistribution.asinh
+      ~KPermutationsDistribution.atan
+      ~KPermutationsDistribution.atanh
+      ~KPermutationsDistribution.cbrt
+      ~KPermutationsDistribution.computeBilateralConfidenceInterval
+      ~KPermutationsDistribution.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~KPermutationsDistribution.computeCDF
+      ~KPermutationsDistribution.computeCDFGradient
+      ~KPermutationsDistribution.computeCharacteristicFunction
+      ~KPermutationsDistribution.computeComplementaryCDF
+      ~KPermutationsDistribution.computeConditionalCDF
+      ~KPermutationsDistribution.computeConditionalDDF
+      ~KPermutationsDistribution.computeConditionalPDF
+      ~KPermutationsDistribution.computeConditionalQuantile
+      ~KPermutationsDistribution.computeDDF
+      ~KPermutationsDistribution.computeDensityGenerator
+      ~KPermutationsDistribution.computeDensityGeneratorDerivative
+      ~KPermutationsDistribution.computeDensityGeneratorSecondDerivative
+      ~KPermutationsDistribution.computeEntropy
+      ~KPermutationsDistribution.computeGeneratingFunction
+      ~KPermutationsDistribution.computeInverseSurvivalFunction
+      ~KPermutationsDistribution.computeLogCharacteristicFunction
+      ~KPermutationsDistribution.computeLogGeneratingFunction
+      ~KPermutationsDistribution.computeLogPDF
+      ~KPermutationsDistribution.computeLogPDFGradient
+      ~KPermutationsDistribution.computeMinimumVolumeInterval
+      ~KPermutationsDistribution.computeMinimumVolumeIntervalWithMarginalProbability
+      ~KPermutationsDistribution.computeMinimumVolumeLevelSet
+      ~KPermutationsDistribution.computeMinimumVolumeLevelSetWithThreshold
+      ~KPermutationsDistribution.computePDF
+      ~KPermutationsDistribution.computePDFGradient
+      ~KPermutationsDistribution.computeProbability
+      ~KPermutationsDistribution.computeQuantile
+      ~KPermutationsDistribution.computeRadialDistributionCDF
+      ~KPermutationsDistribution.computeScalarQuantile
+      ~KPermutationsDistribution.computeSequentialConditionalCDF
+      ~KPermutationsDistribution.computeSequentialConditionalDDF
+      ~KPermutationsDistribution.computeSequentialConditionalPDF
+      ~KPermutationsDistribution.computeSequentialConditionalQuantile
+      ~KPermutationsDistribution.computeSurvivalFunction
+      ~KPermutationsDistribution.computeUnilateralConfidenceInterval
+      ~KPermutationsDistribution.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~KPermutationsDistribution.cos
+      ~KPermutationsDistribution.cosh
+      ~KPermutationsDistribution.drawCDF
+      ~KPermutationsDistribution.drawLogPDF
+      ~KPermutationsDistribution.drawMarginal1DCDF
+      ~KPermutationsDistribution.drawMarginal1DLogPDF
+      ~KPermutationsDistribution.drawMarginal1DPDF
+      ~KPermutationsDistribution.drawMarginal1DSurvivalFunction
+      ~KPermutationsDistribution.drawMarginal2DCDF
+      ~KPermutationsDistribution.drawMarginal2DLogPDF
+      ~KPermutationsDistribution.drawMarginal2DPDF
+      ~KPermutationsDistribution.drawMarginal2DSurvivalFunction
+      ~KPermutationsDistribution.drawPDF
+      ~KPermutationsDistribution.drawQuantile
+      ~KPermutationsDistribution.drawSurvivalFunction
+      ~KPermutationsDistribution.exp
+      ~KPermutationsDistribution.getCDFEpsilon
+      ~KPermutationsDistribution.getCenteredMoment
+      ~KPermutationsDistribution.getCholesky
+      ~KPermutationsDistribution.getClassName
+      ~KPermutationsDistribution.getCopula
+      ~KPermutationsDistribution.getCorrelation
+      ~KPermutationsDistribution.getCovariance
+      ~KPermutationsDistribution.getDescription
+      ~KPermutationsDistribution.getDimension
+      ~KPermutationsDistribution.getDispersionIndicator
+      ~KPermutationsDistribution.getId
+      ~KPermutationsDistribution.getIntegrationNodesNumber
+      ~KPermutationsDistribution.getInverseCholesky
+      ~KPermutationsDistribution.getInverseIsoProbabilisticTransformation
+      ~KPermutationsDistribution.getIsoProbabilisticTransformation
+      ~KPermutationsDistribution.getK
+      ~KPermutationsDistribution.getKendallTau
+      ~KPermutationsDistribution.getKurtosis
+      ~KPermutationsDistribution.getLinearCorrelation
+      ~KPermutationsDistribution.getMarginal
+      ~KPermutationsDistribution.getMean
+      ~KPermutationsDistribution.getMoment
+      ~KPermutationsDistribution.getN
+      ~KPermutationsDistribution.getName
+      ~KPermutationsDistribution.getPDFEpsilon
+      ~KPermutationsDistribution.getParameter
+      ~KPermutationsDistribution.getParameterDescription
+      ~KPermutationsDistribution.getParameterDimension
+      ~KPermutationsDistribution.getParametersCollection
+      ~KPermutationsDistribution.getPearsonCorrelation
+      ~KPermutationsDistribution.getPositionIndicator
+      ~KPermutationsDistribution.getProbabilities
+      ~KPermutationsDistribution.getRange
+      ~KPermutationsDistribution.getRealization
+      ~KPermutationsDistribution.getRoughness
+      ~KPermutationsDistribution.getSample
+      ~KPermutationsDistribution.getShadowedId
+      ~KPermutationsDistribution.getShapeMatrix
+      ~KPermutationsDistribution.getShiftedMoment
+      ~KPermutationsDistribution.getSingularities
+      ~KPermutationsDistribution.getSkewness
+      ~KPermutationsDistribution.getSpearmanCorrelation
+      ~KPermutationsDistribution.getStandardDeviation
+      ~KPermutationsDistribution.getStandardDistribution
+      ~KPermutationsDistribution.getStandardMoment
+      ~KPermutationsDistribution.getStandardRepresentative
+      ~KPermutationsDistribution.getSupport
+      ~KPermutationsDistribution.getSupportEpsilon
+      ~KPermutationsDistribution.getVisibility
+      ~KPermutationsDistribution.hasEllipticalCopula
+      ~KPermutationsDistribution.hasIndependentCopula
+      ~KPermutationsDistribution.hasName
+      ~KPermutationsDistribution.hasVisibleName
+      ~KPermutationsDistribution.inverse
+      ~KPermutationsDistribution.isContinuous
+      ~KPermutationsDistribution.isCopula
+      ~KPermutationsDistribution.isDiscrete
+      ~KPermutationsDistribution.isElliptical
+      ~KPermutationsDistribution.isIntegral
+      ~KPermutationsDistribution.ln
+      ~KPermutationsDistribution.log
+      ~KPermutationsDistribution.setDescription
+      ~KPermutationsDistribution.setIntegrationNodesNumber
+      ~KPermutationsDistribution.setK
+      ~KPermutationsDistribution.setN
+      ~KPermutationsDistribution.setName
+      ~KPermutationsDistribution.setParameter
+      ~KPermutationsDistribution.setParametersCollection
+      ~KPermutationsDistribution.setShadowedId
+      ~KPermutationsDistribution.setSupportEpsilon
+      ~KPermutationsDistribution.setVisibility
+      ~KPermutationsDistribution.sin
+      ~KPermutationsDistribution.sinh
+      ~KPermutationsDistribution.sqr
+      ~KPermutationsDistribution.sqrt
+      ~KPermutationsDistribution.tan
+      ~KPermutationsDistribution.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~KPermutationsDistribution.thisown
+   
    

@@ -1,5 +1,5 @@
-SpecFunc_LogFactorial
-===============================
+openturns.SpecFunc\_LogFactorial
+================================
 
 .. currentmodule:: openturns
 

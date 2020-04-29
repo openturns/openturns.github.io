@@ -1,31 +1,5 @@
-GaussianProcess
-==================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.GaussianProcess().__class__.__name__ == 'Process':
-        # default to Gaussian for the interface class
-        process = ot.GaussianProcess()
-    elif ot.GaussianProcess().__class__.__name__ == 'DiscreteMarkovChain':
-        process = ot.GaussianProcess()
-        process.setTransitionMatrix(ot.SquareMatrix([[0.0,0.5,0.5],[0.7,0.0,0.3],[0.8,0.0,0.2]]))
-        origin = 0
-        process.setOrigin(origin)
-    else:
-        process = ot.GaussianProcess()
-    process.setTimeGrid(ot.RegularGrid(0.0, 0.02, 50))
-    process.setDescription(['$x$'])
-    sample = process.getSample(6)
-    sample_graph = sample.drawMarginal(0)
-    sample_graph.setTitle(str(process))
-
-    fig = plt.figure(figsize=(10, 4))
-    sample_axis = fig.add_subplot(111)
-    View(sample_graph, figure=fig, axes=[sample_axis], add_legend=False)
+openturns.GaussianProcess
+=========================
 
 .. currentmodule:: openturns
 
@@ -33,4 +7,52 @@ GaussianProcess
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GaussianProcess.__init__
+      ~GaussianProcess.getClassName
+      ~GaussianProcess.getContinuousRealization
+      ~GaussianProcess.getCovarianceModel
+      ~GaussianProcess.getDescription
+      ~GaussianProcess.getFuture
+      ~GaussianProcess.getId
+      ~GaussianProcess.getInputDimension
+      ~GaussianProcess.getMarginal
+      ~GaussianProcess.getMesh
+      ~GaussianProcess.getName
+      ~GaussianProcess.getOutputDimension
+      ~GaussianProcess.getRealization
+      ~GaussianProcess.getSample
+      ~GaussianProcess.getShadowedId
+      ~GaussianProcess.getTimeGrid
+      ~GaussianProcess.getTrend
+      ~GaussianProcess.getVisibility
+      ~GaussianProcess.hasName
+      ~GaussianProcess.hasVisibleName
+      ~GaussianProcess.isComposite
+      ~GaussianProcess.isNormal
+      ~GaussianProcess.isStationary
+      ~GaussianProcess.isTrendStationary
+      ~GaussianProcess.setDescription
+      ~GaussianProcess.setMesh
+      ~GaussianProcess.setName
+      ~GaussianProcess.setSamplingMethod
+      ~GaussianProcess.setShadowedId
+      ~GaussianProcess.setTimeGrid
+      ~GaussianProcess.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GaussianProcess.thisown
+   
    

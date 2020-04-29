@@ -1,69 +1,5 @@
-Epanechnikov distribution
-============================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Epanechnikov().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.Epanechnikov().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.Epanechnikov().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.Epanechnikov().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.Epanechnikov().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.Epanechnikov().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.Epanechnikov().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.Epanechnikov().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.Epanechnikov().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.Epanechnikov().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.Epanechnikov().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.Epanechnikov().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.Epanechnikov().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.Epanechnikov()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.Epanechnikov
+======================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,155 @@ Epanechnikov distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Epanechnikov.__init__
+      ~Epanechnikov.abs
+      ~Epanechnikov.acos
+      ~Epanechnikov.acosh
+      ~Epanechnikov.asin
+      ~Epanechnikov.asinh
+      ~Epanechnikov.atan
+      ~Epanechnikov.atanh
+      ~Epanechnikov.cbrt
+      ~Epanechnikov.computeBilateralConfidenceInterval
+      ~Epanechnikov.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~Epanechnikov.computeCDF
+      ~Epanechnikov.computeCDFGradient
+      ~Epanechnikov.computeCharacteristicFunction
+      ~Epanechnikov.computeComplementaryCDF
+      ~Epanechnikov.computeConditionalCDF
+      ~Epanechnikov.computeConditionalDDF
+      ~Epanechnikov.computeConditionalPDF
+      ~Epanechnikov.computeConditionalQuantile
+      ~Epanechnikov.computeDDF
+      ~Epanechnikov.computeDensityGenerator
+      ~Epanechnikov.computeDensityGeneratorDerivative
+      ~Epanechnikov.computeDensityGeneratorSecondDerivative
+      ~Epanechnikov.computeEntropy
+      ~Epanechnikov.computeGeneratingFunction
+      ~Epanechnikov.computeInverseSurvivalFunction
+      ~Epanechnikov.computeLogCharacteristicFunction
+      ~Epanechnikov.computeLogGeneratingFunction
+      ~Epanechnikov.computeLogPDF
+      ~Epanechnikov.computeLogPDFGradient
+      ~Epanechnikov.computeMinimumVolumeInterval
+      ~Epanechnikov.computeMinimumVolumeIntervalWithMarginalProbability
+      ~Epanechnikov.computeMinimumVolumeLevelSet
+      ~Epanechnikov.computeMinimumVolumeLevelSetWithThreshold
+      ~Epanechnikov.computePDF
+      ~Epanechnikov.computePDFGradient
+      ~Epanechnikov.computeProbability
+      ~Epanechnikov.computeQuantile
+      ~Epanechnikov.computeRadialDistributionCDF
+      ~Epanechnikov.computeScalarQuantile
+      ~Epanechnikov.computeSequentialConditionalCDF
+      ~Epanechnikov.computeSequentialConditionalDDF
+      ~Epanechnikov.computeSequentialConditionalPDF
+      ~Epanechnikov.computeSequentialConditionalQuantile
+      ~Epanechnikov.computeSurvivalFunction
+      ~Epanechnikov.computeUnilateralConfidenceInterval
+      ~Epanechnikov.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~Epanechnikov.cos
+      ~Epanechnikov.cosh
+      ~Epanechnikov.drawCDF
+      ~Epanechnikov.drawLogPDF
+      ~Epanechnikov.drawMarginal1DCDF
+      ~Epanechnikov.drawMarginal1DLogPDF
+      ~Epanechnikov.drawMarginal1DPDF
+      ~Epanechnikov.drawMarginal1DSurvivalFunction
+      ~Epanechnikov.drawMarginal2DCDF
+      ~Epanechnikov.drawMarginal2DLogPDF
+      ~Epanechnikov.drawMarginal2DPDF
+      ~Epanechnikov.drawMarginal2DSurvivalFunction
+      ~Epanechnikov.drawPDF
+      ~Epanechnikov.drawQuantile
+      ~Epanechnikov.drawSurvivalFunction
+      ~Epanechnikov.exp
+      ~Epanechnikov.getCDFEpsilon
+      ~Epanechnikov.getCenteredMoment
+      ~Epanechnikov.getCholesky
+      ~Epanechnikov.getClassName
+      ~Epanechnikov.getCopula
+      ~Epanechnikov.getCorrelation
+      ~Epanechnikov.getCovariance
+      ~Epanechnikov.getDescription
+      ~Epanechnikov.getDimension
+      ~Epanechnikov.getDispersionIndicator
+      ~Epanechnikov.getId
+      ~Epanechnikov.getIntegrationNodesNumber
+      ~Epanechnikov.getInverseCholesky
+      ~Epanechnikov.getInverseIsoProbabilisticTransformation
+      ~Epanechnikov.getIsoProbabilisticTransformation
+      ~Epanechnikov.getKendallTau
+      ~Epanechnikov.getKurtosis
+      ~Epanechnikov.getLinearCorrelation
+      ~Epanechnikov.getMarginal
+      ~Epanechnikov.getMean
+      ~Epanechnikov.getMoment
+      ~Epanechnikov.getName
+      ~Epanechnikov.getPDFEpsilon
+      ~Epanechnikov.getParameter
+      ~Epanechnikov.getParameterDescription
+      ~Epanechnikov.getParameterDimension
+      ~Epanechnikov.getParametersCollection
+      ~Epanechnikov.getPearsonCorrelation
+      ~Epanechnikov.getPositionIndicator
+      ~Epanechnikov.getProbabilities
+      ~Epanechnikov.getRange
+      ~Epanechnikov.getRealization
+      ~Epanechnikov.getRoughness
+      ~Epanechnikov.getSample
+      ~Epanechnikov.getShadowedId
+      ~Epanechnikov.getShapeMatrix
+      ~Epanechnikov.getShiftedMoment
+      ~Epanechnikov.getSingularities
+      ~Epanechnikov.getSkewness
+      ~Epanechnikov.getSpearmanCorrelation
+      ~Epanechnikov.getStandardDeviation
+      ~Epanechnikov.getStandardDistribution
+      ~Epanechnikov.getStandardMoment
+      ~Epanechnikov.getStandardRepresentative
+      ~Epanechnikov.getSupport
+      ~Epanechnikov.getVisibility
+      ~Epanechnikov.hasEllipticalCopula
+      ~Epanechnikov.hasIndependentCopula
+      ~Epanechnikov.hasName
+      ~Epanechnikov.hasVisibleName
+      ~Epanechnikov.inverse
+      ~Epanechnikov.isContinuous
+      ~Epanechnikov.isCopula
+      ~Epanechnikov.isDiscrete
+      ~Epanechnikov.isElliptical
+      ~Epanechnikov.isIntegral
+      ~Epanechnikov.ln
+      ~Epanechnikov.log
+      ~Epanechnikov.setDescription
+      ~Epanechnikov.setIntegrationNodesNumber
+      ~Epanechnikov.setName
+      ~Epanechnikov.setParameter
+      ~Epanechnikov.setParametersCollection
+      ~Epanechnikov.setShadowedId
+      ~Epanechnikov.setVisibility
+      ~Epanechnikov.sin
+      ~Epanechnikov.sinh
+      ~Epanechnikov.sqr
+      ~Epanechnikov.sqrt
+      ~Epanechnikov.tan
+      ~Epanechnikov.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Epanechnikov.thisown
+   
    

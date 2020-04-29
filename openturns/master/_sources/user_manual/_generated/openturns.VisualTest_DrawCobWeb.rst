@@ -1,8 +1,5 @@
-VisualTest_DrawCobWeb
-===============================
-
-.. plot:: pyplots/VisualTest_DrawCobWeb.py
-    :include-source: False
+openturns.VisualTest\_DrawCobWeb
+================================
 
 .. currentmodule:: openturns
 

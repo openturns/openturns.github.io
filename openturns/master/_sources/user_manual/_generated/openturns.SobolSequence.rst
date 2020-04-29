@@ -1,27 +1,5 @@
-SobolSequence
+openturns.SobolSequence
 =======================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-
-    # Generate points with the given sequence
-    sequence = ot.SobolSequence(2)
-    sample = sequence.generate(1000)
-
-    # Create the graph
-    graph = ot.Graph("Sequence of 1000 points", "x1", "x2", True, "")
-    cloud = ot.Cloud(sample)
-    graph.add(cloud)
-
-    # Draw the graph
-    fig = plt.figure(figsize=(4, 4))
-    axis = fig.add_subplot(111)
-    View(graph, figure=fig, axes=[axis], add_legend=False)
-    axis.set_xlim(auto=True)
 
 .. currentmodule:: openturns
 
@@ -29,4 +7,42 @@ SobolSequence
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SobolSequence.ComputeStarDiscrepancy
+      ~SobolSequence.__init__
+      ~SobolSequence.generate
+      ~SobolSequence.getClassName
+      ~SobolSequence.getDimension
+      ~SobolSequence.getId
+      ~SobolSequence.getName
+      ~SobolSequence.getShadowedId
+      ~SobolSequence.getVisibility
+      ~SobolSequence.hasName
+      ~SobolSequence.hasVisibleName
+      ~SobolSequence.initialize
+      ~SobolSequence.setName
+      ~SobolSequence.setShadowedId
+      ~SobolSequence.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SobolSequence.Epsilon
+      ~SobolSequence.InitialBase
+      ~SobolSequence.MaximumBase2Logarithm
+      ~SobolSequence.MaximumInitialDegree
+      ~SobolSequence.MaximumNumberOfDimension
+      ~SobolSequence.PrimitivePolynomial
+      ~SobolSequence.thisown
+   
    

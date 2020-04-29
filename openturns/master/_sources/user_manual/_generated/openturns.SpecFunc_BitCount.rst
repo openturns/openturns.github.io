@@ -1,5 +1,5 @@
-SpecFunc_BitCount
-===========================
+openturns.SpecFunc\_BitCount
+============================
 
 .. currentmodule:: openturns
 

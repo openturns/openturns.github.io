@@ -1,8 +1,5 @@
-VisualTest_DrawHenryLine
-==================================
-
-.. plot:: pyplots/VisualTest_DrawHenryLine.py
-    :include-source: False
+openturns.VisualTest\_DrawHenryLine
+===================================
 
 .. currentmodule:: openturns
 

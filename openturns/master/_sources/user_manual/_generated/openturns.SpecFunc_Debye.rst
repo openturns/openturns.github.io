@@ -1,5 +1,5 @@
-SpecFunc_Debye
-========================
+openturns.SpecFunc\_Debye
+=========================
 
 .. currentmodule:: openturns
 

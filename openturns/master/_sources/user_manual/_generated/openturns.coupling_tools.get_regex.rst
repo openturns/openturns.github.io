@@ -1,5 +1,5 @@
-get_regex
-==================================
+openturns.coupling\_tools.get\_regex
+====================================
 
 .. currentmodule:: openturns.coupling_tools
 

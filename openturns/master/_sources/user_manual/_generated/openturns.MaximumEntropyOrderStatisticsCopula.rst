@@ -1,41 +1,5 @@
-MaximumEntropyOrderStatisticsCopula
-==========================================================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.MaximumEntropyOrderStatisticsCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
-        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
-        copula = ot.EmpiricalBernsteinCopula(sample, 4)
-    elif ot.MaximumEntropyOrderStatisticsCopula().__class__.__name__ == 'ExtremeValueCopula':
-        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-    elif ot.MaximumEntropyOrderStatisticsCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
-        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
-    elif ot.MaximumEntropyOrderStatisticsCopula().__class__.__name__ == 'NormalCopula':
-        R = ot.CorrelationMatrix(2)
-        R[1, 0] = 0.8
-        copula = ot.NormalCopula(R)
-    elif ot.MaximumEntropyOrderStatisticsCopula().__class__.__name__ == 'SklarCopula':
-        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
-        copula =  ot.SklarCopula(student)
-    else:
-        copula = ot.MaximumEntropyOrderStatisticsCopula()
-    if copula.getDimension() == 1:
-        copula = ot.MaximumEntropyOrderStatisticsCopula(2)
-    copula.setDescription(['$u_1$', '$u_2$'])
-    pdf_graph = copula.drawPDF()
-    cdf_graph = copula.drawCDF()
-    fig = plt.figure(figsize=(10, 4))
-    pdf_axis = fig.add_subplot(121)
-    cdf_axis = fig.add_subplot(122)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
-    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
-    title = str(copula)[:100].split('\n')[0]
-    fig.suptitle(title)
+openturns.MaximumEntropyOrderStatisticsCopula
+=============================================
 
 .. currentmodule:: openturns
 
@@ -43,4 +7,160 @@ MaximumEntropyOrderStatisticsCopula
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MaximumEntropyOrderStatisticsCopula.__init__
+      ~MaximumEntropyOrderStatisticsCopula.abs
+      ~MaximumEntropyOrderStatisticsCopula.acos
+      ~MaximumEntropyOrderStatisticsCopula.acosh
+      ~MaximumEntropyOrderStatisticsCopula.asin
+      ~MaximumEntropyOrderStatisticsCopula.asinh
+      ~MaximumEntropyOrderStatisticsCopula.atan
+      ~MaximumEntropyOrderStatisticsCopula.atanh
+      ~MaximumEntropyOrderStatisticsCopula.cbrt
+      ~MaximumEntropyOrderStatisticsCopula.computeBilateralConfidenceInterval
+      ~MaximumEntropyOrderStatisticsCopula.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~MaximumEntropyOrderStatisticsCopula.computeCDF
+      ~MaximumEntropyOrderStatisticsCopula.computeCDFGradient
+      ~MaximumEntropyOrderStatisticsCopula.computeCharacteristicFunction
+      ~MaximumEntropyOrderStatisticsCopula.computeComplementaryCDF
+      ~MaximumEntropyOrderStatisticsCopula.computeConditionalCDF
+      ~MaximumEntropyOrderStatisticsCopula.computeConditionalDDF
+      ~MaximumEntropyOrderStatisticsCopula.computeConditionalPDF
+      ~MaximumEntropyOrderStatisticsCopula.computeConditionalQuantile
+      ~MaximumEntropyOrderStatisticsCopula.computeDDF
+      ~MaximumEntropyOrderStatisticsCopula.computeDensityGenerator
+      ~MaximumEntropyOrderStatisticsCopula.computeDensityGeneratorDerivative
+      ~MaximumEntropyOrderStatisticsCopula.computeDensityGeneratorSecondDerivative
+      ~MaximumEntropyOrderStatisticsCopula.computeEntropy
+      ~MaximumEntropyOrderStatisticsCopula.computeGeneratingFunction
+      ~MaximumEntropyOrderStatisticsCopula.computeInverseSurvivalFunction
+      ~MaximumEntropyOrderStatisticsCopula.computeLogCharacteristicFunction
+      ~MaximumEntropyOrderStatisticsCopula.computeLogGeneratingFunction
+      ~MaximumEntropyOrderStatisticsCopula.computeLogPDF
+      ~MaximumEntropyOrderStatisticsCopula.computeLogPDFGradient
+      ~MaximumEntropyOrderStatisticsCopula.computeMinimumVolumeInterval
+      ~MaximumEntropyOrderStatisticsCopula.computeMinimumVolumeIntervalWithMarginalProbability
+      ~MaximumEntropyOrderStatisticsCopula.computeMinimumVolumeLevelSet
+      ~MaximumEntropyOrderStatisticsCopula.computeMinimumVolumeLevelSetWithThreshold
+      ~MaximumEntropyOrderStatisticsCopula.computePDF
+      ~MaximumEntropyOrderStatisticsCopula.computePDFGradient
+      ~MaximumEntropyOrderStatisticsCopula.computeProbability
+      ~MaximumEntropyOrderStatisticsCopula.computeQuantile
+      ~MaximumEntropyOrderStatisticsCopula.computeRadialDistributionCDF
+      ~MaximumEntropyOrderStatisticsCopula.computeScalarQuantile
+      ~MaximumEntropyOrderStatisticsCopula.computeSequentialConditionalCDF
+      ~MaximumEntropyOrderStatisticsCopula.computeSequentialConditionalDDF
+      ~MaximumEntropyOrderStatisticsCopula.computeSequentialConditionalPDF
+      ~MaximumEntropyOrderStatisticsCopula.computeSequentialConditionalQuantile
+      ~MaximumEntropyOrderStatisticsCopula.computeSurvivalFunction
+      ~MaximumEntropyOrderStatisticsCopula.computeUnilateralConfidenceInterval
+      ~MaximumEntropyOrderStatisticsCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~MaximumEntropyOrderStatisticsCopula.cos
+      ~MaximumEntropyOrderStatisticsCopula.cosh
+      ~MaximumEntropyOrderStatisticsCopula.drawCDF
+      ~MaximumEntropyOrderStatisticsCopula.drawLogPDF
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal1DCDF
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal1DLogPDF
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal1DPDF
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal1DSurvivalFunction
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal2DCDF
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal2DLogPDF
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal2DPDF
+      ~MaximumEntropyOrderStatisticsCopula.drawMarginal2DSurvivalFunction
+      ~MaximumEntropyOrderStatisticsCopula.drawPDF
+      ~MaximumEntropyOrderStatisticsCopula.drawQuantile
+      ~MaximumEntropyOrderStatisticsCopula.drawSurvivalFunction
+      ~MaximumEntropyOrderStatisticsCopula.exp
+      ~MaximumEntropyOrderStatisticsCopula.getApproximation
+      ~MaximumEntropyOrderStatisticsCopula.getCDFEpsilon
+      ~MaximumEntropyOrderStatisticsCopula.getCenteredMoment
+      ~MaximumEntropyOrderStatisticsCopula.getCholesky
+      ~MaximumEntropyOrderStatisticsCopula.getClassName
+      ~MaximumEntropyOrderStatisticsCopula.getCopula
+      ~MaximumEntropyOrderStatisticsCopula.getCorrelation
+      ~MaximumEntropyOrderStatisticsCopula.getCovariance
+      ~MaximumEntropyOrderStatisticsCopula.getDescription
+      ~MaximumEntropyOrderStatisticsCopula.getDimension
+      ~MaximumEntropyOrderStatisticsCopula.getDispersionIndicator
+      ~MaximumEntropyOrderStatisticsCopula.getDistribution
+      ~MaximumEntropyOrderStatisticsCopula.getDistributionCollection
+      ~MaximumEntropyOrderStatisticsCopula.getId
+      ~MaximumEntropyOrderStatisticsCopula.getIntegrationNodesNumber
+      ~MaximumEntropyOrderStatisticsCopula.getInverseCholesky
+      ~MaximumEntropyOrderStatisticsCopula.getInverseIsoProbabilisticTransformation
+      ~MaximumEntropyOrderStatisticsCopula.getIsoProbabilisticTransformation
+      ~MaximumEntropyOrderStatisticsCopula.getKendallTau
+      ~MaximumEntropyOrderStatisticsCopula.getKurtosis
+      ~MaximumEntropyOrderStatisticsCopula.getLinearCorrelation
+      ~MaximumEntropyOrderStatisticsCopula.getMarginal
+      ~MaximumEntropyOrderStatisticsCopula.getMean
+      ~MaximumEntropyOrderStatisticsCopula.getMoment
+      ~MaximumEntropyOrderStatisticsCopula.getName
+      ~MaximumEntropyOrderStatisticsCopula.getPDFEpsilon
+      ~MaximumEntropyOrderStatisticsCopula.getParameter
+      ~MaximumEntropyOrderStatisticsCopula.getParameterDescription
+      ~MaximumEntropyOrderStatisticsCopula.getParameterDimension
+      ~MaximumEntropyOrderStatisticsCopula.getParametersCollection
+      ~MaximumEntropyOrderStatisticsCopula.getPearsonCorrelation
+      ~MaximumEntropyOrderStatisticsCopula.getPositionIndicator
+      ~MaximumEntropyOrderStatisticsCopula.getProbabilities
+      ~MaximumEntropyOrderStatisticsCopula.getRange
+      ~MaximumEntropyOrderStatisticsCopula.getRealization
+      ~MaximumEntropyOrderStatisticsCopula.getRoughness
+      ~MaximumEntropyOrderStatisticsCopula.getSample
+      ~MaximumEntropyOrderStatisticsCopula.getShadowedId
+      ~MaximumEntropyOrderStatisticsCopula.getShapeMatrix
+      ~MaximumEntropyOrderStatisticsCopula.getShiftedMoment
+      ~MaximumEntropyOrderStatisticsCopula.getSingularities
+      ~MaximumEntropyOrderStatisticsCopula.getSkewness
+      ~MaximumEntropyOrderStatisticsCopula.getSpearmanCorrelation
+      ~MaximumEntropyOrderStatisticsCopula.getStandardDeviation
+      ~MaximumEntropyOrderStatisticsCopula.getStandardDistribution
+      ~MaximumEntropyOrderStatisticsCopula.getStandardMoment
+      ~MaximumEntropyOrderStatisticsCopula.getStandardRepresentative
+      ~MaximumEntropyOrderStatisticsCopula.getSupport
+      ~MaximumEntropyOrderStatisticsCopula.getVisibility
+      ~MaximumEntropyOrderStatisticsCopula.hasEllipticalCopula
+      ~MaximumEntropyOrderStatisticsCopula.hasIndependentCopula
+      ~MaximumEntropyOrderStatisticsCopula.hasName
+      ~MaximumEntropyOrderStatisticsCopula.hasVisibleName
+      ~MaximumEntropyOrderStatisticsCopula.inverse
+      ~MaximumEntropyOrderStatisticsCopula.isContinuous
+      ~MaximumEntropyOrderStatisticsCopula.isCopula
+      ~MaximumEntropyOrderStatisticsCopula.isDiscrete
+      ~MaximumEntropyOrderStatisticsCopula.isElliptical
+      ~MaximumEntropyOrderStatisticsCopula.isIntegral
+      ~MaximumEntropyOrderStatisticsCopula.ln
+      ~MaximumEntropyOrderStatisticsCopula.log
+      ~MaximumEntropyOrderStatisticsCopula.setDescription
+      ~MaximumEntropyOrderStatisticsCopula.setDistribution
+      ~MaximumEntropyOrderStatisticsCopula.setDistributionCollection
+      ~MaximumEntropyOrderStatisticsCopula.setIntegrationNodesNumber
+      ~MaximumEntropyOrderStatisticsCopula.setName
+      ~MaximumEntropyOrderStatisticsCopula.setParameter
+      ~MaximumEntropyOrderStatisticsCopula.setParametersCollection
+      ~MaximumEntropyOrderStatisticsCopula.setShadowedId
+      ~MaximumEntropyOrderStatisticsCopula.setVisibility
+      ~MaximumEntropyOrderStatisticsCopula.sin
+      ~MaximumEntropyOrderStatisticsCopula.sinh
+      ~MaximumEntropyOrderStatisticsCopula.sqr
+      ~MaximumEntropyOrderStatisticsCopula.sqrt
+      ~MaximumEntropyOrderStatisticsCopula.tan
+      ~MaximumEntropyOrderStatisticsCopula.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MaximumEntropyOrderStatisticsCopula.thisown
+   
    

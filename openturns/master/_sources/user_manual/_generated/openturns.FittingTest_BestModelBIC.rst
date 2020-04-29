@@ -1,5 +1,5 @@
-FittingTest_BestModelBIC
-==================================
+openturns.FittingTest\_BestModelBIC
+===================================
 
 .. currentmodule:: openturns
 

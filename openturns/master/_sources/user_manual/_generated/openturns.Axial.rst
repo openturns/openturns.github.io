@@ -1,30 +1,5 @@
-Axial
+openturns.Axial
 ===============
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-
-    # Generate sample with the given plane
-    center = [0.5, 1.5]
-    levels = [4, 8, 16]
-
-    experiment = ot.Axial(center, levels)
-    sample = experiment.generate()
-
-    # Create the graph
-    graph = ot.Graph(sample.getName(), "x1", "x2", True, "")
-    cloud = ot.Cloud(sample, "blue", "fsquare", "")
-    graph.add(cloud)
-
-    # Draw the graph
-    fig = plt.figure(figsize=(4, 4))
-    axis = fig.add_subplot(111)
-    View(graph, figure=fig, axes=[axis], add_legend=False, square_axes=True)
-    axis.set_xlim(auto=True)
 
 .. currentmodule:: openturns
 
@@ -32,4 +7,37 @@ Axial
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Axial.__init__
+      ~Axial.generate
+      ~Axial.getCenter
+      ~Axial.getClassName
+      ~Axial.getId
+      ~Axial.getLevels
+      ~Axial.getName
+      ~Axial.getShadowedId
+      ~Axial.getVisibility
+      ~Axial.hasName
+      ~Axial.hasVisibleName
+      ~Axial.setCenter
+      ~Axial.setLevels
+      ~Axial.setName
+      ~Axial.setShadowedId
+      ~Axial.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Axial.thisown
+   
    

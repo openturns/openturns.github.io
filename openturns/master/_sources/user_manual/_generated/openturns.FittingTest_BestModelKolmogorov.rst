@@ -1,5 +1,5 @@
-FittingTest_BestModelKolmogorov
-=========================================
+openturns.FittingTest\_BestModelKolmogorov
+==========================================
 
 .. currentmodule:: openturns
 

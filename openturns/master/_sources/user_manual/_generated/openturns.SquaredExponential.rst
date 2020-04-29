@@ -1,69 +1,69 @@
-SquaredExponential
-========================================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.SquaredExponential().__class__.__name__ == 'ExponentialModel':
-        covarianceModel = ot.ExponentialModel([0.5], [5.0])
-    elif ot.SquaredExponential().__class__.__name__ == 'GeneralizedExponential':
-        covarianceModel = ot.GeneralizedExponential([2.0], [3.0], 1.5)
-    elif ot.SquaredExponential().__class__.__name__ == 'ProductCovarianceModel':
-        amplitude = [1.0]
-        scale1 = [4.0]
-        scale2 = [4.0]
-        cov1 = ot.ExponentialModel(scale1, amplitude)
-        cov2 = ot.ExponentialModel(scale2, amplitude)
-        covarianceModel = ot.ProductCovarianceModel([cov1, cov2])
-    elif ot.SquaredExponential().__class__.__name__ == 'RankMCovarianceModel':
-        variance = [1.0, 2.0]
-        basis = ot.LinearBasisFactory().build()
-        covarianceModel = ot.RankMCovarianceModel(variance, basis)
-    else:
-        covarianceModel = ot.SquaredExponential()
-    title = str(covarianceModel)[:100]
-    if covarianceModel.getInputDimension() == 1:
-        scale = covarianceModel.getScale()[0]
-        if covarianceModel.isStationary():
-            def f(x):
-                return [covarianceModel(x)[0, 0]]
-            func = ot.PythonFunction(1, 1, f)
-            func.setDescription(['$tau$', '$cov$'])
-            cov_graph = func.draw(-3.0 * scale, 3.0 * scale, 129)
-            cov_graph.setTitle(title)
-            fig = plt.figure(figsize=(10, 4))
-            cov_axis = fig.add_subplot(111)
-            View(cov_graph, figure=fig, axes=[cov_axis], add_legend=False)
-        else:
-            def f(x):
-                return [covarianceModel([x[0]], [x[1]])[0, 0]]
-            func = ot.PythonFunction(2, 1, f)
-            func.setDescription(['$s$', '$t$', '$cov$'])
-            cov_graph = func.draw([-3.0 * scale]*2, [3.0 * scale]*2, [129]*2)
-            cov_graph.setTitle(title)
-            fig = plt.figure(figsize=(10, 4))
-            cov_axis = fig.add_subplot(111)
-            View(cov_graph, figure=fig, axes=[cov_axis], add_legend=False, square_axes=True)
-    elif covarianceModel.getInputDimension() == 2:
-        scale = covarianceModel.getScale()
-        if covarianceModel.isStationary():
-            def f(x):
-                return [covarianceModel(x)[0, 0]]
-            func = ot.PythonFunction(2, 1, f)
-            func.setDescription(['$s$', '$t$', '$cov$'])
-            cov_graph = func.draw(-3.0 * scale, 3.0 * scale, [129]*2)
-            cov_graph.setTitle(title)
-            fig = plt.figure(figsize=(10, 4))
-            cov_axis = fig.add_subplot(111)
-            View(cov_graph, figure=fig, axes=[cov_axis], add_legend=False, square_axes=True)
+openturns.SquaredExponential
+============================
 
 .. currentmodule:: openturns
 
 .. autoclass:: SquaredExponential
 
-  
+   
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SquaredExponential.__init__
+      ~SquaredExponential.computeAsScalar
+      ~SquaredExponential.computeStandardRepresentative
+      ~SquaredExponential.discretize
+      ~SquaredExponential.discretizeAndFactorize
+      ~SquaredExponential.discretizeAndFactorizeHMatrix
+      ~SquaredExponential.discretizeHMatrix
+      ~SquaredExponential.discretizeRow
+      ~SquaredExponential.draw
+      ~SquaredExponential.getActiveParameter
+      ~SquaredExponential.getAmplitude
+      ~SquaredExponential.getClassName
+      ~SquaredExponential.getFullParameter
+      ~SquaredExponential.getFullParameterDescription
+      ~SquaredExponential.getId
+      ~SquaredExponential.getInputDimension
+      ~SquaredExponential.getMarginal
+      ~SquaredExponential.getName
+      ~SquaredExponential.getNuggetFactor
+      ~SquaredExponential.getOutputCorrelation
+      ~SquaredExponential.getOutputDimension
+      ~SquaredExponential.getParameter
+      ~SquaredExponential.getParameterDescription
+      ~SquaredExponential.getScale
+      ~SquaredExponential.getShadowedId
+      ~SquaredExponential.getVisibility
+      ~SquaredExponential.hasName
+      ~SquaredExponential.hasVisibleName
+      ~SquaredExponential.isDiagonal
+      ~SquaredExponential.isStationary
+      ~SquaredExponential.parameterGradient
+      ~SquaredExponential.partialGradient
+      ~SquaredExponential.setActiveParameter
+      ~SquaredExponential.setAmplitude
+      ~SquaredExponential.setFullParameter
+      ~SquaredExponential.setName
+      ~SquaredExponential.setNuggetFactor
+      ~SquaredExponential.setOutputCorrelation
+      ~SquaredExponential.setParameter
+      ~SquaredExponential.setScale
+      ~SquaredExponential.setShadowedId
+      ~SquaredExponential.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SquaredExponential.thisown
+   
    

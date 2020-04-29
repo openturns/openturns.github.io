@@ -1,5 +1,5 @@
-LinearModelTest_LinearModelFisher
-===========================================
+openturns.LinearModelTest\_LinearModelFisher
+============================================
 
 .. currentmodule:: openturns
 

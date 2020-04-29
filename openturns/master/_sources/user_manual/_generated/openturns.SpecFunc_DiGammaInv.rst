@@ -1,5 +1,5 @@
-SpecFunc_DiGammaInv
-=============================
+openturns.SpecFunc\_DiGammaInv
+==============================
 
 .. currentmodule:: openturns
 

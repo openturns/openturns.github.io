@@ -1,5 +1,5 @@
-CorrelationAnalysis_SpearmanCorrelation
-=================================================
+openturns.CorrelationAnalysis\_SpearmanCorrelation
+==================================================
 
 .. currentmodule:: openturns
 

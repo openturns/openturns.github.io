@@ -1,5 +1,5 @@
-HypothesisTest_Spearman
-=================================
+openturns.HypothesisTest\_Spearman
+==================================
 
 .. currentmodule:: openturns
 

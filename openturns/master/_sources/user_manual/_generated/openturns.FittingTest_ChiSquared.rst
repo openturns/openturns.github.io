@@ -1,5 +1,5 @@
-FittingTest_ChiSquared
-================================
+openturns.FittingTest\_ChiSquared
+=================================
 
 .. currentmodule:: openturns
 

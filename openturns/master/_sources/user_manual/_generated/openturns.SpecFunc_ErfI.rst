@@ -1,5 +1,5 @@
-SpecFunc_ErfI
-=======================
+openturns.SpecFunc\_ErfI
+========================
 
 .. currentmodule:: openturns
 

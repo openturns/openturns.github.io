@@ -1,69 +1,5 @@
-Exponential distribution
-==========================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Exponential().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.Exponential().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.Exponential().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.Exponential().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.Exponential().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.Exponential().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.Exponential().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.Exponential().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.Exponential().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.Exponential().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.Exponential().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.Exponential().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.Exponential().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.Exponential()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.Exponential
+=====================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,159 @@ Exponential distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Exponential.__init__
+      ~Exponential.abs
+      ~Exponential.acos
+      ~Exponential.acosh
+      ~Exponential.asin
+      ~Exponential.asinh
+      ~Exponential.atan
+      ~Exponential.atanh
+      ~Exponential.cbrt
+      ~Exponential.computeBilateralConfidenceInterval
+      ~Exponential.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~Exponential.computeCDF
+      ~Exponential.computeCDFGradient
+      ~Exponential.computeCharacteristicFunction
+      ~Exponential.computeComplementaryCDF
+      ~Exponential.computeConditionalCDF
+      ~Exponential.computeConditionalDDF
+      ~Exponential.computeConditionalPDF
+      ~Exponential.computeConditionalQuantile
+      ~Exponential.computeDDF
+      ~Exponential.computeDensityGenerator
+      ~Exponential.computeDensityGeneratorDerivative
+      ~Exponential.computeDensityGeneratorSecondDerivative
+      ~Exponential.computeEntropy
+      ~Exponential.computeGeneratingFunction
+      ~Exponential.computeInverseSurvivalFunction
+      ~Exponential.computeLogCharacteristicFunction
+      ~Exponential.computeLogGeneratingFunction
+      ~Exponential.computeLogPDF
+      ~Exponential.computeLogPDFGradient
+      ~Exponential.computeMinimumVolumeInterval
+      ~Exponential.computeMinimumVolumeIntervalWithMarginalProbability
+      ~Exponential.computeMinimumVolumeLevelSet
+      ~Exponential.computeMinimumVolumeLevelSetWithThreshold
+      ~Exponential.computePDF
+      ~Exponential.computePDFGradient
+      ~Exponential.computeProbability
+      ~Exponential.computeQuantile
+      ~Exponential.computeRadialDistributionCDF
+      ~Exponential.computeScalarQuantile
+      ~Exponential.computeSequentialConditionalCDF
+      ~Exponential.computeSequentialConditionalDDF
+      ~Exponential.computeSequentialConditionalPDF
+      ~Exponential.computeSequentialConditionalQuantile
+      ~Exponential.computeSurvivalFunction
+      ~Exponential.computeUnilateralConfidenceInterval
+      ~Exponential.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~Exponential.cos
+      ~Exponential.cosh
+      ~Exponential.drawCDF
+      ~Exponential.drawLogPDF
+      ~Exponential.drawMarginal1DCDF
+      ~Exponential.drawMarginal1DLogPDF
+      ~Exponential.drawMarginal1DPDF
+      ~Exponential.drawMarginal1DSurvivalFunction
+      ~Exponential.drawMarginal2DCDF
+      ~Exponential.drawMarginal2DLogPDF
+      ~Exponential.drawMarginal2DPDF
+      ~Exponential.drawMarginal2DSurvivalFunction
+      ~Exponential.drawPDF
+      ~Exponential.drawQuantile
+      ~Exponential.drawSurvivalFunction
+      ~Exponential.exp
+      ~Exponential.getCDFEpsilon
+      ~Exponential.getCenteredMoment
+      ~Exponential.getCholesky
+      ~Exponential.getClassName
+      ~Exponential.getCopula
+      ~Exponential.getCorrelation
+      ~Exponential.getCovariance
+      ~Exponential.getDescription
+      ~Exponential.getDimension
+      ~Exponential.getDispersionIndicator
+      ~Exponential.getGamma
+      ~Exponential.getId
+      ~Exponential.getIntegrationNodesNumber
+      ~Exponential.getInverseCholesky
+      ~Exponential.getInverseIsoProbabilisticTransformation
+      ~Exponential.getIsoProbabilisticTransformation
+      ~Exponential.getKendallTau
+      ~Exponential.getKurtosis
+      ~Exponential.getLambda
+      ~Exponential.getLinearCorrelation
+      ~Exponential.getMarginal
+      ~Exponential.getMean
+      ~Exponential.getMoment
+      ~Exponential.getName
+      ~Exponential.getPDFEpsilon
+      ~Exponential.getParameter
+      ~Exponential.getParameterDescription
+      ~Exponential.getParameterDimension
+      ~Exponential.getParametersCollection
+      ~Exponential.getPearsonCorrelation
+      ~Exponential.getPositionIndicator
+      ~Exponential.getProbabilities
+      ~Exponential.getRange
+      ~Exponential.getRealization
+      ~Exponential.getRoughness
+      ~Exponential.getSample
+      ~Exponential.getShadowedId
+      ~Exponential.getShapeMatrix
+      ~Exponential.getShiftedMoment
+      ~Exponential.getSingularities
+      ~Exponential.getSkewness
+      ~Exponential.getSpearmanCorrelation
+      ~Exponential.getStandardDeviation
+      ~Exponential.getStandardDistribution
+      ~Exponential.getStandardMoment
+      ~Exponential.getStandardRepresentative
+      ~Exponential.getSupport
+      ~Exponential.getVisibility
+      ~Exponential.hasEllipticalCopula
+      ~Exponential.hasIndependentCopula
+      ~Exponential.hasName
+      ~Exponential.hasVisibleName
+      ~Exponential.inverse
+      ~Exponential.isContinuous
+      ~Exponential.isCopula
+      ~Exponential.isDiscrete
+      ~Exponential.isElliptical
+      ~Exponential.isIntegral
+      ~Exponential.ln
+      ~Exponential.log
+      ~Exponential.setDescription
+      ~Exponential.setGamma
+      ~Exponential.setIntegrationNodesNumber
+      ~Exponential.setLambda
+      ~Exponential.setName
+      ~Exponential.setParameter
+      ~Exponential.setParametersCollection
+      ~Exponential.setShadowedId
+      ~Exponential.setVisibility
+      ~Exponential.sin
+      ~Exponential.sinh
+      ~Exponential.sqr
+      ~Exponential.sqrt
+      ~Exponential.tan
+      ~Exponential.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Exponential.thisown
+   
    

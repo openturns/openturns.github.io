@@ -1,69 +1,5 @@
-Poisson distribution
-==================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Poisson().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.Poisson().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.Poisson().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.Poisson().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.Poisson().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.Poisson().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.Poisson().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.Poisson().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.Poisson().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.Poisson().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.Poisson().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.Poisson().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.Poisson().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.Poisson()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.Poisson
+=================
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,159 @@ Poisson distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Poisson.__init__
+      ~Poisson.abs
+      ~Poisson.acos
+      ~Poisson.acosh
+      ~Poisson.asin
+      ~Poisson.asinh
+      ~Poisson.atan
+      ~Poisson.atanh
+      ~Poisson.cbrt
+      ~Poisson.computeBilateralConfidenceInterval
+      ~Poisson.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~Poisson.computeCDF
+      ~Poisson.computeCDFGradient
+      ~Poisson.computeCharacteristicFunction
+      ~Poisson.computeComplementaryCDF
+      ~Poisson.computeConditionalCDF
+      ~Poisson.computeConditionalDDF
+      ~Poisson.computeConditionalPDF
+      ~Poisson.computeConditionalQuantile
+      ~Poisson.computeDDF
+      ~Poisson.computeDensityGenerator
+      ~Poisson.computeDensityGeneratorDerivative
+      ~Poisson.computeDensityGeneratorSecondDerivative
+      ~Poisson.computeEntropy
+      ~Poisson.computeGeneratingFunction
+      ~Poisson.computeInverseSurvivalFunction
+      ~Poisson.computeLogCharacteristicFunction
+      ~Poisson.computeLogGeneratingFunction
+      ~Poisson.computeLogPDF
+      ~Poisson.computeLogPDFGradient
+      ~Poisson.computeMinimumVolumeInterval
+      ~Poisson.computeMinimumVolumeIntervalWithMarginalProbability
+      ~Poisson.computeMinimumVolumeLevelSet
+      ~Poisson.computeMinimumVolumeLevelSetWithThreshold
+      ~Poisson.computePDF
+      ~Poisson.computePDFGradient
+      ~Poisson.computeProbability
+      ~Poisson.computeQuantile
+      ~Poisson.computeRadialDistributionCDF
+      ~Poisson.computeScalarQuantile
+      ~Poisson.computeSequentialConditionalCDF
+      ~Poisson.computeSequentialConditionalDDF
+      ~Poisson.computeSequentialConditionalPDF
+      ~Poisson.computeSequentialConditionalQuantile
+      ~Poisson.computeSurvivalFunction
+      ~Poisson.computeUnilateralConfidenceInterval
+      ~Poisson.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~Poisson.cos
+      ~Poisson.cosh
+      ~Poisson.drawCDF
+      ~Poisson.drawLogPDF
+      ~Poisson.drawMarginal1DCDF
+      ~Poisson.drawMarginal1DLogPDF
+      ~Poisson.drawMarginal1DPDF
+      ~Poisson.drawMarginal1DSurvivalFunction
+      ~Poisson.drawMarginal2DCDF
+      ~Poisson.drawMarginal2DLogPDF
+      ~Poisson.drawMarginal2DPDF
+      ~Poisson.drawMarginal2DSurvivalFunction
+      ~Poisson.drawPDF
+      ~Poisson.drawQuantile
+      ~Poisson.drawSurvivalFunction
+      ~Poisson.exp
+      ~Poisson.getCDFEpsilon
+      ~Poisson.getCenteredMoment
+      ~Poisson.getCholesky
+      ~Poisson.getClassName
+      ~Poisson.getCopula
+      ~Poisson.getCorrelation
+      ~Poisson.getCovariance
+      ~Poisson.getDescription
+      ~Poisson.getDimension
+      ~Poisson.getDispersionIndicator
+      ~Poisson.getId
+      ~Poisson.getIntegrationNodesNumber
+      ~Poisson.getInverseCholesky
+      ~Poisson.getInverseIsoProbabilisticTransformation
+      ~Poisson.getIsoProbabilisticTransformation
+      ~Poisson.getKendallTau
+      ~Poisson.getKurtosis
+      ~Poisson.getLambda
+      ~Poisson.getLinearCorrelation
+      ~Poisson.getMarginal
+      ~Poisson.getMean
+      ~Poisson.getMoment
+      ~Poisson.getName
+      ~Poisson.getPDFEpsilon
+      ~Poisson.getParameter
+      ~Poisson.getParameterDescription
+      ~Poisson.getParameterDimension
+      ~Poisson.getParametersCollection
+      ~Poisson.getPearsonCorrelation
+      ~Poisson.getPositionIndicator
+      ~Poisson.getProbabilities
+      ~Poisson.getRange
+      ~Poisson.getRealization
+      ~Poisson.getRoughness
+      ~Poisson.getSample
+      ~Poisson.getShadowedId
+      ~Poisson.getShapeMatrix
+      ~Poisson.getShiftedMoment
+      ~Poisson.getSingularities
+      ~Poisson.getSkewness
+      ~Poisson.getSpearmanCorrelation
+      ~Poisson.getStandardDeviation
+      ~Poisson.getStandardDistribution
+      ~Poisson.getStandardMoment
+      ~Poisson.getStandardRepresentative
+      ~Poisson.getSupport
+      ~Poisson.getSupportEpsilon
+      ~Poisson.getVisibility
+      ~Poisson.hasEllipticalCopula
+      ~Poisson.hasIndependentCopula
+      ~Poisson.hasName
+      ~Poisson.hasVisibleName
+      ~Poisson.inverse
+      ~Poisson.isContinuous
+      ~Poisson.isCopula
+      ~Poisson.isDiscrete
+      ~Poisson.isElliptical
+      ~Poisson.isIntegral
+      ~Poisson.ln
+      ~Poisson.log
+      ~Poisson.setDescription
+      ~Poisson.setIntegrationNodesNumber
+      ~Poisson.setLambda
+      ~Poisson.setName
+      ~Poisson.setParameter
+      ~Poisson.setParametersCollection
+      ~Poisson.setShadowedId
+      ~Poisson.setSupportEpsilon
+      ~Poisson.setVisibility
+      ~Poisson.sin
+      ~Poisson.sinh
+      ~Poisson.sqr
+      ~Poisson.sqrt
+      ~Poisson.tan
+      ~Poisson.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Poisson.thisown
+   
    

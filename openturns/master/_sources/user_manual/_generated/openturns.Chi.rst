@@ -1,69 +1,5 @@
-Chi distribution
-==========================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Chi().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.Chi().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.Chi().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
-    elif ot.Chi().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-        distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.Chi().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.Chi().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.Chi().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.Chi().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.Chi().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.Chi().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.Chi().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.Chi().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.Chi().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-    else:
-        distribution = ot.Chi()
-    dimension = distribution.getDimension()
-    title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+openturns.Chi
+=============
 
 .. currentmodule:: openturns
 
@@ -71,4 +7,157 @@ Chi distribution
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Chi.__init__
+      ~Chi.abs
+      ~Chi.acos
+      ~Chi.acosh
+      ~Chi.asin
+      ~Chi.asinh
+      ~Chi.atan
+      ~Chi.atanh
+      ~Chi.cbrt
+      ~Chi.computeBilateralConfidenceInterval
+      ~Chi.computeBilateralConfidenceIntervalWithMarginalProbability
+      ~Chi.computeCDF
+      ~Chi.computeCDFGradient
+      ~Chi.computeCharacteristicFunction
+      ~Chi.computeComplementaryCDF
+      ~Chi.computeConditionalCDF
+      ~Chi.computeConditionalDDF
+      ~Chi.computeConditionalPDF
+      ~Chi.computeConditionalQuantile
+      ~Chi.computeDDF
+      ~Chi.computeDensityGenerator
+      ~Chi.computeDensityGeneratorDerivative
+      ~Chi.computeDensityGeneratorSecondDerivative
+      ~Chi.computeEntropy
+      ~Chi.computeGeneratingFunction
+      ~Chi.computeInverseSurvivalFunction
+      ~Chi.computeLogCharacteristicFunction
+      ~Chi.computeLogGeneratingFunction
+      ~Chi.computeLogPDF
+      ~Chi.computeLogPDFGradient
+      ~Chi.computeMinimumVolumeInterval
+      ~Chi.computeMinimumVolumeIntervalWithMarginalProbability
+      ~Chi.computeMinimumVolumeLevelSet
+      ~Chi.computeMinimumVolumeLevelSetWithThreshold
+      ~Chi.computePDF
+      ~Chi.computePDFGradient
+      ~Chi.computeProbability
+      ~Chi.computeQuantile
+      ~Chi.computeRadialDistributionCDF
+      ~Chi.computeScalarQuantile
+      ~Chi.computeSequentialConditionalCDF
+      ~Chi.computeSequentialConditionalDDF
+      ~Chi.computeSequentialConditionalPDF
+      ~Chi.computeSequentialConditionalQuantile
+      ~Chi.computeSurvivalFunction
+      ~Chi.computeUnilateralConfidenceInterval
+      ~Chi.computeUnilateralConfidenceIntervalWithMarginalProbability
+      ~Chi.cos
+      ~Chi.cosh
+      ~Chi.drawCDF
+      ~Chi.drawLogPDF
+      ~Chi.drawMarginal1DCDF
+      ~Chi.drawMarginal1DLogPDF
+      ~Chi.drawMarginal1DPDF
+      ~Chi.drawMarginal1DSurvivalFunction
+      ~Chi.drawMarginal2DCDF
+      ~Chi.drawMarginal2DLogPDF
+      ~Chi.drawMarginal2DPDF
+      ~Chi.drawMarginal2DSurvivalFunction
+      ~Chi.drawPDF
+      ~Chi.drawQuantile
+      ~Chi.drawSurvivalFunction
+      ~Chi.exp
+      ~Chi.getCDFEpsilon
+      ~Chi.getCenteredMoment
+      ~Chi.getCholesky
+      ~Chi.getClassName
+      ~Chi.getCopula
+      ~Chi.getCorrelation
+      ~Chi.getCovariance
+      ~Chi.getDescription
+      ~Chi.getDimension
+      ~Chi.getDispersionIndicator
+      ~Chi.getId
+      ~Chi.getIntegrationNodesNumber
+      ~Chi.getInverseCholesky
+      ~Chi.getInverseIsoProbabilisticTransformation
+      ~Chi.getIsoProbabilisticTransformation
+      ~Chi.getKendallTau
+      ~Chi.getKurtosis
+      ~Chi.getLinearCorrelation
+      ~Chi.getMarginal
+      ~Chi.getMean
+      ~Chi.getMoment
+      ~Chi.getName
+      ~Chi.getNu
+      ~Chi.getPDFEpsilon
+      ~Chi.getParameter
+      ~Chi.getParameterDescription
+      ~Chi.getParameterDimension
+      ~Chi.getParametersCollection
+      ~Chi.getPearsonCorrelation
+      ~Chi.getPositionIndicator
+      ~Chi.getProbabilities
+      ~Chi.getRange
+      ~Chi.getRealization
+      ~Chi.getRoughness
+      ~Chi.getSample
+      ~Chi.getShadowedId
+      ~Chi.getShapeMatrix
+      ~Chi.getShiftedMoment
+      ~Chi.getSingularities
+      ~Chi.getSkewness
+      ~Chi.getSpearmanCorrelation
+      ~Chi.getStandardDeviation
+      ~Chi.getStandardDistribution
+      ~Chi.getStandardMoment
+      ~Chi.getStandardRepresentative
+      ~Chi.getSupport
+      ~Chi.getVisibility
+      ~Chi.hasEllipticalCopula
+      ~Chi.hasIndependentCopula
+      ~Chi.hasName
+      ~Chi.hasVisibleName
+      ~Chi.inverse
+      ~Chi.isContinuous
+      ~Chi.isCopula
+      ~Chi.isDiscrete
+      ~Chi.isElliptical
+      ~Chi.isIntegral
+      ~Chi.ln
+      ~Chi.log
+      ~Chi.setDescription
+      ~Chi.setIntegrationNodesNumber
+      ~Chi.setName
+      ~Chi.setNu
+      ~Chi.setParameter
+      ~Chi.setParametersCollection
+      ~Chi.setShadowedId
+      ~Chi.setVisibility
+      ~Chi.sin
+      ~Chi.sinh
+      ~Chi.sqr
+      ~Chi.sqrt
+      ~Chi.tan
+      ~Chi.tanh
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Chi.thisown
+   
    

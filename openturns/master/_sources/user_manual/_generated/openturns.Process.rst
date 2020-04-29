@@ -1,31 +1,5 @@
-Process
-==================================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-    if ot.Process().__class__.__name__ == 'Process':
-        # default to Gaussian for the interface class
-        process = ot.GaussianProcess()
-    elif ot.Process().__class__.__name__ == 'DiscreteMarkovChain':
-        process = ot.Process()
-        process.setTransitionMatrix(ot.SquareMatrix([[0.0,0.5,0.5],[0.7,0.0,0.3],[0.8,0.0,0.2]]))
-        origin = 0
-        process.setOrigin(origin)
-    else:
-        process = ot.Process()
-    process.setTimeGrid(ot.RegularGrid(0.0, 0.02, 50))
-    process.setDescription(['$x$'])
-    sample = process.getSample(6)
-    sample_graph = sample.drawMarginal(0)
-    sample_graph.setTitle(str(process))
-
-    fig = plt.figure(figsize=(10, 4))
-    sample_axis = fig.add_subplot(111)
-    View(sample_graph, figure=fig, axes=[sample_axis], add_legend=False)
+openturns.Process
+=================
 
 .. currentmodule:: openturns
 
@@ -33,4 +7,45 @@ Process
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Process.__init__
+      ~Process.getClassName
+      ~Process.getContinuousRealization
+      ~Process.getCovarianceModel
+      ~Process.getDescription
+      ~Process.getFuture
+      ~Process.getId
+      ~Process.getImplementation
+      ~Process.getInputDimension
+      ~Process.getMarginal
+      ~Process.getMesh
+      ~Process.getName
+      ~Process.getOutputDimension
+      ~Process.getRealization
+      ~Process.getSample
+      ~Process.getTimeGrid
+      ~Process.getTrend
+      ~Process.isComposite
+      ~Process.isNormal
+      ~Process.isStationary
+      ~Process.setDescription
+      ~Process.setMesh
+      ~Process.setName
+      ~Process.setTimeGrid
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Process.thisown
+   
    

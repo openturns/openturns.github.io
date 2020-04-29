@@ -1,5 +1,5 @@
-SpecFunc_Cbrt
-=======================
+openturns.SpecFunc\_Cbrt
+========================
 
 .. currentmodule:: openturns
 

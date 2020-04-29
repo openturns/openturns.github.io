@@ -1,5 +1,5 @@
-SpecFunc_Dawson
-=========================
+openturns.SpecFunc\_Dawson
+==========================
 
 .. currentmodule:: openturns
 

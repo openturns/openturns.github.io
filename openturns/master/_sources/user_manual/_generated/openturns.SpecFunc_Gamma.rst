@@ -1,5 +1,5 @@
-SpecFunc_Gamma
-========================
+openturns.SpecFunc\_Gamma
+=========================
 
 .. currentmodule:: openturns
 

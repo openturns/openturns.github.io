@@ -1,27 +1,5 @@
-HaltonSequence
+openturns.HaltonSequence
 ========================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-
-    # Generate points with the given sequence
-    sequence = ot.HaltonSequence(2)
-    sample = sequence.generate(1000)
-
-    # Create the graph
-    graph = ot.Graph("Sequence of 1000 points", "x1", "x2", True, "")
-    cloud = ot.Cloud(sample)
-    graph.add(cloud)
-
-    # Draw the graph
-    fig = plt.figure(figsize=(4, 4))
-    axis = fig.add_subplot(111)
-    View(graph, figure=fig, axes=[axis], add_legend=False)
-    axis.set_xlim(auto=True)
 
 .. currentmodule:: openturns
 
@@ -29,4 +7,36 @@ HaltonSequence
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HaltonSequence.ComputeStarDiscrepancy
+      ~HaltonSequence.__init__
+      ~HaltonSequence.generate
+      ~HaltonSequence.getClassName
+      ~HaltonSequence.getDimension
+      ~HaltonSequence.getId
+      ~HaltonSequence.getName
+      ~HaltonSequence.getShadowedId
+      ~HaltonSequence.getVisibility
+      ~HaltonSequence.hasName
+      ~HaltonSequence.hasVisibleName
+      ~HaltonSequence.initialize
+      ~HaltonSequence.setName
+      ~HaltonSequence.setShadowedId
+      ~HaltonSequence.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HaltonSequence.thisown
+   
    

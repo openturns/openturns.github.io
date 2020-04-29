@@ -1,27 +1,5 @@
-FaureSequence
+openturns.FaureSequence
 =======================
-
-.. plot::
-    :include-source: False
-
-    import openturns as ot
-    from matplotlib import pyplot as plt
-    from openturns.viewer import View
-
-    # Generate points with the given sequence
-    sequence = ot.FaureSequence(2)
-    sample = sequence.generate(1000)
-
-    # Create the graph
-    graph = ot.Graph("Sequence of 1000 points", "x1", "x2", True, "")
-    cloud = ot.Cloud(sample)
-    graph.add(cloud)
-
-    # Draw the graph
-    fig = plt.figure(figsize=(4, 4))
-    axis = fig.add_subplot(111)
-    View(graph, figure=fig, axes=[axis], add_legend=False)
-    axis.set_xlim(auto=True)
 
 .. currentmodule:: openturns
 
@@ -29,4 +7,36 @@ FaureSequence
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FaureSequence.ComputeStarDiscrepancy
+      ~FaureSequence.__init__
+      ~FaureSequence.generate
+      ~FaureSequence.getClassName
+      ~FaureSequence.getDimension
+      ~FaureSequence.getId
+      ~FaureSequence.getName
+      ~FaureSequence.getShadowedId
+      ~FaureSequence.getVisibility
+      ~FaureSequence.hasName
+      ~FaureSequence.hasVisibleName
+      ~FaureSequence.initialize
+      ~FaureSequence.setName
+      ~FaureSequence.setShadowedId
+      ~FaureSequence.setVisibility
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FaureSequence.thisown
+   
    

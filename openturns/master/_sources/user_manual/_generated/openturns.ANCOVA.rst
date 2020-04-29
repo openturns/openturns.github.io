@@ -1,4 +1,4 @@
-ANCOVA
+openturns.ANCOVA
 ================
 
 .. currentmodule:: openturns
@@ -7,5 +7,24 @@ ANCOVA
 
    
    .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ANCOVA.__init__
+      ~ANCOVA.getIndices
+      ~ANCOVA.getUncorrelatedIndices
+   
    
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ANCOVA.thisown
+   
+   

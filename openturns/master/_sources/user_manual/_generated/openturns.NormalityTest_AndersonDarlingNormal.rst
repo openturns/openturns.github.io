@@ -1,5 +1,5 @@
-NormalityTest_AndersonDarlingNormal
-=============================================
+openturns.NormalityTest\_AndersonDarlingNormal
+==============================================
 
 .. currentmodule:: openturns
 
