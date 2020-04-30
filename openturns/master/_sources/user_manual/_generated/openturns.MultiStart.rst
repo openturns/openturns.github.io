@@ -17,6 +17,7 @@ openturns.MultiStart
       ~MultiStart.computeLagrangeMultipliers
       ~MultiStart.getClassName
       ~MultiStart.getId
+      ~MultiStart.getKeepResults
       ~MultiStart.getMaximumAbsoluteError
       ~MultiStart.getMaximumConstraintError
       ~MultiStart.getMaximumEvaluationNumber
@@ -36,6 +37,7 @@ openturns.MultiStart
       ~MultiStart.hasName
       ~MultiStart.hasVisibleName
       ~MultiStart.run
+      ~MultiStart.setKeepResults
       ~MultiStart.setMaximumAbsoluteError
       ~MultiStart.setMaximumConstraintError
       ~MultiStart.setMaximumEvaluationNumber
