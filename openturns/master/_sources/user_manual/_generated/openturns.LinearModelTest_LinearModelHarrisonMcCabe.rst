@@ -1,5 +1,5 @@
-openturns.LinearModelTest\_LinearModelHarrisonMcCabe
-====================================================
+LinearModelTest_LinearModelHarrisonMcCabe
+===================================================
 
 .. currentmodule:: openturns
 

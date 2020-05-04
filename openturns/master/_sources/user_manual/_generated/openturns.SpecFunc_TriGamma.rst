@@ -1,5 +1,5 @@
-openturns.SpecFunc\_TriGamma
-============================
+SpecFunc_TriGamma
+===========================
 
 .. currentmodule:: openturns
 

@@ -1,5 +1,5 @@
-openturns.SpecFunc\_IsNormal
-============================
+SpecFunc_IsNormal
+===========================
 
 .. currentmodule:: openturns
 

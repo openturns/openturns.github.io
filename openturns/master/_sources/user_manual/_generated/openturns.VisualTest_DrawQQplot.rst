@@ -1,5 +1,8 @@
-openturns.VisualTest\_DrawQQplot
-================================
+VisualTest_DrawQQplot
+===============================
+
+.. plot:: pyplots/VisualTest_DrawQQplot.py
+    :include-source: False
 
 .. currentmodule:: openturns
 

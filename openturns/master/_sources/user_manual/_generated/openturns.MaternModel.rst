@@ -1,71 +1,69 @@
-openturns.MaternModel
-=====================
+MaternModel
+==========================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.MaternModel().__class__.__name__ == 'ExponentialModel':
+        covarianceModel = ot.ExponentialModel([0.5], [5.0])
+    elif ot.MaternModel().__class__.__name__ == 'GeneralizedExponential':
+        covarianceModel = ot.GeneralizedExponential([2.0], [3.0], 1.5)
+    elif ot.MaternModel().__class__.__name__ == 'ProductCovarianceModel':
+        amplitude = [1.0]
+        scale1 = [4.0]
+        scale2 = [4.0]
+        cov1 = ot.ExponentialModel(scale1, amplitude)
+        cov2 = ot.ExponentialModel(scale2, amplitude)
+        covarianceModel = ot.ProductCovarianceModel([cov1, cov2])
+    elif ot.MaternModel().__class__.__name__ == 'RankMCovarianceModel':
+        variance = [1.0, 2.0]
+        basis = ot.LinearBasisFactory().build()
+        covarianceModel = ot.RankMCovarianceModel(variance, basis)
+    else:
+        covarianceModel = ot.MaternModel()
+    title = str(covarianceModel)[:100]
+    if covarianceModel.getInputDimension() == 1:
+        scale = covarianceModel.getScale()[0]
+        if covarianceModel.isStationary():
+            def f(x):
+                return [covarianceModel(x)[0, 0]]
+            func = ot.PythonFunction(1, 1, f)
+            func.setDescription(['$tau$', '$cov$'])
+            cov_graph = func.draw(-3.0 * scale, 3.0 * scale, 129)
+            cov_graph.setTitle(title)
+            fig = plt.figure(figsize=(10, 4))
+            cov_axis = fig.add_subplot(111)
+            View(cov_graph, figure=fig, axes=[cov_axis], add_legend=False)
+        else:
+            def f(x):
+                return [covarianceModel([x[0]], [x[1]])[0, 0]]
+            func = ot.PythonFunction(2, 1, f)
+            func.setDescription(['$s$', '$t$', '$cov$'])
+            cov_graph = func.draw([-3.0 * scale]*2, [3.0 * scale]*2, [129]*2)
+            cov_graph.setTitle(title)
+            fig = plt.figure(figsize=(10, 4))
+            cov_axis = fig.add_subplot(111)
+            View(cov_graph, figure=fig, axes=[cov_axis], add_legend=False, square_axes=True)
+    elif covarianceModel.getInputDimension() == 2:
+        scale = covarianceModel.getScale()
+        if covarianceModel.isStationary():
+            def f(x):
+                return [covarianceModel(x)[0, 0]]
+            func = ot.PythonFunction(2, 1, f)
+            func.setDescription(['$s$', '$t$', '$cov$'])
+            cov_graph = func.draw(-3.0 * scale, 3.0 * scale, [129]*2)
+            cov_graph.setTitle(title)
+            fig = plt.figure(figsize=(10, 4))
+            cov_axis = fig.add_subplot(111)
+            View(cov_graph, figure=fig, axes=[cov_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
 .. autoclass:: MaternModel
 
-   
+  
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~MaternModel.__init__
-      ~MaternModel.computeAsScalar
-      ~MaternModel.computeStandardRepresentative
-      ~MaternModel.discretize
-      ~MaternModel.discretizeAndFactorize
-      ~MaternModel.discretizeAndFactorizeHMatrix
-      ~MaternModel.discretizeHMatrix
-      ~MaternModel.discretizeRow
-      ~MaternModel.draw
-      ~MaternModel.getActiveParameter
-      ~MaternModel.getAmplitude
-      ~MaternModel.getClassName
-      ~MaternModel.getFullParameter
-      ~MaternModel.getFullParameterDescription
-      ~MaternModel.getId
-      ~MaternModel.getInputDimension
-      ~MaternModel.getMarginal
-      ~MaternModel.getName
-      ~MaternModel.getNu
-      ~MaternModel.getNuggetFactor
-      ~MaternModel.getOutputCorrelation
-      ~MaternModel.getOutputDimension
-      ~MaternModel.getParameter
-      ~MaternModel.getParameterDescription
-      ~MaternModel.getScale
-      ~MaternModel.getShadowedId
-      ~MaternModel.getVisibility
-      ~MaternModel.hasName
-      ~MaternModel.hasVisibleName
-      ~MaternModel.isDiagonal
-      ~MaternModel.isStationary
-      ~MaternModel.parameterGradient
-      ~MaternModel.partialGradient
-      ~MaternModel.setActiveParameter
-      ~MaternModel.setAmplitude
-      ~MaternModel.setFullParameter
-      ~MaternModel.setName
-      ~MaternModel.setNu
-      ~MaternModel.setNuggetFactor
-      ~MaternModel.setOutputCorrelation
-      ~MaternModel.setParameter
-      ~MaternModel.setScale
-      ~MaternModel.setShadowedId
-      ~MaternModel.setVisibility
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~MaternModel.thisown
-   
    

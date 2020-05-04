@@ -1,5 +1,5 @@
-openturns.DistFunc\_pPearsonCorrelation
-=======================================
+DistFunc_pPearsonCorrelation
+======================================
 
 .. currentmodule:: openturns
 

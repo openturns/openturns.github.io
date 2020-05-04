@@ -1,5 +1,5 @@
-openturns.SpecFunc\_GammaCorrection
-===================================
+SpecFunc_GammaCorrection
+==================================
 
 .. currentmodule:: openturns
 

@@ -1,5 +1,8 @@
-openturns.viewer.View
+View
 =====================
+
+.. plot:: pyplots/View.py
+    :include-source: False
 
 .. currentmodule:: openturns.viewer
 
@@ -7,22 +10,4 @@ openturns.viewer.View
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~View.ShowAll
-      ~View.__init__
-      ~View.close
-      ~View.getAxes
-      ~View.getFigure
-      ~View.save
-      ~View.show
-   
-   
-
-   
-   
    

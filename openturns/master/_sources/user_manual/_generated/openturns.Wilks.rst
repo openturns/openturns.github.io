@@ -1,4 +1,4 @@
-openturns.Wilks
+Wilks
 ===============
 
 .. currentmodule:: openturns
@@ -7,25 +7,5 @@ openturns.Wilks
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Wilks.ComputeSampleSize
-      ~Wilks.__init__
-      ~Wilks.computeQuantileBound
-      ~Wilks.getClassName
-   
    
 
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Wilks.thisown
-   
-   

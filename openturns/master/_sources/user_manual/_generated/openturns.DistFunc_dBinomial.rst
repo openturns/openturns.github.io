@@ -1,5 +1,5 @@
-openturns.DistFunc\_dBinomial
-=============================
+DistFunc_dBinomial
+============================
 
 .. currentmodule:: openturns
 

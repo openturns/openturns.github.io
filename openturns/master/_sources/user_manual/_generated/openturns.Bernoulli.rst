@@ -1,5 +1,69 @@
-openturns.Bernoulli
-===================
+Bernoulli distribution
+======================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.Bernoulli().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.Bernoulli().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.Bernoulli().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.Bernoulli().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.Bernoulli().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.Bernoulli().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.Bernoulli().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.Bernoulli().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.Bernoulli().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.Bernoulli().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.Bernoulli().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.Bernoulli().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.Bernoulli().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.Bernoulli()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,159 +71,4 @@ openturns.Bernoulli
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Bernoulli.__init__
-      ~Bernoulli.abs
-      ~Bernoulli.acos
-      ~Bernoulli.acosh
-      ~Bernoulli.asin
-      ~Bernoulli.asinh
-      ~Bernoulli.atan
-      ~Bernoulli.atanh
-      ~Bernoulli.cbrt
-      ~Bernoulli.computeBilateralConfidenceInterval
-      ~Bernoulli.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~Bernoulli.computeCDF
-      ~Bernoulli.computeCDFGradient
-      ~Bernoulli.computeCharacteristicFunction
-      ~Bernoulli.computeComplementaryCDF
-      ~Bernoulli.computeConditionalCDF
-      ~Bernoulli.computeConditionalDDF
-      ~Bernoulli.computeConditionalPDF
-      ~Bernoulli.computeConditionalQuantile
-      ~Bernoulli.computeDDF
-      ~Bernoulli.computeDensityGenerator
-      ~Bernoulli.computeDensityGeneratorDerivative
-      ~Bernoulli.computeDensityGeneratorSecondDerivative
-      ~Bernoulli.computeEntropy
-      ~Bernoulli.computeGeneratingFunction
-      ~Bernoulli.computeInverseSurvivalFunction
-      ~Bernoulli.computeLogCharacteristicFunction
-      ~Bernoulli.computeLogGeneratingFunction
-      ~Bernoulli.computeLogPDF
-      ~Bernoulli.computeLogPDFGradient
-      ~Bernoulli.computeMinimumVolumeInterval
-      ~Bernoulli.computeMinimumVolumeIntervalWithMarginalProbability
-      ~Bernoulli.computeMinimumVolumeLevelSet
-      ~Bernoulli.computeMinimumVolumeLevelSetWithThreshold
-      ~Bernoulli.computePDF
-      ~Bernoulli.computePDFGradient
-      ~Bernoulli.computeProbability
-      ~Bernoulli.computeQuantile
-      ~Bernoulli.computeRadialDistributionCDF
-      ~Bernoulli.computeScalarQuantile
-      ~Bernoulli.computeSequentialConditionalCDF
-      ~Bernoulli.computeSequentialConditionalDDF
-      ~Bernoulli.computeSequentialConditionalPDF
-      ~Bernoulli.computeSequentialConditionalQuantile
-      ~Bernoulli.computeSurvivalFunction
-      ~Bernoulli.computeUnilateralConfidenceInterval
-      ~Bernoulli.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~Bernoulli.cos
-      ~Bernoulli.cosh
-      ~Bernoulli.drawCDF
-      ~Bernoulli.drawLogPDF
-      ~Bernoulli.drawMarginal1DCDF
-      ~Bernoulli.drawMarginal1DLogPDF
-      ~Bernoulli.drawMarginal1DPDF
-      ~Bernoulli.drawMarginal1DSurvivalFunction
-      ~Bernoulli.drawMarginal2DCDF
-      ~Bernoulli.drawMarginal2DLogPDF
-      ~Bernoulli.drawMarginal2DPDF
-      ~Bernoulli.drawMarginal2DSurvivalFunction
-      ~Bernoulli.drawPDF
-      ~Bernoulli.drawQuantile
-      ~Bernoulli.drawSurvivalFunction
-      ~Bernoulli.exp
-      ~Bernoulli.getCDFEpsilon
-      ~Bernoulli.getCenteredMoment
-      ~Bernoulli.getCholesky
-      ~Bernoulli.getClassName
-      ~Bernoulli.getCopula
-      ~Bernoulli.getCorrelation
-      ~Bernoulli.getCovariance
-      ~Bernoulli.getDescription
-      ~Bernoulli.getDimension
-      ~Bernoulli.getDispersionIndicator
-      ~Bernoulli.getId
-      ~Bernoulli.getIntegrationNodesNumber
-      ~Bernoulli.getInverseCholesky
-      ~Bernoulli.getInverseIsoProbabilisticTransformation
-      ~Bernoulli.getIsoProbabilisticTransformation
-      ~Bernoulli.getKendallTau
-      ~Bernoulli.getKurtosis
-      ~Bernoulli.getLinearCorrelation
-      ~Bernoulli.getMarginal
-      ~Bernoulli.getMean
-      ~Bernoulli.getMoment
-      ~Bernoulli.getName
-      ~Bernoulli.getP
-      ~Bernoulli.getPDFEpsilon
-      ~Bernoulli.getParameter
-      ~Bernoulli.getParameterDescription
-      ~Bernoulli.getParameterDimension
-      ~Bernoulli.getParametersCollection
-      ~Bernoulli.getPearsonCorrelation
-      ~Bernoulli.getPositionIndicator
-      ~Bernoulli.getProbabilities
-      ~Bernoulli.getRange
-      ~Bernoulli.getRealization
-      ~Bernoulli.getRoughness
-      ~Bernoulli.getSample
-      ~Bernoulli.getShadowedId
-      ~Bernoulli.getShapeMatrix
-      ~Bernoulli.getShiftedMoment
-      ~Bernoulli.getSingularities
-      ~Bernoulli.getSkewness
-      ~Bernoulli.getSpearmanCorrelation
-      ~Bernoulli.getStandardDeviation
-      ~Bernoulli.getStandardDistribution
-      ~Bernoulli.getStandardMoment
-      ~Bernoulli.getStandardRepresentative
-      ~Bernoulli.getSupport
-      ~Bernoulli.getSupportEpsilon
-      ~Bernoulli.getVisibility
-      ~Bernoulli.hasEllipticalCopula
-      ~Bernoulli.hasIndependentCopula
-      ~Bernoulli.hasName
-      ~Bernoulli.hasVisibleName
-      ~Bernoulli.inverse
-      ~Bernoulli.isContinuous
-      ~Bernoulli.isCopula
-      ~Bernoulli.isDiscrete
-      ~Bernoulli.isElliptical
-      ~Bernoulli.isIntegral
-      ~Bernoulli.ln
-      ~Bernoulli.log
-      ~Bernoulli.setDescription
-      ~Bernoulli.setIntegrationNodesNumber
-      ~Bernoulli.setName
-      ~Bernoulli.setP
-      ~Bernoulli.setParameter
-      ~Bernoulli.setParametersCollection
-      ~Bernoulli.setShadowedId
-      ~Bernoulli.setSupportEpsilon
-      ~Bernoulli.setVisibility
-      ~Bernoulli.sin
-      ~Bernoulli.sinh
-      ~Bernoulli.sqr
-      ~Bernoulli.sqrt
-      ~Bernoulli.tan
-      ~Bernoulli.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Bernoulli.thisown
-   
    

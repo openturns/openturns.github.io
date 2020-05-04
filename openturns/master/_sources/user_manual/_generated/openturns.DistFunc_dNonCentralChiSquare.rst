@@ -1,5 +1,5 @@
-openturns.DistFunc\_dNonCentralChiSquare
-========================================
+DistFunc_dNonCentralChiSquare
+=======================================
 
 .. currentmodule:: openturns
 

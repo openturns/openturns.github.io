@@ -1,5 +1,5 @@
-openturns.SpecFunc\_IncompleteGammaInverse
-==========================================
+SpecFunc_IncompleteGammaInverse
+=========================================
 
 .. currentmodule:: openturns
 

@@ -1,5 +1,69 @@
-openturns.Histogram
-===================
+Histogram distribution
+======================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.Histogram().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.Histogram().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.Histogram().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.Histogram().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.Histogram().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.Histogram().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.Histogram().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.Histogram().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.Histogram().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.Histogram().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.Histogram().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.Histogram().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.Histogram().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.Histogram()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,160 +71,4 @@ openturns.Histogram
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Histogram.__init__
-      ~Histogram.abs
-      ~Histogram.acos
-      ~Histogram.acosh
-      ~Histogram.asin
-      ~Histogram.asinh
-      ~Histogram.atan
-      ~Histogram.atanh
-      ~Histogram.cbrt
-      ~Histogram.computeBilateralConfidenceInterval
-      ~Histogram.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~Histogram.computeCDF
-      ~Histogram.computeCDFGradient
-      ~Histogram.computeCharacteristicFunction
-      ~Histogram.computeComplementaryCDF
-      ~Histogram.computeConditionalCDF
-      ~Histogram.computeConditionalDDF
-      ~Histogram.computeConditionalPDF
-      ~Histogram.computeConditionalQuantile
-      ~Histogram.computeDDF
-      ~Histogram.computeDensityGenerator
-      ~Histogram.computeDensityGeneratorDerivative
-      ~Histogram.computeDensityGeneratorSecondDerivative
-      ~Histogram.computeEntropy
-      ~Histogram.computeGeneratingFunction
-      ~Histogram.computeInverseSurvivalFunction
-      ~Histogram.computeLogCharacteristicFunction
-      ~Histogram.computeLogGeneratingFunction
-      ~Histogram.computeLogPDF
-      ~Histogram.computeLogPDFGradient
-      ~Histogram.computeMinimumVolumeInterval
-      ~Histogram.computeMinimumVolumeIntervalWithMarginalProbability
-      ~Histogram.computeMinimumVolumeLevelSet
-      ~Histogram.computeMinimumVolumeLevelSetWithThreshold
-      ~Histogram.computePDF
-      ~Histogram.computePDFGradient
-      ~Histogram.computeProbability
-      ~Histogram.computeQuantile
-      ~Histogram.computeRadialDistributionCDF
-      ~Histogram.computeScalarQuantile
-      ~Histogram.computeSequentialConditionalCDF
-      ~Histogram.computeSequentialConditionalDDF
-      ~Histogram.computeSequentialConditionalPDF
-      ~Histogram.computeSequentialConditionalQuantile
-      ~Histogram.computeSurvivalFunction
-      ~Histogram.computeUnilateralConfidenceInterval
-      ~Histogram.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~Histogram.cos
-      ~Histogram.cosh
-      ~Histogram.drawCDF
-      ~Histogram.drawLogPDF
-      ~Histogram.drawMarginal1DCDF
-      ~Histogram.drawMarginal1DLogPDF
-      ~Histogram.drawMarginal1DPDF
-      ~Histogram.drawMarginal1DSurvivalFunction
-      ~Histogram.drawMarginal2DCDF
-      ~Histogram.drawMarginal2DLogPDF
-      ~Histogram.drawMarginal2DPDF
-      ~Histogram.drawMarginal2DSurvivalFunction
-      ~Histogram.drawPDF
-      ~Histogram.drawQuantile
-      ~Histogram.drawSurvivalFunction
-      ~Histogram.exp
-      ~Histogram.getCDFEpsilon
-      ~Histogram.getCenteredMoment
-      ~Histogram.getCholesky
-      ~Histogram.getClassName
-      ~Histogram.getCopula
-      ~Histogram.getCorrelation
-      ~Histogram.getCovariance
-      ~Histogram.getDescription
-      ~Histogram.getDimension
-      ~Histogram.getDispersionIndicator
-      ~Histogram.getFirst
-      ~Histogram.getHeight
-      ~Histogram.getId
-      ~Histogram.getIntegrationNodesNumber
-      ~Histogram.getInverseCholesky
-      ~Histogram.getInverseIsoProbabilisticTransformation
-      ~Histogram.getIsoProbabilisticTransformation
-      ~Histogram.getKendallTau
-      ~Histogram.getKurtosis
-      ~Histogram.getLinearCorrelation
-      ~Histogram.getMarginal
-      ~Histogram.getMean
-      ~Histogram.getMoment
-      ~Histogram.getName
-      ~Histogram.getPDFEpsilon
-      ~Histogram.getParameter
-      ~Histogram.getParameterDescription
-      ~Histogram.getParameterDimension
-      ~Histogram.getParametersCollection
-      ~Histogram.getPearsonCorrelation
-      ~Histogram.getPositionIndicator
-      ~Histogram.getProbabilities
-      ~Histogram.getRange
-      ~Histogram.getRealization
-      ~Histogram.getRoughness
-      ~Histogram.getSample
-      ~Histogram.getShadowedId
-      ~Histogram.getShapeMatrix
-      ~Histogram.getShiftedMoment
-      ~Histogram.getSingularities
-      ~Histogram.getSkewness
-      ~Histogram.getSpearmanCorrelation
-      ~Histogram.getStandardDeviation
-      ~Histogram.getStandardDistribution
-      ~Histogram.getStandardMoment
-      ~Histogram.getStandardRepresentative
-      ~Histogram.getSupport
-      ~Histogram.getVisibility
-      ~Histogram.getWidth
-      ~Histogram.hasEllipticalCopula
-      ~Histogram.hasIndependentCopula
-      ~Histogram.hasName
-      ~Histogram.hasVisibleName
-      ~Histogram.inverse
-      ~Histogram.isContinuous
-      ~Histogram.isCopula
-      ~Histogram.isDiscrete
-      ~Histogram.isElliptical
-      ~Histogram.isIntegral
-      ~Histogram.ln
-      ~Histogram.log
-      ~Histogram.setData
-      ~Histogram.setDescription
-      ~Histogram.setFirst
-      ~Histogram.setIntegrationNodesNumber
-      ~Histogram.setName
-      ~Histogram.setParameter
-      ~Histogram.setParametersCollection
-      ~Histogram.setShadowedId
-      ~Histogram.setVisibility
-      ~Histogram.sin
-      ~Histogram.sinh
-      ~Histogram.sqr
-      ~Histogram.sqrt
-      ~Histogram.tan
-      ~Histogram.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Histogram.thisown
-   
    

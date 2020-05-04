@@ -1,5 +1,41 @@
-openturns.FrankCopula
-=====================
+FrankCopula
+==========================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.FrankCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
+        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
+        copula = ot.EmpiricalBernsteinCopula(sample, 4)
+    elif ot.FrankCopula().__class__.__name__ == 'ExtremeValueCopula':
+        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
+    elif ot.FrankCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
+        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
+        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
+    elif ot.FrankCopula().__class__.__name__ == 'NormalCopula':
+        R = ot.CorrelationMatrix(2)
+        R[1, 0] = 0.8
+        copula = ot.NormalCopula(R)
+    elif ot.FrankCopula().__class__.__name__ == 'SklarCopula':
+        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
+        copula =  ot.SklarCopula(student)
+    else:
+        copula = ot.FrankCopula()
+    if copula.getDimension() == 1:
+        copula = ot.FrankCopula(2)
+    copula.setDescription(['$u_1$', '$u_2$'])
+    pdf_graph = copula.drawPDF()
+    cdf_graph = copula.drawCDF()
+    fig = plt.figure(figsize=(10, 4))
+    pdf_axis = fig.add_subplot(121)
+    cdf_axis = fig.add_subplot(122)
+    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
+    title = str(copula)[:100].split('\n')[0]
+    fig.suptitle(title)
 
 .. currentmodule:: openturns
 
@@ -7,161 +43,4 @@ openturns.FrankCopula
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~FrankCopula.__init__
-      ~FrankCopula.abs
-      ~FrankCopula.acos
-      ~FrankCopula.acosh
-      ~FrankCopula.asin
-      ~FrankCopula.asinh
-      ~FrankCopula.atan
-      ~FrankCopula.atanh
-      ~FrankCopula.cbrt
-      ~FrankCopula.computeArchimedeanGenerator
-      ~FrankCopula.computeArchimedeanGeneratorDerivative
-      ~FrankCopula.computeArchimedeanGeneratorSecondDerivative
-      ~FrankCopula.computeBilateralConfidenceInterval
-      ~FrankCopula.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~FrankCopula.computeCDF
-      ~FrankCopula.computeCDFGradient
-      ~FrankCopula.computeCharacteristicFunction
-      ~FrankCopula.computeComplementaryCDF
-      ~FrankCopula.computeConditionalCDF
-      ~FrankCopula.computeConditionalDDF
-      ~FrankCopula.computeConditionalPDF
-      ~FrankCopula.computeConditionalQuantile
-      ~FrankCopula.computeDDF
-      ~FrankCopula.computeDensityGenerator
-      ~FrankCopula.computeDensityGeneratorDerivative
-      ~FrankCopula.computeDensityGeneratorSecondDerivative
-      ~FrankCopula.computeEntropy
-      ~FrankCopula.computeGeneratingFunction
-      ~FrankCopula.computeInverseArchimedeanGenerator
-      ~FrankCopula.computeInverseSurvivalFunction
-      ~FrankCopula.computeLogCharacteristicFunction
-      ~FrankCopula.computeLogGeneratingFunction
-      ~FrankCopula.computeLogPDF
-      ~FrankCopula.computeLogPDFGradient
-      ~FrankCopula.computeMinimumVolumeInterval
-      ~FrankCopula.computeMinimumVolumeIntervalWithMarginalProbability
-      ~FrankCopula.computeMinimumVolumeLevelSet
-      ~FrankCopula.computeMinimumVolumeLevelSetWithThreshold
-      ~FrankCopula.computePDF
-      ~FrankCopula.computePDFGradient
-      ~FrankCopula.computeProbability
-      ~FrankCopula.computeQuantile
-      ~FrankCopula.computeRadialDistributionCDF
-      ~FrankCopula.computeScalarQuantile
-      ~FrankCopula.computeSequentialConditionalCDF
-      ~FrankCopula.computeSequentialConditionalDDF
-      ~FrankCopula.computeSequentialConditionalPDF
-      ~FrankCopula.computeSequentialConditionalQuantile
-      ~FrankCopula.computeSurvivalFunction
-      ~FrankCopula.computeUnilateralConfidenceInterval
-      ~FrankCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~FrankCopula.cos
-      ~FrankCopula.cosh
-      ~FrankCopula.drawCDF
-      ~FrankCopula.drawLogPDF
-      ~FrankCopula.drawMarginal1DCDF
-      ~FrankCopula.drawMarginal1DLogPDF
-      ~FrankCopula.drawMarginal1DPDF
-      ~FrankCopula.drawMarginal1DSurvivalFunction
-      ~FrankCopula.drawMarginal2DCDF
-      ~FrankCopula.drawMarginal2DLogPDF
-      ~FrankCopula.drawMarginal2DPDF
-      ~FrankCopula.drawMarginal2DSurvivalFunction
-      ~FrankCopula.drawPDF
-      ~FrankCopula.drawQuantile
-      ~FrankCopula.drawSurvivalFunction
-      ~FrankCopula.exp
-      ~FrankCopula.getCDFEpsilon
-      ~FrankCopula.getCenteredMoment
-      ~FrankCopula.getCholesky
-      ~FrankCopula.getClassName
-      ~FrankCopula.getCopula
-      ~FrankCopula.getCorrelation
-      ~FrankCopula.getCovariance
-      ~FrankCopula.getDescription
-      ~FrankCopula.getDimension
-      ~FrankCopula.getDispersionIndicator
-      ~FrankCopula.getId
-      ~FrankCopula.getIntegrationNodesNumber
-      ~FrankCopula.getInverseCholesky
-      ~FrankCopula.getInverseIsoProbabilisticTransformation
-      ~FrankCopula.getIsoProbabilisticTransformation
-      ~FrankCopula.getKendallTau
-      ~FrankCopula.getKurtosis
-      ~FrankCopula.getLinearCorrelation
-      ~FrankCopula.getMarginal
-      ~FrankCopula.getMean
-      ~FrankCopula.getMoment
-      ~FrankCopula.getName
-      ~FrankCopula.getPDFEpsilon
-      ~FrankCopula.getParameter
-      ~FrankCopula.getParameterDescription
-      ~FrankCopula.getParameterDimension
-      ~FrankCopula.getParametersCollection
-      ~FrankCopula.getPearsonCorrelation
-      ~FrankCopula.getPositionIndicator
-      ~FrankCopula.getProbabilities
-      ~FrankCopula.getRange
-      ~FrankCopula.getRealization
-      ~FrankCopula.getRoughness
-      ~FrankCopula.getSample
-      ~FrankCopula.getShadowedId
-      ~FrankCopula.getShapeMatrix
-      ~FrankCopula.getShiftedMoment
-      ~FrankCopula.getSingularities
-      ~FrankCopula.getSkewness
-      ~FrankCopula.getSpearmanCorrelation
-      ~FrankCopula.getStandardDeviation
-      ~FrankCopula.getStandardDistribution
-      ~FrankCopula.getStandardMoment
-      ~FrankCopula.getStandardRepresentative
-      ~FrankCopula.getSupport
-      ~FrankCopula.getTheta
-      ~FrankCopula.getVisibility
-      ~FrankCopula.hasEllipticalCopula
-      ~FrankCopula.hasIndependentCopula
-      ~FrankCopula.hasName
-      ~FrankCopula.hasVisibleName
-      ~FrankCopula.inverse
-      ~FrankCopula.isContinuous
-      ~FrankCopula.isCopula
-      ~FrankCopula.isDiscrete
-      ~FrankCopula.isElliptical
-      ~FrankCopula.isIntegral
-      ~FrankCopula.ln
-      ~FrankCopula.log
-      ~FrankCopula.setDescription
-      ~FrankCopula.setIntegrationNodesNumber
-      ~FrankCopula.setName
-      ~FrankCopula.setParameter
-      ~FrankCopula.setParametersCollection
-      ~FrankCopula.setShadowedId
-      ~FrankCopula.setTheta
-      ~FrankCopula.setVisibility
-      ~FrankCopula.sin
-      ~FrankCopula.sinh
-      ~FrankCopula.sqr
-      ~FrankCopula.sqrt
-      ~FrankCopula.tan
-      ~FrankCopula.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~FrankCopula.thisown
-   
    

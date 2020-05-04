@@ -1,5 +1,30 @@
-openturns.Composite
+Composite
 ===================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+
+    # Generate sample with the given plane
+    center = [0.5, 1.5]
+    levels = [4, 8, 16]
+
+    experiment = ot.Composite(center, levels)
+    sample = experiment.generate()
+
+    # Create the graph
+    graph = ot.Graph(sample.getName(), "x1", "x2", True, "")
+    cloud = ot.Cloud(sample, "blue", "fsquare", "")
+    graph.add(cloud)
+
+    # Draw the graph
+    fig = plt.figure(figsize=(4, 4))
+    axis = fig.add_subplot(111)
+    View(graph, figure=fig, axes=[axis], add_legend=False, square_axes=True)
+    axis.set_xlim(auto=True)
 
 .. currentmodule:: openturns
 
@@ -7,37 +32,4 @@ openturns.Composite
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Composite.__init__
-      ~Composite.generate
-      ~Composite.getCenter
-      ~Composite.getClassName
-      ~Composite.getId
-      ~Composite.getLevels
-      ~Composite.getName
-      ~Composite.getShadowedId
-      ~Composite.getVisibility
-      ~Composite.hasName
-      ~Composite.hasVisibleName
-      ~Composite.setCenter
-      ~Composite.setLevels
-      ~Composite.setName
-      ~Composite.setShadowedId
-      ~Composite.setVisibility
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Composite.thisown
-   
    

@@ -1,5 +1,5 @@
-openturns.HypothesisTest\_TwoSamplesKolmogorov
-==============================================
+HypothesisTest_TwoSamplesKolmogorov
+=============================================
 
 .. currentmodule:: openturns
 

@@ -1,5 +1,69 @@
-openturns.Frechet
-=================
+Frechet distribution
+==================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.Frechet().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.Frechet().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.Frechet().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.Frechet().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.Frechet().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.Frechet().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.Frechet().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.Frechet().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.Frechet().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.Frechet().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.Frechet().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.Frechet().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.Frechet().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.Frechet()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,161 +71,4 @@ openturns.Frechet
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Frechet.__init__
-      ~Frechet.abs
-      ~Frechet.acos
-      ~Frechet.acosh
-      ~Frechet.asin
-      ~Frechet.asinh
-      ~Frechet.atan
-      ~Frechet.atanh
-      ~Frechet.cbrt
-      ~Frechet.computeBilateralConfidenceInterval
-      ~Frechet.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~Frechet.computeCDF
-      ~Frechet.computeCDFGradient
-      ~Frechet.computeCharacteristicFunction
-      ~Frechet.computeComplementaryCDF
-      ~Frechet.computeConditionalCDF
-      ~Frechet.computeConditionalDDF
-      ~Frechet.computeConditionalPDF
-      ~Frechet.computeConditionalQuantile
-      ~Frechet.computeDDF
-      ~Frechet.computeDensityGenerator
-      ~Frechet.computeDensityGeneratorDerivative
-      ~Frechet.computeDensityGeneratorSecondDerivative
-      ~Frechet.computeEntropy
-      ~Frechet.computeGeneratingFunction
-      ~Frechet.computeInverseSurvivalFunction
-      ~Frechet.computeLogCharacteristicFunction
-      ~Frechet.computeLogGeneratingFunction
-      ~Frechet.computeLogPDF
-      ~Frechet.computeLogPDFGradient
-      ~Frechet.computeMinimumVolumeInterval
-      ~Frechet.computeMinimumVolumeIntervalWithMarginalProbability
-      ~Frechet.computeMinimumVolumeLevelSet
-      ~Frechet.computeMinimumVolumeLevelSetWithThreshold
-      ~Frechet.computePDF
-      ~Frechet.computePDFGradient
-      ~Frechet.computeProbability
-      ~Frechet.computeQuantile
-      ~Frechet.computeRadialDistributionCDF
-      ~Frechet.computeScalarQuantile
-      ~Frechet.computeSequentialConditionalCDF
-      ~Frechet.computeSequentialConditionalDDF
-      ~Frechet.computeSequentialConditionalPDF
-      ~Frechet.computeSequentialConditionalQuantile
-      ~Frechet.computeSurvivalFunction
-      ~Frechet.computeUnilateralConfidenceInterval
-      ~Frechet.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~Frechet.cos
-      ~Frechet.cosh
-      ~Frechet.drawCDF
-      ~Frechet.drawLogPDF
-      ~Frechet.drawMarginal1DCDF
-      ~Frechet.drawMarginal1DLogPDF
-      ~Frechet.drawMarginal1DPDF
-      ~Frechet.drawMarginal1DSurvivalFunction
-      ~Frechet.drawMarginal2DCDF
-      ~Frechet.drawMarginal2DLogPDF
-      ~Frechet.drawMarginal2DPDF
-      ~Frechet.drawMarginal2DSurvivalFunction
-      ~Frechet.drawPDF
-      ~Frechet.drawQuantile
-      ~Frechet.drawSurvivalFunction
-      ~Frechet.exp
-      ~Frechet.getAlpha
-      ~Frechet.getBeta
-      ~Frechet.getCDFEpsilon
-      ~Frechet.getCenteredMoment
-      ~Frechet.getCholesky
-      ~Frechet.getClassName
-      ~Frechet.getCopula
-      ~Frechet.getCorrelation
-      ~Frechet.getCovariance
-      ~Frechet.getDescription
-      ~Frechet.getDimension
-      ~Frechet.getDispersionIndicator
-      ~Frechet.getGamma
-      ~Frechet.getId
-      ~Frechet.getIntegrationNodesNumber
-      ~Frechet.getInverseCholesky
-      ~Frechet.getInverseIsoProbabilisticTransformation
-      ~Frechet.getIsoProbabilisticTransformation
-      ~Frechet.getKendallTau
-      ~Frechet.getKurtosis
-      ~Frechet.getLinearCorrelation
-      ~Frechet.getMarginal
-      ~Frechet.getMean
-      ~Frechet.getMoment
-      ~Frechet.getName
-      ~Frechet.getPDFEpsilon
-      ~Frechet.getParameter
-      ~Frechet.getParameterDescription
-      ~Frechet.getParameterDimension
-      ~Frechet.getParametersCollection
-      ~Frechet.getPearsonCorrelation
-      ~Frechet.getPositionIndicator
-      ~Frechet.getProbabilities
-      ~Frechet.getRange
-      ~Frechet.getRealization
-      ~Frechet.getRoughness
-      ~Frechet.getSample
-      ~Frechet.getShadowedId
-      ~Frechet.getShapeMatrix
-      ~Frechet.getShiftedMoment
-      ~Frechet.getSingularities
-      ~Frechet.getSkewness
-      ~Frechet.getSpearmanCorrelation
-      ~Frechet.getStandardDeviation
-      ~Frechet.getStandardDistribution
-      ~Frechet.getStandardMoment
-      ~Frechet.getStandardRepresentative
-      ~Frechet.getSupport
-      ~Frechet.getVisibility
-      ~Frechet.hasEllipticalCopula
-      ~Frechet.hasIndependentCopula
-      ~Frechet.hasName
-      ~Frechet.hasVisibleName
-      ~Frechet.inverse
-      ~Frechet.isContinuous
-      ~Frechet.isCopula
-      ~Frechet.isDiscrete
-      ~Frechet.isElliptical
-      ~Frechet.isIntegral
-      ~Frechet.ln
-      ~Frechet.log
-      ~Frechet.setAlpha
-      ~Frechet.setBeta
-      ~Frechet.setDescription
-      ~Frechet.setGamma
-      ~Frechet.setIntegrationNodesNumber
-      ~Frechet.setName
-      ~Frechet.setParameter
-      ~Frechet.setParametersCollection
-      ~Frechet.setShadowedId
-      ~Frechet.setVisibility
-      ~Frechet.sin
-      ~Frechet.sinh
-      ~Frechet.sqr
-      ~Frechet.sqrt
-      ~Frechet.tan
-      ~Frechet.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Frechet.thisown
-   
    

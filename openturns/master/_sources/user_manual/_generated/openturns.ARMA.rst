@@ -1,5 +1,31 @@
-openturns.ARMA
-==============
+ARMA
+============================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.ARMA().__class__.__name__ == 'Process':
+        # default to Gaussian for the interface class
+        process = ot.GaussianProcess()
+    elif ot.ARMA().__class__.__name__ == 'DiscreteMarkovChain':
+        process = ot.ARMA()
+        process.setTransitionMatrix(ot.SquareMatrix([[0.0,0.5,0.5],[0.7,0.0,0.3],[0.8,0.0,0.2]]))
+        origin = 0
+        process.setOrigin(origin)
+    else:
+        process = ot.ARMA()
+    process.setTimeGrid(ot.RegularGrid(0.0, 0.02, 50))
+    process.setDescription(['$x$'])
+    sample = process.getSample(6)
+    sample_graph = sample.drawMarginal(0)
+    sample_graph.setTitle(str(process))
+
+    fig = plt.figure(figsize=(10, 4))
+    sample_axis = fig.add_subplot(111)
+    View(sample_graph, figure=fig, axes=[sample_axis], add_legend=False)
 
 .. currentmodule:: openturns
 
@@ -7,59 +33,4 @@ openturns.ARMA
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~ARMA.__init__
-      ~ARMA.computeNThermalization
-      ~ARMA.getARCoefficients
-      ~ARMA.getClassName
-      ~ARMA.getContinuousRealization
-      ~ARMA.getCovarianceModel
-      ~ARMA.getDescription
-      ~ARMA.getFuture
-      ~ARMA.getId
-      ~ARMA.getInputDimension
-      ~ARMA.getMACoefficients
-      ~ARMA.getMarginal
-      ~ARMA.getMesh
-      ~ARMA.getNThermalization
-      ~ARMA.getName
-      ~ARMA.getOutputDimension
-      ~ARMA.getRealization
-      ~ARMA.getSample
-      ~ARMA.getShadowedId
-      ~ARMA.getState
-      ~ARMA.getTimeGrid
-      ~ARMA.getTrend
-      ~ARMA.getVisibility
-      ~ARMA.getWhiteNoise
-      ~ARMA.hasName
-      ~ARMA.hasVisibleName
-      ~ARMA.isComposite
-      ~ARMA.isNormal
-      ~ARMA.isStationary
-      ~ARMA.setDescription
-      ~ARMA.setMesh
-      ~ARMA.setNThermalization
-      ~ARMA.setName
-      ~ARMA.setShadowedId
-      ~ARMA.setState
-      ~ARMA.setTimeGrid
-      ~ARMA.setVisibility
-      ~ARMA.setWhiteNoise
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~ARMA.thisown
-   
    

@@ -1,5 +1,69 @@
-openturns.VonMises
-==================
+VonMises distribution
+====================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.VonMises().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.VonMises().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.VonMises().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.VonMises().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.VonMises().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.VonMises().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.VonMises().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.VonMises().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.VonMises().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.VonMises().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.VonMises().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.VonMises().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.VonMises().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.VonMises()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,161 +71,4 @@ openturns.VonMises
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~VonMises.__init__
-      ~VonMises.abs
-      ~VonMises.acos
-      ~VonMises.acosh
-      ~VonMises.asin
-      ~VonMises.asinh
-      ~VonMises.atan
-      ~VonMises.atanh
-      ~VonMises.cbrt
-      ~VonMises.computeBilateralConfidenceInterval
-      ~VonMises.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~VonMises.computeCDF
-      ~VonMises.computeCDFGradient
-      ~VonMises.computeCharacteristicFunction
-      ~VonMises.computeComplementaryCDF
-      ~VonMises.computeConditionalCDF
-      ~VonMises.computeConditionalDDF
-      ~VonMises.computeConditionalPDF
-      ~VonMises.computeConditionalQuantile
-      ~VonMises.computeDDF
-      ~VonMises.computeDensityGenerator
-      ~VonMises.computeDensityGeneratorDerivative
-      ~VonMises.computeDensityGeneratorSecondDerivative
-      ~VonMises.computeEntropy
-      ~VonMises.computeGeneratingFunction
-      ~VonMises.computeInverseSurvivalFunction
-      ~VonMises.computeLogCharacteristicFunction
-      ~VonMises.computeLogGeneratingFunction
-      ~VonMises.computeLogPDF
-      ~VonMises.computeLogPDFGradient
-      ~VonMises.computeMinimumVolumeInterval
-      ~VonMises.computeMinimumVolumeIntervalWithMarginalProbability
-      ~VonMises.computeMinimumVolumeLevelSet
-      ~VonMises.computeMinimumVolumeLevelSetWithThreshold
-      ~VonMises.computePDF
-      ~VonMises.computePDFGradient
-      ~VonMises.computeProbability
-      ~VonMises.computeQuantile
-      ~VonMises.computeRadialDistributionCDF
-      ~VonMises.computeScalarQuantile
-      ~VonMises.computeSequentialConditionalCDF
-      ~VonMises.computeSequentialConditionalDDF
-      ~VonMises.computeSequentialConditionalPDF
-      ~VonMises.computeSequentialConditionalQuantile
-      ~VonMises.computeSurvivalFunction
-      ~VonMises.computeUnilateralConfidenceInterval
-      ~VonMises.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~VonMises.cos
-      ~VonMises.cosh
-      ~VonMises.drawCDF
-      ~VonMises.drawLogPDF
-      ~VonMises.drawMarginal1DCDF
-      ~VonMises.drawMarginal1DLogPDF
-      ~VonMises.drawMarginal1DPDF
-      ~VonMises.drawMarginal1DSurvivalFunction
-      ~VonMises.drawMarginal2DCDF
-      ~VonMises.drawMarginal2DLogPDF
-      ~VonMises.drawMarginal2DPDF
-      ~VonMises.drawMarginal2DSurvivalFunction
-      ~VonMises.drawPDF
-      ~VonMises.drawQuantile
-      ~VonMises.drawSurvivalFunction
-      ~VonMises.exp
-      ~VonMises.getCDFEpsilon
-      ~VonMises.getCenteredMoment
-      ~VonMises.getCholesky
-      ~VonMises.getCircularMean
-      ~VonMises.getCircularVariance
-      ~VonMises.getClassName
-      ~VonMises.getCopula
-      ~VonMises.getCorrelation
-      ~VonMises.getCovariance
-      ~VonMises.getDescription
-      ~VonMises.getDimension
-      ~VonMises.getDispersionIndicator
-      ~VonMises.getId
-      ~VonMises.getIntegrationNodesNumber
-      ~VonMises.getInverseCholesky
-      ~VonMises.getInverseIsoProbabilisticTransformation
-      ~VonMises.getIsoProbabilisticTransformation
-      ~VonMises.getKappa
-      ~VonMises.getKendallTau
-      ~VonMises.getKurtosis
-      ~VonMises.getLinearCorrelation
-      ~VonMises.getMarginal
-      ~VonMises.getMean
-      ~VonMises.getMoment
-      ~VonMises.getMu
-      ~VonMises.getName
-      ~VonMises.getPDFEpsilon
-      ~VonMises.getParameter
-      ~VonMises.getParameterDescription
-      ~VonMises.getParameterDimension
-      ~VonMises.getParametersCollection
-      ~VonMises.getPearsonCorrelation
-      ~VonMises.getPositionIndicator
-      ~VonMises.getProbabilities
-      ~VonMises.getRange
-      ~VonMises.getRealization
-      ~VonMises.getRoughness
-      ~VonMises.getSample
-      ~VonMises.getShadowedId
-      ~VonMises.getShapeMatrix
-      ~VonMises.getShiftedMoment
-      ~VonMises.getSingularities
-      ~VonMises.getSkewness
-      ~VonMises.getSpearmanCorrelation
-      ~VonMises.getStandardDeviation
-      ~VonMises.getStandardDistribution
-      ~VonMises.getStandardMoment
-      ~VonMises.getStandardRepresentative
-      ~VonMises.getSupport
-      ~VonMises.getVisibility
-      ~VonMises.hasEllipticalCopula
-      ~VonMises.hasIndependentCopula
-      ~VonMises.hasName
-      ~VonMises.hasVisibleName
-      ~VonMises.inverse
-      ~VonMises.isContinuous
-      ~VonMises.isCopula
-      ~VonMises.isDiscrete
-      ~VonMises.isElliptical
-      ~VonMises.isIntegral
-      ~VonMises.ln
-      ~VonMises.log
-      ~VonMises.setDescription
-      ~VonMises.setIntegrationNodesNumber
-      ~VonMises.setKappa
-      ~VonMises.setMu
-      ~VonMises.setName
-      ~VonMises.setParameter
-      ~VonMises.setParametersCollection
-      ~VonMises.setShadowedId
-      ~VonMises.setVisibility
-      ~VonMises.sin
-      ~VonMises.sinh
-      ~VonMises.sqr
-      ~VonMises.sqrt
-      ~VonMises.tan
-      ~VonMises.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~VonMises.thisown
-   
    

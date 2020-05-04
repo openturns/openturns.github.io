@@ -1,5 +1,5 @@
-openturns.SpecFunc\_HyperGeom\_2\_1
-===================================
+SpecFunc_HyperGeom_2_1
+================================
 
 .. currentmodule:: openturns
 

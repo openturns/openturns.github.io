@@ -1,5 +1,5 @@
-openturns.SpecFunc\_LogBesselK
-==============================
+SpecFunc_LogBesselK
+=============================
 
 .. currentmodule:: openturns
 

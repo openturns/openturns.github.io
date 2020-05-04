@@ -1,5 +1,5 @@
-openturns.SpecFunc\_BinomialCoefficient
-=======================================
+SpecFunc_BinomialCoefficient
+======================================
 
 .. currentmodule:: openturns
 

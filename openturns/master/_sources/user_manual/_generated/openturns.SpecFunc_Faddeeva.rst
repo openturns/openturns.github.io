@@ -1,5 +1,5 @@
-openturns.SpecFunc\_Faddeeva
-============================
+SpecFunc_Faddeeva
+===========================
 
 .. currentmodule:: openturns
 
