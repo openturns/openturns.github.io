@@ -1,5 +1,43 @@
-openturns.LogNormalFactory
-==========================
+LogNormalFactory
+====================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    ot.RandomGenerator.SetSeed(0)
+    factory = ot.LogNormalFactory()
+    ref = factory.build()
+    dimension = ref.getDimension()
+    if dimension <= 2:
+        if dimension == 1:
+            sample = ref.getSample(50)
+            distribution = factory.build(sample)
+            distribution.setDescription(['$t$'])
+            pdf_graph = distribution.drawPDF(256)
+            cloud = ot.Cloud(sample, ot.Sample(sample.getSize(), 1))
+            cloud.setColor('blue')
+            cloud.setPointStyle('fcircle')
+            pdf_graph.add(cloud)
+            pdf_graph.setTitle(str(distribution))
+            fig = plt.figure(figsize=(10, 4))
+            pdf_axis = fig.add_subplot(111)
+            View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        else:
+            sample = ref.getSample(500)
+            distribution = factory.build(sample)
+            distribution.setDescription(['$t_0$', '$t_1$'])
+            pdf_graph = distribution.drawPDF([256]*2)
+            cloud = ot.Cloud(sample)
+            cloud.setColor('red')
+            cloud.setPointStyle('fcircle')
+            pdf_graph.add(cloud)
+            pdf_graph.setTitle(str(distribution))
+            fig = plt.figure(figsize=(10, 4))
+            pdf_axis = fig.add_subplot(111)
+            View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,41 +45,4 @@ openturns.LogNormalFactory
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~LogNormalFactory.__init__
-      ~LogNormalFactory.build
-      ~LogNormalFactory.buildAsLogNormal
-      ~LogNormalFactory.buildEstimator
-      ~LogNormalFactory.buildMethodOfLeastSquares
-      ~LogNormalFactory.buildMethodOfLocalLikelihoodMaximization
-      ~LogNormalFactory.buildMethodOfModifiedMoments
-      ~LogNormalFactory.buildMethodOfMoments
-      ~LogNormalFactory.getBootstrapSize
-      ~LogNormalFactory.getClassName
-      ~LogNormalFactory.getId
-      ~LogNormalFactory.getName
-      ~LogNormalFactory.getShadowedId
-      ~LogNormalFactory.getVisibility
-      ~LogNormalFactory.hasName
-      ~LogNormalFactory.hasVisibleName
-      ~LogNormalFactory.setBootstrapSize
-      ~LogNormalFactory.setName
-      ~LogNormalFactory.setShadowedId
-      ~LogNormalFactory.setVisibility
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~LogNormalFactory.thisown
-   
    

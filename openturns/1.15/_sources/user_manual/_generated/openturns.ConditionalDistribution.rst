@@ -1,5 +1,69 @@
-openturns.ConditionalDistribution
-=================================
+ConditionalDistribution distribution
+==================================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.ConditionalDistribution().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.ConditionalDistribution().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.ConditionalDistribution().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.ConditionalDistribution().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.ConditionalDistribution().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.ConditionalDistribution().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.ConditionalDistribution()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,165 +71,4 @@ openturns.ConditionalDistribution
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~ConditionalDistribution.__init__
-      ~ConditionalDistribution.abs
-      ~ConditionalDistribution.acos
-      ~ConditionalDistribution.acosh
-      ~ConditionalDistribution.asin
-      ~ConditionalDistribution.asinh
-      ~ConditionalDistribution.atan
-      ~ConditionalDistribution.atanh
-      ~ConditionalDistribution.cbrt
-      ~ConditionalDistribution.computeBilateralConfidenceInterval
-      ~ConditionalDistribution.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~ConditionalDistribution.computeCDF
-      ~ConditionalDistribution.computeCDFGradient
-      ~ConditionalDistribution.computeCharacteristicFunction
-      ~ConditionalDistribution.computeComplementaryCDF
-      ~ConditionalDistribution.computeConditionalCDF
-      ~ConditionalDistribution.computeConditionalDDF
-      ~ConditionalDistribution.computeConditionalPDF
-      ~ConditionalDistribution.computeConditionalQuantile
-      ~ConditionalDistribution.computeDDF
-      ~ConditionalDistribution.computeDensityGenerator
-      ~ConditionalDistribution.computeDensityGeneratorDerivative
-      ~ConditionalDistribution.computeDensityGeneratorSecondDerivative
-      ~ConditionalDistribution.computeEntropy
-      ~ConditionalDistribution.computeGeneratingFunction
-      ~ConditionalDistribution.computeInverseSurvivalFunction
-      ~ConditionalDistribution.computeLogCharacteristicFunction
-      ~ConditionalDistribution.computeLogGeneratingFunction
-      ~ConditionalDistribution.computeLogPDF
-      ~ConditionalDistribution.computeLogPDFGradient
-      ~ConditionalDistribution.computeMinimumVolumeInterval
-      ~ConditionalDistribution.computeMinimumVolumeIntervalWithMarginalProbability
-      ~ConditionalDistribution.computeMinimumVolumeLevelSet
-      ~ConditionalDistribution.computeMinimumVolumeLevelSetWithThreshold
-      ~ConditionalDistribution.computePDF
-      ~ConditionalDistribution.computePDFGradient
-      ~ConditionalDistribution.computeProbability
-      ~ConditionalDistribution.computeQuantile
-      ~ConditionalDistribution.computeRadialDistributionCDF
-      ~ConditionalDistribution.computeScalarQuantile
-      ~ConditionalDistribution.computeSequentialConditionalCDF
-      ~ConditionalDistribution.computeSequentialConditionalDDF
-      ~ConditionalDistribution.computeSequentialConditionalPDF
-      ~ConditionalDistribution.computeSequentialConditionalQuantile
-      ~ConditionalDistribution.computeSurvivalFunction
-      ~ConditionalDistribution.computeUnilateralConfidenceInterval
-      ~ConditionalDistribution.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~ConditionalDistribution.cos
-      ~ConditionalDistribution.cosh
-      ~ConditionalDistribution.drawCDF
-      ~ConditionalDistribution.drawLogPDF
-      ~ConditionalDistribution.drawMarginal1DCDF
-      ~ConditionalDistribution.drawMarginal1DLogPDF
-      ~ConditionalDistribution.drawMarginal1DPDF
-      ~ConditionalDistribution.drawMarginal1DSurvivalFunction
-      ~ConditionalDistribution.drawMarginal2DCDF
-      ~ConditionalDistribution.drawMarginal2DLogPDF
-      ~ConditionalDistribution.drawMarginal2DPDF
-      ~ConditionalDistribution.drawMarginal2DSurvivalFunction
-      ~ConditionalDistribution.drawPDF
-      ~ConditionalDistribution.drawQuantile
-      ~ConditionalDistribution.drawSurvivalFunction
-      ~ConditionalDistribution.exp
-      ~ConditionalDistribution.getCDFEpsilon
-      ~ConditionalDistribution.getCenteredMoment
-      ~ConditionalDistribution.getCholesky
-      ~ConditionalDistribution.getClassName
-      ~ConditionalDistribution.getConditionedDistribution
-      ~ConditionalDistribution.getConditioningDistribution
-      ~ConditionalDistribution.getCopula
-      ~ConditionalDistribution.getCorrelation
-      ~ConditionalDistribution.getCovariance
-      ~ConditionalDistribution.getDescription
-      ~ConditionalDistribution.getDimension
-      ~ConditionalDistribution.getDispersionIndicator
-      ~ConditionalDistribution.getDistributionCollection
-      ~ConditionalDistribution.getId
-      ~ConditionalDistribution.getIntegrationNodesNumber
-      ~ConditionalDistribution.getInverseCholesky
-      ~ConditionalDistribution.getInverseIsoProbabilisticTransformation
-      ~ConditionalDistribution.getIsoProbabilisticTransformation
-      ~ConditionalDistribution.getKendallTau
-      ~ConditionalDistribution.getKurtosis
-      ~ConditionalDistribution.getLinearCorrelation
-      ~ConditionalDistribution.getLinkFunction
-      ~ConditionalDistribution.getMarginal
-      ~ConditionalDistribution.getMean
-      ~ConditionalDistribution.getMoment
-      ~ConditionalDistribution.getName
-      ~ConditionalDistribution.getPDFEpsilon
-      ~ConditionalDistribution.getParameter
-      ~ConditionalDistribution.getParameterDescription
-      ~ConditionalDistribution.getParameterDimension
-      ~ConditionalDistribution.getParametersCollection
-      ~ConditionalDistribution.getPearsonCorrelation
-      ~ConditionalDistribution.getPositionIndicator
-      ~ConditionalDistribution.getProbabilities
-      ~ConditionalDistribution.getRange
-      ~ConditionalDistribution.getRealization
-      ~ConditionalDistribution.getRoughness
-      ~ConditionalDistribution.getSample
-      ~ConditionalDistribution.getShadowedId
-      ~ConditionalDistribution.getShapeMatrix
-      ~ConditionalDistribution.getShiftedMoment
-      ~ConditionalDistribution.getSingularities
-      ~ConditionalDistribution.getSkewness
-      ~ConditionalDistribution.getSpearmanCorrelation
-      ~ConditionalDistribution.getStandardDeviation
-      ~ConditionalDistribution.getStandardDistribution
-      ~ConditionalDistribution.getStandardMoment
-      ~ConditionalDistribution.getStandardRepresentative
-      ~ConditionalDistribution.getSupport
-      ~ConditionalDistribution.getVisibility
-      ~ConditionalDistribution.getWeights
-      ~ConditionalDistribution.hasEllipticalCopula
-      ~ConditionalDistribution.hasIndependentCopula
-      ~ConditionalDistribution.hasName
-      ~ConditionalDistribution.hasVisibleName
-      ~ConditionalDistribution.inverse
-      ~ConditionalDistribution.isContinuous
-      ~ConditionalDistribution.isCopula
-      ~ConditionalDistribution.isDiscrete
-      ~ConditionalDistribution.isElliptical
-      ~ConditionalDistribution.isIntegral
-      ~ConditionalDistribution.ln
-      ~ConditionalDistribution.log
-      ~ConditionalDistribution.setConditionedDistribution
-      ~ConditionalDistribution.setConditioningDistribution
-      ~ConditionalDistribution.setDescription
-      ~ConditionalDistribution.setDistributionCollection
-      ~ConditionalDistribution.setIntegrationNodesNumber
-      ~ConditionalDistribution.setLinkFunction
-      ~ConditionalDistribution.setName
-      ~ConditionalDistribution.setParameter
-      ~ConditionalDistribution.setParametersCollection
-      ~ConditionalDistribution.setShadowedId
-      ~ConditionalDistribution.setVisibility
-      ~ConditionalDistribution.setWeights
-      ~ConditionalDistribution.sin
-      ~ConditionalDistribution.sinh
-      ~ConditionalDistribution.sqr
-      ~ConditionalDistribution.sqrt
-      ~ConditionalDistribution.tan
-      ~ConditionalDistribution.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~ConditionalDistribution.thisown
-   
    

@@ -1,5 +1,5 @@
-openturns.CorrelationAnalysis\_PearsonCorrelation
-=================================================
+CorrelationAnalysis_PearsonCorrelation
+================================================
 
 .. currentmodule:: openturns
 

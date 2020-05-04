@@ -1,5 +1,5 @@
-openturns.SpecFunc\_Stirlerr
-============================
+SpecFunc_Stirlerr
+===========================
 
 .. currentmodule:: openturns
 

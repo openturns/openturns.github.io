@@ -1,5 +1,69 @@
-openturns.LogNormal
-===================
+LogNormal distribution
+======================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.LogNormal().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.LogNormal().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.LogNormal().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.LogNormal().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.LogNormal().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.LogNormal().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.LogNormal().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.LogNormal().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.LogNormal().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.LogNormal().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.LogNormal().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.LogNormal().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.LogNormal().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.LogNormal()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,161 +71,4 @@ openturns.LogNormal
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~LogNormal.__init__
-      ~LogNormal.abs
-      ~LogNormal.acos
-      ~LogNormal.acosh
-      ~LogNormal.asin
-      ~LogNormal.asinh
-      ~LogNormal.atan
-      ~LogNormal.atanh
-      ~LogNormal.cbrt
-      ~LogNormal.computeBilateralConfidenceInterval
-      ~LogNormal.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~LogNormal.computeCDF
-      ~LogNormal.computeCDFGradient
-      ~LogNormal.computeCharacteristicFunction
-      ~LogNormal.computeComplementaryCDF
-      ~LogNormal.computeConditionalCDF
-      ~LogNormal.computeConditionalDDF
-      ~LogNormal.computeConditionalPDF
-      ~LogNormal.computeConditionalQuantile
-      ~LogNormal.computeDDF
-      ~LogNormal.computeDensityGenerator
-      ~LogNormal.computeDensityGeneratorDerivative
-      ~LogNormal.computeDensityGeneratorSecondDerivative
-      ~LogNormal.computeEntropy
-      ~LogNormal.computeGeneratingFunction
-      ~LogNormal.computeInverseSurvivalFunction
-      ~LogNormal.computeLogCharacteristicFunction
-      ~LogNormal.computeLogGeneratingFunction
-      ~LogNormal.computeLogPDF
-      ~LogNormal.computeLogPDFGradient
-      ~LogNormal.computeMinimumVolumeInterval
-      ~LogNormal.computeMinimumVolumeIntervalWithMarginalProbability
-      ~LogNormal.computeMinimumVolumeLevelSet
-      ~LogNormal.computeMinimumVolumeLevelSetWithThreshold
-      ~LogNormal.computePDF
-      ~LogNormal.computePDFGradient
-      ~LogNormal.computeProbability
-      ~LogNormal.computeQuantile
-      ~LogNormal.computeRadialDistributionCDF
-      ~LogNormal.computeScalarQuantile
-      ~LogNormal.computeSequentialConditionalCDF
-      ~LogNormal.computeSequentialConditionalDDF
-      ~LogNormal.computeSequentialConditionalPDF
-      ~LogNormal.computeSequentialConditionalQuantile
-      ~LogNormal.computeSurvivalFunction
-      ~LogNormal.computeUnilateralConfidenceInterval
-      ~LogNormal.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~LogNormal.cos
-      ~LogNormal.cosh
-      ~LogNormal.drawCDF
-      ~LogNormal.drawLogPDF
-      ~LogNormal.drawMarginal1DCDF
-      ~LogNormal.drawMarginal1DLogPDF
-      ~LogNormal.drawMarginal1DPDF
-      ~LogNormal.drawMarginal1DSurvivalFunction
-      ~LogNormal.drawMarginal2DCDF
-      ~LogNormal.drawMarginal2DLogPDF
-      ~LogNormal.drawMarginal2DPDF
-      ~LogNormal.drawMarginal2DSurvivalFunction
-      ~LogNormal.drawPDF
-      ~LogNormal.drawQuantile
-      ~LogNormal.drawSurvivalFunction
-      ~LogNormal.exp
-      ~LogNormal.getCDFEpsilon
-      ~LogNormal.getCenteredMoment
-      ~LogNormal.getCholesky
-      ~LogNormal.getClassName
-      ~LogNormal.getCopula
-      ~LogNormal.getCorrelation
-      ~LogNormal.getCovariance
-      ~LogNormal.getDescription
-      ~LogNormal.getDimension
-      ~LogNormal.getDispersionIndicator
-      ~LogNormal.getGamma
-      ~LogNormal.getId
-      ~LogNormal.getIntegrationNodesNumber
-      ~LogNormal.getInverseCholesky
-      ~LogNormal.getInverseIsoProbabilisticTransformation
-      ~LogNormal.getIsoProbabilisticTransformation
-      ~LogNormal.getKendallTau
-      ~LogNormal.getKurtosis
-      ~LogNormal.getLinearCorrelation
-      ~LogNormal.getMarginal
-      ~LogNormal.getMean
-      ~LogNormal.getMoment
-      ~LogNormal.getMuLog
-      ~LogNormal.getName
-      ~LogNormal.getPDFEpsilon
-      ~LogNormal.getParameter
-      ~LogNormal.getParameterDescription
-      ~LogNormal.getParameterDimension
-      ~LogNormal.getParametersCollection
-      ~LogNormal.getPearsonCorrelation
-      ~LogNormal.getPositionIndicator
-      ~LogNormal.getProbabilities
-      ~LogNormal.getRange
-      ~LogNormal.getRealization
-      ~LogNormal.getRoughness
-      ~LogNormal.getSample
-      ~LogNormal.getShadowedId
-      ~LogNormal.getShapeMatrix
-      ~LogNormal.getShiftedMoment
-      ~LogNormal.getSigmaLog
-      ~LogNormal.getSingularities
-      ~LogNormal.getSkewness
-      ~LogNormal.getSpearmanCorrelation
-      ~LogNormal.getStandardDeviation
-      ~LogNormal.getStandardDistribution
-      ~LogNormal.getStandardMoment
-      ~LogNormal.getStandardRepresentative
-      ~LogNormal.getSupport
-      ~LogNormal.getVisibility
-      ~LogNormal.hasEllipticalCopula
-      ~LogNormal.hasIndependentCopula
-      ~LogNormal.hasName
-      ~LogNormal.hasVisibleName
-      ~LogNormal.inverse
-      ~LogNormal.isContinuous
-      ~LogNormal.isCopula
-      ~LogNormal.isDiscrete
-      ~LogNormal.isElliptical
-      ~LogNormal.isIntegral
-      ~LogNormal.ln
-      ~LogNormal.log
-      ~LogNormal.setDescription
-      ~LogNormal.setGamma
-      ~LogNormal.setIntegrationNodesNumber
-      ~LogNormal.setMuLog
-      ~LogNormal.setName
-      ~LogNormal.setParameter
-      ~LogNormal.setParametersCollection
-      ~LogNormal.setShadowedId
-      ~LogNormal.setSigmaLog
-      ~LogNormal.setVisibility
-      ~LogNormal.sin
-      ~LogNormal.sinh
-      ~LogNormal.sqr
-      ~LogNormal.sqrt
-      ~LogNormal.tan
-      ~LogNormal.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~LogNormal.thisown
-   
    

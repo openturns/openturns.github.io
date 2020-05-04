@@ -1,5 +1,69 @@
-openturns.Wishart
-=================
+Wishart distribution
+==================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.Wishart().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.Wishart().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.Wishart().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.Wishart().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.Wishart().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.Wishart().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.Wishart().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.Wishart().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.Wishart().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.Wishart().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.Wishart().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.Wishart().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.Wishart().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.Wishart()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,160 +71,4 @@ openturns.Wishart
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Wishart.__init__
-      ~Wishart.abs
-      ~Wishart.acos
-      ~Wishart.acosh
-      ~Wishart.asin
-      ~Wishart.asinh
-      ~Wishart.atan
-      ~Wishart.atanh
-      ~Wishart.cbrt
-      ~Wishart.computeBilateralConfidenceInterval
-      ~Wishart.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~Wishart.computeCDF
-      ~Wishart.computeCDFGradient
-      ~Wishart.computeCharacteristicFunction
-      ~Wishart.computeComplementaryCDF
-      ~Wishart.computeConditionalCDF
-      ~Wishart.computeConditionalDDF
-      ~Wishart.computeConditionalPDF
-      ~Wishart.computeConditionalQuantile
-      ~Wishart.computeDDF
-      ~Wishart.computeDensityGenerator
-      ~Wishart.computeDensityGeneratorDerivative
-      ~Wishart.computeDensityGeneratorSecondDerivative
-      ~Wishart.computeEntropy
-      ~Wishart.computeGeneratingFunction
-      ~Wishart.computeInverseSurvivalFunction
-      ~Wishart.computeLogCharacteristicFunction
-      ~Wishart.computeLogGeneratingFunction
-      ~Wishart.computeLogPDF
-      ~Wishart.computeLogPDFGradient
-      ~Wishart.computeMinimumVolumeInterval
-      ~Wishart.computeMinimumVolumeIntervalWithMarginalProbability
-      ~Wishart.computeMinimumVolumeLevelSet
-      ~Wishart.computeMinimumVolumeLevelSetWithThreshold
-      ~Wishart.computePDF
-      ~Wishart.computePDFGradient
-      ~Wishart.computeProbability
-      ~Wishart.computeQuantile
-      ~Wishart.computeRadialDistributionCDF
-      ~Wishart.computeScalarQuantile
-      ~Wishart.computeSequentialConditionalCDF
-      ~Wishart.computeSequentialConditionalDDF
-      ~Wishart.computeSequentialConditionalPDF
-      ~Wishart.computeSequentialConditionalQuantile
-      ~Wishart.computeSurvivalFunction
-      ~Wishart.computeUnilateralConfidenceInterval
-      ~Wishart.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~Wishart.cos
-      ~Wishart.cosh
-      ~Wishart.drawCDF
-      ~Wishart.drawLogPDF
-      ~Wishart.drawMarginal1DCDF
-      ~Wishart.drawMarginal1DLogPDF
-      ~Wishart.drawMarginal1DPDF
-      ~Wishart.drawMarginal1DSurvivalFunction
-      ~Wishart.drawMarginal2DCDF
-      ~Wishart.drawMarginal2DLogPDF
-      ~Wishart.drawMarginal2DPDF
-      ~Wishart.drawMarginal2DSurvivalFunction
-      ~Wishart.drawPDF
-      ~Wishart.drawQuantile
-      ~Wishart.drawSurvivalFunction
-      ~Wishart.exp
-      ~Wishart.getCDFEpsilon
-      ~Wishart.getCenteredMoment
-      ~Wishart.getCholesky
-      ~Wishart.getClassName
-      ~Wishart.getCopula
-      ~Wishart.getCorrelation
-      ~Wishart.getCovariance
-      ~Wishart.getDescription
-      ~Wishart.getDimension
-      ~Wishart.getDispersionIndicator
-      ~Wishart.getId
-      ~Wishart.getIntegrationNodesNumber
-      ~Wishart.getInverseCholesky
-      ~Wishart.getInverseIsoProbabilisticTransformation
-      ~Wishart.getIsoProbabilisticTransformation
-      ~Wishart.getKendallTau
-      ~Wishart.getKurtosis
-      ~Wishart.getLinearCorrelation
-      ~Wishart.getMarginal
-      ~Wishart.getMean
-      ~Wishart.getMoment
-      ~Wishart.getName
-      ~Wishart.getNu
-      ~Wishart.getPDFEpsilon
-      ~Wishart.getParameter
-      ~Wishart.getParameterDescription
-      ~Wishart.getParameterDimension
-      ~Wishart.getParametersCollection
-      ~Wishart.getPearsonCorrelation
-      ~Wishart.getPositionIndicator
-      ~Wishart.getProbabilities
-      ~Wishart.getRange
-      ~Wishart.getRealization
-      ~Wishart.getRealizationAsMatrix
-      ~Wishart.getRoughness
-      ~Wishart.getSample
-      ~Wishart.getShadowedId
-      ~Wishart.getShapeMatrix
-      ~Wishart.getShiftedMoment
-      ~Wishart.getSingularities
-      ~Wishart.getSkewness
-      ~Wishart.getSpearmanCorrelation
-      ~Wishart.getStandardDeviation
-      ~Wishart.getStandardDistribution
-      ~Wishart.getStandardMoment
-      ~Wishart.getStandardRepresentative
-      ~Wishart.getSupport
-      ~Wishart.getV
-      ~Wishart.getVisibility
-      ~Wishart.hasEllipticalCopula
-      ~Wishart.hasIndependentCopula
-      ~Wishart.hasName
-      ~Wishart.hasVisibleName
-      ~Wishart.inverse
-      ~Wishart.isContinuous
-      ~Wishart.isCopula
-      ~Wishart.isDiscrete
-      ~Wishart.isElliptical
-      ~Wishart.isIntegral
-      ~Wishart.ln
-      ~Wishart.log
-      ~Wishart.setDescription
-      ~Wishart.setIntegrationNodesNumber
-      ~Wishart.setName
-      ~Wishart.setNu
-      ~Wishart.setParameter
-      ~Wishart.setParametersCollection
-      ~Wishart.setShadowedId
-      ~Wishart.setV
-      ~Wishart.setVisibility
-      ~Wishart.sin
-      ~Wishart.sinh
-      ~Wishart.sqr
-      ~Wishart.sqrt
-      ~Wishart.tan
-      ~Wishart.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Wishart.thisown
-   
    

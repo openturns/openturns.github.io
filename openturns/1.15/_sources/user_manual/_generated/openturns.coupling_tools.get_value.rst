@@ -1,5 +1,5 @@
-openturns.coupling\_tools.get\_value
-====================================
+get_value
+==================================
 
 .. currentmodule:: openturns.coupling_tools
 

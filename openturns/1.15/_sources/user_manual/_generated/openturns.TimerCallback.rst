@@ -1,4 +1,4 @@
-openturns.TimerCallback
+TimerCallback
 =======================
 
 .. currentmodule:: openturns

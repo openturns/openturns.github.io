@@ -1,5 +1,5 @@
-openturns.coupling\_tools.replace
-=================================
+replace
+================================
 
 .. currentmodule:: openturns.coupling_tools
 

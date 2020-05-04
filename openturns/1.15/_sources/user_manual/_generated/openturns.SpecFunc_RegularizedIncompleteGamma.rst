@@ -1,5 +1,5 @@
-openturns.SpecFunc\_RegularizedIncompleteGamma
-==============================================
+SpecFunc_RegularizedIncompleteGamma
+=============================================
 
 .. currentmodule:: openturns
 

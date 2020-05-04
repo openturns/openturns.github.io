@@ -1,5 +1,69 @@
-openturns.ProductDistribution
-=============================
+ProductDistribution distribution
+==========================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.ProductDistribution().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.ProductDistribution().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.ProductDistribution().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.ProductDistribution().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.ProductDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.ProductDistribution().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.ProductDistribution().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.ProductDistribution().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.ProductDistribution().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.ProductDistribution().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.ProductDistribution().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.ProductDistribution().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.ProductDistribution().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.ProductDistribution()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,159 +71,4 @@ openturns.ProductDistribution
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~ProductDistribution.__init__
-      ~ProductDistribution.abs
-      ~ProductDistribution.acos
-      ~ProductDistribution.acosh
-      ~ProductDistribution.asin
-      ~ProductDistribution.asinh
-      ~ProductDistribution.atan
-      ~ProductDistribution.atanh
-      ~ProductDistribution.cbrt
-      ~ProductDistribution.computeBilateralConfidenceInterval
-      ~ProductDistribution.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~ProductDistribution.computeCDF
-      ~ProductDistribution.computeCDFGradient
-      ~ProductDistribution.computeCharacteristicFunction
-      ~ProductDistribution.computeComplementaryCDF
-      ~ProductDistribution.computeConditionalCDF
-      ~ProductDistribution.computeConditionalDDF
-      ~ProductDistribution.computeConditionalPDF
-      ~ProductDistribution.computeConditionalQuantile
-      ~ProductDistribution.computeDDF
-      ~ProductDistribution.computeDensityGenerator
-      ~ProductDistribution.computeDensityGeneratorDerivative
-      ~ProductDistribution.computeDensityGeneratorSecondDerivative
-      ~ProductDistribution.computeEntropy
-      ~ProductDistribution.computeGeneratingFunction
-      ~ProductDistribution.computeInverseSurvivalFunction
-      ~ProductDistribution.computeLogCharacteristicFunction
-      ~ProductDistribution.computeLogGeneratingFunction
-      ~ProductDistribution.computeLogPDF
-      ~ProductDistribution.computeLogPDFGradient
-      ~ProductDistribution.computeMinimumVolumeInterval
-      ~ProductDistribution.computeMinimumVolumeIntervalWithMarginalProbability
-      ~ProductDistribution.computeMinimumVolumeLevelSet
-      ~ProductDistribution.computeMinimumVolumeLevelSetWithThreshold
-      ~ProductDistribution.computePDF
-      ~ProductDistribution.computePDFGradient
-      ~ProductDistribution.computeProbability
-      ~ProductDistribution.computeQuantile
-      ~ProductDistribution.computeRadialDistributionCDF
-      ~ProductDistribution.computeScalarQuantile
-      ~ProductDistribution.computeSequentialConditionalCDF
-      ~ProductDistribution.computeSequentialConditionalDDF
-      ~ProductDistribution.computeSequentialConditionalPDF
-      ~ProductDistribution.computeSequentialConditionalQuantile
-      ~ProductDistribution.computeSurvivalFunction
-      ~ProductDistribution.computeUnilateralConfidenceInterval
-      ~ProductDistribution.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~ProductDistribution.cos
-      ~ProductDistribution.cosh
-      ~ProductDistribution.drawCDF
-      ~ProductDistribution.drawLogPDF
-      ~ProductDistribution.drawMarginal1DCDF
-      ~ProductDistribution.drawMarginal1DLogPDF
-      ~ProductDistribution.drawMarginal1DPDF
-      ~ProductDistribution.drawMarginal1DSurvivalFunction
-      ~ProductDistribution.drawMarginal2DCDF
-      ~ProductDistribution.drawMarginal2DLogPDF
-      ~ProductDistribution.drawMarginal2DPDF
-      ~ProductDistribution.drawMarginal2DSurvivalFunction
-      ~ProductDistribution.drawPDF
-      ~ProductDistribution.drawQuantile
-      ~ProductDistribution.drawSurvivalFunction
-      ~ProductDistribution.exp
-      ~ProductDistribution.getCDFEpsilon
-      ~ProductDistribution.getCenteredMoment
-      ~ProductDistribution.getCholesky
-      ~ProductDistribution.getClassName
-      ~ProductDistribution.getCopula
-      ~ProductDistribution.getCorrelation
-      ~ProductDistribution.getCovariance
-      ~ProductDistribution.getDescription
-      ~ProductDistribution.getDimension
-      ~ProductDistribution.getDispersionIndicator
-      ~ProductDistribution.getId
-      ~ProductDistribution.getIntegrationNodesNumber
-      ~ProductDistribution.getInverseCholesky
-      ~ProductDistribution.getInverseIsoProbabilisticTransformation
-      ~ProductDistribution.getIsoProbabilisticTransformation
-      ~ProductDistribution.getKendallTau
-      ~ProductDistribution.getKurtosis
-      ~ProductDistribution.getLeft
-      ~ProductDistribution.getLinearCorrelation
-      ~ProductDistribution.getMarginal
-      ~ProductDistribution.getMean
-      ~ProductDistribution.getMoment
-      ~ProductDistribution.getName
-      ~ProductDistribution.getPDFEpsilon
-      ~ProductDistribution.getParameter
-      ~ProductDistribution.getParameterDescription
-      ~ProductDistribution.getParameterDimension
-      ~ProductDistribution.getParametersCollection
-      ~ProductDistribution.getPearsonCorrelation
-      ~ProductDistribution.getPositionIndicator
-      ~ProductDistribution.getProbabilities
-      ~ProductDistribution.getRange
-      ~ProductDistribution.getRealization
-      ~ProductDistribution.getRight
-      ~ProductDistribution.getRoughness
-      ~ProductDistribution.getSample
-      ~ProductDistribution.getShadowedId
-      ~ProductDistribution.getShapeMatrix
-      ~ProductDistribution.getShiftedMoment
-      ~ProductDistribution.getSingularities
-      ~ProductDistribution.getSkewness
-      ~ProductDistribution.getSpearmanCorrelation
-      ~ProductDistribution.getStandardDeviation
-      ~ProductDistribution.getStandardDistribution
-      ~ProductDistribution.getStandardMoment
-      ~ProductDistribution.getStandardRepresentative
-      ~ProductDistribution.getSupport
-      ~ProductDistribution.getVisibility
-      ~ProductDistribution.hasEllipticalCopula
-      ~ProductDistribution.hasIndependentCopula
-      ~ProductDistribution.hasName
-      ~ProductDistribution.hasVisibleName
-      ~ProductDistribution.inverse
-      ~ProductDistribution.isContinuous
-      ~ProductDistribution.isCopula
-      ~ProductDistribution.isDiscrete
-      ~ProductDistribution.isElliptical
-      ~ProductDistribution.isIntegral
-      ~ProductDistribution.ln
-      ~ProductDistribution.log
-      ~ProductDistribution.setDescription
-      ~ProductDistribution.setIntegrationNodesNumber
-      ~ProductDistribution.setLeft
-      ~ProductDistribution.setName
-      ~ProductDistribution.setParameter
-      ~ProductDistribution.setParametersCollection
-      ~ProductDistribution.setRight
-      ~ProductDistribution.setShadowedId
-      ~ProductDistribution.setVisibility
-      ~ProductDistribution.sin
-      ~ProductDistribution.sinh
-      ~ProductDistribution.sqr
-      ~ProductDistribution.sqrt
-      ~ProductDistribution.tan
-      ~ProductDistribution.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~ProductDistribution.thisown
-   
    

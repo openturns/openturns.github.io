@@ -1,5 +1,5 @@
-openturns.SpecFunc\_NextPowerOfTwo
-==================================
+SpecFunc_NextPowerOfTwo
+=================================
 
 .. currentmodule:: openturns
 

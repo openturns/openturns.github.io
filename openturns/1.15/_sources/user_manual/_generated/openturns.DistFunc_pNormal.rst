@@ -1,5 +1,5 @@
-openturns.DistFunc\_pNormal
-===========================
+DistFunc_pNormal
+==========================
 
 .. currentmodule:: openturns
 

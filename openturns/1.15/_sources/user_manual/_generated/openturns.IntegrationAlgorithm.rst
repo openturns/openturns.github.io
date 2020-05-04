@@ -1,4 +1,4 @@
-openturns.IntegrationAlgorithm
+IntegrationAlgorithm
 ==============================
 
 .. currentmodule:: openturns
@@ -7,28 +7,5 @@ openturns.IntegrationAlgorithm
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~IntegrationAlgorithm.__init__
-      ~IntegrationAlgorithm.getClassName
-      ~IntegrationAlgorithm.getId
-      ~IntegrationAlgorithm.getImplementation
-      ~IntegrationAlgorithm.getName
-      ~IntegrationAlgorithm.integrate
-      ~IntegrationAlgorithm.setName
-   
    
 
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~IntegrationAlgorithm.thisown
-   
-   

@@ -1,4 +1,4 @@
-openturns.viewer.PlotDesign
+PlotDesign
 ===========================
 
 .. currentmodule:: openturns.viewer

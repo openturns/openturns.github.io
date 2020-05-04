@@ -1,5 +1,5 @@
-openturns.SpecFunc\_Ei
-======================
+SpecFunc_Ei
+=====================
 
 .. currentmodule:: openturns
 

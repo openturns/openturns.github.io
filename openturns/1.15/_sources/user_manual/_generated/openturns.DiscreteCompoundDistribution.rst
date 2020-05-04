@@ -1,5 +1,69 @@
-openturns.DiscreteCompoundDistribution
-======================================
+DiscreteCompoundDistribution distribution
+============================================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.DiscreteCompoundDistribution().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.DiscreteCompoundDistribution().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.DiscreteCompoundDistribution()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,159 +71,4 @@ openturns.DiscreteCompoundDistribution
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~DiscreteCompoundDistribution.__init__
-      ~DiscreteCompoundDistribution.abs
-      ~DiscreteCompoundDistribution.acos
-      ~DiscreteCompoundDistribution.acosh
-      ~DiscreteCompoundDistribution.asin
-      ~DiscreteCompoundDistribution.asinh
-      ~DiscreteCompoundDistribution.atan
-      ~DiscreteCompoundDistribution.atanh
-      ~DiscreteCompoundDistribution.cbrt
-      ~DiscreteCompoundDistribution.computeBilateralConfidenceInterval
-      ~DiscreteCompoundDistribution.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~DiscreteCompoundDistribution.computeCDF
-      ~DiscreteCompoundDistribution.computeCDFGradient
-      ~DiscreteCompoundDistribution.computeCharacteristicFunction
-      ~DiscreteCompoundDistribution.computeComplementaryCDF
-      ~DiscreteCompoundDistribution.computeConditionalCDF
-      ~DiscreteCompoundDistribution.computeConditionalDDF
-      ~DiscreteCompoundDistribution.computeConditionalPDF
-      ~DiscreteCompoundDistribution.computeConditionalQuantile
-      ~DiscreteCompoundDistribution.computeDDF
-      ~DiscreteCompoundDistribution.computeDensityGenerator
-      ~DiscreteCompoundDistribution.computeDensityGeneratorDerivative
-      ~DiscreteCompoundDistribution.computeDensityGeneratorSecondDerivative
-      ~DiscreteCompoundDistribution.computeEntropy
-      ~DiscreteCompoundDistribution.computeGeneratingFunction
-      ~DiscreteCompoundDistribution.computeInverseSurvivalFunction
-      ~DiscreteCompoundDistribution.computeLogCharacteristicFunction
-      ~DiscreteCompoundDistribution.computeLogGeneratingFunction
-      ~DiscreteCompoundDistribution.computeLogPDF
-      ~DiscreteCompoundDistribution.computeLogPDFGradient
-      ~DiscreteCompoundDistribution.computeMinimumVolumeInterval
-      ~DiscreteCompoundDistribution.computeMinimumVolumeIntervalWithMarginalProbability
-      ~DiscreteCompoundDistribution.computeMinimumVolumeLevelSet
-      ~DiscreteCompoundDistribution.computeMinimumVolumeLevelSetWithThreshold
-      ~DiscreteCompoundDistribution.computePDF
-      ~DiscreteCompoundDistribution.computePDFGradient
-      ~DiscreteCompoundDistribution.computeProbability
-      ~DiscreteCompoundDistribution.computeQuantile
-      ~DiscreteCompoundDistribution.computeRadialDistributionCDF
-      ~DiscreteCompoundDistribution.computeScalarQuantile
-      ~DiscreteCompoundDistribution.computeSequentialConditionalCDF
-      ~DiscreteCompoundDistribution.computeSequentialConditionalDDF
-      ~DiscreteCompoundDistribution.computeSequentialConditionalPDF
-      ~DiscreteCompoundDistribution.computeSequentialConditionalQuantile
-      ~DiscreteCompoundDistribution.computeSurvivalFunction
-      ~DiscreteCompoundDistribution.computeUnilateralConfidenceInterval
-      ~DiscreteCompoundDistribution.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~DiscreteCompoundDistribution.cos
-      ~DiscreteCompoundDistribution.cosh
-      ~DiscreteCompoundDistribution.drawCDF
-      ~DiscreteCompoundDistribution.drawLogPDF
-      ~DiscreteCompoundDistribution.drawMarginal1DCDF
-      ~DiscreteCompoundDistribution.drawMarginal1DLogPDF
-      ~DiscreteCompoundDistribution.drawMarginal1DPDF
-      ~DiscreteCompoundDistribution.drawMarginal1DSurvivalFunction
-      ~DiscreteCompoundDistribution.drawMarginal2DCDF
-      ~DiscreteCompoundDistribution.drawMarginal2DLogPDF
-      ~DiscreteCompoundDistribution.drawMarginal2DPDF
-      ~DiscreteCompoundDistribution.drawMarginal2DSurvivalFunction
-      ~DiscreteCompoundDistribution.drawPDF
-      ~DiscreteCompoundDistribution.drawQuantile
-      ~DiscreteCompoundDistribution.drawSurvivalFunction
-      ~DiscreteCompoundDistribution.exp
-      ~DiscreteCompoundDistribution.getBaseDistribution
-      ~DiscreteCompoundDistribution.getCDFEpsilon
-      ~DiscreteCompoundDistribution.getCenteredMoment
-      ~DiscreteCompoundDistribution.getCholesky
-      ~DiscreteCompoundDistribution.getClassName
-      ~DiscreteCompoundDistribution.getCompoundDistribution
-      ~DiscreteCompoundDistribution.getCopula
-      ~DiscreteCompoundDistribution.getCorrelation
-      ~DiscreteCompoundDistribution.getCovariance
-      ~DiscreteCompoundDistribution.getDescription
-      ~DiscreteCompoundDistribution.getDimension
-      ~DiscreteCompoundDistribution.getDispersionIndicator
-      ~DiscreteCompoundDistribution.getId
-      ~DiscreteCompoundDistribution.getIntegrationNodesNumber
-      ~DiscreteCompoundDistribution.getInverseCholesky
-      ~DiscreteCompoundDistribution.getInverseIsoProbabilisticTransformation
-      ~DiscreteCompoundDistribution.getIsoProbabilisticTransformation
-      ~DiscreteCompoundDistribution.getKendallTau
-      ~DiscreteCompoundDistribution.getKurtosis
-      ~DiscreteCompoundDistribution.getLinearCorrelation
-      ~DiscreteCompoundDistribution.getMarginal
-      ~DiscreteCompoundDistribution.getMean
-      ~DiscreteCompoundDistribution.getMoment
-      ~DiscreteCompoundDistribution.getName
-      ~DiscreteCompoundDistribution.getPDFEpsilon
-      ~DiscreteCompoundDistribution.getParameter
-      ~DiscreteCompoundDistribution.getParameterDescription
-      ~DiscreteCompoundDistribution.getParameterDimension
-      ~DiscreteCompoundDistribution.getParametersCollection
-      ~DiscreteCompoundDistribution.getPearsonCorrelation
-      ~DiscreteCompoundDistribution.getPositionIndicator
-      ~DiscreteCompoundDistribution.getProbabilities
-      ~DiscreteCompoundDistribution.getRange
-      ~DiscreteCompoundDistribution.getRealization
-      ~DiscreteCompoundDistribution.getRoughness
-      ~DiscreteCompoundDistribution.getSample
-      ~DiscreteCompoundDistribution.getShadowedId
-      ~DiscreteCompoundDistribution.getShapeMatrix
-      ~DiscreteCompoundDistribution.getShiftedMoment
-      ~DiscreteCompoundDistribution.getSingularities
-      ~DiscreteCompoundDistribution.getSkewness
-      ~DiscreteCompoundDistribution.getSpearmanCorrelation
-      ~DiscreteCompoundDistribution.getStandardDeviation
-      ~DiscreteCompoundDistribution.getStandardDistribution
-      ~DiscreteCompoundDistribution.getStandardMoment
-      ~DiscreteCompoundDistribution.getStandardRepresentative
-      ~DiscreteCompoundDistribution.getSupport
-      ~DiscreteCompoundDistribution.getSupportEpsilon
-      ~DiscreteCompoundDistribution.getVisibility
-      ~DiscreteCompoundDistribution.hasEllipticalCopula
-      ~DiscreteCompoundDistribution.hasIndependentCopula
-      ~DiscreteCompoundDistribution.hasName
-      ~DiscreteCompoundDistribution.hasVisibleName
-      ~DiscreteCompoundDistribution.inverse
-      ~DiscreteCompoundDistribution.isContinuous
-      ~DiscreteCompoundDistribution.isCopula
-      ~DiscreteCompoundDistribution.isDiscrete
-      ~DiscreteCompoundDistribution.isElliptical
-      ~DiscreteCompoundDistribution.isIntegral
-      ~DiscreteCompoundDistribution.ln
-      ~DiscreteCompoundDistribution.log
-      ~DiscreteCompoundDistribution.setDescription
-      ~DiscreteCompoundDistribution.setIntegrationNodesNumber
-      ~DiscreteCompoundDistribution.setName
-      ~DiscreteCompoundDistribution.setParameter
-      ~DiscreteCompoundDistribution.setParametersCollection
-      ~DiscreteCompoundDistribution.setShadowedId
-      ~DiscreteCompoundDistribution.setSupportEpsilon
-      ~DiscreteCompoundDistribution.setVisibility
-      ~DiscreteCompoundDistribution.sin
-      ~DiscreteCompoundDistribution.sinh
-      ~DiscreteCompoundDistribution.sqr
-      ~DiscreteCompoundDistribution.sqrt
-      ~DiscreteCompoundDistribution.tan
-      ~DiscreteCompoundDistribution.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~DiscreteCompoundDistribution.thisown
-   
    

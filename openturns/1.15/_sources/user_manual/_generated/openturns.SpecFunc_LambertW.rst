@@ -1,5 +1,5 @@
-openturns.SpecFunc\_LambertW
-============================
+SpecFunc_LambertW
+===========================
 
 .. currentmodule:: openturns
 

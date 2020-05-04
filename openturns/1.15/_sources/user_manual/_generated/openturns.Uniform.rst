@@ -1,5 +1,69 @@
-openturns.Uniform
-=================
+Uniform distribution
+==================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.Uniform().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.Uniform().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.Uniform().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.Uniform().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.Uniform().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.Uniform().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.Uniform().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.Uniform().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.Uniform().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.Uniform().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.Uniform().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.Uniform().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.Uniform().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.Uniform()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,159 +71,4 @@ openturns.Uniform
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Uniform.__init__
-      ~Uniform.abs
-      ~Uniform.acos
-      ~Uniform.acosh
-      ~Uniform.asin
-      ~Uniform.asinh
-      ~Uniform.atan
-      ~Uniform.atanh
-      ~Uniform.cbrt
-      ~Uniform.computeBilateralConfidenceInterval
-      ~Uniform.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~Uniform.computeCDF
-      ~Uniform.computeCDFGradient
-      ~Uniform.computeCharacteristicFunction
-      ~Uniform.computeComplementaryCDF
-      ~Uniform.computeConditionalCDF
-      ~Uniform.computeConditionalDDF
-      ~Uniform.computeConditionalPDF
-      ~Uniform.computeConditionalQuantile
-      ~Uniform.computeDDF
-      ~Uniform.computeDensityGenerator
-      ~Uniform.computeDensityGeneratorDerivative
-      ~Uniform.computeDensityGeneratorSecondDerivative
-      ~Uniform.computeEntropy
-      ~Uniform.computeGeneratingFunction
-      ~Uniform.computeInverseSurvivalFunction
-      ~Uniform.computeLogCharacteristicFunction
-      ~Uniform.computeLogGeneratingFunction
-      ~Uniform.computeLogPDF
-      ~Uniform.computeLogPDFGradient
-      ~Uniform.computeMinimumVolumeInterval
-      ~Uniform.computeMinimumVolumeIntervalWithMarginalProbability
-      ~Uniform.computeMinimumVolumeLevelSet
-      ~Uniform.computeMinimumVolumeLevelSetWithThreshold
-      ~Uniform.computePDF
-      ~Uniform.computePDFGradient
-      ~Uniform.computeProbability
-      ~Uniform.computeQuantile
-      ~Uniform.computeRadialDistributionCDF
-      ~Uniform.computeScalarQuantile
-      ~Uniform.computeSequentialConditionalCDF
-      ~Uniform.computeSequentialConditionalDDF
-      ~Uniform.computeSequentialConditionalPDF
-      ~Uniform.computeSequentialConditionalQuantile
-      ~Uniform.computeSurvivalFunction
-      ~Uniform.computeUnilateralConfidenceInterval
-      ~Uniform.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~Uniform.cos
-      ~Uniform.cosh
-      ~Uniform.drawCDF
-      ~Uniform.drawLogPDF
-      ~Uniform.drawMarginal1DCDF
-      ~Uniform.drawMarginal1DLogPDF
-      ~Uniform.drawMarginal1DPDF
-      ~Uniform.drawMarginal1DSurvivalFunction
-      ~Uniform.drawMarginal2DCDF
-      ~Uniform.drawMarginal2DLogPDF
-      ~Uniform.drawMarginal2DPDF
-      ~Uniform.drawMarginal2DSurvivalFunction
-      ~Uniform.drawPDF
-      ~Uniform.drawQuantile
-      ~Uniform.drawSurvivalFunction
-      ~Uniform.exp
-      ~Uniform.getA
-      ~Uniform.getB
-      ~Uniform.getCDFEpsilon
-      ~Uniform.getCenteredMoment
-      ~Uniform.getCholesky
-      ~Uniform.getClassName
-      ~Uniform.getCopula
-      ~Uniform.getCorrelation
-      ~Uniform.getCovariance
-      ~Uniform.getDescription
-      ~Uniform.getDimension
-      ~Uniform.getDispersionIndicator
-      ~Uniform.getId
-      ~Uniform.getIntegrationNodesNumber
-      ~Uniform.getInverseCholesky
-      ~Uniform.getInverseIsoProbabilisticTransformation
-      ~Uniform.getIsoProbabilisticTransformation
-      ~Uniform.getKendallTau
-      ~Uniform.getKurtosis
-      ~Uniform.getLinearCorrelation
-      ~Uniform.getMarginal
-      ~Uniform.getMean
-      ~Uniform.getMoment
-      ~Uniform.getName
-      ~Uniform.getPDFEpsilon
-      ~Uniform.getParameter
-      ~Uniform.getParameterDescription
-      ~Uniform.getParameterDimension
-      ~Uniform.getParametersCollection
-      ~Uniform.getPearsonCorrelation
-      ~Uniform.getPositionIndicator
-      ~Uniform.getProbabilities
-      ~Uniform.getRange
-      ~Uniform.getRealization
-      ~Uniform.getRoughness
-      ~Uniform.getSample
-      ~Uniform.getShadowedId
-      ~Uniform.getShapeMatrix
-      ~Uniform.getShiftedMoment
-      ~Uniform.getSingularities
-      ~Uniform.getSkewness
-      ~Uniform.getSpearmanCorrelation
-      ~Uniform.getStandardDeviation
-      ~Uniform.getStandardDistribution
-      ~Uniform.getStandardMoment
-      ~Uniform.getStandardRepresentative
-      ~Uniform.getSupport
-      ~Uniform.getVisibility
-      ~Uniform.hasEllipticalCopula
-      ~Uniform.hasIndependentCopula
-      ~Uniform.hasName
-      ~Uniform.hasVisibleName
-      ~Uniform.inverse
-      ~Uniform.isContinuous
-      ~Uniform.isCopula
-      ~Uniform.isDiscrete
-      ~Uniform.isElliptical
-      ~Uniform.isIntegral
-      ~Uniform.ln
-      ~Uniform.log
-      ~Uniform.setA
-      ~Uniform.setB
-      ~Uniform.setDescription
-      ~Uniform.setIntegrationNodesNumber
-      ~Uniform.setName
-      ~Uniform.setParameter
-      ~Uniform.setParametersCollection
-      ~Uniform.setShadowedId
-      ~Uniform.setVisibility
-      ~Uniform.sin
-      ~Uniform.sinh
-      ~Uniform.sqr
-      ~Uniform.sqrt
-      ~Uniform.tan
-      ~Uniform.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Uniform.thisown
-   
    

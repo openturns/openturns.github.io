@@ -1,5 +1,5 @@
-openturns.SpecFunc\_BesselI1
-============================
+SpecFunc_BesselI1
+===========================
 
 .. currentmodule:: openturns
 

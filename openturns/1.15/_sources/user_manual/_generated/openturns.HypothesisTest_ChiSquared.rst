@@ -1,5 +1,5 @@
-openturns.HypothesisTest\_ChiSquared
-====================================
+HypothesisTest_ChiSquared
+===================================
 
 .. currentmodule:: openturns
 

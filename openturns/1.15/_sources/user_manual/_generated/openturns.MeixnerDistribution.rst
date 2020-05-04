@@ -1,5 +1,69 @@
-openturns.MeixnerDistribution
-=============================
+MeixnerDistribution distribution
+==========================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.MeixnerDistribution().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.MeixnerDistribution().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.MeixnerDistribution().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.MeixnerDistribution().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.MeixnerDistribution().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.MeixnerDistribution().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.MeixnerDistribution()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,168 +71,4 @@ openturns.MeixnerDistribution
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~MeixnerDistribution.__init__
-      ~MeixnerDistribution.abs
-      ~MeixnerDistribution.acos
-      ~MeixnerDistribution.acosh
-      ~MeixnerDistribution.asin
-      ~MeixnerDistribution.asinh
-      ~MeixnerDistribution.atan
-      ~MeixnerDistribution.atanh
-      ~MeixnerDistribution.cbrt
-      ~MeixnerDistribution.computeBilateralConfidenceInterval
-      ~MeixnerDistribution.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~MeixnerDistribution.computeCDF
-      ~MeixnerDistribution.computeCDFGradient
-      ~MeixnerDistribution.computeCharacteristicFunction
-      ~MeixnerDistribution.computeComplementaryCDF
-      ~MeixnerDistribution.computeConditionalCDF
-      ~MeixnerDistribution.computeConditionalDDF
-      ~MeixnerDistribution.computeConditionalPDF
-      ~MeixnerDistribution.computeConditionalQuantile
-      ~MeixnerDistribution.computeDDF
-      ~MeixnerDistribution.computeDensityGenerator
-      ~MeixnerDistribution.computeDensityGeneratorDerivative
-      ~MeixnerDistribution.computeDensityGeneratorSecondDerivative
-      ~MeixnerDistribution.computeEntropy
-      ~MeixnerDistribution.computeGeneratingFunction
-      ~MeixnerDistribution.computeInverseSurvivalFunction
-      ~MeixnerDistribution.computeLogCharacteristicFunction
-      ~MeixnerDistribution.computeLogGeneratingFunction
-      ~MeixnerDistribution.computeLogPDF
-      ~MeixnerDistribution.computeLogPDFGradient
-      ~MeixnerDistribution.computeMinimumVolumeInterval
-      ~MeixnerDistribution.computeMinimumVolumeIntervalWithMarginalProbability
-      ~MeixnerDistribution.computeMinimumVolumeLevelSet
-      ~MeixnerDistribution.computeMinimumVolumeLevelSetWithThreshold
-      ~MeixnerDistribution.computePDF
-      ~MeixnerDistribution.computePDFGradient
-      ~MeixnerDistribution.computeProbability
-      ~MeixnerDistribution.computeQuantile
-      ~MeixnerDistribution.computeRadialDistributionCDF
-      ~MeixnerDistribution.computeScalarQuantile
-      ~MeixnerDistribution.computeSequentialConditionalCDF
-      ~MeixnerDistribution.computeSequentialConditionalDDF
-      ~MeixnerDistribution.computeSequentialConditionalPDF
-      ~MeixnerDistribution.computeSequentialConditionalQuantile
-      ~MeixnerDistribution.computeSurvivalFunction
-      ~MeixnerDistribution.computeUnilateralConfidenceInterval
-      ~MeixnerDistribution.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~MeixnerDistribution.cos
-      ~MeixnerDistribution.cosh
-      ~MeixnerDistribution.drawCDF
-      ~MeixnerDistribution.drawLogPDF
-      ~MeixnerDistribution.drawMarginal1DCDF
-      ~MeixnerDistribution.drawMarginal1DLogPDF
-      ~MeixnerDistribution.drawMarginal1DPDF
-      ~MeixnerDistribution.drawMarginal1DSurvivalFunction
-      ~MeixnerDistribution.drawMarginal2DCDF
-      ~MeixnerDistribution.drawMarginal2DLogPDF
-      ~MeixnerDistribution.drawMarginal2DPDF
-      ~MeixnerDistribution.drawMarginal2DSurvivalFunction
-      ~MeixnerDistribution.drawPDF
-      ~MeixnerDistribution.drawQuantile
-      ~MeixnerDistribution.drawSurvivalFunction
-      ~MeixnerDistribution.exp
-      ~MeixnerDistribution.getAlpha
-      ~MeixnerDistribution.getBeta
-      ~MeixnerDistribution.getCDFEpsilon
-      ~MeixnerDistribution.getCenteredMoment
-      ~MeixnerDistribution.getCholesky
-      ~MeixnerDistribution.getClassName
-      ~MeixnerDistribution.getCopula
-      ~MeixnerDistribution.getCorrelation
-      ~MeixnerDistribution.getCovariance
-      ~MeixnerDistribution.getDelta
-      ~MeixnerDistribution.getDescription
-      ~MeixnerDistribution.getDimension
-      ~MeixnerDistribution.getDispersionIndicator
-      ~MeixnerDistribution.getGamma
-      ~MeixnerDistribution.getId
-      ~MeixnerDistribution.getIntegrationNodesNumber
-      ~MeixnerDistribution.getInverseCholesky
-      ~MeixnerDistribution.getInverseIsoProbabilisticTransformation
-      ~MeixnerDistribution.getIsoProbabilisticTransformation
-      ~MeixnerDistribution.getKendallTau
-      ~MeixnerDistribution.getKurtosis
-      ~MeixnerDistribution.getLinearCorrelation
-      ~MeixnerDistribution.getMarginal
-      ~MeixnerDistribution.getMean
-      ~MeixnerDistribution.getMoment
-      ~MeixnerDistribution.getMu
-      ~MeixnerDistribution.getName
-      ~MeixnerDistribution.getOptimizationAlgorithm
-      ~MeixnerDistribution.getPDFEpsilon
-      ~MeixnerDistribution.getParameter
-      ~MeixnerDistribution.getParameterDescription
-      ~MeixnerDistribution.getParameterDimension
-      ~MeixnerDistribution.getParametersCollection
-      ~MeixnerDistribution.getPearsonCorrelation
-      ~MeixnerDistribution.getPositionIndicator
-      ~MeixnerDistribution.getProbabilities
-      ~MeixnerDistribution.getRange
-      ~MeixnerDistribution.getRealization
-      ~MeixnerDistribution.getRoughness
-      ~MeixnerDistribution.getSample
-      ~MeixnerDistribution.getShadowedId
-      ~MeixnerDistribution.getShapeMatrix
-      ~MeixnerDistribution.getShiftedMoment
-      ~MeixnerDistribution.getSingularities
-      ~MeixnerDistribution.getSkewness
-      ~MeixnerDistribution.getSpearmanCorrelation
-      ~MeixnerDistribution.getStandardDeviation
-      ~MeixnerDistribution.getStandardDistribution
-      ~MeixnerDistribution.getStandardMoment
-      ~MeixnerDistribution.getStandardRepresentative
-      ~MeixnerDistribution.getSupport
-      ~MeixnerDistribution.getVisibility
-      ~MeixnerDistribution.hasEllipticalCopula
-      ~MeixnerDistribution.hasIndependentCopula
-      ~MeixnerDistribution.hasName
-      ~MeixnerDistribution.hasVisibleName
-      ~MeixnerDistribution.initializeOptimizationAlgorithmParameter
-      ~MeixnerDistribution.inverse
-      ~MeixnerDistribution.isContinuous
-      ~MeixnerDistribution.isCopula
-      ~MeixnerDistribution.isDiscrete
-      ~MeixnerDistribution.isElliptical
-      ~MeixnerDistribution.isIntegral
-      ~MeixnerDistribution.ln
-      ~MeixnerDistribution.log
-      ~MeixnerDistribution.setAlpha
-      ~MeixnerDistribution.setBeta
-      ~MeixnerDistribution.setDelta
-      ~MeixnerDistribution.setDescription
-      ~MeixnerDistribution.setGamma
-      ~MeixnerDistribution.setIntegrationNodesNumber
-      ~MeixnerDistribution.setMu
-      ~MeixnerDistribution.setName
-      ~MeixnerDistribution.setOptimizationAlgorithm
-      ~MeixnerDistribution.setParameter
-      ~MeixnerDistribution.setParametersCollection
-      ~MeixnerDistribution.setShadowedId
-      ~MeixnerDistribution.setVisibility
-      ~MeixnerDistribution.sin
-      ~MeixnerDistribution.sinh
-      ~MeixnerDistribution.sqr
-      ~MeixnerDistribution.sqrt
-      ~MeixnerDistribution.tan
-      ~MeixnerDistribution.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~MeixnerDistribution.thisown
-   
    

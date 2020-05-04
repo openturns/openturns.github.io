@@ -1,5 +1,69 @@
-openturns.Skellam
-=================
+Skellam distribution
+==================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.Skellam().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.Skellam().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.Skellam().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.Skellam().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.Skellam().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.Skellam().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.Skellam().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.Skellam().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.Skellam().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.Skellam().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.Skellam().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.Skellam().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.Skellam().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.Skellam()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,164 +71,4 @@ openturns.Skellam
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Skellam.__init__
-      ~Skellam.abs
-      ~Skellam.acos
-      ~Skellam.acosh
-      ~Skellam.asin
-      ~Skellam.asinh
-      ~Skellam.atan
-      ~Skellam.atanh
-      ~Skellam.cbrt
-      ~Skellam.computeBilateralConfidenceInterval
-      ~Skellam.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~Skellam.computeCDF
-      ~Skellam.computeCDFGradient
-      ~Skellam.computeCharacteristicFunction
-      ~Skellam.computeComplementaryCDF
-      ~Skellam.computeConditionalCDF
-      ~Skellam.computeConditionalDDF
-      ~Skellam.computeConditionalPDF
-      ~Skellam.computeConditionalQuantile
-      ~Skellam.computeDDF
-      ~Skellam.computeDensityGenerator
-      ~Skellam.computeDensityGeneratorDerivative
-      ~Skellam.computeDensityGeneratorSecondDerivative
-      ~Skellam.computeEntropy
-      ~Skellam.computeGeneratingFunction
-      ~Skellam.computeInverseSurvivalFunction
-      ~Skellam.computeLogCharacteristicFunction
-      ~Skellam.computeLogGeneratingFunction
-      ~Skellam.computeLogPDF
-      ~Skellam.computeLogPDFGradient
-      ~Skellam.computeMinimumVolumeInterval
-      ~Skellam.computeMinimumVolumeIntervalWithMarginalProbability
-      ~Skellam.computeMinimumVolumeLevelSet
-      ~Skellam.computeMinimumVolumeLevelSetWithThreshold
-      ~Skellam.computePDF
-      ~Skellam.computePDFGradient
-      ~Skellam.computeProbability
-      ~Skellam.computeQuantile
-      ~Skellam.computeRadialDistributionCDF
-      ~Skellam.computeScalarQuantile
-      ~Skellam.computeSequentialConditionalCDF
-      ~Skellam.computeSequentialConditionalDDF
-      ~Skellam.computeSequentialConditionalPDF
-      ~Skellam.computeSequentialConditionalQuantile
-      ~Skellam.computeSurvivalFunction
-      ~Skellam.computeUnilateralConfidenceInterval
-      ~Skellam.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~Skellam.cos
-      ~Skellam.cosh
-      ~Skellam.drawCDF
-      ~Skellam.drawLogPDF
-      ~Skellam.drawMarginal1DCDF
-      ~Skellam.drawMarginal1DLogPDF
-      ~Skellam.drawMarginal1DPDF
-      ~Skellam.drawMarginal1DSurvivalFunction
-      ~Skellam.drawMarginal2DCDF
-      ~Skellam.drawMarginal2DLogPDF
-      ~Skellam.drawMarginal2DPDF
-      ~Skellam.drawMarginal2DSurvivalFunction
-      ~Skellam.drawPDF
-      ~Skellam.drawQuantile
-      ~Skellam.drawSurvivalFunction
-      ~Skellam.exp
-      ~Skellam.getCDFEpsilon
-      ~Skellam.getCenteredMoment
-      ~Skellam.getCholesky
-      ~Skellam.getClassName
-      ~Skellam.getCopula
-      ~Skellam.getCorrelation
-      ~Skellam.getCovariance
-      ~Skellam.getDescription
-      ~Skellam.getDimension
-      ~Skellam.getDispersionIndicator
-      ~Skellam.getId
-      ~Skellam.getIntegrationNodesNumber
-      ~Skellam.getInverseCholesky
-      ~Skellam.getInverseIsoProbabilisticTransformation
-      ~Skellam.getIsoProbabilisticTransformation
-      ~Skellam.getKendallTau
-      ~Skellam.getKurtosis
-      ~Skellam.getLambda1
-      ~Skellam.getLambda2
-      ~Skellam.getLinearCorrelation
-      ~Skellam.getMarginal
-      ~Skellam.getMaximumIteration
-      ~Skellam.getMean
-      ~Skellam.getMoment
-      ~Skellam.getName
-      ~Skellam.getPDFEpsilon
-      ~Skellam.getParameter
-      ~Skellam.getParameterDescription
-      ~Skellam.getParameterDimension
-      ~Skellam.getParametersCollection
-      ~Skellam.getPearsonCorrelation
-      ~Skellam.getPositionIndicator
-      ~Skellam.getProbabilities
-      ~Skellam.getRange
-      ~Skellam.getRealization
-      ~Skellam.getRoughness
-      ~Skellam.getSample
-      ~Skellam.getShadowedId
-      ~Skellam.getShapeMatrix
-      ~Skellam.getShiftedMoment
-      ~Skellam.getSingularities
-      ~Skellam.getSkewness
-      ~Skellam.getSpearmanCorrelation
-      ~Skellam.getStandardDeviation
-      ~Skellam.getStandardDistribution
-      ~Skellam.getStandardMoment
-      ~Skellam.getStandardRepresentative
-      ~Skellam.getSupport
-      ~Skellam.getSupportEpsilon
-      ~Skellam.getVisibility
-      ~Skellam.hasEllipticalCopula
-      ~Skellam.hasIndependentCopula
-      ~Skellam.hasName
-      ~Skellam.hasVisibleName
-      ~Skellam.inverse
-      ~Skellam.isContinuous
-      ~Skellam.isCopula
-      ~Skellam.isDiscrete
-      ~Skellam.isElliptical
-      ~Skellam.isIntegral
-      ~Skellam.ln
-      ~Skellam.log
-      ~Skellam.setDescription
-      ~Skellam.setIntegrationNodesNumber
-      ~Skellam.setLambda1
-      ~Skellam.setLambda1Lambda2
-      ~Skellam.setLambda2
-      ~Skellam.setMaximumIteration
-      ~Skellam.setName
-      ~Skellam.setParameter
-      ~Skellam.setParametersCollection
-      ~Skellam.setShadowedId
-      ~Skellam.setSupportEpsilon
-      ~Skellam.setVisibility
-      ~Skellam.sin
-      ~Skellam.sinh
-      ~Skellam.sqr
-      ~Skellam.sqrt
-      ~Skellam.tan
-      ~Skellam.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Skellam.thisown
-   
    

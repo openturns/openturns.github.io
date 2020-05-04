@@ -1,5 +1,5 @@
-openturns.HypothesisTest\_FullPearson
-=====================================
+HypothesisTest_FullPearson
+====================================
 
 .. currentmodule:: openturns
 

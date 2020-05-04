@@ -1,5 +1,5 @@
-openturns.SpecFunc\_DiLog
-=========================
+SpecFunc_DiLog
+========================
 
 .. currentmodule:: openturns
 

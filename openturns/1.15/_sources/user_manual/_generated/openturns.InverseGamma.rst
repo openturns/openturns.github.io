@@ -1,5 +1,69 @@
-openturns.InverseGamma
-======================
+InverseGamma distribution
+============================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.InverseGamma().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.InverseGamma().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.InverseGamma().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.InverseGamma().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.InverseGamma().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.InverseGamma().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.InverseGamma().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.InverseGamma().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.InverseGamma().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.InverseGamma().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.InverseGamma().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.InverseGamma().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.InverseGamma().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.InverseGamma()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,160 +71,4 @@ openturns.InverseGamma
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~InverseGamma.__init__
-      ~InverseGamma.abs
-      ~InverseGamma.acos
-      ~InverseGamma.acosh
-      ~InverseGamma.asin
-      ~InverseGamma.asinh
-      ~InverseGamma.atan
-      ~InverseGamma.atanh
-      ~InverseGamma.cbrt
-      ~InverseGamma.computeBilateralConfidenceInterval
-      ~InverseGamma.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~InverseGamma.computeCDF
-      ~InverseGamma.computeCDFGradient
-      ~InverseGamma.computeCharacteristicFunction
-      ~InverseGamma.computeComplementaryCDF
-      ~InverseGamma.computeConditionalCDF
-      ~InverseGamma.computeConditionalDDF
-      ~InverseGamma.computeConditionalPDF
-      ~InverseGamma.computeConditionalQuantile
-      ~InverseGamma.computeDDF
-      ~InverseGamma.computeDensityGenerator
-      ~InverseGamma.computeDensityGeneratorDerivative
-      ~InverseGamma.computeDensityGeneratorSecondDerivative
-      ~InverseGamma.computeEntropy
-      ~InverseGamma.computeGeneratingFunction
-      ~InverseGamma.computeInverseSurvivalFunction
-      ~InverseGamma.computeLogCharacteristicFunction
-      ~InverseGamma.computeLogGeneratingFunction
-      ~InverseGamma.computeLogPDF
-      ~InverseGamma.computeLogPDFGradient
-      ~InverseGamma.computeMinimumVolumeInterval
-      ~InverseGamma.computeMinimumVolumeIntervalWithMarginalProbability
-      ~InverseGamma.computeMinimumVolumeLevelSet
-      ~InverseGamma.computeMinimumVolumeLevelSetWithThreshold
-      ~InverseGamma.computePDF
-      ~InverseGamma.computePDFGradient
-      ~InverseGamma.computeProbability
-      ~InverseGamma.computeQuantile
-      ~InverseGamma.computeRadialDistributionCDF
-      ~InverseGamma.computeScalarQuantile
-      ~InverseGamma.computeSequentialConditionalCDF
-      ~InverseGamma.computeSequentialConditionalDDF
-      ~InverseGamma.computeSequentialConditionalPDF
-      ~InverseGamma.computeSequentialConditionalQuantile
-      ~InverseGamma.computeSurvivalFunction
-      ~InverseGamma.computeUnilateralConfidenceInterval
-      ~InverseGamma.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~InverseGamma.cos
-      ~InverseGamma.cosh
-      ~InverseGamma.drawCDF
-      ~InverseGamma.drawLogPDF
-      ~InverseGamma.drawMarginal1DCDF
-      ~InverseGamma.drawMarginal1DLogPDF
-      ~InverseGamma.drawMarginal1DPDF
-      ~InverseGamma.drawMarginal1DSurvivalFunction
-      ~InverseGamma.drawMarginal2DCDF
-      ~InverseGamma.drawMarginal2DLogPDF
-      ~InverseGamma.drawMarginal2DPDF
-      ~InverseGamma.drawMarginal2DSurvivalFunction
-      ~InverseGamma.drawPDF
-      ~InverseGamma.drawQuantile
-      ~InverseGamma.drawSurvivalFunction
-      ~InverseGamma.exp
-      ~InverseGamma.getCDFEpsilon
-      ~InverseGamma.getCenteredMoment
-      ~InverseGamma.getCholesky
-      ~InverseGamma.getClassName
-      ~InverseGamma.getCopula
-      ~InverseGamma.getCorrelation
-      ~InverseGamma.getCovariance
-      ~InverseGamma.getDescription
-      ~InverseGamma.getDimension
-      ~InverseGamma.getDispersionIndicator
-      ~InverseGamma.getId
-      ~InverseGamma.getIntegrationNodesNumber
-      ~InverseGamma.getInverseCholesky
-      ~InverseGamma.getInverseIsoProbabilisticTransformation
-      ~InverseGamma.getIsoProbabilisticTransformation
-      ~InverseGamma.getK
-      ~InverseGamma.getKendallTau
-      ~InverseGamma.getKurtosis
-      ~InverseGamma.getLambda
-      ~InverseGamma.getLinearCorrelation
-      ~InverseGamma.getMarginal
-      ~InverseGamma.getMean
-      ~InverseGamma.getMoment
-      ~InverseGamma.getName
-      ~InverseGamma.getPDFEpsilon
-      ~InverseGamma.getParameter
-      ~InverseGamma.getParameterDescription
-      ~InverseGamma.getParameterDimension
-      ~InverseGamma.getParametersCollection
-      ~InverseGamma.getPearsonCorrelation
-      ~InverseGamma.getPositionIndicator
-      ~InverseGamma.getProbabilities
-      ~InverseGamma.getRange
-      ~InverseGamma.getRealization
-      ~InverseGamma.getRoughness
-      ~InverseGamma.getSample
-      ~InverseGamma.getShadowedId
-      ~InverseGamma.getShapeMatrix
-      ~InverseGamma.getShiftedMoment
-      ~InverseGamma.getSingularities
-      ~InverseGamma.getSkewness
-      ~InverseGamma.getSpearmanCorrelation
-      ~InverseGamma.getStandardDeviation
-      ~InverseGamma.getStandardDistribution
-      ~InverseGamma.getStandardMoment
-      ~InverseGamma.getStandardRepresentative
-      ~InverseGamma.getSupport
-      ~InverseGamma.getVisibility
-      ~InverseGamma.hasEllipticalCopula
-      ~InverseGamma.hasIndependentCopula
-      ~InverseGamma.hasName
-      ~InverseGamma.hasVisibleName
-      ~InverseGamma.inverse
-      ~InverseGamma.isContinuous
-      ~InverseGamma.isCopula
-      ~InverseGamma.isDiscrete
-      ~InverseGamma.isElliptical
-      ~InverseGamma.isIntegral
-      ~InverseGamma.ln
-      ~InverseGamma.log
-      ~InverseGamma.setDescription
-      ~InverseGamma.setIntegrationNodesNumber
-      ~InverseGamma.setK
-      ~InverseGamma.setKLambda
-      ~InverseGamma.setLambda
-      ~InverseGamma.setName
-      ~InverseGamma.setParameter
-      ~InverseGamma.setParametersCollection
-      ~InverseGamma.setShadowedId
-      ~InverseGamma.setVisibility
-      ~InverseGamma.sin
-      ~InverseGamma.sinh
-      ~InverseGamma.sqr
-      ~InverseGamma.sqrt
-      ~InverseGamma.tan
-      ~InverseGamma.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~InverseGamma.thisown
-   
    

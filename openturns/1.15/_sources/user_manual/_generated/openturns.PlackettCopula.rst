@@ -1,5 +1,41 @@
-openturns.PlackettCopula
-========================
+PlackettCopula
+================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.PlackettCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
+        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
+        copula = ot.EmpiricalBernsteinCopula(sample, 4)
+    elif ot.PlackettCopula().__class__.__name__ == 'ExtremeValueCopula':
+        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
+    elif ot.PlackettCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
+        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
+        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
+    elif ot.PlackettCopula().__class__.__name__ == 'NormalCopula':
+        R = ot.CorrelationMatrix(2)
+        R[1, 0] = 0.8
+        copula = ot.NormalCopula(R)
+    elif ot.PlackettCopula().__class__.__name__ == 'SklarCopula':
+        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
+        copula =  ot.SklarCopula(student)
+    else:
+        copula = ot.PlackettCopula()
+    if copula.getDimension() == 1:
+        copula = ot.PlackettCopula(2)
+    copula.setDescription(['$u_1$', '$u_2$'])
+    pdf_graph = copula.drawPDF()
+    cdf_graph = copula.drawCDF()
+    fig = plt.figure(figsize=(10, 4))
+    pdf_axis = fig.add_subplot(121)
+    cdf_axis = fig.add_subplot(122)
+    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
+    title = str(copula)[:100].split('\n')[0]
+    fig.suptitle(title)
 
 .. currentmodule:: openturns
 
@@ -7,157 +43,4 @@ openturns.PlackettCopula
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~PlackettCopula.__init__
-      ~PlackettCopula.abs
-      ~PlackettCopula.acos
-      ~PlackettCopula.acosh
-      ~PlackettCopula.asin
-      ~PlackettCopula.asinh
-      ~PlackettCopula.atan
-      ~PlackettCopula.atanh
-      ~PlackettCopula.cbrt
-      ~PlackettCopula.computeBilateralConfidenceInterval
-      ~PlackettCopula.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~PlackettCopula.computeCDF
-      ~PlackettCopula.computeCDFGradient
-      ~PlackettCopula.computeCharacteristicFunction
-      ~PlackettCopula.computeComplementaryCDF
-      ~PlackettCopula.computeConditionalCDF
-      ~PlackettCopula.computeConditionalDDF
-      ~PlackettCopula.computeConditionalPDF
-      ~PlackettCopula.computeConditionalQuantile
-      ~PlackettCopula.computeDDF
-      ~PlackettCopula.computeDensityGenerator
-      ~PlackettCopula.computeDensityGeneratorDerivative
-      ~PlackettCopula.computeDensityGeneratorSecondDerivative
-      ~PlackettCopula.computeEntropy
-      ~PlackettCopula.computeGeneratingFunction
-      ~PlackettCopula.computeInverseSurvivalFunction
-      ~PlackettCopula.computeLogCharacteristicFunction
-      ~PlackettCopula.computeLogGeneratingFunction
-      ~PlackettCopula.computeLogPDF
-      ~PlackettCopula.computeLogPDFGradient
-      ~PlackettCopula.computeMinimumVolumeInterval
-      ~PlackettCopula.computeMinimumVolumeIntervalWithMarginalProbability
-      ~PlackettCopula.computeMinimumVolumeLevelSet
-      ~PlackettCopula.computeMinimumVolumeLevelSetWithThreshold
-      ~PlackettCopula.computePDF
-      ~PlackettCopula.computePDFGradient
-      ~PlackettCopula.computeProbability
-      ~PlackettCopula.computeQuantile
-      ~PlackettCopula.computeRadialDistributionCDF
-      ~PlackettCopula.computeScalarQuantile
-      ~PlackettCopula.computeSequentialConditionalCDF
-      ~PlackettCopula.computeSequentialConditionalDDF
-      ~PlackettCopula.computeSequentialConditionalPDF
-      ~PlackettCopula.computeSequentialConditionalQuantile
-      ~PlackettCopula.computeSurvivalFunction
-      ~PlackettCopula.computeUnilateralConfidenceInterval
-      ~PlackettCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~PlackettCopula.cos
-      ~PlackettCopula.cosh
-      ~PlackettCopula.drawCDF
-      ~PlackettCopula.drawLogPDF
-      ~PlackettCopula.drawMarginal1DCDF
-      ~PlackettCopula.drawMarginal1DLogPDF
-      ~PlackettCopula.drawMarginal1DPDF
-      ~PlackettCopula.drawMarginal1DSurvivalFunction
-      ~PlackettCopula.drawMarginal2DCDF
-      ~PlackettCopula.drawMarginal2DLogPDF
-      ~PlackettCopula.drawMarginal2DPDF
-      ~PlackettCopula.drawMarginal2DSurvivalFunction
-      ~PlackettCopula.drawPDF
-      ~PlackettCopula.drawQuantile
-      ~PlackettCopula.drawSurvivalFunction
-      ~PlackettCopula.exp
-      ~PlackettCopula.getCDFEpsilon
-      ~PlackettCopula.getCenteredMoment
-      ~PlackettCopula.getCholesky
-      ~PlackettCopula.getClassName
-      ~PlackettCopula.getCopula
-      ~PlackettCopula.getCorrelation
-      ~PlackettCopula.getCovariance
-      ~PlackettCopula.getDescription
-      ~PlackettCopula.getDimension
-      ~PlackettCopula.getDispersionIndicator
-      ~PlackettCopula.getId
-      ~PlackettCopula.getIntegrationNodesNumber
-      ~PlackettCopula.getInverseCholesky
-      ~PlackettCopula.getInverseIsoProbabilisticTransformation
-      ~PlackettCopula.getIsoProbabilisticTransformation
-      ~PlackettCopula.getKendallTau
-      ~PlackettCopula.getKurtosis
-      ~PlackettCopula.getLinearCorrelation
-      ~PlackettCopula.getMarginal
-      ~PlackettCopula.getMean
-      ~PlackettCopula.getMoment
-      ~PlackettCopula.getName
-      ~PlackettCopula.getPDFEpsilon
-      ~PlackettCopula.getParameter
-      ~PlackettCopula.getParameterDescription
-      ~PlackettCopula.getParameterDimension
-      ~PlackettCopula.getParametersCollection
-      ~PlackettCopula.getPearsonCorrelation
-      ~PlackettCopula.getPositionIndicator
-      ~PlackettCopula.getProbabilities
-      ~PlackettCopula.getRange
-      ~PlackettCopula.getRealization
-      ~PlackettCopula.getRoughness
-      ~PlackettCopula.getSample
-      ~PlackettCopula.getShadowedId
-      ~PlackettCopula.getShapeMatrix
-      ~PlackettCopula.getShiftedMoment
-      ~PlackettCopula.getSingularities
-      ~PlackettCopula.getSkewness
-      ~PlackettCopula.getSpearmanCorrelation
-      ~PlackettCopula.getStandardDeviation
-      ~PlackettCopula.getStandardDistribution
-      ~PlackettCopula.getStandardMoment
-      ~PlackettCopula.getStandardRepresentative
-      ~PlackettCopula.getSupport
-      ~PlackettCopula.getTheta
-      ~PlackettCopula.getVisibility
-      ~PlackettCopula.hasEllipticalCopula
-      ~PlackettCopula.hasIndependentCopula
-      ~PlackettCopula.hasName
-      ~PlackettCopula.hasVisibleName
-      ~PlackettCopula.inverse
-      ~PlackettCopula.isContinuous
-      ~PlackettCopula.isCopula
-      ~PlackettCopula.isDiscrete
-      ~PlackettCopula.isElliptical
-      ~PlackettCopula.isIntegral
-      ~PlackettCopula.ln
-      ~PlackettCopula.log
-      ~PlackettCopula.setDescription
-      ~PlackettCopula.setIntegrationNodesNumber
-      ~PlackettCopula.setName
-      ~PlackettCopula.setParameter
-      ~PlackettCopula.setParametersCollection
-      ~PlackettCopula.setShadowedId
-      ~PlackettCopula.setTheta
-      ~PlackettCopula.setVisibility
-      ~PlackettCopula.sin
-      ~PlackettCopula.sinh
-      ~PlackettCopula.sqr
-      ~PlackettCopula.sqrt
-      ~PlackettCopula.tan
-      ~PlackettCopula.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~PlackettCopula.thisown
-   
    

@@ -1,5 +1,43 @@
-openturns.ArcsineFactory
-========================
+ArcsineFactory
+================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    ot.RandomGenerator.SetSeed(0)
+    factory = ot.ArcsineFactory()
+    ref = factory.build()
+    dimension = ref.getDimension()
+    if dimension <= 2:
+        if dimension == 1:
+            sample = ref.getSample(50)
+            distribution = factory.build(sample)
+            distribution.setDescription(['$t$'])
+            pdf_graph = distribution.drawPDF(256)
+            cloud = ot.Cloud(sample, ot.Sample(sample.getSize(), 1))
+            cloud.setColor('blue')
+            cloud.setPointStyle('fcircle')
+            pdf_graph.add(cloud)
+            pdf_graph.setTitle(str(distribution))
+            fig = plt.figure(figsize=(10, 4))
+            pdf_axis = fig.add_subplot(111)
+            View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        else:
+            sample = ref.getSample(500)
+            distribution = factory.build(sample)
+            distribution.setDescription(['$t_0$', '$t_1$'])
+            pdf_graph = distribution.drawPDF([256]*2)
+            cloud = ot.Cloud(sample)
+            cloud.setColor('red')
+            cloud.setPointStyle('fcircle')
+            pdf_graph.add(cloud)
+            pdf_graph.setTitle(str(distribution))
+            fig = plt.figure(figsize=(10, 4))
+            pdf_axis = fig.add_subplot(111)
+            View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,37 +45,4 @@ openturns.ArcsineFactory
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~ArcsineFactory.__init__
-      ~ArcsineFactory.build
-      ~ArcsineFactory.buildAsArcsine
-      ~ArcsineFactory.buildEstimator
-      ~ArcsineFactory.getBootstrapSize
-      ~ArcsineFactory.getClassName
-      ~ArcsineFactory.getId
-      ~ArcsineFactory.getName
-      ~ArcsineFactory.getShadowedId
-      ~ArcsineFactory.getVisibility
-      ~ArcsineFactory.hasName
-      ~ArcsineFactory.hasVisibleName
-      ~ArcsineFactory.setBootstrapSize
-      ~ArcsineFactory.setName
-      ~ArcsineFactory.setShadowedId
-      ~ArcsineFactory.setVisibility
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~ArcsineFactory.thisown
-   
    

@@ -1,5 +1,41 @@
-openturns.SklarCopula
-=====================
+SklarCopula
+==========================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.SklarCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
+        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
+        copula = ot.EmpiricalBernsteinCopula(sample, 4)
+    elif ot.SklarCopula().__class__.__name__ == 'ExtremeValueCopula':
+        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
+    elif ot.SklarCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
+        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
+        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
+    elif ot.SklarCopula().__class__.__name__ == 'NormalCopula':
+        R = ot.CorrelationMatrix(2)
+        R[1, 0] = 0.8
+        copula = ot.NormalCopula(R)
+    elif ot.SklarCopula().__class__.__name__ == 'SklarCopula':
+        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
+        copula =  ot.SklarCopula(student)
+    else:
+        copula = ot.SklarCopula()
+    if copula.getDimension() == 1:
+        copula = ot.SklarCopula(2)
+    copula.setDescription(['$u_1$', '$u_2$'])
+    pdf_graph = copula.drawPDF()
+    cdf_graph = copula.drawCDF()
+    fig = plt.figure(figsize=(10, 4))
+    pdf_axis = fig.add_subplot(121)
+    cdf_axis = fig.add_subplot(122)
+    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
+    title = str(copula)[:100].split('\n')[0]
+    fig.suptitle(title)
 
 .. currentmodule:: openturns
 
@@ -7,157 +43,4 @@ openturns.SklarCopula
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~SklarCopula.__init__
-      ~SklarCopula.abs
-      ~SklarCopula.acos
-      ~SklarCopula.acosh
-      ~SklarCopula.asin
-      ~SklarCopula.asinh
-      ~SklarCopula.atan
-      ~SklarCopula.atanh
-      ~SklarCopula.cbrt
-      ~SklarCopula.computeBilateralConfidenceInterval
-      ~SklarCopula.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~SklarCopula.computeCDF
-      ~SklarCopula.computeCDFGradient
-      ~SklarCopula.computeCharacteristicFunction
-      ~SklarCopula.computeComplementaryCDF
-      ~SklarCopula.computeConditionalCDF
-      ~SklarCopula.computeConditionalDDF
-      ~SklarCopula.computeConditionalPDF
-      ~SklarCopula.computeConditionalQuantile
-      ~SklarCopula.computeDDF
-      ~SklarCopula.computeDensityGenerator
-      ~SklarCopula.computeDensityGeneratorDerivative
-      ~SklarCopula.computeDensityGeneratorSecondDerivative
-      ~SklarCopula.computeEntropy
-      ~SklarCopula.computeGeneratingFunction
-      ~SklarCopula.computeInverseSurvivalFunction
-      ~SklarCopula.computeLogCharacteristicFunction
-      ~SklarCopula.computeLogGeneratingFunction
-      ~SklarCopula.computeLogPDF
-      ~SklarCopula.computeLogPDFGradient
-      ~SklarCopula.computeMinimumVolumeInterval
-      ~SklarCopula.computeMinimumVolumeIntervalWithMarginalProbability
-      ~SklarCopula.computeMinimumVolumeLevelSet
-      ~SklarCopula.computeMinimumVolumeLevelSetWithThreshold
-      ~SklarCopula.computePDF
-      ~SklarCopula.computePDFGradient
-      ~SklarCopula.computeProbability
-      ~SklarCopula.computeQuantile
-      ~SklarCopula.computeRadialDistributionCDF
-      ~SklarCopula.computeScalarQuantile
-      ~SklarCopula.computeSequentialConditionalCDF
-      ~SklarCopula.computeSequentialConditionalDDF
-      ~SklarCopula.computeSequentialConditionalPDF
-      ~SklarCopula.computeSequentialConditionalQuantile
-      ~SklarCopula.computeSurvivalFunction
-      ~SklarCopula.computeUnilateralConfidenceInterval
-      ~SklarCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~SklarCopula.cos
-      ~SklarCopula.cosh
-      ~SklarCopula.drawCDF
-      ~SklarCopula.drawLogPDF
-      ~SklarCopula.drawMarginal1DCDF
-      ~SklarCopula.drawMarginal1DLogPDF
-      ~SklarCopula.drawMarginal1DPDF
-      ~SklarCopula.drawMarginal1DSurvivalFunction
-      ~SklarCopula.drawMarginal2DCDF
-      ~SklarCopula.drawMarginal2DLogPDF
-      ~SklarCopula.drawMarginal2DPDF
-      ~SklarCopula.drawMarginal2DSurvivalFunction
-      ~SklarCopula.drawPDF
-      ~SklarCopula.drawQuantile
-      ~SklarCopula.drawSurvivalFunction
-      ~SklarCopula.exp
-      ~SklarCopula.getCDFEpsilon
-      ~SklarCopula.getCenteredMoment
-      ~SklarCopula.getCholesky
-      ~SklarCopula.getClassName
-      ~SklarCopula.getCopula
-      ~SklarCopula.getCorrelation
-      ~SklarCopula.getCovariance
-      ~SklarCopula.getDescription
-      ~SklarCopula.getDimension
-      ~SklarCopula.getDispersionIndicator
-      ~SklarCopula.getDistribution
-      ~SklarCopula.getId
-      ~SklarCopula.getIntegrationNodesNumber
-      ~SklarCopula.getInverseCholesky
-      ~SklarCopula.getInverseIsoProbabilisticTransformation
-      ~SklarCopula.getIsoProbabilisticTransformation
-      ~SklarCopula.getKendallTau
-      ~SklarCopula.getKurtosis
-      ~SklarCopula.getLinearCorrelation
-      ~SklarCopula.getMarginal
-      ~SklarCopula.getMean
-      ~SklarCopula.getMoment
-      ~SklarCopula.getName
-      ~SklarCopula.getPDFEpsilon
-      ~SklarCopula.getParameter
-      ~SklarCopula.getParameterDescription
-      ~SklarCopula.getParameterDimension
-      ~SklarCopula.getParametersCollection
-      ~SklarCopula.getPearsonCorrelation
-      ~SklarCopula.getPositionIndicator
-      ~SklarCopula.getProbabilities
-      ~SklarCopula.getRange
-      ~SklarCopula.getRealization
-      ~SklarCopula.getRoughness
-      ~SklarCopula.getSample
-      ~SklarCopula.getShadowedId
-      ~SklarCopula.getShapeMatrix
-      ~SklarCopula.getShiftedMoment
-      ~SklarCopula.getSingularities
-      ~SklarCopula.getSkewness
-      ~SklarCopula.getSpearmanCorrelation
-      ~SklarCopula.getStandardDeviation
-      ~SklarCopula.getStandardDistribution
-      ~SklarCopula.getStandardMoment
-      ~SklarCopula.getStandardRepresentative
-      ~SklarCopula.getSupport
-      ~SklarCopula.getVisibility
-      ~SklarCopula.hasEllipticalCopula
-      ~SklarCopula.hasIndependentCopula
-      ~SklarCopula.hasName
-      ~SklarCopula.hasVisibleName
-      ~SklarCopula.inverse
-      ~SklarCopula.isContinuous
-      ~SklarCopula.isCopula
-      ~SklarCopula.isDiscrete
-      ~SklarCopula.isElliptical
-      ~SklarCopula.isIntegral
-      ~SklarCopula.ln
-      ~SklarCopula.log
-      ~SklarCopula.setDescription
-      ~SklarCopula.setDistribution
-      ~SklarCopula.setIntegrationNodesNumber
-      ~SklarCopula.setName
-      ~SklarCopula.setParameter
-      ~SklarCopula.setParametersCollection
-      ~SklarCopula.setShadowedId
-      ~SklarCopula.setVisibility
-      ~SklarCopula.sin
-      ~SklarCopula.sinh
-      ~SklarCopula.sqr
-      ~SklarCopula.sqrt
-      ~SklarCopula.tan
-      ~SklarCopula.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~SklarCopula.thisown
-   
    

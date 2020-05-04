@@ -1,5 +1,5 @@
-openturns.DistFunc\_dNonCentralStudent
-======================================
+DistFunc_dNonCentralStudent
+=====================================
 
 .. currentmodule:: openturns
 

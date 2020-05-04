@@ -1,5 +1,69 @@
-openturns.Arcsine
-=================
+Arcsine distribution
+==================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.Arcsine().__class__.__name__ == 'Bernoulli':
+        distribution = ot.Bernoulli(0.7)
+    elif ot.Arcsine().__class__.__name__ == 'Binomial':
+        distribution = ot.Binomial(5, 0.2)
+    elif ot.Arcsine().__class__.__name__ == 'Hypergeometric':
+        distribution = ot.Hypergeometric(10, 4, 7)
+    elif ot.Arcsine().__class__.__name__ == 'ComposedDistribution':
+        copula = ot.IndependentCopula(2)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        distribution = ot.ComposedDistribution(marginals, copula)
+    elif ot.Arcsine().__class__.__name__ == 'CumulativeDistributionNetwork':
+        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
+        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
+    elif ot.Arcsine().__class__.__name__ == 'Histogram':
+        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
+    elif ot.Arcsine().__class__.__name__ == 'KernelMixture':
+        kernel = ot.Uniform()
+        sample = ot.Normal().getSample(5)
+        bandwith = [1.0]
+        distribution = ot.KernelMixture(kernel, bandwith, sample)
+    elif ot.Arcsine().__class__.__name__ == 'MaximumDistribution':
+        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
+        distribution = ot.MaximumDistribution(coll)
+    elif ot.Arcsine().__class__.__name__ == 'Multinomial':
+        distribution = ot.Multinomial(5, [0.2])
+    elif ot.Arcsine().__class__.__name__ == 'RandomMixture':
+        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
+        weights = [0.8, 0.2]
+        cst = 3.0
+        distribution = ot.RandomMixture(coll, weights, cst)
+    elif ot.Arcsine().__class__.__name__ == 'TruncatedDistribution':
+        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    elif ot.Arcsine().__class__.__name__ == 'UserDefined':
+        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    elif ot.Arcsine().__class__.__name__ == 'ZipfMandelbrot':
+        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    else:
+        distribution = ot.Arcsine()
+    dimension = distribution.getDimension()
+    title = str(distribution)[:100].split('\n')[0]
+    if dimension == 1:
+        distribution.setDescription(['$x$'])
+        pdf_graph = distribution.drawPDF()
+        cdf_graph = distribution.drawCDF()
+        fig = plt.figure(figsize=(10, 4))
+        pdf_axis = fig.add_subplot(121)
+        cdf_axis = fig.add_subplot(122)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
+        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
+        fig.suptitle(title)
+    elif dimension == 2:
+        distribution.setDescription(['$x_1$', '$x_2$'])
+        pdf_graph = distribution.drawPDF()
+        pdf_graph.setTitle(title)
+        fig = plt.figure(figsize=(10, 5))
+        pdf_axis = fig.add_subplot(111)
+        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
 
 .. currentmodule:: openturns
 
@@ -7,159 +71,4 @@ openturns.Arcsine
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~Arcsine.__init__
-      ~Arcsine.abs
-      ~Arcsine.acos
-      ~Arcsine.acosh
-      ~Arcsine.asin
-      ~Arcsine.asinh
-      ~Arcsine.atan
-      ~Arcsine.atanh
-      ~Arcsine.cbrt
-      ~Arcsine.computeBilateralConfidenceInterval
-      ~Arcsine.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~Arcsine.computeCDF
-      ~Arcsine.computeCDFGradient
-      ~Arcsine.computeCharacteristicFunction
-      ~Arcsine.computeComplementaryCDF
-      ~Arcsine.computeConditionalCDF
-      ~Arcsine.computeConditionalDDF
-      ~Arcsine.computeConditionalPDF
-      ~Arcsine.computeConditionalQuantile
-      ~Arcsine.computeDDF
-      ~Arcsine.computeDensityGenerator
-      ~Arcsine.computeDensityGeneratorDerivative
-      ~Arcsine.computeDensityGeneratorSecondDerivative
-      ~Arcsine.computeEntropy
-      ~Arcsine.computeGeneratingFunction
-      ~Arcsine.computeInverseSurvivalFunction
-      ~Arcsine.computeLogCharacteristicFunction
-      ~Arcsine.computeLogGeneratingFunction
-      ~Arcsine.computeLogPDF
-      ~Arcsine.computeLogPDFGradient
-      ~Arcsine.computeMinimumVolumeInterval
-      ~Arcsine.computeMinimumVolumeIntervalWithMarginalProbability
-      ~Arcsine.computeMinimumVolumeLevelSet
-      ~Arcsine.computeMinimumVolumeLevelSetWithThreshold
-      ~Arcsine.computePDF
-      ~Arcsine.computePDFGradient
-      ~Arcsine.computeProbability
-      ~Arcsine.computeQuantile
-      ~Arcsine.computeRadialDistributionCDF
-      ~Arcsine.computeScalarQuantile
-      ~Arcsine.computeSequentialConditionalCDF
-      ~Arcsine.computeSequentialConditionalDDF
-      ~Arcsine.computeSequentialConditionalPDF
-      ~Arcsine.computeSequentialConditionalQuantile
-      ~Arcsine.computeSurvivalFunction
-      ~Arcsine.computeUnilateralConfidenceInterval
-      ~Arcsine.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~Arcsine.cos
-      ~Arcsine.cosh
-      ~Arcsine.drawCDF
-      ~Arcsine.drawLogPDF
-      ~Arcsine.drawMarginal1DCDF
-      ~Arcsine.drawMarginal1DLogPDF
-      ~Arcsine.drawMarginal1DPDF
-      ~Arcsine.drawMarginal1DSurvivalFunction
-      ~Arcsine.drawMarginal2DCDF
-      ~Arcsine.drawMarginal2DLogPDF
-      ~Arcsine.drawMarginal2DPDF
-      ~Arcsine.drawMarginal2DSurvivalFunction
-      ~Arcsine.drawPDF
-      ~Arcsine.drawQuantile
-      ~Arcsine.drawSurvivalFunction
-      ~Arcsine.exp
-      ~Arcsine.getA
-      ~Arcsine.getB
-      ~Arcsine.getCDFEpsilon
-      ~Arcsine.getCenteredMoment
-      ~Arcsine.getCholesky
-      ~Arcsine.getClassName
-      ~Arcsine.getCopula
-      ~Arcsine.getCorrelation
-      ~Arcsine.getCovariance
-      ~Arcsine.getDescription
-      ~Arcsine.getDimension
-      ~Arcsine.getDispersionIndicator
-      ~Arcsine.getId
-      ~Arcsine.getIntegrationNodesNumber
-      ~Arcsine.getInverseCholesky
-      ~Arcsine.getInverseIsoProbabilisticTransformation
-      ~Arcsine.getIsoProbabilisticTransformation
-      ~Arcsine.getKendallTau
-      ~Arcsine.getKurtosis
-      ~Arcsine.getLinearCorrelation
-      ~Arcsine.getMarginal
-      ~Arcsine.getMean
-      ~Arcsine.getMoment
-      ~Arcsine.getName
-      ~Arcsine.getPDFEpsilon
-      ~Arcsine.getParameter
-      ~Arcsine.getParameterDescription
-      ~Arcsine.getParameterDimension
-      ~Arcsine.getParametersCollection
-      ~Arcsine.getPearsonCorrelation
-      ~Arcsine.getPositionIndicator
-      ~Arcsine.getProbabilities
-      ~Arcsine.getRange
-      ~Arcsine.getRealization
-      ~Arcsine.getRoughness
-      ~Arcsine.getSample
-      ~Arcsine.getShadowedId
-      ~Arcsine.getShapeMatrix
-      ~Arcsine.getShiftedMoment
-      ~Arcsine.getSingularities
-      ~Arcsine.getSkewness
-      ~Arcsine.getSpearmanCorrelation
-      ~Arcsine.getStandardDeviation
-      ~Arcsine.getStandardDistribution
-      ~Arcsine.getStandardMoment
-      ~Arcsine.getStandardRepresentative
-      ~Arcsine.getSupport
-      ~Arcsine.getVisibility
-      ~Arcsine.hasEllipticalCopula
-      ~Arcsine.hasIndependentCopula
-      ~Arcsine.hasName
-      ~Arcsine.hasVisibleName
-      ~Arcsine.inverse
-      ~Arcsine.isContinuous
-      ~Arcsine.isCopula
-      ~Arcsine.isDiscrete
-      ~Arcsine.isElliptical
-      ~Arcsine.isIntegral
-      ~Arcsine.ln
-      ~Arcsine.log
-      ~Arcsine.setA
-      ~Arcsine.setB
-      ~Arcsine.setDescription
-      ~Arcsine.setIntegrationNodesNumber
-      ~Arcsine.setName
-      ~Arcsine.setParameter
-      ~Arcsine.setParametersCollection
-      ~Arcsine.setShadowedId
-      ~Arcsine.setVisibility
-      ~Arcsine.sin
-      ~Arcsine.sinh
-      ~Arcsine.sqr
-      ~Arcsine.sqrt
-      ~Arcsine.tan
-      ~Arcsine.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~Arcsine.thisown
-   
    

@@ -1,5 +1,5 @@
-openturns.DistFunc\_kFactorPooled
-=================================
+DistFunc_kFactorPooled
+================================
 
 .. currentmodule:: openturns
 

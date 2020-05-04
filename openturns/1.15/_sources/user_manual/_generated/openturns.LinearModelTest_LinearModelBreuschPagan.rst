@@ -1,5 +1,5 @@
-openturns.LinearModelTest\_LinearModelBreuschPagan
-==================================================
+LinearModelTest_LinearModelBreuschPagan
+=================================================
 
 .. currentmodule:: openturns
 

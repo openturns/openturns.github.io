@@ -1,5 +1,5 @@
-openturns.FittingTest\_BIC
-==========================
+FittingTest_BIC
+=========================
 
 .. currentmodule:: openturns
 

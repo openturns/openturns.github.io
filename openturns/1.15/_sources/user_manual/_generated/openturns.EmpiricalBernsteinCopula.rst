@@ -1,5 +1,41 @@
-openturns.EmpiricalBernsteinCopula
-==================================
+EmpiricalBernsteinCopula
+====================================================================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    from matplotlib import pyplot as plt
+    from openturns.viewer import View
+    if ot.EmpiricalBernsteinCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
+        sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
+        copula = ot.EmpiricalBernsteinCopula(sample, 4)
+    elif ot.EmpiricalBernsteinCopula().__class__.__name__ == 'ExtremeValueCopula':
+        copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
+    elif ot.EmpiricalBernsteinCopula().__class__.__name__ == 'MaximumEntropyOrderStatisticsCopula':
+        marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
+        copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
+    elif ot.EmpiricalBernsteinCopula().__class__.__name__ == 'NormalCopula':
+        R = ot.CorrelationMatrix(2)
+        R[1, 0] = 0.8
+        copula = ot.NormalCopula(R)
+    elif ot.EmpiricalBernsteinCopula().__class__.__name__ == 'SklarCopula':
+        student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
+        copula =  ot.SklarCopula(student)
+    else:
+        copula = ot.EmpiricalBernsteinCopula()
+    if copula.getDimension() == 1:
+        copula = ot.EmpiricalBernsteinCopula(2)
+    copula.setDescription(['$u_1$', '$u_2$'])
+    pdf_graph = copula.drawPDF()
+    cdf_graph = copula.drawCDF()
+    fig = plt.figure(figsize=(10, 4))
+    pdf_axis = fig.add_subplot(121)
+    cdf_axis = fig.add_subplot(122)
+    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+    View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False, square_axes=True)
+    title = str(copula)[:100].split('\n')[0]
+    fig.suptitle(title)
 
 .. currentmodule:: openturns
 
@@ -7,159 +43,4 @@ openturns.EmpiricalBernsteinCopula
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~EmpiricalBernsteinCopula.__init__
-      ~EmpiricalBernsteinCopula.abs
-      ~EmpiricalBernsteinCopula.acos
-      ~EmpiricalBernsteinCopula.acosh
-      ~EmpiricalBernsteinCopula.asin
-      ~EmpiricalBernsteinCopula.asinh
-      ~EmpiricalBernsteinCopula.atan
-      ~EmpiricalBernsteinCopula.atanh
-      ~EmpiricalBernsteinCopula.cbrt
-      ~EmpiricalBernsteinCopula.computeBilateralConfidenceInterval
-      ~EmpiricalBernsteinCopula.computeBilateralConfidenceIntervalWithMarginalProbability
-      ~EmpiricalBernsteinCopula.computeCDF
-      ~EmpiricalBernsteinCopula.computeCDFGradient
-      ~EmpiricalBernsteinCopula.computeCharacteristicFunction
-      ~EmpiricalBernsteinCopula.computeComplementaryCDF
-      ~EmpiricalBernsteinCopula.computeConditionalCDF
-      ~EmpiricalBernsteinCopula.computeConditionalDDF
-      ~EmpiricalBernsteinCopula.computeConditionalPDF
-      ~EmpiricalBernsteinCopula.computeConditionalQuantile
-      ~EmpiricalBernsteinCopula.computeDDF
-      ~EmpiricalBernsteinCopula.computeDensityGenerator
-      ~EmpiricalBernsteinCopula.computeDensityGeneratorDerivative
-      ~EmpiricalBernsteinCopula.computeDensityGeneratorSecondDerivative
-      ~EmpiricalBernsteinCopula.computeEntropy
-      ~EmpiricalBernsteinCopula.computeGeneratingFunction
-      ~EmpiricalBernsteinCopula.computeInverseSurvivalFunction
-      ~EmpiricalBernsteinCopula.computeLogCharacteristicFunction
-      ~EmpiricalBernsteinCopula.computeLogGeneratingFunction
-      ~EmpiricalBernsteinCopula.computeLogPDF
-      ~EmpiricalBernsteinCopula.computeLogPDFGradient
-      ~EmpiricalBernsteinCopula.computeMinimumVolumeInterval
-      ~EmpiricalBernsteinCopula.computeMinimumVolumeIntervalWithMarginalProbability
-      ~EmpiricalBernsteinCopula.computeMinimumVolumeLevelSet
-      ~EmpiricalBernsteinCopula.computeMinimumVolumeLevelSetWithThreshold
-      ~EmpiricalBernsteinCopula.computePDF
-      ~EmpiricalBernsteinCopula.computePDFGradient
-      ~EmpiricalBernsteinCopula.computeProbability
-      ~EmpiricalBernsteinCopula.computeQuantile
-      ~EmpiricalBernsteinCopula.computeRadialDistributionCDF
-      ~EmpiricalBernsteinCopula.computeScalarQuantile
-      ~EmpiricalBernsteinCopula.computeSequentialConditionalCDF
-      ~EmpiricalBernsteinCopula.computeSequentialConditionalDDF
-      ~EmpiricalBernsteinCopula.computeSequentialConditionalPDF
-      ~EmpiricalBernsteinCopula.computeSequentialConditionalQuantile
-      ~EmpiricalBernsteinCopula.computeSurvivalFunction
-      ~EmpiricalBernsteinCopula.computeUnilateralConfidenceInterval
-      ~EmpiricalBernsteinCopula.computeUnilateralConfidenceIntervalWithMarginalProbability
-      ~EmpiricalBernsteinCopula.cos
-      ~EmpiricalBernsteinCopula.cosh
-      ~EmpiricalBernsteinCopula.drawCDF
-      ~EmpiricalBernsteinCopula.drawLogPDF
-      ~EmpiricalBernsteinCopula.drawMarginal1DCDF
-      ~EmpiricalBernsteinCopula.drawMarginal1DLogPDF
-      ~EmpiricalBernsteinCopula.drawMarginal1DPDF
-      ~EmpiricalBernsteinCopula.drawMarginal1DSurvivalFunction
-      ~EmpiricalBernsteinCopula.drawMarginal2DCDF
-      ~EmpiricalBernsteinCopula.drawMarginal2DLogPDF
-      ~EmpiricalBernsteinCopula.drawMarginal2DPDF
-      ~EmpiricalBernsteinCopula.drawMarginal2DSurvivalFunction
-      ~EmpiricalBernsteinCopula.drawPDF
-      ~EmpiricalBernsteinCopula.drawQuantile
-      ~EmpiricalBernsteinCopula.drawSurvivalFunction
-      ~EmpiricalBernsteinCopula.exp
-      ~EmpiricalBernsteinCopula.getBinNumber
-      ~EmpiricalBernsteinCopula.getCDFEpsilon
-      ~EmpiricalBernsteinCopula.getCenteredMoment
-      ~EmpiricalBernsteinCopula.getCholesky
-      ~EmpiricalBernsteinCopula.getClassName
-      ~EmpiricalBernsteinCopula.getCopula
-      ~EmpiricalBernsteinCopula.getCopulaSample
-      ~EmpiricalBernsteinCopula.getCorrelation
-      ~EmpiricalBernsteinCopula.getCovariance
-      ~EmpiricalBernsteinCopula.getDescription
-      ~EmpiricalBernsteinCopula.getDimension
-      ~EmpiricalBernsteinCopula.getDispersionIndicator
-      ~EmpiricalBernsteinCopula.getId
-      ~EmpiricalBernsteinCopula.getIntegrationNodesNumber
-      ~EmpiricalBernsteinCopula.getInverseCholesky
-      ~EmpiricalBernsteinCopula.getInverseIsoProbabilisticTransformation
-      ~EmpiricalBernsteinCopula.getIsoProbabilisticTransformation
-      ~EmpiricalBernsteinCopula.getKendallTau
-      ~EmpiricalBernsteinCopula.getKurtosis
-      ~EmpiricalBernsteinCopula.getLinearCorrelation
-      ~EmpiricalBernsteinCopula.getMarginal
-      ~EmpiricalBernsteinCopula.getMean
-      ~EmpiricalBernsteinCopula.getMoment
-      ~EmpiricalBernsteinCopula.getName
-      ~EmpiricalBernsteinCopula.getPDFEpsilon
-      ~EmpiricalBernsteinCopula.getParameter
-      ~EmpiricalBernsteinCopula.getParameterDescription
-      ~EmpiricalBernsteinCopula.getParameterDimension
-      ~EmpiricalBernsteinCopula.getParametersCollection
-      ~EmpiricalBernsteinCopula.getPearsonCorrelation
-      ~EmpiricalBernsteinCopula.getPositionIndicator
-      ~EmpiricalBernsteinCopula.getProbabilities
-      ~EmpiricalBernsteinCopula.getRange
-      ~EmpiricalBernsteinCopula.getRealization
-      ~EmpiricalBernsteinCopula.getRoughness
-      ~EmpiricalBernsteinCopula.getSample
-      ~EmpiricalBernsteinCopula.getShadowedId
-      ~EmpiricalBernsteinCopula.getShapeMatrix
-      ~EmpiricalBernsteinCopula.getShiftedMoment
-      ~EmpiricalBernsteinCopula.getSingularities
-      ~EmpiricalBernsteinCopula.getSkewness
-      ~EmpiricalBernsteinCopula.getSpearmanCorrelation
-      ~EmpiricalBernsteinCopula.getStandardDeviation
-      ~EmpiricalBernsteinCopula.getStandardDistribution
-      ~EmpiricalBernsteinCopula.getStandardMoment
-      ~EmpiricalBernsteinCopula.getStandardRepresentative
-      ~EmpiricalBernsteinCopula.getSupport
-      ~EmpiricalBernsteinCopula.getVisibility
-      ~EmpiricalBernsteinCopula.hasEllipticalCopula
-      ~EmpiricalBernsteinCopula.hasIndependentCopula
-      ~EmpiricalBernsteinCopula.hasName
-      ~EmpiricalBernsteinCopula.hasVisibleName
-      ~EmpiricalBernsteinCopula.inverse
-      ~EmpiricalBernsteinCopula.isContinuous
-      ~EmpiricalBernsteinCopula.isCopula
-      ~EmpiricalBernsteinCopula.isDiscrete
-      ~EmpiricalBernsteinCopula.isElliptical
-      ~EmpiricalBernsteinCopula.isIntegral
-      ~EmpiricalBernsteinCopula.ln
-      ~EmpiricalBernsteinCopula.log
-      ~EmpiricalBernsteinCopula.setBinNumber
-      ~EmpiricalBernsteinCopula.setCopulaSample
-      ~EmpiricalBernsteinCopula.setDescription
-      ~EmpiricalBernsteinCopula.setIntegrationNodesNumber
-      ~EmpiricalBernsteinCopula.setName
-      ~EmpiricalBernsteinCopula.setParameter
-      ~EmpiricalBernsteinCopula.setParametersCollection
-      ~EmpiricalBernsteinCopula.setShadowedId
-      ~EmpiricalBernsteinCopula.setVisibility
-      ~EmpiricalBernsteinCopula.sin
-      ~EmpiricalBernsteinCopula.sinh
-      ~EmpiricalBernsteinCopula.sqr
-      ~EmpiricalBernsteinCopula.sqrt
-      ~EmpiricalBernsteinCopula.tan
-      ~EmpiricalBernsteinCopula.tanh
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~EmpiricalBernsteinCopula.thisown
-   
    

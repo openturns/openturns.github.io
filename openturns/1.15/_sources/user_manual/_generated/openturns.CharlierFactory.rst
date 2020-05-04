@@ -1,5 +1,39 @@
-openturns.CharlierFactory
+CharlierFactory
 =========================
+
+.. plot::
+    :include-source: False
+
+    import openturns as ot
+    import numpy as np
+    from matplotlib import pyplot as plt
+    n_functions = 8
+    function_factory = ot.CharlierFactory()
+    if function_factory.getClassName() == 'KrawtchoukFactory':
+        function_factory = ot.CharlierFactory(n_functions, .5)
+    functions = [function_factory.build(i) for i in range(n_functions)]
+    measure = function_factory.getMeasure()
+    if hasattr(measure, 'getA') and hasattr(measure, 'getB'):
+        x_min = measure.getA()
+        x_max = measure.getB()
+    else:
+        x_min = measure.computeQuantile(1e-3)[0]
+        x_max = measure.computeQuantile(1. - 1e-3)[0]
+    n_points = 200
+    meshed_support = np.linspace(x_min, x_max, n_points)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    for i in range(n_functions):
+        plt.plot(meshed_support,
+                 [functions[i](x) for x in meshed_support], lw=1.5,
+                 label='$\phi_{' + str(i) + '}(x)$')
+    plt.xlabel('$x$')
+    plt.ylabel('$\phi_i(x)$')
+    plt.xlim(x_min, x_max)
+    plt.grid()
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width, box.height * 0.9])
+    plt.legend(loc='upper center', bbox_to_anchor=(.5, 1.25), ncol=4)
 
 .. currentmodule:: openturns
 
@@ -7,42 +41,4 @@ openturns.CharlierFactory
 
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~CharlierFactory.__init__
-      ~CharlierFactory.build
-      ~CharlierFactory.buildCoefficients
-      ~CharlierFactory.buildRecurrenceCoefficientsCollection
-      ~CharlierFactory.getClassName
-      ~CharlierFactory.getId
-      ~CharlierFactory.getLambda
-      ~CharlierFactory.getMeasure
-      ~CharlierFactory.getName
-      ~CharlierFactory.getNodesAndWeights
-      ~CharlierFactory.getRecurrenceCoefficients
-      ~CharlierFactory.getRoots
-      ~CharlierFactory.getShadowedId
-      ~CharlierFactory.getVisibility
-      ~CharlierFactory.hasName
-      ~CharlierFactory.hasVisibleName
-      ~CharlierFactory.setName
-      ~CharlierFactory.setShadowedId
-      ~CharlierFactory.setVisibility
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~CharlierFactory.ANALYSIS
-      ~CharlierFactory.PROBABILITY
-      ~CharlierFactory.thisown
-   
    

@@ -1,5 +1,5 @@
-openturns.SpecFunc\_Expm1
-=========================
+SpecFunc_Expm1
+========================
 
 .. currentmodule:: openturns
 

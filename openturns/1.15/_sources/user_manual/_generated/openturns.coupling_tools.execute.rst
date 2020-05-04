@@ -1,5 +1,5 @@
-openturns.coupling\_tools.execute
-=================================
+execute
+================================
 
 .. currentmodule:: openturns.coupling_tools
 
