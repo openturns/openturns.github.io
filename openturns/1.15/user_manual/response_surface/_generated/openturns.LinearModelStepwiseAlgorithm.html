@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LinearModelStepwiseAlgorithm &#8212; OpenTURNS 1.15rc1 documentation</title>
     <link rel="stylesheet" href="../../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -100,7 +101,7 @@
 <dl class="py class">
 <dt id="openturns.LinearModelStepwiseAlgorithm">
 <em class="property">class </em><code class="sig-name descname">LinearModelStepwiseAlgorithm</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LinearModelStepwiseAlgorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class used to create a linear model from numerical samples.</p>
+<dd><p>Stepwise linear model algorithm.</p>
 <p><strong>Available usages</strong>:</p>
 <blockquote>
 <div><p>LinearModelStepwiseAlgorithm(<em>inputSample, basis, outputSample, minimalIndices, isForward, penalty, maximumIterationNumber</em>)</p>
@@ -133,30 +134,23 @@
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearModel</span></code>, <a class="reference internal" href="openturns.LinearModelResult.html#openturns.LinearModelResult" title="openturns.LinearModelResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearModelResult</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="openturns.LinearModelAlgorithm.html#openturns.LinearModelAlgorithm" title="openturns.LinearModelAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearModelAlgorithm</span></code></a>, <a class="reference internal" href="openturns.LinearModelResult.html#openturns.LinearModelResult" title="openturns.LinearModelResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearModelResult</span></code></a></dt><dd></dd>
 </dl>
 </div>
 <p class="rubric">Notes</p>
-<p>This class is used in order to create a linear model from numerical samples, by using
-the stepwise method. The linear regression model between the scalar variable <img class="math" src="../../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y" style="vertical-align: 0px"/>
+<p>The objective is to select the best linear regression model by using the 
+stepwise method. Starting from the <cite>basis</cite> and <cite>minimalIndices</cite>, the stepwise 
+strategy consists in adding basis elements (if <cite>isForward</cite> is True), dropping 
+some (if <cite>isForward</cite> is False) or adding and dropping (<cite>both</cite> strategy) some 
+elements. At each step, we get a model. We compute the corresponding penalty 
+(BIC or AIC) and we continue repeatedly this process until the penalty could 
+not be improved or the maximum iterations number is reached.
+Finally we get a regression model between the scalar variable <img class="math" src="../../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y" style="vertical-align: 0px"/>
 and the <img class="math" src="../../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n" style="vertical-align: 0px"/>-dimensional one <img class="math" src="../../../_images/math/ac19d37c585a460e70d94dcea1158f5331121312.svg" alt="\vect{X} = (X_i)_{i \leq n}" style="vertical-align: -4px"/> writes as follows:</p>
 <div class="math">
-<p><img src="../../../_images/math/96ed82b6c0135ba41fde7251282ab5518770bc35.svg" alt="\tilde{Y} = a_0 + \sum_{i=1}^n a_i X_i + \epsilon"/></p>
+<p><img src="../../../_images/math/fb767aa6eb25c5ed0b02a3d8161851b5b4287050.svg" alt="\tilde{Y} = a_0 + \sum_{i \in I} a_i \phi_i(X) + \epsilon"/></p>
 </div><p>where <img class="math" src="../../../_images/math/0d105e8ee3d8ee933b1f68424693c02a02189d3a.svg" alt="\epsilon" style="vertical-align: 0px"/> is the residual, supposed to follow the standard Normal
-distribution.</p>
-<p>Each coefficient <img class="math" src="../../../_images/math/9db368995e7864e132fd3f12b95acbb326e6ec45.svg" alt="a_i" style="vertical-align: -2px"/> is evaluated from both samples <img class="math" src="../../../_images/math/5d543ad6f7980328b4feb7a339db3cf2a1697629.svg" alt="Ysample" style="vertical-align: -3px"/> and
-<img class="math" src="../../../_images/math/13b33eefae183a124819cabd3fd4b8df9d63038e.svg" alt="Xsample" style="vertical-align: -3px"/> and is accompagnied by a confidence interval and a p-value (which
-tests if they are significantly different from 0.0).</p>
-<p>By default, input sample is normalized.  It is possible to set Resource key
-(<code class="docutils literal notranslate"><span class="pre">LinearModelStepwiseAlgorithm-normalize</span></code>) to <em>False</em> in order to discard
-this normalization.</p>
-<p>This class enables to test the quality of the model. It provides only numerical
-tests. If <img class="math" src="../../../_images/math/ea775056706c0642a79ca7b47cbc53cd1a63fc8d.svg" alt="X" style="vertical-align: 0px"/> is scalar, a graphical validation test exists, that draws
-the residual couples <img class="math" src="../../../_images/math/24c8b6a741daef132430cdbcc42e6e48816cb3ee.svg" alt="(\epsilon_i, \epsilon_{i+1})" style="vertical-align: -4px"/>, where the residual
-<img class="math" src="../../../_images/math/2a63b87bd5c99fca25f44e83ef29c99e210a216c.svg" alt="\epsilon_i" style="vertical-align: -2px"/> is evaluated on the samples <img class="math" src="../../../_images/math/224310f19b11ea5aaa1fc7aecdb43ef3f3fb62cc.svg" alt="(Xsample, Ysample)" style="vertical-align: -4px"/>:
-<img class="math" src="../../../_images/math/b5be5cad05fcde4e8022988d4f9454d818d13759.svg" alt="\epsilon_i  = Ysample_i - \tilde{Y}_i" style="vertical-align: -3px"/> with
-<img class="math" src="../../../_images/math/cf6ec8375578774c86e77268cf180a69243c1083.svg" alt="\tilde{Y}_i = a_0 + a_1 + Xsample_i" style="vertical-align: -3px"/>. The method is
-<a class="reference internal" href="../../_generated/openturns.VisualTest_DrawLinearModelResidual.html#openturns.VisualTest_DrawLinearModelResidual" title="openturns.VisualTest_DrawLinearModelResidual"><code class="xref py py-class docutils literal notranslate"><span class="pre">VisualTest_DrawLinearModelResidual</span></code></a>.</p>
+distribution, <img class="math" src="../../../_images/math/7ffa398a2109f04e25591d01c4f97ec6e97d753f.svg" alt="\phi_i" style="vertical-align: -3px"/> the i-th element of the basis.</p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -359,7 +353,7 @@ the residual couples <img class="math" src="../../../_images/math/24c8b6a741daef
 <dl class="field-list">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl>
-<dt><strong>result</strong><span class="classifier"><a class="reference internal" href="openturns.LinearModelResult.html#openturns.LinearModelResult" title="openturns.LinearModelResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearModelResult</span></code></a></span></dt><dd><p>Result.</p>
+<dt><strong>result</strong><span class="classifier"><a class="reference internal" href="openturns.LinearModelResult.html#openturns.LinearModelResult" title="openturns.LinearModelResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearModelResult</span></code></a></span></dt><dd><p>The result.</p>
 </dd>
 </dl>
 </dd>
@@ -503,7 +497,7 @@ the residual couples <img class="math" src="../../../_images/math/24c8b6a741daef
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on May 04, 2020.
+      Last updated on May 25, 2020.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.0+.
     </div>
   </body>
