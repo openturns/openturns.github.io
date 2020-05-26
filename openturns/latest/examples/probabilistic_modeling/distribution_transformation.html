@@ -1,10 +1,11 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Transform a distribution &#8212; OpenTURNS 1.15rc1 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform a distribution &#8212; OpenTURNS 1.15 documentation</title>
     <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -54,14 +55,25 @@
         <li class="right" >
           <a href="random_mixture_distribution_discrete.html" title="Create a discrete random mixture"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" accesskey="U">Probabilistic modeling</a> &#187;</li> 
+          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" accesskey="U">Probabilistic modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Transform a distribution</a></li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Transform a distribution</a><ul>
+<li><a class="reference internal" href="#Sum-&amp;-difference-of-distributions">Sum &amp; difference of distributions</a></li>
+<li><a class="reference internal" href="#Product-&amp;-inverse">Product &amp; inverse</a></li>
+<li><a class="reference internal" href="#Transformation-using-functions">Transformation using functions</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="random_mixture_distribution_discrete.html"
                         title="previous chapter">Create a discrete random mixture</a></p>
@@ -160,8 +172,8 @@ div.nboutput.container div.prompt pre {
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
     min-width: 7ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
@@ -185,7 +197,6 @@ div.nboutput.container div.prompt pre {
 /* input/output area */
 div.nbinput.container div.input_area,
 div.nboutput.container div.output_area {
-    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
@@ -259,6 +270,27 @@ div.nboutput.container div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -295,9 +327,9 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Transform-a-distribution">
 <h1>Transform a distribution<a class="headerlink" href="#Transform-a-distribution" title="Permalink to this headline">¶</a></h1>
-<p>In this example we are going to use distribution algebra.</p>
+<p>In this example we are going to use distribution algebra and distribution transformation via functions.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -306,25 +338,27 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>We define some (classical) distribution :</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># create some distribution</span>
-<span class="n">distribution1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span></span><span class="n">distribution1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 <span class="n">distribution2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
-<span class="n">distribution3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">WeibullMin</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="n">distribution3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">WeibullMin</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="Sum-&amp;-difference-of-distributions">
+<h2>Sum &amp; difference of distributions<a class="headerlink" href="#Sum-&-difference-of-distributions" title="Permalink to this headline">¶</a></h2>
+<p>It is easy to compute the sum of distributions. For example:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># sum of distributions</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution1</span> <span class="o">+</span> <span class="n">distribution2</span>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution1</span> <span class="o">+</span> <span class="n">distribution2</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
 <span class="n">distribution</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 </pre></div>
@@ -335,23 +369,24 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-RandomMixture(Trapezoidal(a = 0, b = 1, c = 2, d = 3))
+Trapezoidal(a = 0, b = 1, c = 2, d = 3)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_4_1.svg" src="../../_images/examples_probabilistic_modeling_distribution_transformation_4_1.svg" /></div>
+<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_6_1.png" src="../../_images/examples_probabilistic_modeling_distribution_transformation_6_1.png" />
 </div>
+</div>
+<p>We might also use substraction even with scalar values:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># flip a distribution</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">-</span> <span class="n">distribution3</span>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">-</span> <span class="n">distribution3</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
 <span class="n">distribution</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 </pre></div>
@@ -362,23 +397,27 @@ RandomMixture(Trapezoidal(a = 0, b = 1, c = 2, d = 3))
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-RandomMixture(3 - WeibullMin(alpha = 2, beta = 1.5, gamma = 0))
+RandomMixture(3 - WeibullMin(beta = 1.5, alpha = 2, gamma = 0))
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_5_1.svg" src="../../_images/examples_probabilistic_modeling_distribution_transformation_5_1.svg" /></div>
+<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_8_1.png" src="../../_images/examples_probabilistic_modeling_distribution_transformation_8_1.png" />
 </div>
+</div>
+</div>
+<div class="section" id="Product-&amp;-inverse">
+<h2>Product &amp; inverse<a class="headerlink" href="#Product-&-inverse" title="Permalink to this headline">¶</a></h2>
+<p>We might also compute the product of two (or more) distributions. For example:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># product of distributions</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution1</span> <span class="o">*</span> <span class="n">distribution2</span>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution1</span> <span class="o">*</span> <span class="n">distribution2</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
 <span class="n">distribution</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 </pre></div>
@@ -393,15 +432,138 @@ ProductDistribution(Uniform(a = 0, b = 1) * Uniform(a = 0, b = 2))
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_6_1.svg" src="../../_images/examples_probabilistic_modeling_distribution_transformation_6_1.svg" /></div>
+<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_10_1.png" src="../../_images/examples_probabilistic_modeling_distribution_transformation_10_1.png" />
+</div>
+</div>
+<p>We could also inverse a distribution :</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">distribution1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+<span class="n">distribution</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CompositeDistribution=f(Uniform(a = 0, b = 1)) with f=[x]-&gt;[1.0 / x]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_12_1.png" src="../../_images/examples_probabilistic_modeling_distribution_transformation_12_1.png" />
+</div>
+</div>
+<p>Or compute a ratio distrobution:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ratio</span> <span class="o">=</span> <span class="n">distribution2</span> <span class="o">/</span> <span class="n">distribution1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+<span class="n">ratio</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ProductDistribution(Uniform(a = 0, b = 2) * CompositeDistribution=f(Uniform(a = 0, b = 1)) with f=[x]-&gt;[1.0 / x])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_14_1.png" src="../../_images/examples_probabilistic_modeling_distribution_transformation_14_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Transformation-using-functions">
+<h2>Transformation using functions<a class="headerlink" href="#Transformation-using-functions" title="Permalink to this headline">¶</a></h2>
+<p>The library provides methods to get the full distributions of <code class="docutils literal notranslate"><span class="pre">f(x)</span></code> where <code class="docutils literal notranslate"><span class="pre">f</span></code> can be equal to :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sin</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asin</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cos</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">acos</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tan</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">atan</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sinh</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">asinh</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cosh</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">acosh</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tanh</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">atanh</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sqr</span></code> (for square),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inverse</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sqrt</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exp</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log</span></code>/<code class="docutils literal notranslate"><span class="pre">ln</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">abs</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cbrt</span></code>.</p></li>
+</ul>
+<p>If one wants a specific method, user might rely on <code class="docutils literal notranslate"><span class="pre">CompositeDistribution</span></code>.</p>
+<p>For example for the usual <code class="docutils literal notranslate"><span class="pre">log</span></code> transformation:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">distribution1</span><span class="o">.</span><span class="n">log</span><span class="p">()</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_16_0.png" src="../../_images/examples_probabilistic_modeling_distribution_transformation_16_0.png" />
+</div>
+</div>
+<p>And for the <code class="docutils literal notranslate"><span class="pre">log2</span></code> function:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;log2(x)&#39;</span><span class="p">])</span>
+<span class="n">f</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="s2">&quot;ln(X)&quot;</span><span class="p">])</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">CompositeDistribution</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">distribution1</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_probabilistic_modeling_distribution_transformation_18_0.png" src="../../_images/examples_probabilistic_modeling_distribution_transformation_18_0.png" />
+</div>
+</div>
 </div>
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -419,16 +581,17 @@ ProductDistribution(Uniform(a = 0, b = 1) * Uniform(a = 0, b = 2))
         <li class="right" >
           <a href="random_mixture_distribution_discrete.html" title="Create a discrete random mixture"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.15 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" >Probabilistic modeling</a> &#187;</li> 
+          <li class="nav-item nav-item-3"><a href="probabilistic_modeling.html" >Probabilistic modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Transform a distribution</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Apr 10, 2020.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.1.0+/eae1d3b4f.
+      Last updated on May 25, 2020.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.0+.
     </div>
   </body>
 </html>
