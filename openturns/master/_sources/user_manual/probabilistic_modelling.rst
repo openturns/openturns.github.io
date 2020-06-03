@@ -152,8 +152,7 @@ Combining and transforming distributions
 
     BayesDistribution
 
-    :template: DistributionHighDimension.rst_t
-    BlockIndependentDistribution
+    :template: Distribution.rst_t
     ComposedDistribution
 
     :template: classWithPlot.rst_t
@@ -235,7 +234,7 @@ Combining and transforming copulas
 
 .. autosummary::
     :toctree: _generated/
-    :template: DistributionHighDimension.rst_t
+    :template: classWithPlot.rst_t
 
     ComposedCopula
 
