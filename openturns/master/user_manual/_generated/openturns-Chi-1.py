@@ -7,10 +7,6 @@ elif ot.Chi().__class__.__name__ == 'Binomial':
     distribution = ot.Binomial(5, 0.2)
 elif ot.Chi().__class__.__name__ == 'Hypergeometric':
     distribution = ot.Hypergeometric(10, 4, 7)
-elif ot.Chi().__class__.__name__ == 'ComposedDistribution':
-    copula = ot.IndependentCopula(2)
-    marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
-    distribution = ot.ComposedDistribution(marginals, copula)
 elif ot.Chi().__class__.__name__ == 'CumulativeDistributionNetwork':
     coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
     distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
@@ -57,4 +53,4 @@ elif dimension == 2:
     pdf_graph.setTitle(title)
     fig = plt.figure(figsize=(10, 5))
     pdf_axis = fig.add_subplot(111)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=False)

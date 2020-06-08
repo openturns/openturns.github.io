@@ -7,63 +7,60 @@ ComposedDistribution distribution
     import openturns as ot
     from matplotlib import pyplot as plt
     from openturns.viewer import View
-    if ot.ComposedDistribution().__class__.__name__ == 'Bernoulli':
-        distribution = ot.Bernoulli(0.7)
-    elif ot.ComposedDistribution().__class__.__name__ == 'Binomial':
-        distribution = ot.Binomial(5, 0.2)
-    elif ot.ComposedDistribution().__class__.__name__ == 'Hypergeometric':
-        distribution = ot.Hypergeometric(10, 4, 7)
+    if ot.ComposedDistribution().__class__.__name__ == 'ComposedCopula':
+        distribution = ot.ComposedCopula([ot.ClaytonCopula(2.0), ot.GumbelCopula(3.0)])
     elif ot.ComposedDistribution().__class__.__name__ == 'ComposedDistribution':
-        copula = ot.IndependentCopula(2)
-        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0)]
+        R = ot.CorrelationMatrix(3)
+        R[0,1]=0.5
+        R[0,2]=0.3
+        R[1,2]=-0.2
+        copula = ot.NormalCopula(R)
+        marginals = [ot.Uniform(1.0, 2.0), ot.Normal(2.0, 3.0), ot.Gamma(5.5, 2.0)]
         distribution = ot.ComposedDistribution(marginals, copula)
-    elif ot.ComposedDistribution().__class__.__name__ == 'CumulativeDistributionNetwork':
-        coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
-        distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-    elif ot.ComposedDistribution().__class__.__name__ == 'Histogram':
-        distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-    elif ot.ComposedDistribution().__class__.__name__ == 'KernelMixture':
-        kernel = ot.Uniform()
-        sample = ot.Normal().getSample(5)
-        bandwith = [1.0]
-        distribution = ot.KernelMixture(kernel, bandwith, sample)
-    elif ot.ComposedDistribution().__class__.__name__ == 'MaximumDistribution':
-        coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
-        distribution = ot.MaximumDistribution(coll)
-    elif ot.ComposedDistribution().__class__.__name__ == 'Multinomial':
-        distribution = ot.Multinomial(5, [0.2])
-    elif ot.ComposedDistribution().__class__.__name__ == 'RandomMixture':
-        coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
-        weights = [0.8, 0.2]
-        cst = 3.0
-        distribution = ot.RandomMixture(coll, weights, cst)
-    elif ot.ComposedDistribution().__class__.__name__ == 'TruncatedDistribution':
-        distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-    elif ot.ComposedDistribution().__class__.__name__ == 'UserDefined':
-        distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
-    elif ot.ComposedDistribution().__class__.__name__ == 'ZipfMandelbrot':
-        distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+    elif ot.ComposedDistribution().__class__.__name__ == 'BlockIndependentDistribution':
+        R = ot.CorrelationMatrix(2)
+        R[0,1]=0.5
+        atom1 = ot.ComposedDistribution([ot.Exponential(2.0), ot.WeibullMax(2.0, 2.0)], ot.NormalCopula(R))
+        atom2 = ot.ComposedDistribution([ot.Normal(2.0, 1.0), ot.Triangular(2.0, 3.0, 4.0)], ot.ClaytonCopula(3.0))
+        distribution = ot.BlockIndependentDistribution([atom1, atom2])
     else:
         distribution = ot.ComposedDistribution()
     dimension = distribution.getDimension()
+    mean = distribution.getMean()
+    std = distribution.getStandardDeviation()
+    xMin = distribution.getRange().getLowerBound()
+    xMax = distribution.getRange().getUpperBound()
+    xMin = [max(xMin[i], mean[i] - 3.0 * std[i]) for i in range(dimension)]
+    xMax = [min(xMax[i], mean[i] + 3.0 * std[i]) for i in range(dimension)]
+    size = 1000
+    sample = distribution.getSample(size)
+    sMin = sample.getMin()
+    sMax = sample.getMax()
+    xMin = [min(xMin[i], sMin[i]) for i in range(dimension)]
+    xMax = [max(xMax[i], sMax[i]) for i in range(dimension)]
+    n_rows = dimension
+    n_cols = dimension
+    fig = plt.figure(figsize=(10, 10))
+    for j in range(dimension):
+        for i in range(dimension):
+            pdf_axis = fig.add_subplot(n_rows, n_cols, j*dimension+i+1)
+            if i == j:
+                pdf_graph = distribution.drawMarginal1DPDF(i, xMin[i], xMax[i], 256)
+            else:
+                pdf_graph = distribution.drawMarginal2DPDF(i, j, [xMin[i], xMin[j]], [xMax[i], xMax[j]], [256]*2)            
+                cloud = ot.Cloud(sample.getMarginal([i, j]))
+                cloud.setPointStyle("dot")
+                pdf_graph.add(cloud)
+            pdf_graph.setTitle("")
+            pdf_graph.setXTitle("")
+            pdf_graph.setYTitle("")
+            if i == 0:
+                pdf_graph.setYTitle(r"$x_" + str(j) + r"$")
+            if j == dimension-1:
+                pdf_graph.setXTitle(r"$x_" + str(i) + r"$")
+            View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=distribution.isCopula())
     title = str(distribution)[:100].split('\n')[0]
-    if dimension == 1:
-        distribution.setDescription(['$x$'])
-        pdf_graph = distribution.drawPDF()
-        cdf_graph = distribution.drawCDF()
-        fig = plt.figure(figsize=(10, 4))
-        pdf_axis = fig.add_subplot(121)
-        cdf_axis = fig.add_subplot(122)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False)
-        View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
-        fig.suptitle(title)
-    elif dimension == 2:
-        distribution.setDescription(['$x_1$', '$x_2$'])
-        pdf_graph = distribution.drawPDF()
-        pdf_graph.setTitle(title)
-        fig = plt.figure(figsize=(10, 5))
-        pdf_axis = fig.add_subplot(111)
-        View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=True)
+    fig.suptitle(title)
 
 .. currentmodule:: openturns
 
