@@ -1,4 +1,4 @@
-ExponentialModel
+﻿ExponentialModel
 ====================================================
 
 .. plot::

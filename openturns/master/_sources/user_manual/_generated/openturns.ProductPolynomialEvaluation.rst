@@ -1,4 +1,4 @@
-ProductPolynomialEvaluation
+﻿ProductPolynomialEvaluation
 =====================================
 
 .. currentmodule:: openturns

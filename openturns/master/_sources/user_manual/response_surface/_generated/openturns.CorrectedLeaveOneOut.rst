@@ -1,4 +1,4 @@
-CorrectedLeaveOneOut
+﻿CorrectedLeaveOneOut
 ==============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ProcessEvent
+﻿ProcessEvent
 ======================
 
 .. currentmodule:: openturns

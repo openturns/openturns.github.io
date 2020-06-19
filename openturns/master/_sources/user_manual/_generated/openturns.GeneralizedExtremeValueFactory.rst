@@ -1,4 +1,4 @@
-GeneralizedExtremeValueFactory
+﻿GeneralizedExtremeValueFactory
 ================================================================================
 
 .. plot::

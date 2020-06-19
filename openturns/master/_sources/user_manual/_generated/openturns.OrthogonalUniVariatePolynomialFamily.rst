@@ -1,4 +1,4 @@
-OrthogonalUniVariatePolynomialFamily
+﻿OrthogonalUniVariatePolynomialFamily
 ==============================================
 
 .. currentmodule:: openturns

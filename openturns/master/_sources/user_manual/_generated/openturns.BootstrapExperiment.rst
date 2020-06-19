@@ -1,4 +1,4 @@
-BootstrapExperiment
+﻿BootstrapExperiment
 =============================
 
 .. plot:: pyplots/BootstrapExperiment.py

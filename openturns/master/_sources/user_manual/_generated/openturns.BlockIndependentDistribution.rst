@@ -1,4 +1,4 @@
-BlockIndependentDistribution distribution
+﻿BlockIndependentDistribution distribution
 ============================================================================
 
 .. plot::

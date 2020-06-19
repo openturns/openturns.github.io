@@ -1,4 +1,4 @@
-MethodOfMomentsFactory
+﻿MethodOfMomentsFactory
 ================================
 
 .. currentmodule:: openturns

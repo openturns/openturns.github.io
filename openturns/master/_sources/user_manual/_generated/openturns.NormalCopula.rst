@@ -1,4 +1,4 @@
-NormalCopula
+﻿NormalCopula
 ============================================
 
 .. plot::

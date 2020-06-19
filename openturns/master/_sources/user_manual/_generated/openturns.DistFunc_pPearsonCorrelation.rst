@@ -1,4 +1,4 @@
-DistFunc_pPearsonCorrelation
+﻿DistFunc_pPearsonCorrelation
 ======================================
 
 .. currentmodule:: openturns

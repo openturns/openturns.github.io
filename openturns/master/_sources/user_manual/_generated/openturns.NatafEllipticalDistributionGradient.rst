@@ -1,4 +1,4 @@
-NatafEllipticalDistributionGradient
+﻿NatafEllipticalDistributionGradient
 =============================================
 
 .. currentmodule:: openturns

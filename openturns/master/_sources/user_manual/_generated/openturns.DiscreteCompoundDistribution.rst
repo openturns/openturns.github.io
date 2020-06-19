@@ -1,4 +1,4 @@
-DiscreteCompoundDistribution distribution
+﻿DiscreteCompoundDistribution distribution
 ============================================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-GaussianLinearCalibration
+﻿GaussianLinearCalibration
 ===================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Multinomial distribution
+﻿Multinomial distribution
 ==========================================
 
 .. plot::

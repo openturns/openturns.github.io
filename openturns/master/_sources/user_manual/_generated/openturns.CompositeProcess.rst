@@ -1,4 +1,4 @@
-CompositeProcess
+﻿CompositeProcess
 ==========================
 
 .. plot:: pyplots/CompositeProcess.py

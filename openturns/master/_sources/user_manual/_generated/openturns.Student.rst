@@ -1,4 +1,4 @@
-Student distribution
+﻿Student distribution
 ==================================
 
 .. plot::

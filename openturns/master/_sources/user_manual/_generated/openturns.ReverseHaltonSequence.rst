@@ -1,4 +1,4 @@
-ReverseHaltonSequence
+﻿ReverseHaltonSequence
 ===============================
 
 .. plot::

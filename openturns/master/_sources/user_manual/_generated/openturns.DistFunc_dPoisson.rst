@@ -1,4 +1,4 @@
-DistFunc_dPoisson
+﻿DistFunc_dPoisson
 ===========================
 
 .. currentmodule:: openturns

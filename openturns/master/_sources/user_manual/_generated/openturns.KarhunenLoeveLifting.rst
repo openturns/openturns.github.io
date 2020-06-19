@@ -1,4 +1,4 @@
-KarhunenLoeveLifting
+﻿KarhunenLoeveLifting
 ==============================
 
 .. currentmodule:: openturns

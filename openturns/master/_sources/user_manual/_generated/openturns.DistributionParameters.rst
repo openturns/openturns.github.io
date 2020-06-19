@@ -1,4 +1,4 @@
-DistributionParameters
+﻿DistributionParameters
 ================================
 
 .. currentmodule:: openturns

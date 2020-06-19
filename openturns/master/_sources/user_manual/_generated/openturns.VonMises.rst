@@ -1,4 +1,4 @@
-VonMises distribution
+﻿VonMises distribution
 ====================================
 
 .. plot::

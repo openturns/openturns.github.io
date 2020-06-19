@@ -1,4 +1,4 @@
-Analytical
+﻿Analytical
 ====================
 
 .. currentmodule:: openturns

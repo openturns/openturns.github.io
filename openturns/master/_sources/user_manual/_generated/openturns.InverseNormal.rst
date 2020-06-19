@@ -1,4 +1,4 @@
-InverseNormal distribution
+﻿InverseNormal distribution
 ==============================================
 
 .. plot::

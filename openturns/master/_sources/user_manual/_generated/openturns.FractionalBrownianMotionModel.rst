@@ -1,4 +1,4 @@
-FractionalBrownianMotionModel
+﻿FractionalBrownianMotionModel
 ==============================================================================
 
 .. plot::

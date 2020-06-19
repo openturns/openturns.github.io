@@ -1,4 +1,4 @@
-GumbelLambdaGamma
+﻿GumbelLambdaGamma
 ===========================
 
 .. currentmodule:: openturns

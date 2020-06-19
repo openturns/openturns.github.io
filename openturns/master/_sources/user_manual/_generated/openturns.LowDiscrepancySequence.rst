@@ -1,4 +1,4 @@
-LowDiscrepancySequence
+﻿LowDiscrepancySequence
 ================================
 
 .. currentmodule:: openturns

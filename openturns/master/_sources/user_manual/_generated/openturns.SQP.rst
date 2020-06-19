@@ -1,4 +1,4 @@
-SQP
+﻿SQP
 =============
 
 .. currentmodule:: openturns

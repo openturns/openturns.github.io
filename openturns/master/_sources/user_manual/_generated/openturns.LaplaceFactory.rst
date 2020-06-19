@@ -1,4 +1,4 @@
-LaplaceFactory
+﻿LaplaceFactory
 ================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-HaltonSequence
+﻿HaltonSequence
 ========================
 
 .. plot::

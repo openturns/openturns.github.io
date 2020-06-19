@@ -1,4 +1,4 @@
-TruncatedNormalFactory
+﻿TruncatedNormalFactory
 ================================================================
 
 .. plot::

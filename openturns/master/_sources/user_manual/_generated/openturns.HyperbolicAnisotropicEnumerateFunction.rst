@@ -1,4 +1,4 @@
-HyperbolicAnisotropicEnumerateFunction
+﻿HyperbolicAnisotropicEnumerateFunction
 ================================================
 
 .. currentmodule:: openturns

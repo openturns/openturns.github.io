@@ -1,4 +1,4 @@
-LeastSquaresDistributionFactory
+﻿LeastSquaresDistributionFactory
 =========================================
 
 .. currentmodule:: openturns

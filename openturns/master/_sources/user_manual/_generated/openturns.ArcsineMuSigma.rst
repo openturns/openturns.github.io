@@ -1,4 +1,4 @@
-ArcsineMuSigma
+﻿ArcsineMuSigma
 ========================
 
 .. currentmodule:: openturns

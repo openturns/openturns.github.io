@@ -1,4 +1,4 @@
-SparseMethod
+﻿SparseMethod
 ======================
 
 .. currentmodule:: openturns

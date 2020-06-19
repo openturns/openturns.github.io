@@ -1,4 +1,4 @@
-Composite
+﻿Composite
 ===================
 
 .. plot::

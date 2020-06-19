@@ -1,4 +1,4 @@
-NonLinearLeastSquaresCalibration
+﻿NonLinearLeastSquaresCalibration
 ==========================================
 
 .. currentmodule:: openturns

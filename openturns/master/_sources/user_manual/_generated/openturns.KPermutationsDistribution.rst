@@ -1,4 +1,4 @@
-KPermutationsDistribution distribution
+﻿KPermutationsDistribution distribution
 ======================================================================
 
 .. plot::

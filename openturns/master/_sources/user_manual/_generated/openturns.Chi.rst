@@ -1,4 +1,4 @@
-Chi distribution
+﻿Chi distribution
 ==========================
 
 .. plot::

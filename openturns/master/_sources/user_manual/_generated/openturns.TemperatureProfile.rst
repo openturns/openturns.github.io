@@ -1,4 +1,4 @@
-TemperatureProfile
+﻿TemperatureProfile
 ============================
 
 .. currentmodule:: openturns

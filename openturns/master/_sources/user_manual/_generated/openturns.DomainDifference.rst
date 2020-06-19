@@ -1,4 +1,4 @@
-DomainDifference
+﻿DomainDifference
 ==========================
 
 .. currentmodule:: openturns

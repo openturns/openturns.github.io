@@ -1,4 +1,4 @@
-ZipfMandelbrot distribution
+﻿ZipfMandelbrot distribution
 ================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-InverseBoxCoxTransform
+﻿InverseBoxCoxTransform
 ================================
 
 .. plot:: pyplots/InverseBoxCoxTransform.py

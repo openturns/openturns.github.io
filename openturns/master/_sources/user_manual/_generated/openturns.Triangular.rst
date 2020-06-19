@@ -1,4 +1,4 @@
-Triangular distribution
+﻿Triangular distribution
 ========================================
 
 .. plot::

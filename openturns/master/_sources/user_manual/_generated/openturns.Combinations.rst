@@ -1,4 +1,4 @@
-Combinations
+﻿Combinations
 ======================
 
 .. currentmodule:: openturns

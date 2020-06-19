@@ -1,4 +1,4 @@
-EventSimulation
+﻿EventSimulation
 =========================
 
 .. currentmodule:: openturns

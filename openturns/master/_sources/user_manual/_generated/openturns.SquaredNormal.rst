@@ -1,4 +1,4 @@
-SquaredNormal distribution
+﻿SquaredNormal distribution
 ==============================================
 
 .. plot::

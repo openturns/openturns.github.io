@@ -1,4 +1,4 @@
-Ipopt
+﻿Ipopt
 ===============
 
 .. currentmodule:: openturns

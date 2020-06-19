@@ -1,4 +1,4 @@
-SpecFunc_LogBesselK
+﻿SpecFunc_LogBesselK
 =============================
 
 .. currentmodule:: openturns

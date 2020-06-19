@@ -1,4 +1,4 @@
-MultiFORMResult
+﻿MultiFORMResult
 =========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ChiSquareFactory
+﻿ChiSquareFactory
 ====================================================
 
 .. plot::

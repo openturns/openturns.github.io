@@ -1,4 +1,4 @@
-InverseGamma distribution
+﻿InverseGamma distribution
 ============================================
 
 .. plot::

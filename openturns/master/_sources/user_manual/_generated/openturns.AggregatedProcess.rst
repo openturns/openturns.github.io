@@ -1,4 +1,4 @@
-AggregatedProcess
+﻿AggregatedProcess
 ======================================================
 
 .. plot::

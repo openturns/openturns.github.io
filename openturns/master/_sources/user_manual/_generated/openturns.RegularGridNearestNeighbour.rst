@@ -1,4 +1,4 @@
-RegularGridNearestNeighbour
+﻿RegularGridNearestNeighbour
 =====================================
 
 .. currentmodule:: openturns

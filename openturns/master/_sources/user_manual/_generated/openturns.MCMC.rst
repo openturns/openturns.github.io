@@ -1,4 +1,4 @@
-MCMC
+﻿MCMC
 ==============
 
 .. currentmodule:: openturns

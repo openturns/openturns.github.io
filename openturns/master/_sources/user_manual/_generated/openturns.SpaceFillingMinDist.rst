@@ -1,4 +1,4 @@
-SpaceFillingMinDist
+﻿SpaceFillingMinDist
 =============================
 
 .. currentmodule:: openturns

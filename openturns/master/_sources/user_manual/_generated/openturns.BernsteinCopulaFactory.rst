@@ -1,4 +1,4 @@
-BernsteinCopulaFactory
+﻿BernsteinCopulaFactory
 ================================
 
 .. currentmodule:: openturns

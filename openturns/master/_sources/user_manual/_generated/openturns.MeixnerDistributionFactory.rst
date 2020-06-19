@@ -1,4 +1,4 @@
-MeixnerDistributionFactory
+﻿MeixnerDistributionFactory
 ========================================================================
 
 .. plot::

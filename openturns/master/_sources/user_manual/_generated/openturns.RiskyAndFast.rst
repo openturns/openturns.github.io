@@ -1,4 +1,4 @@
-RiskyAndFast
+﻿RiskyAndFast
 ======================
 
 .. currentmodule:: openturns

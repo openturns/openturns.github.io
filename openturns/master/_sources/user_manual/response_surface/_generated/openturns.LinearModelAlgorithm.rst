@@ -1,4 +1,4 @@
-LinearModelAlgorithm
+﻿LinearModelAlgorithm
 ==============================
 
 .. currentmodule:: openturns

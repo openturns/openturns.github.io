@@ -1,4 +1,4 @@
-MartinezSensitivityAlgorithm
+﻿MartinezSensitivityAlgorithm
 ======================================
 
 .. plot:: pyplots/MartinezSensitivityAlgorithm.py

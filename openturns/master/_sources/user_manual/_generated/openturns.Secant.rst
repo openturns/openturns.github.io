@@ -1,4 +1,4 @@
-Secant
+﻿Secant
 ================
 
 .. plot::

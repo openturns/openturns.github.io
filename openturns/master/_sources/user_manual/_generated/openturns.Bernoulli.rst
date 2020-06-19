@@ -1,4 +1,4 @@
-Bernoulli distribution
+﻿Bernoulli distribution
 ======================================
 
 .. plot::

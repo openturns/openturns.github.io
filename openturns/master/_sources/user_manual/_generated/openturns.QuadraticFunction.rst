@@ -1,4 +1,4 @@
-QuadraticFunction
+﻿QuadraticFunction
 ===========================
 
 .. plot:: pyplots/QuadraticFunction.py

@@ -1,4 +1,4 @@
-UniVariateFunction
+﻿UniVariateFunction
 ============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Basis
+﻿Basis
 ===============
 
 .. currentmodule:: openturns

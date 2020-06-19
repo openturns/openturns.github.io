@@ -1,4 +1,4 @@
-ConstantGradient
+﻿ConstantGradient
 ==========================
 
 .. currentmodule:: openturns

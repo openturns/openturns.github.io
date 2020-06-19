@@ -1,4 +1,4 @@
-ImportanceSamplingExperiment
+﻿ImportanceSamplingExperiment
 ======================================
 
 .. plot:: pyplots/ImportanceSamplingExperiment.py

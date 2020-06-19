@@ -1,4 +1,4 @@
-LinearModelTest_LinearModelBreuschPagan
+﻿LinearModelTest_LinearModelBreuschPagan
 =================================================
 
 .. currentmodule:: openturns

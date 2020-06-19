@@ -1,4 +1,4 @@
-CleaningStrategy
+﻿CleaningStrategy
 ==========================
 
 .. currentmodule:: openturns

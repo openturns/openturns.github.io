@@ -1,4 +1,4 @@
-get
+﻿get
 ============================
 
 .. currentmodule:: openturns.coupling_tools

@@ -1,4 +1,4 @@
-MarginalEvaluation
+﻿MarginalEvaluation
 ============================
 
 .. currentmodule:: openturns

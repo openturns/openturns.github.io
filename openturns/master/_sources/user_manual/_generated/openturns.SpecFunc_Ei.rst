@@ -1,4 +1,4 @@
-SpecFunc_Ei
+﻿SpecFunc_Ei
 =====================
 
 .. currentmodule:: openturns

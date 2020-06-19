@@ -1,4 +1,4 @@
-DistFunc_dBinomial
+﻿DistFunc_dBinomial
 ============================
 
 .. currentmodule:: openturns

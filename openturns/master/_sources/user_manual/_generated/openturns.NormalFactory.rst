@@ -1,4 +1,4 @@
-NormalFactory
+﻿NormalFactory
 ==============================================
 
 .. plot::

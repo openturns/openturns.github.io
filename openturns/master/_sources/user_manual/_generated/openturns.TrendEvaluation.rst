@@ -1,4 +1,4 @@
-TrendEvaluation
+﻿TrendEvaluation
 =========================
 
 .. currentmodule:: openturns

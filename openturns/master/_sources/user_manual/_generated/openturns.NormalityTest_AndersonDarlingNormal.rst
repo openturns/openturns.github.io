@@ -1,4 +1,4 @@
-NormalityTest_AndersonDarlingNormal
+﻿NormalityTest_AndersonDarlingNormal
 =============================================
 
 .. currentmodule:: openturns

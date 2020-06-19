@@ -1,4 +1,4 @@
-FieldToPointFunction
+﻿FieldToPointFunction
 ==============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ProbabilitySimulationAlgorithm
+﻿ProbabilitySimulationAlgorithm
 ========================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-MonteCarloLHS
+﻿MonteCarloLHS
 =======================
 
 .. currentmodule:: openturns

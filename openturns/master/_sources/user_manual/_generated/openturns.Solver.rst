@@ -1,4 +1,4 @@
-Solver
+﻿Solver
 ================
 
 .. currentmodule:: openturns

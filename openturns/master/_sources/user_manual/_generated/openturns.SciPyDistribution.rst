@@ -1,4 +1,4 @@
-SciPyDistribution
+﻿SciPyDistribution
 ===========================
 
 .. currentmodule:: openturns

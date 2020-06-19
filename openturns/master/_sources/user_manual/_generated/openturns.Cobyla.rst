@@ -1,4 +1,4 @@
-Cobyla
+﻿Cobyla
 ================
 
 .. currentmodule:: openturns

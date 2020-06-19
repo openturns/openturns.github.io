@@ -1,4 +1,4 @@
-LogNormal distribution
+﻿LogNormal distribution
 ======================================
 
 .. plot::

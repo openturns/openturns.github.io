@@ -1,4 +1,4 @@
-LHSExperiment
+﻿LHSExperiment
 =======================
 
 .. plot:: pyplots/LHSExperiment.py

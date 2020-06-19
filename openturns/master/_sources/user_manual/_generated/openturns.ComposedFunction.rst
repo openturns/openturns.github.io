@@ -1,4 +1,4 @@
-ComposedFunction
+﻿ComposedFunction
 ==========================
 
 .. plot:: pyplots/ComposedFunction.py

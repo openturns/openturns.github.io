@@ -1,4 +1,4 @@
-Trapezoidal distribution
+﻿Trapezoidal distribution
 ==========================================
 
 .. plot::

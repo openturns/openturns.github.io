@@ -1,4 +1,4 @@
-Factorial
+﻿Factorial
 ===================
 
 .. plot::

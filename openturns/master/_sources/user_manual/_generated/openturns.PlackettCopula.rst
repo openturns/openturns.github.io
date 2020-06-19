@@ -1,4 +1,4 @@
-PlackettCopula
+﻿PlackettCopula
 ================================================
 
 .. plot::

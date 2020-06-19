@@ -1,4 +1,4 @@
-KarhunenLoeveQuadratureAlgorithm
+﻿KarhunenLoeveQuadratureAlgorithm
 ==========================================
 
 .. plot:: pyplots/KarhunenLoeveQuadratureAlgorithm.py

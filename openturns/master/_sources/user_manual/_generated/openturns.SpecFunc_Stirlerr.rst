@@ -1,4 +1,4 @@
-SpecFunc_Stirlerr
+﻿SpecFunc_Stirlerr
 ===========================
 
 .. currentmodule:: openturns

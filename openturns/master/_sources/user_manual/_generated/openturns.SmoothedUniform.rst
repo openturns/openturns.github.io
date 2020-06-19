@@ -1,4 +1,4 @@
-SmoothedUniform distribution
+﻿SmoothedUniform distribution
 ==================================================
 
 .. plot::

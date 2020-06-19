@@ -1,4 +1,4 @@
-UserDefined distribution
+﻿UserDefined distribution
 ==========================================
 
 .. plot::

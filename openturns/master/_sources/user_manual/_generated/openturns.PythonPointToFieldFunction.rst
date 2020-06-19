@@ -1,4 +1,4 @@
-PythonPointToFieldFunction
+﻿PythonPointToFieldFunction
 ====================================
 
 .. currentmodule:: openturns

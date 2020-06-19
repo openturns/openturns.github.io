@@ -1,4 +1,4 @@
-InverseRosenblattEvaluation
+﻿InverseRosenblattEvaluation
 =====================================
 
 .. currentmodule:: openturns

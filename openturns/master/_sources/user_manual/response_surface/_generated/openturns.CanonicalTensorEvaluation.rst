@@ -1,4 +1,4 @@
-CanonicalTensorEvaluation
+﻿CanonicalTensorEvaluation
 ===================================
 
 .. currentmodule:: openturns

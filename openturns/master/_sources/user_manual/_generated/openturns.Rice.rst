@@ -1,4 +1,4 @@
-Rice distribution
+﻿Rice distribution
 ============================
 
 .. plot::

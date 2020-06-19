@@ -1,4 +1,4 @@
-SymbolicGradient
+﻿SymbolicGradient
 ==========================
 
 .. currentmodule:: openturns

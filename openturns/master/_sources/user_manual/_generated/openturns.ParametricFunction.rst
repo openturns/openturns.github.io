@@ -1,4 +1,4 @@
-ParametricFunction
+﻿ParametricFunction
 ============================
 
 .. currentmodule:: openturns

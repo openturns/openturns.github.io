@@ -1,4 +1,4 @@
-FittingTest_ChiSquared
+﻿FittingTest_ChiSquared
 ================================
 
 .. currentmodule:: openturns

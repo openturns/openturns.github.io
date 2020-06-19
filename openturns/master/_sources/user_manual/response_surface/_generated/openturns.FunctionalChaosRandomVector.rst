@@ -1,4 +1,4 @@
-FunctionalChaosRandomVector
+﻿FunctionalChaosRandomVector
 =====================================
 
 .. currentmodule:: openturns

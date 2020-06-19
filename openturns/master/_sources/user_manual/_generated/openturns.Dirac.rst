@@ -1,4 +1,4 @@
-Dirac distribution
+﻿Dirac distribution
 ==============================
 
 .. plot::

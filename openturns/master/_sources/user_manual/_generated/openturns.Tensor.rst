@@ -1,4 +1,4 @@
-Tensor
+﻿Tensor
 ================
 
 .. currentmodule:: openturns

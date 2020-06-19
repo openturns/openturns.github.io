@@ -1,4 +1,4 @@
-Ceres
+﻿Ceres
 ===============
 
 .. currentmodule:: openturns

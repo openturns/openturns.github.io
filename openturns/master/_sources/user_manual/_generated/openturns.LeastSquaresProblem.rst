@@ -1,4 +1,4 @@
-LeastSquaresProblem
+﻿LeastSquaresProblem
 =============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Skellam distribution
+﻿Skellam distribution
 ==================================
 
 .. plot::

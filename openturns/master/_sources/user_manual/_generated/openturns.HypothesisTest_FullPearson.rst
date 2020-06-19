@@ -1,4 +1,4 @@
-HypothesisTest_FullPearson
+﻿HypothesisTest_FullPearson
 ====================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-SubsetSampling
+﻿SubsetSampling
 ========================
 
 .. currentmodule:: openturns

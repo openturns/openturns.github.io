@@ -1,4 +1,4 @@
-UnionEvent
+﻿UnionEvent
 ====================
 
 .. currentmodule:: openturns

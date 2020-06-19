@@ -1,4 +1,4 @@
-Wishart distribution
+﻿Wishart distribution
 ==================================
 
 .. plot::

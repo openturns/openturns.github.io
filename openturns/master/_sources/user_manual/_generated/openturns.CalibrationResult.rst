@@ -1,4 +1,4 @@
-CalibrationResult
+﻿CalibrationResult
 ===========================
 
 .. currentmodule:: openturns

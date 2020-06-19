@@ -1,4 +1,4 @@
-BoxCoxFactory
+﻿BoxCoxFactory
 =======================
 
 .. plot:: pyplots/BoxCoxFactory.py

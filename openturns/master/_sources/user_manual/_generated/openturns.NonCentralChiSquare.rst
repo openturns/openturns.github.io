@@ -1,4 +1,4 @@
-NonCentralChiSquare distribution
+﻿NonCentralChiSquare distribution
 ==========================================================
 
 .. plot::

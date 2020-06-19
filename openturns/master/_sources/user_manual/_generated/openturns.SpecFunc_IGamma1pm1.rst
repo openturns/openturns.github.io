@@ -1,4 +1,4 @@
-SpecFunc_IGamma1pm1
+﻿SpecFunc_IGamma1pm1
 =============================
 
 .. currentmodule:: openturns

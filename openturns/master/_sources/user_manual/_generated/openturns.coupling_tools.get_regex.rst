@@ -1,4 +1,4 @@
-get_regex
+﻿get_regex
 ==================================
 
 .. currentmodule:: openturns.coupling_tools

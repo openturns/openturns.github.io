@@ -1,4 +1,4 @@
-CalibrationAlgorithm
+﻿CalibrationAlgorithm
 ==============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-LinearEvaluation
+﻿LinearEvaluation
 ==========================
 
 .. currentmodule:: openturns

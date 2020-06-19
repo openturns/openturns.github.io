@@ -1,4 +1,4 @@
-FaureSequence
+﻿FaureSequence
 =======================
 
 .. plot::

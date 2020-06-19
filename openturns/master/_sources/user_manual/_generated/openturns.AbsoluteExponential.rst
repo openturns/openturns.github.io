@@ -1,4 +1,4 @@
-AbsoluteExponential
+﻿AbsoluteExponential
 ==========================================================
 
 .. plot::

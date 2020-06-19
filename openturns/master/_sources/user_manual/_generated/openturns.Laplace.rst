@@ -1,4 +1,4 @@
-Laplace distribution
+﻿Laplace distribution
 ==================================
 
 .. plot::

@@ -1,4 +1,4 @@
-LevelSetMesher
+﻿LevelSetMesher
 ========================
 
 .. plot:: pyplots/LevelSetMesher.py

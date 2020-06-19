@@ -1,4 +1,4 @@
-PoissonFactory
+﻿PoissonFactory
 ================================================
 
 .. plot::

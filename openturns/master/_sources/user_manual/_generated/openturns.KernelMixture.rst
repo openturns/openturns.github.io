@@ -1,4 +1,4 @@
-KernelMixture distribution
+﻿KernelMixture distribution
 ==============================================
 
 .. plot::

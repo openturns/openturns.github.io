@@ -1,4 +1,4 @@
-GeneralizedPareto
+﻿GeneralizedPareto
 ===========================
 
 .. plot:: pyplots/GeneralizedPareto.py

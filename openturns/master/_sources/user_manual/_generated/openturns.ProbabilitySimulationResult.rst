@@ -1,4 +1,4 @@
-ProbabilitySimulationResult
+﻿ProbabilitySimulationResult
 =====================================
 
 .. currentmodule:: openturns

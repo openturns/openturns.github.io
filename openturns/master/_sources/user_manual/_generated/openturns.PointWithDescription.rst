@@ -1,4 +1,4 @@
-PointWithDescription
+﻿PointWithDescription
 ==============================
 
 .. currentmodule:: openturns

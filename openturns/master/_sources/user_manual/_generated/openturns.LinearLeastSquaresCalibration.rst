@@ -1,4 +1,4 @@
-LinearLeastSquaresCalibration
+﻿LinearLeastSquaresCalibration
 =======================================
 
 .. currentmodule:: openturns

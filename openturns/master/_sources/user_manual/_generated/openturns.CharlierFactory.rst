@@ -1,4 +1,4 @@
-CharlierFactory
+﻿CharlierFactory
 =========================
 
 .. plot::

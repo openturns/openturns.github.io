@@ -1,4 +1,4 @@
-OpenTURNSPythonFunction
+﻿OpenTURNSPythonFunction
 =================================
 
 .. currentmodule:: openturns

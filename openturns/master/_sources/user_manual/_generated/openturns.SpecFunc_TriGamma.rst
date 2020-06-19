@@ -1,4 +1,4 @@
-SpecFunc_TriGamma
+﻿SpecFunc_TriGamma
 ===========================
 
 .. currentmodule:: openturns

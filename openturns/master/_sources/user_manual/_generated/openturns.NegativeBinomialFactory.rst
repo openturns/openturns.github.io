@@ -1,4 +1,4 @@
-NegativeBinomialFactory
+﻿NegativeBinomialFactory
 ==================================================================
 
 .. plot::

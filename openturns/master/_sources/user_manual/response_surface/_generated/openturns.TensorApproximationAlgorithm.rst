@@ -1,4 +1,4 @@
-TensorApproximationAlgorithm
+﻿TensorApproximationAlgorithm
 ======================================
 
 .. plot:: pyplots/TensorApproximationAlgorithm.py

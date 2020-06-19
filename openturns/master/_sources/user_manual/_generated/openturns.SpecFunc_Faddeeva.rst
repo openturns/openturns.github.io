@@ -1,4 +1,4 @@
-SpecFunc_Faddeeva
+﻿SpecFunc_Faddeeva
 ===========================
 
 .. currentmodule:: openturns

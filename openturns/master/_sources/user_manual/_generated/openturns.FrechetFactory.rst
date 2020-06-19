@@ -1,4 +1,4 @@
-FrechetFactory
+﻿FrechetFactory
 ================================================
 
 .. plot::

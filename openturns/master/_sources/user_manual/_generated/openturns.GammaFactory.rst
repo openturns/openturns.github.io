@@ -1,4 +1,4 @@
-GammaFactory
+﻿GammaFactory
 ============================================
 
 .. plot::

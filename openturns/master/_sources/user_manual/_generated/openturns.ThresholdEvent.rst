@@ -1,4 +1,4 @@
-ThresholdEvent
+﻿ThresholdEvent
 ========================
 
 .. currentmodule:: openturns

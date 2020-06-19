@@ -1,4 +1,4 @@
-EnclosingSimplexAlgorithm
+﻿EnclosingSimplexAlgorithm
 ===================================
 
 .. currentmodule:: openturns

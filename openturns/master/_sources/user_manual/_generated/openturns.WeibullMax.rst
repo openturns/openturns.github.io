@@ -1,4 +1,4 @@
-WeibullMax
+﻿WeibullMax
 ====================
 
 .. plot:: pyplots/WeibullMax.py

@@ -1,4 +1,4 @@
-DiscreteMarkovChain
+﻿DiscreteMarkovChain
 ==========================================================
 
 .. plot::

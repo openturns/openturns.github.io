@@ -1,4 +1,4 @@
-ExponentialFactory
+﻿ExponentialFactory
 ========================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-Burr
+﻿Burr
 ==============
 
 .. plot:: pyplots/Burr.py

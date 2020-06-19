@@ -1,4 +1,4 @@
-SpecFunc_BesselI0
+﻿SpecFunc_BesselI0
 ===========================
 
 .. currentmodule:: openturns

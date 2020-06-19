@@ -1,4 +1,4 @@
-DistributionCollection
+﻿DistributionCollection
 ================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-LinearModelTest_LinearModelResidualMean
+﻿LinearModelTest_LinearModelResidualMean
 =================================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Bonmin
+﻿Bonmin
 ================
 
 .. currentmodule:: openturns

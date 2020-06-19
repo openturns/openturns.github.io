@@ -1,4 +1,4 @@
-ARMALikelihoodFactory
+﻿ARMALikelihoodFactory
 ===============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-InverseWishart distribution
+﻿InverseWishart distribution
 ================================================
 
 .. plot::

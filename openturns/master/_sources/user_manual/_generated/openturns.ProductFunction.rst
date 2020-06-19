@@ -1,4 +1,4 @@
-ProductFunction
+﻿ProductFunction
 =========================
 
 .. plot:: pyplots/ProductFunction.py

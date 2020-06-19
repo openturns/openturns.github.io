@@ -1,4 +1,4 @@
-TBB
+﻿TBB
 =============
 
 .. currentmodule:: openturns

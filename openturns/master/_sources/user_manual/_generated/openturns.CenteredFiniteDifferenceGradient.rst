@@ -1,4 +1,4 @@
-CenteredFiniteDifferenceGradient
+﻿CenteredFiniteDifferenceGradient
 ==========================================
 
 .. currentmodule:: openturns

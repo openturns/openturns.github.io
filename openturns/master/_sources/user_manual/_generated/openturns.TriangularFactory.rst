@@ -1,4 +1,4 @@
-TriangularFactory
+﻿TriangularFactory
 ======================================================
 
 .. plot::

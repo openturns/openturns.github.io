@@ -1,4 +1,4 @@
-Normal distribution
+﻿Normal distribution
 ================================
 
 .. plot::

@@ -1,4 +1,4 @@
-SafeAndSlow
+﻿SafeAndSlow
 =====================
 
 .. currentmodule:: openturns

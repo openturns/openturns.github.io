@@ -1,4 +1,4 @@
-ComposedCopula distribution
+﻿ComposedCopula distribution
 ================================================
 
 .. plot::

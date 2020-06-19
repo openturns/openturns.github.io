@@ -1,4 +1,4 @@
-InverseBoxCoxEvaluation
+﻿InverseBoxCoxEvaluation
 =================================
 
 .. currentmodule:: openturns

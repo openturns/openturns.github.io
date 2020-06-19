@@ -1,4 +1,4 @@
-QRMethod
+﻿QRMethod
 ==================
 
 .. currentmodule:: openturns

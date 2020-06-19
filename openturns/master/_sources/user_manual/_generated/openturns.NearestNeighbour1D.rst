@@ -1,4 +1,4 @@
-NearestNeighbour1D
+﻿NearestNeighbour1D
 ============================
 
 .. currentmodule:: openturns

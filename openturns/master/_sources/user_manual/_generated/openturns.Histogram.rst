@@ -1,4 +1,4 @@
-Histogram distribution
+﻿Histogram distribution
 ======================================
 
 .. plot::

@@ -1,4 +1,4 @@
-Rayleigh distribution
+﻿Rayleigh distribution
 ====================================
 
 .. plot::

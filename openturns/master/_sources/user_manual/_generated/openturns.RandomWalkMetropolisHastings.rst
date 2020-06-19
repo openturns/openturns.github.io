@@ -1,4 +1,4 @@
-RandomWalkMetropolisHastings
+﻿RandomWalkMetropolisHastings
 ======================================
 
 .. currentmodule:: openturns

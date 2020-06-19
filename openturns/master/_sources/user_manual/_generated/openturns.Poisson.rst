@@ -1,4 +1,4 @@
-Poisson distribution
+﻿Poisson distribution
 ==================================
 
 .. plot::

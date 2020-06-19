@@ -1,4 +1,4 @@
-ProductDistribution distribution
+﻿ProductDistribution distribution
 ==========================================================
 
 .. plot::

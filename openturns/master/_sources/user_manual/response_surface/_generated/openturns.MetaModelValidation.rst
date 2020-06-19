@@ -1,4 +1,4 @@
-MetaModelValidation
+﻿MetaModelValidation
 =============================
 
 .. currentmodule:: openturns

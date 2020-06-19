@@ -1,4 +1,4 @@
-Binomial distribution
+﻿Binomial distribution
 ====================================
 
 .. plot::

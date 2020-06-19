@@ -1,4 +1,4 @@
-HypothesisTest_ChiSquared
+﻿HypothesisTest_ChiSquared
 ===================================
 
 .. currentmodule:: openturns

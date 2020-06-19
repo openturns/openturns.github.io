@@ -1,4 +1,4 @@
-SpecFunc_Cbrt
+﻿SpecFunc_Cbrt
 =======================
 
 .. currentmodule:: openturns

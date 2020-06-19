@@ -1,4 +1,4 @@
-ExponentiallyDampedCosineModel
+﻿ExponentiallyDampedCosineModel
 ================================================================================
 
 .. plot::

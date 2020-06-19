@@ -1,4 +1,4 @@
-ParetoFactory
+﻿ParetoFactory
 ==============================================
 
 .. plot::

@@ -1,4 +1,4 @@
-ComposedDistribution distribution
+﻿ComposedDistribution distribution
 ============================================================
 
 .. plot::

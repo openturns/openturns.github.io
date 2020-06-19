@@ -1,4 +1,4 @@
-LinearModelTest_FullRegression
+﻿LinearModelTest_FullRegression
 ========================================
 
 .. currentmodule:: openturns

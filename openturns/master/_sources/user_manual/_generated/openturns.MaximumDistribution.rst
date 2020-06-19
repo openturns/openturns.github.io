@@ -1,4 +1,4 @@
-MaximumDistribution distribution
+﻿MaximumDistribution distribution
 ==========================================================
 
 .. plot::

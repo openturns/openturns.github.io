@@ -1,4 +1,4 @@
-InverseTrendTransform
+﻿InverseTrendTransform
 ===============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-InverseTrendEvaluation
+﻿InverseTrendEvaluation
 ================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-RayleighFactory
+﻿RayleighFactory
 ==================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-FieldFunction
+﻿FieldFunction
 =======================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Geometric distribution
+﻿Geometric distribution
 ======================================
 
 .. plot::

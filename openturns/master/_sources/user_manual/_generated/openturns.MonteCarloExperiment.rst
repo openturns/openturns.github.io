@@ -1,4 +1,4 @@
-MonteCarloExperiment
+﻿MonteCarloExperiment
 ==============================
 
 .. plot:: pyplots/MonteCarloExperiment.py

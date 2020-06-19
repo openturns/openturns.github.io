@@ -1,4 +1,4 @@
-LogNormalFactory
+﻿LogNormalFactory
 ====================================================
 
 .. plot::

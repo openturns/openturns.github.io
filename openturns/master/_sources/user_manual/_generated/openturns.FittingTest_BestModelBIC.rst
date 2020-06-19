@@ -1,4 +1,4 @@
-FittingTest_BestModelBIC
+﻿FittingTest_BestModelBIC
 ==================================
 
 .. currentmodule:: openturns

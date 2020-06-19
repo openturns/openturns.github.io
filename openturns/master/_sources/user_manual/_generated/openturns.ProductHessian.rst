@@ -1,4 +1,4 @@
-ProductHessian
+﻿ProductHessian
 ========================
 
 .. currentmodule:: openturns

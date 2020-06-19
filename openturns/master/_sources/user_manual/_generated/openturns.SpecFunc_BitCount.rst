@@ -1,4 +1,4 @@
-SpecFunc_BitCount
+﻿SpecFunc_BitCount
 ===========================
 
 .. currentmodule:: openturns

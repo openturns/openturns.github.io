@@ -1,4 +1,4 @@
-KrigingAlgorithm
+﻿KrigingAlgorithm
 ==========================
 
 .. plot:: pyplots/KrigingAlgorithm.py

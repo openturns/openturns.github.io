@@ -1,4 +1,4 @@
-BayesDistribution
+﻿BayesDistribution
 ===========================
 
 .. plot:: pyplots/BayesDistribution.py

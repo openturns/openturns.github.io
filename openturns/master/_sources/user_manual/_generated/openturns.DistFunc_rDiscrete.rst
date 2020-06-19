@@ -1,4 +1,4 @@
-DistFunc_rDiscrete
+﻿DistFunc_rDiscrete
 ============================
 
 .. currentmodule:: openturns

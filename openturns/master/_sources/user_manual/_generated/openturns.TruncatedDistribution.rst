@@ -1,4 +1,4 @@
-TruncatedDistribution distribution
+﻿TruncatedDistribution distribution
 ==============================================================
 
 .. plot::

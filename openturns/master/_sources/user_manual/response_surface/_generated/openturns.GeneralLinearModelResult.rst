@@ -1,4 +1,4 @@
-GeneralLinearModelResult
+﻿GeneralLinearModelResult
 ==================================
 
 .. currentmodule:: openturns

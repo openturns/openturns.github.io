@@ -1,4 +1,4 @@
-SymbolicHessian
+﻿SymbolicHessian
 =========================
 
 .. currentmodule:: openturns

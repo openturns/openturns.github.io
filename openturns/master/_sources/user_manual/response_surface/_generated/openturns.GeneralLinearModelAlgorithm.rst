@@ -1,4 +1,4 @@
-GeneralLinearModelAlgorithm
+﻿GeneralLinearModelAlgorithm
 =====================================
 
 .. plot:: pyplots/GeneralLinearModelAlgorithm.py

@@ -1,4 +1,4 @@
-replace
+﻿replace
 ================================
 
 .. currentmodule:: openturns.coupling_tools

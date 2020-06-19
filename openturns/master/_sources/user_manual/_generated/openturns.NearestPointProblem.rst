@@ -1,4 +1,4 @@
-NearestPointProblem
+﻿NearestPointProblem
 =============================
 
 .. currentmodule:: openturns

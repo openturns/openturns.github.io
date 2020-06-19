@@ -1,4 +1,4 @@
-LinearModelTest_PartialRegression
+﻿LinearModelTest_PartialRegression
 ===========================================
 
 .. currentmodule:: openturns

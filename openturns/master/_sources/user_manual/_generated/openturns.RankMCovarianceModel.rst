@@ -1,4 +1,4 @@
-RankMCovarianceModel
+﻿RankMCovarianceModel
 ============================================================
 
 .. plot::

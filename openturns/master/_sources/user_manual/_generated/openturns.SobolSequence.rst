@@ -1,4 +1,4 @@
-SobolSequence
+﻿SobolSequence
 =======================
 
 .. plot::

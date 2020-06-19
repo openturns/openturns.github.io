@@ -1,4 +1,4 @@
-SpecFunc_HyperGeom_2_2
+﻿SpecFunc_HyperGeom_2_2
 ================================
 
 .. currentmodule:: openturns

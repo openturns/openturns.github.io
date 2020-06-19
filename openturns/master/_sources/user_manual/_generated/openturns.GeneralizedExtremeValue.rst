@@ -1,4 +1,4 @@
-GeneralizedExtremeValue
+﻿GeneralizedExtremeValue
 =================================
 
 .. plot:: pyplots/GeneralizedExtremeValue.py

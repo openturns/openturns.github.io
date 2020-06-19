@@ -1,4 +1,4 @@
-DistFunc_logdPoisson
+﻿DistFunc_logdPoisson
 ==============================
 
 .. currentmodule:: openturns

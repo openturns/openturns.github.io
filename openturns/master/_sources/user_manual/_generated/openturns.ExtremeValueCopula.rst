@@ -1,4 +1,4 @@
-ExtremeValueCopula
+﻿ExtremeValueCopula
 ========================================================
 
 .. plot::

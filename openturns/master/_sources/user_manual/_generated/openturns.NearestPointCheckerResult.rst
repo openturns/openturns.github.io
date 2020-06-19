@@ -1,4 +1,4 @@
-NearestPointCheckerResult
+﻿NearestPointCheckerResult
 ===================================
 
 .. currentmodule:: openturns

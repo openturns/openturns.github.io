@@ -1,4 +1,4 @@
-IndependentCopula
+﻿IndependentCopula
 ======================================================
 
 .. plot::

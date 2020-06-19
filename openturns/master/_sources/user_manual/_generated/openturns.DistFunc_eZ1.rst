@@ -1,4 +1,4 @@
-DistFunc_eZ1
+﻿DistFunc_eZ1
 ======================
 
 .. currentmodule:: openturns

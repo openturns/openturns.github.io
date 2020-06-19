@@ -1,4 +1,4 @@
-SpaceFillingC2
+﻿SpaceFillingC2
 ========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ProductCovarianceModel
+﻿ProductCovarianceModel
 ================================================================
 
 .. plot::

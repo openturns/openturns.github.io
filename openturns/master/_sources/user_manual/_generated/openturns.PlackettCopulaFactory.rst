@@ -1,4 +1,4 @@
-PlackettCopulaFactory
+﻿PlackettCopulaFactory
 ==============================================================
 
 .. plot::

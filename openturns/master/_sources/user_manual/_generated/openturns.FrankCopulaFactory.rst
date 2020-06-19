@@ -1,4 +1,4 @@
-FrankCopulaFactory
+﻿FrankCopulaFactory
 ========================================================
 
 .. plot::

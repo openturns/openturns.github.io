@@ -1,4 +1,4 @@
-CorrelationAnalysis_PearsonCorrelation
+﻿CorrelationAnalysis_PearsonCorrelation
 ================================================
 
 .. currentmodule:: openturns

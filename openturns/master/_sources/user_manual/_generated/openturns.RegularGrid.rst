@@ -1,4 +1,4 @@
-RegularGrid
+﻿RegularGrid
 =====================
 
 .. currentmodule:: openturns

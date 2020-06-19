@@ -1,4 +1,4 @@
-Null
+﻿Null
 ==============
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-UniVariatePolynomial
+﻿UniVariatePolynomial
 ==============================
 
 .. currentmodule:: openturns

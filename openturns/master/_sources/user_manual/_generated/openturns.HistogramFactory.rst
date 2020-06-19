@@ -1,4 +1,4 @@
-HistogramFactory
+﻿HistogramFactory
 ====================================================
 
 .. plot::

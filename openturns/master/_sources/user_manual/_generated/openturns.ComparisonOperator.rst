@@ -1,4 +1,4 @@
-ComparisonOperator
+﻿ComparisonOperator
 ============================
 
 .. currentmodule:: openturns

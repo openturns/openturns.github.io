@@ -1,4 +1,4 @@
-FORM
+﻿FORM
 ==============
 
 .. currentmodule:: openturns

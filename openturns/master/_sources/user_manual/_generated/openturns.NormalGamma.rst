@@ -1,4 +1,4 @@
-NormalGamma
+﻿NormalGamma
 =====================
 
 .. plot:: pyplots/NormalGamma.py

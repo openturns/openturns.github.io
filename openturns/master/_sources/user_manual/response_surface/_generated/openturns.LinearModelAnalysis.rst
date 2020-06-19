@@ -1,4 +1,4 @@
-LinearModelAnalysis
+﻿LinearModelAnalysis
 =============================
 
 .. currentmodule:: openturns

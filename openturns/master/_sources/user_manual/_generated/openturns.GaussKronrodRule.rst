@@ -1,4 +1,4 @@
-GaussKronrodRule
+﻿GaussKronrodRule
 ==========================
 
 .. currentmodule:: openturns

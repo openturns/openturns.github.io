@@ -1,4 +1,4 @@
-SymmetricMatrix
+﻿SymmetricMatrix
 =========================
 
 .. currentmodule:: openturns

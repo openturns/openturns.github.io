@@ -1,4 +1,4 @@
-GaussianProcess
+﻿GaussianProcess
 ==================================================
 
 .. plot::

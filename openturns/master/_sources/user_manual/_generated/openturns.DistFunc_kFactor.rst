@@ -1,4 +1,4 @@
-DistFunc_kFactor
+﻿DistFunc_kFactor
 ==========================
 
 .. currentmodule:: openturns

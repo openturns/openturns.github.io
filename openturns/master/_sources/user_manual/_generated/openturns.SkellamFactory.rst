@@ -1,4 +1,4 @@
-SkellamFactory
+﻿SkellamFactory
 ================================================
 
 .. plot::

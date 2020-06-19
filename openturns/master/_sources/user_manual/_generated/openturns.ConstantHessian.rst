@@ -1,4 +1,4 @@
-ConstantHessian
+﻿ConstantHessian
 =========================
 
 .. currentmodule:: openturns

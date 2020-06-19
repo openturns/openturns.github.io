@@ -1,4 +1,4 @@
-Gamma
+﻿Gamma
 ===============
 
 .. plot:: pyplots/Gamma.py

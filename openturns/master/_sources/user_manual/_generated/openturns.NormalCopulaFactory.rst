@@ -1,4 +1,4 @@
-NormalCopulaFactory
+﻿NormalCopulaFactory
 ==========================================================
 
 .. plot::

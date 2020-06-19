@@ -1,4 +1,4 @@
-LinearCombinationGradient
+﻿LinearCombinationGradient
 ===================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-KarhunenLoeveP1Algorithm
+﻿KarhunenLoeveP1Algorithm
 ==================================
 
 .. plot:: pyplots/KarhunenLoeveP1Algorithm.py

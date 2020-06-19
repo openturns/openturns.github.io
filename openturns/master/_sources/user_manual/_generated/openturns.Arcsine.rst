@@ -1,4 +1,4 @@
-Arcsine distribution
+﻿Arcsine distribution
 ==================================
 
 .. plot::

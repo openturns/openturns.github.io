@@ -1,4 +1,4 @@
-DistFunc_dNonCentralStudent
+﻿DistFunc_dNonCentralStudent
 =====================================
 
 .. currentmodule:: openturns

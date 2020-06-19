@@ -1,4 +1,4 @@
-DistFunc_rHypergeometric
+﻿DistFunc_rHypergeometric
 ==================================
 
 .. currentmodule:: openturns

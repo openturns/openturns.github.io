@@ -1,4 +1,4 @@
-IndicesCollection
+﻿IndicesCollection
 ===========================
 
 .. currentmodule:: openturns

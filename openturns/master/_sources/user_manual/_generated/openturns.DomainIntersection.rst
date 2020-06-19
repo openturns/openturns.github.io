@@ -1,4 +1,4 @@
-DomainIntersection
+﻿DomainIntersection
 ============================
 
 .. currentmodule:: openturns

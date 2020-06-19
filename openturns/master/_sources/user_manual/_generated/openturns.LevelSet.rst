@@ -1,4 +1,4 @@
-LevelSet
+﻿LevelSet
 ==================
 
 .. currentmodule:: openturns

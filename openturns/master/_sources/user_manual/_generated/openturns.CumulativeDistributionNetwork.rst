@@ -1,4 +1,4 @@
-CumulativeDistributionNetwork distribution
+﻿CumulativeDistributionNetwork distribution
 ==============================================================================
 
 .. plot::

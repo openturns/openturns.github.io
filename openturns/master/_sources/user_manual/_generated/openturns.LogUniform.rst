@@ -1,4 +1,4 @@
-LogUniform distribution
+﻿LogUniform distribution
 ========================================
 
 .. plot::

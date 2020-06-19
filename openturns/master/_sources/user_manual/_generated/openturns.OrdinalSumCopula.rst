@@ -1,4 +1,4 @@
-OrdinalSumCopula
+﻿OrdinalSumCopula
 ==========================
 
 .. plot:: pyplots/OrdinalSumCopula.py

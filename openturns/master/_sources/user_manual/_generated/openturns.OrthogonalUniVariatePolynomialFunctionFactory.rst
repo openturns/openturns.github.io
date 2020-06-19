@@ -1,4 +1,4 @@
-OrthogonalUniVariatePolynomialFunctionFactory
+﻿OrthogonalUniVariatePolynomialFunctionFactory
 =======================================================
 
 .. currentmodule:: openturns

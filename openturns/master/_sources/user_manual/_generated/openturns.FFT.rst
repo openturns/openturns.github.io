@@ -1,4 +1,4 @@
-FFT
+﻿FFT
 =============
 
 .. currentmodule:: openturns

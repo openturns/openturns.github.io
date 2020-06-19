@@ -1,4 +1,4 @@
-CorrelationAnalysis_PCC
+﻿CorrelationAnalysis_PCC
 =================================
 
 .. currentmodule:: openturns

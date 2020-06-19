@@ -1,4 +1,4 @@
-Frechet distribution
+﻿Frechet distribution
 ==================================
 
 .. plot::

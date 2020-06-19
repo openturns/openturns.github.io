@@ -1,4 +1,4 @@
-UserDefinedSpectralModel
+﻿UserDefinedSpectralModel
 ==================================
 
 .. plot:: pyplots/UserDefinedSpectralModel.py

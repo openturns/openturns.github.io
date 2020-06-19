@@ -1,4 +1,4 @@
-BasisSequence
+﻿BasisSequence
 =======================
 
 .. currentmodule:: openturns

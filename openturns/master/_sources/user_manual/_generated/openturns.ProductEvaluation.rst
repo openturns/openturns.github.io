@@ -1,4 +1,4 @@
-ProductEvaluation
+﻿ProductEvaluation
 ===========================
 
 .. currentmodule:: openturns

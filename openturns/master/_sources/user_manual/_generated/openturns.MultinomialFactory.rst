@@ -1,4 +1,4 @@
-MultinomialFactory
+﻿MultinomialFactory
 ========================================================
 
 .. plot::

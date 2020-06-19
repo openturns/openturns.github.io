@@ -1,4 +1,4 @@
-SobolSimulationAlgorithm
+﻿SobolSimulationAlgorithm
 ==================================
 
 .. currentmodule:: openturns

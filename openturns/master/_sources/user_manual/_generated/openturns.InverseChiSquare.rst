@@ -1,4 +1,4 @@
-InverseChiSquare distribution
+﻿InverseChiSquare distribution
 ====================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-LinearLeastSquares
+﻿LinearLeastSquares
 ============================
 
 .. currentmodule:: openturns

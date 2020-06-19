@@ -1,4 +1,4 @@
-PlotDesign
+﻿PlotDesign
 ===========================
 
 .. plot:: pyplots/PlotDesign.py

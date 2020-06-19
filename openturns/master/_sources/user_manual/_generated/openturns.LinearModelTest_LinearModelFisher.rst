@@ -1,4 +1,4 @@
-LinearModelTest_LinearModelFisher
+﻿LinearModelTest_LinearModelFisher
 ===========================================
 
 .. currentmodule:: openturns

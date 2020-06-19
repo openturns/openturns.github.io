@@ -1,4 +1,4 @@
-CholeskyMethod
+﻿CholeskyMethod
 ========================
 
 .. currentmodule:: openturns

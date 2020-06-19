@@ -1,4 +1,4 @@
-SpecFunc_LogGamma1p
+﻿SpecFunc_LogGamma1p
 =============================
 
 .. currentmodule:: openturns

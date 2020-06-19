@@ -1,4 +1,4 @@
-SamplingStrategy
+﻿SamplingStrategy
 ==========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-OrthogonalDirection
+﻿OrthogonalDirection
 =============================
 
 .. currentmodule:: openturns

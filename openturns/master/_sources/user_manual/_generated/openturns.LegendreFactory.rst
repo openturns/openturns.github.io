@@ -1,4 +1,4 @@
-LegendreFactory
+﻿LegendreFactory
 =========================
 
 .. plot::

@@ -1,4 +1,4 @@
-XMLStorageManager
+﻿XMLStorageManager
 ===========================
 
 .. currentmodule:: openturns

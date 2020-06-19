@@ -1,4 +1,4 @@
-LogUniformFactory
+﻿LogUniformFactory
 ======================================================
 
 .. plot::

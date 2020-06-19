@@ -1,4 +1,4 @@
-AliMikhailHaqCopulaFactory
+﻿AliMikhailHaqCopulaFactory
 ====================================
 
 .. currentmodule:: openturns

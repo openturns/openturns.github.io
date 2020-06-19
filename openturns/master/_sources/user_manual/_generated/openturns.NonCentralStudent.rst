@@ -1,4 +1,4 @@
-NonCentralStudent distribution
+﻿NonCentralStudent distribution
 ======================================================
 
 .. plot::

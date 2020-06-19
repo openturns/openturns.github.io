@@ -1,4 +1,4 @@
-ChiSquare distribution
+﻿ChiSquare distribution
 ======================================
 
 .. plot::

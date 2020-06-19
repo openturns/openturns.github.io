@@ -1,4 +1,4 @@
-Logistic distribution
+﻿Logistic distribution
 ====================================
 
 .. plot::

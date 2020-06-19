@@ -1,4 +1,4 @@
-TestResult
+﻿TestResult
 ====================
 
 .. currentmodule:: openturns

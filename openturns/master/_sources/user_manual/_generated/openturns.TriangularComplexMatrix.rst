@@ -1,4 +1,4 @@
-TriangularComplexMatrix
+﻿TriangularComplexMatrix
 =================================
 
 .. currentmodule:: openturns

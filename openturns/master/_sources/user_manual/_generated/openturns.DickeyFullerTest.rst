@@ -1,4 +1,4 @@
-DickeyFullerTest
+﻿DickeyFullerTest
 ==========================
 
 .. currentmodule:: openturns

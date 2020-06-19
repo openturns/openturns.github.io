@@ -1,4 +1,4 @@
-MeixnerDistribution distribution
+﻿MeixnerDistribution distribution
 ==========================================================
 
 .. plot::

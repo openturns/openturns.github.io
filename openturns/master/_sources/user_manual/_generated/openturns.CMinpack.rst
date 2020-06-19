@@ -1,4 +1,4 @@
-CMinpack
+﻿CMinpack
 ==================
 
 .. currentmodule:: openturns

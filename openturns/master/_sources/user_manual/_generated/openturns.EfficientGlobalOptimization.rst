@@ -1,4 +1,4 @@
-EfficientGlobalOptimization
+﻿EfficientGlobalOptimization
 =====================================
 
 .. currentmodule:: openturns

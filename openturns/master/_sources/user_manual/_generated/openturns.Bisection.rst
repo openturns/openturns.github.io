@@ -1,4 +1,4 @@
-Bisection
+﻿Bisection
 ===================
 
 .. plot::

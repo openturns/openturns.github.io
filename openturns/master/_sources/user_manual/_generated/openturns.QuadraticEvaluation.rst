@@ -1,4 +1,4 @@
-QuadraticEvaluation
+﻿QuadraticEvaluation
 =============================
 
 .. currentmodule:: openturns

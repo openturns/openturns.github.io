@@ -1,4 +1,4 @@
-DistFunc_logdBinomial
+﻿DistFunc_logdBinomial
 ===============================
 
 .. currentmodule:: openturns

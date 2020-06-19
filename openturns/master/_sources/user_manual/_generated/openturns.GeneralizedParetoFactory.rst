@@ -1,4 +1,4 @@
-GeneralizedParetoFactory
+﻿GeneralizedParetoFactory
 ====================================================================
 
 .. plot::

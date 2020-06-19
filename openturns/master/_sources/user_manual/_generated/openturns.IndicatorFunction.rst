@@ -1,4 +1,4 @@
-IndicatorFunction
+﻿IndicatorFunction
 ===========================
 
 .. plot:: pyplots/IndicatorFunction.py

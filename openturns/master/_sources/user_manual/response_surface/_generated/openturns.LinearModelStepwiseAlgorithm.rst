@@ -1,4 +1,4 @@
-LinearModelStepwiseAlgorithm
+﻿LinearModelStepwiseAlgorithm
 ======================================
 
 .. currentmodule:: openturns

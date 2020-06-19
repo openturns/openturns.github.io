@@ -1,4 +1,4 @@
-HypothesisTest_TwoSamplesKolmogorov
+﻿HypothesisTest_TwoSamplesKolmogorov
 =============================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-SimulatedAnnealingLHS
+﻿SimulatedAnnealingLHS
 ===============================
 
 .. currentmodule:: openturns

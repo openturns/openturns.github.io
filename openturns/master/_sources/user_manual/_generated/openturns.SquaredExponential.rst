@@ -1,4 +1,4 @@
-SquaredExponential
+﻿SquaredExponential
 ========================================================
 
 .. plot::

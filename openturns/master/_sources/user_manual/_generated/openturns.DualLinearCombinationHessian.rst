@@ -1,4 +1,4 @@
-DualLinearCombinationHessian
+﻿DualLinearCombinationHessian
 ======================================
 
 .. currentmodule:: openturns

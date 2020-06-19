@@ -1,4 +1,4 @@
-GumbelCopulaFactory
+﻿GumbelCopulaFactory
 ==========================================================
 
 .. plot::

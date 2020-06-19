@@ -1,4 +1,4 @@
-GammaMuSigma
+﻿GammaMuSigma
 ======================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Gumbel distribution
+﻿Gumbel distribution
 ================================
 
 .. plot::

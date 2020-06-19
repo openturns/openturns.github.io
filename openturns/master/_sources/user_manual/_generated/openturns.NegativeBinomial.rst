@@ -1,4 +1,4 @@
-NegativeBinomial
+﻿NegativeBinomial
 ==========================
 
 .. plot:: pyplots/NegativeBinomial.py

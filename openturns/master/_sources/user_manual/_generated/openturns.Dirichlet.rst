@@ -1,4 +1,4 @@
-Dirichlet
+﻿Dirichlet
 ===================
 
 .. plot:: pyplots/Dirichlet.py

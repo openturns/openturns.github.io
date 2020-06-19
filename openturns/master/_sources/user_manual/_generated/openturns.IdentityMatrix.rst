@@ -1,4 +1,4 @@
-IdentityMatrix
+﻿IdentityMatrix
 ========================
 
 .. currentmodule:: openturns

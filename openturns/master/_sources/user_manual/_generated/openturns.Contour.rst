@@ -1,4 +1,4 @@
-Contour
+﻿Contour
 =================
 
 .. plot:: pyplots/Contour.py

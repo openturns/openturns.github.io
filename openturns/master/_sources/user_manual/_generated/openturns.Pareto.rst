@@ -1,4 +1,4 @@
-Pareto distribution
+﻿Pareto distribution
 ================================
 
 .. plot::

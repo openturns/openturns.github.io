@@ -1,4 +1,4 @@
-DistFunc_dNonCentralChiSquare
+﻿DistFunc_dNonCentralChiSquare
 =======================================
 
 .. currentmodule:: openturns

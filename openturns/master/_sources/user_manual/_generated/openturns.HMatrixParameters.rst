@@ -1,4 +1,4 @@
-HMatrixParameters
+﻿HMatrixParameters
 ===========================
 
 .. currentmodule:: openturns

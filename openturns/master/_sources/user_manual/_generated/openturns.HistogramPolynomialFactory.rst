@@ -1,4 +1,4 @@
-HistogramPolynomialFactory
+﻿HistogramPolynomialFactory
 ====================================
 
 .. plot::

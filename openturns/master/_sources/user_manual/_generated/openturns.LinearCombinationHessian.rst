@@ -1,4 +1,4 @@
-LinearCombinationHessian
+﻿LinearCombinationHessian
 ==================================
 
 .. currentmodule:: openturns

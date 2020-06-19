@@ -1,4 +1,4 @@
-NoEvaluation
+﻿NoEvaluation
 ======================
 
 .. currentmodule:: openturns

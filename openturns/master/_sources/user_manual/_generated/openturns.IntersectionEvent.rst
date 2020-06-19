@@ -1,4 +1,4 @@
-IntersectionEvent
+﻿IntersectionEvent
 ===========================
 
 .. currentmodule:: openturns

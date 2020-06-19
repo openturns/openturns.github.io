@@ -1,4 +1,4 @@
-View
+﻿View
 =====================
 
 .. plot:: pyplots/View.py

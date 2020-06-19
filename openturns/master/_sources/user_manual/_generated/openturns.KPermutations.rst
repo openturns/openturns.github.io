@@ -1,4 +1,4 @@
-KPermutations
+﻿KPermutations
 =======================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Epanechnikov distribution
+﻿Epanechnikov distribution
 ============================================
 
 .. plot::

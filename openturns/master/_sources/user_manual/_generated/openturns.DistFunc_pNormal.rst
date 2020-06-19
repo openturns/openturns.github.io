@@ -1,4 +1,4 @@
-DistFunc_pNormal
+﻿DistFunc_pNormal
 ==========================
 
 .. currentmodule:: openturns

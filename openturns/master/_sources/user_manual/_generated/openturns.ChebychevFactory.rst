@@ -1,4 +1,4 @@
-ChebychevFactory
+﻿ChebychevFactory
 ==========================
 
 .. plot::

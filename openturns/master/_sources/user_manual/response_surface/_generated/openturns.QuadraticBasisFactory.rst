@@ -1,4 +1,4 @@
-QuadraticBasisFactory
+﻿QuadraticBasisFactory
 ===============================
 
 .. currentmodule:: openturns

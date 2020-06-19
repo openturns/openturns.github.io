@@ -1,4 +1,4 @@
-IntegrationStrategy
+﻿IntegrationStrategy
 =============================
 
 .. currentmodule:: openturns

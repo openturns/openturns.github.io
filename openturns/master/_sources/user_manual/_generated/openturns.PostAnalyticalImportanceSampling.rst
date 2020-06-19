@@ -1,4 +1,4 @@
-PostAnalyticalImportanceSampling
+﻿PostAnalyticalImportanceSampling
 ==========================================
 
 .. currentmodule:: openturns

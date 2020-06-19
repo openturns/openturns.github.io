@@ -1,4 +1,4 @@
-execute
+﻿execute
 ================================
 
 .. currentmodule:: openturns.coupling_tools

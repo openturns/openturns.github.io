@@ -1,4 +1,4 @@
-KrawtchoukFactory
+﻿KrawtchoukFactory
 ===========================
 
 .. plot::

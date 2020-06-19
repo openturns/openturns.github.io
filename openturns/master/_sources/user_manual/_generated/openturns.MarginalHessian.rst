@@ -1,4 +1,4 @@
-MarginalHessian
+﻿MarginalHessian
 =========================
 
 .. currentmodule:: openturns

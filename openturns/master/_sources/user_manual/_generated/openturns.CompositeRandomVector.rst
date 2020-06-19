@@ -1,4 +1,4 @@
-CompositeRandomVector
+﻿CompositeRandomVector
 ===============================
 
 .. plot:: pyplots/CompositeRandomVector.py

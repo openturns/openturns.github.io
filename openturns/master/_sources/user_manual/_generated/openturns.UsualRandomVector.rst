@@ -1,4 +1,4 @@
-UsualRandomVector
+﻿UsualRandomVector
 ===========================
 
 .. plot:: pyplots/UsualRandomVector.py

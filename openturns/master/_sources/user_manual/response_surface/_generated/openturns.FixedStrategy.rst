@@ -1,4 +1,4 @@
-FixedStrategy
+﻿FixedStrategy
 =======================
 
 .. currentmodule:: openturns

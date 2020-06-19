@@ -1,4 +1,4 @@
-BernoulliFactory
+﻿BernoulliFactory
 ====================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-EmpiricalBernsteinCopula
+﻿EmpiricalBernsteinCopula
 ====================================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-SystemFORM
+﻿SystemFORM
 ====================
 
 .. currentmodule:: openturns

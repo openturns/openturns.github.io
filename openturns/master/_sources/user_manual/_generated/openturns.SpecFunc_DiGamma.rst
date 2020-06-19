@@ -1,4 +1,4 @@
-SpecFunc_DiGamma
+﻿SpecFunc_DiGamma
 ==========================
 
 .. currentmodule:: openturns

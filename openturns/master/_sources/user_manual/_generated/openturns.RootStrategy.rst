@@ -1,4 +1,4 @@
-RootStrategy
+﻿RootStrategy
 ======================
 
 .. currentmodule:: openturns

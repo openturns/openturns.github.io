@@ -1,4 +1,4 @@
-LinearCombinationFunction
+﻿LinearCombinationFunction
 ===================================
 
 .. plot:: pyplots/LinearCombinationFunction.py

@@ -1,4 +1,4 @@
-KrigingResult
+﻿KrigingResult
 =======================
 
 .. currentmodule:: openturns

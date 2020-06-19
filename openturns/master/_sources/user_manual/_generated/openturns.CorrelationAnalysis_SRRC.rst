@@ -1,4 +1,4 @@
-CorrelationAnalysis_SRRC
+﻿CorrelationAnalysis_SRRC
 ==================================
 
 .. currentmodule:: openturns

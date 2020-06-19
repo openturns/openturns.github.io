@@ -1,4 +1,4 @@
-PosteriorDistribution
+﻿PosteriorDistribution
 ===============================
 
 .. currentmodule:: openturns

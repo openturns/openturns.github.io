@@ -1,4 +1,4 @@
-OrthogonalUniVariatePolynomial
+﻿OrthogonalUniVariatePolynomial
 ========================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-LinearFunction
+﻿LinearFunction
 ========================
 
 .. plot:: pyplots/LinearFunction.py

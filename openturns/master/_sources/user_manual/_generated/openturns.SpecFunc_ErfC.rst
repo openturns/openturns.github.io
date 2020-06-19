@@ -1,4 +1,4 @@
-SpecFunc_ErfC
+﻿SpecFunc_ErfC
 =======================
 
 .. currentmodule:: openturns

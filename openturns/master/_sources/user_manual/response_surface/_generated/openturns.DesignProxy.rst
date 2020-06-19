@@ -1,4 +1,4 @@
-DesignProxy
+﻿DesignProxy
 =====================
 
 .. currentmodule:: openturns

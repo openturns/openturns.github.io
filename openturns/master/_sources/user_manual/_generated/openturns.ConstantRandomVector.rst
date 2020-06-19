@@ -1,4 +1,4 @@
-ConstantRandomVector
+﻿ConstantRandomVector
 ==============================
 
 .. currentmodule:: openturns

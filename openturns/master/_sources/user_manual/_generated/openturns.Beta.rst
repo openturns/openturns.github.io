@@ -1,4 +1,4 @@
-Beta
+﻿Beta
 ==============
 
 .. plot:: pyplots/Beta.py

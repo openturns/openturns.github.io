@@ -1,4 +1,4 @@
-SpecFunc_GammaCorrection
+﻿SpecFunc_GammaCorrection
 ==================================
 
 .. currentmodule:: openturns

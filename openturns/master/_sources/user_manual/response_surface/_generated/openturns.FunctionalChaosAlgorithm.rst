@@ -1,4 +1,4 @@
-FunctionalChaosAlgorithm
+﻿FunctionalChaosAlgorithm
 ==================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-MaximumEntropyOrderStatisticsCopula
+﻿MaximumEntropyOrderStatisticsCopula
 ==========================================================================================
 
 .. plot::

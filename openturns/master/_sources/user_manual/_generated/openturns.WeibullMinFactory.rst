@@ -1,4 +1,4 @@
-WeibullMinFactory
+﻿WeibullMinFactory
 ======================================================
 
 .. plot::

@@ -1,4 +1,4 @@
-JansenSensitivityAlgorithm
+﻿JansenSensitivityAlgorithm
 ====================================
 
 .. plot:: pyplots/JansenSensitivityAlgorithm.py

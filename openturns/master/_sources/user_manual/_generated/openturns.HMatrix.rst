@@ -1,4 +1,4 @@
-HMatrix
+﻿HMatrix
 =================
 
 .. currentmodule:: openturns

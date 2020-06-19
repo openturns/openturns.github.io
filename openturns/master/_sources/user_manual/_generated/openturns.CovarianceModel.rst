@@ -1,4 +1,4 @@
-CovarianceModel
+﻿CovarianceModel
 =========================
 
 .. currentmodule:: openturns

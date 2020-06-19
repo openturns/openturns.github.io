@@ -1,4 +1,4 @@
-SpecFunc_Psi
+﻿SpecFunc_Psi
 ======================
 
 .. currentmodule:: openturns

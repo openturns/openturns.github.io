@@ -1,4 +1,4 @@
-DualLinearCombinationGradient
+﻿DualLinearCombinationGradient
 =======================================
 
 .. currentmodule:: openturns

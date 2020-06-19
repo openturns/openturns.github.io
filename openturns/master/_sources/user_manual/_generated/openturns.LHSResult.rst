@@ -1,4 +1,4 @@
-LHSResult
+﻿LHSResult
 ===================
 
 .. currentmodule:: openturns

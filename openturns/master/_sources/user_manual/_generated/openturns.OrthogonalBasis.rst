@@ -1,4 +1,4 @@
-OrthogonalBasis
+﻿OrthogonalBasis
 =========================
 
 .. currentmodule:: openturns

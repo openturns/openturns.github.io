@@ -1,4 +1,4 @@
-LeastSquaresMetaModelSelection
+﻿LeastSquaresMetaModelSelection
 ========================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-AdaptiveDirectionalSampling
+﻿AdaptiveDirectionalSampling
 =====================================
 
 .. currentmodule:: openturns

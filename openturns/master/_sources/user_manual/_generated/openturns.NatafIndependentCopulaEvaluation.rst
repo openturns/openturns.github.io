@@ -1,4 +1,4 @@
-NatafIndependentCopulaEvaluation
+﻿NatafIndependentCopulaEvaluation
 ==========================================
 
 .. currentmodule:: openturns

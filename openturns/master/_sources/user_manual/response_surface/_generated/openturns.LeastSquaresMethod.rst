@@ -1,4 +1,4 @@
-LeastSquaresMethod
+﻿LeastSquaresMethod
 ============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-FisherSnedecor
+﻿FisherSnedecor
 ========================
 
 .. plot:: pyplots/FisherSnedecor.py

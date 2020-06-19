@@ -1,4 +1,4 @@
-RegularGridEnclosingSimplex
+﻿RegularGridEnclosingSimplex
 =====================================
 
 .. currentmodule:: openturns

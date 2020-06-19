@@ -1,4 +1,4 @@
-Exponential distribution
+﻿Exponential distribution
 ==========================================
 
 .. plot::

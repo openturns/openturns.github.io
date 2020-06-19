@@ -1,4 +1,4 @@
-HessianImplementation
+﻿HessianImplementation
 ===============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-TrapezoidalFactory
+﻿TrapezoidalFactory
 ========================================================
 
 .. plot::

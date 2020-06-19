@@ -1,4 +1,4 @@
-WeibullMin
+﻿WeibullMin
 ====================
 
 .. plot:: pyplots/WeibullMin.py

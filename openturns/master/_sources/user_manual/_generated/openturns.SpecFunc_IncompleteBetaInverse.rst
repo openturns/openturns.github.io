@@ -1,4 +1,4 @@
-SpecFunc_IncompleteBetaInverse
+﻿SpecFunc_IncompleteBetaInverse
 ========================================
 
 .. currentmodule:: openturns

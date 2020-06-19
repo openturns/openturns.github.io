@@ -1,4 +1,4 @@
-KDTree
+﻿KDTree
 ================
 
 .. currentmodule:: openturns

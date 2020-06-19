@@ -1,4 +1,4 @@
-ParametricGradient
+﻿ParametricGradient
 ============================
 
 .. currentmodule:: openturns

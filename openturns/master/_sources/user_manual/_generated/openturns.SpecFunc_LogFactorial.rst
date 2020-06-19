@@ -1,4 +1,4 @@
-SpecFunc_LogFactorial
+﻿SpecFunc_LogFactorial
 ===============================
 
 .. currentmodule:: openturns

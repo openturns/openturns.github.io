@@ -1,4 +1,4 @@
-WeibullMaxMuSigma
+﻿WeibullMaxMuSigma
 ===========================
 
 .. currentmodule:: openturns

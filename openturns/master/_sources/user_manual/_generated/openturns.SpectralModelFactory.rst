@@ -1,4 +1,4 @@
-SpectralModelFactory
+﻿SpectralModelFactory
 ==============================
 
 .. plot:: pyplots/SpectralModelFactory.py

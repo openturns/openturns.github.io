@@ -1,4 +1,4 @@
-GeometricFactory
+﻿GeometricFactory
 ====================================================
 
 .. plot::

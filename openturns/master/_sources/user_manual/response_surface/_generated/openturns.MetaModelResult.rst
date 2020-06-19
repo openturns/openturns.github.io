@@ -1,4 +1,4 @@
-MetaModelResult
+﻿MetaModelResult
 =========================
 
 .. currentmodule:: openturns

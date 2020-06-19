@@ -1,4 +1,4 @@
-AliMikhailHaqCopula
+﻿AliMikhailHaqCopula
 ==========================================================
 
 .. plot::

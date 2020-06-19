@@ -1,4 +1,4 @@
-AnalyticalResult
+﻿AnalyticalResult
 ==========================
 
 .. currentmodule:: openturns

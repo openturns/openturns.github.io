@@ -1,4 +1,4 @@
-FarlieGumbelMorgensternCopula
+﻿FarlieGumbelMorgensternCopula
 ==============================================================================
 
 .. plot::

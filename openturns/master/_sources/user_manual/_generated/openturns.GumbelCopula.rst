@@ -1,4 +1,4 @@
-GumbelCopula
+﻿GumbelCopula
 ============================================
 
 .. plot::

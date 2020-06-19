@@ -1,4 +1,4 @@
-SpaceFillingPhiP
+﻿SpaceFillingPhiP
 ==========================
 
 .. currentmodule:: openturns

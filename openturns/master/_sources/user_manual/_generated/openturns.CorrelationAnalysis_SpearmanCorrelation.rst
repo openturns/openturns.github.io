@@ -1,4 +1,4 @@
-CorrelationAnalysis_SpearmanCorrelation
+﻿CorrelationAnalysis_SpearmanCorrelation
 =================================================
 
 .. currentmodule:: openturns

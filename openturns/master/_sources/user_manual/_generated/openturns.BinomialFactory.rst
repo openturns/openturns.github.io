@@ -1,4 +1,4 @@
-BinomialFactory
+﻿BinomialFactory
 ==================================================
 
 .. plot::

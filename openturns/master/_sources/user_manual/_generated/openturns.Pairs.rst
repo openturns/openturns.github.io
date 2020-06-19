@@ -1,4 +1,4 @@
-Pairs
+﻿Pairs
 ===============
 
 .. plot:: pyplots/Pairs.py

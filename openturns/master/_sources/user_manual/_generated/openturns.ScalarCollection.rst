@@ -1,4 +1,4 @@
-ScalarCollection
+﻿ScalarCollection
 ==========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-DomainDisjunctiveUnion
+﻿DomainDisjunctiveUnion
 ================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ParametricPointToFieldFunction
+﻿ParametricPointToFieldFunction
 ========================================
 
 .. currentmodule:: openturns

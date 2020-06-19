@@ -1,4 +1,4 @@
-StandardEvent
+﻿StandardEvent
 =======================
 
 .. currentmodule:: openturns

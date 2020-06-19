@@ -1,4 +1,4 @@
-Hypergeometric distribution
+﻿Hypergeometric distribution
 ================================================
 
 .. plot::

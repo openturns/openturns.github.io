@@ -1,4 +1,4 @@
-WhittleFactory
+﻿WhittleFactory
 ========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-KernelSmoothing
+﻿KernelSmoothing
 =========================
 
 .. currentmodule:: openturns

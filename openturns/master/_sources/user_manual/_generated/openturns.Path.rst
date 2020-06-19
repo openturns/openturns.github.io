@@ -1,4 +1,4 @@
-Path
+﻿Path
 ==============
 
 .. currentmodule:: openturns
