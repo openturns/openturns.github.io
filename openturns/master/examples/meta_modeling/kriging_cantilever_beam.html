@@ -424,9 +424,38 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<p>We should apply a transformation to map inputs with huge values onto a standard space:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mu</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">computeStandardDeviationPerComponent</span><span class="p">()</span>
+<span class="n">linear</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquareMatrix</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">linear</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+<span class="n">transformation</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearFunction</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">linear</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Note : if we have access to distribution, we might only use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">transformation</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getIsoProbabilisticTransformation</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And transform the input sample:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">tX_train</span> <span class="o">=</span> <span class="n">transformation</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <p>The following figure presents the distribution of the vertical deviations Y on the training sample. We observe that the large deviations occur less often.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -439,11 +468,11 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_kriging_cantilever_beam_15_0.png" src="../../_images/examples_meta_modeling_kriging_cantilever_beam_15_0.png" />
+<img alt="../../_images/examples_meta_modeling_kriging_cantilever_beam_19_0.png" src="../../_images/examples_meta_modeling_kriging_cantilever_beam_19_0.png" />
 </div>
 </div>
 </div>
@@ -451,14 +480,14 @@ div.rendered_html tbody tr:hover {
 <h2>Create the metamodel<a class="headerlink" href="#Create-the-metamodel" title="Permalink to this headline">¶</a></h2>
 <p>In order to create the kriging metamodel, we first select a constant trend with the <code class="docutils literal notranslate"><span class="pre">ConstantBasisFactory</span></code> class. Then we use a squared exponential covariance model. Finally, we use the <code class="docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code> class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">tX_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">krigingMetamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
@@ -468,7 +497,7 @@ div.rendered_html tbody tr:hover {
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method has optimized the hyperparameters of the metamodel.</p>
 <p>We can then print the constant trend of the metamodel, which have been estimated using the least squares method.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -477,17 +506,17 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[class=Point name=Unnamed dimension=1 values=[18.7495]]
+[class=Point name=Unnamed dimension=1 values=[18.7526]]
 </pre></div></div>
 </div>
 <p>We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -496,40 +525,41 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>SquaredExponential(scale=[5.49182,5.18332,7.19611,6.86906], amplitude=[8.37795])</p></div>
+<p>SquaredExponential(scale=[5.49492,5.18157,7.19611,6.86906], amplitude=[8.37916])</p></div>
 </div>
 </div>
 <div class="section" id="Validate-the-metamodel">
 <h2>Validate the metamodel<a class="headerlink" href="#Validate-the-metamodel" title="Permalink to this headline">¶</a></h2>
 <p>We finally want to validate the kriging metamodel. This is why we generate a validation sample which size is equal to 100 and we evaluate the output of the model on this sample.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">sampleSize_test</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize_test</span><span class="p">)</span>
 <span class="n">Y_test</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">tX_test</span> <span class="o">=</span> <span class="n">transformation</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">MetaModelValidation</span></code> classe makes the validation easy. To create it, we use the validation samples and the metamodel.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingMetamodel</span><span class="p">)</span>
+<span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">tX_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingMetamodel</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">computePredictivityFactor</span></code> computes the Q2 factor.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -539,18 +569,18 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.9645762691321285
+0.9645770914135018
 </pre></div></div>
 </div>
 <p>Since the Q2 is larger than 95%, we can say that the quality is acceptable.</p>
 <p>The residuals are the difference between the model and the metamodel.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -560,17 +590,17 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_kriging_cantilever_beam_32_0.png" src="../../_images/examples_meta_modeling_kriging_cantilever_beam_32_0.png" />
+<img alt="../../_images/examples_meta_modeling_kriging_cantilever_beam_36_0.png" src="../../_images/examples_meta_modeling_kriging_cantilever_beam_36_0.png" />
 </div>
 </div>
 <p>We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first sign of good quality. Furthermore, the residuals are most of the times contained in the [-1,1] interval, which is a sign of quality given the amplitude of the output (approximately from 5 to 25 cm).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">drawValidation</span></code> method allows to compare the observed outputs and the metamodel outputs.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -582,11 +612,11 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_meta_modeling_kriging_cantilever_beam_35_0.png" src="../../_images/examples_meta_modeling_kriging_cantilever_beam_35_0.png" />
+<img alt="../../_images/examples_meta_modeling_kriging_cantilever_beam_39_0.png" src="../../_images/examples_meta_modeling_kriging_cantilever_beam_39_0.png" />
 </div>
 </div>
 <p>We observe that the metamodel predictions are close to the model outputs, since most red points are close to the diagonal. However, when we consider extreme deviations (i.e. less than 10 or larger than 20), then the quality is less obvious.</p>

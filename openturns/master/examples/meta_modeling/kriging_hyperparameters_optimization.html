@@ -338,7 +338,7 @@ div.rendered_html tbody tr:hover {
 <h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
 <p>In a kriging metamodel, there are various types of parameters which are estimated from the data.</p>
 <ul class="simple">
-<li><p>The parameters <img class="math" src="../../_images/math/ba8c3934bef7762b6f11c66f00b1c03834953d03.svg" alt="{\bf \beta}" style="vertical-align: -3px"/> associated with the deterministic trend. These parameters are computed based on linear least squares.</p></li>
+<li><p>The parameters <img class="math" src="../../_images/math/5ca4cfc1ff48bc0e1948d7ac399244837f8b8982.svg" alt="{\beta}" style="vertical-align: -3px"/> associated with the deterministic trend. These parameters are computed based on linear least squares.</p></li>
 <li><p>The parameters of the covariance model.</p></li>
 </ul>
 <p>The covariance model has two types of parameters.</p>
@@ -421,25 +421,52 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">10</span>
+<span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize_train</span><span class="p">)</span>
 <span class="n">Y_train</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>We should apply a transformation to map inputs with huge values onto a standard space:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mu</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">computeStandardDeviationPerComponent</span><span class="p">()</span>
+<span class="n">linear</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquareMatrix</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">linear</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+<span class="n">transformation</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearFunction</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">linear</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>And transform the input sample:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">tX_train</span> <span class="o">=</span> <span class="n">transformation</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Note : if we have access to distribution, we might only use</p>
+<p><code class="docutils literal notranslate"><span class="pre">python</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">transformation</span> <span class="pre">=</span> <span class="pre">myDistribution.getIsoProbabilisticTransformation()</span></code></p>
 </div>
 <div class="section" id="Create-the-metamodel">
 <h2>Create the metamodel<a class="headerlink" href="#Create-the-metamodel" title="Permalink to this headline">¶</a></h2>
 <p>In order to create the kriging metamodel, we first select a constant trend with the <code class="docutils literal notranslate"><span class="pre">ConstantBasisFactory</span></code> class. Then we use a squared exponential covariance model. Finally, we use the <code class="docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code> class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">tX_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">krigingMetamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
@@ -449,7 +476,7 @@ div.rendered_html tbody tr:hover {
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method has optimized the hyperparameters of the metamodel.</p>
 <p>We can then print the constant trend of the metamodel, which have been estimated using the least squares method.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -458,17 +485,17 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[class=Point name=Unnamed dimension=1 values=[13.1797]]
+[class=Point name=Unnamed dimension=1 values=[18.7526]]
 </pre></div></div>
 </div>
 <p>We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -478,18 +505,18 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>SquaredExponential(scale=[2.95323,3.58577,6.23301,6.38865], amplitude=[3.99677])</p></div>
+<p>SquaredExponential(scale=[5.49492,5.18157,7.19611,6.86906], amplitude=[8.37916])</p></div>
 </div>
 </div>
 <div class="section" id="Get-the-optimizer-algorithm">
 <h2>Get the optimizer algorithm<a class="headerlink" href="#Get-the-optimizer-algorithm" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">getOptimizationAlgorithm</span></code> method returns the optimization algorithm used to optimize the <img class="math" src="../../_images/math/faaffaa41e6112abe2aad6241e3e817f6f3b14bf.svg" alt="{\bf \theta}" style="vertical-align: 0px"/> parameters of the <code class="docutils literal notranslate"><span class="pre">SquaredExponential</span></code> covariance model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -499,7 +526,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>By default, the optimizer is the TNC algorithm with bound constraints.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -509,7 +536,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -519,7 +546,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">getOptimizationBounds</span></code> method returns the bounds. The dimension of these bounds correspond to the spatial dimension of the covariance model. In the metamodeling context, this correspond to the input dimension of the model.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -529,7 +556,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -538,7 +565,7 @@ div.rendered_html tbody tr:hover {
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -548,14 +575,14 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
 <p>[0.01,0.01,0.01,0.01]</p></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -565,15 +592,15 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>[5.1234,5.98007,6.23301,6.38865]</p></div>
+<p>[6.71499,8.27466,7.19611,6.86906]</p></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">getOptimizeParameters</span></code> method returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if these parameters are to be optimized.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -582,7 +609,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -595,7 +622,7 @@ True
 <h2>Configure the starting point of the optimization<a class="headerlink" href="#Configure-the-starting-point-of-the-optimization" title="Permalink to this headline">¶</a></h2>
 <p>The starting point of the optimization is based on the parameters of the covariance model. In the following example, we configure the parameters of the covariance model to the arbitrary values <code class="docutils literal notranslate"><span class="pre">[12.,34.,56.,78.]</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -605,7 +632,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -614,7 +641,7 @@ True
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -624,15 +651,15 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>SquaredExponential(scale=[2.95323,3.58577,6.23301,6.38865], amplitude=[3.99677])</p></div>
+<p>SquaredExponential(scale=[12,34,16.3904,78], amplitude=[3.49366])</p></div>
 </div>
 <p>In order to see the difference with the default optimization, we print the previous optimized covariance model.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -641,11 +668,11 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>SquaredExponential(scale=[2.95323,3.58577,6.23301,6.38865], amplitude=[3.99677])</p></div>
+<p>SquaredExponential(scale=[5.49492,5.18157,7.19611,6.86906], amplitude=[8.37916])</p></div>
 </div>
 <p>We observe that this does not change much the values of the parameters in this case.</p>
 </div>
@@ -653,18 +680,18 @@ True
 <h2>Disabling the optimization<a class="headerlink" href="#Disabling-the-optimization" title="Permalink to this headline">¶</a></h2>
 <p>It is sometimes useful to completely disable the optimization of the parameters. In order to see the effect of this, we first initialize the parameters of the covariance model with the arbitrary values <code class="docutils literal notranslate"><span class="pre">[12.,34.,56.,78.]</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">12.</span><span class="p">,</span><span class="mf">34.</span><span class="p">,</span><span class="mf">56.</span><span class="p">,</span><span class="mf">78.</span><span class="p">],</span> <span class="p">[</span><span class="mf">91.0</span><span class="p">])</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">tX_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">setOptimizeParameters</span></code> method can be used to disable the optimization of the parameters.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -674,7 +701,7 @@ True
 </div>
 <p>Then we run the algorithm and get the result.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -685,7 +712,7 @@ True
 </div>
 <p>We observe that the covariance model is unchanged.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -694,7 +721,7 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -702,7 +729,7 @@ True
 </div>
 <p>The trend, however, is still optimized, using linear least squares.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -711,12 +738,12 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[class=Point name=Unnamed dimension=1 values=[85.845]]
+[class=Point name=Unnamed dimension=1 values=[222.572]]
 </pre></div></div>
 </div>
 </div>
@@ -725,14 +752,14 @@ True
 <p>In this example, we show how to reuse the optimized parameters of a previous kriging and configure a new one. Furthermore, we disable the optimization so that the parameters of the covariance model are not updated. This make the process of adding a new point very fast: it improves the quality by adding a new point in the design of experiments without paying the price of the update of the covariance model.</p>
 <p>Step 1: Run a first kriging algorithm.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">tX_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
@@ -741,15 +768,15 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>SquaredExponential(scale=[2.95323,3.58577,6.23301,6.38865], amplitude=[3.99677])</p></div>
+<p>SquaredExponential(scale=[5.49492,5.18157,7.19611,6.86906], amplitude=[8.37916])</p></div>
 </div>
 <p>Step 2: Create a new point and add it to the previous training design.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -759,7 +786,7 @@ True
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -769,16 +796,16 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-30
+40
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -788,21 +815,40 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-30
+40
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">tX_train</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">transformation</span><span class="p">(</span><span class="n">X_new</span><span class="p">))</span>
+<span class="n">tX_train</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+40
 </pre></div></div>
 </div>
 <p>Step 3: Create an updated kriging, using the new point with the old covariance parameters.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">tX_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setOptimizeParameters</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
@@ -812,14 +858,14 @@ True
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>SquaredExponential(scale=[2.95323,3.58577,6.23301,6.38865], amplitude=[3.99677])</p></div>
+<p>SquaredExponential(scale=[5.49492,5.18157,7.19611,6.86906], amplitude=[8.37916])</p></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -834,7 +880,7 @@ True
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -860,7 +906,7 @@ Change in the parameter #4 = 0.0
 <h2>Configure the optimization solver<a class="headerlink" href="#Configure-the-optimization-solver" title="Permalink to this headline">¶</a></h2>
 <p>The following example checks the robustness of the optimization of the kriging algorithm with respect to the optimization of the likelihood function in the covariance model parameters estimation. We use a <code class="docutils literal notranslate"><span class="pre">MultiStart</span></code> algorithm in order to avoid to be trapped by a local minimum. Furthermore, we generate the design of experiments using a <code class="docutils literal notranslate"><span class="pre">LHSExperiments</span></code>, which guarantees that the points will fill the space.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -872,7 +918,7 @@ Change in the parameter #4 = 0.0
 </div>
 <p>First, we create a multivariate distribution, based on independent <code class="docutils literal notranslate"><span class="pre">Uniform</span></code> marginals which have the bounds required by the covariance model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -885,7 +931,7 @@ Change in the parameter #4 = 0.0
 </div>
 <p>We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in the sample space. This LHS is optimized so as to fill the space.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -902,7 +948,7 @@ Change in the parameter #4 = 0.0
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -912,7 +958,7 @@ Change in the parameter #4 = 0.0
 </div>
 <p>We can check that the minimum and maximum in the sample correspond to the bounds of the design of experiment.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -921,17 +967,17 @@ Change in the parameter #4 = 0.0
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 (class=Point name=Unnamed dimension=4 values=[0.01,0.01,0.01,0.01],
- class=Point name=Unnamed dimension=4 values=[5.1234,5.98007,6.23301,6.38865])
+ class=Point name=Unnamed dimension=4 values=[6.71499,8.27466,7.19611,6.86906])
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -940,40 +986,41 @@ Change in the parameter #4 = 0.0
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(class=Point name=Unnamed dimension=4 values=[0.01733,0.111174,0.0560509,0.263393],
- class=Point name=Unnamed dimension=4 values=[5.04098,5.96626,6.20398,6.32161])
+(class=Point name=Unnamed dimension=4 values=[0.127921,0.0960666,0.197923,0.21663],
+ class=Point name=Unnamed dimension=4 values=[6.49641,8.01789,7.10813,6.7048])
 </pre></div></div>
 </div>
 <p>Then we create a <code class="docutils literal notranslate"><span class="pre">MultiStart</span></code> algorithm based on the LHS starting points.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">solver</span><span class="o">.</span><span class="n">setMaximumIterationNumber</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">multiStartSolver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">starting_points</span><span class="p">)</span>
+<span class="n">multiStartSolver</span><span class="o">.</span><span class="n">setMaximumIterationNumber</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>Finally, we configure the optimization algorithm so as to use the <code class="docutils literal notranslate"><span class="pre">MultiStart</span></code> algorithm.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">transformation</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">multiStartSolver</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -983,14 +1030,14 @@ Change in the parameter #4 = 0.0
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>SquaredExponential(scale=[2.95323,3.58577,6.23301,6.38865], amplitude=[3.99677])</p></div>
+<p>SquaredExponential(scale=[5.49492,5.18157,7.19611,6.86906], amplitude=[8.37916])</p></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
