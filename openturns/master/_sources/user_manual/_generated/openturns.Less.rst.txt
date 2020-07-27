@@ -1,4 +1,4 @@
-Less
+﻿Less
 ==============
 
 .. currentmodule:: openturns

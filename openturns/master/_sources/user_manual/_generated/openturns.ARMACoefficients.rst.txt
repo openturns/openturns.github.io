@@ -1,4 +1,4 @@
-ARMACoefficients
+﻿ARMACoefficients
 ==========================
 
 .. currentmodule:: openturns

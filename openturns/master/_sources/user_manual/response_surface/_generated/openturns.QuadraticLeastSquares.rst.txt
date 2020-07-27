@@ -1,4 +1,4 @@
-QuadraticLeastSquares
+﻿QuadraticLeastSquares
 ===============================
 
 .. currentmodule:: openturns

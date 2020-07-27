@@ -1,4 +1,4 @@
-OrthonormalizationAlgorithm
+﻿OrthonormalizationAlgorithm
 =====================================
 
 .. currentmodule:: openturns

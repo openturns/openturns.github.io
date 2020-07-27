@@ -1,4 +1,4 @@
-Mixture
+﻿Mixture
 =================
 
 .. plot:: pyplots/Mixture.py

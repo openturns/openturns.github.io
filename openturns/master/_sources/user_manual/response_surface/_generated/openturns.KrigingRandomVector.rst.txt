@@ -1,4 +1,4 @@
-KrigingRandomVector
+﻿KrigingRandomVector
 =============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-RiceFactory
+﻿RiceFactory
 =====================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ValueFunction
+﻿ValueFunction
 =======================
 
 .. currentmodule:: openturns

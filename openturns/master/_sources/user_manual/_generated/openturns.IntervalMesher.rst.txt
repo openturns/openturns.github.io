@@ -1,4 +1,4 @@
-IntervalMesher
+﻿IntervalMesher
 ========================
 
 .. plot:: pyplots/IntervalMesher.py

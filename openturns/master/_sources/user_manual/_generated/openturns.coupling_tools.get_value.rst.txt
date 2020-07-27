@@ -1,4 +1,4 @@
-get_value
+﻿get_value
 ==================================
 
 .. currentmodule:: openturns.coupling_tools

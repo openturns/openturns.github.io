@@ -1,4 +1,4 @@
-Classifier
+﻿Classifier
 ====================
 
 .. currentmodule:: openturns

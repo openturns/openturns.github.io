@@ -1,4 +1,4 @@
-LinearEnumerateFunction
+﻿LinearEnumerateFunction
 =================================
 
 .. currentmodule:: openturns

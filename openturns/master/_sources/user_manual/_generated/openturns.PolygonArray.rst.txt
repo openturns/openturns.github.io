@@ -1,4 +1,4 @@
-PolygonArray
+﻿PolygonArray
 ======================
 
 .. plot:: pyplots/PolygonArray.py

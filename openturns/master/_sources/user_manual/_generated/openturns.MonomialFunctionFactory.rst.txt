@@ -1,4 +1,4 @@
-MonomialFunctionFactory
+﻿MonomialFunctionFactory
 =================================
 
 .. currentmodule:: openturns

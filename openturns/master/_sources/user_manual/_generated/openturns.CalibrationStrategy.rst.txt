@@ -1,4 +1,4 @@
-CalibrationStrategy
+﻿CalibrationStrategy
 =============================
 
 .. currentmodule:: openturns

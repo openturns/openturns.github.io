@@ -1,4 +1,4 @@
-GaussKronrod
+﻿GaussKronrod
 ======================
 
 .. plot:: pyplots/GaussKronrod.py

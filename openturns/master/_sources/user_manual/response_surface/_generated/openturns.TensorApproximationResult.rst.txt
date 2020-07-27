@@ -1,4 +1,4 @@
-TensorApproximationResult
+﻿TensorApproximationResult
 ===================================
 
 .. currentmodule:: openturns

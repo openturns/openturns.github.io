@@ -1,4 +1,4 @@
-SpecFunc_LogBeta
+﻿SpecFunc_LogBeta
 ==========================
 
 .. currentmodule:: openturns

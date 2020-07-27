@@ -1,4 +1,4 @@
-OptimizationResult
+﻿OptimizationResult
 ============================
 
 .. currentmodule:: openturns

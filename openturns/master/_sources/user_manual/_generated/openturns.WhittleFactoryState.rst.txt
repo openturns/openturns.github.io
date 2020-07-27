@@ -1,4 +1,4 @@
-WhittleFactoryState
+﻿WhittleFactoryState
 =============================
 
 .. currentmodule:: openturns

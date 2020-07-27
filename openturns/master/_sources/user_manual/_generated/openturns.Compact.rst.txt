@@ -1,4 +1,4 @@
-Compact
+﻿Compact
 =================
 
 .. currentmodule:: openturns

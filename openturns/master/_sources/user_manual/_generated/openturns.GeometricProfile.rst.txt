@@ -1,4 +1,4 @@
-GeometricProfile
+﻿GeometricProfile
 ==========================
 
 .. currentmodule:: openturns

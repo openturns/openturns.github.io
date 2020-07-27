@@ -1,4 +1,4 @@
-FittingTest_Kolmogorov
+﻿FittingTest_Kolmogorov
 ================================
 
 .. currentmodule:: openturns

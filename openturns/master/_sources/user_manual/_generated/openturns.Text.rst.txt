@@ -1,4 +1,4 @@
-Text
+﻿Text
 ==============
 
 .. plot:: pyplots/Text.py

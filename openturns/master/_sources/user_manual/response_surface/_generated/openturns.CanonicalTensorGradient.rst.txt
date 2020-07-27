@@ -1,4 +1,4 @@
-CanonicalTensorGradient
+﻿CanonicalTensorGradient
 =================================
 
 .. currentmodule:: openturns

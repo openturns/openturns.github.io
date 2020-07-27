@@ -1,4 +1,4 @@
-MonomialFunction
+﻿MonomialFunction
 ==========================
 
 .. currentmodule:: openturns

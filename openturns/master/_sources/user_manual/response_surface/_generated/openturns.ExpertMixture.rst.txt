@@ -1,4 +1,4 @@
-ExpertMixture
+﻿ExpertMixture
 =======================
 
 .. currentmodule:: openturns

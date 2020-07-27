@@ -1,4 +1,4 @@
-NoGradient
+﻿NoGradient
 ====================
 
 .. currentmodule:: openturns

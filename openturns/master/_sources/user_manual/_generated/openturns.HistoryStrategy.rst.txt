@@ -1,4 +1,4 @@
-HistoryStrategy
+﻿HistoryStrategy
 =========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ANCOVA
+﻿ANCOVA
 ================
 
 .. currentmodule:: openturns

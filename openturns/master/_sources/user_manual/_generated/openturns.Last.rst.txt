@@ -1,4 +1,4 @@
-Last
+﻿Last
 ==============
 
 .. currentmodule:: openturns

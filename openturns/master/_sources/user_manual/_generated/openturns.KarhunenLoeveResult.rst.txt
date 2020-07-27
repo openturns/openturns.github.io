@@ -1,4 +1,4 @@
-KarhunenLoeveResult
+﻿KarhunenLoeveResult
 =============================
 
 .. currentmodule:: openturns

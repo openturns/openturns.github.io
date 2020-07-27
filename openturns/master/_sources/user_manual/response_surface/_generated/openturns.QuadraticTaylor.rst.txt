@@ -1,4 +1,4 @@
-QuadraticTaylor
+﻿QuadraticTaylor
 =========================
 
 .. currentmodule:: openturns

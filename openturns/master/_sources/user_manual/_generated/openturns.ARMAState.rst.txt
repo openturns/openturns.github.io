@@ -1,4 +1,4 @@
-ARMAState
+﻿ARMAState
 ===================
 
 .. currentmodule:: openturns

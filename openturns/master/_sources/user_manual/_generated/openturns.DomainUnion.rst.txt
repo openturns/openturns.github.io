@@ -1,4 +1,4 @@
-DomainUnion
+﻿DomainUnion
 =====================
 
 .. currentmodule:: openturns

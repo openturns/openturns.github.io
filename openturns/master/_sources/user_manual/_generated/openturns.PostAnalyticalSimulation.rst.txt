@@ -1,4 +1,4 @@
-PostAnalyticalSimulation
+﻿PostAnalyticalSimulation
 ==================================
 
 .. currentmodule:: openturns

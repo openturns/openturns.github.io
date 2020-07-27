@@ -1,4 +1,4 @@
-NormInfEnumerateFunction
+﻿NormInfEnumerateFunction
 ==================================
 
 .. currentmodule:: openturns

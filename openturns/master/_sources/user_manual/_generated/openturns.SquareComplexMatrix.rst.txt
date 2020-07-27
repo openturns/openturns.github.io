@@ -1,4 +1,4 @@
-SquareComplexMatrix
+﻿SquareComplexMatrix
 =============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-TrendFactory
+﻿TrendFactory
 ======================
 
 .. plot:: pyplots/TrendFactory.py

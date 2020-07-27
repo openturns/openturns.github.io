@@ -1,4 +1,4 @@
-FilonQuadrature
+﻿FilonQuadrature
 =========================
 
 .. currentmodule:: openturns

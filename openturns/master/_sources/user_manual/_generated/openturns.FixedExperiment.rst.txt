@@ -1,4 +1,4 @@
-FixedExperiment
+﻿FixedExperiment
 =========================
 
 .. plot:: pyplots/FixedExperiment.py

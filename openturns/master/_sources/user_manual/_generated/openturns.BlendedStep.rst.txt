@@ -1,4 +1,4 @@
-BlendedStep
+﻿BlendedStep
 =====================
 
 .. currentmodule:: openturns

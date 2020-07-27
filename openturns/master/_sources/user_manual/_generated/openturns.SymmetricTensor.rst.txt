@@ -1,4 +1,4 @@
-SymmetricTensor
+﻿SymmetricTensor
 =========================
 
 .. currentmodule:: openturns

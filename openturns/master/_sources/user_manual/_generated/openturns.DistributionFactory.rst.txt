@@ -1,4 +1,4 @@
-DistributionFactory
+﻿DistributionFactory
 =============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-HypothesisTest_FullSpearman
+﻿HypothesisTest_FullSpearman
 =====================================
 
 .. currentmodule:: openturns

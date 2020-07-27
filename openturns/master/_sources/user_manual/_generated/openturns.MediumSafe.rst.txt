@@ -1,4 +1,4 @@
-MediumSafe
+﻿MediumSafe
 ====================
 
 .. currentmodule:: openturns

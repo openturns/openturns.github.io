@@ -1,4 +1,4 @@
-PythonFieldFunction
+﻿PythonFieldFunction
 =============================
 
 .. currentmodule:: openturns

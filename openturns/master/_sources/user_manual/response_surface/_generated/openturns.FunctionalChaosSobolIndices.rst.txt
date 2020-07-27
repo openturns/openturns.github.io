@@ -1,4 +1,4 @@
-FunctionalChaosSobolIndices
+﻿FunctionalChaosSobolIndices
 =====================================
 
 .. currentmodule:: openturns

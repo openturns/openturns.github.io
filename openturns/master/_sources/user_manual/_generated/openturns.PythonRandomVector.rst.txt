@@ -1,4 +1,4 @@
-PythonRandomVector
+﻿PythonRandomVector
 ============================
 
 .. currentmodule:: openturns

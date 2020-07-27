@@ -1,4 +1,4 @@
-SpecFunc_LnGamma
+﻿SpecFunc_LnGamma
 ==========================
 
 .. currentmodule:: openturns

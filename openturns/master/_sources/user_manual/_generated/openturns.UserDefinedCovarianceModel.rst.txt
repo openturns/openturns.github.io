@@ -1,4 +1,4 @@
-UserDefinedCovarianceModel
+﻿UserDefinedCovarianceModel
 ====================================
 
 .. plot:: pyplots/UserDefinedCovarianceModel.py

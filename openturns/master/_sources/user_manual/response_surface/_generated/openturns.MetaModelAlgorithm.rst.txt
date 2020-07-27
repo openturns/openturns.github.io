@@ -1,4 +1,4 @@
-MetaModelAlgorithm
+﻿MetaModelAlgorithm
 ============================
 
 .. currentmodule:: openturns

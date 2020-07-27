@@ -1,4 +1,4 @@
-LinearModelTest_LinearModelDurbinWatson
+﻿LinearModelTest_LinearModelDurbinWatson
 =================================================
 
 .. currentmodule:: openturns

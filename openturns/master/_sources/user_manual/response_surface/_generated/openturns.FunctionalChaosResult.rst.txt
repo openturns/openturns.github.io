@@ -1,4 +1,4 @@
-FunctionalChaosResult
+﻿FunctionalChaosResult
 ===============================
 
 .. currentmodule:: openturns

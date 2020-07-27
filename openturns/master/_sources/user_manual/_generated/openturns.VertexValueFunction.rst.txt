@@ -1,4 +1,4 @@
-VertexValueFunction
+﻿VertexValueFunction
 =============================
 
 .. currentmodule:: openturns

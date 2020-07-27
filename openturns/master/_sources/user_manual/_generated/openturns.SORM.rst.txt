@@ -1,4 +1,4 @@
-SORM
+﻿SORM
 ==============
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ProductGradient
+﻿ProductGradient
 =========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ComposedGradient
+﻿ComposedGradient
 ==========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-TimeSeries
+﻿TimeSeries
 ====================
 
 .. plot:: pyplots/TimeSeries.py

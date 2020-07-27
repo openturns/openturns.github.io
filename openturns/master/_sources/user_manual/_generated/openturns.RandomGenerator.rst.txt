@@ -1,4 +1,4 @@
-RandomGenerator
+﻿RandomGenerator
 =========================
 
 .. currentmodule:: openturns

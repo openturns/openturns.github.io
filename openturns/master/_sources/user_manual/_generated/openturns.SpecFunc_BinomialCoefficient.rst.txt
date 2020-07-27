@@ -1,4 +1,4 @@
-SpecFunc_BinomialCoefficient
+﻿SpecFunc_BinomialCoefficient
 ======================================
 
 .. currentmodule:: openturns

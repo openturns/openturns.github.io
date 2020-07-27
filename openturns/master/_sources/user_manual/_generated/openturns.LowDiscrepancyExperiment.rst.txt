@@ -1,4 +1,4 @@
-LowDiscrepancyExperiment
+﻿LowDiscrepancyExperiment
 ==================================
 
 .. plot:: pyplots/LowDiscrepancyExperiment.py

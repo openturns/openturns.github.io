@@ -1,4 +1,4 @@
-MinCopula
+﻿MinCopula
 ===================
 
 .. currentmodule:: openturns

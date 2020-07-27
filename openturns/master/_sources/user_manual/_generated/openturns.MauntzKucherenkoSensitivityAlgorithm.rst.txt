@@ -1,4 +1,4 @@
-MauntzKucherenkoSensitivityAlgorithm
+﻿MauntzKucherenkoSensitivityAlgorithm
 ==============================================
 
 .. plot:: pyplots/MauntzKucherenkoSensitivityAlgorithm.py

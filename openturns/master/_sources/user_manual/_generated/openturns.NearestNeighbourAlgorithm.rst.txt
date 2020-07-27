@@ -1,4 +1,4 @@
-NearestNeighbourAlgorithm
+﻿NearestNeighbourAlgorithm
 ===================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-OrthogonalProductFunctionFactory
+﻿OrthogonalProductFunctionFactory
 ==========================================
 
 .. currentmodule:: openturns

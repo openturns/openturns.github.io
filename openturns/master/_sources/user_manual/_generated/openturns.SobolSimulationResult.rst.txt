@@ -1,4 +1,4 @@
-SobolSimulationResult
+﻿SobolSimulationResult
 ===============================
 
 .. currentmodule:: openturns

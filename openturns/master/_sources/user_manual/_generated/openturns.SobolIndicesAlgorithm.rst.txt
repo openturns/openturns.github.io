@@ -1,4 +1,4 @@
-SobolIndicesAlgorithm
+﻿SobolIndicesAlgorithm
 ===============================
 
 .. plot:: pyplots/SobolIndicesAlgorithm.py

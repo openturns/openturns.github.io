@@ -1,4 +1,4 @@
-GaussLegendre
+﻿GaussLegendre
 =======================
 
 .. plot:: pyplots/GaussLegendre.py

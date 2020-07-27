@@ -1,4 +1,4 @@
-IntegrationAlgorithm
+﻿IntegrationAlgorithm
 ==============================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-DirectionalSampling
+﻿DirectionalSampling
 =============================
 
 .. currentmodule:: openturns

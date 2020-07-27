@@ -1,4 +1,4 @@
-PointToPointConnection
+﻿PointToPointConnection
 ================================
 
 .. currentmodule:: openturns

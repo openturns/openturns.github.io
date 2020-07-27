@@ -1,4 +1,4 @@
-Curve
+﻿Curve
 ===============
 
 .. plot:: pyplots/Curve.py

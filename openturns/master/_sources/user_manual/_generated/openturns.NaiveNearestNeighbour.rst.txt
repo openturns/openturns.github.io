@@ -1,4 +1,4 @@
-NaiveNearestNeighbour
+﻿NaiveNearestNeighbour
 ===============================
 
 .. currentmodule:: openturns

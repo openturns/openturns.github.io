@@ -1,4 +1,4 @@
-BasisFactory
+﻿BasisFactory
 ======================
 
 .. currentmodule:: openturns

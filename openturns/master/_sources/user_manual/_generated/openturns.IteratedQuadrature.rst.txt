@@ -1,4 +1,4 @@
-IteratedQuadrature
+﻿IteratedQuadrature
 ============================
 
 .. plot:: pyplots/IteratedQuadrature.py

@@ -1,4 +1,4 @@
-ExpectationSimulationResult
+﻿ExpectationSimulationResult
 =====================================
 
 .. currentmodule:: openturns

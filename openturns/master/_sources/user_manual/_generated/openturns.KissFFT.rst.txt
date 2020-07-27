@@ -1,4 +1,4 @@
-KissFFT
+﻿KissFFT
 =================
 
 .. currentmodule:: openturns

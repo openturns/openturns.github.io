@@ -1,4 +1,4 @@
-NLopt
+﻿NLopt
 ===============
 
 .. currentmodule:: openturns

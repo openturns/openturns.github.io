@@ -1,4 +1,4 @@
-AggregatedEvaluation
+﻿AggregatedEvaluation
 ==============================
 
 .. currentmodule:: openturns

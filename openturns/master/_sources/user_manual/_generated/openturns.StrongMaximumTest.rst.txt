@@ -1,4 +1,4 @@
-StrongMaximumTest
+﻿StrongMaximumTest
 ===========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-OptimizationProblem
+﻿OptimizationProblem
 =============================
 
 .. currentmodule:: openturns

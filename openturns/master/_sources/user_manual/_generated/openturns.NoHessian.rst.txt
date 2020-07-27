@@ -1,4 +1,4 @@
-NoHessian
+﻿NoHessian
 ===================
 
 .. currentmodule:: openturns

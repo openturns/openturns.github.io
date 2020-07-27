@@ -1,4 +1,4 @@
-DomainComplement
+﻿DomainComplement
 ==========================
 
 .. currentmodule:: openturns

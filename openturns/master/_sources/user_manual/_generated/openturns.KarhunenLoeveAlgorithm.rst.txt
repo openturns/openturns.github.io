@@ -1,4 +1,4 @@
-KarhunenLoeveAlgorithm
+﻿KarhunenLoeveAlgorithm
 ================================
 
 .. currentmodule:: openturns

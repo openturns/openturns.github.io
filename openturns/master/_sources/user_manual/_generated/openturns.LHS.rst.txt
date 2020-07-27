@@ -1,4 +1,4 @@
-LHS
+﻿LHS
 =============
 
 .. currentmodule:: openturns

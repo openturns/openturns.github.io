@@ -1,4 +1,4 @@
-SpecFunc_Gamma
+﻿SpecFunc_Gamma
 ========================
 
 .. currentmodule:: openturns

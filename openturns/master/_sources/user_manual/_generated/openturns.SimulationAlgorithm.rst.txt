@@ -1,4 +1,4 @@
-SimulationAlgorithm
+﻿SimulationAlgorithm
 =============================
 
 .. currentmodule:: openturns

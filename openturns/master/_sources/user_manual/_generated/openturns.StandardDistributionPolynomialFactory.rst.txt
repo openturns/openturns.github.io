@@ -1,4 +1,4 @@
-StandardDistributionPolynomialFactory
+﻿StandardDistributionPolynomialFactory
 ===============================================
 
 .. currentmodule:: openturns

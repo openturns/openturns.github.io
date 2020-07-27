@@ -1,4 +1,4 @@
-SpecFunc_DiLog
+﻿SpecFunc_DiLog
 ========================
 
 .. currentmodule:: openturns

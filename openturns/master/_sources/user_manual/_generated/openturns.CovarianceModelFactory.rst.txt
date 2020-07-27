@@ -1,4 +1,4 @@
-CovarianceModelFactory
+﻿CovarianceModelFactory
 ================================
 
 .. currentmodule:: openturns

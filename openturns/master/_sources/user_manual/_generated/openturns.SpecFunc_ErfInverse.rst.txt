@@ -1,4 +1,4 @@
-SpecFunc_ErfInverse
+﻿SpecFunc_ErfInverse
 =============================
 
 .. currentmodule:: openturns

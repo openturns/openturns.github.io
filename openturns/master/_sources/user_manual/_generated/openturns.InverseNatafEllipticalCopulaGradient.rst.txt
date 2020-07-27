@@ -1,4 +1,4 @@
-InverseNatafEllipticalCopulaGradient
+﻿InverseNatafEllipticalCopulaGradient
 ==============================================
 
 .. currentmodule:: openturns

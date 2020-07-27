@@ -1,4 +1,4 @@
-Greater
+﻿Greater
 =================
 
 .. currentmodule:: openturns

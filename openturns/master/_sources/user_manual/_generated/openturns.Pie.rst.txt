@@ -1,4 +1,4 @@
-Pie
+﻿Pie
 =============
 
 .. plot:: pyplots/Pie.py

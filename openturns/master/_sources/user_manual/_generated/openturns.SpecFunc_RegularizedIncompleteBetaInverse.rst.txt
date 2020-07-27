@@ -1,4 +1,4 @@
-SpecFunc_RegularizedIncompleteBetaInverse
+﻿SpecFunc_RegularizedIncompleteBetaInverse
 ===================================================
 
 .. currentmodule:: openturns

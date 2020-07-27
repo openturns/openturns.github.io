@@ -1,4 +1,4 @@
-VisualTest_DrawKendallPlot
+﻿VisualTest_DrawKendallPlot
 ====================================
 
 .. plot:: pyplots/VisualTest_DrawKendallPlot.py

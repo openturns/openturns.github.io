@@ -1,4 +1,4 @@
-InverseNatafIndependentCopulaGradient
+﻿InverseNatafIndependentCopulaGradient
 ===============================================
 
 .. currentmodule:: openturns

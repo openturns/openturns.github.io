@@ -1,4 +1,4 @@
-LaguerreFactory
+﻿LaguerreFactory
 =========================
 
 .. plot::

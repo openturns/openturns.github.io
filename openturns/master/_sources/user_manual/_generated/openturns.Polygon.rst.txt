@@ -1,4 +1,4 @@
-Polygon
+﻿Polygon
 =================
 
 .. plot:: pyplots/Polygon.py

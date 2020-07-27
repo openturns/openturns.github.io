@@ -1,4 +1,4 @@
-OrderStatisticsMarginalChecker
+﻿OrderStatisticsMarginalChecker
 ========================================
 
 .. currentmodule:: openturns

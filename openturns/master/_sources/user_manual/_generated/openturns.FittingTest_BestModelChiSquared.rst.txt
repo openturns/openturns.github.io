@@ -1,4 +1,4 @@
-FittingTest_BestModelChiSquared
+﻿FittingTest_BestModelChiSquared
 =========================================
 
 .. currentmodule:: openturns

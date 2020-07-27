@@ -1,4 +1,4 @@
-LeastSquaresStrategy
+﻿LeastSquaresStrategy
 ==============================
 
 .. currentmodule:: openturns

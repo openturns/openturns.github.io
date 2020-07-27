@@ -1,4 +1,4 @@
-HMatrixFactory
+﻿HMatrixFactory
 ========================
 
 .. currentmodule:: openturns

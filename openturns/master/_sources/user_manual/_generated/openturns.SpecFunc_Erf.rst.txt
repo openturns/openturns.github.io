@@ -1,4 +1,4 @@
-SpecFunc_Erf
+﻿SpecFunc_Erf
 ======================
 
 .. currentmodule:: openturns

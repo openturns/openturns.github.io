@@ -1,4 +1,4 @@
-ComplexCollection
+﻿ComplexCollection
 ===========================
 
 .. currentmodule:: openturns

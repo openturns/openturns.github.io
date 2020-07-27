@@ -1,4 +1,4 @@
-AbdoRackwitz
+﻿AbdoRackwitz
 ======================
 
 .. currentmodule:: openturns

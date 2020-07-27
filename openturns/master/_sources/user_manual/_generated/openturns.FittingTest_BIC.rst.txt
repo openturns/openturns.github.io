@@ -1,4 +1,4 @@
-FittingTest_BIC
+﻿FittingTest_BIC
 =========================
 
 .. currentmodule:: openturns

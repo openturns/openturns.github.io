@@ -1,4 +1,4 @@
-ResourceMap
+﻿ResourceMap
 =====================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-EnclosingSimplexMonotonic1D
+﻿EnclosingSimplexMonotonic1D
 =====================================
 
 .. currentmodule:: openturns

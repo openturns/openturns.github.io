@@ -1,4 +1,4 @@
-MultiStart
+﻿MultiStart
 ====================
 
 .. currentmodule:: openturns

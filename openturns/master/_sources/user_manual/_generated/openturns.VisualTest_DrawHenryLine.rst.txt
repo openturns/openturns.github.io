@@ -1,4 +1,4 @@
-VisualTest_DrawHenryLine
+﻿VisualTest_DrawHenryLine
 ==================================
 
 .. plot:: pyplots/VisualTest_DrawHenryLine.py

@@ -1,4 +1,4 @@
-FAST
+﻿FAST
 ==============
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-UserDefinedStationaryCovarianceModel
+﻿UserDefinedStationaryCovarianceModel
 ==============================================
 
 .. plot:: pyplots/UserDefinedStationaryCovarianceModel.py

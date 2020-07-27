@@ -1,4 +1,4 @@
-AggregatedFunction
+﻿AggregatedFunction
 ============================
 
 .. currentmodule:: openturns

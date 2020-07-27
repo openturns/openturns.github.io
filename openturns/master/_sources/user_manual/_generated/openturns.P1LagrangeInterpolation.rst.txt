@@ -1,4 +1,4 @@
-P1LagrangeInterpolation
+﻿P1LagrangeInterpolation
 =================================
 
 .. currentmodule:: openturns

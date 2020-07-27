@@ -1,4 +1,4 @@
-EnumerateFunction
+﻿EnumerateFunction
 ===========================
 
 .. currentmodule:: openturns

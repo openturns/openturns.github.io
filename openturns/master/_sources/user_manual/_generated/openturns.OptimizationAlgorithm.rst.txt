@@ -1,4 +1,4 @@
-OptimizationAlgorithm
+﻿OptimizationAlgorithm
 ===============================
 
 .. currentmodule:: openturns

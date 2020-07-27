@@ -1,4 +1,4 @@
-ComposedEvaluation
+﻿ComposedEvaluation
 ============================
 
 .. currentmodule:: openturns

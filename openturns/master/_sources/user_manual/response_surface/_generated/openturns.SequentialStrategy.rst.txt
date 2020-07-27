@@ -1,4 +1,4 @@
-SequentialStrategy
+﻿SequentialStrategy
 ============================
 
 .. currentmodule:: openturns

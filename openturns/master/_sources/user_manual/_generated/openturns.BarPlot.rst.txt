@@ -1,4 +1,4 @@
-BarPlot
+﻿BarPlot
 =================
 
 .. plot:: pyplots/BarPlot.py

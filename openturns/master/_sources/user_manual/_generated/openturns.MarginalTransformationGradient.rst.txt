@@ -1,4 +1,4 @@
-MarginalTransformationGradient
+﻿MarginalTransformationGradient
 ========================================
 
 .. currentmodule:: openturns

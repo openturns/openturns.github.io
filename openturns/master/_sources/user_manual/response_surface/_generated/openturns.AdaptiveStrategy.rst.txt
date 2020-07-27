@@ -1,4 +1,4 @@
-AdaptiveStrategy
+﻿AdaptiveStrategy
 ==========================
 
 .. currentmodule:: openturns

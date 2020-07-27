@@ -1,4 +1,4 @@
-BoxCoxTransform
+﻿BoxCoxTransform
 =========================
 
 .. plot:: pyplots/BoxCoxTransform.py

@@ -1,4 +1,4 @@
-TimerCallback
+﻿TimerCallback
 =======================
 
 .. currentmodule:: openturns

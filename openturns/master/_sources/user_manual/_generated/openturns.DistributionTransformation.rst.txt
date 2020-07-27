@@ -1,4 +1,4 @@
-DistributionTransformation
+﻿DistributionTransformation
 ====================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-ODESolver
+﻿ODESolver
 ===================
 
 .. currentmodule:: openturns

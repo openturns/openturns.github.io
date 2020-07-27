@@ -1,4 +1,4 @@
-SymbolicFunction
+﻿SymbolicFunction
 ==========================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-StratifiedExperiment
+﻿StratifiedExperiment
 ==============================
 
 .. currentmodule:: openturns

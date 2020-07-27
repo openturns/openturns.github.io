@@ -1,4 +1,4 @@
-LessOrEqual
+﻿LessOrEqual
 =====================
 
 .. currentmodule:: openturns

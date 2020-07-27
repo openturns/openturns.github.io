@@ -1,4 +1,4 @@
-Staircase
+﻿Staircase
 ===================
 
 .. plot:: pyplots/Staircase.py

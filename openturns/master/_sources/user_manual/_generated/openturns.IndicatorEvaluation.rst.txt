@@ -1,4 +1,4 @@
-IndicatorEvaluation
+﻿IndicatorEvaluation
 =============================
 
 .. currentmodule:: openturns

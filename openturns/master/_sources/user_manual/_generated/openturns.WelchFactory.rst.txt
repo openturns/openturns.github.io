@@ -1,4 +1,4 @@
-WelchFactory
+﻿WelchFactory
 ======================
 
 .. plot:: pyplots/WelchFactory.py

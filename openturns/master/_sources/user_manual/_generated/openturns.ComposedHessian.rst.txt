@@ -1,4 +1,4 @@
-ComposedHessian
+﻿ComposedHessian
 =========================
 
 .. currentmodule:: openturns

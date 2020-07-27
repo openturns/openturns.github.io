@@ -1,4 +1,4 @@
-SimulationSensitivityAnalysis
+﻿SimulationSensitivityAnalysis
 =======================================
 
 .. currentmodule:: openturns

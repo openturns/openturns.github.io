@@ -1,4 +1,4 @@
-WeightedExperiment
+﻿WeightedExperiment
 ============================
 
 .. currentmodule:: openturns

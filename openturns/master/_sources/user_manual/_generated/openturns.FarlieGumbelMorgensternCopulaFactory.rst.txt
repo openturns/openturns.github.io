@@ -1,4 +1,4 @@
-FarlieGumbelMorgensternCopulaFactory
+﻿FarlieGumbelMorgensternCopulaFactory
 ==============================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-LinearProfile
+﻿LinearProfile
 =======================
 
 .. currentmodule:: openturns

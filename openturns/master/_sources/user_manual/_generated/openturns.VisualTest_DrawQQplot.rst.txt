@@ -1,4 +1,4 @@
-VisualTest_DrawQQplot
+﻿VisualTest_DrawQQplot
 ===============================
 
 .. plot:: pyplots/VisualTest_DrawQQplot.py

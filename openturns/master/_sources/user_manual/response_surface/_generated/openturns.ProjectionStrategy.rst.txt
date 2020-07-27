@@ -1,4 +1,4 @@
-ProjectionStrategy
+﻿ProjectionStrategy
 ============================
 
 .. currentmodule:: openturns

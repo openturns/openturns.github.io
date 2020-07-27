@@ -1,4 +1,4 @@
-BoundingVolumeHierarchy
+﻿BoundingVolumeHierarchy
 =================================
 
 .. currentmodule:: openturns

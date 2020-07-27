@@ -1,4 +1,4 @@
-Experiment
+﻿Experiment
 ====================
 
 .. currentmodule:: openturns

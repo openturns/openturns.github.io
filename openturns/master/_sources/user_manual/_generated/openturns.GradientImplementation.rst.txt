@@ -1,4 +1,4 @@
-GradientImplementation
+﻿GradientImplementation
 ================================
 
 .. currentmodule:: openturns

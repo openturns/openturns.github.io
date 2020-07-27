@@ -1,4 +1,4 @@
-KarhunenLoeveSVDAlgorithm
+﻿KarhunenLoeveSVDAlgorithm
 ===================================
 
 .. plot:: pyplots/KarhunenLoeveSVDAlgorithm.py

@@ -1,4 +1,4 @@
-VisualTest_DrawLinearModelResidual
+﻿VisualTest_DrawLinearModelResidual
 ============================================
 
 .. plot:: pyplots/VisualTest_DrawLinearModelResidual.py

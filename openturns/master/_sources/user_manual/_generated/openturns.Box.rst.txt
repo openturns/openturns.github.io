@@ -1,4 +1,4 @@
-Box
+﻿Box
 =============
 
 .. plot:: pyplots/Box.py

@@ -1,4 +1,4 @@
-SubsetSamplingResult
+﻿SubsetSamplingResult
 ==============================
 
 .. currentmodule:: openturns

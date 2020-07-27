@@ -1,4 +1,4 @@
-PlatformInfo
+﻿PlatformInfo
 ======================
 
 .. currentmodule:: openturns

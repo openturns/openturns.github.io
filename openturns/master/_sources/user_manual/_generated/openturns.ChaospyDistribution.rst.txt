@@ -1,4 +1,4 @@
-ChaospyDistribution
+﻿ChaospyDistribution
 =============================
 
 .. currentmodule:: openturns

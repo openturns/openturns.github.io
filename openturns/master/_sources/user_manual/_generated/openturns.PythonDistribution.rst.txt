@@ -1,4 +1,4 @@
-PythonDistribution
+﻿PythonDistribution
 ============================
 
 .. currentmodule:: openturns

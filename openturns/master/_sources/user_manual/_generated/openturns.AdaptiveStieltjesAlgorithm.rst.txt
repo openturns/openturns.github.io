@@ -1,4 +1,4 @@
-AdaptiveStieltjesAlgorithm
+﻿AdaptiveStieltjesAlgorithm
 ====================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-SpecFunc_LambertW
+﻿SpecFunc_LambertW
 ===========================
 
 .. currentmodule:: openturns

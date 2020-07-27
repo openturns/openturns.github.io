@@ -1,4 +1,4 @@
-LinearTaylor
+﻿LinearTaylor
 ======================
 
 .. currentmodule:: openturns

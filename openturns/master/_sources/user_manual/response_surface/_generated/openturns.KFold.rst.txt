@@ -1,4 +1,4 @@
-KFold
+﻿KFold
 ===============
 
 .. currentmodule:: openturns

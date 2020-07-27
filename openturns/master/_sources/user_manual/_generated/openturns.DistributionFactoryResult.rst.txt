@@ -1,4 +1,4 @@
-DistributionFactoryResult
+﻿DistributionFactoryResult
 ===================================
 
 .. currentmodule:: openturns

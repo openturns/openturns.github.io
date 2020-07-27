@@ -1,4 +1,4 @@
-FilteringWindows
+﻿FilteringWindows
 ==========================
 
 .. currentmodule:: openturns

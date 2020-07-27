@@ -1,4 +1,4 @@
-CorrelationMatrix
+﻿CorrelationMatrix
 ===========================
 
 .. currentmodule:: openturns

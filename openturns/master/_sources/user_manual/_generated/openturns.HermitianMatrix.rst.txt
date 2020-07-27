@@ -1,4 +1,4 @@
-HermitianMatrix
+﻿HermitianMatrix
 =========================
 
 .. currentmodule:: openturns

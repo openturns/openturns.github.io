@@ -1,4 +1,4 @@
-KarhunenLoeveProjection
+﻿KarhunenLoeveProjection
 =================================
 
 .. currentmodule:: openturns

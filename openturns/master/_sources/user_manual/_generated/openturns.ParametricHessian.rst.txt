@@ -1,4 +1,4 @@
-ParametricHessian
+﻿ParametricHessian
 ===========================
 
 .. currentmodule:: openturns

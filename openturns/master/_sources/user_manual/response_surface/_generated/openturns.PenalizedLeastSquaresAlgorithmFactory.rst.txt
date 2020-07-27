@@ -1,4 +1,4 @@
-PenalizedLeastSquaresAlgorithmFactory
+﻿PenalizedLeastSquaresAlgorithmFactory
 ===============================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-StationaryCovarianceModelFactory
+﻿StationaryCovarianceModelFactory
 ==========================================
 
 .. plot:: pyplots/StationaryCovarianceModelFactory.py

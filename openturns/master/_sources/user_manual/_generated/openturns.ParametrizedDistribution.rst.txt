@@ -1,4 +1,4 @@
-ParametrizedDistribution
+﻿ParametrizedDistribution
 ==================================
 
 .. currentmodule:: openturns

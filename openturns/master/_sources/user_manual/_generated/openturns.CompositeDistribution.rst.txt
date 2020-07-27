@@ -1,4 +1,4 @@
-CompositeDistribution
+﻿CompositeDistribution
 ===============================
 
 .. plot:: pyplots/CompositeDistribution.py

@@ -1,4 +1,4 @@
-SymbolicEvaluation
+﻿SymbolicEvaluation
 ============================
 
 .. currentmodule:: openturns

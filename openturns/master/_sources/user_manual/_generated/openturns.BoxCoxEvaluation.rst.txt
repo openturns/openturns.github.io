@@ -1,4 +1,4 @@
-BoxCoxEvaluation
+﻿BoxCoxEvaluation
 ==========================
 
 .. currentmodule:: openturns

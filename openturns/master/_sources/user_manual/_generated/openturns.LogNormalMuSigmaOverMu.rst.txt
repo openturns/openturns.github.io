@@ -1,4 +1,4 @@
-LogNormalMuSigmaOverMu
+﻿LogNormalMuSigmaOverMu
 ================================
 
 .. currentmodule:: openturns

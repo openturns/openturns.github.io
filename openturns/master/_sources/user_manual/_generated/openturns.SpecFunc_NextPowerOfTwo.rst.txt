@@ -1,4 +1,4 @@
-SpecFunc_NextPowerOfTwo
+﻿SpecFunc_NextPowerOfTwo
 =================================
 
 .. currentmodule:: openturns

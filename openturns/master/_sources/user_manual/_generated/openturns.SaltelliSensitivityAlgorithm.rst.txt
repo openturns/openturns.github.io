@@ -1,4 +1,4 @@
-SaltelliSensitivityAlgorithm
+﻿SaltelliSensitivityAlgorithm
 ======================================
 
 .. plot:: pyplots/SaltelliSensitivityAlgorithm.py

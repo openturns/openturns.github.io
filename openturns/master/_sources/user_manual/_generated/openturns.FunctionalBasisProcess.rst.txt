@@ -1,4 +1,4 @@
-FunctionalBasisProcess
+﻿FunctionalBasisProcess
 ================================
 
 .. plot:: pyplots/FunctionalBasisProcess.py

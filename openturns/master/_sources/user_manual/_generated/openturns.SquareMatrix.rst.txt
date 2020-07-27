@@ -1,4 +1,4 @@
-SquareMatrix
+﻿SquareMatrix
 ======================
 
 .. currentmodule:: openturns

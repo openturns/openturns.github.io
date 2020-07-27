@@ -1,4 +1,4 @@
-TranslationFunction
+﻿TranslationFunction
 =============================
 
 .. currentmodule:: openturns

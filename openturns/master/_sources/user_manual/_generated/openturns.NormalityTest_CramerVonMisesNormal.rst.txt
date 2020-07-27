@@ -1,4 +1,4 @@
-NormalityTest_CramerVonMisesNormal
+﻿NormalityTest_CramerVonMisesNormal
 ============================================
 
 .. currentmodule:: openturns

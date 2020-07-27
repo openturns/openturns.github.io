@@ -1,4 +1,4 @@
-MaximumEntropyOrderStatisticsDistribution
+﻿MaximumEntropyOrderStatisticsDistribution
 ===================================================
 
 .. plot:: pyplots/MaximumEntropyOrderStatisticsDistribution.py

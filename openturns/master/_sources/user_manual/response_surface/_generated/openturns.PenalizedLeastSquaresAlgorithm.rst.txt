@@ -1,4 +1,4 @@
-PenalizedLeastSquaresAlgorithm
+﻿PenalizedLeastSquaresAlgorithm
 ========================================
 
 .. currentmodule:: openturns

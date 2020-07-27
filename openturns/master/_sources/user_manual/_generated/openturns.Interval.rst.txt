@@ -1,4 +1,4 @@
-Interval
+﻿Interval
 ==================
 
 .. currentmodule:: openturns

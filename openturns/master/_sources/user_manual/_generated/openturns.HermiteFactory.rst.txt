@@ -1,4 +1,4 @@
-HermiteFactory
+﻿HermiteFactory
 ========================
 
 .. plot::

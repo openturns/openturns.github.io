@@ -1,4 +1,4 @@
-DatabaseFunction
+﻿DatabaseFunction
 ==========================
 
 .. currentmodule:: openturns

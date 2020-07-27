@@ -1,4 +1,4 @@
-MixtureClassifier
+﻿MixtureClassifier
 ===========================
 
 .. plot:: pyplots/MixtureClassifier.py

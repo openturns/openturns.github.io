@@ -1,4 +1,4 @@
-HypothesisTest_Spearman
+﻿HypothesisTest_Spearman
 =================================
 
 .. currentmodule:: openturns

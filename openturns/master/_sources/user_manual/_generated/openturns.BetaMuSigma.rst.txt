@@ -1,4 +1,4 @@
-BetaMuSigma
+﻿BetaMuSigma
 =====================
 
 .. currentmodule:: openturns

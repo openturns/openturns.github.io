@@ -1,4 +1,4 @@
-TaylorExpansionMoments
+﻿TaylorExpansionMoments
 ================================
 
 .. currentmodule:: openturns

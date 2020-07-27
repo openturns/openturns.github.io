@@ -187,21 +187,33 @@ The tools chosen for the development of the platform are:
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | **Category**                          | **Name**                                                  | **Version**       |
 +=======================================+===========================================================+===================+
-| Configuration                         | `CMake <https://cmake.org/>`_                             | 2.8.4             |
+| Configuration                         | `CMake <https://cmake.org/>`_                             | 3.2               |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
-| C/C++ compiler                        | `GCC <https://gcc.gnu.org/>`_                             | 3.3.5             |
+| C/C++ compiler (C99/C++11)            | `GCC <https://gcc.gnu.org/>`_                             | 4.8               |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | Linear algebra                        | `BLAS <http://www.netlib.org/blas/>`_                     | 3.0               |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | Linear algebra                        | `LAPACK <http://www.netlib.org/lapack/>`_                 | 3.0               |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
-| Linear algebra (optional)             | `HMat <https://github.com/jeromerobert/hmat-oss>`_        | 1.2               |
+| Linear algebra (optional)             | `HMat <https://github.com/jeromerobert/hmat-oss>`_        | 1.6               |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
-| Analytical parser (optional)          | `muParser <http://muparser.beltoforion.de/>`_             | 2.2.3             |
+| Linear algebra (optional)             | `Spectra <https://spectralib.org/>`_                      | 0.8.1             |
++---------------------------------------+-----------------------------------------------------------+-------------------+
+| Legacy analytical parser (optional)   | `muParser <http://muparser.beltoforion.de/>`_             | 2.2.3             |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | Special functions (optional)          | `Boost <http://www.boost.org/>`_                          | 1.46              |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | Optimization (optional)               | `NLopt <http://ab-initio.mit.edu/nlopt>`_                 | 2.4               |
++---------------------------------------+-----------------------------------------------------------+-------------------+
+| Optimization (optional)               | `CMinpack <http://devernay.free.fr/hacks/cminpack/>`_     | 1.3               |
++---------------------------------------+-----------------------------------------------------------+-------------------+
+| Optimization (optional)               | `Ceres Solver <http://ceres-solver.org>`_                 | 1.11              |
++---------------------------------------+-----------------------------------------------------------+-------------------+
+| Optimization (optional)               | `Dlib <http://dlib.net/>`_                                | 18.18             |
++---------------------------------------+-----------------------------------------------------------+-------------------+
+| Optimization (optional)               | `Bonmin <https://projects.coin-or.org/Bonmin>`_           | 1.8.7             |
++---------------------------------------+-----------------------------------------------------------+-------------------+
+| Optimization (optional)               | `Ipopt <https://coin-or.github.io/Ipopt/>`_               | 3.11.9            |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | CSV parser (optional)                 | flex                                                      | 2.5.33            |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
@@ -213,11 +225,11 @@ The tools chosen for the development of the platform are:
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | Python support                        | `Python <http://www.python.org/>`_                        | 2.6               |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
-| Plotting library (optional)           | `Matplotlib <http://matplotlib.org/>`_                    | 1.1               |
+| Plotting library (optional)           | `Matplotlib <http://matplotlib.org/>`_                    | 1.3.1             |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
-| C++/Python wrapper                    | `SWIG <http://www.swig.org/>`_                            | 2.0.9             |
+| Legacy plotting (optional)            | R                                                         | 2.0.1             |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
-| Statistics library (optional)         | R                                                         | 2.0.1             |
+| C++/Python wrapper                    | `SWIG <http://www.swig.org/>`_                            | 3.0.0             |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
 | Version control                       | `Git <https://git-scm.com/>`_                             | 2.5               |
 +---------------------------------------+-----------------------------------------------------------+-------------------+
@@ -235,12 +247,11 @@ The tools chosen for the development of the platform are:
 The versions given here are only meant as indications of minimum version and newer ones
 may be used.
 
+
 Compilation infrastructure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The historic autotools compilation infrastructure was replaced by CMake.
-CMake is a lot faster, and the resulting infrastructure is easier to
-maintain. It covers:
+The compilation infrastructure uses CMake, it covers:
 
 -  The detection and configuration aspects of the platform;
 
@@ -250,41 +261,42 @@ maintain. It covers:
 
 -  The regression tests.
 
-CMake could also provide a way to compile the Windows version using
-Microsoft compilers.
+
+Version control
+~~~~~~~~~~~~~~~
+
+The project uses Git version-control system.
+The code repositories are hosted on GitHub (https://github.com/openturns/).
+
+
+Continuous integration
+~~~~~~~~~~~~~~~~~~~~~~
+
+The git code repository is monitored for changes by automated builds,
+allowing developers to detect problems early.
+
+Each pull-request on the GitHub code repository triggers continuous integration
+jobs for the different target platforms to be run on several free
+continuous integration services:
+
+- CircleCI (https://circleci.com/) for Linux
+- Travis (https://travis-ci.org/) for macOS
+- AppVeyor (https://www.appveyor.com/) for Windows
+
+Each of these jobs checks that the library can be successfully compiled and
+that all unit tests pass. All jobs passing is one of the necessary conditions
+for the code to be integrated.
+
 
 Packaging
 ~~~~~~~~~
 
 The team officially provides binaries for the Debian operating system,
 and Windows. Note that is officially supported in Debian: it can be
-installed easily from the debian software repositories. Experimental
-packages may be available for some RPM-based distributions such as
+installed easily from the debian software repositories. Packages
+are also available for some RPM-based distributions such as
 Fedora, CentOS and openSUSE.
 
-Autobuilder
-~~~~~~~~~~~
-
-The project provides developers a continuous integration environment.
-It consists in an daemon monitoring the version control software for
-changes. It assumes new code to be involved in regression test. Also
-developers should regularly commit to the code base to ensure the origin
-of a problem is quickly detected.
-
-The autobuilder is triggered at each pull-request.
-
-The current test environment consists of the build on each of these
-platforms:
-
--  debian 6 x86\_64
-
--  debian 6 i686
-
--  mingw-w64 i686 (wine)
-
-The result of the autobuilder made public to anyone registered to the
-mailing list ``commits@openturns.org``. A summary of each build is
-provided by mail with links to the logs stored on the server.
 
 Design patterns
 ---------------
@@ -412,17 +424,6 @@ the object.
 .. figure:: Figures/modeling_notions/composite.png
    :alt: Composite structure.
 
-Figure [fig:composite\_tree] shows an example of tree modeled by the
-Composite. The Composite objects make up the tree nodes whereas the
-leaves can be any concrete object deriving from Component.
-
-.. figure:: Figures/modeling_notions/composite_tree.png
-   :alt: Example of tree modeled by the Composite.
-
-The Composite pattern is an essential element of the design model for
-the  platform. It can be used to model numerical function composition,
-random vector composition, etc. It can be found in several aspects of
-the modeling brick. Any related objects tree structure can rely on the
-Composite pattern with benefit. For example, the classes
-ComposedDistribution, CompositeRandomVector,
-ComposedFunction follow this pattern.
+The Composite pattern is an essential element of the design model for the platform.
+It can be found in several modeling bricks, such as function composition (ComposedFunction)
+random vector composition (CompositeRandomVector), joint distributions (ComposedDistribution), etc.

@@ -1,4 +1,4 @@
-GaussProductExperiment
+﻿GaussProductExperiment
 ================================
 
 .. plot:: pyplots/GaussProductExperiment.py

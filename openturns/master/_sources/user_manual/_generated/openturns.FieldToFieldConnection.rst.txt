@@ -1,4 +1,4 @@
-FieldToFieldConnection
+﻿FieldToFieldConnection
 ================================
 
 .. currentmodule:: openturns

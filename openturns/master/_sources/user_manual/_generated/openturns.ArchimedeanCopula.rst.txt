@@ -1,4 +1,4 @@
-ArchimedeanCopula
+﻿ArchimedeanCopula
 ===========================
 
 .. currentmodule:: openturns

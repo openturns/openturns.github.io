@@ -1,4 +1,4 @@
-NearestPointChecker
+﻿NearestPointChecker
 =============================
 
 .. currentmodule:: openturns

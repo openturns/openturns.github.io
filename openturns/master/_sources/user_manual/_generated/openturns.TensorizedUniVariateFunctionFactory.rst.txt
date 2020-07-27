@@ -1,4 +1,4 @@
-TensorizedUniVariateFunctionFactory
+﻿TensorizedUniVariateFunctionFactory
 =============================================
 
 .. currentmodule:: openturns

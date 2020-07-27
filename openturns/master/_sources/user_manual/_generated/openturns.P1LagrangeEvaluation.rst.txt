@@ -1,4 +1,4 @@
-P1LagrangeEvaluation
+﻿P1LagrangeEvaluation
 ==============================
 
 .. currentmodule:: openturns

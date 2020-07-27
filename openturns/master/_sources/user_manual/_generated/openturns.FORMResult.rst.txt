@@ -1,4 +1,4 @@
-FORMResult
+﻿FORMResult
 ====================
 
 .. currentmodule:: openturns

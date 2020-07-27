@@ -1,4 +1,4 @@
-HypothesisTest_PartialSpearman
+﻿HypothesisTest_PartialSpearman
 ========================================
 
 .. currentmodule:: openturns

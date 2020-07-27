@@ -1,4 +1,4 @@
-ConditionedGaussianProcess
+﻿ConditionedGaussianProcess
 ====================================
 
 .. currentmodule:: openturns

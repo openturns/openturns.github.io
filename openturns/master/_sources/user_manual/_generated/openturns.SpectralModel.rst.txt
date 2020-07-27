@@ -1,4 +1,4 @@
-SpectralModel
+﻿SpectralModel
 =======================
 
 .. currentmodule:: openturns

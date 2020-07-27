@@ -1,4 +1,4 @@
-ApproximationAlgorithm
+﻿ApproximationAlgorithm
 ================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-Function
+﻿Function
 ==================
 
 .. currentmodule:: openturns

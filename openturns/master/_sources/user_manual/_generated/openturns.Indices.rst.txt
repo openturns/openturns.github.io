@@ -1,4 +1,4 @@
-Indices
+﻿Indices
 =================
 
 .. currentmodule:: openturns

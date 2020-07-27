@@ -1,4 +1,4 @@
-Wilks
+﻿Wilks
 ===============
 
 .. currentmodule:: openturns

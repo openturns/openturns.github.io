@@ -1,4 +1,4 @@
-BipartiteGraph
+﻿BipartiteGraph
 ========================
 
 .. plot:: pyplots/BipartiteGraph.py

@@ -1,4 +1,4 @@
-Study
+﻿Study
 ===============
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-DualLinearCombinationFunction
+﻿DualLinearCombinationFunction
 =======================================
 
 .. currentmodule:: openturns

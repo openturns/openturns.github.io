@@ -1,4 +1,4 @@
-SpecFunc_IsNormal
+﻿SpecFunc_IsNormal
 ===========================
 
 .. currentmodule:: openturns

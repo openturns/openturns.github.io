@@ -1,4 +1,4 @@
-MemoizeFunction
+﻿MemoizeFunction
 =========================
 
 .. currentmodule:: openturns

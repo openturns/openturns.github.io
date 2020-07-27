@@ -1,4 +1,4 @@
-BoolCollection
+﻿BoolCollection
 ========================
 
 .. currentmodule:: openturns

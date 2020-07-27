@@ -1,4 +1,4 @@
-FittingAlgorithm
+﻿FittingAlgorithm
 ==========================
 
 .. currentmodule:: openturns

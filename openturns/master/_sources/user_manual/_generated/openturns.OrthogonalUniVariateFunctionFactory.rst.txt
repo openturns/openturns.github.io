@@ -1,4 +1,4 @@
-OrthogonalUniVariateFunctionFactory
+﻿OrthogonalUniVariateFunctionFactory
 =============================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-TTY
+﻿TTY
 =============
 
 .. currentmodule:: openturns

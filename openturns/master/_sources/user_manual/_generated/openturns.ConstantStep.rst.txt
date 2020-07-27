@@ -1,4 +1,4 @@
-ConstantStep
+﻿ConstantStep
 ======================
 
 .. currentmodule:: openturns

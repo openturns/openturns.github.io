@@ -1,4 +1,4 @@
-CorrelationAnalysis_PRCC
+﻿CorrelationAnalysis_PRCC
 ==================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-SpecFunc_RegularizedIncompleteGamma
+﻿SpecFunc_RegularizedIncompleteGamma
 =============================================
 
 .. currentmodule:: openturns

@@ -1,4 +1,4 @@
-StationaryCovarianceModel
+﻿StationaryCovarianceModel
 ===================================
 
 .. currentmodule:: openturns

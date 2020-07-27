@@ -1,4 +1,4 @@
-GumbelMuSigma
+﻿GumbelMuSigma
 =======================
 
 .. currentmodule:: openturns

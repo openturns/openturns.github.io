@@ -1,4 +1,4 @@
-LinearCombinationEvaluation
+﻿LinearCombinationEvaluation
 =====================================
 
 .. currentmodule:: openturns

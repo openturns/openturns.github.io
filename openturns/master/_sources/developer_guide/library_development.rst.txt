@@ -31,22 +31,8 @@ Or, you can pick up a stable version tarball:
 
 ::
 
-    wget https://github.com/openturns/openturns/archive/v1.7.tar.gz
-    tar xjf v1.7.tar.gz
-    cd openturns-1.7
-
-You may want to install the provided R package enabling additional
-statistical capabilities:
-
-::
-
-    R CMD INSTALL utils/rot_1.4.6.tar.gz
-
-You can verify it’s correct installation by typing:
-
-::
-
-    R --vanilla <<< 'library(rot)'
+    curl -L https://github.com/openturns/openturns/archive/v1.15.tar.gz | tar xz
+    cd openturns-1.12
 
 Build openturns
 ~~~~~~~~~~~~~~~
@@ -207,7 +193,7 @@ Second, add your class to the Python interface
        designPoint : float sequence
            Design point in the standard space resulting from the optimization
            algorithm.
-       limitStateVariable : :class:`~openturns.Event`
+       limitStateVariable : :class:`~openturns.RandomVector`
            Event of which the probability is calculated.
        isInFailureSpace : bool
            Indicates whether the origin of the standard space is in the failure space.
@@ -304,7 +290,7 @@ by the following template:
     #
     #  CMakeLists.txt
     #
-    #  Copyright 2005-2018 Airbus-EDF-IMACS-Phimeca
+    #  Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca
     #
     #  This library is free software: you can redistribute it and/or modify
     #  it under the terms of the GNU Lesser General Public License as published by
@@ -347,32 +333,23 @@ where sources can be browsed.
 .. figure:: Figures/BrowseSource.png
    :alt: GitHub interface: the source browser
 
-Trac
-~~~~
+Bug tracking
+~~~~~~~~~~~~
 
-Trac is an open source, web-based project management and bug-tracking
-tool. Trac allows hyperlinking information between a bug database,
-revision control and wiki content. It also serves as a web interface to
-several revision control systems including Subversion.
+GitHub’s tracker is called *Issues*, and has its own section in every repository.
 
-The `timeline <http://trac.openturns.org/timeline>`_ lists the
-recent changes ticket database and wiki pages:
-
-.. figure:: Figures/Timeline.png
-   :alt: Trac interface: the timeline
-
-Trac provides a `bug-tracker <http://trac.openturns.org/report>`_.
-The snapshot shows the list of active tickets.
+The snapshot of the library `bug-tracker <https://github.com/openturns/openturns/issues>`_
+shows the list of active tickets:
 
 .. figure:: Figures/Tickets1.png
-   :alt: Trac interface: the ticket report view
+   :alt: GitHub interface: the ticket browser
 
 Each ticket features attributes to help classification, interactive
 comments and file attachment. This snapshot exposes the details
 of a ticket:
 
 .. figure:: Figures/Tickets2.png
-   :alt: Trac interface: details of a ticket report
+   :alt: GitHub interface: details of a ticket report
 
 Other requirements
 ------------------
@@ -416,6 +393,56 @@ implications on the ergonomics and the design of the User Interface,
 particularly the GUI which should offer keyboard shortcuts for any
 available function as well as keyboard-based (rather than mouse-based)
 mechanisms to handle and select objects.
+
+Profiling
+~~~~~~~~~
+
+`Flame Graphs <http://www.brendangregg.com/flamegraphs.html>`_ can help visualize
+where your functions spends the most time. Here are some commands to profile your
+code paths using the `perf <https://perf.wiki.kernel.org/index.php/Main_Page>`_ tool
+and generate the associated graph with `FlameGraph <https://github.com/brendangregg/FlameGraph>`_.
+
+.. figure:: Figures/perf_welch.png
+   :alt: Flame graph of WelchFactory
+
+First retrieve the graphing scripts:
+
+::
+
+    git clone https://github.com/brendangregg/FlameGraph.git /tmp/FlameGraph
+
+You will need to build without parallelization and with debug flags:
+
+::
+
+    cmake -DUSE_TBB=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer" .
+
+You will also want to disable openblas threads or openmp at any other level:
+
+::
+
+    export OMP_NUM_THREADS=1
+
+Now you are ready to profile your executable:
+
+::
+
+    perf record --call-graph dwarf -o /tmp/perf.data ./lib/test/t_WelchFactory_std
+
+Some Linux distros prevent normal users from collecting stats, in that case:
+
+::
+
+    # echo "-1"  > /proc/sys/kernel/perf_event_paranoid
+    # echo 0 > /proc/sys/kernel/kptr_restrict
+
+At this point you should be able to generate the graph from the perf data:
+
+::
+
+    perf script -i /tmp/perf.data | /tmp/FlameGraph/stackcollapse-perf.pl | /tmp/FlameGraph/flamegraph.pl > /tmp/perf.svg
+
+
 
 .. [1]
    English has been chosen as the native language for the platform.

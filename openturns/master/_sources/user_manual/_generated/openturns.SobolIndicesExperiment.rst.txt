@@ -1,4 +1,4 @@
-SobolIndicesExperiment
+﻿SobolIndicesExperiment
 ================================
 
 .. currentmodule:: openturns

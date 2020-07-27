@@ -1,4 +1,4 @@
-StorageManager
+﻿StorageManager
 ========================
 
 .. currentmodule:: openturns

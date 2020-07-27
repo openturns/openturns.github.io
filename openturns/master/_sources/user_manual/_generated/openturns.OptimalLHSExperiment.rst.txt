@@ -1,4 +1,4 @@
-OptimalLHSExperiment
+﻿OptimalLHSExperiment
 ==============================
 
 .. currentmodule:: openturns

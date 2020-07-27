@@ -1,4 +1,4 @@
-RandomDirection
+﻿RandomDirection
 =========================
 
 .. currentmodule:: openturns

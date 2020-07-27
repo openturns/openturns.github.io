@@ -1,4 +1,4 @@
-VisualTest_DrawLinearModel
+﻿VisualTest_DrawLinearModel
 ====================================
 
 .. plot:: pyplots/VisualTest_DrawLinearModel.py

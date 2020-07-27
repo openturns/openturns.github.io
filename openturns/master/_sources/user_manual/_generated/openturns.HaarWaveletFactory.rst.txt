@@ -1,4 +1,4 @@
-HaarWaveletFactory
+﻿HaarWaveletFactory
 ============================
 
 .. plot::

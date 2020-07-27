@@ -1,4 +1,4 @@
-SimulationResult
+﻿SimulationResult
 ==========================
 
 .. currentmodule:: openturns
