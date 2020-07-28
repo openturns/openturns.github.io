@@ -73,7 +73,6 @@
 <li><a class="reference internal" href="#Thanks-to">Thanks to</a></li>
 <li><a class="reference internal" href="#References">References</a></li>
 <li><a class="reference internal" href="#Generate-the-observations">Generate the observations</a></li>
-<li><a class="reference internal" href="#A-calibration-analysis-class">A calibration analysis class</a></li>
 <li><a class="reference internal" href="#Set-the-calibration-parameters">Set the calibration parameters</a></li>
 <li><a class="reference internal" href="#Calibration-with-linear-least-squares">Calibration with linear least squares</a></li>
 <li><a class="reference internal" href="#Analysis-of-the-results">Analysis of the results</a></li>
@@ -185,20 +184,33 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 7ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
-    text-align: right;
-    flex: 0;
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
 }
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
 @media (max-width: 540px) {
     div.nbinput.container div.prompt,
     div.nboutput.container div.prompt {
+        width: unset;
         text-align: left;
         padding: 0.4em;
     }
     div.nboutput.container div.prompt.empty {
         padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
     }
 }
 
@@ -291,7 +303,7 @@ div.nboutput.container div.output_area div[class*=highlight].math,
 div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
+    padding: 5px;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -507,11 +519,11 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area rendered_html docutils container">
 <TABLE><TR><TD></TD><TH>y0</TH></TR>
-<TR><TD>0</TD><TD>848051716.1855512</TD></TR>
-<TR><TD>1</TD><TD>876763726.8422453</TD></TR>
-<TR><TD>2</TD><TD>774845768.8873012</TD></TR>
-<TR><TD>3</TD><TD>756186139.4613488</TD></TR>
-<TR><TD>4</TD><TD>809312377.4983335</TD></TR>
+<TR><TH>0</TH><TD>8.480517e+08</TD></TR>
+<TR><TH>1</TH><TD>8.767637e+08</TD></TR>
+<TR><TH>2</TH><TD>7.748458e+08</TD></TR>
+<TR><TH>3</TH><TD>7.561861e+08</TD></TR>
+<TR><TH>4</TH><TD>8.093124e+08</TD></TR>
 </TABLE></div>
 </div>
 <p>Plot the histogram of the output.</p>
@@ -579,331 +591,11 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 </div>
-<div class="section" id="A-calibration-analysis-class">
-<h2>A calibration analysis class<a class="headerlink" href="#A-calibration-analysis-class" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">A graphics class to analyze the results of calibration.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
-<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
-
-<span class="k">class</span> <span class="nc">CalibrationAnalysis</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">calibrationResult</span><span class="p">,</span><span class="n">model</span><span class="p">,</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots the prior and posterior distribution of the calibrated parameter theta.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        calibrationResult : :class:`~openturns.calibrationResult`</span>
-<span class="sd">            The result of a calibration.</span>
-
-<span class="sd">        model : 2-d sequence of float</span>
-<span class="sd">            The function to calibrate.</span>
-
-<span class="sd">        inputObservations : :class:`~openturns.Sample`</span>
-<span class="sd">            The sample of input values of the model linked to the observations.</span>
-
-<span class="sd">        outputObservations : 2-d sequence of float</span>
-<span class="sd">            The sample of output values of the model linked to the observations.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span> <span class="o">=</span> <span class="n">calibrationResult</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span> <span class="o">=</span> <span class="n">inputObservations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span> <span class="o">=</span> <span class="n">outputObservations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span> <span class="o">=</span> <span class="mi">6</span> <span class="c1"># inch</span>
-        <span class="c1"># Compute yAtPrior</span>
-        <span class="n">meanPrior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPrior</span><span class="p">()</span><span class="o">.</span><span class="n">getMean</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">meanPrior</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="o">=</span><span class="n">model</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">)</span>
-        <span class="c1"># Compute yAtPosterior</span>
-        <span class="n">meanPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span><span class="o">.</span><span class="n">getMean</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">meanPosterior</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="o">=</span><span class="n">model</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">drawParameterDistributions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots the prior and posterior distribution of the calibrated parameter theta.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">thetaPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPrior</span><span class="p">()</span>
-        <span class="n">thetaDescription</span> <span class="o">=</span> <span class="n">thetaPrior</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-        <span class="n">thetaPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
-        <span class="n">thetaDim</span> <span class="o">=</span> <span class="n">thetaPosterior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">thetaDim</span><span class="p">):</span>
-            <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">thetaDescription</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
-            <span class="c1"># Prior distribution</span>
-            <span class="n">thetaPrior_i</span> <span class="o">=</span> <span class="n">thetaPrior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="n">priorPDF</span> <span class="o">=</span> <span class="n">thetaPrior_i</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-            <span class="n">priorPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">])</span>
-            <span class="n">priorPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Prior&quot;</span><span class="p">])</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">priorPDF</span><span class="p">)</span>
-            <span class="c1"># Posterior distribution</span>
-            <span class="n">thetaPosterior_i</span> <span class="o">=</span> <span class="n">thetaPosterior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="n">postPDF</span> <span class="o">=</span> <span class="n">thetaPosterior_i</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-            <span class="n">postPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">])</span>
-            <span class="n">postPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Posterior&quot;</span><span class="p">])</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">postPDF</span><span class="p">)</span>
-            <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            If the prior is a Dirac, set the vertical axis bounds to the posterior.</span>
-<span class="sd">            Otherwise, the Dirac set to [0,1], where the 1 can be much larger</span>
-<span class="sd">            than the maximum PDF of the posterior.</span>
-<span class="sd">            &#39;&#39;&#39;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">thetaPrior_i</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">==</span><span class="s2">&quot;Dirac&quot;</span><span class="p">):</span>
-                <span class="c1"># The vertical (PDF) bounds of the posterior</span>
-                <span class="n">postbb</span> <span class="o">=</span> <span class="n">postPDF</span><span class="o">.</span><span class="n">getBoundingBox</span><span class="p">()</span>
-                <span class="n">pdf_upper</span> <span class="o">=</span> <span class="n">postbb</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">pdf_lower</span> <span class="o">=</span> <span class="n">postbb</span><span class="o">.</span><span class="n">getLowerBound</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="c1"># Set these bounds to the graph</span>
-                <span class="n">bb</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">getBoundingBox</span><span class="p">()</span>
-                <span class="n">graph_upper</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()</span>
-                <span class="n">graph_upper</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf_upper</span>
-                <span class="n">bb</span><span class="o">.</span><span class="n">setUpperBound</span><span class="p">(</span><span class="n">graph_upper</span><span class="p">)</span>
-                <span class="n">graph_lower</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">getLowerBound</span><span class="p">()</span>
-                <span class="n">graph_lower</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf_lower</span>
-                <span class="n">bb</span><span class="o">.</span><span class="n">setLowerBound</span><span class="p">(</span><span class="n">graph_lower</span><span class="p">)</span>
-                <span class="n">graph</span><span class="o">.</span><span class="n">setBoundingBox</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span>
-            <span class="c1"># Add it to the graphics</span>
-            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">thetaDim</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">fig</span>
-
-    <span class="k">def</span> <span class="nf">drawObservationsVsPredictions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots the output of the model depending</span>
-<span class="sd">        on the output observations before and after calibration.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">ySize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-        <span class="n">yDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;Observations&quot;</span><span class="p">,</span><span class="s2">&quot;Predictions&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
-        <span class="c1"># Plot the diagonal</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">ySize</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">outputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="o">*</span><span class="n">yDim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yDim</span><span class="p">):</span>
-                <span class="n">outputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
-                <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">yDim</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="n">graph</span>
-
-    <span class="k">def</span> <span class="nf">_drawObservationsVsPredictions1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots the output of the model depending</span>
-<span class="sd">        on the output observations before and after calibration.</span>
-<span class="sd">        Can manage only 1D samples.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">yDim</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">ydescription</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-        <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> Observations&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> Predictions&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">xlabel</span><span class="p">,</span><span class="n">ylabel</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
-        <span class="c1"># Plot the diagonal</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span> <span class="n">outputObservations</span><span class="p">)</span>
-            <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span><span class="p">)</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output observations are not 1D.&#39;</span><span class="p">)</span>
-        <span class="c1"># Plot the predictions before</span>
-        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yPriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span> <span class="n">outputAtPrior</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Prior&quot;</span><span class="p">)</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output prior predictions are not 1D.&#39;</span><span class="p">)</span>
-        <span class="c1"># Plot the predictions after</span>
-        <span class="n">yPosteriorDim</span> <span class="o">=</span> <span class="n">outputAtPosterior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yPosteriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span> <span class="n">outputAtPosterior</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Posterior&quot;</span><span class="p">)</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output posterior predictions are not 1D.&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">graph</span>
-
-    <span class="k">def</span> <span class="nf">drawResiduals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plot the distribution of the residuals and</span>
-<span class="sd">        the distribution of the observation errors.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ySize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-        <span class="n">yDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">yPriorSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">observationsError</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
-            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawResiduals1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsError</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">ySize</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">outputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">observationsError</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
-            <span class="c1"># In this case, we cannot draw observationsError ; just</span>
-            <span class="c1"># pass the required input argument, but it is not actually used.</span>
-            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawResiduals1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsError</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">observationsError</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
-            <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="o">*</span><span class="n">yDim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yDim</span><span class="p">):</span>
-                <span class="n">outputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">observationsErrorYi</span> <span class="o">=</span> <span class="n">observationsError</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-                <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawResiduals1Dimension</span><span class="p">(</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsErrorYi</span><span class="p">)</span>
-                <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">yDim</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">graph</span>
-
-    <span class="k">def</span> <span class="nf">_drawResiduals1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">,</span><span class="n">observationsError</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plot the distribution of the residuals and</span>
-<span class="sd">        the distribution of the observation errors.</span>
-<span class="sd">        Can manage only 1D samples.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ydescription</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-        <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> Residuals&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Residuals analysis&quot;</span><span class="p">,</span><span class="n">xlabel</span><span class="p">,</span><span class="s2">&quot;Probability distribution function&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
-        <span class="n">yDim</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">yPosteriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">yPriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">posteriorResiduals</span> <span class="o">=</span> <span class="n">outputObservations</span> <span class="o">-</span> <span class="n">outputAtPrior</span>
-            <span class="n">kernel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
-            <span class="n">fittedDist</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">posteriorResiduals</span><span class="p">)</span>
-            <span class="n">residualPDF</span> <span class="o">=</span> <span class="n">fittedDist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">])</span>
-            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Prior&quot;</span><span class="p">])</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">residualPDF</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output prior observations are not 1D.&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">yPosteriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">posteriorResiduals</span> <span class="o">=</span> <span class="n">outputObservations</span> <span class="o">-</span> <span class="n">outputAtPosterior</span>
-            <span class="n">kernel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
-            <span class="n">fittedDist</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">posteriorResiduals</span><span class="p">)</span>
-            <span class="n">residualPDF</span> <span class="o">=</span> <span class="n">fittedDist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">])</span>
-            <span class="n">residualPDF</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Posterior&quot;</span><span class="p">])</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">residualPDF</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output posterior observations are not 1D.&#39;</span><span class="p">)</span>
-        <span class="c1"># Plot the distribution of the observation errors</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">observationsError</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="c1"># In the other case, we just do not plot</span>
-            <span class="n">obserrgraph</span> <span class="o">=</span> <span class="n">observationsError</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-            <span class="n">obserrgraph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span><span class="p">])</span>
-            <span class="n">obserrgraph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Observation errors&quot;</span><span class="p">])</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">obserrgraph</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">graph</span>
-
-    <span class="k">def</span> <span class="nf">drawObservationsVsInputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots the observed output of the model depending</span>
-<span class="sd">        on the observed input before and after calibration.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">xSize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-        <span class="n">ySize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-        <span class="n">xDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">yDim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">xdescription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-        <span class="n">ydescription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-        <span class="c1"># Observations</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">xDim</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">xSize</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ySize</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">inputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">outputObservations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">xDim</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">,</span> <span class="n">yDim</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">unitlength</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xDim</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yDim</span><span class="p">):</span>
-                    <span class="n">k</span> <span class="o">=</span> <span class="n">xDim</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="n">i</span>
-                    <span class="n">inputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputObservations</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span>
-                    <span class="n">outputObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputObservations</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span>
-                    <span class="n">outputAtPrior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPrior</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span>
-                    <span class="n">outputAtPosterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputAtPosterior</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span>
-                    <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
-                    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">yDim</span><span class="p">,</span> <span class="n">xDim</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="n">_</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">graph</span>
-
-    <span class="k">def</span> <span class="nf">_drawObservationsVsInputs1Dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plots the observed output of the model depending</span>
-<span class="sd">        on the observed input before and after calibration.</span>
-<span class="sd">        Can manage only 1D samples.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">xDim</span> <span class="o">=</span> <span class="n">inputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">xDim</span><span class="o">!=</span><span class="mi">1</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Input observations are not 1D.&#39;</span><span class="p">)</span>
-        <span class="n">yDim</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="n">xdescription</span> <span class="o">=</span> <span class="n">inputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-        <span class="n">ydescription</span> <span class="o">=</span> <span class="n">outputObservations</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">xdescription</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ydescription</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="kc">True</span><span class="p">,</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
-        <span class="c1"># Observations</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputObservations</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observationColor</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output observations are not 1D.&#39;</span><span class="p">)</span>
-        <span class="c1"># Model outputs before calibration</span>
-        <span class="n">yPriorDim</span> <span class="o">=</span> <span class="n">outputAtPrior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yPriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputAtPrior</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priorColor</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Prior&quot;</span><span class="p">)</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output prior predictions are not 1D.&#39;</span><span class="p">)</span>
-        <span class="c1"># Model outputs after calibration</span>
-        <span class="n">yPosteriorDim</span> <span class="o">=</span> <span class="n">outputAtPosterior</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">yPosteriorDim</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputObservations</span><span class="p">,</span><span class="n">outputAtPosterior</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriorColor</span><span class="p">)</span>
-            <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Posterior&quot;</span><span class="p">)</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output posterior predictions are not 1D.&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">graph</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="section" id="Set-the-calibration-parameters">
 <h2>Set the calibration parameters<a class="headerlink" href="#Set-the-calibration-parameters" title="Permalink to this headline">¶</a></h2>
 <p>Define the value of the reference values of the <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta" style="vertical-align: 0px"/> parameter. In the bayesian framework, this is called the mean of the <em>prior</em> gaussian distribution. In the data assimilation framework, this is called the <em>background</em>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -917,7 +609,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>The following statement create the calibrated function from the model. The calibrated parameters <code class="docutils literal notranslate"><span class="pre">R</span></code>, <code class="docutils literal notranslate"><span class="pre">C</span></code>, <code class="docutils literal notranslate"><span class="pre">Gamma</span></code> are at indices 1, 2, 3 in the inputs arguments of the model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -931,7 +623,7 @@ div.rendered_html tbody tr:hover {
 <h2>Calibration with linear least squares<a class="headerlink" href="#Calibration-with-linear-least-squares" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">LinearLeastSquaresCalibration</span></code> class performs the linear least squares calibration by linearizing the model in the neighbourhood of the reference point.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -941,7 +633,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method computes the solution of the problem.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -950,7 +642,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -963,7 +655,7 @@ div.rendered_html tbody tr:hover {
 <h2>Analysis of the results<a class="headerlink" href="#Analysis-of-the-results" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">getParameterMAP</span></code> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -973,7 +665,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -981,7 +673,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -991,7 +683,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1000,23 +692,51 @@ div.rendered_html tbody tr:hover {
 [-530.441, 551.114]</p></div>
 </div>
 <p>We can see that the <code class="docutils literal notranslate"><span class="pre">Gamma</span></code> parameter has a large confidence interval : even the sign of the parameter is unknown. The parameter which is calibrated with the smallest confidence interval is <code class="docutils literal notranslate"><span class="pre">R</span></code>, which confidence interval is [708.3,780.0] (MPa). This is why this parameter seems the most important in this case.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_chaboche_36_0.png" src="../../_images/examples_calibration_calibration_chaboche_36_0.png" />
+</div>
+</div>
+<p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span> <span class="o">=</span> <span class="n">CalibrationAnalysis</span><span class="p">(</span><span class="n">calibrationResult</span><span class="p">,</span> <span class="n">mycf</span><span class="p">,</span> <span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">)</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_chaboche_38_0.png" src="../../_images/examples_calibration_calibration_chaboche_38_0.png" />
+</div>
+</div>
+<p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
-<span class="n">graph</span>
+<span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+<span class="n">observationError</span>
 </pre></div>
 </div>
 </div>
@@ -1024,17 +744,17 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_39_0.png" src="../../_images/examples_calibration_calibration_chaboche_39_0.png" />
+<div class="output_area rendered_html docutils container">
+<p>Normal(mu = 0, sigma = 1.10416e+07)</p></div>
 </div>
-</div>
-<p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
 </pre></div>
 </div>
 </div>
@@ -1046,59 +766,23 @@ div.rendered_html tbody tr:hover {
 <img alt="../../_images/examples_calibration_calibration_chaboche_41_0.png" src="../../_images/examples_calibration_calibration_chaboche_41_0.png" />
 </div>
 </div>
-<p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
-<span class="n">observationError</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<p>Normal(mu = 0, sigma = 1.10416e+07)</p></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
-<span class="n">graph</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_44_0.png" src="../../_images/examples_calibration_calibration_chaboche_44_0.png" />
-</div>
-</div>
 <p>The analysis of the residuals shows that the distribution is centered on zero and symmetric. This indicates that the calibration performed well.</p>
 <p>Moreover, the distribution of the residuals is close to being gaussian.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_46_0.png" src="../../_images/examples_calibration_calibration_chaboche_46_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_43_0.png" src="../../_images/examples_calibration_calibration_chaboche_43_0.png" />
 </div>
 </div>
 </div>
@@ -1106,7 +790,7 @@ div.rendered_html tbody tr:hover {
 <h2>Calibration with nonlinear least squares<a class="headerlink" href="#Calibration-with-nonlinear-least-squares" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">NonLinearLeastSquaresCalibration</span></code> class performs the non linear least squares calibration by minimizing the squared euclidian norm between the predictions and the observations.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1116,7 +800,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method computes the solution of the problem.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1125,7 +809,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1138,7 +822,7 @@ div.rendered_html tbody tr:hover {
 <h2>Analysis of the results<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">getParameterMAP</span></code> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1148,15 +832,15 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>[7.48444e+08,2.74804e+09,9.78149]</p></div>
+<p>[7.49161e+08,2.68929e+09,9.19248]</p></div>
 </div>
 <p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1166,32 +850,76 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>[7.40173e+08, 7.57679e+08]<br>
-[2.11479e+09, 3.48123e+09]<br>
-[2.9595, 17.3487]</p></div>
+<p>[7.39711e+08, 7.57777e+08]<br>
+[2.15925e+09, 3.47188e+09]<br>
+[3.34419, 17.2225]</p></div>
 </div>
 <p>We can see that all three parameters are estimated with a large confidence interval.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_chaboche_56_0.png" src="../../_images/examples_calibration_calibration_chaboche_56_0.png" />
+</div>
+</div>
+<p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_calibration_calibration_chaboche_58_0.png" src="../../_images/examples_calibration_calibration_chaboche_58_0.png" />
+</div>
+</div>
+<p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span> <span class="o">=</span> <span class="n">CalibrationAnalysis</span><span class="p">(</span><span class="n">calibrationResult</span><span class="p">,</span><span class="n">mycf</span><span class="p">,</span> <span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">)</span>
+<span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+<span class="n">observationError</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<p>Normal(mu = -6381.93, sigma = 1.09931e+07)</p></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
-<span class="n">graph</span>
+<span></span><span class="n">observationError</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1200,16 +928,17 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_60_0.png" src="../../_images/examples_calibration_calibration_chaboche_60_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_61_0.png" src="../../_images/examples_calibration_calibration_chaboche_61_0.png" />
 </div>
 </div>
-<p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">graph</span>
 </pre></div>
 </div>
 </div>
@@ -1221,76 +950,23 @@ div.rendered_html tbody tr:hover {
 <img alt="../../_images/examples_calibration_calibration_chaboche_62_0.png" src="../../_images/examples_calibration_calibration_chaboche_62_0.png" />
 </div>
 </div>
-<p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
-<span class="n">observationError</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<p>Normal(mu = 3573.98, sigma = 1.09955e+07)</p></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">observationError</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_65_0.png" src="../../_images/examples_calibration_calibration_chaboche_65_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
-<span class="n">graph</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_66_0.png" src="../../_images/examples_calibration_calibration_chaboche_66_0.png" />
-</div>
-</div>
 <p>The analysis of the residuals shows that the distribution is centered on zero and symmetric. This indicates that the calibration performed well.</p>
 <p>Moreover, the distribution of the residuals is close to being gaussian. This indicates that the observation error might be gaussian.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_68_0.png" src="../../_images/examples_calibration_calibration_chaboche_68_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_64_0.png" src="../../_images/examples_calibration_calibration_chaboche_64_0.png" />
 </div>
 </div>
 </div>
@@ -1298,7 +974,7 @@ div.rendered_html tbody tr:hover {
 <h2>Gaussian calibration parameters<a class="headerlink" href="#Gaussian-calibration-parameters" title="Permalink to this headline">¶</a></h2>
 <p>The standard deviation of the observations errors.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1308,7 +984,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>Define the covariance matrix of the output Y of the model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1319,7 +995,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>Define the covariance matrix of the parameters <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta" style="vertical-align: 0px"/> to calibrate.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1330,7 +1006,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1343,7 +1019,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1356,7 +1032,7 @@ div.rendered_html tbody tr:hover {
 <h2>Gaussian linear calibration<a class="headerlink" href="#Gaussian-linear-calibration" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code> class performs the gaussian linear calibration by linearizing the model in the neighbourhood of the prior.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1366,7 +1042,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method computes the solution of the problem.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1375,7 +1051,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1388,7 +1064,7 @@ div.rendered_html tbody tr:hover {
 <h2>Analysis of the results<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">getParameterMAP</span></code> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1398,7 +1074,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1406,7 +1082,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1416,7 +1092,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1425,56 +1101,47 @@ div.rendered_html tbody tr:hover {
 [6.45772, 9.8591]</p></div>
 </div>
 <p>We can see that all three parameters are estimated with a large confidence interval.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span> <span class="o">=</span> <span class="n">CalibrationAnalysis</span><span class="p">(</span><span class="n">calibrationResult</span><span class="p">,</span><span class="n">mycf</span><span class="p">,</span><span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">graph</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_90_0.png" src="../../_images/examples_calibration_calibration_chaboche_90_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_85_0.png" src="../../_images/examples_calibration_calibration_chaboche_85_0.png" />
 </div>
 </div>
 <p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_92_0.png" src="../../_images/examples_calibration_calibration_chaboche_92_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_87_0.png" src="../../_images/examples_calibration_calibration_chaboche_87_0.png" />
 </div>
 </div>
 <p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
 <p>The observation error is predicted by linearizing the problem at the prior.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1484,7 +1151,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1492,39 +1159,40 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>This can be compared to the residuals distribution, which is computed at the posterior.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">graph</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_97_0.png" src="../../_images/examples_calibration_calibration_chaboche_97_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_92_0.png" src="../../_images/examples_calibration_calibration_chaboche_92_0.png" />
 </div>
 </div>
 <p>The analysis of the gaussian distribution (the blue line) of the observation errors is close to the posterior distribution of the residuals (the green line). Moreover, the posterior distribution is centered. These informations indicate that the calibration performed well.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_99_0.png" src="../../_images/examples_calibration_calibration_chaboche_99_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_94_0.png" src="../../_images/examples_calibration_calibration_chaboche_94_0.png" />
 </div>
 </div>
 <p>For the <img class="math" src="../../_images/math/ddc35335d91f00501b1be972e341ffcba6893269.svg" alt="R" style="vertical-align: 0px"/> variable, the observations are much more important than the prior: this is shown by the fact that the posterior and prior distribution of the <img class="math" src="../../_images/math/ddc35335d91f00501b1be972e341ffcba6893269.svg" alt="R" style="vertical-align: 0px"/> variable are very different.</p>
@@ -1534,7 +1202,7 @@ div.rendered_html tbody tr:hover {
 <h2>Gaussian nonlinear calibration<a class="headerlink" href="#Gaussian-nonlinear-calibration" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration</span></code> class performs the gaussian nonlinear calibration.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1544,7 +1212,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> method computes the solution of the problem.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1553,7 +1221,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1566,7 +1234,7 @@ div.rendered_html tbody tr:hover {
 <h2>Analysis of the results<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">getParameterMAP</span></code> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1576,15 +1244,15 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>[7.50434e+08,2.58012e+09,8.02108]</p></div>
+<p>[7.50505e+08,2.57712e+09,8.00567]</p></div>
 </div>
 <p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star" style="vertical-align: 0px"/>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1594,65 +1262,56 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<p>[7.44106e+08, 7.55416e+08]<br>
-[2.42955e+09, 2.77875e+09]<br>
-[7.41359, 8.55092]</p></div>
+<p>[7.44181e+08, 7.55607e+08]<br>
+[2.42749e+09, 2.77307e+09]<br>
+[7.43243, 8.61892]</p></div>
 </div>
 <p>We can see that all three parameters are estimated with a large confidence interval.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span> <span class="o">=</span> <span class="n">CalibrationAnalysis</span><span class="p">(</span><span class="n">calibrationResult</span><span class="p">,</span><span class="n">mycf</span><span class="p">,</span> <span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">graph</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_114_0.png" src="../../_images/examples_calibration_calibration_chaboche_114_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_108_0.png" src="../../_images/examples_calibration_calibration_chaboche_108_0.png" />
 </div>
 </div>
 <p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_116_0.png" src="../../_images/examples_calibration_calibration_chaboche_116_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_110_0.png" src="../../_images/examples_calibration_calibration_chaboche_110_0.png" />
 </div>
 </div>
 <p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
 <p>The observation error is predicted by bootstraping the problem at the posterior.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1662,7 +1321,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1670,37 +1329,38 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>This can be compared to the residuals distribution, which is computed at the posterior.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mypcr</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_121_0.png" src="../../_images/examples_calibration_calibration_chaboche_121_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_115_0.png" src="../../_images/examples_calibration_calibration_chaboche_115_0.png" />
 </div>
 </div>
 <p>The analysis is very similar to the linear calibration.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mypcr</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span></span><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/examples_calibration_calibration_chaboche_123_0.png" src="../../_images/examples_calibration_calibration_chaboche_123_0.png" />
+<img alt="../../_images/examples_calibration_calibration_chaboche_117_0.png" src="../../_images/examples_calibration_calibration_chaboche_117_0.png" />
 </div>
 </div>
 <p>We see that the prior and posterior distribution for the <img class="math" src="../../_images/math/92b1fba2de1ce37c8da793f184e1f3a622ac3afa.svg" alt="\gamma" style="vertical-align: -3px"/> parameter are close to each other, but not superimposed: the observations significantly brought information to the variable <img class="math" src="../../_images/math/92b1fba2de1ce37c8da793f184e1f3a622ac3afa.svg" alt="\gamma" style="vertical-align: -3px"/> during the calibration.</p>

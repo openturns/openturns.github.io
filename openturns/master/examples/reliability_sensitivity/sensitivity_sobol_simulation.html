@@ -1,0 +1,557 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sobol’ indices by simulation &#8212; OpenTURNS 1.16dev documentation</title>
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Sobol’ sensitivity indices from chaos" href="functional_chaos_sensitivity.html" />
+    <link rel="prev" title="Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis" href="sensitivity_sobol.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="functional_chaos_sensitivity.html" title="Sobol’ sensitivity indices from chaos"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sensitivity_sobol.html" title="Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sobol’ indices by simulation</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Sobol’ indices by simulation</a><ul>
+<li><a class="reference internal" href="#Definition-of-the-model">Definition of the model</a></li>
+<li><a class="reference internal" href="#Create-algorithm">Create algorithm</a></li>
+<li><a class="reference internal" href="#Results">Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sensitivity_sobol.html"
+                        title="previous chapter">Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="functional_chaos_sensitivity.html"
+                        title="next chapter">Sobol’ sensitivity indices from chaos</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/examples/reliability_sensitivity/sensitivity_sobol_simulation.ipynb"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Sobol’-indices-by-simulation">
+<h1>Sobol’ indices by simulation<a class="headerlink" href="#Sobol’-indices-by-simulation" title="Permalink to this headline">¶</a></h1>
+<p>In the previous example we have seen how to estimate Sobol’ indices with a fixed-sized design of experiment. Now we will see that there is also a simulation algorithm that allows to use as many samples as needed to reach a given precision, or until a time limit is hit or the user cancels the simulation.</p>
+<p>We consider a cantilever beam defined by its Young’s modulus <img class="math" src="../../_images/math/7b093bea7d8744f39f2a40eafb4574ed61b97fc5.svg" alt="E" style="vertical-align: 0px"/>, its length <img class="math" src="../../_images/math/674f685d44e204d0c5abdc6b85851af89ec6deda.svg" alt="L" style="vertical-align: 0px"/> and its section modulus <img class="math" src="../../_images/math/ef3d6592baea05f79a282952fb7e90fba4ba5869.svg" alt="I" style="vertical-align: 0px"/>. One end of the cantilever beam is built in a wall and we apply a concentrated bending load <img class="math" src="../../_images/math/604ed945c1dae899de5d6c15a426473a3f97c1a2.svg" alt="F" style="vertical-align: 0px"/> at the other end of the beam, resulting in a deviation <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y" style="vertical-align: 0px"/>.</p>
+<p><img alt="639e4d39e0234bc586db5d34b3fc9a3d" class="no-scaled-link" src="../../_images/beam1.png" style="width: 200px;" /></p>
+<p><strong>Inputs</strong></p>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/7b093bea7d8744f39f2a40eafb4574ed61b97fc5.svg" alt="E" style="vertical-align: 0px"/> : Young modulus (Pa), Beta(r = 0.9, t = 3.5, a = <img class="math" src="../../_images/math/6af5f4c051f9455b170387e65faed8b2c5003aa7.svg" alt="2.5\times 10^7" style="vertical-align: -1px"/>, <img class="math" src="../../_images/math/7b4f02c7683c880f1ff983c36d38e4f1fc17104c.svg" alt="b = 5\times 10^7" style="vertical-align: -1px"/>)</p></li>
+<li><p><img class="math" src="../../_images/math/604ed945c1dae899de5d6c15a426473a3f97c1a2.svg" alt="F" style="vertical-align: 0px"/> : Loading (N), Lognormal(<img class="math" src="../../_images/math/f94298cc6f21d6e46d6b8b14e8e5176ea7884345.svg" alt="\mu_F=30 \times 10^3" style="vertical-align: -3px"/>, <img class="math" src="../../_images/math/b32787dcd2c368bbe638d39e2e7fefb05d65c959.svg" alt="\sigma_F=9\times 10^3" style="vertical-align: -2px"/>, shift=<img class="math" src="../../_images/math/0b47ad563a39e9fdaa58b1e8feea9fded4b3389e.svg" alt="15\times 10^3" style="vertical-align: -1px"/>)</p></li>
+<li><p><img class="math" src="../../_images/math/674f685d44e204d0c5abdc6b85851af89ec6deda.svg" alt="L" style="vertical-align: 0px"/> : Length of beam (cm), Uniform(min=250.0, max= 260.0)</p></li>
+<li><p><img class="math" src="../../_images/math/ef3d6592baea05f79a282952fb7e90fba4ba5869.svg" alt="I" style="vertical-align: 0px"/> : Moment of inertia (cm^4), Beta(r = 2.5, t = 4.0, a = 310, b = 450).</p></li>
+</ul>
+<p>In the previous table <img class="math" src="../../_images/math/ce8dbe235c4215373abbb99bcb99c11a7a733aa8.svg" alt="\mu_F=E(F)" style="vertical-align: -4px"/> and <img class="math" src="../../_images/math/06e8c1d01caacba7033dbad7683b337649b3c721.svg" alt="\sigma_F=\sqrt{V(F)}" style="vertical-align: -5px"/> are the mean and the standard deviation of <img class="math" src="../../_images/math/604ed945c1dae899de5d6c15a426473a3f97c1a2.svg" alt="F" style="vertical-align: 0px"/>.</p>
+<p>We assume that the random variables E, F, L and I are dependent and associated with a gaussian copula which correlation matrix is :</p>
+<div class="math">
+<p><img src="../../_images/math/0179019a0bf7f16eae5d344f6745b83d470f7536.svg" alt="R =
+\begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 1 &amp; -0.2 \\
+0 &amp; 0 &amp; -0.2 &amp; 1
+\end{pmatrix}"/></p>
+</div><p>In other words, we consider that the variables L and I are negatively correlated : when the length L increases, the moment of intertia I decreases.</p>
+<p><strong>Output</strong></p>
+<p>The vertical displacement at free end of the cantilever beam is:</p>
+<div class="math">
+<p><img src="../../_images/math/b8a99a30732bcb589b596e363e81858b68bb1580.svg" alt="Y  = \dfrac{F\, L^3}{3 \, E \, I}"/></p>
+</div><div class="section" id="Definition-of-the-model">
+<h2>Definition of the model<a class="headerlink" href="#Definition-of-the-model" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+</pre></div>
+</div>
+</div>
+<p>We define the symbolic function which evaluates the output Y depending on the inputs E, F, L and I.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;F*L^3/(3*E*I)&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>Then we define the distribution of the input random vector.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Young&#39;s modulus E</span>
+<span class="n">E</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">2.5e7</span><span class="p">,</span> <span class="mf">5.0e7</span><span class="p">)</span> <span class="c1"># in N/m^2</span>
+<span class="n">E</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">)</span>
+<span class="c1"># Load F</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LogNormal</span><span class="p">()</span> <span class="c1"># in N</span>
+<span class="n">F</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">()([</span><span class="mf">30.e3</span><span class="p">,</span> <span class="mf">9e3</span><span class="p">,</span> <span class="mf">15.e3</span><span class="p">]))</span>
+<span class="n">F</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+<span class="c1"># Length L</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">250.</span><span class="p">,</span> <span class="mf">260.</span><span class="p">)</span> <span class="c1"># in cm</span>
+<span class="n">L</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
+<span class="c1"># Moment of inertia I</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">450</span><span class="p">)</span> <span class="c1"># in cm^4</span>
+<span class="n">I</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Finally, we define the dependency using a <code class="docutils literal notranslate"><span class="pre">NormalCopula</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">E</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">I</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-algorithm">
+<h2>Create algorithm<a class="headerlink" href="#Create-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>First we select which estimator to use:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">estimator</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SaltelliSensitivityAlgorithm</span><span class="p">()</span>
+<span class="n">estimator</span><span class="o">.</span><span class="n">setUseAsymptoticDistribution</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Then the simulation algorithm is configured:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolSimulationAlgorithm</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">estimator</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span> <span class="c1"># number of iterations</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setBlockSize</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="c1"># size of Sobol experiment at each iteration</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setBatchSize</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># number of points evaluated simultaneously</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setIndexQuantileLevel</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span> <span class="c1"># alpha: cirteria checks whether CIs are small enough</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setIndexQuantileEpsilon</span><span class="p">(</span><span class="mf">1e-2</span><span class="p">)</span> <span class="c1"># epsilon: critera checks whether CIs are tight enough</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Results">
+<h2>Results<a class="headerlink" href="#Results" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;first order indices:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getFirstOrderIndicesEstimate</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total order indices:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getTotalOrderIndicesEstimate</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+first order indices: [0.154081,0.872087,0.0122877,0.0433801]
+total order indices: [0.16743,0.795477,0.0124454,0.045178]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># distribution of X1 first order indices:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getTotalOrderIndicesDistribution</span><span class="p">())</span>
+<span class="n">result</span><span class="o">.</span><span class="n">getFirstOrderIndicesDistribution</span><span class="p">()</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Normal(mu = [0.16743,0.795477,0.0124454,0.045178], sigma = [0.0068919,0.00950876,0.00204324,0.0038844], R = [[ 1 0 0 0 ]
+ [ 0 1 0 0 ]
+ [ 0 0 1 0 ]
+ [ 0 0 0 1 ]])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_reliability_sensitivity_sensitivity_sobol_simulation_18_1.png" src="../../_images/examples_reliability_sensitivity_sensitivity_sobol_simulation_18_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># plot of estimates and confidence intervals</span>
+<span class="n">result</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/examples_reliability_sensitivity_sensitivity_sobol_simulation_19_0.png" src="../../_images/examples_reliability_sensitivity_sensitivity_sobol_simulation_19_0.png" />
+</div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="functional_chaos_sensitivity.html" title="Sobol’ sensitivity indices from chaos"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sensitivity_sobol.html" title="Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sobol’ indices by simulation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2018 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jan 01, 2018.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.0.
+    </div>
+  </body>
+</html>
