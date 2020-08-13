@@ -1,5 +1,5 @@
-﻿ExponentiallyDampedCosineModel
-================================================================================
+﻿StationaryFunctionalCovarianceModel
+==========================================================================================
 
 .. plot::
     :include-source: False
@@ -7,26 +7,26 @@
     import openturns as ot
     from matplotlib import pyplot as plt
     from openturns.viewer import View
-    if ot.ExponentiallyDampedCosineModel().__class__.__name__ == 'ExponentialModel':
+    if ot.StationaryFunctionalCovarianceModel().__class__.__name__ == 'ExponentialModel':
         covarianceModel = ot.ExponentialModel([0.5], [5.0])
-    elif ot.ExponentiallyDampedCosineModel().__class__.__name__ == 'GeneralizedExponential':
+    elif ot.StationaryFunctionalCovarianceModel().__class__.__name__ == 'GeneralizedExponential':
         covarianceModel = ot.GeneralizedExponential([2.0], [3.0], 1.5)
-    elif ot.ExponentiallyDampedCosineModel().__class__.__name__ == 'ProductCovarianceModel':
+    elif ot.StationaryFunctionalCovarianceModel().__class__.__name__ == 'ProductCovarianceModel':
         amplitude = [1.0]
         scale1 = [4.0]
         scale2 = [4.0]
         cov1 = ot.ExponentialModel(scale1, amplitude)
         cov2 = ot.ExponentialModel(scale2, amplitude)
         covarianceModel = ot.ProductCovarianceModel([cov1, cov2])
-    elif ot.ExponentiallyDampedCosineModel().__class__.__name__ == 'RankMCovarianceModel':
+    elif ot.StationaryFunctionalCovarianceModel().__class__.__name__ == 'RankMCovarianceModel':
         variance = [1.0, 2.0]
         basis = ot.LinearBasisFactory().build()
         covarianceModel = ot.RankMCovarianceModel(variance, basis)
-    elif ot.ExponentiallyDampedCosineModel().__class__.__name__ == 'StationaryFunctionalCovarianceModel':
+    elif ot.StationaryFunctionalCovarianceModel().__class__.__name__ == 'StationaryFunctionalCovarianceModel':
         rho = ot.SymbolicFunction(['tau'], ['exp(-tau)*cos(2*pi_*tau)'])
         covarianceModel = ot.StationaryFunctionalCovarianceModel([1.0], [1.0], rho)
     else:
-        covarianceModel = ot.ExponentiallyDampedCosineModel()
+        covarianceModel = ot.StationaryFunctionalCovarianceModel()
     title = str(covarianceModel)[:100]
     if covarianceModel.getInputDimension() == 1:
         scale = covarianceModel.getScale()[0]
@@ -65,7 +65,7 @@
 
 .. currentmodule:: openturns
 
-.. autoclass:: ExponentiallyDampedCosineModel
+.. autoclass:: StationaryFunctionalCovarianceModel
 
   
    .. automethod:: __init__

@@ -16,6 +16,9 @@ elif ot.ExponentiallyDampedCosineModel().__class__.__name__ == 'RankMCovarianceM
     variance = [1.0, 2.0]
     basis = ot.LinearBasisFactory().build()
     covarianceModel = ot.RankMCovarianceModel(variance, basis)
+elif ot.ExponentiallyDampedCosineModel().__class__.__name__ == 'StationaryFunctionalCovarianceModel':
+    rho = ot.SymbolicFunction(['tau'], ['exp(-tau)*cos(2*pi_*tau)'])
+    covarianceModel = ot.StationaryFunctionalCovarianceModel([1.0], [1.0], rho)
 else:
     covarianceModel = ot.ExponentiallyDampedCosineModel()
 title = str(covarianceModel)[:100]
