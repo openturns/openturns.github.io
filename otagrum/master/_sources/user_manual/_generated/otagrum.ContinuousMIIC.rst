@@ -1,4 +1,4 @@
-ContinuousMIIC
+﻿ContinuousMIIC
 ======================
 
 .. currentmodule:: otagrum

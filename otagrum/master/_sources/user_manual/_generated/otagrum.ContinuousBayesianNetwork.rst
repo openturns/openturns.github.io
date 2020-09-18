@@ -1,4 +1,4 @@
-ContinuousBayesianNetwork
+﻿ContinuousBayesianNetwork
 =================================
 
 .. currentmodule:: otagrum

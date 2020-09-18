@@ -1,4 +1,4 @@
-ContinuousTTest
+﻿ContinuousTTest
 =======================
 
 .. currentmodule:: otagrum

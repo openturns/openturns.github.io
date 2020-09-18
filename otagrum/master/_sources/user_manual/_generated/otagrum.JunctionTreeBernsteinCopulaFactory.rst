@@ -1,4 +1,4 @@
-JunctionTreeBernsteinCopulaFactory
+﻿JunctionTreeBernsteinCopulaFactory
 ==========================================
 
 .. currentmodule:: otagrum

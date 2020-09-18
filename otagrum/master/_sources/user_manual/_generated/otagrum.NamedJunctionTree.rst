@@ -1,4 +1,4 @@
-NamedJunctionTree
+﻿NamedJunctionTree
 =========================
 
 .. currentmodule:: otagrum

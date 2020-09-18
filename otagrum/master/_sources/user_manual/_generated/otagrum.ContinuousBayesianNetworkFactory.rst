@@ -1,4 +1,4 @@
-ContinuousBayesianNetworkFactory
+﻿ContinuousBayesianNetworkFactory
 ========================================
 
 .. currentmodule:: otagrum

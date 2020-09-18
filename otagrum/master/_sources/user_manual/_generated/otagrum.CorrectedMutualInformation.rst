@@ -1,4 +1,4 @@
-CorrectedMutualInformation
+﻿CorrectedMutualInformation
 ==================================
 
 .. currentmodule:: otagrum
