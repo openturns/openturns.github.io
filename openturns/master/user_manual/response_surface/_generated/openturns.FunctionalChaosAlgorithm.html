@@ -352,11 +352,25 @@ We choose all the polynomials of degree &lt;= 4</p>
 <dt id="openturns.FunctionalChaosAlgorithm.BuildDistribution">
 <em class="property">static </em><code class="sig-name descname">BuildDistribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputSample</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.FunctionalChaosAlgorithm.BuildDistribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recover the distribution, with metamodel performance in mind.</p>
-<p>For each marginal, find the best 1-d continuous parametric model,
-else fallback to the use of <a class="reference internal" href="../../_generated/openturns.KernelSmoothing.html#openturns.KernelSmoothing" title="openturns.KernelSmoothing"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelSmoothing</span></code></a>.
-For the copula, the Spearman independance test is used on each component pair
-to decide whether an independent copula can be used,
-else use a <a class="reference internal" href="../../_generated/openturns.NormalCopula.html#openturns.NormalCopula" title="openturns.NormalCopula"><code class="xref py py-class docutils literal notranslate"><span class="pre">NormalCopula</span></code></a>.</p>
+<p>For each marginal, find the best 1-d continuous parametric model
+else fallback to the use of a nonparametric one.</p>
+<p>The selection is done as follow:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>We start with a list of all parametric models (all factories)</p></li>
+<li><p>For each model, we estimate its parameters if feasible.</p></li>
+<li><p>We check then if model is <cite>valid</cite>, ie if its Kolmogorov score exceeds a threshold 
+fixed in the <cite>MetaModelAlgorithm-PValueThreshold</cite> ResourceMap key. Default value is 5%</p></li>
+<li><p>We sort all <cite>valid</cite> models and return the one with the optimal criterion.</p></li>
+</ul>
+</div></blockquote>
+<p>For the last step, the criterion might be <cite>BIC</cite>, <cite>AIC</cite> or <cite>AICC</cite>. The specification of the criterion is
+done through the <cite>MetaModelAlgorithm-ModelSelectionCriterion</cite> ResourceMap key. Default value is fixed to <cite>BIC</cite>.
+Note that if there is no <cite>valid</cite> candidate, we estimate a non-parametric model (<a class="reference internal" href="../../_generated/openturns.KernelSmoothing.html#openturns.KernelSmoothing" title="openturns.KernelSmoothing"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelSmoothing</span></code></a>
+or <a class="reference internal" href="../../_generated/openturns.Histogram.html#openturns.Histogram" title="openturns.Histogram"><code class="xref py py-class docutils literal notranslate"><span class="pre">Histogram</span></code></a>). The <cite>MetaModelAlgorithm-NonParametricModel</cite> ResourceMap key allows selecting
+the preferred one. Default value is <cite>Histogram</cite></p>
+<p>One each marginal is estimated, we use the Spearman independence test on each component pair to decide whether an 
+independent copula. In case of non independence, we rely on a <a class="reference internal" href="../../_generated/openturns.NormalCopula.html#openturns.NormalCopula" title="openturns.NormalCopula"><code class="xref py py-class docutils literal notranslate"><span class="pre">NormalCopula</span></code></a>.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
