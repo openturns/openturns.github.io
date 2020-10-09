@@ -50,11 +50,12 @@
 <dl class="py class">
 <dt id="otagrum.ContinuousBayesianNetwork">
 <em class="property">class </em><code class="sig-prename descclassname">otagrum.</code><code class="sig-name descname">ContinuousBayesianNetwork</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork" title="Permalink to this definition">¶</a></dt>
-<dd><p>ContinuousBayesianNetwork class represents a copula bayesian network (CBN), that is
-a bayesian network parameterized by local conditional copula functions for each
-node. The scope of each copula function is the node and its parents.</p>
+<dd><p>ContinuousBayesianNetwork class represents a continuous bayesian network (CBN),
+that is a bayesian network parameterized by marginal distributions and local
+copulas for each node from which conditional copulas are
+extracted. The scope of each copula is the node and its parents.</p>
 <dl class="simple">
-<dt>Available constructor:</dt><dd><p>ContinuousBayesianNetwork(<em>NamedDAG, DistributionCollection</em>)</p>
+<dt>Available constructor:</dt><dd><p>ContinuousBayesianNetwork(<em>dag, marginals, copulas</em>)</p>
 </dd>
 </dl>
 <dl class="field-list">
@@ -62,7 +63,10 @@ node. The scope of each copula function is the node and its parents.</p>
 <dd class="field-odd"><dl>
 <dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>The structure of the CBN</p>
 </dd>
-<dt><strong>jointDistributions</strong><span class="classifier"><a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.DistributionCollection.html#openturns.DistributionCollection" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.DistributionCollection</span></code></a></span></dt><dd><p>Collection of local conditional copula functions</p>
+<dt><strong>marginals</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>Collection of univariate marginal distributions</p>
+</dd>
+<dt><strong>copulas</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>Collection of local conditional copula functions. The copula is
+unused for nodes with no parents.</p>
 </dd>
 </dl>
 </dd>
@@ -74,15 +78,16 @@ node. The scope of each copula function is the node and its parents.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyAgrum</span> <span class="k">as</span> <span class="nn">gum</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">BayesNet</span><span class="o">.</span><span class="n">fastPrototype</span><span class="p">(</span><span class="s1">&#39;A-&gt;C-&gt;B;&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ndag</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">NamedDAG</span><span class="p">(</span><span class="n">bn</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">jointDistributions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">marginals</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndag</span><span class="o">.</span><span class="n">getSize</span><span class="p">())]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">copulas</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndag</span><span class="o">.</span><span class="n">getSize</span><span class="p">()):</span>
 <span class="gp">... </span>    <span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">ndag</span><span class="o">.</span><span class="n">getParents</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
 <span class="gp">... </span>    <span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
 <span class="gp">... </span>            <span class="n">R</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>
-<span class="gp">... </span>    <span class="n">jointDistributions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">getCopula</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cbn</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousBayesianNetwork</span><span class="p">(</span><span class="n">ndag</span><span class="p">,</span> <span class="n">jointDistributions</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">copulas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">getCopula</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cbn</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousBayesianNetwork</span><span class="p">(</span><span class="n">ndag</span><span class="p">,</span> <span class="n">marginals</span><span class="p">,</span> <span class="n">copulas</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Draw a sample from the joint distribution encoded by the CBN</p>
@@ -297,23 +302,23 @@ node. The scope of each copula function is the node and its parents.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getCopula" title="otagrum.ContinuousBayesianNetwork.getCopula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCopula</span></code></a>()</p></td>
 <td><p>Accessor to the copula of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getCorrelation" title="otagrum.ContinuousBayesianNetwork.getCorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCorrelation</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getCopulas" title="otagrum.ContinuousBayesianNetwork.getCopulas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCopulas</span></code></a>()</p></td>
+<td><p>The collection of local conditional copulas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getCorrelation" title="otagrum.ContinuousBayesianNetwork.getCorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCorrelation</span></code></a>()</p></td>
 <td><p><strong>(ditch me?)</strong></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getCovariance" title="otagrum.ContinuousBayesianNetwork.getCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCovariance</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getCovariance" title="otagrum.ContinuousBayesianNetwork.getCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCovariance</span></code></a>()</p></td>
 <td><p>Accessor to the covariance matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDescription" title="otagrum.ContinuousBayesianNetwork.getDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDescription</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDescription" title="otagrum.ContinuousBayesianNetwork.getDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDescription</span></code></a>()</p></td>
 <td><p>Accessor to the componentwise description.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDimension" title="otagrum.ContinuousBayesianNetwork.getDimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDimension</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDimension" title="otagrum.ContinuousBayesianNetwork.getDimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDimension</span></code></a>()</p></td>
 <td><p>Accessor to the dimension of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDispersionIndicator" title="otagrum.ContinuousBayesianNetwork.getDispersionIndicator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDispersionIndicator</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDispersionIndicator" title="otagrum.ContinuousBayesianNetwork.getDispersionIndicator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDispersionIndicator</span></code></a>()</p></td>
 <td><p>Dispersion indicator accessor.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getDistributionCollection" title="otagrum.ContinuousBayesianNetwork.getDistributionCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDistributionCollection</span></code></a>()</p></td>
-<td><p>The collection of local conditional copulas.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getId" title="otagrum.ContinuousBayesianNetwork.getId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getId</span></code></a>()</p></td>
 <td><p>Accessor to the object’s id.</p></td>
@@ -342,166 +347,169 @@ node. The scope of each copula function is the node and its parents.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getMarginal" title="otagrum.ContinuousBayesianNetwork.getMarginal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMarginal</span></code></a>(*args)</p></td>
 <td><p>Accessor to marginal distributions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getMean" title="otagrum.ContinuousBayesianNetwork.getMean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMean</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getMarginals" title="otagrum.ContinuousBayesianNetwork.getMarginals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMarginals</span></code></a>()</p></td>
+<td><p>The collection of univariate marginal distributions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getMean" title="otagrum.ContinuousBayesianNetwork.getMean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMean</span></code></a>()</p></td>
 <td><p>Accessor to the mean.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getMoment" title="otagrum.ContinuousBayesianNetwork.getMoment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMoment</span></code></a>(n)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getMoment" title="otagrum.ContinuousBayesianNetwork.getMoment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMoment</span></code></a>(n)</p></td>
 <td><p>Accessor to the componentwise moments.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getName" title="otagrum.ContinuousBayesianNetwork.getName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getName</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getName" title="otagrum.ContinuousBayesianNetwork.getName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getName</span></code></a>()</p></td>
 <td><p>Accessor to the object’s name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getNamedDAG" title="otagrum.ContinuousBayesianNetwork.getNamedDAG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNamedDAG</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getNamedDAG" title="otagrum.ContinuousBayesianNetwork.getNamedDAG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getNamedDAG</span></code></a>()</p></td>
 <td><p>The CBN structure.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getPDFEpsilon" title="otagrum.ContinuousBayesianNetwork.getPDFEpsilon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPDFEpsilon</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getPDFEpsilon" title="otagrum.ContinuousBayesianNetwork.getPDFEpsilon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPDFEpsilon</span></code></a>()</p></td>
 <td><p>Accessor to the PDF computation precision.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParameter" title="otagrum.ContinuousBayesianNetwork.getParameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameter</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParameter" title="otagrum.ContinuousBayesianNetwork.getParameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameter</span></code></a>()</p></td>
 <td><p>Accessor to the parameter of the distribution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParameterDescription" title="otagrum.ContinuousBayesianNetwork.getParameterDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterDescription</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParameterDescription" title="otagrum.ContinuousBayesianNetwork.getParameterDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterDescription</span></code></a>()</p></td>
 <td><p>Accessor to the parameter description of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParameterDimension" title="otagrum.ContinuousBayesianNetwork.getParameterDimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterDimension</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParameterDimension" title="otagrum.ContinuousBayesianNetwork.getParameterDimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterDimension</span></code></a>()</p></td>
 <td><p>Accessor to the number of parameters in the distribution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParametersCollection" title="otagrum.ContinuousBayesianNetwork.getParametersCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParametersCollection</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getParametersCollection" title="otagrum.ContinuousBayesianNetwork.getParametersCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParametersCollection</span></code></a>()</p></td>
 <td><p>Accessor to the parameter of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getPearsonCorrelation" title="otagrum.ContinuousBayesianNetwork.getPearsonCorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPearsonCorrelation</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getPearsonCorrelation" title="otagrum.ContinuousBayesianNetwork.getPearsonCorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPearsonCorrelation</span></code></a>()</p></td>
 <td><p>Accessor to the Pearson correlation matrix.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getPositionIndicator" title="otagrum.ContinuousBayesianNetwork.getPositionIndicator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPositionIndicator</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getPositionIndicator" title="otagrum.ContinuousBayesianNetwork.getPositionIndicator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPositionIndicator</span></code></a>()</p></td>
 <td><p>Position indicator accessor.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getProbabilities" title="otagrum.ContinuousBayesianNetwork.getProbabilities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getProbabilities</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getProbabilities" title="otagrum.ContinuousBayesianNetwork.getProbabilities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getProbabilities</span></code></a>()</p></td>
 <td><p>Accessor to the discrete probability levels.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getRange" title="otagrum.ContinuousBayesianNetwork.getRange"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRange</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getRange" title="otagrum.ContinuousBayesianNetwork.getRange"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRange</span></code></a>()</p></td>
 <td><p>Accessor to the range of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getRealization" title="otagrum.ContinuousBayesianNetwork.getRealization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRealization</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getRealization" title="otagrum.ContinuousBayesianNetwork.getRealization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRealization</span></code></a>()</p></td>
 <td><p>Accessor to a pseudo-random realization from the distribution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getRoughness" title="otagrum.ContinuousBayesianNetwork.getRoughness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRoughness</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getRoughness" title="otagrum.ContinuousBayesianNetwork.getRoughness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRoughness</span></code></a>()</p></td>
 <td><p>Accessor to roughness of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSample" title="otagrum.ContinuousBayesianNetwork.getSample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSample</span></code></a>(size)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSample" title="otagrum.ContinuousBayesianNetwork.getSample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSample</span></code></a>(size)</p></td>
 <td><p>Accessor to a pseudo-random sample from the distribution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getShadowedId" title="otagrum.ContinuousBayesianNetwork.getShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShadowedId</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getShadowedId" title="otagrum.ContinuousBayesianNetwork.getShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShadowedId</span></code></a>()</p></td>
 <td><p>Accessor to the object’s shadowed id.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getShapeMatrix" title="otagrum.ContinuousBayesianNetwork.getShapeMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShapeMatrix</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getShapeMatrix" title="otagrum.ContinuousBayesianNetwork.getShapeMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShapeMatrix</span></code></a>()</p></td>
 <td><p>Accessor to the shape matrix of the underlying copula if it is elliptical.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getShiftedMoment" title="otagrum.ContinuousBayesianNetwork.getShiftedMoment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShiftedMoment</span></code></a>(n, shift)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getShiftedMoment" title="otagrum.ContinuousBayesianNetwork.getShiftedMoment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShiftedMoment</span></code></a>(n, shift)</p></td>
 <td><p>Accessor to the componentwise shifted moments.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSingularities" title="otagrum.ContinuousBayesianNetwork.getSingularities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSingularities</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSingularities" title="otagrum.ContinuousBayesianNetwork.getSingularities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSingularities</span></code></a>()</p></td>
 <td><p>Accessor to the singularities of the PDF function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSkewness" title="otagrum.ContinuousBayesianNetwork.getSkewness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSkewness</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSkewness" title="otagrum.ContinuousBayesianNetwork.getSkewness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSkewness</span></code></a>()</p></td>
 <td><p>Accessor to the componentwise skewness.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSpearmanCorrelation" title="otagrum.ContinuousBayesianNetwork.getSpearmanCorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSpearmanCorrelation</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSpearmanCorrelation" title="otagrum.ContinuousBayesianNetwork.getSpearmanCorrelation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSpearmanCorrelation</span></code></a>()</p></td>
 <td><p>Accessor to the Spearman correlation matrix.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardDeviation" title="otagrum.ContinuousBayesianNetwork.getStandardDeviation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardDeviation</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardDeviation" title="otagrum.ContinuousBayesianNetwork.getStandardDeviation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardDeviation</span></code></a>()</p></td>
 <td><p>Accessor to the componentwise standard deviation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardDistribution" title="otagrum.ContinuousBayesianNetwork.getStandardDistribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardDistribution</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardDistribution" title="otagrum.ContinuousBayesianNetwork.getStandardDistribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardDistribution</span></code></a>()</p></td>
 <td><p>Accessor to the standard distribution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardMoment" title="otagrum.ContinuousBayesianNetwork.getStandardMoment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardMoment</span></code></a>(n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardMoment" title="otagrum.ContinuousBayesianNetwork.getStandardMoment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardMoment</span></code></a>(n)</p></td>
 <td><p>Accessor to the componentwise standard moments.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardRepresentative" title="otagrum.ContinuousBayesianNetwork.getStandardRepresentative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardRepresentative</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getStandardRepresentative" title="otagrum.ContinuousBayesianNetwork.getStandardRepresentative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStandardRepresentative</span></code></a>()</p></td>
 <td><p>Accessor to the standard representative distribution in the parametric family.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSupport" title="otagrum.ContinuousBayesianNetwork.getSupport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSupport</span></code></a>(*args)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getSupport" title="otagrum.ContinuousBayesianNetwork.getSupport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSupport</span></code></a>(*args)</p></td>
 <td><p>Accessor to the support of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getVisibility" title="otagrum.ContinuousBayesianNetwork.getVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVisibility</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.getVisibility" title="otagrum.ContinuousBayesianNetwork.getVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVisibility</span></code></a>()</p></td>
 <td><p>Accessor to the object’s visibility state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasEllipticalCopula" title="otagrum.ContinuousBayesianNetwork.hasEllipticalCopula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasEllipticalCopula</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasEllipticalCopula" title="otagrum.ContinuousBayesianNetwork.hasEllipticalCopula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasEllipticalCopula</span></code></a>()</p></td>
 <td><p>Test whether the copula of the distribution is elliptical or not.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasIndependentCopula" title="otagrum.ContinuousBayesianNetwork.hasIndependentCopula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasIndependentCopula</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasIndependentCopula" title="otagrum.ContinuousBayesianNetwork.hasIndependentCopula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasIndependentCopula</span></code></a>()</p></td>
 <td><p>Test whether the copula of the distribution is the independent one.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasName" title="otagrum.ContinuousBayesianNetwork.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasName" title="otagrum.ContinuousBayesianNetwork.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>()</p></td>
 <td><p>Test if the object is named.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasVisibleName" title="otagrum.ContinuousBayesianNetwork.hasVisibleName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasVisibleName</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.hasVisibleName" title="otagrum.ContinuousBayesianNetwork.hasVisibleName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasVisibleName</span></code></a>()</p></td>
 <td><p>Test if the object has a distinguishable name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.inverse" title="otagrum.ContinuousBayesianNetwork.inverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.inverse" title="otagrum.ContinuousBayesianNetwork.inverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse</span></code></a>()</p></td>
 <td><p>Transform distribution by inverse function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isContinuous" title="otagrum.ContinuousBayesianNetwork.isContinuous"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isContinuous</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isContinuous" title="otagrum.ContinuousBayesianNetwork.isContinuous"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isContinuous</span></code></a>()</p></td>
 <td><p>Test whether the distribution is continuous or not.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isCopula" title="otagrum.ContinuousBayesianNetwork.isCopula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isCopula</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isCopula" title="otagrum.ContinuousBayesianNetwork.isCopula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isCopula</span></code></a>()</p></td>
 <td><p>Test whether the distribution is a copula or not.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isDiscrete" title="otagrum.ContinuousBayesianNetwork.isDiscrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isDiscrete</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isDiscrete" title="otagrum.ContinuousBayesianNetwork.isDiscrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isDiscrete</span></code></a>()</p></td>
 <td><p>Test whether the distribution is discrete or not.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isElliptical" title="otagrum.ContinuousBayesianNetwork.isElliptical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isElliptical</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isElliptical" title="otagrum.ContinuousBayesianNetwork.isElliptical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isElliptical</span></code></a>()</p></td>
 <td><p>Test whether the distribution is elliptical or not.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isIntegral" title="otagrum.ContinuousBayesianNetwork.isIntegral"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isIntegral</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.isIntegral" title="otagrum.ContinuousBayesianNetwork.isIntegral"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isIntegral</span></code></a>()</p></td>
 <td><p>Test whether the distribution is integer-valued or not.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.ln" title="otagrum.ContinuousBayesianNetwork.ln"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ln</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.ln" title="otagrum.ContinuousBayesianNetwork.ln"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ln</span></code></a>()</p></td>
 <td><p>Transform distribution by natural logarithm function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.log" title="otagrum.ContinuousBayesianNetwork.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.log" title="otagrum.ContinuousBayesianNetwork.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>()</p></td>
 <td><p>Transform distribution by natural logarithm function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setDAGAndDistributionCollection" title="otagrum.ContinuousBayesianNetwork.setDAGAndDistributionCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDAGAndDistributionCollection</span></code></a>(dag, …)</p></td>
-<td><p>Accessor to the DAG and distribution collection.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setDAGAndMarginalsAndCopulas" title="otagrum.ContinuousBayesianNetwork.setDAGAndMarginalsAndCopulas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDAGAndMarginalsAndCopulas</span></code></a>(dag, marginals, …)</p></td>
+<td><p>Accessor to the DAG, the marginals and the local copulas collections.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setDescription" title="otagrum.ContinuousBayesianNetwork.setDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDescription</span></code></a>(description)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setDescription" title="otagrum.ContinuousBayesianNetwork.setDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDescription</span></code></a>(description)</p></td>
 <td><p>Accessor to the componentwise description.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setIntegrationNodesNumber" title="otagrum.ContinuousBayesianNetwork.setIntegrationNodesNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setIntegrationNodesNumber</span></code></a>(integrationNodesNumber)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setIntegrationNodesNumber" title="otagrum.ContinuousBayesianNetwork.setIntegrationNodesNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setIntegrationNodesNumber</span></code></a>(integrationNodesNumber)</p></td>
 <td><p>Accessor to the number of Gauss integration points.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setName" title="otagrum.ContinuousBayesianNetwork.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setName" title="otagrum.ContinuousBayesianNetwork.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
 <td><p>Accessor to the object’s name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setParameter" title="otagrum.ContinuousBayesianNetwork.setParameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParameter</span></code></a>(parameters)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setParameter" title="otagrum.ContinuousBayesianNetwork.setParameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParameter</span></code></a>(parameters)</p></td>
 <td><p>Accessor to the parameter of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setParametersCollection" title="otagrum.ContinuousBayesianNetwork.setParametersCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParametersCollection</span></code></a>(*args)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setParametersCollection" title="otagrum.ContinuousBayesianNetwork.setParametersCollection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParametersCollection</span></code></a>(*args)</p></td>
 <td><p>Accessor to the parameter of the distribution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setShadowedId" title="otagrum.ContinuousBayesianNetwork.setShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setShadowedId</span></code></a>(id)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setShadowedId" title="otagrum.ContinuousBayesianNetwork.setShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setShadowedId</span></code></a>(id)</p></td>
 <td><p>Accessor to the object’s shadowed id.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setVisibility" title="otagrum.ContinuousBayesianNetwork.setVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setVisibility</span></code></a>(visible)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.setVisibility" title="otagrum.ContinuousBayesianNetwork.setVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setVisibility</span></code></a>(visible)</p></td>
 <td><p>Accessor to the object’s visibility state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sin" title="otagrum.ContinuousBayesianNetwork.sin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sin</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sin" title="otagrum.ContinuousBayesianNetwork.sin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sin</span></code></a>()</p></td>
 <td><p>Transform distribution by sine function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sinh" title="otagrum.ContinuousBayesianNetwork.sinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sinh</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sinh" title="otagrum.ContinuousBayesianNetwork.sinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sinh</span></code></a>()</p></td>
 <td><p>Transform distribution by sinh function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sqr" title="otagrum.ContinuousBayesianNetwork.sqr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sqr</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sqr" title="otagrum.ContinuousBayesianNetwork.sqr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sqr</span></code></a>()</p></td>
 <td><p>Transform distribution by square function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sqrt" title="otagrum.ContinuousBayesianNetwork.sqrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sqrt</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.sqrt" title="otagrum.ContinuousBayesianNetwork.sqrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sqrt</span></code></a>()</p></td>
 <td><p>Transform distribution by square root function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.tan" title="otagrum.ContinuousBayesianNetwork.tan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tan</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.tan" title="otagrum.ContinuousBayesianNetwork.tan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tan</span></code></a>()</p></td>
 <td><p>Transform distribution by tangent function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.tanh" title="otagrum.ContinuousBayesianNetwork.tanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tanh</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otagrum.ContinuousBayesianNetwork.tanh" title="otagrum.ContinuousBayesianNetwork.tanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tanh</span></code></a>()</p></td>
 <td><p>Transform distribution by tanh function.</p></td>
 </tr>
 </tbody>
@@ -2660,6 +2668,20 @@ Defaults uses <cite>DistributionImplementation-DefaultPointNumber</cite> from th
 </dd></dl>
 
 <dl class="py method">
+<dt id="otagrum.ContinuousBayesianNetwork.getCopulas">
+<code class="sig-name descname">getCopulas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.getCopulas" title="Permalink to this definition">¶</a></dt>
+<dd><p>The collection of local conditional copulas.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl>
+<dt><strong>copulas</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>Collection of local conditional copulas</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="otagrum.ContinuousBayesianNetwork.getCorrelation">
 <code class="sig-name descname">getCorrelation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.getCorrelation" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>(ditch me?)</strong></p>
@@ -2730,20 +2752,6 @@ Only available for 1-d distributions.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>dispersion</strong><span class="classifier">float</span></dt><dd><p>Standard deviation or interquartile.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="otagrum.ContinuousBayesianNetwork.getDistributionCollection">
-<code class="sig-name descname">getDistributionCollection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.getDistributionCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>The collection of local conditional copulas.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl>
-<dt><strong>jointDistributions</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.DistributionCollection.html#openturns.DistributionCollection" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.DistributionCollection</span></code></a></span></dt><dd><p>Collection of local conditional copulas</p>
 </dd>
 </dl>
 </dd>
@@ -2967,6 +2975,20 @@ if:</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl>
 <dt><strong>distribution</strong><span class="classifier"><a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></a></span></dt><dd><p>The marginal distribution of the selected component(s).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="otagrum.ContinuousBayesianNetwork.getMarginals">
+<code class="sig-name descname">getMarginals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.getMarginals" title="Permalink to this definition">¶</a></dt>
+<dd><p>The collection of univariate marginal distributions.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl>
+<dt><strong>marginals</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>Collection of univariate marginal distributions</p>
 </dd>
 </dl>
 </dd>
@@ -3723,15 +3745,17 @@ function is of the form:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="otagrum.ContinuousBayesianNetwork.setDAGAndDistributionCollection">
-<code class="sig-name descname">setDAGAndDistributionCollection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dag</span></em>, <em class="sig-param"><span class="n">jointDistributions</span></em><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.setDAGAndDistributionCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the DAG and distribution collection.</p>
+<dt id="otagrum.ContinuousBayesianNetwork.setDAGAndMarginalsAndCopulas">
+<code class="sig-name descname">setDAGAndMarginalsAndCopulas</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dag</span></em>, <em class="sig-param"><span class="n">marginals</span></em>, <em class="sig-param"><span class="n">copulas</span></em><span class="sig-paren">)</span><a class="headerlink" href="#otagrum.ContinuousBayesianNetwork.setDAGAndMarginalsAndCopulas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the DAG, the marginals and the local copulas collections.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
 <dt><strong>dag</strong><span class="classifier"><a class="reference internal" href="otagrum.NamedDAG.html#otagrum.NamedDAG" title="otagrum.NamedDAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedDAG</span></code></a></span></dt><dd><p>The underlying NamedDAG</p>
 </dd>
-<dt><strong>jointDistributions</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.DistributionCollection.html#openturns.DistributionCollection" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.DistributionCollection</span></code></a></span></dt><dd><p>The collection of local conditional copulas</p>
+<dt><strong>marginals</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>The collection of univariate marginal distributions</p>
+</dd>
+<dt><strong>copulas</strong><span class="classifier">sequence of <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="(in OpenTURNS v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Distribution</span></code></a></span></dt><dd><p>The collection of local conditional copulas</p>
 </dd>
 </dl>
 </dd>
