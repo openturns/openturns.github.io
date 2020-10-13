@@ -1,0 +1,436 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_py_data_analysis_manage_data_and_samples_plot_sample_correlation.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_py_data_analysis_manage_data_and_samples_plot_sample_correlation.py:
+
+
+Correlation analysis on samples
+===============================
+
+In this example we are going to estimate the correlation between an output sample Y and the corresponding inputs using various estimators:
+
+- Pearson coefficients
+- Spearman coefficients
+- PCC: Partial Correlation Coefficients
+- PRCC: Partial Rank Correlation Coefficient
+- SRC: Standard Regression Coefficients
+- SRRC: Standard Rank Regression Coefficient
+
+
+.. code-block:: default
+
+    from __future__ import print_function
+    import openturns as ot
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+To illustrate the usage of the method mentionned above, we define a set of X/Y data using the ususal `Ishigami` use-case.
+
+Create X/Y data
+
+
+.. code-block:: default
+
+    ot.RandomGenerator.SetSeed(0)
+    formula = ['X3+sin(pi_*X1)+7*sin(X2)*sin(pi_*X2)+' + \
+               '1.2*((pi_*X3)*(pi_*X2))*sin(pi_*X1)']
+    input_names = ['X1', 'X2', 'X3']
+    model = ot.SymbolicFunction(input_names, formula)
+    distribution = ot.ComposedDistribution([ot.Uniform(-1.0, 1.0)] * 3, \
+                                            ot.IndependentCopula(3))
+    size = 100
+    inputDesign = ot.SobolIndicesExperiment(distribution, size, True).generate()
+    outputDesign = model(inputDesign)
+
+
+
+
+
+
+
+
+PCC coefficients
+------------------
+We compute here `PCC` coefficients using the `CorrelationAnalysis`
+
+
+.. code-block:: default
+
+    pcc_indices = ot.CorrelationAnalysis.PCC(inputDesign, outputDesign)
+    print(pcc_indices)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.195052,0.0183082,0.171376]
+
+
+
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(pcc_indices, input_names, "PCC coefficients")
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_001.png
+    :alt: PCC coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+PRCC coefficients
+--------------------
+We compute here `PRCC` coefficients using the `CorrelationAnalysis`
+
+
+.. code-block:: default
+
+    prcc_indices = ot.CorrelationAnalysis.PRCC(inputDesign, outputDesign)
+    print(prcc_indices)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.218657,0.00540221,0.14355]
+
+
+
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(prcc_indices, input_names, "PRCC coefficients")
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_002.png
+    :alt: PRCC coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+SRC coefficients
+-------------------
+We compute here `SRC` coefficients using the `CorrelationAnalysis`
+
+
+.. code-block:: default
+
+    src_indices = ot.CorrelationAnalysis.SRC(inputDesign, outputDesign)
+    print(src_indices)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.0369391,0.000313641,0.0282987]
+
+
+
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(src_indices, input_names, 'SRC coefficients')
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_003.png
+    :alt: SRC coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+Case where coefficients sum to 1 : 
+
+
+.. code-block:: default
+
+    scale_src_indices = ot.CorrelationAnalysis.SRC(inputDesign, outputDesign, True)
+    print(scale_src_indices)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.563513,0.00478466,0.431703]
+
+
+
+
+And its associated graph:
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(scale_src_indices, input_names, 'Scaled SRC coefficients')
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_004.png
+    :alt: Scaled SRC coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+Finally, using signed src: we get the trend importance :
+
+
+.. code-block:: default
+
+    signed_src_indices = ot.CorrelationAnalysis.SignedSRC(inputDesign, outputDesign)
+    print(signed_src_indices)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.192195,0.0177099,0.168222]
+
+
+
+
+and its graph :
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(signed_src_indices, input_names, 'Signed SRC coefficients')
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_005.png
+    :alt: Signed SRC coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+SRRC coefficients
+--------------------
+We compute here `SRRC` coefficients using the `CorrelationAnalysis`
+
+
+.. code-block:: default
+
+    srrc_indices = ot.CorrelationAnalysis.SRRC(inputDesign, outputDesign)
+    print(srrc_indices)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.0468524,2.72779e-05,0.0196627]
+
+
+
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(srrc_indices, input_names, 'SRRC coefficients')
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_006.png
+    :alt: SRRC coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+Pearson coefficients
+-----------------------
+We compute here the Pearson :math:`\rho` coefficients using the `CorrelationAnalysis`
+
+
+.. code-block:: default
+
+    pearson_correlation = ot.CorrelationAnalysis.PearsonCorrelation(inputDesign, outputDesign)
+    print(pearson_correlation)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.194078,0.0210564,0.171476]
+
+
+
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(pearson_correlation,
+                                                         input_names,
+                                                         "Pearson correlation coefficients")
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_007.png
+    :alt: Pearson correlation coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+Spearman coefficients
+-----------------------
+We compute here the Pearson :math:`\rho_s` coefficients using the `CorrelationAnalysis`
+
+
+.. code-block:: default
+
+    spearman_correlation = ot.CorrelationAnalysis.SpearmanCorrelation(inputDesign, outputDesign)
+    print(spearman_correlation)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.218318,0.00733303,0.143473]
+
+
+
+
+
+.. code-block:: default
+
+    graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(spearman_correlation, 
+                                                         input_names, 
+                                                         "Spearman correlation coefficients")
+    view = viewer.View(graph)
+    plt.show()
+
+
+
+.. image:: /auto_py_data_analysis/manage_data_and_samples/images/sphx_glr_plot_sample_correlation_008.png
+    :alt: Spearman correlation coefficients
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.556 seconds)
+
+
+.. _sphx_glr_download_auto_py_data_analysis_manage_data_and_samples_plot_sample_correlation.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_sample_correlation.py <plot_sample_correlation.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_sample_correlation.ipynb <plot_sample_correlation.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

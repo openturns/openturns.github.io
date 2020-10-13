@@ -1,0 +1,672 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_py_calibration_bayesian_calibration_plot_bayesian_calibration_flooding.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_py_calibration_bayesian_calibration_plot_bayesian_calibration_flooding.py:
+
+
+Bayesian calibration of the flooding model
+==========================================
+
+Abstract
+--------
+
+The goal of this example is to present the statistical hypotheses of the bayesian calibration of the flooding model.
+
+Model
+-----
+
+The simulator predicts the water height H depending on the flowrate Q.
+
+We consider the following four variable:
+
+* Q : the river flowrate (:math:`m^3/s`)
+* Ks : the Strickler coefficient (:math:`m^{1/3}/s`)
+* Zv : the downstream riverbed level (m)
+* Zm : the upstream riverbed level (m)
+
+When the Strickler coefficient increases, the riverbed generates less friction to the water flow.
+
+Parameters
+----------
+
+We consider the following parameters:
+
+* the length of the river L = 5000 (m),
+* the width of the river B = 300 (m).
+
+Outputs
+-------
+
+We make the hypothesis that the slope of the river is nonpositive and close to zero, which implies:
+
+.. math::
+   \alpha = \frac{Z_m - Z_v}{L},
+
+
+if :math:`Z_m \geq Z_v`. 
+The height of the river is:
+
+.. math::
+   H = \left(\frac{Q}{K_s B \sqrt{\alpha}}\right)^{0.6},
+
+
+for any :math:`K_s, Q>0`.
+
+Distribution
+------------
+
+We assume that the river flowrate has the following truncated Gumbel distribution:
+
+=========  ================================
+Variable   Distribution
+=========  ================================
+ Q         Gumbel(scale=558, mode=1013)>0
+=========  ================================
+
+Parameters to calibrate
+-----------------------
+
+The vector of parameters to calibrate is:
+
+.. math::
+   \theta = (K_s,Z_v,Z_m).
+
+
+The variables to calibrate are :math:`(K_s,Z_v,Z_m)` and are set to the following values:
+
+.. math::
+   K_s = 30, \qquad Z_v = 50, \qquad Z_m = 55.
+
+
+Observations
+------------
+
+In this section, we describe the statistical model associated with the :math:`n` observations.
+The errors of the water heights are associated with a gaussian distribution with a zero mean and a standard variation equal to:
+
+.. math::
+   \sigma=0.1.
+
+
+Therefore, the observed water heights are:
+
+.. math::
+   H_i = G(Q_i,K_s,Z_v,Z_m) + \epsilon_i
+
+
+for :math:`i=1,...,n` where
+
+.. math::
+   \epsilon \sim \mathcal{N}(0,\sigma^2)
+
+
+and we make the hypothesis that the observation errors are independent.
+We consider a sample size equal to:
+
+.. math::
+   n=20.
+
+
+The observations are the couples :math:`\{(Q_i,H_i)\}_{i=1,...,n}`, i.e. each observation is a couple made of the flowrate and the corresponding river height.
+
+Analysis
+--------
+
+In this model, the variables :math:`Z_m` and :math:`Z_v` are not identifiables, since only the difference :math:`Z_m-Z_v` matters. Hence, calibrating this model requires some regularization.
+
+Generate the observations
+-------------------------
+
+
+.. code-block:: default
+
+    import numpy as np
+    import openturns as ot
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+
+We define the model :math:`g` which has 4 inputs and one output H.
+
+The nonlinear least squares does not take into account for bounds in the parameters. Therefore, we ensure that the output is computed whatever the inputs. The model fails into two situations:
+
+* if :math:`K_s<0`,
+* if :math:`Z_v-Z_m<0`.
+
+In these cases, we return an infinite number.
+
+
+.. code-block:: default
+
+    def functionFlooding(X) :
+        L = 5.0e3
+        B = 300.0
+        Q, K_s, Z_v, Z_m = X
+        alpha = (Z_m - Z_v)/L
+        if alpha < 0.0 or K_s <= 0.0:
+            H = np.inf
+        else:
+            H = (Q/(K_s*B*np.sqrt(alpha)))**(3.0/5.0)
+        return [H]
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    g = ot.PythonFunction(4, 1, functionFlooding) 
+    g = ot.MemoizeFunction(g)
+    g.setOutputDescription(["H (m)"])
+
+
+
+
+
+
+
+
+Create the input distribution for :math:`Q`.
+
+
+.. code-block:: default
+
+    Q = ot.Gumbel(558.0, 1013.0)
+    Q = ot.TruncatedDistribution(Q,ot.TruncatedDistribution.LOWER)
+    Q.setDescription(["Q (m3/s)"])
+    Q
+
+
+
+
+
+
+.. raw:: html
+
+    <p>TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[)</p>
+    <br />
+    <br />
+
+Set the parameters to be calibrated.
+
+
+.. code-block:: default
+
+    K_s = ot.Dirac(30.0)
+    Z_v = ot.Dirac(50.0)
+    Z_m = ot.Dirac(55.0)
+    K_s.setDescription(["Ks (m^(1/3)/s)"])
+    Z_v.setDescription(["Zv (m)"])
+    Z_m.setDescription(["Zm (m)"])
+
+
+
+
+
+
+
+
+Create the joint input distribution.
+
+
+.. code-block:: default
+
+    inputRandomVector = ot.ComposedDistribution([Q, K_s, Z_v, Z_m])
+
+
+
+
+
+
+
+
+Create a Monte-Carlo sample of the output H.
+
+
+.. code-block:: default
+
+    nbobs = 20
+    inputSample = inputRandomVector.getSample(nbobs)
+    outputH = g(inputSample)
+
+
+
+
+
+
+
+
+Generate the observation noise and add it to the output of the model.
+
+
+.. code-block:: default
+
+    sigmaObservationNoiseH = 0.1 # (m)
+    noiseH = ot.Normal(0.,sigmaObservationNoiseH)
+    ot.RandomGenerator.SetSeed(0)
+    sampleNoiseH = noiseH.getSample(nbobs)
+    Hobs = outputH + sampleNoiseH
+
+
+
+
+
+
+
+
+Plot the Y observations versus the X observations.
+
+
+.. code-block:: default
+
+    Qobs = inputSample[:,0]
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = ot.Graph("Observations","Q (m3/s)","H (m)",True)
+    cloud = ot.Cloud(Qobs,Hobs)
+    graph.add(cloud)
+    graph
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    class=Graph name=Observations implementation=class=GraphImplementation name=Observations title=Observations xTitle=Q (m3/s) yTitle=H (m) axes=ON grid=ON legendposition= legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=20 dimension=2 data=[[2752.94,3.96323],[591.629,1.42464],[2096.19,3.26988],[1063.75,2.32631],[1435.35,2.42201],[1180.75,2.38328],[2096.39,3.27839],[1118.34,2.41672],[759.955,1.88378],[527.619,1.52758],[2224.3,3.38672],[595.185,1.58295],[708.427,1.49934],[1192.74,2.23426],[552.293,1.35735],[2148.86,3.35433],[792.987,1.94891],[1322.54,2.49967],[541.825,1.41551],[1219.52,2.43879]] color=blue fillStyle=solid lineStyle=solid pointStyle=plus lineWidth=1]
+
+
+
+Setting the calibration parameters
+----------------------------------
+
+Define the parametric model :math:`z = f(x,\theta)` that associates each observation :math:`x_i` and values of the  parameters :math:`\theta_i` to the parameters of the distribution of the corresponding observation: here :math:`z=(\mu, \sigma)`
+
+
+.. code-block:: default
+
+    def fullModelPy(X):
+        Q, K_s, Z_v, Z_m = X
+        H = g(X)[0]
+        sigmaH = 0.5 # (m^2) The standard deviation of the observation error.
+        return [H,sigmaH]
+
+    fullModel = ot.PythonFunction(4, 2, fullModelPy)
+    model = ot.ParametricFunction(fullModel, [0], Qobs[0])
+    model
+
+
+
+
+
+
+.. raw:: html
+
+    <p>ParametricEvaluation(class=PythonEvaluation name=OpenTURNSPythonFunction, parameters positions=[0], parameters=[x0 : 2752.94], input positions=[1,2,3])</p>
+    <br />
+    <br />
+
+Define the value of the reference values of the :math:`\theta` parameter. In the bayesian framework, this is called the mean of the *prior* gaussian distribution. In the data assimilation framework, this is called the *background*.
+
+
+.. code-block:: default
+
+    KsInitial = 20.
+    ZvInitial = 49.
+    ZmInitial = 51.
+    parameterPriorMean = ot.Point([KsInitial,ZvInitial,ZmInitial])
+    paramDim = parameterPriorMean.getDimension()
+
+
+
+
+
+
+
+
+Define the covariance matrix of the parameters :math:`\theta` to calibrate.
+
+
+.. code-block:: default
+
+    sigmaKs = 5.
+    sigmaZv = 1.
+    sigmaZm = 1.
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    parameterPriorCovariance = ot.CovarianceMatrix(paramDim)
+    parameterPriorCovariance[0,0] = sigmaKs**2
+    parameterPriorCovariance[1,1] = sigmaZv**2
+    parameterPriorCovariance[2,2] = sigmaZm**2
+    parameterPriorCovariance
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[[ 25  0  0 ]<br>
+     [  0  1  0 ]<br>
+     [  0  0  1 ]]</p>
+    <br />
+    <br />
+
+Define the the prior distribution :math:`\pi(\underline{\theta})` of the parameter :math:`\underline{\theta}`
+
+
+.. code-block:: default
+
+    prior = ot.Normal(parameterPriorMean,parameterPriorCovariance)
+    prior.setDescription(['Ks', 'Zv', 'Zm'])
+    prior
+
+
+
+
+
+
+.. raw:: html
+
+    <p>Normal(mu = [20,49,51], sigma = [5,1,1], R = [[ 1 0 0 ]<br>
+     [ 0 1 0 ]<br>
+     [ 0 0 1 ]])</p>
+    <br />
+    <br />
+
+Define the distribution of observations :math:`\underline{y} | \underline{z}` conditional on model predictions. 
+
+Note that its parameter dimension is the one of :math:`\underline{z}`, so the model must be adjusted accordingly. In other words, the input argument of the `setParameter` method of the conditional distribution must be equal to the dimension of the output of the `model`. Hence, we do not have to set the actual parameters: only the type of distribution is used.
+
+
+.. code-block:: default
+
+    conditional = ot.Normal()
+    conditional
+
+
+
+
+
+
+.. raw:: html
+
+    <p>Normal(mu = 0, sigma = 1)</p>
+    <br />
+    <br />
+
+Proposal distribution: uniform.
+
+
+.. code-block:: default
+
+    proposal = [ot.Uniform(-5., 5.),ot.Uniform(-1., 1.),ot.Uniform(-1., 1.)]
+    proposal
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [class=Uniform name=Uniform dimension=1 a=-5 b=5, class=Uniform name=Uniform dimension=1 a=-1 b=1, class=Uniform name=Uniform dimension=1 a=-1 b=1]
+
+
+
+Test the MCMC sampler
+---------------------
+
+The MCMC sampler essentially computes the log-likelihood of the parameters.
+
+
+.. code-block:: default
+
+    mymcmc = ot.MCMC(prior, conditional, model, Qobs, Hobs, parameterPriorMean)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    mymcmc.computeLogLikelihood(parameterPriorMean)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    -123.25616677477902
+
+
+
+Test the Metropolis-Hastings sampler
+------------------------------------
+
+- Creation of the Random Walk Metropolis-Hastings (RWMH) sampler.
+
+
+.. code-block:: default
+
+    initialState = parameterPriorMean
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    RWMHsampler = ot.RandomWalkMetropolisHastings(
+        prior, conditional, model, Qobs, Hobs, initialState, proposal)
+
+
+
+
+
+
+
+
+Tuning of the RWMH algorithm.
+
+Strategy of calibration for the random walk (trivial example: default).
+
+
+.. code-block:: default
+
+    strategy = ot.CalibrationStrategyCollection(paramDim)
+    RWMHsampler.setCalibrationStrategyPerComponent(strategy)
+
+
+
+
+
+
+
+
+Other parameters.
+
+
+.. code-block:: default
+
+    RWMHsampler.setVerbose(True)
+    RWMHsampler.setThinning(1)
+    RWMHsampler.setBurnIn(200)
+
+
+
+
+
+
+
+
+Generate a sample from the posterior distribution of the parameters theta.
+
+
+.. code-block:: default
+
+    sampleSize = 1000
+    sample = RWMHsampler.getSample(sampleSize)
+
+
+
+
+
+
+
+
+Look at the acceptance rate (basic checking of the efficiency of the tuning; value close to 0.2 usually recommended).
+
+
+.. code-block:: default
+
+    RWMHsampler.getAcceptanceRate()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[0.546667,0.619167,0.604167]</p>
+    <br />
+    <br />
+
+Build the distribution of the posterior by kernel smoothing.
+
+
+.. code-block:: default
+
+    kernel = ot.KernelSmoothing()
+    posterior = kernel.build(sample)
+
+
+
+
+
+
+
+
+Display prior vs posterior for each parameter.
+
+
+.. code-block:: default
+
+    from openturns.viewer import View
+    import pylab as pl
+
+    fig = pl.figure(figsize=(12, 4))
+
+    for parameter_index in range(paramDim):
+        graph = posterior.getMarginal(parameter_index).drawPDF()
+        priorGraph = prior.getMarginal(parameter_index).drawPDF()
+        priorGraph.setColors(['blue'])
+        graph.add(priorGraph)
+        graph.setLegends(['Posterior', 'Prior'])
+        ax = fig.add_subplot(1, paramDim, parameter_index+1)
+        _ = ot.viewer.View(graph, figure=fig, axes=[ax])
+
+    _ = fig.suptitle("Bayesian calibration")
+
+
+
+.. image:: /auto_py_calibration/bayesian_calibration/images/sphx_glr_plot_bayesian_calibration_flooding_001.png
+    :alt: Bayesian calibration
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  1.247 seconds)
+
+
+.. _sphx_glr_download_auto_py_calibration_bayesian_calibration_plot_bayesian_calibration_flooding.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_bayesian_calibration_flooding.py <plot_bayesian_calibration_flooding.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_bayesian_calibration_flooding.ipynb <plot_bayesian_calibration_flooding.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

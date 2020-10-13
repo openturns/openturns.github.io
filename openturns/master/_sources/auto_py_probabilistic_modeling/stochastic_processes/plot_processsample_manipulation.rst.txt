@@ -1,0 +1,254 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_py_probabilistic_modeling_stochastic_processes_plot_processsample_manipulation.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_py_probabilistic_modeling_stochastic_processes_plot_processsample_manipulation.py:
+
+
+Process sample manipulation
+===========================
+
+
+.. code-block:: default
+
+    # sphinx_gallery_thumbnail_number = 2
+
+
+
+
+
+
+
+
+The objective here is to create and manipulate a process sample. A process sample is a collection of fields which share the same mesh :math:`\mathcal{M} \in \mathbb{R}^n`.
+
+A process sample can be obtained as :math:`K` realizations of a multivariate stochastic process :math:`X: \Omega \times \mathcal{D} \rightarrow \mathbb{R}^d` of dimension :math:`d` where :math:`\mathcal{D} \in \mathbb{R}^n`, when the realizations are discretized on the same mesh :math:`\mathcal{M}` of :math:`\mathcal{D}`. The  values :math:`(\underline{x}_0^k, \dots, \underline{x}_{N-1}^k)` of the field :math:`k` are defined by:
+
+.. math:: 
+    \forall i \in [0, N-1],\quad \underline{x}_i= X(\omega_k)(\underline{t}_i)
+
+
+
+.. code-block:: default
+
+    from __future__ import print_function
+    import openturns as ot
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    import math as m
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+First, define a regular 2-d mesh
+
+
+.. code-block:: default
+
+    discretization = [10, 5]
+    mesher = ot.IntervalMesher(discretization)
+    lowerBound = [0.0, 0.0]
+    upperBound = [2.0, 1.0]
+    interval = ot.Interval(lowerBound, upperBound)
+    mesh = mesher.build(interval)
+    mesh = ot.RegularGrid(0.0, 0.01, 100)
+    graph = mesh.draw()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_processsample_manipulation_001.png
+    :alt: Mesh Unnamed
+    :class: sphx-glr-single-img
+
+
+
+
+
+Allocate a process sample from a field
+
+
+.. code-block:: default
+
+    field = ot.Field()
+    sampleSize = 10
+    processSample = ot.ProcessSample(sampleSize, field)
+    #field.draw()
+
+
+
+
+
+
+
+
+Create a process sample as realizations of a process
+
+
+.. code-block:: default
+
+    amplitude = [1.0]
+    scale = [0.2]*1
+    myCovModel = ot.ExponentialModel(scale, amplitude)
+    myProcess = ot.GaussianProcess(myCovModel, mesh)
+    processSample = myProcess.getSample(10)
+    #processSample
+
+
+
+
+
+
+
+
+draw the sample, without interpolation
+
+
+.. code-block:: default
+
+    graph = processSample.drawMarginal(0, False)
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_processsample_manipulation_002.png
+    :alt: Unnamed - 0 marginal
+    :class: sphx-glr-single-img
+
+
+
+
+
+draw the sample, with interpolation
+
+
+.. code-block:: default
+
+    graph = processSample.drawMarginal(0)
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_processsample_manipulation_003.png
+    :alt: Unnamed - 0 marginal
+    :class: sphx-glr-single-img
+
+
+
+
+
+Compute the  mean of the process sample
+The result is a field
+
+
+.. code-block:: default
+
+    graph = processSample.computeMean().drawMarginal()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_processsample_manipulation_004.png
+    :alt: Unnamed - 0 marginal
+    :class: sphx-glr-single-img
+
+
+
+
+
+Draw the quantile field
+
+
+.. code-block:: default
+
+    graph = processSample.computeQuantilePerComponent(0.9).drawMarginal(0)
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_processsample_manipulation_005.png
+    :alt: Unnamed - 0 marginal
+    :class: sphx-glr-single-img
+
+
+
+
+
+Draw the field with interpolation
+
+
+.. code-block:: default
+
+    graph = processSample.drawMarginal(0)
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_py_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_processsample_manipulation_006.png
+    :alt: Unnamed - 0 marginal
+    :class: sphx-glr-single-img
+
+
+
+
+
+processSample
+
+
+.. code-block:: default
+
+    plt.show()
+
+
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.517 seconds)
+
+
+.. _sphx_glr_download_auto_py_probabilistic_modeling_stochastic_processes_plot_processsample_manipulation.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_processsample_manipulation.py <plot_processsample_manipulation.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_processsample_manipulation.ipynb <plot_processsample_manipulation.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
