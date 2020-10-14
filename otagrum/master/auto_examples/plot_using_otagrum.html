@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using otagrum &#8212; otagrum 0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Plant growth" href="plot_plant_growth.html" />
+    <link rel="prev" title="Examples" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_plant_growth.html" title="Plant growth"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">otagrum 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using otagrum</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-using-otagrum-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="using-otagrum">
+<span id="sphx-glr-auto-examples-plot-using-otagrum-py"></span><h1>Using otagrum<a class="headerlink" href="#using-otagrum" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">pyAgrum</span> <span class="k">as</span> <span class="nn">gum</span>
+<span class="kn">import</span> <span class="nn">pyAgrum.lib.notebook</span> <span class="k">as</span> <span class="nn">gnb</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">otagrum</span>
+</pre></div>
+</div>
+<p>Creating the CBN structure
+We begin by creating the CBN that will be used throughout this example.</p>
+<p>To do so, we need a NamedDAG structure…</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">DAG</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">addNode</span><span class="p">()</span> <span class="c1"># Add node A</span>
+<span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">addNode</span><span class="p">()</span> <span class="c1"># Add node B</span>
+<span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">addNode</span><span class="p">()</span> <span class="c1"># Add node C</span>
+<span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">addNode</span><span class="p">()</span> <span class="c1"># Add node D</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="o">.</span><span class="n">addArc</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">],</span> <span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">])</span> <span class="c1"># Arc A -&gt; C</span>
+<span class="n">dag</span><span class="o">.</span><span class="n">addArc</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">])</span> <span class="c1"># Arc B -&gt; C</span>
+<span class="n">dag</span><span class="o">.</span><span class="n">addArc</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">])</span> <span class="c1"># Arc C -&gt; D</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span>
+</pre></div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>G</title>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+</g>
+<!-- 2 -->
+<g id="node3" class="node">
+<title>2</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge2" class="edge">
+<title>0-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C39.71,-136.28 45.15,-125.71 50.04,-116.2"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="53.23,-117.64 54.7,-107.15 47.01,-114.44 53.23,-117.64"/>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge3" class="edge">
+<title>1-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C86.29,-136.28 80.85,-125.71 75.96,-116.2"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="78.99,-114.44 71.3,-107.15 72.77,-117.64 78.99,-114.44"/>
+</g>
+<!-- 3 -->
+<g id="node4" class="node">
+<title>3</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+</g>
+<!-- 2&#45;&gt;3 -->
+<g id="edge1" class="edge">
+<title>2-&gt;3</title>
+<path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-63.98 63,-54.71 63,-46.11"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="66.5,-46.1 63,-36.1 59.5,-46.1 66.5,-46.1"/>
+</g>
+</g>
+</svg>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">structure</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">NamedDAG</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gnb</span><span class="o">.</span><span class="n">showDot</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">toDot</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;IPython.core.display.SVG object&gt;
+</pre></div>
+</div>
+<p>Parameters of the CBN … and a collection of marginals and local conditional copulas.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">m_list</span> <span class="o">=</span> <span class="p">[</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Uniform.html#openturns.Uniform" title="openturns.Uniform" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span></a><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">getSize</span><span class="p">())]</span> <span class="c1"># Local marginals</span>
+<span class="n">lcc_list</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Local Conditional Copulas</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">structure</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span> <span class="p">):</span>
+    <span class="n">dim_lcc</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">getParents</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+    <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CorrelationMatrix.html#openturns.CorrelationMatrix" title="openturns.CorrelationMatrix" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">R</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CorrelationMatrix.html#openturns.CorrelationMatrix" title="openturns.CorrelationMatrix" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span></a><span class="p">(</span><span class="n">dim_lcc</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim_lcc</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+            <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CorrelationMatrix.html#openturns.CorrelationMatrix" title="openturns.CorrelationMatrix" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">R</span></a><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+    <span class="n">lcc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Normal.html#openturns.Normal" title="openturns.Normal" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span></a><span class="p">([</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim_lcc</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="n">dim_lcc</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CorrelationMatrix.html#openturns.CorrelationMatrix" title="openturns.CorrelationMatrix" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">R</span></a><span class="p">)</span><span class="o">.</span><span class="n">getCopula</span><span class="p">()</span> <span class="p">)</span>
+
+
+<span class="c1"># **Creation of the CBN**</span>
+
+<span class="c1"># Now that we have a NamedDAG structure and a collection of local conditional copulas, we can construct a CBN.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cbn</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousBayesianNetwork</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">m_list</span><span class="p">,</span> <span class="n">lcc_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Having a CBN, we can now sample from it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RandomGenerator.html#openturns.RandomGenerator.SetSeed" title="openturns.RandomGenerator.SetSeed" class="sphx-glr-backref-module-openturns-RandomGenerator sphx-glr-backref-type-py-method"><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span></a><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># Set random seed</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample</span></a> <span class="o">=</span> <span class="n">cbn</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">train</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample</span></a><span class="p">[:</span><span class="o">-</span><span class="mi">100</span><span class="p">]</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample</span></a><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">:]</span>
+</pre></div>
+</div>
+<p>Learning the structure with continuous PC:
+Now that we have data, we can use it to learn the structure with the continuous PC algorithm.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousPC</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample</span></a><span class="p">,</span> <span class="n">maxConditioningSetSize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="c1"># We first learn the skeleton, that is the undirected structure.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">skeleton</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">learnSkeleton</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">skeleton</span>
+</pre></div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>no_name</title>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+</g>
+<!-- 2 -->
+<g id="node3" class="node">
+<title>2</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge1" class="edge">
+<title>0-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C41.17,-133.46 48.89,-118.44 54.7,-107.15"/>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge2" class="edge">
+<title>1-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C84.83,-133.46 77.11,-118.44 71.3,-107.15"/>
+</g>
+<!-- 3 -->
+<g id="node4" class="node">
+<title>3</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+</g>
+<!-- 2&#45;&gt;3 -->
+<g id="edge3" class="edge">
+<title>2-&gt;3</title>
+<path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-60.85 63,-46.92 63,-36.1"/>
+</g>
+</g>
+</svg>
+<br />
+<br /><p>Then we look for the v-structures, leading to a Partially Directed Acyclic Graph (PDAG)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pdag</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">learnPDAG</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pdag</span>
+</pre></div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>no_name</title>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+</g>
+<!-- 2 -->
+<g id="node3" class="node">
+<title>2</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge1" class="edge">
+<title>0-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C39.71,-136.28 45.15,-125.71 50.04,-116.2"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="53.23,-117.64 54.7,-107.15 47.01,-114.44 53.23,-117.64"/>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge2" class="edge">
+<title>1-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C86.29,-136.28 80.85,-125.71 75.96,-116.2"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="78.99,-114.44 71.3,-107.15 72.77,-117.64 78.99,-114.44"/>
+</g>
+<!-- 3 -->
+<g id="node4" class="node">
+<title>3</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+</g>
+<!-- 2&#45;&gt;3 -->
+<g id="edge3" class="edge">
+<title>2-&gt;3</title>
+<path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-60.85 63,-46.92 63,-36.1"/>
+</g>
+</g>
+</svg>
+<br />
+<br /><p>Finally, the remaining edges are oriented by propagating constraints</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ndag</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">learnDAG</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gnb</span><span class="o">.</span><span class="n">showDot</span><span class="p">(</span><span class="n">ndag</span><span class="o">.</span><span class="n">toDot</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;IPython.core.display.SVG object&gt;
+</pre></div>
+</div>
+<p>The true structure has been recovered.
+Learning with continuous MIIC
+Otagrum provides another learning algorithm to learn the structure: the continuous MIIC algorithm.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousMIIC</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<p>This algorithm relies on the computing of mutual information which is done through the copula function. Hence, a copula model for the data is needed. The continuous MIIC algorithm can make use of Gaussian copulas (parametric) or Bernstein copulas (non-parametric) to compute mutual information. Moreover, due to finite sampling size, the mutual information estimators need to be corrected. Two kind of correction are provided: NoCorr (no correction) or Naive (a fixed correction is substracted from the raw mutual information estimators). Those behaviours can be changed as follows:</p>
+<p>learner.setCMode(otagrum.CorrectedMutualInformation.CModeTypes_Bernstein) # By default</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">learner</span><span class="o">.</span><span class="n">setCMode</span><span class="p">(</span><span class="n">otagrum</span><span class="o">.</span><span class="n">CorrectedMutualInformation</span><span class="o">.</span><span class="n">CModeTypes_Gaussian</span><span class="p">)</span> <span class="c1"># To use Gaussian copulas</span>
+<span class="n">learner</span><span class="o">.</span><span class="n">setKMode</span><span class="p">(</span><span class="n">otagrum</span><span class="o">.</span><span class="n">CorrectedMutualInformation</span><span class="o">.</span><span class="n">KModeTypes_Naive</span><span class="p">)</span> <span class="c1"># By default</span>
+<span class="c1">#learner.setKMode(otagrum.CorrectedMutualInformation.KModeTypes_NoCorr) # To use the raw estimators</span>
+<span class="n">learner</span><span class="o">.</span><span class="n">setAlpha</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span> <span class="c1"># Set the correction value for the Naive behaviour, it is set to 0.01 by default</span>
+</pre></div>
+</div>
+<p>As with PC algorithm we can learn the skeleton, PDAG and DAG using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">skeleton</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">learnSkeleton</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">skeleton</span>
+</pre></div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>no_name</title>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+</g>
+<!-- 2 -->
+<g id="node3" class="node">
+<title>2</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge1" class="edge">
+<title>0-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C41.17,-133.46 48.89,-118.44 54.7,-107.15"/>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge2" class="edge">
+<title>1-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C84.83,-133.46 77.11,-118.44 71.3,-107.15"/>
+</g>
+<!-- 3 -->
+<g id="node4" class="node">
+<title>3</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+</g>
+<!-- 2&#45;&gt;3 -->
+<g id="edge3" class="edge">
+<title>2-&gt;3</title>
+<path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-60.85 63,-46.92 63,-36.1"/>
+</g>
+</g>
+</svg>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pdag</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">learnPDAG</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pdag</span>
+</pre></div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>no_name</title>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+</g>
+<!-- 2 -->
+<g id="node3" class="node">
+<title>2</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge1" class="edge">
+<title>0-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C39.71,-136.28 45.15,-125.71 50.04,-116.2"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="53.23,-117.64 54.7,-107.15 47.01,-114.44 53.23,-117.64"/>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge2" class="edge">
+<title>1-&gt;2</title>
+<path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C86.29,-136.28 80.85,-125.71 75.96,-116.2"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="78.99,-114.44 71.3,-107.15 72.77,-117.64 78.99,-114.44"/>
+</g>
+<!-- 3 -->
+<g id="node4" class="node">
+<title>3</title>
+<ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+</g>
+<!-- 2&#45;&gt;3 -->
+<g id="edge3" class="edge">
+<title>2-&gt;3</title>
+<path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-63.98 63,-54.71 63,-46.11"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="66.5,-46.1 63,-36.1 59.5,-46.1 66.5,-46.1"/>
+</g>
+</g>
+</svg>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">learner</span><span class="o">.</span><span class="n">learnDAG</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gnb</span><span class="o">.</span><span class="n">showDot</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">toDot</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;IPython.core.display.SVG object&gt;
+</pre></div>
+</div>
+<p>Learning parameters
+Bernstein copulas are used to learn the local conditional copulas associated to each node</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">m_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">lcc_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample.getDimension" title="openturns.Sample.getDimension" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">train</span><span class="o">.</span><span class="n">getDimension</span></a><span class="p">()):</span>
+    <span class="n">m_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.UniformFactory.html#openturns.UniformFactory" title="openturns.UniformFactory" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">UniformFactory</span></a><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample.getMarginal" title="openturns.Sample.getMarginal" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">train</span><span class="o">.</span><span class="n">getMarginal</span></a><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ndag</span><span class="o">.</span><span class="n">getParents</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+    <span class="n">dim_lcc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dim_lcc</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.EmpiricalBernsteinCopula.html#openturns.EmpiricalBernsteinCopula" title="openturns.EmpiricalBernsteinCopula" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bernsteinCopula</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.IndependentCopula.html#openturns.IndependentCopula" title="openturns.IndependentCopula" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">IndependentCopula</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dim_lcc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousTTest</span><span class="o">.</span><span class="n">GetK</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">train</span></a><span class="p">),</span> <span class="n">dim_lcc</span><span class="p">)</span>
+        <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.EmpiricalBernsteinCopula.html#openturns.EmpiricalBernsteinCopula" title="openturns.EmpiricalBernsteinCopula" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bernsteinCopula</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.EmpiricalBernsteinCopula.html#openturns.EmpiricalBernsteinCopula" title="openturns.EmpiricalBernsteinCopula" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">EmpiricalBernsteinCopula</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample.getMarginal" title="openturns.Sample.getMarginal" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">train</span><span class="o">.</span><span class="n">getMarginal</span></a><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">K</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">lcc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.EmpiricalBernsteinCopula.html#openturns.EmpiricalBernsteinCopula" title="openturns.EmpiricalBernsteinCopula" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bernsteinCopula</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now create the learned CBN</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lcbn</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">ContinuousBayesianNetwork</span><span class="p">(</span><span class="n">ndag</span><span class="p">,</span> <span class="n">m_list</span><span class="p">,</span> <span class="n">lcc_list</span><span class="p">)</span> <span class="c1"># Learned CBN</span>
+</pre></div>
+</div>
+<p>And compare the mean loglikelihood between the true and the learned models</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute_mean_LL</span><span class="p">(</span><span class="n">cbn</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test</span></a><span class="p">):</span>
+    <span class="n">ll</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test</span></a><span class="p">:</span>
+        <span class="n">ll</span> <span class="o">+=</span> <span class="n">cbn</span><span class="o">.</span><span class="n">computeLogPDF</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">ll</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test</span></a><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ll</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">true_LL</span> <span class="o">=</span> <span class="n">compute_mean_LL</span><span class="p">(</span><span class="n">cbn</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">true_LL</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.31620906143480526
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exp_LL</span> <span class="o">=</span> <span class="n">compute_mean_LL</span><span class="p">(</span><span class="n">lcbn</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">exp_LL</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.15241697100666615
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.854 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-using-otagrum-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/c785e393d248af29337db07a92c50d35/plot_using_otagrum.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_using_otagrum.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/5d5ea88ebb95e0f402b04a4daf048e90/plot_using_otagrum.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_using_otagrum.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plot_plant_growth.html"
+                        title="next chapter">Plant growth</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/auto_examples/plot_using_otagrum.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_plant_growth.html" title="Plant growth"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">otagrum 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using otagrum</a></li> 
+      </ul>
+    </div>
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant growth &#8212; otagrum 0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Using otagrum" href="plot_using_otagrum.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_using_otagrum.html" title="Using otagrum"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">otagrum 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Plant growth</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-plant-growth-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="plant-growth">
+<span id="sphx-glr-auto-examples-plot-plant-growth-py"></span><h1>Plant growth<a class="headerlink" href="#plant-growth" title="Permalink to this headline">¶</a></h1>
+<p>The study presented in that section focuses on the growth of particular plant (not specified).
+The objective is to predict which height will be reached by the plant …
+for example in order to evaluate the risk that the plant might require un greater jag on the balcony …</p>
+<p>The problem is that we have no data on the height usually reached by this kind of plant, which prohibits any use of statistics tools …
+So … what ? Yet we have the following information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>we know the influence of the quality of the light and the influence of the air moisture rate on the plant growth,</p></li>
+<li><p>we can quantify the quality of the light we have at home and also the air moisture rate where the plant lives.</p></li>
+</ul>
+</div></blockquote>
+<p>…. so we can model the plant growth thanks to a Bayes net and then have access to the variability of its final height!</p>
+<p>Let us imagine (for the example purpose):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Some meteorological data (tropical place?):</p>
+<ul>
+<li><p>the balcony is in plain light 3 times out of 4,</p></li>
+<li><p>in the darkness, the air is moist 8 times out of 10,</p></li>
+<li><p>in plain light, the air is dry 6 times out of 10.</p></li>
+</ul>
+</li>
+<li><p>Some remembrance of biology trainings:</p>
+<ul>
+<li><p>in plain light, if the air is moist, the plant is very happy: it grows 90cm on average with a variation of $pm$ 10 cm. If the air is too dry, it will not grow more than 30 cm but we reasonnably can expect about a 15 cm growth.</p></li>
+<li><p>in the darkness, if the air is too dry, the plant suffers: it will not grow more than 20 cm and might die as well! If the air is moist, it will  usually grow about 30 cm, at least 15cm but not more than 50 cm.</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">otagrum</span>
+<span class="kn">import</span> <span class="nn">pyAgrum</span> <span class="k">as</span> <span class="nn">gum</span>
+<span class="kn">import</span> <span class="nn">pyAgrum.lib.notebook</span> <span class="k">as</span> <span class="nn">gnb</span>
+<span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">View</span></a>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># We have to build the Bayes Net now. There are 3 variables that will be named : $Light$, $Moisture$ and $Height$.</span>
+</pre></div>
+</div>
+<p>Create variables</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">light</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">LabelizedVariable</span><span class="p">(</span><span class="s2">&quot;Light&quot;</span><span class="p">,</span> <span class="s2">&quot;quality of light&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">moisture</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">LabelizedVariable</span><span class="p">(</span><span class="s2">&quot;Moisture&quot;</span><span class="p">,</span> <span class="s2">&quot;quantity of moisture&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">height</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">DiscretizedVariable</span><span class="p">(</span><span class="s2">&quot;Height&quot;</span><span class="p">,</span> <span class="s2">&quot;plant growth&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both variables $Light$ and $Moisture$ are categorical variables whith the following attributes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>$Light$ has 2 attributes: $Dim$ which refers to the darkness and $Bright$ which refers to plain light situations,</p></li>
+<li><p>$Moisture$ has 2 attributes: $Dry$ which refers to dry air situations and $Wet$ which refers to wet air situations.</p></li>
+</ul>
+</div></blockquote>
+<p>$Height$ is a continuous variable which has to be discretized for the Bayes Net use.</p>
+<p># Create labels and ticks</p>
+<p>light has 2 attributes : Dim and Bright</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">light</span><span class="o">.</span><span class="n">addLabel</span><span class="p">(</span><span class="s2">&quot;Dim&quot;</span><span class="p">)</span>
+<span class="n">light</span><span class="o">.</span><span class="n">addLabel</span><span class="p">(</span><span class="s2">&quot;Bright&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(gum::LabelizedVariable@0x5629d0cada30) Light&lt;Dim,Bright&gt;
+</pre></div>
+</div>
+<p>moisture has 2 attributes : Dry and Wet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">moisture</span><span class="o">.</span><span class="n">addLabel</span><span class="p">(</span><span class="s2">&quot;Dry&quot;</span><span class="p">)</span>
+<span class="n">moisture</span><span class="o">.</span><span class="n">addLabel</span><span class="p">(</span><span class="s2">&quot;Wet&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(gum::LabelizedVariable@0x5629d13f2e10) Moisture&lt;Dry,Wet&gt;
+</pre></div>
+</div>
+<p>height is a discretized variable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">height</span><span class="o">.</span><span class="n">addTick</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span>
+<span class="n">height</span><span class="o">.</span><span class="n">domainSize</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>14
+</pre></div>
+</div>
+<p>Furthermore, there are several influence links : $Light$ on $Moisture$, $(Light,Moisture)$ on $Height$.</p>
+<p># Create the net</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">BayesNet</span><span class="p">(</span><span class="s2">&quot;Plant Growth&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Add variables</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">indexLight</span>    <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">light</span><span class="p">)</span>
+<span class="n">indexMoisture</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">moisture</span><span class="p">)</span>
+<span class="n">indexHeight</span>   <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Add arcs</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">addArc</span><span class="p">(</span><span class="n">indexLight</span><span class="p">,</span> <span class="n">indexMoisture</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">addArc</span><span class="p">(</span><span class="n">indexLight</span><span class="p">,</span> <span class="n">indexHeight</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">addArc</span><span class="p">(</span><span class="n">indexMoisture</span><span class="p">,</span> <span class="n">indexHeight</span><span class="p">)</span>
+<span class="n">bn</span>
+</pre></div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120pt" height="188pt" viewBox="0.00 0.00 120.34 188.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>G</title>
+<!-- Light -->
+<g id="node1" class="node">
+<title>Light</title>
+<g id="a_node1"><a xlink:title="(0) Light">
+<ellipse fill="#404040" stroke="black" cx="77.9" cy="-162" rx="29.8" ry="18"/>
+<text text-anchor="middle" x="77.9" y="-158.3" font-family="Times,serif" font-size="14.00" fill="white">Light</text>
+</a>
+</g>
+</g>
+<!-- Moisture -->
+<g id="node2" class="node">
+<title>Moisture</title>
+<g id="a_node2"><a xlink:title="(1) Moisture">
+<ellipse fill="#404040" stroke="black" cx="42.9" cy="-90" rx="42.79" ry="18"/>
+<text text-anchor="middle" x="42.9" y="-86.3" font-family="Times,serif" font-size="14.00" fill="white">Moisture</text>
+</a>
+</g>
+</g>
+<!-- Light&#45;&gt;Moisture -->
+<g id="edge1" class="edge">
+<title>Light-&gt;Moisture</title>
+<g id="a_edge1"><a xlink:title="(0, 1) : ">
+<path fill="none" stroke="#4a4a4a" d="M69.6,-144.41C65.52,-136.25 60.51,-126.22 55.93,-117.07"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="58.98,-115.34 51.37,-107.96 52.72,-118.47 58.98,-115.34"/>
+</a>
+</g>
+</g>
+<!-- Height -->
+<g id="node3" class="node">
+<title>Height</title>
+<g id="a_node3"><a xlink:title="(2) Height">
+<ellipse fill="#404040" stroke="black" cx="77.9" cy="-18" rx="34.39" ry="18"/>
+<text text-anchor="middle" x="77.9" y="-14.3" font-family="Times,serif" font-size="14.00" fill="white">Height</text>
+</a>
+</g>
+</g>
+<!-- Light&#45;&gt;Height -->
+<g id="edge2" class="edge">
+<title>Light-&gt;Height</title>
+<g id="a_edge2"><a xlink:title="(0, 2) : ">
+<path fill="none" stroke="#4a4a4a" d="M84.79,-144.14C88.6,-133.88 92.95,-120.41 94.9,-108 97.37,-92.19 97.37,-87.81 94.9,-72 93.52,-63.18 90.92,-53.82 88.16,-45.46"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="91.4,-44.13 84.79,-35.86 84.8,-46.45 91.4,-44.13"/>
+</a>
+</g>
+</g>
+<!-- Moisture&#45;&gt;Height -->
+<g id="edge3" class="edge">
+<title>Moisture-&gt;Height</title>
+<g id="a_edge3"><a xlink:title="(1, 2) : ">
+<path fill="none" stroke="#4a4a4a" d="M51.37,-72.05C55.45,-63.89 60.44,-53.91 64.98,-44.82"/>
+<polygon fill="#4a4a4a" stroke="#4a4a4a" points="68.16,-46.3 69.5,-35.79 61.9,-43.17 68.16,-46.3"/>
+</a>
+</g>
+</g>
+</g>
+</svg>
+<br />
+<br /><p>The next step is the quantification of the Bayes net.</p>
+<p>The variable $Light$ is quantified as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>$Light=Dim$ with a probability of 0.25,</p></li>
+<li><p>$Light=Bright$ with a probability of 0.75.</p></li>
+</ul>
+</div></blockquote>
+<p>Create conditional probability tables
+light conditional probability table</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexLight</span><span class="p">)[:]</span><span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">]</span>
+<span class="n">gnb</span><span class="o">.</span><span class="n">showPotential</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexLight</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;IPython.core.display.HTML object&gt;
+</pre></div>
+</div>
+<dl class="simple">
+<dt>The influence of $Light$ on $Moisture$ is modelized by:</dt><dd><ul class="simple">
+<li><p>when $Light=Dim$ then  $Moisture=Dry$ with a probability of 0.2 and  $Moisture=Wet$ with a probability of 0.8,</p></li>
+<li><p>when $Light=Bright$ then  $Moisture=Dry$ with a probability of 0.6 and  $Moisture=Wet$ with a probability of 0.4.</p></li>
+</ul>
+</dd>
+</dl>
+<p>moisture conditional probability table
+We show the antecedents of moisture with the order in which they were declared</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexMoisture</span><span class="p">)[{</span><span class="s1">&#39;Light&#39;</span> <span class="p">:</span> <span class="s1">&#39;Dim&#39;</span><span class="p">}]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexMoisture</span><span class="p">)[{</span><span class="s1">&#39;Light&#39;</span> <span class="p">:</span> <span class="s1">&#39;Bright&#39;</span><span class="p">}]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]</span>
+<span class="n">gnb</span><span class="o">.</span><span class="n">showPotential</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexMoisture</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;IPython.core.display.HTML object&gt;
+</pre></div>
+</div>
+<dl class="simple">
+<dt>The influence of $(Light, Moisture)$ on $Height$ is modelized by:</dt><dd><ul class="simple">
+<li><p>when $Light=Dim$ and $Moisture=Dry$ then $Height$ follows a $Uniform(min=0, max=20)$ distribution,</p></li>
+<li><p>when $Light=Dim$ and $Moisture=Wet$ then $Height$ follows a $Triangular(min=15, mod=30, max=50)$ distribution,</p></li>
+<li><p>when $Light=Bright$ and $Moisture=Dry$ then $Height$ follows a $Triangular(min=0, mod=15, max=30)$ distribution,</p></li>
+<li><p>when $Light=Bright$ and $Moisture=Wet$ then $Height$ follows a $Normal(mu=90, sigma=10)$ distribution.</p></li>
+</ul>
+</dd>
+</dl>
+<p>height has a conditional probability table
+We give here its conditional distributions</p>
+<p>distribution when Dim and Dry</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Uniform.html#openturns.Uniform" title="openturns.Uniform" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenDimAndDry</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Uniform.html#openturns.Uniform" title="openturns.Uniform" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span></a><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">)</span>
+<span class="c1"># distribution when Dim and Wet</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Triangular.html#openturns.Triangular" title="openturns.Triangular" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenDimAndWet</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Triangular.html#openturns.Triangular" title="openturns.Triangular" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Triangular</span></a><span class="p">(</span><span class="mf">15.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>
+<span class="c1"># distribution when Bright and Dry</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Triangular.html#openturns.Triangular" title="openturns.Triangular" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenBrightAndDry</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Triangular.html#openturns.Triangular" title="openturns.Triangular" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Triangular</span></a><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span>
+<span class="c1"># distribution when Bright and Wet</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Normal.html#openturns.Normal" title="openturns.Normal" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenBrightAndWet</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Normal.html#openturns.Normal" title="openturns.Normal" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span></a><span class="p">(</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We have to enter some OT distributions whithin aGrUM conditional probability tables
+We show the antecedents of height with the order in which they were declared
+The new class Utils from otagrum is able to marry OT distributions and Agrum conditional probability tables</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexHeight</span><span class="p">)[{</span><span class="s1">&#39;Light&#39;</span><span class="p">:</span> <span class="s1">&#39;Dim&#39;</span><span class="p">,</span> <span class="s1">&#39;Moisture&#39;</span><span class="p">:</span> <span class="s1">&#39;Dry&#39;</span><span class="p">}]</span>   <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">Discretize</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Uniform.html#openturns.Uniform" title="openturns.Uniform" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenDimAndDry</span></a><span class="p">,</span> <span class="n">height</span><span class="p">)[:]</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexHeight</span><span class="p">)[{</span><span class="s1">&#39;Light&#39;</span><span class="p">:</span> <span class="s1">&#39;Bright&#39;</span><span class="p">,</span> <span class="s1">&#39;Moisture&#39;</span><span class="p">:</span> <span class="s1">&#39;Dry&#39;</span><span class="p">}]</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">Discretize</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Triangular.html#openturns.Triangular" title="openturns.Triangular" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenBrightAndDry</span></a><span class="p">,</span> <span class="n">height</span><span class="p">)[:]</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexHeight</span><span class="p">)[{</span><span class="s1">&#39;Light&#39;</span><span class="p">:</span> <span class="s1">&#39;Dim&#39;</span><span class="p">,</span> <span class="s1">&#39;Moisture&#39;</span><span class="p">:</span> <span class="s1">&#39;Wet&#39;</span><span class="p">}]</span>    <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">Discretize</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Triangular.html#openturns.Triangular" title="openturns.Triangular" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenDimAndWet</span></a><span class="p">,</span> <span class="n">height</span><span class="p">)[:]</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexHeight</span><span class="p">)[{</span><span class="s1">&#39;Light&#39;</span><span class="p">:</span> <span class="s1">&#39;Bright&#39;</span><span class="p">,</span> <span class="s1">&#39;Moisture&#39;</span><span class="p">:</span> <span class="s1">&#39;Wet&#39;</span><span class="p">}]</span> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">Discretize</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Normal.html#openturns.Normal" title="openturns.Normal" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">heightWhenBrightAndWet</span></a><span class="p">,</span> <span class="n">height</span><span class="p">)[:]</span>
+<span class="n">gnb</span><span class="o">.</span><span class="n">showPotential</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">cpt</span><span class="p">(</span><span class="n">indexHeight</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;IPython.core.display.HTML object&gt;
+</pre></div>
+</div>
+<p>We can study the plant growth variability in different situations like:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>I put my plant on my balcony; in that situation, I set none evidence inside the Bayes net.</p></li>
+<li><p>I put my plant in a  place where it is dark all time (in my cellar?); in that situation, I set one evidence inside the Bayes net: $Light=Dim$.</p></li>
+<li><p>I put my plant in a  place where it is moist all time (in my bathroom?); in that situation, I set one evidence inside the Bayes net: $Moisture=Wet$.</p></li>
+</ul>
+</div></blockquote>
+<p>Variability of the plant growth on my balcony</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ie</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">LazyPropagation</span><span class="p">(</span><span class="n">bn</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_dist</span></a> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">FromMarginal</span><span class="p">(</span><span class="n">ie</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="s2">&quot;Height&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Probability (height &gt; 40cm) = &quot;</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.computeCDF" title="openturns.Distribution.computeCDF" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist</span><span class="o">.</span><span class="n">computeCDF</span></a><span class="p">(</span><span class="mf">40.0</span><span class="p">))</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.drawPDF" title="openturns.Distribution.drawPDF" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist</span><span class="o">.</span><span class="n">drawPDF</span></a><span class="p">())</span>
+</pre></div>
+</div>
+<img alt="Height PDF" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_plant_growth_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Probability (height &gt; 40cm) =  0.32857134257593246
+
+&lt;openturns.viewer.View object at 0x7fd7656cf130&gt;
+</pre></div>
+</div>
+<p>Variability of the plant growth in my cellar</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ie</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">LazyPropagation</span><span class="p">(</span><span class="n">bn</span><span class="p">)</span>
+<span class="n">ie</span><span class="o">.</span><span class="n">setEvidence</span><span class="p">({</span><span class="s1">&#39;Light&#39;</span><span class="p">:</span><span class="s1">&#39;Dim&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_dist_dim</span></a> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">FromMarginal</span><span class="p">(</span><span class="n">ie</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="s2">&quot;Height&quot;</span><span class="p">))</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.setDescription" title="openturns.Distribution.setDescription" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist_dim</span><span class="o">.</span><span class="n">setDescription</span></a><span class="p">([</span><span class="s1">&#39;Height|Light=Dim&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Probability (height &gt; 40cm)|Light=Dim = &quot;</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.computeCDF" title="openturns.Distribution.computeCDF" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist_dim</span><span class="o">.</span><span class="n">computeCDF</span></a><span class="p">(</span><span class="mf">40.0</span><span class="p">))</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.drawPDF" title="openturns.Distribution.drawPDF" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist_dim</span><span class="o">.</span><span class="n">drawPDF</span></a><span class="p">())</span>
+</pre></div>
+</div>
+<img alt="Height|Light=Dim PDF" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_plant_growth_002.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Probability (height &gt; 40cm)|Light=Dim =  0.11428571428571421
+
+&lt;openturns.viewer.View object at 0x7fd7656cf9d0&gt;
+</pre></div>
+</div>
+<p>Variability of the plant growth when the atmosphere is very wet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ie</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">LazyPropagation</span><span class="p">(</span><span class="n">bn</span><span class="p">)</span>
+<span class="n">ie</span><span class="o">.</span><span class="n">setEvidence</span><span class="p">({</span><span class="s1">&#39;Moisture&#39;</span><span class="p">:</span><span class="s1">&#39;Wet&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_dist_wet</span></a> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">FromMarginal</span><span class="p">(</span><span class="n">ie</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="s2">&quot;Height&quot;</span><span class="p">))</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.setDescription" title="openturns.Distribution.setDescription" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist_wet</span><span class="o">.</span><span class="n">setDescription</span></a><span class="p">([</span><span class="s1">&#39;Height|Moisture=Wet&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Probability (height &gt; 40cm)|Moisture=Wet = &quot;</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.computeCDF" title="openturns.Distribution.computeCDF" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist_wet</span><span class="o">.</span><span class="n">computeCDF</span></a><span class="p">(</span><span class="mf">40.0</span><span class="p">))</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.drawPDF" title="openturns.Distribution.drawPDF" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_dist_wet</span><span class="o">.</span><span class="n">drawPDF</span></a><span class="p">())</span>
+</pre></div>
+</div>
+<img alt="Height|Moisture=Wet PDF" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_plant_growth_003.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Probability (height &gt; 40cm)|Moisture=Wet =  0.6571426851518647
+
+&lt;openturns.viewer.View object at 0x7fd7656cf310&gt;
+</pre></div>
+</div>
+<p>Get the distribution of the variable “Light”</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_dist_wet</span></a> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">FromPotential</span><span class="p">(</span><span class="n">ie</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="s2">&quot;Light&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_dist_wet</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.drawPDF" title="openturns.Distribution.drawPDF" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">l_dist_wet</span><span class="o">.</span><span class="n">drawPDF</span></a><span class="p">())</span>
+</pre></div>
+</div>
+<img alt="Light PDF" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_plant_growth_004.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>UserDefined({x = [0], p = 0.4}, {x = [1], p = 0.6})
+
+&lt;openturns.viewer.View object at 0x7fd7656cfe50&gt;
+</pre></div>
+</div>
+<p>Get the joint distribution [H, M]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ie</span> <span class="o">=</span> <span class="n">gum</span><span class="o">.</span><span class="n">LazyPropagation</span><span class="p">(</span><span class="n">bn</span><span class="p">)</span>
+<span class="n">ie</span><span class="o">.</span><span class="n">addJointTarget</span><span class="p">({</span><span class="s2">&quot;Height&quot;</span><span class="p">,</span> <span class="s2">&quot;Moisture&quot;</span><span class="p">})</span>
+<span class="n">ie</span><span class="o">.</span><span class="n">makeInference</span><span class="p">()</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_m_dist</span></a> <span class="o">=</span> <span class="n">otagrum</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">FromPotential</span><span class="p">(</span><span class="n">ie</span><span class="o">.</span><span class="n">jointPosterior</span><span class="p">({</span><span class="s2">&quot;Height&quot;</span><span class="p">,</span> <span class="s2">&quot;Moisture&quot;</span><span class="p">}))</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.getDescription" title="openturns.Distribution.getDescription" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_m_dist</span><span class="o">.</span><span class="n">getDescription</span></a><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.getMarginal" title="openturns.Distribution.getMarginal" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">h_m_dist</span><span class="o">.</span><span class="n">getMarginal</span></a><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[Moisture,Height]
+UserDefined({x = [0], p = 0.5}, {x = [1], p = 0.5})
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.391 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-plant-growth-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/82c3675708534fe0d37186acf7047e67/plot_plant_growth.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_plant_growth.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/a1db101856b791da0196ee9f109a8220/plot_plant_growth.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_plant_growth.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="plot_using_otagrum.html"
+                        title="previous chapter">Using otagrum</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/auto_examples/plot_plant_growth.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_using_otagrum.html" title="Using otagrum"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">otagrum 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Plant growth</a></li> 
+      </ul>
+    </div>
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
+  </body>
+</html>

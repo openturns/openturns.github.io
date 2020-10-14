@@ -1,0 +1,596 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_examples_plot_plant_growth.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_plot_plant_growth.py:
+
+
+Plant growth
+============
+
+The study presented in that section focuses on the growth of particular plant (not specified).
+The objective is to predict which height will be reached by the plant ...
+for example in order to evaluate the risk that the plant might require un greater jag on the balcony ...
+
+The problem is that we have no data on the height usually reached by this kind of plant, which prohibits any use of statistics tools ...
+So ... what ? Yet we have the following information:
+
+   - we know the influence of the quality of the light and the influence of the air moisture rate on the plant growth,
+   - we can quantify the quality of the light we have at home and also the air moisture rate where the plant lives.
+
+.... so we can model the plant growth thanks to a Bayes net and then have access to the variability of its final height!
+
+Let us imagine (for the example purpose): 
+
+ - Some meteorological data (tropical place?): 
+
+   - the balcony is in plain light 3 times out of 4,
+   - in the darkness, the air is moist 8 times out of 10,
+   - in plain light, the air is dry 6 times out of 10.
+
+ - Some remembrance of biology trainings:
+
+   - in plain light, if the air is moist, the plant is very happy: it grows 90cm on average with a variation of $\pm$ 10 cm. If the air is too dry, it will not grow more than 30 cm but we reasonnably can expect about a 15 cm growth.
+   - in the darkness, if the air is too dry, the plant suffers: it will not grow more than 20 cm and might die as well! If the air is moist, it will  usually grow about 30 cm, at least 15cm but not more than 50 cm.
+
+
+
+
+.. code-block:: default
+
+    from __future__ import print_function
+    import openturns as ot
+    import otagrum
+    import pyAgrum as gum
+    import pyAgrum.lib.notebook as gnb
+    from openturns.viewer import View
+    from matplotlib import pylab as plt
+
+    # We have to build the Bayes Net now. There are 3 variables that will be named : $Light$, $Moisture$ and $Height$.
+
+
+
+
+
+
+
+
+Create variables
+
+
+.. code-block:: default
+
+    light = gum.LabelizedVariable("Light", "quality of light", 0)
+    moisture = gum.LabelizedVariable("Moisture", "quantity of moisture", 0)
+    height = gum.DiscretizedVariable("Height", "plant growth")
+
+
+
+
+
+
+
+
+Both variables $Light$ and $Moisture$ are categorical variables whith the following attributes:  
+
+ - $Light$ has 2 attributes: $Dim$ which refers to the darkness and $Bright$ which refers to plain light situations,
+ - $Moisture$ has 2 attributes: $Dry$ which refers to dry air situations and $Wet$ which refers to wet air situations.
+
+$Height$ is a continuous variable which has to be discretized for the Bayes Net use.
+
+# Create labels and ticks
+
+light has 2 attributes : Dim and Bright
+
+
+.. code-block:: default
+
+    light.addLabel("Dim")
+    light.addLabel("Bright")
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    (gum::LabelizedVariable@0x5629d0cada30) Light<Dim,Bright>
+
+
+
+moisture has 2 attributes : Dry and Wet
+
+
+.. code-block:: default
+
+    moisture.addLabel("Dry")
+    moisture.addLabel("Wet")
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    (gum::LabelizedVariable@0x5629d13f2e10) Moisture<Dry,Wet>
+
+
+
+height is a discretized variable
+
+
+.. code-block:: default
+
+    [height.addTick(i) for i in range(0, 150, 10)]
+    height.domainSize()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    14
+
+
+
+Furthermore, there are several influence links : $Light$ on $Moisture$, $(Light,Moisture)$ on $Height$.
+
+# Create the net
+
+
+.. code-block:: default
+
+    bn = gum.BayesNet("Plant Growth")
+
+
+
+
+
+
+
+
+Add variables
+
+
+.. code-block:: default
+
+    indexLight    = bn.add(light)
+    indexMoisture = bn.add(moisture)
+    indexHeight   = bn.add(height)
+
+
+
+
+
+
+
+
+Add arcs
+
+
+.. code-block:: default
+
+    bn.addArc(indexLight, indexMoisture)
+    bn.addArc(indexLight, indexHeight)
+    bn.addArc(indexMoisture, indexHeight)
+    bn
+
+
+
+
+
+
+.. raw:: html
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120pt" height="188pt" viewBox="0.00 0.00 120.34 188.00">
+    <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+    <title>G</title>
+    <!-- Light -->
+    <g id="node1" class="node">
+    <title>Light</title>
+    <g id="a_node1"><a xlink:title="(0) Light">
+    <ellipse fill="#404040" stroke="black" cx="77.9" cy="-162" rx="29.8" ry="18"/>
+    <text text-anchor="middle" x="77.9" y="-158.3" font-family="Times,serif" font-size="14.00" fill="white">Light</text>
+    </a>
+    </g>
+    </g>
+    <!-- Moisture -->
+    <g id="node2" class="node">
+    <title>Moisture</title>
+    <g id="a_node2"><a xlink:title="(1) Moisture">
+    <ellipse fill="#404040" stroke="black" cx="42.9" cy="-90" rx="42.79" ry="18"/>
+    <text text-anchor="middle" x="42.9" y="-86.3" font-family="Times,serif" font-size="14.00" fill="white">Moisture</text>
+    </a>
+    </g>
+    </g>
+    <!-- Light&#45;&gt;Moisture -->
+    <g id="edge1" class="edge">
+    <title>Light-&gt;Moisture</title>
+    <g id="a_edge1"><a xlink:title="(0, 1) : ">
+    <path fill="none" stroke="#4a4a4a" d="M69.6,-144.41C65.52,-136.25 60.51,-126.22 55.93,-117.07"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="58.98,-115.34 51.37,-107.96 52.72,-118.47 58.98,-115.34"/>
+    </a>
+    </g>
+    </g>
+    <!-- Height -->
+    <g id="node3" class="node">
+    <title>Height</title>
+    <g id="a_node3"><a xlink:title="(2) Height">
+    <ellipse fill="#404040" stroke="black" cx="77.9" cy="-18" rx="34.39" ry="18"/>
+    <text text-anchor="middle" x="77.9" y="-14.3" font-family="Times,serif" font-size="14.00" fill="white">Height</text>
+    </a>
+    </g>
+    </g>
+    <!-- Light&#45;&gt;Height -->
+    <g id="edge2" class="edge">
+    <title>Light-&gt;Height</title>
+    <g id="a_edge2"><a xlink:title="(0, 2) : ">
+    <path fill="none" stroke="#4a4a4a" d="M84.79,-144.14C88.6,-133.88 92.95,-120.41 94.9,-108 97.37,-92.19 97.37,-87.81 94.9,-72 93.52,-63.18 90.92,-53.82 88.16,-45.46"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="91.4,-44.13 84.79,-35.86 84.8,-46.45 91.4,-44.13"/>
+    </a>
+    </g>
+    </g>
+    <!-- Moisture&#45;&gt;Height -->
+    <g id="edge3" class="edge">
+    <title>Moisture-&gt;Height</title>
+    <g id="a_edge3"><a xlink:title="(1, 2) : ">
+    <path fill="none" stroke="#4a4a4a" d="M51.37,-72.05C55.45,-63.89 60.44,-53.91 64.98,-44.82"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="68.16,-46.3 69.5,-35.79 61.9,-43.17 68.16,-46.3"/>
+    </a>
+    </g>
+    </g>
+    </g>
+    </svg>
+    <br />
+    <br />
+
+The next step is the quantification of the Bayes net.
+
+The variable $Light$ is quantified as follows:
+
+ - $Light=Dim$ with a probability of 0.25,
+ - $Light=Bright$ with a probability of 0.75.
+
+Create conditional probability tables
+light conditional probability table
+
+
+.. code-block:: default
+
+    bn.cpt(indexLight)[:]= [0.25, 0.75]
+    gnb.showPotential(bn.cpt(indexLight))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    <IPython.core.display.HTML object>
+
+
+
+
+The influence of $Light$ on $Moisture$ is modelized by:
+ - when $Light=Dim$ then  $Moisture=Dry$ with a probability of 0.2 and  $Moisture=Wet$ with a probability of 0.8,
+ - when $Light=Bright$ then  $Moisture=Dry$ with a probability of 0.6 and  $Moisture=Wet$ with a probability of 0.4.
+
+moisture conditional probability table
+We show the antecedents of moisture with the order in which they were declared
+
+
+.. code-block:: default
+
+    bn.cpt(indexMoisture)[{'Light' : 'Dim'}] = [0.2, 0.8]
+    bn.cpt(indexMoisture)[{'Light' : 'Bright'}] = [0.6, 0.4]
+    gnb.showPotential(bn.cpt(indexMoisture))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    <IPython.core.display.HTML object>
+
+
+
+
+The influence of $(Light, Moisture)$ on $Height$ is modelized by:
+ - when $Light=Dim$ and $Moisture=Dry$ then $Height$ follows a $Uniform(min=0, max=20)$ distribution,
+ - when $Light=Dim$ and $Moisture=Wet$ then $Height$ follows a $Triangular(min=15, mod=30, max=50)$ distribution,
+ - when $Light=Bright$ and $Moisture=Dry$ then $Height$ follows a $Triangular(min=0, mod=15, max=30)$ distribution,
+ - when $Light=Bright$ and $Moisture=Wet$ then $Height$ follows a $Normal(\mu=90, \sigma=10)$ distribution.
+
+height has a conditional probability table
+We give here its conditional distributions
+
+distribution when Dim and Dry
+
+
+.. code-block:: default
+
+    heightWhenDimAndDry = ot.Uniform(0.0, 20.0)
+    # distribution when Dim and Wet
+    heightWhenDimAndWet = ot.Triangular(15.0, 30.0, 50.0)
+    # distribution when Bright and Dry
+    heightWhenBrightAndDry = ot.Triangular(0.0, 15.0, 30.0)
+    # distribution when Bright and Wet
+    heightWhenBrightAndWet = ot.Normal(90.0, 10.0)
+
+
+
+
+
+
+
+
+We have to enter some OT distributions whithin aGrUM conditional probability tables
+We show the antecedents of height with the order in which they were declared
+The new class Utils from otagrum is able to marry OT distributions and Agrum conditional probability tables
+
+
+.. code-block:: default
+
+    bn.cpt(indexHeight)[{'Light': 'Dim', 'Moisture': 'Dry'}]   = otagrum.Utils.Discretize(heightWhenDimAndDry, height)[:]
+    bn.cpt(indexHeight)[{'Light': 'Bright', 'Moisture': 'Dry'}] = otagrum.Utils.Discretize(heightWhenBrightAndDry, height)[:]
+    bn.cpt(indexHeight)[{'Light': 'Dim', 'Moisture': 'Wet'}]    = otagrum.Utils.Discretize(heightWhenDimAndWet, height)[:]
+    bn.cpt(indexHeight)[{'Light': 'Bright', 'Moisture': 'Wet'}] = otagrum.Utils.Discretize(heightWhenBrightAndWet, height)[:]
+    gnb.showPotential(bn.cpt(indexHeight))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    <IPython.core.display.HTML object>
+
+
+
+
+We can study the plant growth variability in different situations like:
+
+ - I put my plant on my balcony; in that situation, I set none evidence inside the Bayes net.
+ - I put my plant in a  place where it is dark all time (in my cellar?); in that situation, I set one evidence inside the Bayes net: $Light=Dim$.
+ - I put my plant in a  place where it is moist all time (in my bathroom?); in that situation, I set one evidence inside the Bayes net: $Moisture=Wet$.
+
+Variability of the plant growth on my balcony
+
+
+.. code-block:: default
+
+    ie = gum.LazyPropagation(bn)
+    h_dist = otagrum.Utils.FromMarginal(ie.posterior("Height"))
+    print("Probability (height > 40cm) = ", 1.0 - h_dist.computeCDF(40.0))
+    View(h_dist.drawPDF())
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_plant_growth_001.png
+    :alt: Height PDF
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Probability (height > 40cm) =  0.32857134257593246
+
+    <openturns.viewer.View object at 0x7fd7656cf130>
+
+
+
+Variability of the plant growth in my cellar
+
+
+.. code-block:: default
+
+    ie = gum.LazyPropagation(bn)
+    ie.setEvidence({'Light':'Dim'})
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    h_dist_dim = otagrum.Utils.FromMarginal(ie.posterior("Height"))
+    h_dist_dim.setDescription(['Height|Light=Dim'])
+    print("Probability (height > 40cm)|Light=Dim = ", 1.0 - h_dist_dim.computeCDF(40.0))
+    View(h_dist_dim.drawPDF())
+
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_plant_growth_002.png
+    :alt: Height|Light=Dim PDF
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Probability (height > 40cm)|Light=Dim =  0.11428571428571421
+
+    <openturns.viewer.View object at 0x7fd7656cf9d0>
+
+
+
+Variability of the plant growth when the atmosphere is very wet
+
+
+.. code-block:: default
+
+    ie = gum.LazyPropagation(bn)
+    ie.setEvidence({'Moisture':'Wet'})
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    h_dist_wet = otagrum.Utils.FromMarginal(ie.posterior("Height"))
+    h_dist_wet.setDescription(['Height|Moisture=Wet'])
+    print("Probability (height > 40cm)|Moisture=Wet = ", 1.0 - h_dist_wet.computeCDF(40.0))
+    View(h_dist_wet.drawPDF())
+
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_plant_growth_003.png
+    :alt: Height|Moisture=Wet PDF
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Probability (height > 40cm)|Moisture=Wet =  0.6571426851518647
+
+    <openturns.viewer.View object at 0x7fd7656cf310>
+
+
+
+Get the distribution of the variable "Light"
+
+
+.. code-block:: default
+
+    l_dist_wet = otagrum.Utils.FromPotential(ie.posterior("Light"))
+    print(l_dist_wet)
+    View(l_dist_wet.drawPDF())
+
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_plant_growth_004.png
+    :alt: Light PDF
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    UserDefined({x = [0], p = 0.4}, {x = [1], p = 0.6})
+
+    <openturns.viewer.View object at 0x7fd7656cfe50>
+
+
+
+Get the joint distribution [H, M]
+
+
+.. code-block:: default
+
+    ie = gum.LazyPropagation(bn)
+    ie.addJointTarget({"Height", "Moisture"})
+    ie.makeInference()
+    h_m_dist = otagrum.Utils.FromPotential(ie.jointPosterior({"Height", "Moisture"}))
+    print(h_m_dist.getDescription())
+    print(h_m_dist.getMarginal(0))
+    plt.show()
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [Moisture,Height]
+    UserDefined({x = [0], p = 0.5}, {x = [1], p = 0.5})
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.391 seconds)
+
+
+.. _sphx_glr_download_auto_examples_plot_plant_growth.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_plant_growth.py <plot_plant_growth.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_plant_growth.ipynb <plot_plant_growth.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

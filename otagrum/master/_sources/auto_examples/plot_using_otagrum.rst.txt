@@ -1,0 +1,786 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_examples_plot_using_otagrum.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_plot_using_otagrum.py:
+
+
+Using otagrum
+=============
+
+
+.. code-block:: default
+
+    import openturns as ot
+    import pyAgrum as gum
+    import pyAgrum.lib.notebook as gnb
+    from matplotlib import pylab as plt
+    import otagrum
+
+
+
+
+
+
+
+
+Creating the CBN structure
+We begin by creating the CBN that will be used throughout this example.
+
+To do so, we need a NamedDAG structure...
+
+
+.. code-block:: default
+
+    dag = gum.DAG()
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    mapping = {}
+    mapping['A'] = dag.addNode() # Add node A
+    mapping['B'] = dag.addNode() # Add node B
+    mapping['C'] = dag.addNode() # Add node C
+    mapping['D'] = dag.addNode() # Add node D
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    dag.addArc(mapping['A'], mapping['C']) # Arc A -> C
+    dag.addArc(mapping['B'], mapping['C']) # Arc B -> C
+    dag.addArc(mapping['C'], mapping['D']) # Arc C -> D
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    dag
+
+
+
+
+
+
+
+.. raw:: html
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+    <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+    <title>G</title>
+    <!-- 0 -->
+    <g id="node1" class="node">
+    <title>0</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+    </g>
+    <!-- 2 -->
+    <g id="node3" class="node">
+    <title>2</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+    </g>
+    <!-- 0&#45;&gt;2 -->
+    <g id="edge2" class="edge">
+    <title>0-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C39.71,-136.28 45.15,-125.71 50.04,-116.2"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="53.23,-117.64 54.7,-107.15 47.01,-114.44 53.23,-117.64"/>
+    </g>
+    <!-- 1 -->
+    <g id="node2" class="node">
+    <title>1</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+    </g>
+    <!-- 1&#45;&gt;2 -->
+    <g id="edge3" class="edge">
+    <title>1-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C86.29,-136.28 80.85,-125.71 75.96,-116.2"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="78.99,-114.44 71.3,-107.15 72.77,-117.64 78.99,-114.44"/>
+    </g>
+    <!-- 3 -->
+    <g id="node4" class="node">
+    <title>3</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+    </g>
+    <!-- 2&#45;&gt;3 -->
+    <g id="edge1" class="edge">
+    <title>2-&gt;3</title>
+    <path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-63.98 63,-54.71 63,-46.11"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="66.5,-46.1 63,-36.1 59.5,-46.1 66.5,-46.1"/>
+    </g>
+    </g>
+    </svg>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    structure = otagrum.NamedDAG(dag, list(mapping.keys()))
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    gnb.showDot(structure.toDot())
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    <IPython.core.display.SVG object>
+
+
+
+
+Parameters of the CBN ... and a collection of marginals and local conditional copulas.
+
+
+.. code-block:: default
+
+    m_list = [ot.Uniform(0.0, 1.0) for i in range(structure.getSize())] # Local marginals
+    lcc_list = [] # Local Conditional Copulas
+    for i in range( structure.getSize() ):
+        dim_lcc = structure.getParents(i).getSize() + 1
+        R = ot.CorrelationMatrix(dim_lcc)
+        for j in range(dim_lcc):
+            for k in range(j):
+                R[j, k] = 0.6
+        lcc_list.append( ot.Normal([0.0]*dim_lcc, [1.0]*dim_lcc, R).getCopula() )
+
+
+    # **Creation of the CBN**
+
+    # Now that we have a NamedDAG structure and a collection of local conditional copulas, we can construct a CBN.
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    cbn = otagrum.ContinuousBayesianNetwork(structure, m_list, lcc_list)
+
+
+
+
+
+
+
+
+Having a CBN, we can now sample from it.
+
+
+.. code-block:: default
+
+    ot.RandomGenerator.SetSeed(10) # Set random seed
+    sample = cbn.getSample(1000)
+    train = sample[:-100]
+    test = sample[-100:]
+
+
+
+
+
+
+
+
+
+Learning the structure with continuous PC:
+Now that we have data, we can use it to learn the structure with the continuous PC algorithm.
+
+
+.. code-block:: default
+
+    learner = otagrum.ContinuousPC(sample, maxConditioningSetSize=5, alpha=0.1)
+
+
+    # We first learn the skeleton, that is the undirected structure.
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    skeleton = learner.learnSkeleton()
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    skeleton
+
+
+
+
+
+
+.. raw:: html
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+    <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+    <title>no_name</title>
+    <!-- 0 -->
+    <g id="node1" class="node">
+    <title>0</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+    </g>
+    <!-- 2 -->
+    <g id="node3" class="node">
+    <title>2</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+    </g>
+    <!-- 0&#45;&gt;2 -->
+    <g id="edge1" class="edge">
+    <title>0-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C41.17,-133.46 48.89,-118.44 54.7,-107.15"/>
+    </g>
+    <!-- 1 -->
+    <g id="node2" class="node">
+    <title>1</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+    </g>
+    <!-- 1&#45;&gt;2 -->
+    <g id="edge2" class="edge">
+    <title>1-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C84.83,-133.46 77.11,-118.44 71.3,-107.15"/>
+    </g>
+    <!-- 3 -->
+    <g id="node4" class="node">
+    <title>3</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+    </g>
+    <!-- 2&#45;&gt;3 -->
+    <g id="edge3" class="edge">
+    <title>2-&gt;3</title>
+    <path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-60.85 63,-46.92 63,-36.1"/>
+    </g>
+    </g>
+    </svg>
+    <br />
+    <br />
+
+Then we look for the v-structures, leading to a Partially Directed Acyclic Graph (PDAG) 
+
+
+.. code-block:: default
+
+    pdag = learner.learnPDAG()
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    pdag
+
+
+
+
+
+
+.. raw:: html
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+    <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+    <title>no_name</title>
+    <!-- 0 -->
+    <g id="node1" class="node">
+    <title>0</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+    </g>
+    <!-- 2 -->
+    <g id="node3" class="node">
+    <title>2</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+    </g>
+    <!-- 0&#45;&gt;2 -->
+    <g id="edge1" class="edge">
+    <title>0-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C39.71,-136.28 45.15,-125.71 50.04,-116.2"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="53.23,-117.64 54.7,-107.15 47.01,-114.44 53.23,-117.64"/>
+    </g>
+    <!-- 1 -->
+    <g id="node2" class="node">
+    <title>1</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+    </g>
+    <!-- 1&#45;&gt;2 -->
+    <g id="edge2" class="edge">
+    <title>1-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C86.29,-136.28 80.85,-125.71 75.96,-116.2"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="78.99,-114.44 71.3,-107.15 72.77,-117.64 78.99,-114.44"/>
+    </g>
+    <!-- 3 -->
+    <g id="node4" class="node">
+    <title>3</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+    </g>
+    <!-- 2&#45;&gt;3 -->
+    <g id="edge3" class="edge">
+    <title>2-&gt;3</title>
+    <path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-60.85 63,-46.92 63,-36.1"/>
+    </g>
+    </g>
+    </svg>
+    <br />
+    <br />
+
+Finally, the remaining edges are oriented by propagating constraints
+
+
+.. code-block:: default
+
+    ndag = learner.learnDAG()
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    gnb.showDot(ndag.toDot())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    <IPython.core.display.SVG object>
+
+
+
+
+The true structure has been recovered.
+Learning with continuous MIIC
+Otagrum provides another learning algorithm to learn the structure: the continuous MIIC algorithm.
+
+
+.. code-block:: default
+
+    learner = otagrum.ContinuousMIIC(sample)
+
+
+
+
+
+
+
+
+This algorithm relies on the computing of mutual information which is done through the copula function. Hence, a copula model for the data is needed. The continuous MIIC algorithm can make use of Gaussian copulas (parametric) or Bernstein copulas (non-parametric) to compute mutual information. Moreover, due to finite sampling size, the mutual information estimators need to be corrected. Two kind of correction are provided: NoCorr (no correction) or Naive (a fixed correction is substracted from the raw mutual information estimators). Those behaviours can be changed as follows: 
+
+learner.setCMode(otagrum.CorrectedMutualInformation.CModeTypes_Bernstein) # By default
+
+
+.. code-block:: default
+
+    learner.setCMode(otagrum.CorrectedMutualInformation.CModeTypes_Gaussian) # To use Gaussian copulas
+    learner.setKMode(otagrum.CorrectedMutualInformation.KModeTypes_Naive) # By default
+    #learner.setKMode(otagrum.CorrectedMutualInformation.KModeTypes_NoCorr) # To use the raw estimators
+    learner.setAlpha(0.01) # Set the correction value for the Naive behaviour, it is set to 0.01 by default
+
+
+
+
+
+
+
+
+As with PC algorithm we can learn the skeleton, PDAG and DAG using
+
+
+.. code-block:: default
+
+    skeleton = learner.learnSkeleton()
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    skeleton
+
+
+
+
+
+
+
+.. raw:: html
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+    <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+    <title>no_name</title>
+    <!-- 0 -->
+    <g id="node1" class="node">
+    <title>0</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+    </g>
+    <!-- 2 -->
+    <g id="node3" class="node">
+    <title>2</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+    </g>
+    <!-- 0&#45;&gt;2 -->
+    <g id="edge1" class="edge">
+    <title>0-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C41.17,-133.46 48.89,-118.44 54.7,-107.15"/>
+    </g>
+    <!-- 1 -->
+    <g id="node2" class="node">
+    <title>1</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+    </g>
+    <!-- 1&#45;&gt;2 -->
+    <g id="edge2" class="edge">
+    <title>1-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C84.83,-133.46 77.11,-118.44 71.3,-107.15"/>
+    </g>
+    <!-- 3 -->
+    <g id="node4" class="node">
+    <title>3</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+    </g>
+    <!-- 2&#45;&gt;3 -->
+    <g id="edge3" class="edge">
+    <title>2-&gt;3</title>
+    <path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-60.85 63,-46.92 63,-36.1"/>
+    </g>
+    </g>
+    </svg>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    pdag = learner.learnPDAG()
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    pdag
+
+
+
+
+
+
+
+.. raw:: html
+
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="188pt" viewBox="0.00 0.00 134.00 188.00">
+    <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+    <title>no_name</title>
+    <!-- 0 -->
+    <g id="node1" class="node">
+    <title>0</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="27" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="27" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">0</text>
+    </g>
+    <!-- 2 -->
+    <g id="node3" class="node">
+    <title>2</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-90" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-86.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">2</text>
+    </g>
+    <!-- 0&#45;&gt;2 -->
+    <g id="edge1" class="edge">
+    <title>0-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M35.35,-144.76C39.71,-136.28 45.15,-125.71 50.04,-116.2"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="53.23,-117.64 54.7,-107.15 47.01,-114.44 53.23,-117.64"/>
+    </g>
+    <!-- 1 -->
+    <g id="node2" class="node">
+    <title>1</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="99" cy="-162" rx="27" ry="18"/>
+    <text text-anchor="middle" x="99" y="-158.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">1</text>
+    </g>
+    <!-- 1&#45;&gt;2 -->
+    <g id="edge2" class="edge">
+    <title>1-&gt;2</title>
+    <path fill="none" stroke="#4a4a4a" d="M90.65,-144.76C86.29,-136.28 80.85,-125.71 75.96,-116.2"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="78.99,-114.44 71.3,-107.15 72.77,-117.64 78.99,-114.44"/>
+    </g>
+    <!-- 3 -->
+    <g id="node4" class="node">
+    <title>3</title>
+    <ellipse fill="none" stroke="#4a4a4a" cx="63" cy="-18" rx="27" ry="18"/>
+    <text text-anchor="middle" x="63" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#4a4a4a">3</text>
+    </g>
+    <!-- 2&#45;&gt;3 -->
+    <g id="edge3" class="edge">
+    <title>2-&gt;3</title>
+    <path fill="none" stroke="#4a4a4a" d="M63,-71.7C63,-63.98 63,-54.71 63,-46.11"/>
+    <polygon fill="#4a4a4a" stroke="#4a4a4a" points="66.5,-46.1 63,-36.1 59.5,-46.1 66.5,-46.1"/>
+    </g>
+    </g>
+    </svg>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    dag = learner.learnDAG()
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    gnb.showDot(dag.toDot())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    <IPython.core.display.SVG object>
+
+
+
+
+Learning parameters
+Bernstein copulas are used to learn the local conditional copulas associated to each node
+
+
+.. code-block:: default
+
+    m_list = []
+    lcc_list = []
+    for i in range(train.getDimension()):
+        m_list.append(ot.UniformFactory().build(train.getMarginal(i)))
+        indices = [i] + [int(n) for n in ndag.getParents(i)]
+        dim_lcc = len(indices)
+        if dim_lcc == 1:
+            bernsteinCopula = ot.IndependentCopula(1)
+        elif dim_lcc > 1:
+            K = otagrum.ContinuousTTest.GetK(len(train), dim_lcc)
+            bernsteinCopula = ot.EmpiricalBernsteinCopula(train.getMarginal(indices), K, False)
+        lcc_list.append(bernsteinCopula)
+
+
+
+
+
+
+
+
+We can now create the learned CBN
+
+
+.. code-block:: default
+
+    lcbn = otagrum.ContinuousBayesianNetwork(ndag, m_list, lcc_list) # Learned CBN
+
+
+
+
+
+
+
+
+And compare the mean loglikelihood between the true and the learned models
+
+
+.. code-block:: default
+
+    def compute_mean_LL(cbn, test):
+        ll = 0
+        for t in test:
+            ll += cbn.computeLogPDF(t)
+        ll /= len(test)
+        return ll
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    true_LL = compute_mean_LL(cbn, test)
+    print(true_LL)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    0.31620906143480526
+
+
+
+
+
+.. code-block:: default
+
+    exp_LL = compute_mean_LL(lcbn, test)
+    print(exp_LL)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    0.15241697100666615
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.854 seconds)
+
+
+.. _sphx_glr_download_auto_examples_plot_using_otagrum.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_using_otagrum.py <plot_using_otagrum.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_using_otagrum.ipynb <plot_using_otagrum.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
