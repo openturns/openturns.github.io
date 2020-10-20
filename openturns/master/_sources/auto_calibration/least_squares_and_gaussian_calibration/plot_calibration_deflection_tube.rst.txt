@@ -1,0 +1,629 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_calibration_least_squares_and_gaussian_calibration_plot_calibration_deflection_tube.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_calibration_least_squares_and_gaussian_calibration_plot_calibration_deflection_tube.py:
+
+
+Calibration of the deflection of a tube
+=======================================
+
+Description
+-----------
+
+We consider the deflection of a tube under a vertical stress.
+
+<img src="_static/simply_supported_beam.png" width="300" />
+
+The parameters of the model are:
+
+* F : the strength,
+* L : the length of the tube,
+* a : position of the force,
+* D : external diameter of the tube,
+* d : internal diameter of the tube,
+* E : Young modulus.
+
+The following figure presents the internal and external diameter of the tube:
+
+<img src="_static/tube-diameters.png" width="200" />
+
+The area moment of inertia of the cross section about the neutral axis of a round tube (i.e. perpendicular to the section) with external and internal diameters :math:`D` and :math:`d` are:
+
+.. math::
+
+   I = \frac{\pi (D^4-d^4)}{32}.
+
+
+The vertical deflection at point :math:`x=a` is:
+
+.. math::
+   g_1(X) = - F \frac{a^2 (L-a)^2}{3 E L I},
+
+
+where :math:`X=(F,L,a,D,d,E)`. 
+The angle of the tube at the left end is:
+
+.. math::
+   g_2(X) = 
+   - F \frac{b (L^2-b^2)}{6 E L I},
+
+
+and the angle of the tube at the right end is:
+
+.. math::
+   g_3(X) = 
+   F \frac{a (L^2-a^2)}{6 E L I}.
+
+
+The following table presents the distributions of the random variables. These variables are assumed to be independent.
+
+======== ==========================
+Variable Distribution
+======== ==========================
+F        Normal(1,0.1)
+L        Normal(1.5,0.01)
+a        Uniform(0.7,1.2)
+D        Triangular(0.75,0.8,0.85)
+d        Triangular(0.09,0.1,0.11)
+E        Normal(200000,2000)
+======== ==========================
+
+
+References
+----------
+
+* Deflection of beams by Russ Elliott. http://www.clag.org.uk/beam.html
+* https://upload.wikimedia.org/wikipedia/commons/f/ff/Simple_beam_with_offset_load.svg
+* https://en.wikipedia.org/wiki/Deflection_(engineering)
+* https://mechanicalc.com/reference/beam-deflection-tables
+* https://en.wikipedia.org/wiki/Second_moment_of_area
+* Shigley's Mechanical Engineering Design (9th Edition), Richard G. Budynas, J. Keith Nisbettn, McGraw Hill (2011)
+* Mechanics of Materials (7th Edition), James M. Gere, Barry J. Goodno, Cengage Learning (2009)
+* Statics and Mechanics of Materials (5th Edition), Ferdinand Beer, E. Russell Johnston, Jr., John DeWolf, David Mazurek. Mc Graw Hill (2011) Chapter 15: deflection of beams.
+
+Create a calibration problem
+----------------------------
+
+
+.. code-block:: default
+
+    import openturns as ot
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+We use the variable names `De` for the external diameter and `di` for the internal diameter because the symbolic function engine is not case sensitive, hence the variable names `D` and `d` would not be distiguished.
+
+
+.. code-block:: default
+
+    inputsvars=["F","L","a","De","di","E"]
+    formula = "var I:=pi_*(De^4-di^4)/32; var b:=L-a; g1:=-F*a^2*(L-a)^2/(3*E*L*I); g2:=-F*b*(L^2-b^2)/(6*E*L*I); g3:=F*a*(L^2-a^2)/(6*E*L*I)"
+    g = ot.SymbolicFunction(inputsvars,["g1","g2","g3"],formula)
+    g.setOutputDescription(["Deflection","Left angle","Right angle"])
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    XF=ot.Normal(1,0.1)
+    XE=ot.Normal(200000,2000)
+    XF.setDescription(["Force"])
+    XE.setDescription(["Young Modulus"])
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    XL = ot.Dirac(1.5)
+    Xa = ot.Dirac(1.0)
+    XD = ot.Dirac(0.8)
+    Xd = ot.Dirac(0.1)
+    XL.setDescription(["Longueur"])
+    Xa.setDescription(["Location"])
+    XD.setDescription(["External diameter"])
+    Xd.setDescription(["Internal diameter"])
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    inputDistribution = ot.ComposedDistribution([XF,XL,Xa,XD,Xd,XE])
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    sampleSize = 100
+    inputSample = inputDistribution.getSample(sampleSize)
+    inputSample[0:5]
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>Force</TH><TH>Longueur</TH><TH>Location</TH><TH>External diameter</TH><TH>Internal diameter</TH><TH>Young Modulus</TH></TR>
+    <TR><TH>0</TH><TD>1.064552</TD><TD>1.5</TD><TD>1</TD><TD>0.8</TD><TD>0.1</TD><TD>200203.5</TD></TR>
+    <TR><TH>1</TH><TD>1.0443</TD><TD>1.5</TD><TD>1</TD><TD>0.8</TD><TD>0.1</TD><TD>197415.5</TD></TR>
+    <TR><TH>2</TH><TD>1.123688</TD><TD>1.5</TD><TD>1</TD><TD>0.8</TD><TD>0.1</TD><TD>203916.9</TD></TR>
+    <TR><TH>3</TH><TD>0.9826647</TD><TD>1.5</TD><TD>1</TD><TD>0.8</TD><TD>0.1</TD><TD>198070.2</TD></TR>
+    <TR><TH>4</TH><TD>0.9217701</TD><TD>1.5</TD><TD>1</TD><TD>0.8</TD><TD>0.1</TD><TD>198857.2</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    outputDeflection = g(inputSample)
+    outputDeflection[0:5]
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>Deflection</TH><TH>Left angle</TH><TH>Right angle</TH></TR>
+    <TR><TH>0</TH><TD>-7.347998e-06</TD><TD>-1.4696e-05</TD><TD>1.837e-05</TD></TR>
+    <TR><TH>1</TH><TD>-7.310009e-06</TD><TD>-1.462002e-05</TD><TD>1.827502e-05</TD></TR>
+    <TR><TH>2</TH><TD>-7.614934e-06</TD><TD>-1.522987e-05</TD><TD>1.903733e-05</TD></TR>
+    <TR><TH>3</TH><TD>-6.855827e-06</TD><TD>-1.371165e-05</TD><TD>1.713957e-05</TD></TR>
+    <TR><TH>4</TH><TD>-6.405529e-06</TD><TD>-1.281106e-05</TD><TD>1.601382e-05</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    observationNoiseSigma = [0.1e-6,0.05e-5,0.05e-5]
+    observationNoiseCovariance = ot.CovarianceMatrix(3)
+    for i in range(3):
+        observationNoiseCovariance[i,i] = observationNoiseSigma[i]**2
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    noiseSigma = ot.Normal([0.,0.,0.],observationNoiseCovariance)
+    sampleObservationNoise = noiseSigma.getSample(sampleSize)
+    observedOutput = outputDeflection + sampleObservationNoise
+    observedOutput[0:5]
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>Deflection</TH><TH>Left angle</TH><TH>Right angle</TH></TR>
+    <TR><TH>0</TH><TD>-7.413478e-06</TD><TD>-1.576261e-05</TD><TD>1.810219e-05</TD></TR>
+    <TR><TH>1</TH><TD>-7.385527e-06</TD><TD>-1.501412e-05</TD><TD>1.867476e-05</TD></TR>
+    <TR><TH>2</TH><TD>-7.532924e-06</TD><TD>-1.582186e-05</TD><TD>1.841229e-05</TD></TR>
+    <TR><TH>3</TH><TD>-6.804852e-06</TD><TD>-1.407256e-05</TD><TD>1.765737e-05</TD></TR>
+    <TR><TH>4</TH><TD>-6.444243e-06</TD><TD>-1.295816e-05</TD><TD>1.599811e-05</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    observedInput = ot.Sample(sampleSize,2)
+    observedInput[:,0] = inputSample[:,0] # F
+    observedInput[:,1] = inputSample[:,5] # E
+    observedInput.setDescription(["Force","Young Modulus"])
+    observedInput[0:5]
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>Force</TH><TH>Young Modulus</TH></TR>
+    <TR><TH>0</TH><TD>1.064552</TD><TD>200203.5</TD></TR>
+    <TR><TH>1</TH><TD>1.0443</TD><TD>197415.5</TD></TR>
+    <TR><TH>2</TH><TD>1.123688</TD><TD>203916.9</TD></TR>
+    <TR><TH>3</TH><TD>0.9826647</TD><TD>198070.2</TD></TR>
+    <TR><TH>4</TH><TD>0.9217701</TD><TD>198857.2</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    fullSample = ot.Sample(sampleSize,5)
+    fullSample[:,0:2] = observedInput
+    fullSample[:,2:5] = observedOutput
+    fullSample.setDescription(["Force","Young","Deflection","Left Angle","Right Angle"])
+    fullSample[0:5]
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>Force</TH><TH>Young</TH><TH>Deflection</TH><TH>Left Angle</TH><TH>Right Angle</TH></TR>
+    <TR><TH>0</TH><TD>1.064552</TD><TD>200203.5</TD><TD>-7.413478e-06</TD><TD>-1.576261e-05</TD><TD>1.810219e-05</TD></TR>
+    <TR><TH>1</TH><TD>1.0443</TD><TD>197415.5</TD><TD>-7.385527e-06</TD><TD>-1.501412e-05</TD><TD>1.867476e-05</TD></TR>
+    <TR><TH>2</TH><TD>1.123688</TD><TD>203916.9</TD><TD>-7.532924e-06</TD><TD>-1.582186e-05</TD><TD>1.841229e-05</TD></TR>
+    <TR><TH>3</TH><TD>0.9826647</TD><TD>198070.2</TD><TD>-6.804852e-06</TD><TD>-1.407256e-05</TD><TD>1.765737e-05</TD></TR>
+    <TR><TH>4</TH><TD>0.9217701</TD><TD>198857.2</TD><TD>-6.444243e-06</TD><TD>-1.295816e-05</TD><TD>1.599811e-05</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    ot.Pairs(fullSample)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    class=GridLayout name=Unnamed nbRows=4 nbColumns=4 graphCollection=[class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle=Young axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Force,Young] data=[[1.06455,200203],[1.0443,197415],[1.12369,203917],[0.982665,198070],[0.92177,198857],[0.997233,200786],[0.95344,203027],[1.05047,198993],[1.00199,198967],[1.10482,200830],[0.901751,201393],[1.06936,198799],[0.980376,198603],[1.15497,203558],[1.03806,199487],[1.01547,201936],[1.05291,201767],[0.892107,200277],[1.03806,198847],[0.912955,198870],[0.938544,200501],[1.25512,198743],[0.80648,198111],[0.838035,201655],[1.00513,199442],[1.03477,203004],[0.984264,200230],[0.871899,197903],[0.988448,199108],[1.09235,197578],[0.928592,202017],[1.1747,197453],[1.01849,196632],[0.916901,196436],[0.895553,201019],[1.14599,202457],[0.987081,202490],[0.936364,199103],[0.895261,198820],[0.935969,198266],[1.00991,204613],[1.04168,196742],[1.20023,198369],[0.992009,196566],[0.980058,200371],[0.978513,202229],[1.0131,202102],[1.08555,201611],[1.04076,198425],[1.15783,198016],[0.907198,201599],[1.09928,202382],[0.957953,200655],[1.00982,202052],[0.984421,199266],[0.919388,201798],[1.09231,200729],[0.989402,199061],[0.93661,198147],[0.809848,202540],[1.18842,204457],[1.19223,198968],[0.915641,200099],[0.83963,200046],[0.944586,197022],[1.04313,197820],[1.1213,199915],[0.98605,198239],[0.762141,198175],[0.979815,200192],[0.95188,197599],[0.824917,199102],[1.03359,198567],[1.12213,200592],[0.976625,198633],[1.06558,200531],[0.91846,202007],[1.08221,197182],[1.02685,198995],[1.1017,202484],[1.05572,201786],[0.874165,198959],[1.03411,198378],[0.991623,197530],[1.05414,199622],[0.970874,201075],[0.845635,198466],[0.899637,198419],[1.05326,199750],[1.0596,198640],[1.003,200011],[0.920845,197969],[1.01917,201668],[1.05761,200682],[1.00112,200258],[1.11082,202211],[1.04996,201659],[0.835106,199685],[1.20206,201445],[0.994676,197604]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=OFF grid=OFF legendposition= legendFontSize=1 drawables=[],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=OFF grid=OFF legendposition= legendFontSize=1 drawables=[],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=OFF grid=OFF legendposition= legendFontSize=1 drawables=[],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle=Deflection axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Force,Deflection] data=[[1.06455,-7.41348e-06],[1.0443,-7.38553e-06],[1.12369,-7.53292e-06],[0.982665,-6.80485e-06],[0.92177,-6.44424e-06],[0.997233,-6.85943e-06],[0.95344,-6.29e-06],[1.05047,-7.21729e-06],[1.00199,-6.96084e-06],[1.10482,-7.63733e-06],[0.901751,-6.23974e-06],[1.06936,-7.28944e-06],[0.980376,-6.76467e-06],[1.15497,-7.77316e-06],[1.03806,-7.13433e-06],[1.01547,-6.93713e-06],[1.05291,-7.18849e-06],[0.892107,-6.13191e-06],[1.03806,-7.22084e-06],[0.912955,-6.31015e-06],[0.938544,-6.54104e-06],[1.25512,-8.79529e-06],[0.80648,-5.62915e-06],[0.838035,-5.90648e-06],[1.00513,-6.90796e-06],[1.03477,-7.02823e-06],[0.984264,-6.96728e-06],[0.871899,-6.08889e-06],[0.988448,-7.03376e-06],[1.09235,-7.42406e-06],[0.928592,-6.41577e-06],[1.1747,-8.12939e-06],[1.01849,-7.22993e-06],[0.916901,-6.47509e-06],[0.895553,-6.16712e-06],[1.14599,-7.70836e-06],[0.987081,-6.72134e-06],[0.936364,-6.60701e-06],[0.895261,-6.17381e-06],[0.935969,-6.60945e-06],[1.00991,-6.84341e-06],[1.04168,-7.33403e-06],[1.20023,-8.26813e-06],[0.992009,-6.72262e-06],[0.980058,-6.57622e-06],[0.978513,-6.86961e-06],[1.0131,-7.19115e-06],[1.08555,-7.39277e-06],[1.04076,-7.10891e-06],[1.15783,-7.89485e-06],[0.907198,-6.29851e-06],[1.09928,-7.5756e-06],[0.957953,-6.45857e-06],[1.00982,-6.88718e-06],[0.984421,-6.83667e-06],[0.919388,-6.25379e-06],[1.09231,-7.65415e-06],[0.989402,-6.80699e-06],[0.93661,-6.49561e-06],[0.809848,-5.55268e-06],[1.18842,-7.94292e-06],[1.19223,-8.17829e-06],[0.915641,-6.3784e-06],[0.83963,-5.89414e-06],[0.944586,-6.45685e-06],[1.04313,-7.27912e-06],[1.1213,-7.69902e-06],[0.98605,-6.99111e-06],[0.762141,-5.34416e-06],[0.979815,-6.83159e-06],[0.95188,-6.69587e-06],[0.824917,-5.74356e-06],[1.03359,-7.322e-06],[1.12213,-7.76262e-06],[0.976625,-6.68916e-06],[1.06558,-7.29648e-06],[0.91846,-6.24468e-06],[1.08221,-7.59656e-06],[1.02685,-7.15377e-06],[1.1017,-7.47069e-06],[1.05572,-7.17738e-06],[0.874165,-6.19105e-06],[1.03411,-7.21088e-06],[0.991623,-6.86433e-06],[1.05414,-7.17252e-06],[0.970874,-6.57737e-06],[0.845635,-5.78932e-06],[0.899637,-6.06457e-06],[1.05326,-7.40735e-06],[1.0596,-7.34979e-06],[1.003,-6.95902e-06],[0.920845,-6.52415e-06],[1.01917,-7.0438e-06],[1.05761,-7.30556e-06],[1.00112,-6.80853e-06],[1.11082,-7.54625e-06],[1.04996,-7.20411e-06],[0.835106,-5.9478e-06],[1.20206,-7.93137e-06],[0.994676,-7.04307e-06]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Young,Deflection] data=[[200203,-7.41348e-06],[197415,-7.38553e-06],[203917,-7.53292e-06],[198070,-6.80485e-06],[198857,-6.44424e-06],[200786,-6.85943e-06],[203027,-6.29e-06],[198993,-7.21729e-06],[198967,-6.96084e-06],[200830,-7.63733e-06],[201393,-6.23974e-06],[198799,-7.28944e-06],[198603,-6.76467e-06],[203558,-7.77316e-06],[199487,-7.13433e-06],[201936,-6.93713e-06],[201767,-7.18849e-06],[200277,-6.13191e-06],[198847,-7.22084e-06],[198870,-6.31015e-06],[200501,-6.54104e-06],[198743,-8.79529e-06],[198111,-5.62915e-06],[201655,-5.90648e-06],[199442,-6.90796e-06],[203004,-7.02823e-06],[200230,-6.96728e-06],[197903,-6.08889e-06],[199108,-7.03376e-06],[197578,-7.42406e-06],[202017,-6.41577e-06],[197453,-8.12939e-06],[196632,-7.22993e-06],[196436,-6.47509e-06],[201019,-6.16712e-06],[202457,-7.70836e-06],[202490,-6.72134e-06],[199103,-6.60701e-06],[198820,-6.17381e-06],[198266,-6.60945e-06],[204613,-6.84341e-06],[196742,-7.33403e-06],[198369,-8.26813e-06],[196566,-6.72262e-06],[200371,-6.57622e-06],[202229,-6.86961e-06],[202102,-7.19115e-06],[201611,-7.39277e-06],[198425,-7.10891e-06],[198016,-7.89485e-06],[201599,-6.29851e-06],[202382,-7.5756e-06],[200655,-6.45857e-06],[202052,-6.88718e-06],[199266,-6.83667e-06],[201798,-6.25379e-06],[200729,-7.65415e-06],[199061,-6.80699e-06],[198147,-6.49561e-06],[202540,-5.55268e-06],[204457,-7.94292e-06],[198968,-8.17829e-06],[200099,-6.3784e-06],[200046,-5.89414e-06],[197022,-6.45685e-06],[197820,-7.27912e-06],[199915,-7.69902e-06],[198239,-6.99111e-06],[198175,-5.34416e-06],[200192,-6.83159e-06],[197599,-6.69587e-06],[199102,-5.74356e-06],[198567,-7.322e-06],[200592,-7.76262e-06],[198633,-6.68916e-06],[200531,-7.29648e-06],[202007,-6.24468e-06],[197182,-7.59656e-06],[198995,-7.15377e-06],[202484,-7.47069e-06],[201786,-7.17738e-06],[198959,-6.19105e-06],[198378,-7.21088e-06],[197530,-6.86433e-06],[199622,-7.17252e-06],[201075,-6.57737e-06],[198466,-5.78932e-06],[198419,-6.06457e-06],[199750,-7.40735e-06],[198640,-7.34979e-06],[200011,-6.95902e-06],[197969,-6.52415e-06],[201668,-7.0438e-06],[200682,-7.30556e-06],[200258,-6.80853e-06],[202211,-7.54625e-06],[201659,-7.20411e-06],[199685,-5.9478e-06],[201445,-7.93137e-06],[197604,-7.04307e-06]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=OFF grid=OFF legendposition= legendFontSize=1 drawables=[],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=OFF grid=OFF legendposition= legendFontSize=1 drawables=[],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle=Left Angle axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Force,Left Angle] data=[[1.06455,-1.57626e-05],[1.0443,-1.50141e-05],[1.12369,-1.58219e-05],[0.982665,-1.40726e-05],[0.92177,-1.29582e-05],[0.997233,-1.34822e-05],[0.95344,-1.33331e-05],[1.05047,-1.54624e-05],[1.00199,-1.31198e-05],[1.10482,-1.50056e-05],[0.901751,-1.28634e-05],[1.06936,-1.49436e-05],[0.980376,-1.31097e-05],[1.15497,-1.61553e-05],[1.03806,-1.40026e-05],[1.01547,-1.45105e-05],[1.05291,-1.42728e-05],[0.892107,-1.18209e-05],[1.03806,-1.41855e-05],[0.912955,-1.28714e-05],[0.938544,-1.29211e-05],[1.25512,-1.74418e-05],[0.80648,-1.17852e-05],[0.838035,-1.07427e-05],[1.00513,-1.35538e-05],[1.03477,-1.44086e-05],[0.984264,-1.35067e-05],[0.871899,-1.21799e-05],[0.988448,-1.45657e-05],[1.09235,-1.52207e-05],[0.928592,-1.223e-05],[1.1747,-1.65942e-05],[1.01849,-1.45438e-05],[0.916901,-1.26771e-05],[0.895553,-1.19204e-05],[1.14599,-1.51243e-05],[0.987081,-1.24731e-05],[0.936364,-1.33886e-05],[0.895261,-1.2568e-05],[0.935969,-1.27866e-05],[1.00991,-1.41449e-05],[1.04168,-1.45252e-05],[1.20023,-1.81828e-05],[0.992009,-1.41226e-05],[0.980058,-1.38554e-05],[0.978513,-1.34404e-05],[1.0131,-1.38519e-05],[1.08555,-1.58505e-05],[1.04076,-1.49312e-05],[1.15783,-1.63054e-05],[0.907198,-1.22035e-05],[1.09928,-1.57738e-05],[0.957953,-1.35591e-05],[1.00982,-1.38886e-05],[0.984421,-1.362e-05],[0.919388,-1.25245e-05],[1.09231,-1.41853e-05],[0.989402,-1.41708e-05],[0.93661,-1.36171e-05],[0.809848,-1.12353e-05],[1.18842,-1.55441e-05],[1.19223,-1.71222e-05],[0.915641,-1.18694e-05],[0.83963,-1.1348e-05],[0.944586,-1.20375e-05],[1.04313,-1.44903e-05],[1.1213,-1.52411e-05],[0.98605,-1.43118e-05],[0.762141,-1.09148e-05],[0.979815,-1.41402e-05],[0.95188,-1.40438e-05],[0.824917,-1.13592e-05],[1.03359,-1.46828e-05],[1.12213,-1.49156e-05],[0.976625,-1.28455e-05],[1.06558,-1.43691e-05],[0.91846,-1.31602e-05],[1.08221,-1.66742e-05],[1.02685,-1.43024e-05],[1.1017,-1.52484e-05],[1.05572,-1.45596e-05],[0.874165,-1.21448e-05],[1.03411,-1.45691e-05],[0.991623,-1.44472e-05],[1.05414,-1.4309e-05],[0.970874,-1.27604e-05],[0.845635,-1.20346e-05],[0.899637,-1.14388e-05],[1.05326,-1.3778e-05],[1.0596,-1.48835e-05],[1.003,-1.43604e-05],[0.920845,-1.30229e-05],[1.01917,-1.36726e-05],[1.05761,-1.43914e-05],[1.00112,-1.31206e-05],[1.11082,-1.48475e-05],[1.04996,-1.49561e-05],[0.835106,-1.11958e-05],[1.20206,-1.64625e-05],[0.994676,-1.44511e-05]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Young,Left Angle] data=[[200203,-1.57626e-05],[197415,-1.50141e-05],[203917,-1.58219e-05],[198070,-1.40726e-05],[198857,-1.29582e-05],[200786,-1.34822e-05],[203027,-1.33331e-05],[198993,-1.54624e-05],[198967,-1.31198e-05],[200830,-1.50056e-05],[201393,-1.28634e-05],[198799,-1.49436e-05],[198603,-1.31097e-05],[203558,-1.61553e-05],[199487,-1.40026e-05],[201936,-1.45105e-05],[201767,-1.42728e-05],[200277,-1.18209e-05],[198847,-1.41855e-05],[198870,-1.28714e-05],[200501,-1.29211e-05],[198743,-1.74418e-05],[198111,-1.17852e-05],[201655,-1.07427e-05],[199442,-1.35538e-05],[203004,-1.44086e-05],[200230,-1.35067e-05],[197903,-1.21799e-05],[199108,-1.45657e-05],[197578,-1.52207e-05],[202017,-1.223e-05],[197453,-1.65942e-05],[196632,-1.45438e-05],[196436,-1.26771e-05],[201019,-1.19204e-05],[202457,-1.51243e-05],[202490,-1.24731e-05],[199103,-1.33886e-05],[198820,-1.2568e-05],[198266,-1.27866e-05],[204613,-1.41449e-05],[196742,-1.45252e-05],[198369,-1.81828e-05],[196566,-1.41226e-05],[200371,-1.38554e-05],[202229,-1.34404e-05],[202102,-1.38519e-05],[201611,-1.58505e-05],[198425,-1.49312e-05],[198016,-1.63054e-05],[201599,-1.22035e-05],[202382,-1.57738e-05],[200655,-1.35591e-05],[202052,-1.38886e-05],[199266,-1.362e-05],[201798,-1.25245e-05],[200729,-1.41853e-05],[199061,-1.41708e-05],[198147,-1.36171e-05],[202540,-1.12353e-05],[204457,-1.55441e-05],[198968,-1.71222e-05],[200099,-1.18694e-05],[200046,-1.1348e-05],[197022,-1.20375e-05],[197820,-1.44903e-05],[199915,-1.52411e-05],[198239,-1.43118e-05],[198175,-1.09148e-05],[200192,-1.41402e-05],[197599,-1.40438e-05],[199102,-1.13592e-05],[198567,-1.46828e-05],[200592,-1.49156e-05],[198633,-1.28455e-05],[200531,-1.43691e-05],[202007,-1.31602e-05],[197182,-1.66742e-05],[198995,-1.43024e-05],[202484,-1.52484e-05],[201786,-1.45596e-05],[198959,-1.21448e-05],[198378,-1.45691e-05],[197530,-1.44472e-05],[199622,-1.4309e-05],[201075,-1.27604e-05],[198466,-1.20346e-05],[198419,-1.14388e-05],[199750,-1.3778e-05],[198640,-1.48835e-05],[200011,-1.43604e-05],[197969,-1.30229e-05],[201668,-1.36726e-05],[200682,-1.43914e-05],[200258,-1.31206e-05],[202211,-1.48475e-05],[201659,-1.49561e-05],[199685,-1.11958e-05],[201445,-1.64625e-05],[197604,-1.44511e-05]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Deflection,Left Angle] data=[[-7.41348e-06,-1.57626e-05],[-7.38553e-06,-1.50141e-05],[-7.53292e-06,-1.58219e-05],[-6.80485e-06,-1.40726e-05],[-6.44424e-06,-1.29582e-05],[-6.85943e-06,-1.34822e-05],[-6.29e-06,-1.33331e-05],[-7.21729e-06,-1.54624e-05],[-6.96084e-06,-1.31198e-05],[-7.63733e-06,-1.50056e-05],[-6.23974e-06,-1.28634e-05],[-7.28944e-06,-1.49436e-05],[-6.76467e-06,-1.31097e-05],[-7.77316e-06,-1.61553e-05],[-7.13433e-06,-1.40026e-05],[-6.93713e-06,-1.45105e-05],[-7.18849e-06,-1.42728e-05],[-6.13191e-06,-1.18209e-05],[-7.22084e-06,-1.41855e-05],[-6.31015e-06,-1.28714e-05],[-6.54104e-06,-1.29211e-05],[-8.79529e-06,-1.74418e-05],[-5.62915e-06,-1.17852e-05],[-5.90648e-06,-1.07427e-05],[-6.90796e-06,-1.35538e-05],[-7.02823e-06,-1.44086e-05],[-6.96728e-06,-1.35067e-05],[-6.08889e-06,-1.21799e-05],[-7.03376e-06,-1.45657e-05],[-7.42406e-06,-1.52207e-05],[-6.41577e-06,-1.223e-05],[-8.12939e-06,-1.65942e-05],[-7.22993e-06,-1.45438e-05],[-6.47509e-06,-1.26771e-05],[-6.16712e-06,-1.19204e-05],[-7.70836e-06,-1.51243e-05],[-6.72134e-06,-1.24731e-05],[-6.60701e-06,-1.33886e-05],[-6.17381e-06,-1.2568e-05],[-6.60945e-06,-1.27866e-05],[-6.84341e-06,-1.41449e-05],[-7.33403e-06,-1.45252e-05],[-8.26813e-06,-1.81828e-05],[-6.72262e-06,-1.41226e-05],[-6.57622e-06,-1.38554e-05],[-6.86961e-06,-1.34404e-05],[-7.19115e-06,-1.38519e-05],[-7.39277e-06,-1.58505e-05],[-7.10891e-06,-1.49312e-05],[-7.89485e-06,-1.63054e-05],[-6.29851e-06,-1.22035e-05],[-7.5756e-06,-1.57738e-05],[-6.45857e-06,-1.35591e-05],[-6.88718e-06,-1.38886e-05],[-6.83667e-06,-1.362e-05],[-6.25379e-06,-1.25245e-05],[-7.65415e-06,-1.41853e-05],[-6.80699e-06,-1.41708e-05],[-6.49561e-06,-1.36171e-05],[-5.55268e-06,-1.12353e-05],[-7.94292e-06,-1.55441e-05],[-8.17829e-06,-1.71222e-05],[-6.3784e-06,-1.18694e-05],[-5.89414e-06,-1.1348e-05],[-6.45685e-06,-1.20375e-05],[-7.27912e-06,-1.44903e-05],[-7.69902e-06,-1.52411e-05],[-6.99111e-06,-1.43118e-05],[-5.34416e-06,-1.09148e-05],[-6.83159e-06,-1.41402e-05],[-6.69587e-06,-1.40438e-05],[-5.74356e-06,-1.13592e-05],[-7.322e-06,-1.46828e-05],[-7.76262e-06,-1.49156e-05],[-6.68916e-06,-1.28455e-05],[-7.29648e-06,-1.43691e-05],[-6.24468e-06,-1.31602e-05],[-7.59656e-06,-1.66742e-05],[-7.15377e-06,-1.43024e-05],[-7.47069e-06,-1.52484e-05],[-7.17738e-06,-1.45596e-05],[-6.19105e-06,-1.21448e-05],[-7.21088e-06,-1.45691e-05],[-6.86433e-06,-1.44472e-05],[-7.17252e-06,-1.4309e-05],[-6.57737e-06,-1.27604e-05],[-5.78932e-06,-1.20346e-05],[-6.06457e-06,-1.14388e-05],[-7.40735e-06,-1.3778e-05],[-7.34979e-06,-1.48835e-05],[-6.95902e-06,-1.43604e-05],[-6.52415e-06,-1.30229e-05],[-7.0438e-06,-1.36726e-05],[-7.30556e-06,-1.43914e-05],[-6.80853e-06,-1.31206e-05],[-7.54625e-06,-1.48475e-05],[-7.20411e-06,-1.49561e-05],[-5.9478e-06,-1.11958e-05],[-7.93137e-06,-1.64625e-05],[-7.04307e-06,-1.44511e-05]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle= yTitle= axes=OFF grid=OFF legendposition= legendFontSize=1 drawables=[],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle=Force yTitle=Right Angle axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Force,Right Angle] data=[[1.06455,1.81022e-05],[1.0443,1.86748e-05],[1.12369,1.84123e-05],[0.982665,1.76574e-05],[0.92177,1.59981e-05],[0.997233,1.74592e-05],[0.95344,1.64996e-05],[1.05047,1.7718e-05],[1.00199,1.63758e-05],[1.10482,1.85739e-05],[0.901751,1.4835e-05],[1.06936,1.87296e-05],[0.980376,1.6712e-05],[1.15497,1.87257e-05],[1.03806,1.77754e-05],[1.01547,1.8035e-05],[1.05291,1.72842e-05],[0.892107,1.51359e-05],[1.03806,1.79724e-05],[0.912955,1.5435e-05],[0.938544,1.66558e-05],[1.25512,2.17538e-05],[0.80648,1.38581e-05],[0.838035,1.45043e-05],[1.00513,1.74181e-05],[1.03477,1.68545e-05],[0.984264,1.72201e-05],[0.871899,1.48729e-05],[0.988448,1.792e-05],[1.09235,1.93148e-05],[0.928592,1.62619e-05],[1.1747,2.02623e-05],[1.01849,1.87233e-05],[0.916901,1.57169e-05],[0.895553,1.65124e-05],[1.14599,1.94995e-05],[0.987081,1.70851e-05],[0.936364,1.63105e-05],[0.895261,1.53103e-05],[0.935969,1.57335e-05],[1.00991,1.68571e-05],[1.04168,1.87721e-05],[1.20023,2.09009e-05],[0.992009,1.75654e-05],[0.980058,1.70148e-05],[0.978513,1.63476e-05],[1.0131,1.69355e-05],[1.08555,1.90045e-05],[1.04076,1.7614e-05],[1.15783,2.00427e-05],[0.907198,1.62502e-05],[1.09928,1.87431e-05],[0.957953,1.71937e-05],[1.00982,1.71075e-05],[0.984421,1.75788e-05],[0.919388,1.56998e-05],[1.09231,1.77325e-05],[0.989402,1.70471e-05],[0.93661,1.59136e-05],[0.809848,1.3189e-05],[1.18842,1.98437e-05],[1.19223,2.17975e-05],[0.915641,1.57401e-05],[0.83963,1.3735e-05],[0.944586,1.67726e-05],[1.04313,1.82033e-05],[1.1213,1.83144e-05],[0.98605,1.81025e-05],[0.762141,1.27432e-05],[0.979815,1.61686e-05],[0.95188,1.68902e-05],[0.824917,1.54521e-05],[1.03359,1.79223e-05],[1.12213,1.90267e-05],[0.976625,1.74843e-05],[1.06558,1.85327e-05],[0.91846,1.61213e-05],[1.08221,1.89013e-05],[1.02685,1.77111e-05],[1.1017,1.85104e-05],[1.05572,1.72878e-05],[0.874165,1.54102e-05],[1.03411,1.79796e-05],[0.991623,1.78357e-05],[1.05414,1.85823e-05],[0.970874,1.63208e-05],[0.845635,1.51877e-05],[0.899637,1.59951e-05],[1.05326,1.75165e-05],[1.0596,1.87677e-05],[1.003,1.74224e-05],[0.920845,1.57081e-05],[1.01917,1.7427e-05],[1.05761,1.84133e-05],[1.00112,1.77464e-05],[1.11082,1.89096e-05],[1.04996,1.80729e-05],[0.835106,1.47559e-05],[1.20206,2.09222e-05],[0.994676,1.76343e-05]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle=Young yTitle= axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Young,Right Angle] data=[[200203,1.81022e-05],[197415,1.86748e-05],[203917,1.84123e-05],[198070,1.76574e-05],[198857,1.59981e-05],[200786,1.74592e-05],[203027,1.64996e-05],[198993,1.7718e-05],[198967,1.63758e-05],[200830,1.85739e-05],[201393,1.4835e-05],[198799,1.87296e-05],[198603,1.6712e-05],[203558,1.87257e-05],[199487,1.77754e-05],[201936,1.8035e-05],[201767,1.72842e-05],[200277,1.51359e-05],[198847,1.79724e-05],[198870,1.5435e-05],[200501,1.66558e-05],[198743,2.17538e-05],[198111,1.38581e-05],[201655,1.45043e-05],[199442,1.74181e-05],[203004,1.68545e-05],[200230,1.72201e-05],[197903,1.48729e-05],[199108,1.792e-05],[197578,1.93148e-05],[202017,1.62619e-05],[197453,2.02623e-05],[196632,1.87233e-05],[196436,1.57169e-05],[201019,1.65124e-05],[202457,1.94995e-05],[202490,1.70851e-05],[199103,1.63105e-05],[198820,1.53103e-05],[198266,1.57335e-05],[204613,1.68571e-05],[196742,1.87721e-05],[198369,2.09009e-05],[196566,1.75654e-05],[200371,1.70148e-05],[202229,1.63476e-05],[202102,1.69355e-05],[201611,1.90045e-05],[198425,1.7614e-05],[198016,2.00427e-05],[201599,1.62502e-05],[202382,1.87431e-05],[200655,1.71937e-05],[202052,1.71075e-05],[199266,1.75788e-05],[201798,1.56998e-05],[200729,1.77325e-05],[199061,1.70471e-05],[198147,1.59136e-05],[202540,1.3189e-05],[204457,1.98437e-05],[198968,2.17975e-05],[200099,1.57401e-05],[200046,1.3735e-05],[197022,1.67726e-05],[197820,1.82033e-05],[199915,1.83144e-05],[198239,1.81025e-05],[198175,1.27432e-05],[200192,1.61686e-05],[197599,1.68902e-05],[199102,1.54521e-05],[198567,1.79223e-05],[200592,1.90267e-05],[198633,1.74843e-05],[200531,1.85327e-05],[202007,1.61213e-05],[197182,1.89013e-05],[198995,1.77111e-05],[202484,1.85104e-05],[201786,1.72878e-05],[198959,1.54102e-05],[198378,1.79796e-05],[197530,1.78357e-05],[199622,1.85823e-05],[201075,1.63208e-05],[198466,1.51877e-05],[198419,1.59951e-05],[199750,1.75165e-05],[198640,1.87677e-05],[200011,1.74224e-05],[197969,1.57081e-05],[201668,1.7427e-05],[200682,1.84133e-05],[200258,1.77464e-05],[202211,1.89096e-05],[201659,1.80729e-05],[199685,1.47559e-05],[201445,2.09222e-05],[197604,1.76343e-05]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle=Deflection yTitle= axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Deflection,Right Angle] data=[[-7.41348e-06,1.81022e-05],[-7.38553e-06,1.86748e-05],[-7.53292e-06,1.84123e-05],[-6.80485e-06,1.76574e-05],[-6.44424e-06,1.59981e-05],[-6.85943e-06,1.74592e-05],[-6.29e-06,1.64996e-05],[-7.21729e-06,1.7718e-05],[-6.96084e-06,1.63758e-05],[-7.63733e-06,1.85739e-05],[-6.23974e-06,1.4835e-05],[-7.28944e-06,1.87296e-05],[-6.76467e-06,1.6712e-05],[-7.77316e-06,1.87257e-05],[-7.13433e-06,1.77754e-05],[-6.93713e-06,1.8035e-05],[-7.18849e-06,1.72842e-05],[-6.13191e-06,1.51359e-05],[-7.22084e-06,1.79724e-05],[-6.31015e-06,1.5435e-05],[-6.54104e-06,1.66558e-05],[-8.79529e-06,2.17538e-05],[-5.62915e-06,1.38581e-05],[-5.90648e-06,1.45043e-05],[-6.90796e-06,1.74181e-05],[-7.02823e-06,1.68545e-05],[-6.96728e-06,1.72201e-05],[-6.08889e-06,1.48729e-05],[-7.03376e-06,1.792e-05],[-7.42406e-06,1.93148e-05],[-6.41577e-06,1.62619e-05],[-8.12939e-06,2.02623e-05],[-7.22993e-06,1.87233e-05],[-6.47509e-06,1.57169e-05],[-6.16712e-06,1.65124e-05],[-7.70836e-06,1.94995e-05],[-6.72134e-06,1.70851e-05],[-6.60701e-06,1.63105e-05],[-6.17381e-06,1.53103e-05],[-6.60945e-06,1.57335e-05],[-6.84341e-06,1.68571e-05],[-7.33403e-06,1.87721e-05],[-8.26813e-06,2.09009e-05],[-6.72262e-06,1.75654e-05],[-6.57622e-06,1.70148e-05],[-6.86961e-06,1.63476e-05],[-7.19115e-06,1.69355e-05],[-7.39277e-06,1.90045e-05],[-7.10891e-06,1.7614e-05],[-7.89485e-06,2.00427e-05],[-6.29851e-06,1.62502e-05],[-7.5756e-06,1.87431e-05],[-6.45857e-06,1.71937e-05],[-6.88718e-06,1.71075e-05],[-6.83667e-06,1.75788e-05],[-6.25379e-06,1.56998e-05],[-7.65415e-06,1.77325e-05],[-6.80699e-06,1.70471e-05],[-6.49561e-06,1.59136e-05],[-5.55268e-06,1.3189e-05],[-7.94292e-06,1.98437e-05],[-8.17829e-06,2.17975e-05],[-6.3784e-06,1.57401e-05],[-5.89414e-06,1.3735e-05],[-6.45685e-06,1.67726e-05],[-7.27912e-06,1.82033e-05],[-7.69902e-06,1.83144e-05],[-6.99111e-06,1.81025e-05],[-5.34416e-06,1.27432e-05],[-6.83159e-06,1.61686e-05],[-6.69587e-06,1.68902e-05],[-5.74356e-06,1.54521e-05],[-7.322e-06,1.79223e-05],[-7.76262e-06,1.90267e-05],[-6.68916e-06,1.74843e-05],[-7.29648e-06,1.85327e-05],[-6.24468e-06,1.61213e-05],[-7.59656e-06,1.89013e-05],[-7.15377e-06,1.77111e-05],[-7.47069e-06,1.85104e-05],[-7.17738e-06,1.72878e-05],[-6.19105e-06,1.54102e-05],[-7.21088e-06,1.79796e-05],[-6.86433e-06,1.78357e-05],[-7.17252e-06,1.85823e-05],[-6.57737e-06,1.63208e-05],[-5.78932e-06,1.51877e-05],[-6.06457e-06,1.59951e-05],[-7.40735e-06,1.75165e-05],[-7.34979e-06,1.87677e-05],[-6.95902e-06,1.74224e-05],[-6.52415e-06,1.57081e-05],[-7.0438e-06,1.7427e-05],[-7.30556e-06,1.84133e-05],[-6.80853e-06,1.77464e-05],[-7.54625e-06,1.89096e-05],[-7.20411e-06,1.80729e-05],[-5.9478e-06,1.47559e-05],[-7.93137e-06,2.09222e-05],[-7.04307e-06,1.76343e-05]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1],class=Graph name=Unnamed implementation=class=GraphImplementation name=Unnamed title= xTitle=Left Angle yTitle= axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Cloud name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=2 description=[Left Angle,Right Angle] data=[[-1.57626e-05,1.81022e-05],[-1.50141e-05,1.86748e-05],[-1.58219e-05,1.84123e-05],[-1.40726e-05,1.76574e-05],[-1.29582e-05,1.59981e-05],[-1.34822e-05,1.74592e-05],[-1.33331e-05,1.64996e-05],[-1.54624e-05,1.7718e-05],[-1.31198e-05,1.63758e-05],[-1.50056e-05,1.85739e-05],[-1.28634e-05,1.4835e-05],[-1.49436e-05,1.87296e-05],[-1.31097e-05,1.6712e-05],[-1.61553e-05,1.87257e-05],[-1.40026e-05,1.77754e-05],[-1.45105e-05,1.8035e-05],[-1.42728e-05,1.72842e-05],[-1.18209e-05,1.51359e-05],[-1.41855e-05,1.79724e-05],[-1.28714e-05,1.5435e-05],[-1.29211e-05,1.66558e-05],[-1.74418e-05,2.17538e-05],[-1.17852e-05,1.38581e-05],[-1.07427e-05,1.45043e-05],[-1.35538e-05,1.74181e-05],[-1.44086e-05,1.68545e-05],[-1.35067e-05,1.72201e-05],[-1.21799e-05,1.48729e-05],[-1.45657e-05,1.792e-05],[-1.52207e-05,1.93148e-05],[-1.223e-05,1.62619e-05],[-1.65942e-05,2.02623e-05],[-1.45438e-05,1.87233e-05],[-1.26771e-05,1.57169e-05],[-1.19204e-05,1.65124e-05],[-1.51243e-05,1.94995e-05],[-1.24731e-05,1.70851e-05],[-1.33886e-05,1.63105e-05],[-1.2568e-05,1.53103e-05],[-1.27866e-05,1.57335e-05],[-1.41449e-05,1.68571e-05],[-1.45252e-05,1.87721e-05],[-1.81828e-05,2.09009e-05],[-1.41226e-05,1.75654e-05],[-1.38554e-05,1.70148e-05],[-1.34404e-05,1.63476e-05],[-1.38519e-05,1.69355e-05],[-1.58505e-05,1.90045e-05],[-1.49312e-05,1.7614e-05],[-1.63054e-05,2.00427e-05],[-1.22035e-05,1.62502e-05],[-1.57738e-05,1.87431e-05],[-1.35591e-05,1.71937e-05],[-1.38886e-05,1.71075e-05],[-1.362e-05,1.75788e-05],[-1.25245e-05,1.56998e-05],[-1.41853e-05,1.77325e-05],[-1.41708e-05,1.70471e-05],[-1.36171e-05,1.59136e-05],[-1.12353e-05,1.3189e-05],[-1.55441e-05,1.98437e-05],[-1.71222e-05,2.17975e-05],[-1.18694e-05,1.57401e-05],[-1.1348e-05,1.3735e-05],[-1.20375e-05,1.67726e-05],[-1.44903e-05,1.82033e-05],[-1.52411e-05,1.83144e-05],[-1.43118e-05,1.81025e-05],[-1.09148e-05,1.27432e-05],[-1.41402e-05,1.61686e-05],[-1.40438e-05,1.68902e-05],[-1.13592e-05,1.54521e-05],[-1.46828e-05,1.79223e-05],[-1.49156e-05,1.90267e-05],[-1.28455e-05,1.74843e-05],[-1.43691e-05,1.85327e-05],[-1.31602e-05,1.61213e-05],[-1.66742e-05,1.89013e-05],[-1.43024e-05,1.77111e-05],[-1.52484e-05,1.85104e-05],[-1.45596e-05,1.72878e-05],[-1.21448e-05,1.54102e-05],[-1.45691e-05,1.79796e-05],[-1.44472e-05,1.78357e-05],[-1.4309e-05,1.85823e-05],[-1.27604e-05,1.63208e-05],[-1.20346e-05,1.51877e-05],[-1.14388e-05,1.59951e-05],[-1.3778e-05,1.75165e-05],[-1.48835e-05,1.87677e-05],[-1.43604e-05,1.74224e-05],[-1.30229e-05,1.57081e-05],[-1.36726e-05,1.7427e-05],[-1.43914e-05,1.84133e-05],[-1.31206e-05,1.77464e-05],[-1.48475e-05,1.89096e-05],[-1.49561e-05,1.80729e-05],[-1.11958e-05,1.47559e-05],[-1.64625e-05,2.09222e-05],[-1.44511e-05,1.76343e-05]] color=blue fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]]
+
+
+
+Setting up the calibration
+--------------------------
+
+
+.. code-block:: default
+
+    XL = 1.4 # Exact : 1.5
+    Xa = 1.2 # Exact : 1.0
+    XD = 0.7 # Exact : 0.8
+    Xd = 0.2 # Exact : 0.1
+    thetaPrior = ot.Point([XL,Xa,XD,Xd])
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    sigmaXL = 0.1 * XL
+    sigmaXa = 0.1 * Xa
+    sigmaXD = 0.1 * XD
+    sigmaXd = 0.1 * Xd
+    parameterCovariance = ot.CovarianceMatrix(4)
+    parameterCovariance[0,0] = sigmaXL**2
+    parameterCovariance[1,1] = sigmaXa**2
+    parameterCovariance[2,2] = sigmaXD**2
+    parameterCovariance[3,3] = sigmaXd**2
+    parameterCovariance
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[[ 0.0196 0      0      0      ]<br>
+     [ 0      0.0144 0      0      ]<br>
+     [ 0      0      0.0049 0      ]<br>
+     [ 0      0      0      0.0004 ]]</p>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    calibratedIndices = [1,2,3,4]
+    calibrationFunction = ot.ParametricFunction(g, calibratedIndices, thetaPrior)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    sigmaObservation = [0.2e-6,0.03e-5,0.03e-5] # Exact : 0.1e-6
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    errorCovariance = ot.CovarianceMatrix(3)
+    errorCovariance[0,0] = sigmaObservation[0]**2
+    errorCovariance[1,1] = sigmaObservation[1]**2
+    errorCovariance[2,2] = sigmaObservation[2]**2
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    calibrationFunction.setParameter(thetaPrior)
+    predictedOutput = calibrationFunction(observedInput)
+    predictedOutput[0:5]
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>Deflection</TH><TH>Left angle</TH><TH>Right angle</TH></TR>
+    <TR><TH>0</TH><TD>-3.114442e-06</TD><TD>-1.038147e-05</TD><TD>1.68699e-05</TD></TR>
+    <TR><TH>1</TH><TD>-3.09834e-06</TD><TD>-1.03278e-05</TD><TD>1.678268e-05</TD></TR>
+    <TR><TH>2</TH><TD>-3.227582e-06</TD><TD>-1.075861e-05</TD><TD>1.748274e-05</TD></TR>
+    <TR><TH>3</TH><TD>-2.905836e-06</TD><TD>-9.68612e-06</TD><TD>1.573994e-05</TD></TR>
+    <TR><TH>4</TH><TD>-2.714977e-06</TD><TD>-9.049924e-06</TD><TD>1.470613e-05</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+Calibration with gaussian non linear least squares
+--------------------------------------------------
+
+
+.. code-block:: default
+
+    algo = ot.GaussianNonLinearCalibration(calibrationFunction, observedInput, observedOutput, thetaPrior, parameterCovariance, errorCovariance)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    algo.run()
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    calibrationResult = algo.getResult()
+
+
+
+
+
+
+
+
+Analysis of the results
+-----------------------
+
+
+.. code-block:: default
+
+    thetaMAP = calibrationResult.getParameterMAP()
+    thetaMAP
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[1.48718,0.985779,0.79819,0.199886]</p>
+    <br />
+    <br />
+
+Compute a 95% confidence interval for each marginal.
+
+
+.. code-block:: default
+
+    thetaPosterior = calibrationResult.getParameterPosterior()
+    alpha = 0.95
+    dim = thetaPosterior.getDimension()
+    for i in range(dim):
+        print(thetaPosterior.getMarginal(i).computeBilateralConfidenceInterval(alpha))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [1.46732, 1.50759]
+    [0.9622, 1.01035]
+    [0.793836, 0.802522]
+    [0.199886, 0.199911]
+
+
+
+
+
+.. code-block:: default
+
+    graph = calibrationResult.drawObservationsVsInputs()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_deflection_tube_001.png
+    :alt: plot calibration deflection tube
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = calibrationResult.drawObservationsVsPredictions()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_deflection_tube_002.png
+    :alt: plot calibration deflection tube
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = calibrationResult.drawResiduals()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_deflection_tube_003.png
+    :alt: plot calibration deflection tube
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = calibrationResult.drawParameterDistributions()
+    view = viewer.View(graph)
+
+    plt.show()
+
+
+
+.. image:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_deflection_tube_004.png
+    :alt: plot calibration deflection tube
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  4.135 seconds)
+
+
+.. _sphx_glr_download_auto_calibration_least_squares_and_gaussian_calibration_plot_calibration_deflection_tube.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_calibration_deflection_tube.py <plot_calibration_deflection_tube.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_calibration_deflection_tube.ipynb <plot_calibration_deflection_tube.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

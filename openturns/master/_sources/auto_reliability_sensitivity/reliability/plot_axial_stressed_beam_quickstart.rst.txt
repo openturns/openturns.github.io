@@ -1,0 +1,573 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_reliability_sensitivity_reliability_plot_axial_stressed_beam_quickstart.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_reliability_sensitivity_reliability_plot_axial_stressed_beam_quickstart.py:
+
+
+Estimate a probability with Monte-Carlo on axial stressed beam: a quick start guide to reliability
+==================================================================================================
+
+The goal of this example is to show a simple practical example of probability estimation in a reliability study with the `ProbabilitySimulationAlgorithm` class. The `ThresholdEvent` is used to define the event. We use the Monte-Carlo method thanks to the `MonteCarloExperiment` class to estimate this probability and its confidence interval.
+
+Introduction
+------------
+
+We consider a simple beam stressed by a traction load F at both sides.
+
+![Axial stressed beam](axial-stressed-beam.png)
+
+The geometry is supposed to be deterministic; the diameter D is equal to:
+
+.. math::
+   D=0.02 \textrm{ (m)}.
+
+
+By definition, the yield stress is the load divided by the surface. Since the surface is :math:`\pi D^2/4`, the stress is:
+
+.. math::
+   S = \frac{F}{\pi D^2/4}.
+
+
+Failure occurs when the beam plastifies, i.e. when the axial stress gets larger than the yield stress:
+
+.. math::
+   R - \frac{F}{\pi D^2/4} \leq 0
+
+
+where :math:`R` is the strength.
+
+Therefore, the limit state function :math:`G` is: 
+
+.. math::
+   G(R,F) = R - \frac{F}{\pi D^2/4},
+
+
+for any :math:`R,F\in\mathbb{R}`.
+
+The value of the parameter :math:`D` is such that:
+
+.. math::
+   D^2/4 = 10^{-4},
+
+
+which leads to the equation:
+
+.. math::
+   G(R,F) = R - \frac{F}{10^{-4} \pi}.
+
+
+We consider the following distribution functions.
+
+========  ===========================================================================
+Variable  Distribution
+========  ===========================================================================
+ R         LogNormal(:math:`\mu_R=3\times 10^6`, :math:`\sigma_R=3\times 10^5`) [Pa] 
+ F         Normal(:math:`\mu_F=750`, :math:`\sigma_F=50`) [N] 
+========  ===========================================================================
+
+where :math:`\mu_R=E(R)` and :math:`\sigma_R^2=V(R)` are the mean and the variance of :math:`R`.
+
+The failure probability is: 
+
+.. math::
+   P_f = \text{Prob}(G(R,F) \leq 0).
+
+
+The exact :math:`P_f` is 
+
+.. math::
+   P_f = 0.02920.
+
+
+Definition of the model
+-----------------------
+
+
+.. code-block:: default
+
+    import openturns as ot
+    import numpy as np
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+The dimension of the problem.
+
+
+.. code-block:: default
+
+    dim = 2
+
+
+
+
+
+
+
+
+We define the limit state function as a symbolic function. 
+
+
+.. code-block:: default
+
+    limitStateFunction = ot.SymbolicFunction(['R', 'F'], ['R-F/(1.e-4 * pi_)'])
+
+
+
+
+
+
+
+
+Before using the function within an algorithm, we check that the limit state function is correctly evaluated.
+
+
+.. code-block:: default
+
+    x = [3.e6, 750.]
+    print('x=', x)
+    print('G(x)=', limitStateFunction(x))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    x= [3000000.0, 750.0]
+    G(x)= [612676]
+
+
+
+
+Probabilistic model
+-------------------
+
+We then create a first marginal, a univariate `LogNormal` distribution, parameterized by its mean and standard deviation.
+
+
+.. code-block:: default
+
+    R = ot.LogNormalMuSigma(3.e6, 3.e5, 0.0).getDistribution()
+    R.setName('Yield strength')
+    R.setDescription('R')
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = R.drawPDF()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_quickstart_001.png
+    :alt: plot axial stressed beam quickstart
+    :class: sphx-glr-single-img
+
+
+
+
+
+Our second marginal is a `Normal` univariate distribution.
+
+
+.. code-block:: default
+
+    F = ot.Normal(750., 50.)
+    F.setName('Traction_load')
+    F.setDescription('F')
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = F.drawPDF()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_quickstart_002.png
+    :alt: plot axial stressed beam quickstart
+    :class: sphx-glr-single-img
+
+
+
+
+
+In order to create the input distribution, we use the `ComposedDistribution` class which associates the distribution marginals and a copula. If no copula is supplied to the constructor, it selects the independent copula as default:
+
+
+.. code-block:: default
+
+    myDistribution = ot.ComposedDistribution([R, F])
+    myDistribution.setName('myDist')
+
+
+
+
+
+
+
+
+We create a `RandomVector` from the `Distribution`, which will then be fed to the limit state function.
+
+
+.. code-block:: default
+
+    inputRandomVector = ot.RandomVector(myDistribution)
+
+
+
+
+
+
+
+
+Finally we create a `CompositeRandomVector` by associating the limit state function with the input random vector.
+
+
+.. code-block:: default
+
+    outputRandomVector = ot.CompositeRandomVector(limitStateFunction, inputRandomVector)
+
+
+
+
+
+
+
+
+Exact computation
+-----------------
+
+The simplest method is to perform an exact computation based on the arithmetic of distributions.
+
+
+.. code-block:: default
+
+    D = 0.02
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    G = R-F/(D**2/4 * np.pi)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    G.computeCDF(0.)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.029198194624830504
+
+
+
+This is the exact result from the description of this example.
+
+Distribution of the output
+--------------------------
+
+Plot the distribution of the output.
+
+
+.. code-block:: default
+
+    sampleSize = 500
+    sampleG = outputRandomVector.getSample(sampleSize)
+    graph = ot.HistogramFactory().build(sampleG).drawPDF()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_quickstart_003.png
+    :alt: y0 PDF
+    :class: sphx-glr-single-img
+
+
+
+
+
+Estimate the probability with Monte-Carlo
+-----------------------------------------
+
+We first create a `ThresholdEvent` based on the output `RandomVector`, the operator and the threshold.
+
+
+.. code-block:: default
+
+    myEvent = ot.ThresholdEvent(outputRandomVector, ot.Less(), 0.0)
+
+
+
+
+
+
+
+
+The `ProbabilitySimulationAlgorithm` is the main tool to estimate a probability. It is based on a specific design of experiments: in this example, we use the simplest of all, the `MonteCarloExperiment`. 
+
+
+.. code-block:: default
+
+    maximumCoV = 0.05 # Coefficient of variation
+    maximumNumberOfBlocks = 100000
+
+    experiment = ot.MonteCarloExperiment()
+    algoMC = ot.ProbabilitySimulationAlgorithm(myEvent, experiment)
+    algoMC.setMaximumOuterSampling(maximumNumberOfBlocks)
+    algoMC.setBlockSize(1)
+    algoMC.setMaximumCoefficientOfVariation(maximumCoV)
+
+
+
+
+
+
+
+
+In order to gather statistics about the algorithm, we get the initial number of function calls (this is not mandatory, but will prove to be convenient later in the study).
+
+
+.. code-block:: default
+
+    initialNumberOfCall = limitStateFunction.getEvaluationCallsNumber()
+
+
+
+
+
+
+
+
+Now comes the costly part: the `run` method performs the required simulations. The algorithm stops when the coefficient of variation of the probability estimate becomes lower than 0.5.
+
+
+.. code-block:: default
+
+    algoMC.run()
+
+
+
+
+
+
+
+
+We can then get the results of the algorithm. 
+
+
+.. code-block:: default
+
+    result = algoMC.getResult()
+    probability = result.getProbabilityEstimate()
+    numberOfFunctionEvaluations = limitStateFunction.getEvaluationCallsNumber() - initialNumberOfCall
+    print('Number of calls to the limit state =', numberOfFunctionEvaluations)
+    print('Pf = ', probability)
+    print('CV =', result.getCoefficientOfVariation())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Number of calls to the limit state = 13475
+    Pf =  0.028868274582560305
+    CV = 0.04996481346528455
+
+
+
+
+The `drawProbabilityConvergence` method plots the probability estimate depending on the number of function evaluations. The order of convergence is :math:`O \left( 1/N^2 \right)` with :math:`N` being the number of function evaluations. This is why we use a logarithmic scale for the X axis of the graphics.
+
+
+.. code-block:: default
+
+    graph = algoMC.drawProbabilityConvergence()
+    graph.setLogScale(ot.GraphImplementation.LOGX)
+    graph
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    class=Graph name=ProbabilitySimulationAlgorithm convergence graph at level 0.95 implementation=class=GraphImplementation name=ProbabilitySimulationAlgorithm convergence graph at level 0.95 title=ProbabilitySimulationAlgorithm convergence graph at level 0.95 xTitle=outer iteration yTitle=estimate axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=probability estimate implementation=class=Curve name=probability estimate derived from class=DrawableImplementation name=probability estimate legend=probability estimate data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1684 dimension=2 data=[[1,0],[2,0],[3,0],...,[1682,0.0286861],[1683,0.0288176],[1684,0.0288005]] color=red fillStyle=solid lineStyle=solid pointStyle=none lineWidth=2,class=Drawable name=bounds implementation=class=Curve name=bounds derived from class=DrawableImplementation name=bounds legend=bounds data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1675 dimension=2 data=[[10,-0.00921176],[11,-0.00841055],[12,-0.00773732],...,[1682,0.0258657],[1683,0.0259918],[1684,0.0259763]] color=green fillStyle=solid lineStyle=solid pointStyle=none lineWidth=1,class=Drawable name=Unnamed implementation=class=Curve name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1675 dimension=2 data=[[10,0.0592118],[11,0.0538651],[12,0.049404],...,[1682,0.0315065],[1683,0.0316434],[1684,0.0316246]] color=green fillStyle=solid lineStyle=solid pointStyle=none lineWidth=1]
+
+
+
+We see that the 95% confidence interval becomes smaller and smaller and stabilizes at the end of the simulation.
+
+In order to compute the confidence interval, we use the `getConfidenceLength` method, which returns the length of the interval. In order to compute the bounds of the interval, we divide this length by 2.
+
+
+.. code-block:: default
+
+    alpha = 0.05
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    pflen = result.getConfidenceLength(1-alpha)
+    print("%.2f%% confidence interval = [%f,%f]" % ((1-alpha)*100,probability-pflen/2,probability+pflen/2))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    95.00% confidence interval = [0.026041,0.031695]
+
+
+
+
+This interval is consistent with the exact probability :math:`P_f=0.02920`.
+
+Appendix: derivation of the failure probability
+-----------------------------------------------
+
+The failure probability is: 
+
+.. math::
+   P_f = \text{Prob}(R-S \leq 0) = \int_{r-s \leq 0} f_{R, S}(r, s)drds
+
+
+where :math:`f_{R, S}` is the probability distribution function of the random vector :math:`(R,S)`.
+If R and S are independent, then: 
+
+.. math::
+   f_{R, S}(r, s) = f_R(r) f_S(s)
+
+
+for any :math:`r,s\in\mathbb{R}`, 
+where :math:`f_S` is the probability distribution function of the random variable :math:`S` and :math:`f_R` is the probability distribution function of the random variable :math:`R`.
+Therefore,
+
+.. math::
+   P_f = \int_{r-s \leq 0} f_R(r) f_S(s) drds.
+
+
+This implies:
+
+.. math::
+   P_f = \int_{-\infty}^{+\infty} \left(\int_{r \leq s} f_R(r) dr \right) f_S(s) ds.
+
+Therefore,
+
+.. math::
+   P_f = \int_{-\infty}^{+\infty}f_S(s)F_R(s)ds
+
+
+where :math:`F_R` is the cumulative distribution function of the random variable :math:`R`.
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.276 seconds)
+
+
+.. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_axial_stressed_beam_quickstart.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_axial_stressed_beam_quickstart.py <plot_axial_stressed_beam_quickstart.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_axial_stressed_beam_quickstart.ipynb <plot_axial_stressed_beam_quickstart.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

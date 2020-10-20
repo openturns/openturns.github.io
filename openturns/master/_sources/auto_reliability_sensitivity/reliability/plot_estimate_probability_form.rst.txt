@@ -1,0 +1,526 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_reliability_sensitivity_reliability_plot_estimate_probability_form.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_reliability_sensitivity_reliability_plot_estimate_probability_form.py:
+
+
+Estimate a probability with FORM
+================================
+
+In this example we estimate a failure probability with the `FORM` algorithm on the cantilever beam example. More precisely, we show how to use the associated results:
+
+- the design point in both physical and standard space,
+- the probability estimation according to the FORM approximation, and the following SORM ones: Tvedt, Hohen-Bichler and Breitung,
+- the Hasofer reliability index and the generalized ones evaluated from the Breitung, Tvedt and Hohen-Bichler approximations,
+- the importance factors defined as the normalized director factors of the design point in the :math:`U`-space
+- the sensitivity factors of the Hasofer reliability index and the FORM probability.
+- the coordinates of the mean point in the standard event space.
+
+The coordinates of the mean point in the standard event space is:
+
+.. math::
+   \frac{1}{E_1(-\beta)}\int_{\beta}^{\infty} u_1 p_1(u_1)du_1
+
+
+where :math:`E_1` is the spheric univariate distribution of the standard space and :math:`\beta` is the reliability index.
+
+Introduction 
+-------------
+
+Let us consider the analytical example of a cantilever beam with Young modulus E, length L and section modulus I.
+
+One end of the cantilever beam is built in a wall and we apply a concentrated bending load F at the other end of the beam, resulting in a deviation:
+
+.. math::
+   d = \frac{FL^3}{3EI}
+
+
+Failure occurs when the beam deviation is too large:
+
+.. math::
+   d \ge 30 (cm)
+
+
+Four independent random variables are considered:
+
+ - E: Young's modulus [Pa]
+ - F: load [N]
+ - L: length [m]
+ - I: section [m^4]
+
+Stochastic model (simplified model, no units):
+
+ - E ~ Beta(0.93, 2.27, 2.8e7, 4.8e7)
+ - F ~ LogNormal(30000, 9000, 15000)
+ - L ~ Uniform(250, 260)
+ - I ~ Beta(2.5, 1.5, 3.1e2, 4.5e2)
+
+
+
+.. code-block:: default
+
+    from __future__ import print_function
+    import openturns as ot
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+Create the marginal distributions of the parameters.
+
+
+.. code-block:: default
+
+    dist_E = ot.Beta(0.93, 2.27, 2.8e7, 4.8e7)
+    dist_F = ot.LogNormalMuSigma(30000, 9000, 15000).getDistribution()
+    dist_L = ot.Uniform(250, 260)
+    dist_I = ot.Beta(2.5, 1.5, 3.1e2, 4.5e2)
+    marginals = [dist_E, dist_F, dist_L, dist_I]
+
+
+
+
+
+
+
+
+Create the Copula.
+
+
+.. code-block:: default
+
+    RS = ot.CorrelationMatrix(4)
+    RS[2, 3] = -0.2
+    # Evaluate the correlation matrix of the Normal copula from RS
+    R = ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(RS)
+    # Create the Normal copula parametrized by R
+    copula = ot.NormalCopula(R) 
+
+
+
+
+
+
+
+
+Create the joint probability distribution.
+
+
+.. code-block:: default
+
+    distribution = ot.ComposedDistribution(marginals, copula)
+    distribution.setDescription(['E', 'F', 'L', 'I'])
+
+
+
+
+
+
+
+
+create the model
+
+
+.. code-block:: default
+
+    model = ot.SymbolicFunction(['E', 'F', 'L', 'I'], ['F*L^3/(3*E*I)'])
+
+
+
+
+
+
+
+
+Create the event whose probability we want to estimate.
+
+
+.. code-block:: default
+
+    vect = ot.RandomVector(distribution)
+    G = ot.CompositeRandomVector(model, vect)
+    event = ot.ThresholdEvent(G, ot.Greater(), 30.0)
+    event.setName("deviation")
+
+
+
+
+
+
+
+
+Define a solver
+
+
+.. code-block:: default
+
+    optimAlgo = ot.Cobyla()
+    optimAlgo.setMaximumEvaluationNumber(1000)
+    optimAlgo.setMaximumAbsoluteError(1.0e-10)
+    optimAlgo.setMaximumRelativeError(1.0e-10)
+    optimAlgo.setMaximumResidualError(1.0e-10)
+    optimAlgo.setMaximumConstraintError(1.0e-10)
+
+
+
+
+
+
+
+
+Run FORM
+
+
+.. code-block:: default
+
+    algo = ot.FORM(optimAlgo, event, distribution.getMean())
+    algo.run()
+    result = algo.getResult()
+
+
+
+
+
+
+
+
+Probability
+
+
+.. code-block:: default
+
+    result.getEventProbability()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.006709804264900567
+
+
+
+Hasofer reliability index
+
+
+.. code-block:: default
+
+    result.getHasoferReliabilityIndex()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    2.4724350787523086
+
+
+
+Design point in the standard U* space.
+
+
+.. code-block:: default
+
+    result.getStandardSpaceDesignPoint()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[-0.602386,2.31056,0.355794,-0.533677]</p>
+    <br />
+    <br />
+
+Design point in the physical X space.
+
+
+.. code-block:: default
+
+    result.getPhysicalSpaceDesignPoint()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[3.03272e+07,61318.5,256.39,378.635]</p>
+    <br />
+    <br />
+
+Importance factors
+
+
+.. code-block:: default
+
+    graph = result.drawImportanceFactors()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_001.png
+    :alt: Importance Factors from Design Point - deviation
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+    marginalSensitivity, otherSensitivity = result.drawHasoferReliabilityIndexSensitivity()
+    marginalSensitivity.setLegendPosition('bottom')
+    view = viewer.View(marginalSensitivity)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_002.png
+    :alt: Hasofer Reliability Index Sensitivities - Marginal parameters - deviation
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+    marginalSensitivity, otherSensitivity = result.drawEventProbabilitySensitivity()
+    view = viewer.View(marginalSensitivity)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_003.png
+    :alt: FORM - Event Probability Sensitivities - Marginal parameters - deviation
+    :class: sphx-glr-single-img
+
+
+
+
+
+Error history
+
+
+.. code-block:: default
+
+    optimResult = result.getOptimizationResult()
+    graphErrors = optimResult.drawErrorHistory()
+    graphErrors.setLegendPosition('bottom')
+    graphErrors.setYMargin(0.0)
+    view = viewer.View(graphErrors)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_004.png
+    :alt: Error history
+    :class: sphx-glr-single-img
+
+
+
+
+
+Get additional results with SORM
+
+
+.. code-block:: default
+
+    algo = ot.SORM(optimAlgo, event, distribution.getMean())
+    algo.run()
+    sorm_result = algo.getResult()
+
+
+
+
+
+
+
+
+Reliability index with Breitung approximation
+
+
+.. code-block:: default
+
+    sorm_result.getGeneralisedReliabilityIndexBreitung()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    2.5438690633787395
+
+
+
+... with Hohenbichler approximation
+
+
+.. code-block:: default
+
+    sorm_result.getGeneralisedReliabilityIndexHohenbichler()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    2.5514688579773583
+
+
+
+.. with Tvedt approximation
+
+
+.. code-block:: default
+
+    sorm_result.getGeneralisedReliabilityIndexTvedt()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    2.5536673936804664
+
+
+
+SORM probability of the event with Breitung approximation
+
+
+.. code-block:: default
+
+    sorm_result.getEventProbabilityBreitung()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.00548160860832736
+
+
+
+... with Hohenbichler approximation
+
+
+.. code-block:: default
+
+    sorm_result.getEventProbabilityHohenbichler()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.005363495511528019
+
+
+
+... with Tvedt approximation
+
+
+.. code-block:: default
+
+    sorm_result.getEventProbabilityTvedt()
+
+    plt.show()
+
+
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.442 seconds)
+
+
+.. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_estimate_probability_form.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_estimate_probability_form.py <plot_estimate_probability_form.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_estimate_probability_form.ipynb <plot_estimate_probability_form.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

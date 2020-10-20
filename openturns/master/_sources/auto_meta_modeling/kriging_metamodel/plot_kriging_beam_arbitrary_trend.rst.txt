@@ -1,0 +1,480 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_beam_arbitrary_trend.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_meta_modeling_kriging_metamodel_plot_kriging_beam_arbitrary_trend.py:
+
+
+Configuring an arbitrary trend in Kriging
+=========================================
+
+The goal of this example is to show how to configure an arbitrary trend in a Kriging metamodel. 
+
+In general, any collection of multivariate functions can be used as the `basis` argument of a `KrigingAlgorithm`. In practice, it might not be convenient to create a multivariate basis and this is why we sometimes create it by tensorization of univariate functions. In this example, we first use Legendre polynomials as our univariate functions, then we create an orthogonal polynomial basis corresponding to the input marginals.
+
+For this purpose, we use the cantilever beam example.
+
+Definition of the model
+-----------------------
+
+
+.. code-block:: default
+
+    import openturns as ot
+    ot.RandomGenerator.SetSeed(0)
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+We define the symbolic function which evaluates the output Y depending on the inputs E, F, L and I.
+
+
+.. code-block:: default
+
+    model = ot.SymbolicFunction(["E", "F", "L", "I"], ["F*L^3/(3*E*I)"])
+
+
+
+
+
+
+
+
+Then we define the distribution of the input random vector. 
+
+Young's modulus E
+
+
+.. code-block:: default
+
+    E = ot.Beta(0.9, 2.27, 2.5e7, 5.0e7) # in N/m^2
+    E.setDescription("E")
+    # Load F
+    F = ot.LogNormal() # in N
+    F.setParameter(ot.LogNormalMuSigma()([30.e3, 9e3, 15.e3]))
+    F.setDescription("F")
+    # Length L
+    L = ot.Uniform(250., 260.) # in cm
+    L.setDescription("L")
+    # Moment of inertia I
+    I = ot.Beta(2.5, 1.5, 310, 450) # in cm^4
+    I.setDescription("I")
+
+
+
+
+
+
+
+
+Finally, we define the dependency using a `NormalCopula`.
+
+
+.. code-block:: default
+
+    dimension = 4 # number of inputs
+    R = ot.CorrelationMatrix(dimension)
+    R[2, 3] = -0.2 
+    myCopula = ot.NormalCopula(ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(R))
+    myDistribution = ot.ComposedDistribution([E, F, L, I], myCopula)
+
+
+
+
+
+
+
+
+Create the design of experiments
+--------------------------------
+
+We consider a simple Monte-Carlo sampling as a design of experiments. This is why we generate an input sample using the `getSample` method of the distribution. Then we evaluate the output using the `model` function.
+
+
+.. code-block:: default
+
+    sampleSize_train = 20
+    X_train = myDistribution.getSample(sampleSize_train)
+    Y_train = model(X_train)
+
+
+
+
+
+
+
+
+Create the Legendre basis
+-------------------------
+
+We first create a Legendre basis of univariate polynomials. In order to convert then into multivariate polynomials, we use a linear enumerate function.
+
+The `LegendreFactory` class creates Legendre polynomials. 
+
+
+.. code-block:: default
+
+    univariateFactory = ot.LegendreFactory()
+
+
+
+
+
+
+
+
+This factory corresponds to the `Uniform` distribution in the [-1,1] interval. 
+
+
+.. code-block:: default
+
+    univariateFactory.getMeasure()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>Uniform(a = -1, b = 1)</p>
+    <br />
+    <br />
+
+This interval does not correspond to the interval on which the input marginals are defined (we will come back to this topic later), but this will, anyway, create a consistent trend for the kriging.
+
+
+.. code-block:: default
+
+    polyColl = [univariateFactory]*dimension
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    enumerateFunction = ot.LinearEnumerateFunction(dimension)
+    productBasis = ot.OrthogonalProductPolynomialFactory(polyColl, enumerateFunction)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    functions = []
+    numberOfTrendCoefficients = 12
+    for i in range(numberOfTrendCoefficients):
+        multivariatepolynomial = productBasis.build(i)
+        print(multivariatepolynomial)
+        functions.append(multivariatepolynomial)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    1
+    1.73205 * x0
+    1.73205 * x1
+    1.73205 * x2
+    1.73205 * x3
+    -1.11803 + 3.3541 * x0^2
+    (1.73205 * x0) * (1.73205 * x1)
+    (1.73205 * x0) * (1.73205 * x2)
+    (1.73205 * x0) * (1.73205 * x3)
+    -1.11803 + 3.3541 * x1^2
+    (1.73205 * x1) * (1.73205 * x2)
+    (1.73205 * x1) * (1.73205 * x3)
+
+
+
+
+
+.. code-block:: default
+
+    basis = ot.Basis(functions)
+
+
+
+
+
+
+
+
+Create the metamodel
+--------------------
+
+In order to create the kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class. Then we use a squared exponential covariance model. Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments. 
+
+
+.. code-block:: default
+
+    covarianceModel = ot.SquaredExponential([1.]*dimension, [1.0])
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
+    algo.run()
+    result = algo.getResult()
+    krigingWithConstantTrend = result.getMetaModel()
+
+
+
+
+
+
+
+
+The `getTrendCoefficients` method returns the coefficients of the trend.
+
+
+.. code-block:: default
+
+    result.getTrendCoefficients()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [class=Point name=Unnamed dimension=12 values=[9.37146e-20,2.64601e-12,1.65944e-15,4.20447e-17,3.18577e-17,-5.57247e-15,3.94631e-12,1.20909e-09,-2.04196e-10,-1.87901e-10,7.79485e-13,-7.28798e-13]]
+
+
+
+We see that the number of coefficients in the trend corresponds to the number of functions in the basis. 
+
+
+.. code-block:: default
+
+    result.getCovarianceModel()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>SquaredExponential(scale=[1,1,1,1], amplitude=[1.94219])</p>
+    <br />
+    <br />
+
+The `SquaredExponential` model has one amplitude coefficient and 4 scale coefficients. This is because this covariance model is anisotropic : each of the 4 input variables is associated with its own scale coefficient. 
+
+Create an orthogonal multivariate polynomial factory
+----------------------------------------------------
+
+In order to create a Legendre basis which better corresponds to the input marginals, we could consider the orthogonal basis which would be associated to uniform marginals. To compute the bounds of these uniform distributions, we may consider the 1% and 99% quantiles of each marginal.
+
+There is, however, a simpler way to proceed. We can simply orthogonalize the input marginals and create the orthogonal polynomial basis corresponding to the inputs. This corresponds to the method we would use in the polynomial chaos. 
+
+We first create the polynomial basis which corresponds to the inputs. 
+
+
+.. code-block:: default
+
+    multivariateBasis = ot.OrthogonalProductPolynomialFactory([E, F, L, I])
+
+
+
+
+
+
+
+
+Then we create the multivariate basis which has maximum degree equal to 2.
+
+
+.. code-block:: default
+
+    totalDegree = 2
+    enumerateFunction = multivariateBasis.getEnumerateFunction()
+    numberOfTrendCoefficients = enumerateFunction.getStrataCumulatedCardinal(totalDegree)
+    numberOfTrendCoefficients
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    15
+
+
+
+
+.. code-block:: default
+
+    functions = []
+    for i in range(numberOfTrendCoefficients):
+        multivariatepolynomial = productBasis.build(i)
+        print(multivariatepolynomial)
+        functions.append(multivariatepolynomial)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    1
+    1.73205 * x0
+    1.73205 * x1
+    1.73205 * x2
+    1.73205 * x3
+    -1.11803 + 3.3541 * x0^2
+    (1.73205 * x0) * (1.73205 * x1)
+    (1.73205 * x0) * (1.73205 * x2)
+    (1.73205 * x0) * (1.73205 * x3)
+    -1.11803 + 3.3541 * x1^2
+    (1.73205 * x1) * (1.73205 * x2)
+    (1.73205 * x1) * (1.73205 * x3)
+    -1.11803 + 3.3541 * x2^2
+    (1.73205 * x2) * (1.73205 * x3)
+    -1.11803 + 3.3541 * x3^2
+
+
+
+
+
+.. code-block:: default
+
+    basis = ot.Basis(functions)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
+    algo.run()
+    result = algo.getResult()
+    krigingWithConstantTrend = result.getMetaModel()
+
+
+
+
+
+
+
+
+The `getTrendCoefficients` method returns the coefficients of the trend.
+
+
+.. code-block:: default
+
+    result.getTrendCoefficients()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [class=Point name=Unnamed dimension=15 values=[9.37146e-20,2.64601e-12,1.65944e-15,4.20447e-17,3.18577e-17,-5.57247e-15,3.94631e-12,1.20909e-09,-2.04196e-10,-1.87901e-10,7.79485e-13,-7.28798e-13,2.10889e-14,1.45866e-14,-9.90571e-16]]
+
+
+
+Conclusion
+----------
+
+The trend that we have configured corresponds to the basis that we would have used in a full polynomial chaos computed with least squares. 
+
+Other extensions of this work would be:
+
+* to use a Fourier basis with `FourierSeriesFactory`,
+* wavelets with `HaarWaveletFactory`,
+
+or any other univariate factory. 
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.010 seconds)
+
+
+.. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_beam_arbitrary_trend.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_kriging_beam_arbitrary_trend.py <plot_kriging_beam_arbitrary_trend.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_kriging_beam_arbitrary_trend.ipynb <plot_kriging_beam_arbitrary_trend.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
