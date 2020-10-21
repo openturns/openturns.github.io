@@ -1,0 +1,779 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_probabilistic_modeling_distributions_plot_distribution_manipulation.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_probabilistic_modeling_distributions_plot_distribution_manipulation.py:
+
+
+Distribution manipulation
+=========================
+
+In this example we are going to exhibit some of the services exposed by the distribution objects:
+
+- ask for the dimension, with the method getDimension
+- extract the marginal distributions, with the method getMarginal
+- to ask for some properties, with isContinuous, isDiscrete, isElliptical
+- to get the copula, with the method getCopula*
+- to ask for some properties on the copula, with the methods hasIndependentCopula, hasEllipticalCopula
+- to evaluate some moments, with getMean, getStandardDeviation, getCovariance, getSkewness, getKurtosis
+- to evaluate the roughness, with the method getRoughness
+- to get one realization or simultaneously :math:`n` realizations, with the method getRealization, getSample
+- to evaluate the probability content of a given interval, with the method computeProbability
+- to evaluate a quantile or a complementary quantile, with the method computeQuantile
+- to evaluate the characteristic function of the distribution
+- to evaluate the derivative of the CDF or PDF
+- to draw some curves
+
+
+.. code-block:: default
+
+    from __future__ import print_function
+    import openturns as ot
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+Create an 1-d distribution
+
+
+.. code-block:: default
+
+    dist_1 = ot.Normal()
+
+    # Create a 2-d distribution
+    dist_2 = ot.ComposedDistribution([ot.Normal(), ot.Triangular(0.0, 2.0, 3.0)], ot.ClaytonCopula(2.3))
+
+    # Create a 3-d distribution
+    copula_dim3 = ot.Student(5.0, 3).getCopula()
+    dist_3 = ot.ComposedDistribution([ot.Normal(), ot.Triangular(0.0, 2.0, 3.0), ot.Exponential(0.2)], copula_dim3)
+
+
+
+
+
+
+
+
+Get the dimension fo the distribution
+
+
+.. code-block:: default
+
+    dist_2.getDimension()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    2
+
+
+
+Get the 2nd marginal
+
+
+.. code-block:: default
+
+    dist_2.getMarginal(1)
+
+
+
+
+
+
+.. raw:: html
+
+    <p>Triangular(a = 0, m = 2, b = 3)</p>
+    <br />
+    <br />
+
+Get a 2-d marginal
+
+
+.. code-block:: default
+
+    dist_3.getMarginal([0, 1]).getDimension()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    2
+
+
+
+Ask some properties of the distribution
+
+
+.. code-block:: default
+
+    dist_1.isContinuous(), dist_1.isDiscrete(), dist_1.isElliptical()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    (True, False, True)
+
+
+
+Get the copula
+
+
+.. code-block:: default
+
+    copula = dist_2.getCopula()
+
+
+
+
+
+
+
+
+Ask some properties on the copula
+
+
+.. code-block:: default
+
+    dist_2.hasIndependentCopula(), dist_2.hasEllipticalCopula()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    (False, False)
+
+
+
+mean vector of the distribution
+
+
+.. code-block:: default
+
+    dist_2.getMean()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[0,1.66667]</p>
+    <br />
+    <br />
+
+standard deviation vector of the distribution
+
+
+.. code-block:: default
+
+    dist_2.getStandardDeviation()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[1,0.62361]</p>
+    <br />
+    <br />
+
+covariance matrix of the distribution
+
+
+.. code-block:: default
+
+    dist_2.getCovariance()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[[ 1        0.491927 ]<br>
+     [ 0.491927 0.388889 ]]</p>
+    <br />
+    <br />
+
+skewness vector of the distribution
+
+
+.. code-block:: default
+
+    dist_2.getSkewness()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[0,-0.305441]</p>
+    <br />
+    <br />
+
+kurtosis vector of the distribution
+
+
+.. code-block:: default
+
+    dist_2.getKurtosis()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[3,2.4]</p>
+    <br />
+    <br />
+
+roughness of the distribution
+
+
+.. code-block:: default
+
+    dist_1.getRoughness()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.28209479177387814
+
+
+
+Get one realization
+
+
+.. code-block:: default
+
+    dist_2.getRealization()
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[0.779052,2.64799]</p>
+    <br />
+    <br />
+
+Get several realizations
+
+
+.. code-block:: default
+
+    dist_2.getSample(5)
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>X0</TH><TH>X1</TH></TR>
+    <TR><TH>0</TH><TD>0.06985929</TD><TD>1.42593</TD></TR>
+    <TR><TH>1</TH><TD>-0.2847443</TD><TD>1.680554</TD></TR>
+    <TR><TH>2</TH><TD>-1.842467</TD><TD>0.7630956</TD></TR>
+    <TR><TH>3</TH><TD>0.3236553</TD><TD>2.048827</TD></TR>
+    <TR><TH>4</TH><TD>0.1203091</TD><TD>2.285018</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+Evaluate the PDF at the mean point
+
+
+.. code-block:: default
+
+    dist_2.computePDF(dist_2.getMean())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.3528005531670077
+
+
+
+Evaluate the CDF at the mean point
+
+
+.. code-block:: default
+
+    dist_2.computeCDF(dist_2.getMean())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.3706626446357781
+
+
+
+Evaluate the complementary CDF
+
+
+.. code-block:: default
+
+    dist_2.computeComplementaryCDF(dist_2.getMean())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.6293373553642219
+
+
+
+Evaluate the survival function at the mean point
+
+
+.. code-block:: default
+
+    dist_2.computeSurvivalFunction(dist_2.getMean())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.4076996816728151
+
+
+
+Evaluate the PDF on a sample
+
+
+.. code-block:: default
+
+    dist_2.computePDF(dist_2.getSample(5))
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>v0</TH></TR>
+    <TR><TH>0</TH><TD>0.2107205</TD></TR>
+    <TR><TH>1</TH><TD>0.2829345</TD></TR>
+    <TR><TH>2</TH><TD>0.2683372</TD></TR>
+    <TR><TH>3</TH><TD>0.3159856</TD></TR>
+    <TR><TH>4</TH><TD>0.3618715</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+Evaluate the CDF on a sample
+
+
+.. code-block:: default
+
+    dist_2.computeCDF(dist_2.getSample(5))
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>v0</TH></TR>
+    <TR><TH>0</TH><TD>0.7326854</TD></TR>
+    <TR><TH>1</TH><TD>0.5003563</TD></TR>
+    <TR><TH>2</TH><TD>0.820944</TD></TR>
+    <TR><TH>3</TH><TD>0.01091264</TD></TR>
+    <TR><TH>4</TH><TD>0.4877803</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+Evaluate the probability content of an 1-d interval
+
+
+.. code-block:: default
+
+    interval = ot.Interval(-2.0, 3.0)
+    dist_1.computeProbability(interval)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.9758999700201907
+
+
+
+Evaluate the probability content of a 2-d interval
+
+
+.. code-block:: default
+
+    interval = ot.Interval([0.4, -1], [3.4, 2])
+    dist_2.computeProbability(interval)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    0.129833882783416
+
+
+
+Evaluate the quantile of order p=90%
+
+
+.. code-block:: default
+
+    dist_2.computeQuantile(0.90)
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[1.60422,2.59627]</p>
+    <br />
+    <br />
+
+and the quantile of order 1-p
+
+
+.. code-block:: default
+
+    dist_2.computeQuantile(0.90, True)
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[-1.10363,0.899591]</p>
+    <br />
+    <br />
+
+Evaluate the quantiles of order p et q
+For example, the quantile 90% and 95%
+
+
+.. code-block:: default
+
+    dist_1.computeQuantile([0.90, 0.95])
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>v0</TH></TR>
+    <TR><TH>0</TH><TD>1.281552</TD></TR>
+    <TR><TH>1</TH><TD>1.644854</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+and the quantile of order 1-p and 1-q
+
+
+.. code-block:: default
+
+    dist_1.computeQuantile([0.90, 0.95], True)
+
+
+
+
+
+
+.. raw:: html
+
+    <TABLE><TR><TD></TD><TH>v0</TH></TR>
+    <TR><TH>0</TH><TD>-1.281552</TD></TR>
+    <TR><TH>1</TH><TD>-1.644854</TD></TR>
+    </TABLE>
+    <br />
+    <br />
+
+Evaluate the characteristic function of the distribution (only 1-d)
+
+
+.. code-block:: default
+
+    dist_1.computeCharacteristicFunction(dist_1.getMean()[0])
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    (1+0j)
+
+
+
+Evaluate the derivatives of the PDF with respect to the parameters at mean
+
+
+.. code-block:: default
+
+    dist_2.computePDFGradient(dist_2.getMean())
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[0,-0.398942,0.12963,-0.277778,-0.185185,0]</p>
+    <br />
+    <br />
+
+Evaluate the derivatives of the CDF with respect to the parameters at mean
+
+
+.. code-block:: default
+
+    dist_2.computeCDFGradient(dist_2.getMean())
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[-0.398942,-0,-0.169753,-0.231481,-0.555556,0]</p>
+    <br />
+    <br />
+
+draw PDF
+
+
+.. code-block:: default
+
+    graph = dist_1.drawPDF()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_distribution_manipulation_001.png
+    :alt: plot distribution manipulation
+    :class: sphx-glr-single-img
+
+
+
+
+
+draw CDF
+
+
+.. code-block:: default
+
+    graph = dist_1.drawCDF()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_distribution_manipulation_002.png
+    :alt: plot distribution manipulation
+    :class: sphx-glr-single-img
+
+
+
+
+
+Draw an 1-d quantile curve
+
+
+.. code-block:: default
+
+
+    # Define the range and the number of points
+    qMin = 0.2
+    qMax = 0.6
+    nbrPoints = 101
+    quantileGraph = dist_1.drawQuantile(qMin, qMax, nbrPoints)
+    view = viewer.View(quantileGraph)
+
+
+
+
+.. image:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_distribution_manipulation_003.png
+    :alt: plot distribution manipulation
+    :class: sphx-glr-single-img
+
+
+
+
+
+Draw a 2-d quantile curve
+
+
+.. code-block:: default
+
+
+    # Define the range and the number of points
+    qMin = 0.3
+    qMax = 0.9
+    nbrPoints = 101
+    quantileGraph = dist_2.drawQuantile(qMin, qMax, nbrPoints)
+    view = viewer.View(quantileGraph)
+    plt.show()
+
+
+
+.. image:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_distribution_manipulation_004.png
+    :alt: [X0,X1] Quantile
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.341 seconds)
+
+
+.. _sphx_glr_download_auto_probabilistic_modeling_distributions_plot_distribution_manipulation.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_distribution_manipulation.py <plot_distribution_manipulation.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_distribution_manipulation.ipynb <plot_distribution_manipulation.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

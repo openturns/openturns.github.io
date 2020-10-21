@@ -13,7 +13,7 @@ sampleX = sample.getMarginal(0)
 sampleX.setName('X')
 # same as good test
 regressionModel = ot.LinearModelAlgorithm(sampleX, sampleY).getResult()
-graph = ot.VisualTest.DrawLinearModel(sampleX, sampleY, regressionModel)
+graph = ot.VisualTest.DrawLinearModel(regressionModel)
 cloud = graph.getDrawable(0)
 cloud.setPointStyle('times')
 graph.setDrawable(cloud, 0)

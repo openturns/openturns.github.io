@@ -1,0 +1,472 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_numerical_methods_optimization_plot_optimization_rastrigin.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_numerical_methods_optimization_plot_optimization_rastrigin.py:
+
+
+Optimization of the Rastrigin test function
+===========================================
+
+The Rastrigin function is defined by:
+
+.. math::
+   f(\mathbf{x}) = A + \sum_{i=1}^n \left[x_i^2 - A\cos(2 \pi x_i)\right]
+
+where :math:`A=10` and :math:`\mathbf{x}\in[-5.12,5.12]^n`. 
+
+It has a global minimum at :math:`\mathbf{x} = \mathbf{0}` where :math:`f(\mathbf{x})=0`.
+
+This function has several local minimas. This is why we use the `Multistart` algorithm. In our example, we consider the bidimensional case, i.e. :math:`n=2`.
+
+*Reference*:
+
+* Rastrigin, L. A. "Systems of extremal control." Mir, Moscow (1974).
+* G. Rudolph. "Globale Optimierung mit parallelen Evolutionsstrategien". Diplomarbeit. Department of Computer Science, University of Dortmund, July 1990.
+
+Definition of the problem
+-------------------------
+
+
+.. code-block:: default
+
+    import openturns as ot
+    import openturns.viewer as viewer
+    from matplotlib import pylab as plt
+    import numpy as np
+    ot.Log.Show(ot.Log.NONE)
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    def rastriginPy(X):
+        A = 10.0
+        delta = [x**2 - A * np.cos(2 * np.pi * x) for x in X]
+        y = A + sum(delta)
+        return [y]
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    rastriginPy([1.0, 1.0])
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [-8.0]
+
+
+
+
+.. code-block:: default
+
+    dim = 2
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    rastrigin = ot.PythonFunction(dim, 1, rastriginPy)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    lowerbound = [-5.12] * dim
+    upperbound = [5.12] * dim
+    bounds = ot.Interval(lowerbound, upperbound)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    xexact = [0.0] * dim
+
+
+
+
+
+
+
+
+Plot the iso-values of the objective function
+---------------------------------------------
+
+
+.. code-block:: default
+
+    rastrigin = ot.MemoizeFunction(rastrigin)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
+    graph.setTitle("Rastrigin function")
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_optimization_rastrigin_001.png
+    :alt: Rastrigin function
+    :class: sphx-glr-single-img
+
+
+
+
+
+We see that the Rastrigin function has several local minimas. However, there is only one single global minimum at :math:`\mathbf{x}^\star=(0, 0)`.
+
+Define the starting points
+--------------------------
+
+The starting points are computed from `Uniform` distributions in the input domain. We consider a set of 100 starting points. 
+
+
+.. code-block:: default
+
+    U = ot.Uniform(-5.12, 5.12)
+    distribution = ot.ComposedDistribution([U]*dim)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    size = 100
+    startingPoints = distribution.getSample(size)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
+    graph.setTitle("Rastrigin function")
+    cloud = ot.Cloud(startingPoints)
+    cloud.setPointStyle("bullet")
+    cloud.setColor("black")
+    graph.add(cloud)
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_optimization_rastrigin_002.png
+    :alt: Rastrigin function
+    :class: sphx-glr-single-img
+
+
+
+
+
+We see that the starting points are randomly chosen in the input domain of the function. 
+
+Create and solve the optimization problem
+-----------------------------------------
+
+
+.. code-block:: default
+
+    problem = ot.OptimizationProblem(rastrigin)
+    problem.setBounds(bounds)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    solver = ot.TNC(problem)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    algo = ot.MultiStart(solver, startingPoints)
+    algo.run()
+    result = algo.getResult()
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    xoptim = result.getOptimalPoint()
+    xoptim
+
+
+
+
+
+
+.. raw:: html
+
+    <p>[-1.93649e-09,-3.64122e-13]</p>
+    <br />
+    <br />
+
+
+.. code-block:: default
+
+    xexact
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [0.0, 0.0]
+
+
+
+We can see that the solver found a very accurate approximation of the exact solution. 
+
+
+.. code-block:: default
+
+    result.getEvaluationNumber()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    19
+
+
+
+
+.. code-block:: default
+
+    inputSample = result.getInputSample()
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
+    graph.setTitle("Rastrigin function")
+    cloud = ot.Cloud(inputSample)
+    cloud.setPointStyle("bullet")
+    cloud.setColor("black")
+    graph.add(cloud)
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_optimization_rastrigin_003.png
+    :alt: Rastrigin function
+    :class: sphx-glr-single-img
+
+
+
+
+
+We see that the algorithm evaluated the function more often in the neighbourhood of the solution. 
+
+
+.. code-block:: default
+
+    graph = result.drawOptimalValueHistory()
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_optimization_rastrigin_004.png
+    :alt: Optimal value history
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. code-block:: default
+
+    rastrigin.getEvaluationCallsNumber()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    30490
+
+
+
+In order to see where the `rastrigin` function was evaluated, we use the `getInputHistory` method. 
+
+
+.. code-block:: default
+
+    inputSample = rastrigin.getInputHistory()
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
+    graph.setTitle("Rastrigin function")
+    cloud = ot.Cloud(inputSample)
+    cloud.setPointStyle("bullet")
+    cloud.setColor("black")
+    graph.add(cloud)
+    view = viewer.View(graph)
+    plt.show()
+
+
+
+
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_optimization_rastrigin_005.png
+    :alt: Rastrigin function
+    :class: sphx-glr-single-img
+
+
+
+
+
+We see that the algorithm explored different regions of the space before finding the global minimum. 
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  1.090 seconds)
+
+
+.. _sphx_glr_download_auto_numerical_methods_optimization_plot_optimization_rastrigin.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_optimization_rastrigin.py <plot_optimization_rastrigin.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_optimization_rastrigin.ipynb <plot_optimization_rastrigin.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

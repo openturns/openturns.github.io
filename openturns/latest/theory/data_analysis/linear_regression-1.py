@@ -14,7 +14,7 @@ sampleX.setName('X')
 # Fit this linear model
 regressionModel = ot.LinearModelAlgorithm(sampleX, sampleY).getResult()
 # Test the linear model fitting
-graph = ot.VisualTest.DrawLinearModel(sampleX, sampleY, regressionModel)
+graph = ot.VisualTest.DrawLinearModel(regressionModel)
 cloud = graph.getDrawable(0)
 cloud.setPointStyle('times')
 graph.setDrawable(cloud, 0)

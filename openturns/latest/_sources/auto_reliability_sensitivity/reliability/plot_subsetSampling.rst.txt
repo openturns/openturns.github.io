@@ -1,0 +1,600 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_reliability_sensitivity_reliability_plot_subsetSampling.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_reliability_sensitivity_reliability_plot_subsetSampling.py:
+
+
+Subset Sampling
+===============
+
+The objective is to evaluate a probability from the Subset sampling technique.
+
+We consider the function :math:`g : \mathbb{R}^2 \rightarrow \mathbb{R}` defined by:
+
+..math::
+  \begin{align*}
+  g(X)= 20-(x_1-x_2)^2-8(x_1+x_2-4)^3
+  \end{align*}
+
+and the input random vector :math:`X = (X_1, X_2)` which follows a Normal distribution with independent components, and identical marginals with 0.25 mean and unit variance: 
+
+..math::
+  \begin{align*}
+  X \sim  \mathcal{N}(\mu = [0.25, 0.25], \sigma = [1,1], cov = I_2)
+  \end{align*}
+
+We want to evaluate the probability:
+
+..math::
+  \begin{align*}
+  p = \mathbb{P} \{ g(X) \leq 0 \}
+  \end{align*}
+
+
+First, import the python modules: 
+
+
+.. code-block:: default
+
+    from  openturns import *
+
+
+
+
+
+
+
+
+Create the probabilistic model :math:`Y = g(X)`
+-----------------------------------------------
+
+Create the input random vector :math:`X`:
+
+
+.. code-block:: default
+
+    X = RandomVector(Normal([0.25]*2, [1]*2, IdentityMatrix(2)))
+
+
+
+
+
+
+
+
+Create the function :math:`g`:
+
+
+.. code-block:: default
+
+    g=SymbolicFunction(['x1', 'x2'], ['20-(x1-x2)^2-8*(x1+x2-4)^3'])
+    print('function g: ', g)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    function g:  [x1,x2]->[20-(x1-x2)^2-8*(x1+x2-4)^3]
+
+
+
+
+In order to be able to get the subset samples used in the algorithm, it is necessary to transform the *SymbolicFunction* into a *MemoizeFunction*:
+
+
+.. code-block:: default
+
+    g = MemoizeFunction(g)
+
+
+
+
+
+
+
+
+Create the output random vector :math:`Y = g(X)`:
+
+
+.. code-block:: default
+
+    Y = CompositeRandomVector(g,X)
+
+
+
+
+
+
+
+
+Create the event :math:`\{ Y = g(X) \leq 0 \}`
+----------------------------------------------
+
+
+.. code-block:: default
+
+    myEvent = ThresholdEvent(Y, LessOrEqual(), 0.0) 
+
+
+
+
+
+
+
+
+Evaluate the probability with the subset sampling technique
+-----------------------------------------------------------
+
+
+.. code-block:: default
+
+    algo = SubsetSampling(myEvent)
+
+
+
+
+
+
+
+
+In order to get all the inputs and outputs that realize the event, you have to mention it now:
+
+
+.. code-block:: default
+
+    algo.setKeepEventSample(True)
+
+
+
+
+
+
+
+
+Now you can run the algorithm!
+
+
+.. code-block:: default
+
+    algo.run()
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    result = algo.getResult()
+    proba = result.getProbabilityEstimate()
+    print('Proba Subset = ',  proba)
+    print('Current coefficient of variation = ', result.getCoefficientOfVariation())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Proba Subset =  0.00041529999999999876
+    Current coefficient of variation =  0.08844664433835656
+
+
+
+
+The length of the confidence interval of level :math:`95\%` is:
+
+
+.. code-block:: default
+
+    length95 = result.getConfidenceLength()
+    print('Confidence length (0.95) = ', result.getConfidenceLength())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Confidence length (0.95) =  0.00014398636843145345
+
+
+
+
+which enables to build the confidence interval: 
+
+
+.. code-block:: default
+
+    print('Confidence intervalle (0.95) = [', proba - length95/2, ', ', proba + length95/2, ']')
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Confidence intervalle (0.95) = [ 0.00034330681578427204 ,  0.0004872931842157255 ]
+
+
+
+
+You can also get the succesive thresholds used by the algorithm:
+
+
+.. code-block:: default
+
+    levels =  algo.getThresholdPerStep()
+    print('Levels of g = ', levels)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Levels of g =  [55.3989,18.0113,6.92664,0]
+
+
+
+
+Draw the subset samples used by the algorithm
+---------------------------------------------
+
+The following manipulations are possible onfly if you have created a *MemoizeFunction* that enables to store all the inputs and output of the function :math:`g`.
+
+Get all the inputs where :math:`g` were evaluated: 
+
+
+.. code-block:: default
+
+    inputSampleSubset = g.getInputHistory()
+    nTotal = inputSampleSubset.getSize()
+    print('Number of evaluations of g = ', nTotal)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Number of evaluations of g =  40000
+
+
+
+
+Within each step of the algorithm, a sample of size :math:`N` is created, where: 
+
+
+.. code-block:: default
+
+    N =  algo.getMaximumOuterSampling()*algo.getBlockSize()
+    print('Size of each subset = ', N)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Size of each subset =  10000
+
+
+
+
+You can get the number :math:`N_s` of steps with: 
+
+
+.. code-block:: default
+
+    Ns = algo.getNumberOfSteps()
+    print('Number of steps= ', Ns)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Number of steps=  4
+
+
+
+
+and you can verify that :math:`N_s` is equal to :math:`\frac{nTotal}{N}`:
+
+
+.. code-block:: default
+
+    print('nTotal / N = ', int(nTotal / N))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    nTotal / N =  4
+
+
+
+
+Now, we can split the initial sample into subset samples of size :math:`N_s`: 
+
+
+.. code-block:: default
+
+    list_subSamples = list()
+    for i in range(Ns):
+        list_subSamples.append(inputSampleSubset[i*N:i*N +N])
+
+
+
+
+
+
+
+
+The following graph draws each subset sample and the frontier :math:`g(x_1, x_2) = l_i` where :math:`l_i` is the threshold at the step :math:`i`:
+
+
+.. code-block:: default
+
+    graph = Graph()
+    graph.setAxes(True)
+    graph.setGrid(True)
+    graph.setTitle('Subset sampling: samples')
+    graph.setXTitle(r'$x_1$')
+    graph.setYTitle(r'$x_2$')
+    graph.setLegendPosition('bottomleft')
+
+
+
+
+
+
+
+
+Add all the subset samples:
+
+
+.. code-block:: default
+
+    for i in range(Ns):
+        cloud = Cloud(list_subSamples[i])
+        #cloud.setPointStyle("dot")
+        graph.add(cloud)
+    col = Drawable().BuildDefaultPalette(Ns)
+    graph.setColors(col)
+
+
+
+
+
+
+
+
+Add the frontiers :math:`g(x_1, x_2) = l_i` where :math:`l_i` is the threshold at the step :math:`i`:
+
+
+.. code-block:: default
+
+    gIsoLines =  g.draw([-3]*2, [5]*2, [128]*2)
+    dr = gIsoLines.getDrawable(0)
+    for i in range(levels.getSize()):
+        dr.setLevels([levels[i]])
+        dr.setLineStyle('solid')
+        dr.setLegend(r'$g(X) = $' + str(round(levels[i], 2)))
+        dr.setLineWidth(3)
+        dr.setColor(col[i])
+        graph.add(dr)
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    Show(graph)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_subsetSampling_001.png
+    :alt: Subset sampling: samples
+    :class: sphx-glr-single-img
+
+
+
+
+
+Draw the frontiers only
+-----------------------
+
+The following graph enables to understand the progresison of the algorithm:
+
+
+.. code-block:: default
+
+    graph=Graph()
+    graph.setAxes(True)
+    graph.setGrid(True)
+    dr = gIsoLines.getDrawable(0)
+    for i in range(levels.getSize()):
+        dr.setLevels([levels[i]])
+        dr.setLineStyle('solid')
+        dr.setLegend(r'$g(X) = $' + str(round(levels[i], 2)))
+        dr.setLineWidth(3)
+        graph.add(dr)
+
+    graph.setColors(col)
+    graph.setLegendPosition('bottomleft')
+    graph.setTitle('Subset sampling: thresholds')
+    graph.setXTitle(r'$x_1$')
+    graph.setYTitle(r'$x_2$')
+
+    Show(graph)
+
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_subsetSampling_002.png
+    :alt: Subset sampling: thresholds
+    :class: sphx-glr-single-img
+
+
+
+
+
+Get all the input and output points that realized the event
+-----------------------------------------------------------
+The following lines are possible only if you have mentionned that you wanted to keep the points that realize the event with the method *algo.setKeepEventSample(True)*
+
+
+.. code-block:: default
+
+    inputEventSample = algo.getEventInputSample()
+    outputEventSample = algo.getEventOutputSample()
+    print('Number of event realizations = ', inputEventSample.getSize())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Number of event realizations =  4153
+
+
+
+
+Here we have to avoid a bug of the version 1.15 because *getEventInputSample()* gives the sample in the stadrad space: we have to push it backward to the physical space.
+
+
+.. code-block:: default
+
+    dist = Normal([0.25]*2, [1]*2, IdentityMatrix(2))
+    transformFunc = dist.getInverseIsoProbabilisticTransformation()
+    inputEventSample = transformFunc(inputEventSample)
+
+
+
+
+
+
+
+
+Draw them! They are all in the event space.
+
+
+.. code-block:: default
+
+    graph=Graph()
+    graph.setAxes(True)
+    graph.setGrid(True)
+    cloud = Cloud(inputEventSample)
+    cloud.setPointStyle('dot')
+    graph.add(cloud)
+    gIsoLines =  g.draw([-3]*2, [5]*2, [1000]*2)
+    dr = gIsoLines.getDrawable(0)
+    dr.setLevels([0.0])
+    dr.setColor('red')
+    graph.add(dr)
+    Show(graph)
+
+
+
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_subsetSampling_003.png
+    :alt: plot subsetSampling
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.784 seconds)
+
+
+.. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_subsetSampling.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_subsetSampling.py <plot_subsetSampling.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_subsetSampling.ipynb <plot_subsetSampling.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
