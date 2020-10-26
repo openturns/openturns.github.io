@@ -1,4 +1,4 @@
-PolynomialChaosPOD
+﻿PolynomialChaosPOD
 ========================
 
 .. currentmodule:: otpod

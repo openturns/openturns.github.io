@@ -1,4 +1,4 @@
-AdaptiveSignalPOD
+﻿AdaptiveSignalPOD
 =======================
 
 .. currentmodule:: otpod

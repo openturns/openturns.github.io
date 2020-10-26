@@ -1,4 +1,4 @@
-UnivariateLinearModelAnalysis
+﻿UnivariateLinearModelAnalysis
 ===================================
 
 .. currentmodule:: otpod
