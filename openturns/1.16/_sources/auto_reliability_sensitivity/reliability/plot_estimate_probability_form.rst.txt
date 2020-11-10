@@ -12,7 +12,7 @@
 Estimate a probability with FORM
 ================================
 
-In this example we estimate a failure probability with the `FORM` algorithm on the cantilever beam example. More precisely, we show how to use the associated results:
+In this example we estimate a failure probability with the `FORM` algorithm on the :ref:`cantilever beam <use-case-cantilever-beam>` example. More precisely, we show how to use the associated results:
 
 - the design point in both physical and standard space,
 - the probability estimation according to the FORM approximation, and the following SORM ones: Tvedt, Hohen-Bichler and Breitung,
@@ -29,37 +29,8 @@ The coordinates of the mean point in the standard event space is:
 
 where :math:`E_1` is the spheric univariate distribution of the standard space and :math:`\beta` is the reliability index.
 
-Introduction 
--------------
-
-Let us consider the analytical example of a cantilever beam with Young modulus E, length L and section modulus I.
-
-One end of the cantilever beam is built in a wall and we apply a concentrated bending load F at the other end of the beam, resulting in a deviation:
-
-.. math::
-   d = \frac{FL^3}{3EI}
-
-
-Failure occurs when the beam deviation is too large:
-
-.. math::
-   d \ge 30 (cm)
-
-
-Four independent random variables are considered:
-
- - E: Young's modulus [Pa]
- - F: load [N]
- - L: length [m]
- - I: section [m^4]
-
-Stochastic model (simplified model, no units):
-
- - E ~ Beta(0.93, 2.27, 2.8e7, 4.8e7)
- - F ~ LogNormal(30000, 9000, 15000)
- - L ~ Uniform(250, 260)
- - I ~ Beta(2.5, 1.5, 3.1e2, 4.5e2)
-
+Model definition
+----------------
 
 
 .. code-block:: default
@@ -77,16 +48,13 @@ Stochastic model (simplified model, no units):
 
 
 
-Create the marginal distributions of the parameters.
+We load the model from the usecases module :
 
 
 .. code-block:: default
 
-    dist_E = ot.Beta(0.93, 2.27, 2.8e7, 4.8e7)
-    dist_F = ot.LogNormalMuSigma(30000, 9000, 15000).getDistribution()
-    dist_L = ot.Uniform(250, 260)
-    dist_I = ot.Beta(2.5, 1.5, 3.1e2, 4.5e2)
-    marginals = [dist_E, dist_F, dist_L, dist_I]
+    from openturns.usecases import cantilever_beam as cantilever_beam
+    cb = cantilever_beam.CantileverBeam()
 
 
 
@@ -95,31 +63,12 @@ Create the marginal distributions of the parameters.
 
 
 
-Create the Copula.
+We use the input parameters distribution from the data class :
 
 
 .. code-block:: default
 
-    RS = ot.CorrelationMatrix(4)
-    RS[2, 3] = -0.2
-    # Evaluate the correlation matrix of the Normal copula from RS
-    R = ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(RS)
-    # Create the Normal copula parametrized by R
-    copula = ot.NormalCopula(R) 
-
-
-
-
-
-
-
-
-Create the joint probability distribution.
-
-
-.. code-block:: default
-
-    distribution = ot.ComposedDistribution(marginals, copula)
+    distribution = cb.distribution
     distribution.setDescription(['E', 'F', 'L', 'I'])
 
 
@@ -129,12 +78,12 @@ Create the joint probability distribution.
 
 
 
-create the model
+We define the model
 
 
 .. code-block:: default
 
-    model = ot.SymbolicFunction(['E', 'F', 'L', 'I'], ['F*L^3/(3*E*I)'])
+    model = cb.model
 
 
 
@@ -150,7 +99,7 @@ Create the event whose probability we want to estimate.
 
     vect = ot.RandomVector(distribution)
     G = ot.CompositeRandomVector(model, vect)
-    event = ot.ThresholdEvent(G, ot.Greater(), 30.0)
+    event = ot.ThresholdEvent(G, ot.Greater(), 0.3)
     event.setName("deviation")
 
 
@@ -213,7 +162,7 @@ Probability
  .. code-block:: none
 
 
-    0.006709804264900567
+    1.0900370418627411e-06
 
 
 
@@ -235,7 +184,7 @@ Hasofer reliability index
  .. code-block:: none
 
 
-    2.4724350787523086
+    4.735972259888527
 
 
 
@@ -253,7 +202,7 @@ Design point in the standard U* space.
 
 .. raw:: html
 
-    <p>[-0.602386,2.31056,0.355794,-0.533677]</p>
+    <p>[-0.665643,4.31264,1.23029,-1.3689]</p>
     <br />
     <br />
 
@@ -271,7 +220,7 @@ Design point in the physical X space.
 
 .. raw:: html
 
-    <p>[3.03272e+07,61318.5,256.39,378.635]</p>
+    <p>[6.56566e+10,458.976,2.58907,1.34803e-07]</p>
     <br />
     <br />
 
@@ -298,6 +247,7 @@ Importance factors
 .. code-block:: default
 
     marginalSensitivity, otherSensitivity = result.drawHasoferReliabilityIndexSensitivity()
+    marginalSensitivity.setLegends(["E","F","L","I"])
     marginalSensitivity.setLegendPosition('bottom')
     view = viewer.View(marginalSensitivity)
 
@@ -316,6 +266,8 @@ Importance factors
 .. code-block:: default
 
     marginalSensitivity, otherSensitivity = result.drawEventProbabilitySensitivity()
+    marginalSensitivity.setLegends(["E","F","L","I"])
+    marginalSensitivity.setLegendPosition('bottom')
     view = viewer.View(marginalSensitivity)
 
 
@@ -385,7 +337,7 @@ Reliability index with Breitung approximation
  .. code-block:: none
 
 
-    2.5438690633787395
+    4.915018845541476
 
 
 
@@ -407,7 +359,7 @@ Reliability index with Breitung approximation
  .. code-block:: none
 
 
-    2.5514688579773583
+    4.92039449786118
 
 
 
@@ -429,7 +381,7 @@ Reliability index with Breitung approximation
  .. code-block:: none
 
 
-    2.5536673936804664
+    4.923707817325711
 
 
 
@@ -451,7 +403,7 @@ SORM probability of the event with Breitung approximation
  .. code-block:: none
 
 
-    0.00548160860832736
+    4.4386959812405156e-07
 
 
 
@@ -473,7 +425,7 @@ SORM probability of the event with Breitung approximation
  .. code-block:: none
 
 
-    0.005363495511528019
+    4.31849736540921e-07
 
 
 
@@ -495,7 +447,7 @@ SORM probability of the event with Breitung approximation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.450 seconds)
+   **Total running time of the script:** ( 0 minutes  0.424 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_estimate_probability_form.py:

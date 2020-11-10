@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Estimate a probability with Monte-Carlo on axial stressed beam: a quick start guide to reliability" href="plot_axial_stressed_beam_quickstart.html" />
-    <link rel="prev" title="Estimate a flooding probability" href="plot_flood_model.html" />
+    <link rel="prev" title="Parametrization of a simulation algorithm" href="plot_probability_simulation_parametrization.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -58,7 +58,7 @@
           <a href="plot_axial_stressed_beam_quickstart.html" title="Estimate a probability with Monte-Carlo on axial stressed beam: a quick start guide to reliability"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_flood_model.html" title="Estimate a flooding probability"
+          <a href="plot_probability_simulation_parametrization.html" title="Parametrization of a simulation algorithm"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -72,7 +72,6 @@
   <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Probability estimation with importance sampling simulation on cantilever beam example</a><ul>
-<li><a class="reference internal" href="#description-of-the-problem">Description of the problem</a></li>
 <li><a class="reference internal" href="#define-the-cantilever-beam-model">Define the cantilever beam model</a></li>
 <li><a class="reference internal" href="#define-the-event">Define the event</a></li>
 <li><a class="reference internal" href="#run-a-form-analysis">Run a FORM analysis</a></li>
@@ -83,8 +82,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="plot_flood_model.html"
-                        title="previous chapter">Estimate a flooding probability</a></p>
+  <p class="topless"><a href="plot_probability_simulation_parametrization.html"
+                        title="previous chapter">Parametrization of a simulation algorithm</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="plot_axial_stressed_beam_quickstart.html"
                         title="next chapter">Estimate a probability with Monte-Carlo on axial stressed beam: a quick start guide to reliability</a></p>
@@ -126,32 +125,7 @@
 <li><p>create an importance distribution based on the results of the FORM results,</p></li>
 <li><p>run a sampling-based probability estimate algorithm.</p></li>
 </ul>
-<div class="section" id="description-of-the-problem">
-<h2>Description of the problem<a class="headerlink" href="#description-of-the-problem" title="Permalink to this headline">¶</a></h2>
-<p>Let us consider the analytical example of a cantilever beam, with Young’s modulus E, length L and section modulus I.</p>
-<p>One end of the cantilever beam is built in a wall and we apply a concentrated bending load F at the other end of the beam, resulting in a deviation:</p>
-<div class="math">
-<p><img src="../../_images/math/ef0a13c7c7b89a6f17edc533502b295d954d4d58.svg" alt="d = \frac{FL^3}{3EI}"/></p>
-</div><p>Failure occurs when the beam deviation is too large:</p>
-<p>Four independent random variables are considered:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>E: Young’s modulus [Pa]</p></li>
-<li><p>F: load [N]</p></li>
-<li><p>L: length [m]</p></li>
-<li><p>I: section [m^4]</p></li>
-</ul>
-</div></blockquote>
-<p>Stochastic model (simplified model, no units):</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>E ~ Beta(0.93, 2.27, 2.8e7, 4.8e7)</p></li>
-<li><p>F ~ LogNormal(30000, 9000, 15000)</p></li>
-<li><p>L ~ Uniform(250, 260)</p></li>
-<li><p>I ~ Beta(2.5, 1.5, 3.1e2, 4.5e2)</p></li>
-</ul>
-</div></blockquote>
-</div>
+<p>We shall consider the analytical example of a <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a>.</p>
 <div class="section" id="define-the-cantilever-beam-model">
 <h2>Define the cantilever beam model<a class="headerlink" href="#define-the-cantilever-beam-model" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
@@ -161,29 +135,17 @@
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Create the marginal distributions of the parameters</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dist_E</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">0.93</span><span class="p">,</span> <span class="mf">2.27</span><span class="p">,</span> <span class="mf">2.8e7</span><span class="p">,</span> <span class="mf">4.8e7</span><span class="p">)</span>
-<span class="n">dist_F</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">(</span><span class="mi">30000</span><span class="p">,</span> <span class="mi">9000</span><span class="p">,</span> <span class="mi">15000</span><span class="p">)</span><span class="o">.</span><span class="n">getDistribution</span><span class="p">()</span>
-<span class="n">dist_L</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">260</span><span class="p">)</span>
-<span class="n">dist_I</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.1e2</span><span class="p">,</span> <span class="mf">4.5e2</span><span class="p">)</span>
-<span class="n">marginals</span> <span class="o">=</span> <span class="p">[</span><span class="n">dist_E</span><span class="p">,</span> <span class="n">dist_F</span><span class="p">,</span> <span class="n">dist_L</span><span class="p">,</span> <span class="n">dist_I</span><span class="p">]</span>
+<p>The cantilever beam example can be accessed in the usecases module :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span> <span class="k">as</span> <span class="n">cantilever_beam</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">cantilever_beam</span><span class="o">.</span><span class="n">CantileverBeam</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Create the Copula</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RS</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">RS</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span>
-<span class="c1"># Evaluate the correlation matrix of the Normal copula from RS</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="o">.</span><span class="n">GetCorrelationFromSpearmanCorrelation</span><span class="p">(</span><span class="n">RS</span><span class="p">)</span>
-<span class="c1"># Create the Normal copula parametrized by R</span>
-<span class="n">copula</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<p>The joint probability distribution of the input parameters is stored in the object <cite>cb</cite> :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">distribution</span>
 </pre></div>
 </div>
-<p>Create the joint probability distribution</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">marginals</span><span class="p">,</span> <span class="n">copula</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>create the model</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;F*L^3/(3*E*I)&#39;</span><span class="p">])</span>
+<p>We create the model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">model</span>
 </pre></div>
 </div>
 </div>
@@ -192,7 +154,7 @@
 <p>We create the event whose probability we want to estimate.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">vect</span><span class="p">)</span>
-<span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Greater</span><span class="p">(),</span> <span class="mf">30.0</span><span class="p">)</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Greater</span><span class="p">(),</span> <span class="mf">0.30</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -221,7 +183,7 @@
 <span class="n">standardSpaceDesignPoint</span>
 </pre></div>
 </div>
-<p>[-0.602386,2.31056,0.355794,-0.533677]</p>
+<p>[-0.665643,4.31264,1.23029,-1.3689]</p>
 <br />
 <br /><p>The key point is to define the importance distribution in the U-space. To define it, we use a multivariate standard Gaussian centered around the design point in the U-space.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
@@ -237,7 +199,7 @@
 <span class="n">myImportance</span>
 </pre></div>
 </div>
-<p>Normal(mu = [-0.602386,2.31056,0.355794,-0.533677], sigma = [1,1,1,1], R = [[ 1 0 0 0 ]<br>
+<p>Normal(mu = [-0.665643,4.31264,1.23029,-1.3689], sigma = [1,1,1,1], R = [[ 1 0 0 0 ]<br>
  [ 0 1 0 0 ]<br>
  [ 0 0 1 0 ]<br>
  [ 0 0 0 1 ]])</p>
@@ -268,7 +230,7 @@
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.0069462388045894935
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>4.3321474325557144e-07
 </pre></div>
 </div>
 <p>In order to compute the confidence interval, we use the <cite>getConfidenceLength</cite> method, which returns the length of the interval. In order to compute the bounds of the interval, we divide this length by 2.</p>
@@ -280,10 +242,10 @@
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>95.00% confidence interval = [0.005590,0.008303]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>95.00% confidence interval = [0.000000,0.000001]
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.023 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.020 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-reliability-plot-estimate-probability-importance-sampling-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7e5f750762e9117d75fb708545fcb179/plot_estimate_probability_importance_sampling.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_estimate_probability_importance_sampling.py</span></code></a></p>
@@ -313,7 +275,7 @@
           <a href="plot_axial_stressed_beam_quickstart.html" title="Estimate a probability with Monte-Carlo on axial stressed beam: a quick start guide to reliability"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_flood_model.html" title="Estimate a flooding probability"
+          <a href="plot_probability_simulation_parametrization.html" title="Parametrization of a simulation algorithm"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -324,7 +286,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 06, 2020.
+      Last updated on Nov 10, 2020.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.0+.
     </div>
   </body>

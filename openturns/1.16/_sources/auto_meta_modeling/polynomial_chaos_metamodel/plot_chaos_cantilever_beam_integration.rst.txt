@@ -12,7 +12,7 @@
 Create a polynomial chaos metamodel by integration on the cantilever beam
 =========================================================================
 
-In this example, we create a polynomial chaos metamodel by integration on the cantilever beam example. 
+In this example, we create a polynomial chaos metamodel by integration on the :ref:`cantilever beam <use-case-cantilever-beam>` example. 
 
 In order to do this, we use the `GaussProductExperiment` class. 
 
@@ -32,40 +32,58 @@ In order to do this, we use the `GaussProductExperiment` class.
 
 
 
-.. code-block:: default
-
-    dist_E = ot.Beta(0.9, 2.27, 2.8e7, 4.8e7)
-    dist_E.setDescription(["E"])
-    F_para = ot.LogNormalMuSigma(3.0e4, 9.0e3, 15.0e3) # in N
-    dist_F = ot.ParametrizedDistribution(F_para)
-    dist_F.setDescription(["F"])
-    dist_L = ot.Uniform(250., 260.) # in cm
-    dist_L.setDescription(["L"])
-    dist_I = ot.Beta(2.5, 1.5, 310., 450.) # in cm^4
-    dist_I.setDescription(["I"])
-
-    myDistribution = ot.ComposedDistribution([dist_E, dist_F, dist_L, dist_I])
-
-
-
-
-
-
-
+We first load the model from the usecases module :
 
 
 .. code-block:: default
 
-    dim_input = 4 # dimension of the input
+    from openturns.usecases import cantilever_beam as cantilever_beam
+    cb = cantilever_beam.CantileverBeam()
+
+
+
+
+
+
+
+
+In this example we consider all marginals independent. They are defined in the `CantileverBeam` data class as well as an independent distribution :
+
+
+.. code-block:: default
+
+    dist_E = cb.E
+    dist_F = cb.F
+    dist_L = cb.L
+    dist_I = cb.I
+    myDistribution = cb.independentDistribution
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    dim_input = cb.dim # dimension of the input
     dim_output = 1 # dimension of the output
 
-    def function_beam(X):
-        E, F, L, I = X
-        Y = F* (L**3) /  (3 * E * I)
-        return [Y]
 
-    g = ot.PythonFunction( dim_input, dim_output, function_beam)
-    g.setInputDescription(myDistribution.getDescription())
+
+
+
+
+
+
+We load the model :
+
+
+.. code-block:: default
+
+    g = cb.model
 
 
 
@@ -148,7 +166,7 @@ We begin by getting the standard measure associated with the multivariate polyno
 
 .. raw:: html
 
-    <p>ComposedDistribution(Beta(alpha = 0.9, beta = 2.27, a = -1, b = 1), LogNormal(muLog = 9.46206, sigmaLog = 0.554513, gamma = 0), Uniform(a = -1, b = 1), Beta(alpha = 2.5, beta = 1.5, a = -1, b = 1), IndependentCopula(dimension = 4))</p>
+    <p>ComposedDistribution(Beta(alpha = 0.9, beta = 3.5, a = -1, b = 1), LogNormal(muLog = 5.69881, sigmaLog = 0.0997513, gamma = 0), Uniform(a = -1, b = 1), Beta(alpha = 2.5, beta = 4, a = -1, b = 1), IndependentCopula(dimension = 4))</p>
     <br />
     <br />
 
@@ -297,7 +315,7 @@ Compute the :math:`Q^2` predictivity coefficient
  .. code-block:: none
 
 
-    0.9999611446817934
+    0.9999977826876493
 
 
 
@@ -345,26 +363,25 @@ Retrieve Sobol' sensitivity measures associated to the polynomial chaos decompos
      input dimension: 4
      output dimension: 1
      basis size: 126
-     mean: [12.6676]
-     std-dev: [4.28807]
+     mean: [0.170691]
+     std-dev: [0.0203241]
     ------------------------------------------------------------
     Index   | Multi-indice                  | Part of variance  
     ------------------------------------------------------------
-          2 | [0,1,0,0]                     | 0.78543
-          1 | [1,0,0,0]                     | 0.128439
-          4 | [0,0,0,1]                     | 0.0546688
-          6 | [1,1,0,0]                     | 0.0115595
-          3 | [0,0,1,0]                     | 0.0100596
+          2 | [0,1,0,0]                     | 0.70534
+          4 | [0,0,0,1]                     | 0.164639
+          3 | [0,0,1,0]                     | 0.0813041
+          1 | [1,0,0,0]                     | 0.0448651
     ------------------------------------------------------------
 
 
     ------------------------------------------------------------
     Component | Sobol index            | Sobol total index      
     ------------------------------------------------------------
-            0 | 0.130668               | 0.143489              
-            1 | 0.78543                | 0.803144              
-            2 | 0.0100606              | 0.0112004             
-            3 | 0.0550877              | 0.0610143             
+            0 | 0.044908               | 0.0455157             
+            1 | 0.70534                | 0.708258              
+            2 | 0.0813125              | 0.0823703             
+            3 | 0.165174               | 0.167125              
     ------------------------------------------------------------
 
 
@@ -401,7 +418,7 @@ We see that the coefficients are particularily well computed since the Q2 coeffi
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.230 seconds)
+   **Total running time of the script:** ( 0 minutes  0.219 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_polynomial_chaos_metamodel_plot_chaos_cantilever_beam_integration.py:

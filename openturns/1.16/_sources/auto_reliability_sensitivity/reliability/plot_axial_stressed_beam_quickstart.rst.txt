@@ -13,76 +13,7 @@ Estimate a probability with Monte-Carlo on axial stressed beam: a quick start gu
 ==================================================================================================
 
 The goal of this example is to show a simple practical example of probability estimation in a reliability study with the `ProbabilitySimulationAlgorithm` class. The `ThresholdEvent` is used to define the event. We use the Monte-Carlo method thanks to the `MonteCarloExperiment` class to estimate this probability and its confidence interval.
-
-Introduction
-------------
-
-We consider a simple beam stressed by a traction load F at both sides.
-
-![Axial stressed beam](axial-stressed-beam.png)
-
-The geometry is supposed to be deterministic; the diameter D is equal to:
-
-.. math::
-   D=0.02 \textrm{ (m)}.
-
-
-By definition, the yield stress is the load divided by the surface. Since the surface is :math:`\pi D^2/4`, the stress is:
-
-.. math::
-   S = \frac{F}{\pi D^2/4}.
-
-
-Failure occurs when the beam plastifies, i.e. when the axial stress gets larger than the yield stress:
-
-.. math::
-   R - \frac{F}{\pi D^2/4} \leq 0
-
-
-where :math:`R` is the strength.
-
-Therefore, the limit state function :math:`G` is: 
-
-.. math::
-   G(R,F) = R - \frac{F}{\pi D^2/4},
-
-
-for any :math:`R,F\in\mathbb{R}`.
-
-The value of the parameter :math:`D` is such that:
-
-.. math::
-   D^2/4 = 10^{-4},
-
-
-which leads to the equation:
-
-.. math::
-   G(R,F) = R - \frac{F}{10^{-4} \pi}.
-
-
-We consider the following distribution functions.
-
-========  ===========================================================================
-Variable  Distribution
-========  ===========================================================================
- R         LogNormal(:math:`\mu_R=3\times 10^6`, :math:`\sigma_R=3\times 10^5`) [Pa] 
- F         Normal(:math:`\mu_F=750`, :math:`\sigma_F=50`) [N] 
-========  ===========================================================================
-
-where :math:`\mu_R=E(R)` and :math:`\sigma_R^2=V(R)` are the mean and the variance of :math:`R`.
-
-The failure probability is: 
-
-.. math::
-   P_f = \text{Prob}(G(R,F) \leq 0).
-
-
-The exact :math:`P_f` is 
-
-.. math::
-   P_f = 0.02920.
-
+We use the :ref:`axial stressed beam <use-case-stressed-beam>` model as an illustrative example.
 
 Definition of the model
 -----------------------
@@ -103,12 +34,13 @@ Definition of the model
 
 
 
-The dimension of the problem.
+We load the model from the usecases module :
 
 
 .. code-block:: default
 
-    dim = 2
+    from openturns.usecases import stressed_beam as stressed_beam
+    sm = stressed_beam.AxialStressedBeam()
 
 
 
@@ -117,12 +49,12 @@ The dimension of the problem.
 
 
 
-We define the limit state function as a symbolic function. 
+The limit state function is defined as a symbolic function in the `model` parameter of the `AxialStressedBeam` data class : 
 
 
 .. code-block:: default
 
-    limitStateFunction = ot.SymbolicFunction(['R', 'F'], ['R-F/(1.e-4 * pi_)'])
+    limitStateFunction = sm.model
 
 
 
@@ -159,14 +91,12 @@ Before using the function within an algorithm, we check that the limit state fun
 Probabilistic model
 -------------------
 
-We then create a first marginal, a univariate `LogNormal` distribution, parameterized by its mean and standard deviation.
+We load the first marginal, a univariate `LogNormal` distribution, parameterized by its mean and standard deviation :
 
 
 .. code-block:: default
 
-    R = ot.LogNormalMuSigma(3.e6, 3.e5, 0.0).getDistribution()
-    R.setName('Yield strength')
-    R.setDescription('R')
+    R = sm.distribution_R
 
 
 
@@ -174,6 +104,8 @@ We then create a first marginal, a univariate `LogNormal` distribution, paramete
 
 
 
+
+We draw the PDF of the first marginal.
 
 
 .. code-block:: default
@@ -192,14 +124,12 @@ We then create a first marginal, a univariate `LogNormal` distribution, paramete
 
 
 
-Our second marginal is a `Normal` univariate distribution.
+Our second marginal is a `Normal` univariate distribution :
 
 
 .. code-block:: default
 
-    F = ot.Normal(750., 50.)
-    F.setName('Traction_load')
-    F.setDescription('F')
+    F = sm.distribution_F
 
 
 
@@ -207,6 +137,8 @@ Our second marginal is a `Normal` univariate distribution.
 
 
 
+
+We draw the PDF of the second marginal.
 
 
 .. code-block:: default
@@ -225,13 +157,12 @@ Our second marginal is a `Normal` univariate distribution.
 
 
 
-In order to create the input distribution, we use the `ComposedDistribution` class which associates the distribution marginals and a copula. If no copula is supplied to the constructor, it selects the independent copula as default:
+In order to create the input distribution, we use the `ComposedDistribution` class which associates the distribution marginals and a copula. If no copula is supplied to the constructor, it selects the independent copula as default. That is implemented in the data class :
 
 
 .. code-block:: default
 
-    myDistribution = ot.ComposedDistribution([R, F])
-    myDistribution.setName('myDist')
+    myDistribution = sm.distribution
 
 
 
@@ -431,9 +362,9 @@ We can then get the results of the algorithm.
 
  .. code-block:: none
 
-    Number of calls to the limit state = 13475
-    Pf =  0.028868274582560305
-    CV = 0.04996481346528455
+    Number of calls to the limit state = 12692
+    Pf =  0.030570438071226093
+    CV = 0.04998529582572751
 
 
 
@@ -445,20 +376,16 @@ The `drawProbabilityConvergence` method plots the probability estimate depending
 
     graph = algoMC.drawProbabilityConvergence()
     graph.setLogScale(ot.GraphImplementation.LOGX)
-    graph
+    view = viewer.View(graph)
 
 
 
 
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
+.. image:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_quickstart_004.png
+    :alt: ProbabilitySimulationAlgorithm convergence graph at level 0.95
+    :class: sphx-glr-single-img
 
 
-    class=Graph name=ProbabilitySimulationAlgorithm convergence graph at level 0.95 implementation=class=GraphImplementation name=ProbabilitySimulationAlgorithm convergence graph at level 0.95 title=ProbabilitySimulationAlgorithm convergence graph at level 0.95 xTitle=outer iteration yTitle=estimate axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=probability estimate implementation=class=Curve name=probability estimate derived from class=DrawableImplementation name=probability estimate legend=probability estimate data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1684 dimension=2 data=[[1,0],[2,0],[3,0],...,[1682,0.0286861],[1683,0.0288176],[1684,0.0288005]] color=red fillStyle=solid lineStyle=solid pointStyle=none lineWidth=2,class=Drawable name=bounds implementation=class=Curve name=bounds derived from class=DrawableImplementation name=bounds legend=bounds data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1675 dimension=2 data=[[10,-0.00921176],[11,-0.00841055],[12,-0.00773732],...,[1682,0.0258657],[1683,0.0259918],[1684,0.0259763]] color=green fillStyle=solid lineStyle=solid pointStyle=none lineWidth=1,class=Drawable name=Unnamed implementation=class=Curve name=Unnamed derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1675 dimension=2 data=[[10,0.0592118],[11,0.0538651],[12,0.049404],...,[1682,0.0315065],[1683,0.0316434],[1684,0.0316246]] color=green fillStyle=solid lineStyle=solid pointStyle=none lineWidth=1]
 
 
 
@@ -494,7 +421,7 @@ In order to compute the confidence interval, we use the `getConfidenceLength` me
 
  .. code-block:: none
 
-    95.00% confidence interval = [0.026041,0.031695]
+    95.00% confidence interval = [0.027575,0.033565]
 
 
 
@@ -542,7 +469,7 @@ where :math:`F_R` is the cumulative distribution function of the random variable
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.279 seconds)
+   **Total running time of the script:** ( 0 minutes  0.467 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_axial_stressed_beam_quickstart.py:

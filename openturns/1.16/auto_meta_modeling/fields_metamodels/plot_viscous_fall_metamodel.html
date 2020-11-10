@@ -72,9 +72,6 @@
   <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Viscous free fall: metamodel of a field function</a><ul>
-<li><a class="reference internal" href="#introduction">Introduction</a></li>
-<li><a class="reference internal" href="#probabilistic-model">Probabilistic model</a></li>
-<li><a class="reference internal" href="#references">References</a></li>
 <li><a class="reference internal" href="#define-the-model">Define the model</a></li>
 <li><a class="reference internal" href="#compute-the-kl-decomposition-of-the-output">Compute the KL decomposition of the output</a></li>
 <li><a class="reference internal" href="#validate-the-metamodel">Validate the metamodel</a></li>
@@ -119,67 +116,7 @@
 </div>
 <div class="sphx-glr-example-title section" id="viscous-free-fall-metamodel-of-a-field-function">
 <span id="sphx-glr-auto-meta-modeling-fields-metamodels-plot-viscous-fall-metamodel-py"></span><h1>Viscous free fall: metamodel of a field function<a class="headerlink" href="#viscous-free-fall-metamodel-of-a-field-function" title="Permalink to this headline">¶</a></h1>
-<p>In this example, we present how to create the metamodel of a field function. This examples considers the free fall model. We first compute the Karhunen-Loève decomposition of a sample of trajectories. Then we create a create a polynomial chaos which takes the inputs and returns the KL decomposition modes as outputs. Finally, we create a metamodel by combining the KL decomposition and the polynomial chaos.</p>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>We consider an object inside a vertical cylinder which contains a viscous fluid. The fluid generates a drag force which limits the speed of the solid and we assume that the force depends linearily on the object speed:</p>
-<div class="math">
-<p><img src="../../_images/math/26ec9a955fce0c0abc37f1b36da8a628da61d080.svg" alt="m \frac{dv}{dt} = - m g - c v"/></p>
-</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]"/> where:</p>
-<ul class="simple">
-<li><p><img class="math" src="../../_images/math/e337404c76e804095f49955989f1afeba88e14ce.svg" alt="v"/> is the speed <img class="math" src="../../_images/math/3e089dba72d0221acb9cd7e65dec1e8f109be9c5.svg" alt="[m/s]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> is the time <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/bbb1e8e3de9b39bff8b6973f5b8864f566bdb617.svg" alt="t_{max}"/> is the maximum time <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/658ae44ee69111e3048325f416f44d6080707928.svg" alt="g"/> is the gravitational acceleration <img class="math" src="../../_images/math/8a142fffbe98732eea43f29b9337046e11be81e6.svg" alt="[m.s^{-2}]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m"/> is the mass <img class="math" src="../../_images/math/4de6be7753609caccb2680c56747b51534b6d4b0.svg" alt="[kg]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/568c612d5051e128230b50daf0d8ea04d4fc3646.svg" alt="c"/> is the linear drag coefficient <img class="math" src="../../_images/math/57b592d441c8146a60c6eea6e61b7c3e693988ab.svg" alt="[kg.s^{-1}]"/>.</p></li>
-</ul>
-<p>The previous differential equation has the exact solution:</p>
-<div class="math">
-<p><img src="../../_images/math/44bddbd97966da8b1edabfbcf3a292d9e9c78f23.svg" alt="z(t) = z_0 + v_{inf} t + \tau (v_0 - v_{inf})\left(1 - e^{-\frac{t}{\tau}}\right)"/></p>
-</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]"/></p>
-<p>where:</p>
-<ul class="simple">
-<li><p><img class="math" src="../../_images/math/54520abcb124d8a92b62628e945a7d961eb43ab1.svg" alt="z"/> is the altitude above the surface <img class="math" src="../../_images/math/aa7e8a983b183cd5f9697f35d4902d7d6f55dc5a.svg" alt="[m]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/bb4d1142535c3f6ae97ff2fef068acd80ae9a132.svg" alt="z_0"/> is the initial altitude <img class="math" src="../../_images/math/aa7e8a983b183cd5f9697f35d4902d7d6f55dc5a.svg" alt="[m]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/8fe381d8c314dd8928399dd8de9796f7079add11.svg" alt="v_0"/> is the initial speed (upward) <img class="math" src="../../_images/math/5d3f566646a0a1c98c5b8602556a0bf0d1f617db.svg" alt="[m.s^{-1}]"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/ebd8f210f3a932c8e5e2e8ea5040b64166e6f06e.svg" alt="v_{inf}"/> is the limit speed <img class="math" src="../../_images/math/5d3f566646a0a1c98c5b8602556a0bf0d1f617db.svg" alt="[m.s^{-1}]"/>:</p></li>
-</ul>
-<div class="math">
-<p><img src="../../_images/math/a5c16cd060c4d8e8eb0f995484e595409830bfca.svg" alt="v_{inf}=-\frac{m g}{c}"/></p>
-</div><ul class="simple">
-<li><p><img class="math" src="../../_images/math/20de980d786f800acea0d00b9f248081b74ce860.svg" alt="\tau"/> is time caracteristic <img class="math" src="../../_images/math/e4ad022bfc97738d014806873e944cabafc5e09e.svg" alt="[s]"/>:</p></li>
-</ul>
-<div class="math">
-<p><img src="../../_images/math/f87a969894edb78bc352fc31fbd302b6dd969b1d.svg" alt="\tau=\frac{m}{c}."/></p>
-</div><p>The stationnary speed limit at infinite time is equal to <img class="math" src="../../_images/math/ebd8f210f3a932c8e5e2e8ea5040b64166e6f06e.svg" alt="v_{inf}"/>:</p>
-<div class="math">
-<p><img src="../../_images/math/c09116a93c5473c6b4b53af62a0456352328552f.svg" alt="\lim_{t\rightarrow+\infty} v(t)= v_{inf}."/></p>
-</div><p>When there is no drag, i.e. when <img class="math" src="../../_images/math/bbc1072a3cbfa73a698d92ae32f73eecc1af859b.svg" alt="c=0"/>, the trajectory depends quadratically on <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>:</p>
-<div class="math">
-<p><img src="../../_images/math/48b77bbdd1a1f277440afee4ff03e7016853b8f5.svg" alt="z(t) = z_0 + v_0 t -g t^2"/></p>
-</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]"/>.</p>
-<p>Furthermore, when the solid touches the ground, we ensure that the altitude remains nonnegative, i.e. the final altitude is:</p>
-<div class="math">
-<p><img src="../../_images/math/57ddf95071fe008200cc14f3b15bb49be7b0086d.svg" alt="y(t) = \max(z(t),0)"/></p>
-</div><p>for any <img class="math" src="../../_images/math/e37ccc57d86c6e709093d85dc5d9560d5abd78e3.svg" alt="t \in [0, t_{max}]"/>.</p>
-</div>
-<div class="section" id="probabilistic-model">
-<h2>Probabilistic model<a class="headerlink" href="#probabilistic-model" title="Permalink to this headline">¶</a></h2>
-<p>The parameters <img class="math" src="../../_images/math/bb4d1142535c3f6ae97ff2fef068acd80ae9a132.svg" alt="z_0"/>, <img class="math" src="../../_images/math/8fe381d8c314dd8928399dd8de9796f7079add11.svg" alt="v_0"/>, <img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m"/> and <img class="math" src="../../_images/math/568c612d5051e128230b50daf0d8ea04d4fc3646.svg" alt="c"/> are probabilistic:</p>
-<ul class="simple">
-<li><p><img class="math" src="../../_images/math/48864ec6da2f5e310fe1755e2dc0f6637f356967.svg" alt="z_0 \sim \mathcal{U}(100, 150)"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/202f9e3fa6edba4b0caea782a7c448bc137bcb96.svg" alt="v_0 \sim \mathcal{N}(55, 10)"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/08141fd4142c35bfc56bcd65adbadbb8a1fae0f2.svg" alt="m \sim \mathcal{N}(80, 8)"/>,</p></li>
-<li><p><img class="math" src="../../_images/math/ce13b18da88ba809fa0ee149d9571f33f8bca99e.svg" alt="c \sim \mathcal{U}(0, 30)"/>.</p></li>
-</ul>
-</div>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Steven C. Chapra. Applied numerical methods with Matlab for engineers and scientists, Third edition. 2012. Chapter 7, “Optimization”, p.182.</p></li>
-</ul>
-</div>
+<p>In this example, we present how to create the metamodel of a field function. This examples considers the <a class="reference internal" href="../../usecases/use_case_viscous_fall.html#use-case-viscous-fall"><span class="std std-ref">free fall model</span></a>. We first compute the Karhunen-Loève decomposition of a sample of trajectories. Then we create a create a polynomial chaos which takes the inputs and returns the KL decomposition modes as outputs. Finally, we create a metamodel by combining the KL decomposition and the polynomial chaos.</p>
 <div class="section" id="define-the-model">
 <h2>Define the model<a class="headerlink" href="#define-the-model" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
@@ -254,8 +191,8 @@
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">scaledModes</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;KL modes&#39;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;:math:`t`&#39;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;:math:`z`&#39;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$t$&#39;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$z$&#39;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -305,7 +242,7 @@
 </div>
 <img alt="Model/metamodel comparison" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_viscous_fall_metamodel_002.png" />
 <p>We see that the blue trajectories (i.e. the metamodel) are close to the red trajectories (i.e. the validation sample). This shows that the metamodel is quite accurate. However, we observe that the trajectory singularity that occurs when the object touches the ground (i.e. when <img class="math" src="../../_images/math/54520abcb124d8a92b62628e945a7d961eb43ab1.svg" alt="z"/> is equal to zero), makes the metamodel less accurate.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  29.322 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  27.865 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-fields-metamodels-plot-viscous-fall-metamodel-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a895aa27cf172b0f40e0e1acee336a62/plot_viscous_fall_metamodel.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_viscous_fall_metamodel.py</span></code></a></p>
@@ -346,7 +283,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 06, 2020.
+      Last updated on Nov 10, 2020.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.0+.
     </div>
   </body>

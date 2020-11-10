@@ -22,7 +22,7 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Event manipulation" href="../reliability/plot_event_manipulation.html" />
+    <link rel="next" title="Estimate a probability with Latin Hypercube Sampling" href="../reliability/plot_estimate_probability_lhs.html" />
     <link rel="prev" title="Estimate moments from Taylor expansions" href="plot_estimate_moments_taylor.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
@@ -55,7 +55,7 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../reliability/plot_event_manipulation.html" title="Event manipulation"
+          <a href="../reliability/plot_estimate_probability_lhs.html" title="Estimate a probability with Latin Hypercube Sampling"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="plot_estimate_moments_taylor.html" title="Estimate moments from Taylor expansions"
@@ -83,8 +83,8 @@
   <p class="topless"><a href="plot_estimate_moments_taylor.html"
                         title="previous chapter">Estimate moments from Taylor expansions</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../reliability/plot_event_manipulation.html"
-                        title="next chapter">Event manipulation</a></p>
+  <p class="topless"><a href="../reliability/plot_estimate_probability_lhs.html"
+                        title="next chapter">Estimate a probability with Latin Hypercube Sampling</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -116,7 +116,7 @@
 </div>
 <div class="sphx-glr-example-title section" id="central-tendency-analysis-on-the-cantilever-beam-example">
 <span id="sphx-glr-auto-reliability-sensitivity-central-dispersion-plot-central-tendency-py"></span><h1>Central tendency analysis on the cantilever beam example<a class="headerlink" href="#central-tendency-analysis-on-the-cantilever-beam-example" title="Permalink to this headline">¶</a></h1>
-<p>In this example we perform a central tendency analysis of a random variable Y using the various methods available. We consider the cantilever beam example and show how to use the <cite>TaylorExpansionMoments</cite> and <cite>ExpectationSimulationAlgorithm</cite> classes.</p>
+<p>In this example we perform a central tendency analysis of a random variable Y using the various methods available. We consider the <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a> example and show how to use the <cite>TaylorExpansionMoments</cite> and <cite>ExpectationSimulationAlgorithm</cite> classes.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
@@ -124,16 +124,31 @@
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Create the random variable of interest Y=g(X).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]</span>
-<span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+<p>We first load the data class from the usecases module :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span> <span class="k">as</span> <span class="n">cantilever_beam</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">cantilever_beam</span><span class="o">.</span><span class="n">CantileverBeam</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We want to create the random variable of interest Y=g(X) where <img class="math" src="../../_images/math/4e5617f4cead20d16790503c320b3c8159d10ae6.svg" alt="g(.)"/> is the physical model and <img class="math" src="../../_images/math/ea775056706c0642a79ca7b47cbc53cd1a63fc8d.svg" alt="X"/> is the input vectors. For this example we consider independent marginals.</p>
+<p>We set a <cite>mean</cite> vector and a unitary standard deviation :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">dim</span>
+<span class="n">mean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 <span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IdentityMatrix</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We create the input parameters distribution and make a random vector :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
 <span class="n">X</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">])</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;F*L^3/(3*E*I)&#39;</span><span class="p">])</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>f</cite> is the cantilever beam model :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">model</span>
+</pre></div>
+</div>
+<p>The random variable of interest Y is then</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 <span class="n">Y</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -210,7 +225,7 @@ monte carlo mean= [1.39543] var= [0.00271142]
 </pre></div>
 </div>
 <img alt="Kernel smoothing approximation of the output distribution" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_central_tendency_002.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.132 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.133 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-central-dispersion-plot-central-tendency-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/842fd7c6e038e163798dcc627a82c47b/plot_central_tendency.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_central_tendency.py</span></code></a></p>
@@ -237,7 +252,7 @@ monte carlo mean= [1.39543] var= [0.00271142]
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../reliability/plot_event_manipulation.html" title="Event manipulation"
+          <a href="../reliability/plot_estimate_probability_lhs.html" title="Estimate a probability with Latin Hypercube Sampling"
              >next</a> |</li>
         <li class="right" >
           <a href="plot_estimate_moments_taylor.html" title="Estimate moments from Taylor expansions"
@@ -251,7 +266,7 @@ monte carlo mean= [1.39543] var= [0.00271142]
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 06, 2020.
+      Last updated on Nov 10, 2020.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.0+.
     </div>
   </body>

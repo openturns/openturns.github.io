@@ -13,76 +13,7 @@ Estimate a probability with Monte Carlo
 =======================================
 
 In this example we estimate a probability by means of a simulation algorithm, the Monte-Carlo algorithm. To do this, we need the classes `MonteCarloExperiment` and `ProbabilitySimulationAlgorithm`.
-
-Introduction
-------------
-
-We consider a simple beam stressed by a traction load F at both sides.
-
-![Axial stressed beam](axial-stressed-beam.png)
-
-The geometry is supposed to be deterministic; the diameter D is equal to:
-
-.. math::
-   D=0.02 \textrm{ (m)}.
-
-
-By definition, the yield stress is the load divided by the surface. Since the surface is :math:`\pi D^2/4`, the stress is:
-
-.. math::
-   S = \frac{F}{\pi D^2/4}.
-
-
-Failure occurs when the beam plastifies, i.e. when the axial stress gets larger than the yield stress:
-
-.. math::
-   R - \frac{F}{\pi D^2/4} \leq 0
-
-
-where :math:`R` is the strength.
-
-Therefore, the limit state function :math:`G` is: 
-
-.. math::
-   G(R,F) = R - \frac{F}{\pi D^2/4},
-
-
-for any :math:`R,F\in\mathbb{R}`.
-
-The value of the parameter :math:`D` is such that:
-
-.. math::
-   D^2/4 = 10^{-4},
-
-
-which leads to the equation:
-
-.. math::
-   G(R,F) = R - \frac{F}{10^{-4} \pi}.
-
-
-We consider the following distribution functions.
-
- ========  ===========================================================================
- Variable  Distribution 
- ========  ===========================================================================
-  R         LogNormal(:math:`\mu_R=3\times 10^6`, :math:`\sigma_R=3\times 10^5`) [Pa]
-  F         Normal(:math:`\mu_F=750`, :math:`\sigma_F=50`) [N]
- ========  ===========================================================================
-
-where :math:`\mu_R=E(R)` and :math:`\sigma_R^2=V(R)` are the mean and the variance of :math:`R`.
-
-The failure probability is: 
-
-.. math::
-   P_f = \text{Prob}(G(R,F) \leq 0).
-
-
-The exact :math:`P_f` is 
-
-.. math::
-   P_f = 0.02920.
-
+We consider the :ref:`axial stressed beam <use-case-stressed-beam>` example.
 
 
 .. code-block:: default
@@ -100,15 +31,13 @@ The exact :math:`P_f` is
 
 
 
-Create the joint distribution of the parameters.
+We load the model from the usecases module :
 
 
 .. code-block:: default
 
-    distribution_R = ot.LogNormalMuSigma(300.0, 30.0, 0.0).getDistribution()
-    distribution_F = ot.Normal(75e3, 5e3)
-    marginals = [distribution_R, distribution_F]
-    distribution = ot.ComposedDistribution(marginals)
+    from openturns.usecases import stressed_beam as stressed_beam
+    sm = stressed_beam.AxialStressedBeam()
 
 
 
@@ -117,12 +46,12 @@ Create the joint distribution of the parameters.
 
 
 
-Create the model.
+We get the joint distribution of the parameters.
 
 
 .. code-block:: default
 
-    model = ot.SymbolicFunction(['R', 'F'], ['R-F/(pi_*100.0)'])
+    distribution = sm.distribution
 
 
 
@@ -131,7 +60,21 @@ Create the model.
 
 
 
-Create the event whose probability we want to estimate.
+The model is also stored in the data class :
+
+
+.. code-block:: default
+
+    model = sm.model
+
+
+
+
+
+
+
+
+We create the event whose probability we want to estimate.
 
 
 .. code-block:: default
@@ -183,7 +126,7 @@ Retrieve results.
 
  .. code-block:: none
 
-    Pf= 0.031224851118622166
+    Pf= 0.027625878843832115
 
 
 
@@ -191,7 +134,7 @@ Retrieve results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.056 seconds)
+   **Total running time of the script:** ( 0 minutes  0.043 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_estimate_probability_monte_carlo.py:
