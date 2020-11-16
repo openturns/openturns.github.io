@@ -12,92 +12,7 @@
 Calibration of the Chaboche mechanical model
 ============================================
 
-Deterministic model
--------------------
-
-The Chaboche mecanical law predicts the stress depending on the strain:
-
-.. math::
-   \sigma = G(\epsilon,R,C,\gamma) = R + \frac{C}{\gamma} (1-\exp(-\gamma\epsilon))
-
-
-where:
-
-- :math:`\epsilon` is the strain,
-- :math:`\sigma` is the stress (Pa),
-- :math:`R`, :math:`C`, :math:`\gamma` are the parameters.
-
-The variables have the following distributions and are supposed to be independent.
-
- ================  ===========================================================
- Random var.       Distribution
- ================  ===========================================================
- :math:`R`         Lognormal (:math:`\mu = 750` MPa, :math:`\sigma = 11` MPa)
- :math:`C`         Normal (:math:`\mu = 2750` MPa, :math:`\sigma = 250` MPa)
- :math:`\gamma`    Normal (:math:`\mu = 10`, :math:`\sigma = 2`)
- :math:`\epsilon`  Uniform(a=0, b=0.07).
- ================  ===========================================================
-
-Parameters to calibrate
------------------------
-
-The vector of parameters to calibrate is:
-
-.. math::
-   \theta = (R,C,\gamma).
-
-
-We set:
-
-- :math:`R = 750\times 10^6`,
-- :math:`C = 2750\times 10^6`,
-- :math:`\gamma = 10`.
-
-Observations
-------------
-
-In order to create a calibration problem, we make the hypothesis that the strain has the following distribution:
-
-.. math::
-   \epsilon \sim Uniform(0,0.07).
-
-
-Moreover, we consider a gaussian noise on the observed constraint:
-
-.. math::
-   \epsilon_\sigma \sim \mathcal{N} \left(0,10\times 10^6\right)
-
-
-and we make the hypothesis that the observation errors are independent.
-We set the number of observations to:
-
-.. math::
-   n = 100.
-
-
-We generate a Monte-Carlo sampling with size :math:`n`:
-
-.. math::
-   \sigma_i = G(\epsilon_i,R,C,\gamma) + (\epsilon_\sigma)_i,
-
-
-for :math:`i = 1,..., n`.
-The observations are the pairs :math:`\{(\epsilon_i,\sigma_i)\}_{i=1,...,n}`, i.e. each observation is a couple made of the strain and the corresponding stress.
-
-Thanks to
----------
-
-- Antoine Dumas, Phimeca
-
-
-References
-----------
-
-- J. Lemaitre and J. L. Chaboche (2002) "Mechanics of solid materials" Cambridge University Press.
-
-
-Generate the observations
--------------------------
+In this example we present calibration methods on the Chaboche model. A detailed explanation of this mechanical law is presented :ref:`here <use-case-chaboche>`.
 
 
 .. code-block:: default
@@ -106,6 +21,8 @@ Generate the observations
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
+    from openturns.usecases import chaboche_model as chaboche_model
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -115,15 +32,12 @@ Generate the observations
 
 
 
-Define the model.
+Load the Chaboche data structure
 
 
 .. code-block:: default
 
-    def modelChaboche(X):
-        strain, R, C, gamma = X
-        stress = R + C * (1 - np.exp(-gamma * strain)) / gamma
-        return [stress]
+    cm = chaboche_model.ChabocheModel()
 
 
 
@@ -132,52 +46,13 @@ Define the model.
 
 
 
-
-Create the Python function.
+We get the Chaboche model and the joint input distribution :
 
 
 .. code-block:: default
 
-    g = ot.PythonFunction(4, 1, modelChaboche)
-
-
-
-
-
-
-
-
-Define the random vector.
-
-
-.. code-block:: default
-
-    Strain = ot.Uniform(0, 0.07)
-    unknownR = 750e6
-    unknownC = 2750e6
-    unknownGamma = 10
-    R = ot.Dirac(unknownR)
-    C = ot.Dirac(unknownC)
-    Gamma = ot.Dirac(unknownGamma)
-
-    Strain.setDescription(["Strain"])
-    R.setDescription(["R"])
-    C.setDescription(["C"])
-    Gamma.setDescription(["Gamma"])
-
-
-
-
-
-
-
-
-Create the joint input distribution function.
-
-
-.. code-block:: default
-
-    inputDistribution = ot.ComposedDistribution([Strain, R, C, Gamma])
+    g = cm.model
+    inputDistribution = cm.inputDistribution
 
 
 
@@ -204,11 +79,11 @@ Create the Monte-Carlo sample.
 .. raw:: html
 
     <TABLE><TR><TD></TD><TH>y0</TH></TR>
-    <TR><TH>0</TH><TD>8.488914e+08</TD></TR>
-    <TR><TH>1</TH><TD>8.783113e+08</TD></TR>
-    <TR><TH>2</TH><TD>8.754496e+08</TD></TR>
-    <TR><TH>3</TH><TD>8.872187e+08</TD></TR>
-    <TR><TH>4</TH><TD>8.595783e+08</TD></TR>
+    <TR><TH>0</TH><TD>8.225139e+08</TD></TR>
+    <TR><TH>1</TH><TD>7.87381e+08</TD></TR>
+    <TR><TH>2</TH><TD>7.530167e+08</TD></TR>
+    <TR><TH>3</TH><TD>8.25257e+08</TD></TR>
+    <TR><TH>4</TH><TD>8.215074e+08</TD></TR>
     </TABLE>
     <br />
     <br />
@@ -382,7 +257,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[7.48178e+08,2.80672e+09,10.4592]</p>
+    <p>[7.55665e+08,2.41976e+09,7.76849]</p>
     <br />
     <br />
 
@@ -401,9 +276,9 @@ We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
 .. raw:: html
 
-    <p>[7.40369e+08, 7.55986e+08]<br>
-    [2.27903e+09, 3.33441e+09]<br>
-    [-517.284, 538.203]</p>
+    <p>[7.5e+08, 7.61329e+08]<br>
+    [1.93278e+09, 2.90674e+09]<br>
+    [-479.264, 494.801]</p>
     <br />
     <br />
 
@@ -464,7 +339,7 @@ We see that there is a much better fit after calibration, since the predictions 
 
 .. raw:: html
 
-    <p>Normal(mu = 0, sigma = 1.1025e+07)</p>
+    <p>Normal(mu = 0, sigma = 1.03405e+07)</p>
     <br />
     <br />
 
@@ -515,7 +390,9 @@ The `NonLinearLeastSquaresCalibration` class performs the non linear least squar
 
 .. code-block:: default
 
-    algo = ot.NonLinearLeastSquaresCalibration(mycf, observedStrain, observedStress, thetaPrior)
+    algo = ot.NonLinearLeastSquaresCalibration(
+        mycf, observedStrain, observedStress, thetaPrior
+    )
 
 
 
@@ -569,7 +446,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[7.47522e+08,2.88854e+09,11.1915]</p>
+    <p>[7.55764e+08,2.41907e+09,7.77538]</p>
     <br />
     <br />
 
@@ -588,9 +465,9 @@ We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
 .. raw:: html
 
-    <p>[7.38602e+08, 7.58579e+08]<br>
-    [2.16219e+09, 3.62933e+09]<br>
-    [3.5572, 18.8279]</p>
+    <p>[7.46815e+08, 7.64023e+08]<br>
+    [1.83849e+09, 3.1899e+09]<br>
+    [0.976967, 16.4257]</p>
     <br />
     <br />
 
@@ -648,7 +525,7 @@ We see that there is a much better fit after calibration, since the predictions 
 
 .. raw:: html
 
-    <p>Normal(mu = 2160.56, sigma = 1.09017e+07)</p>
+    <p>Normal(mu = -18951.8, sigma = 1.0238e+07)</p>
     <br />
     <br />
 
@@ -786,7 +663,9 @@ The `GaussianLinearCalibration` class performs the gaussian linear calibration b
 
 .. code-block:: default
 
-    algo = ot.GaussianLinearCalibration(mycf, observedStrain, observedStress, thetaPrior, sigma, errorCovariance)
+    algo = ot.GaussianLinearCalibration(
+        mycf, observedStrain, observedStress, thetaPrior, sigma, errorCovariance
+    )
 
 
 
@@ -839,7 +718,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[7.5035e+08,2.60977e+09,8.17958]</p>
+    <p>[7.55403e+08,2.44237e+09,8.02337]</p>
     <br />
     <br />
 
@@ -858,9 +737,9 @@ We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
 .. raw:: html
 
-    <p>[7.45134e+08, 7.55566e+08]<br>
-    [2.41407e+09, 2.80548e+09]<br>
-    [6.48461, 9.87455]</p>
+    <p>[7.51146e+08, 7.59661e+08]<br>
+    [2.26218e+09, 2.62255e+09]<br>
+    [6.28201, 9.76473]</p>
     <br />
     <br />
 
@@ -975,7 +854,9 @@ The `GaussianNonLinearCalibration` class performs the gaussian nonlinear calibra
 
 .. code-block:: default
 
-    algo = ot.GaussianNonLinearCalibration(mycf, observedStrain, observedStress, thetaPrior, sigma, errorCovariance)
+    algo = ot.GaussianNonLinearCalibration(
+        mycf, observedStrain, observedStress, thetaPrior, sigma, errorCovariance
+    )
 
 
 
@@ -1028,7 +909,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[7.50466e+08,2.61003e+09,8.19629]</p>
+    <p>[7.5559e+08,2.43721e+09,8.00266]</p>
     <br />
     <br />
 
@@ -1047,9 +928,9 @@ We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
 .. raw:: html
 
-    <p>[7.44651e+08, 7.54581e+08]<br>
-    [2.47164e+09, 2.85086e+09]<br>
-    [6.9034, 10.3133]</p>
+    <p>[7.50579e+08, 7.60352e+08]<br>
+    [2.2832e+09, 2.59508e+09]<br>
+    [7.44971, 8.47513]</p>
     <br />
     <br />
 
@@ -1109,7 +990,7 @@ The observation error is predicted by bootstraping the problem at the posterior.
 
 .. raw:: html
 
-    <p>Normal(mu = -7013.81, sigma = 1e+07)</p>
+    <p>Normal(mu = -10638.6, sigma = 1e+07)</p>
     <br />
     <br />
 
@@ -1157,7 +1038,7 @@ We see that the prior and posterior distribution for the :math:`\gamma` paramete
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.439 seconds)
+   **Total running time of the script:** ( 0 minutes  8.789 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_least_squares_and_gaussian_calibration_plot_calibration_chaboche.py:

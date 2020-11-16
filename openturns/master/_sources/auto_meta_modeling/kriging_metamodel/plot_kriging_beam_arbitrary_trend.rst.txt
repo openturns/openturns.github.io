@@ -16,7 +16,7 @@ The goal of this example is to show how to configure an arbitrary trend in a Kri
 
 In general, any collection of multivariate functions can be used as the `basis` argument of a `KrigingAlgorithm`. In practice, it might not be convenient to create a multivariate basis and this is why we sometimes create it by tensorization of univariate functions. In this example, we first use Legendre polynomials as our univariate functions, then we create an orthogonal polynomial basis corresponding to the input marginals.
 
-For this purpose, we use the cantilever beam example.
+For this purpose, we use the :ref:`cantilever beam <use-case-cantilever-beam>` example.
 
 Definition of the model
 -----------------------
@@ -37,12 +37,27 @@ Definition of the model
 
 
 
-We define the symbolic function which evaluates the output Y depending on the inputs E, F, L and I.
+We load the cantilever beam use case
 
 
 .. code-block:: default
 
-    model = ot.SymbolicFunction(["E", "F", "L", "I"], ["F*L^3/(3*E*I)"])
+    from openturns.usecases import cantilever_beam as cantilever_beam
+    cb = cantilever_beam.CantileverBeam()
+
+
+
+
+
+
+
+
+We load the function (model) which evaluates the output Y depending on the inputs.
+
+
+.. code-block:: default
+
+    model = cb.model
 
 
 
@@ -53,41 +68,11 @@ We define the symbolic function which evaluates the output Y depending on the in
 
 Then we define the distribution of the input random vector. 
 
-Young's modulus E
-
 
 .. code-block:: default
 
-    E = ot.Beta(0.9, 2.27, 2.5e7, 5.0e7) # in N/m^2
-    E.setDescription("E")
-    # Load F
-    F = ot.LogNormal() # in N
-    F.setParameter(ot.LogNormalMuSigma()([30.e3, 9e3, 15.e3]))
-    F.setDescription("F")
-    # Length L
-    L = ot.Uniform(250., 260.) # in cm
-    L.setDescription("L")
-    # Moment of inertia I
-    I = ot.Beta(2.5, 1.5, 310, 450) # in cm^4
-    I.setDescription("I")
-
-
-
-
-
-
-
-
-Finally, we define the dependency using a `NormalCopula`.
-
-
-.. code-block:: default
-
-    dimension = 4 # number of inputs
-    R = ot.CorrelationMatrix(dimension)
-    R[2, 3] = -0.2 
-    myCopula = ot.NormalCopula(ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(R))
-    myDistribution = ot.ComposedDistribution([E, F, L, I], myCopula)
+    dimension = cb.dim # number of inputs
+    myDistribution = cb.distribution
 
 
 
@@ -277,7 +262,7 @@ The `getTrendCoefficients` method returns the coefficients of the trend.
  .. code-block:: none
 
 
-    [class=Point name=Unnamed dimension=12 values=[9.37146e-20,2.64601e-12,1.65944e-15,4.20447e-17,3.18577e-17,-5.57247e-15,3.94631e-12,1.20909e-09,-2.04196e-10,-1.87901e-10,7.79485e-13,-7.28798e-13]]
+    [class=Point name=Unnamed dimension=12 values=[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50]]
 
 
 
@@ -295,7 +280,7 @@ We see that the number of coefficients in the trend corresponds to the number of
 
 .. raw:: html
 
-    <p>SquaredExponential(scale=[1,1,1,1], amplitude=[1.94219])</p>
+    <p>SquaredExponential(scale=[1,1,1,1], amplitude=[0.0316175])</p>
     <br />
     <br />
 
@@ -313,7 +298,7 @@ We first create the polynomial basis which corresponds to the inputs.
 
 .. code-block:: default
 
-    multivariateBasis = ot.OrthogonalProductPolynomialFactory([E, F, L, I])
+    multivariateBasis = ot.OrthogonalProductPolynomialFactory([cb.E, cb.F, cb.L, cb.I])
 
 
 
@@ -430,7 +415,7 @@ The `getTrendCoefficients` method returns the coefficients of the trend.
  .. code-block:: none
 
 
-    [class=Point name=Unnamed dimension=15 values=[9.37146e-20,2.64601e-12,1.65944e-15,4.20447e-17,3.18577e-17,-5.57247e-15,3.94631e-12,1.20909e-09,-2.04196e-10,-1.87901e-10,7.79485e-13,-7.28798e-13,2.10889e-14,1.45866e-14,-9.90571e-16]]
+    [class=Point name=Unnamed dimension=15 values=[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50,1.39896e-44,7.63508e-52,-7.60276e-46]]
 
 
 
@@ -449,7 +434,7 @@ or any other univariate factory.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.016 seconds)
+   **Total running time of the script:** ( 0 minutes  0.010 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_beam_arbitrary_trend.py:

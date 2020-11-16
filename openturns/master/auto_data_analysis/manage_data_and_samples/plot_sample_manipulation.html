@@ -22,8 +22,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="A quick start guide to the Point and Sample classes" href="plot_quick_start_point_and_sample.html" />
-    <link rel="prev" title="Estimate moments from sample" href="plot_estimate_moments.html" />
+    <link rel="next" title="Sort a sample" href="plot_sort_sample.html" />
+    <link rel="prev" title="A quick start guide to the Point and Sample classes" href="plot_quick_start_point_and_sample.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -55,10 +55,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_quick_start_point_and_sample.html" title="A quick start guide to the Point and Sample classes"
+          <a href="plot_sort_sample.html" title="Sort a sample"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_estimate_moments.html" title="Estimate moments from sample"
+          <a href="plot_quick_start_point_and_sample.html" title="A quick start guide to the Point and Sample classes"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -69,12 +69,23 @@
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Sample manipulation</a><ul>
+<li><a class="reference internal" href="#a-typical-example">A typical example</a></li>
+<li><a class="reference internal" href="#basic-operations-on-samples">Basic operations on samples</a></li>
+<li><a class="reference internal" href="#estimate-the-statistical-moments">Estimate the statistical moments</a></li>
+<li><a class="reference internal" href="#test-the-correlation">Test the correlation</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="plot_estimate_moments.html"
-                        title="previous chapter">Estimate moments from sample</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="plot_quick_start_point_and_sample.html"
-                        title="next chapter">A quick start guide to the <cite>Point</cite> and <cite>Sample</cite> classes</a></p>
+                        title="previous chapter">A quick start guide to the <cite>Point</cite> and <cite>Sample</cite> classes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plot_sort_sample.html"
+                        title="next chapter">Sort a sample</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -106,131 +117,200 @@
 </div>
 <div class="sphx-glr-example-title section" id="sample-manipulation">
 <span id="sphx-glr-auto-data-analysis-manage-data-and-samples-plot-sample-manipulation-py"></span><h1>Sample manipulation<a class="headerlink" href="#sample-manipulation" title="Permalink to this headline">¶</a></h1>
-<p>This example will describe the main statistical functionalities on data through the Sample object.</p>
+<p>This example will describe the main statistical functionalities on data through the Sample object. The Sample is an output variable of interest.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Generate a sample of dimension 3</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
-<span class="n">sample</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+<div class="section" id="a-typical-example">
+<h2>A typical example<a class="headerlink" href="#a-typical-example" title="Permalink to this headline">¶</a></h2>
+<p>A recurring issue in uncertainty quantification is to perform analysis on an output variable of interest Y obtained through a model <cite>f</cite> and input parameters <cite>X</cite>.
+Here we shall consider the input parameters as two independent standard normal distributions <img class="math" src="../../_images/math/8fb4dc473f35c2e533e202eed0d21230983a6d73.svg" alt="X=(X_1, X_2)"/>. We therefore use an <cite>IndependentCopula</cite> to describe the link between the two marginals.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># input parameters</span>
+<span class="n">inputDist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">IndependentCopula</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">inputDist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s1">&#39;X1&#39;</span><span class="p">,</span> <span class="s1">&#39;X2&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<TABLE><TR><TD></TD><TH>X0</TH><TH>X1</TH><TH>X2</TH></TR>
-<TR><TH>0</TH><TD>0.2848851</TD><TD>-1.513006</TD><TD>-0.5750952</TD></TR>
-<TR><TH>1</TH><TD>0.3165664</TD><TD>-2.171768</TD><TD>0.5864573</TD></TR>
-<TR><TH>2</TH><TD>0.2646171</TD><TD>1.183059</TD><TD>0.1865599</TD></TR>
-<TR><TH>3</TH><TD>-1.6747</TD><TD>0.9319077</TD><TD>-0.1620935</TD></TR>
-<TR><TH>4</TH><TD>-1.131884</TD><TD>0.3408018</TD><TD>-0.5165591</TD></TR>
+<p>We create a vector from the 2D-distribution created before :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputVector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">inputDist</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Suppose our model <cite>f</cite> is known and reads as :</p>
+<div class="math">
+<p><img src="../../_images/math/5f7382719c6335656f2f7f32b48b21f3251dd691.svg" alt="f(X) = \begin{pmatrix}
+         x_1^2 + x_2 \\
+         x_1   + x_2^2
+       \end{pmatrix}"/></p>
+</div><p>We define our model <cite>f</cite> with a <cite>SymbolicFunction</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x1^2+x2&quot;</span><span class="p">,</span> <span class="s2">&quot;x2^2+x1&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Our output vector is Y=f(X), the image of the inputVector by the model</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputVector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">inputVector</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now get a sample out of Y, that is realizations (here 1000) of the random outputVector</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">outputVector</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>sample</cite> may be seen as a matrix of size <img class="math" src="../../_images/math/6c9503daaacfa5aad2ae8d4c02c86bf4e90a9893.svg" alt="1000 \times 2"/>. We print the 5 first samples (out of 1000) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<TABLE><TR><TD></TD><TH>y0</TH><TH>y1</TH></TR>
+<TR><TH>0</TH><TD>-0.5815072</TD><TD>0.7240122</TD></TR>
+<TR><TH>1</TH><TD>3.26726</TD><TD>-0.5563772</TD></TR>
+<TR><TH>2</TH><TD>-0.3683326</TD><TD>-0.08640049</TD></TR>
+<TR><TH>3</TH><TD>-1.139952</TD><TD>1.854578</TD></TR>
+<TR><TH>4</TH><TD>5.692328</TD><TD>-1.219674</TD></TR>
 </TABLE>
 <br />
-<br /><p>Get min and max per component</p>
+<br /></div>
+<div class="section" id="basic-operations-on-samples">
+<h2>Basic operations on samples<a class="headerlink" href="#basic-operations-on-samples" title="Permalink to this headline">¶</a></h2>
+<p>We have access to basic information about a sample such as</p>
+<ul class="simple">
+<li><p>minimum and maximum per component</p></li>
+</ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">getMin</span><span class="p">(),</span> <span class="n">sample</span><span class="o">.</span><span class="n">getMax</span><span class="p">()</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(class=Point name=Unnamed dimension=3 values=[-3.07535,-2.48862,-3.39855], class=Point name=Unnamed dimension=3 values=[3.41961,2.71854,2.90425])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(class=Point name=Unnamed dimension=2 values=[-2.56587,-2.84726], class=Point name=Unnamed dimension=2 values=[9.93535,12.1777])
 </pre></div>
 </div>
-<p>Get the range per component (xmax-xmin)</p>
+<ul class="simple">
+<li><p>the range per component (max-min)</p></li>
+</ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeRange</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>[6.49496,5.20716,6.3028]</p>
+<p>[12.5012,15.025]</p>
 <br />
-<br /><p>Get the mean per component</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[0.0305341,0.0696977,-0.00293365]</p>
-<br />
-<br /><p>Get the standard deviation per component</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeStandardDeviationPerComponent</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[1.01333,0.986418,0.973284]</p>
-<br />
-<br /><p>Get the Variance per component</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeVariance</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[1.02683,0.973021,0.947281]</p>
-<br />
-<br /><p>Get the Skewness per component</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeSkewness</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[-0.100365,0.0330154,-0.166036]</p>
-<br />
-<br /><p>Get the Kurtosis per component</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeKurtosis</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[3.0447,2.71131,2.97627]</p>
-<br />
-<br /><p>Get the median per component</p>
+<br /><p>More elaborate functionalities are also available :</p>
+<ul class="simple">
+<li><p>get the median per component</p></li>
+</ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeMedian</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>[0.055302,0.0701777,0.00513757]</p>
+<p>[0.680688,0.874763]</p>
 <br />
-<br /><p>Get the empirical 0.95 quantile per component</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeQuantilePerComponent</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>[1.6064,1.75258,1.43879]</p>
-<br />
-<br /><p>Get the sample covariance</p>
+<br /><ul class="simple">
+<li><p>compute the covariance</p></li>
+</ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeCovariance</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>[[  1.02683    0.0030062  0.0202557 ]<br>
- [  0.0030062  0.973021  -0.0611211 ]<br>
- [  0.0202557 -0.0611211  0.947281  ]]</p>
+<p>[[  2.59234   -0.0758625 ]<br>
+ [ -0.0758625  3.30636   ]]</p>
 <br />
-<br /><p>Get the sample standard deviation</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeStandardDeviation</span><span class="p">()</span>
+<br /><ul class="simple">
+<li><p>get the empirical 0.95 quantile per component</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeQuantilePerComponent</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>[[  1.01333     0           0          ]<br>
- [  0.00296666  0.986414    0          ]<br>
- [  0.0199893  -0.0620231   0.9711     ]]</p>
+<p>[3.67518,4.13131]</p>
 <br />
-<br /><p>Get the sample Pearson correlation matrix</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computePearsonCorrelation</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[[  1           0.00300751  0.020538   ]<br>
- [  0.00300751  1          -0.0636635  ]<br>
- [  0.020538   -0.0636635   1          ]]</p>
-<br />
-<br /><p>Get  the sample Kendall correlation matrix</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeKendallTau</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[[  1          -0.00482565  0.0141403  ]<br>
- [ -0.00482565  1          -0.0409459  ]<br>
- [  0.0141403  -0.0409459   1          ]]</p>
-<br />
-<br /><p>Get  the sample Spearman  correlation matrix</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeSpearmanCorrelation</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>[[  1          -0.00786714  0.0200047  ]<br>
- [ -0.00786714  1          -0.0623547  ]<br>
- [  0.0200047  -0.0623547   1          ]]</p>
-<br />
-<br /><p>Get the value of the empirical CDF at a point</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">point</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">]</span>
+<br /><ul class="simple">
+<li><p>get the value of the empirical CDF at a point</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">point</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">]</span>
 <span class="n">sample</span><span class="o">.</span><span class="n">computeEmpiricalCDF</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.842
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.518
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.013 seconds)</p>
+</div>
+<div class="section" id="estimate-the-statistical-moments">
+<h2>Estimate the statistical moments<a class="headerlink" href="#estimate-the-statistical-moments" title="Permalink to this headline">¶</a></h2>
+<p>Oftentimes, we need to estimate the first moments of the output data. We can then estimate statistical moments from the output sample :</p>
+<ul class="simple">
+<li><p>estimate the moment of order 1 : mean</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[0.903872,1.15217]</p>
+<br />
+<br /><ul class="simple">
+<li><p>estimate the standard deviation (returns the Cholesky factor)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeStandardDeviation</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[[  1.61007    0         ]<br>
+ [ -0.0471174  1.81773   ]]</p>
+<br />
+<br /><ul class="simple">
+<li><p>estimate the standard deviation for each component</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeStandardDeviationPerComponent</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[1.61007,1.81834]</p>
+<br />
+<br /><ul class="simple">
+<li><p>estimate the moment of order 2 : variance</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeVariance</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[2.59234,3.30636]</p>
+<br />
+<br /><ul class="simple">
+<li><p>estimate the moment of order 3 : skewness</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeSkewness</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[1.28241,1.80582]</p>
+<br />
+<br /><ul class="simple">
+<li><p>estimate the moment of order 4 : kurtosis</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeKurtosis</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[6.40216,9.59074]</p>
+<br />
+<br /></div>
+<div class="section" id="test-the-correlation">
+<h2>Test the correlation<a class="headerlink" href="#test-the-correlation" title="Permalink to this headline">¶</a></h2>
+<p>Some statistical test for correlation are available :</p>
+<ul class="simple">
+<li><p>get the sample Pearson correlation matrix :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computePearsonCorrelation</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[[  1         -0.0259123 ]<br>
+ [ -0.0259123  1         ]]</p>
+<br />
+<br /><ul class="simple">
+<li><p>get  the sample Kendall correlation matrix :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeKendallTau</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[[ 1         0.0183584 ]<br>
+ [ 0.0183584 1         ]]</p>
+<br />
+<br /><ul class="simple">
+<li><p>get  the sample Spearman correlation matrix :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">computeSpearmanCorrelation</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>[[ 1         0.0200394 ]<br>
+ [ 0.0200394 1         ]]</p>
+<br />
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.008 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-data-analysis-manage-data-and-samples-plot-sample-manipulation-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0d21a3e3577e9677059a3de1c83c736d/plot_sample_manipulation.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_sample_manipulation.py</span></code></a></p>
@@ -240,6 +320,7 @@
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
 </div>
 
 
@@ -256,10 +337,10 @@
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_quick_start_point_and_sample.html" title="A quick start guide to the Point and Sample classes"
+          <a href="plot_sort_sample.html" title="Sort a sample"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_estimate_moments.html" title="Estimate moments from sample"
+          <a href="plot_quick_start_point_and_sample.html" title="A quick start guide to the Point and Sample classes"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>

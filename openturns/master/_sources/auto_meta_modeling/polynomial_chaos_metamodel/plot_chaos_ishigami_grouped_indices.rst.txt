@@ -12,7 +12,7 @@
 Compute grouped indices for the Ishigami function
 =================================================
 
-In this example, we compute grouped Sobol' indices for the Ishigami function.
+In this example, we compute grouped Sobol' indices for the :ref:`Ishigami function <use-case-ishigami>`.
 
 
 .. code-block:: default
@@ -31,15 +31,13 @@ In this example, we compute grouped Sobol' indices for the Ishigami function.
 
 
 
-Create the Ishigami test function.
+We load the Ishigami test function from usecases module :
 
 
 .. code-block:: default
 
-    ot.RandomGenerator.SetSeed(0)
-    formula = ['sin(X1) + 7. * sin(X2)^2 + 0.1 * X3^4 * sin(X1)']
-    input_names = ['X1', 'X2', 'X3']
-    g = ot.SymbolicFunction(input_names, formula)
+    from openturns.usecases import ishigami_function as ishigami_function
+    im = ishigami_function.IshigamiModel()
 
 
 
@@ -48,13 +46,14 @@ Create the Ishigami test function.
 
 
 
-Create the probabilistic model
+The `IshigamiModel` data class contains the input distribution :math:`X=(X_1, X_2, X_3)` in `im.distributionX` and the Ishigami function in `im.model`.
+We also have access to the input variable names with
 
 
 .. code-block:: default
 
-    distributionList = [ot.Uniform(-pi, pi)] * 3
-    distribution = ot.ComposedDistribution(distributionList)
+    input_names = im.distributionX.getDescription()
+
 
 
 
@@ -69,8 +68,8 @@ Create a training sample
 .. code-block:: default
 
     N = 100 
-    inputTrain = distribution.getSample(N)
-    outputTrain = g(inputTrain)
+    inputTrain = im.distributionX.getSample(N)
+    outputTrain = im.model(inputTrain)
 
 
 
@@ -84,14 +83,14 @@ Create the chaos.
 
 .. code-block:: default
 
-    multivariateBasis = ot.OrthogonalProductPolynomialFactory(distributionList)
+    multivariateBasis = ot.OrthogonalProductPolynomialFactory([im.X1, im.X2, im.X3])
     selectionAlgorithm = ot.LeastSquaresMetaModelSelectionFactory()
     projectionStrategy = ot.LeastSquaresStrategy(inputTrain, outputTrain, selectionAlgorithm)
     totalDegree = 8
     enumfunc = multivariateBasis.getEnumerateFunction()
     P = enumfunc.getStrataCumulatedCardinal(totalDegree)
     adaptiveStrategy = ot.FixedStrategy(multivariateBasis, P)
-    chaosalgo = ot.FunctionalChaosAlgorithm(inputTrain, outputTrain, distribution, adaptiveStrategy, projectionStrategy)
+    chaosalgo = ot.FunctionalChaosAlgorithm(inputTrain, outputTrain, im.distributionX, adaptiveStrategy, projectionStrategy)
 
 
 
@@ -135,28 +134,28 @@ Print Sobol' indices
      input dimension: 3
      output dimension: 1
      basis size: 26
-     mean: [3.50804]
-     std-dev: [3.70043]
+     mean: [3.50739]
+     std-dev: [3.70413]
     ------------------------------------------------------------
     Index   | Multi-indice                  | Part of variance  
     ------------------------------------------------------------
-          7 | [0,4,0]                       | 0.279938
-          1 | [1,0,0]                       | 0.190322
-          6 | [1,0,2]                       | 0.136823
-         15 | [0,6,0]                       | 0.130033
-          5 | [3,0,0]                       | 0.12058
-         11 | [3,0,2]                       | 0.0837457
-          3 | [0,2,0]                       | 0.0250262
-         12 | [1,0,4]                       | 0.0111867
+          7 | [0,4,0]                       | 0.274425
+          1 | [1,0,0]                       | 0.191936
+          6 | [1,0,2]                       | 0.135811
+         13 | [0,6,0]                       | 0.134001
+          5 | [3,0,0]                       | 0.122952
+         10 | [3,0,2]                       | 0.0856397
+          3 | [0,2,0]                       | 0.0237185
+         11 | [1,0,4]                       | 0.0112027
     ------------------------------------------------------------
 
 
     ------------------------------------------------------------
     Component | Sobol index            | Sobol total index      
     ------------------------------------------------------------
-            0 | 0.313447               | 0.55526               
-            1 | 0.444616               | 0.444775              
-            2 | 5.73982e-05            | 0.241886              
+            0 | 0.31752                | 0.559269              
+            1 | 0.440685               | 0.440794              
+            2 | 1.87833e-05            | 0.241742              
     ------------------------------------------------------------
 
 
@@ -182,7 +181,7 @@ We compute the first order indice of the group [0,1].
  .. code-block:: none
 
 
-    0.7581141221738299
+    0.7582578489711685
 
 
 
@@ -234,7 +233,7 @@ We compute the total order indice of the group [1,2].
  .. code-block:: none
 
 
-    0.6865529054018149
+    0.6824803087795115
 
 
 
@@ -269,7 +268,7 @@ This group collects all the multi-indices containing variables in this group, in
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.030 seconds)
+   **Total running time of the script:** ( 0 minutes  0.027 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_polynomial_chaos_metamodel_plot_chaos_ishigami_grouped_indices.py:
