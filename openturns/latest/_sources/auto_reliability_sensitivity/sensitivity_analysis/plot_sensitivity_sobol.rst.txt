@@ -12,20 +12,7 @@
 Estimate Sobol' indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis
 ===================================================================================================================
 
-In this example, we estimate the Sobol' indices for the Ishigami function by sampling methods. 
-
-Let :math:`a=7` and :math:`b=0.1`. We consider the function 
-
-.. math::
-   g(X_1,X_2,X_3) = \sin(X_1)+a \sin (X_2)^2 + b X_3^4 \sin(X_1)
-
-
-for any :math:`X_1,X_2,X_3\in[-\pi,\pi]` 
-
-We assume that the random variables :math:`X_1,X_2,X_3` are independent and identically distributed according to the uniform distribution on the interval :math:`[-\pi, \pi]`:
-
-.. math::
-   X_1,X_2,X_3\sim \mathcal{U}(-\pi,\pi).
+In this example, we estimate the Sobol' indices for the :ref:`Ishigami function <use-case-ishigami>` by sampling methods. 
 
 
 Introduction
@@ -74,15 +61,13 @@ Define the model
 
 
 
-Create the Ishigami test function.
+We load the Ishigami model from the usecases model :
 
 
 .. code-block:: default
 
-    ot.RandomGenerator.SetSeed(0)
-    formula = ['sin(X1) + 7. * sin(X2)^2 + 0.1 * X3^4 * sin(X1)']
-    input_names = ['X1', 'X2', 'X3']
-    g = ot.SymbolicFunction(input_names, formula)
+    from openturns.usecases import ishigami_function
+    im = ishigami_function.IshigamiModel()
 
 
 
@@ -91,14 +76,13 @@ Create the Ishigami test function.
 
 
 
-Create the probabilistic model
+The `IshigamiModel` data class contains the input distribution :math:`X=(X_1, X_2, X_3)` in `im.distributionX` and the Ishigami function in `im.model`.
+We also have access to the input variable names with
 
 
 .. code-block:: default
 
-    inputDimension = 3
-    distributionList = [ot.Uniform(-np.pi, np.pi)] * inputDimension
-    distribution = ot.ComposedDistribution(distributionList)
+    input_names = im.distributionX.getDescription()
 
 
 
@@ -114,8 +98,8 @@ Draw the function
 .. code-block:: default
 
     n = 10000
-    sampleX = distribution.getSample(n)
-    sampleY = g(sampleX)
+    sampleX = im.distributionX.getSample(n)
+    sampleY = im.model(sampleX)
 
 
 
@@ -189,8 +173,9 @@ We first create a design of experiments with the `SobolIndicesExperiment`. Since
 .. code-block:: default
 
     size = 1000
-    sie = ot.SobolIndicesExperiment(distribution, size)
+    sie = ot.SobolIndicesExperiment(im.distributionX, size)
     inputDesign = sie.generate()
+    input_names = im.distributionX.getDescription()
     inputDesign.setDescription(input_names)
     inputDesign.getSize()
 
@@ -216,7 +201,7 @@ Then we evaluate the outputs corresponding to this design of experiments.
 
 .. code-block:: default
 
-    outputDesign = g(inputDesign)
+    outputDesign = im.model(inputDesign)
 
 
 
@@ -253,7 +238,7 @@ The `getFirstOrderIndices` and `getTotalOrderIndices` method respectively return
 
 .. raw:: html
 
-    <p>[0.334197,0.42868,-0.0246479]</p>
+    <p>[0.262063,0.403644,0.0435311]</p>
     <br />
     <br />
 
@@ -269,7 +254,7 @@ The `getFirstOrderIndices` and `getTotalOrderIndices` method respectively return
 
 .. raw:: html
 
-    <p>[0.538721,0.440278,0.2622]</p>
+    <p>[0.529997,0.441213,0.27389]</p>
     <br />
     <br />
 
@@ -305,11 +290,11 @@ Estimate the second order indices
 
     size = 1000
     computeSecondOrder = True
-    sie = ot.SobolIndicesExperiment(distribution, size, computeSecondOrder)
+    sie = ot.SobolIndicesExperiment(im.distributionX, size, computeSecondOrder)
     inputDesign = sie.generate()
     print(inputDesign.getSize())
     inputDesign.setDescription(input_names)
-    outputDesign = g(inputDesign)
+    outputDesign = im.model(inputDesign)
 
 
 
@@ -344,7 +329,7 @@ We see that 8000 function evaluations are now required; that is 3000 more evalua
 .. code-block:: default
 
     second_order = sensitivityAnalysis.getSecondOrderIndices()
-    for i in range(inputDimension):
+    for i in range(im.dim):
         for j in range(i):
             print('2nd order indice (%d,%d)=%g' % (i,j,second_order[i,j]))
 
@@ -358,9 +343,9 @@ We see that 8000 function evaluations are now required; that is 3000 more evalua
 
  .. code-block:: none
 
-    2nd order indice (1,0)=-0.0805798
-    2nd order indice (2,0)=0.0914596
-    2nd order indice (2,1)=-0.0988192
+    2nd order indice (1,0)=0.0120302
+    2nd order indice (2,0)=0.217984
+    2nd order indice (2,1)=0.0590756
 
 
 
@@ -415,7 +400,7 @@ We see that the results do not change significantly in this particular situation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.495 seconds)
+   **Total running time of the script:** ( 0 minutes  0.511 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_sensitivity_analysis_plot_sensitivity_sobol.py:

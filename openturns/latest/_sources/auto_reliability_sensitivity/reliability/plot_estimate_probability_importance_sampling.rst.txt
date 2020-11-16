@@ -20,35 +20,7 @@ The main steps of this method are:
 * create an importance distribution based on the results of the FORM results,
 * run a sampling-based probability estimate algorithm. 
 
-
-Description of the problem
---------------------------
-
-Let us consider the analytical example of a cantilever beam, with Young's modulus E, length L and section modulus I.
-
-One end of the cantilever beam is built in a wall and we apply a concentrated bending load F at the other end of the beam, resulting in a deviation:
-
-.. math::
-   d = \frac{FL^3}{3EI}
-
-
-Failure occurs when the beam deviation is too large:
-
-.. math::d \ge 30 (cm)
-
-Four independent random variables are considered:
-
- - E: Young's modulus [Pa]
- - F: load [N]
- - L: length [m]
- - I: section [m^4]
-
-Stochastic model (simplified model, no units):
-
- - E ~ Beta(0.93, 2.27, 2.8e7, 4.8e7)
- - F ~ LogNormal(30000, 9000, 15000)
- - L ~ Uniform(250, 260)
- - I ~ Beta(2.5, 1.5, 3.1e2, 4.5e2)
+We shall consider the analytical example of a :ref:`cantilever beam <use-case-cantilever-beam>`.
 
 
 Define the cantilever beam model
@@ -70,16 +42,13 @@ Define the cantilever beam model
 
 
 
-Create the marginal distributions of the parameters
+The cantilever beam example can be accessed in the usecases module :
 
 
 .. code-block:: default
 
-    dist_E = ot.Beta(0.93, 2.27, 2.8e7, 4.8e7)
-    dist_F = ot.LogNormalMuSigma(30000, 9000, 15000).getDistribution()
-    dist_L = ot.Uniform(250, 260)
-    dist_I = ot.Beta(2.5, 1.5, 3.1e2, 4.5e2)
-    marginals = [dist_E, dist_F, dist_L, dist_I]
+    from openturns.usecases import cantilever_beam as cantilever_beam
+    cb = cantilever_beam.CantileverBeam()
 
 
 
@@ -88,17 +57,12 @@ Create the marginal distributions of the parameters
 
 
 
-Create the Copula
+The joint probability distribution of the input parameters is stored in the object `cb` :
 
 
 .. code-block:: default
 
-    RS = ot.CorrelationMatrix(4)
-    RS[2, 3] = -0.2
-    # Evaluate the correlation matrix of the Normal copula from RS
-    R = ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(RS)
-    # Create the Normal copula parametrized by R
-    copula = ot.NormalCopula(R) 
+    distribution = cb.distribution
 
 
 
@@ -107,26 +71,12 @@ Create the Copula
 
 
 
-Create the joint probability distribution
+We create the model.
 
 
 .. code-block:: default
 
-    distribution = ot.ComposedDistribution(marginals, copula)
-
-
-
-
-
-
-
-
-create the model
-
-
-.. code-block:: default
-
-    model = ot.SymbolicFunction(['E', 'F', 'L', 'I'], ['F*L^3/(3*E*I)'])
+    model = cb.model
 
 
 
@@ -145,7 +95,7 @@ We create the event whose probability we want to estimate.
 
     vect = ot.RandomVector(distribution)
     G = ot.CompositeRandomVector(model, vect)
-    event = ot.ThresholdEvent(G, ot.Greater(), 30.0)
+    event = ot.ThresholdEvent(G, ot.Greater(), 0.30)
 
 
 
@@ -210,7 +160,7 @@ The `getStandardSpaceDesignPoint` method returns the design point in the U-space
 
 .. raw:: html
 
-    <p>[-0.602386,2.31056,0.355794,-0.533677]</p>
+    <p>[-0.665643,4.31264,1.23029,-1.3689]</p>
     <br />
     <br />
 
@@ -251,7 +201,7 @@ The key point is to define the importance distribution in the U-space. To define
 
 .. raw:: html
 
-    <p>Normal(mu = [-0.602386,2.31056,0.355794,-0.533677], sigma = [1,1,1,1], R = [[ 1 0 0 0 ]<br>
+    <p>Normal(mu = [-0.665643,4.31264,1.23029,-1.3689], sigma = [1,1,1,1], R = [[ 1 0 0 0 ]<br>
      [ 0 1 0 0 ]<br>
      [ 0 0 1 0 ]<br>
      [ 0 0 0 1 ]])</p>
@@ -327,7 +277,7 @@ retrieve results
  .. code-block:: none
 
 
-    0.0069462388045894935
+    4.3321474325557144e-07
 
 
 
@@ -360,7 +310,7 @@ In order to compute the confidence interval, we use the `getConfidenceLength` me
 
  .. code-block:: none
 
-    95.00% confidence interval = [0.005590,0.008303]
+    95.00% confidence interval = [0.000000,0.000001]
 
 
 
@@ -368,7 +318,7 @@ In order to compute the confidence interval, we use the `getConfidenceLength` me
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.014 seconds)
+   **Total running time of the script:** ( 0 minutes  0.020 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_estimate_probability_importance_sampling.py:

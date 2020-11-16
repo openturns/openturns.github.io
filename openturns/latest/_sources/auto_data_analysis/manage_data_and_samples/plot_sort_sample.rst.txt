@@ -1,0 +1,397 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_data_analysis_manage_data_and_samples_plot_sort_sample.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_data_analysis_manage_data_and_samples_plot_sort_sample.py:
+
+
+Sort a sample
+=============
+
+In this example we present useful methods of the `Sample` object such as marginals extraction and various sorting strategies.
+
+
+.. code-block:: default
+
+    from __future__ import print_function
+    import openturns as ot
+    ot.Log.Show(ot.Log.NONE)
+    ot.RandomGenerator.SetSeed(0)
+
+
+
+
+
+
+
+
+
+We start by defining the distribution of a regular non-biased dice.
+
+
+.. code-block:: default
+
+    dice_distribution = ot.UserDefined([[i] for i in range(1,7)])
+
+
+
+
+
+
+
+
+We consider now an experiment with two independent dices and build the corresponding random vector :
+
+
+.. code-block:: default
+
+    two_dices_distribution = ot.ComposedDistribution([dice_distribution]*2)
+
+
+
+
+
+
+
+
+We now build a sample of size :math:`n=5` from this distribution :
+
+
+.. code-block:: default
+
+    n = 5
+    sample = two_dices_distribution.getSample(n)
+    print( sample ) 
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X0 X1 ]
+    0 : [ 1  3  ]
+    1 : [ 3  2  ]
+    2 : [ 4  3  ]
+    3 : [ 4  4  ]
+    4 : [ 5  5  ]
+
+
+
+
+Useful methods
+--------------
+
+We have access to the marginals by providing a list of the wanted indices :
+
+
+.. code-block:: default
+
+
+    # the first marginal
+    sample_dice1 = sample.getMarginal([0])
+
+    # the second marginal
+    sample_dice2 = sample.getMarginal([1])
+
+
+
+
+
+
+
+
+Suppose we are interested in the sum of the two dices. This can be done by summing the two samples `dice1` and `dice2`.
+Provided the dimensions are the same we can add samples with the `+` operator and produce a new sample :
+
+
+.. code-block:: default
+
+    experiment = sample_dice1 + sample_dice2
+
+
+
+
+
+
+
+
+Note that the `+=` operator is defined as well.
+
+We can concatenate two samples having the same size with the `stack` method :
+
+
+.. code-block:: default
+
+    sample_dice1.stack(sample_dice2)
+    print(sample_dice1)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X0 X1 ]
+    0 : [ 1  3  ]
+    1 : [ 3  2  ]
+    2 : [ 4  3  ]
+    3 : [ 4  4  ]
+    4 : [ 5  5  ]
+
+
+
+
+We can split a sample in two by giving an index (here 2).
+
+
+.. code-block:: default
+
+    remaining = sample_dice1.split(2)
+    print( sample_dice1 )
+    print( remaining )
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X0 X1 ]
+    0 : [ 1  3  ]
+    1 : [ 3  2  ]
+        [ X0 X1 ]
+    0 : [ 4  3  ]
+    1 : [ 4  4  ]
+    2 : [ 5  5  ]
+
+
+
+
+Sorting samples
+---------------
+
+We can extract any marginal and sort it by ascending order by specifying the index :
+
+
+.. code-block:: default
+
+    sorted_marginal = sample.sort(1)
+    print( sorted_marginal )
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    0 : [ 2 ]
+    1 : [ 3 ]
+    2 : [ 3 ]
+    3 : [ 4 ]
+    4 : [ 5 ]
+
+
+
+
+We can sort the sample in place, that is whithout creating a new sample, as well with sortInPlace. When the dimension is greater than one the sort is made according to the first marginal.
+
+
+.. code-block:: default
+
+    sample.sortInPlace()
+    print( sample )
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X0 X1 ]
+    0 : [ 1  3  ]
+    1 : [ 3  2  ]
+    2 : [ 4  3  ]
+    3 : [ 4  4  ]
+    4 : [ 5  5  ]
+
+
+
+
+We can sort the rows according to the second marginal with the `sortAccordingToAComponent` : 
+
+
+.. code-block:: default
+
+    another_sample = sample.sortAccordingToAComponent(1)
+    print( another_sample )
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X0 X1 ]
+    0 : [ 3  2  ]
+    1 : [ 1  3  ]
+    2 : [ 4  3  ]
+    3 : [ 4  4  ]
+    4 : [ 5  5  ]
+
+
+
+
+There is also a `sortAccordingToAComponentInPlace` method that does the same without creating a new sample.
+
+We can sort and remove the duplicates at the same time
+
+
+.. code-block:: default
+
+    print( sample_dice2 )
+    print( sample_dice2.sortUnique() )
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X1 ]
+    0 : [ 3  ]
+    1 : [ 2  ]
+    2 : [ 3  ]
+    3 : [ 4  ]
+    4 : [ 5  ]
+        [ X1 ]
+    0 : [ 2  ]
+    1 : [ 3  ]
+    2 : [ 4  ]
+    3 : [ 5  ]
+
+
+
+
+We note that the sample is smaller as expected. Sorting in place is also possible :
+
+
+.. code-block:: default
+
+    sample_dice2.sortUniqueInPlace()
+    print( sample_dice2 )
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X1 ]
+    0 : [ 2  ]
+    1 : [ 3  ]
+    2 : [ 4  ]
+    3 : [ 5  ]
+
+
+
+
+Let's try with the sample in dimension 2 :
+
+
+.. code-block:: default
+
+    sampleUnique = sample.sortUnique()
+    print( sampleUnique )
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        [ X0 X1 ]
+    0 : [ 1  3  ]
+    1 : [ 3  2  ]
+    2 : [ 4  3  ]
+    3 : [ 4  4  ]
+    4 : [ 5  5  ]
+
+
+
+
+Nothing happens here because pairs are already unique !
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.005 seconds)
+
+
+.. _sphx_glr_download_auto_data_analysis_manage_data_and_samples_plot_sort_sample.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_sort_sample.py <plot_sort_sample.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_sort_sample.ipynb <plot_sort_sample.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

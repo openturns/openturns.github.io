@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Configuring an arbitrary trend in Kriging &#8212; OpenTURNS 1.16rc1 documentation</title>
-    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <title>Configuring an arbitrary trend in Kriging &#8212; OpenTURNS 1.16 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
@@ -60,7 +60,7 @@
         <li class="right" >
           <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Meta modeling</a> &#187;</li>
@@ -121,7 +121,7 @@
 <span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-kriging-beam-arbitrary-trend-py"></span><h1>Configuring an arbitrary trend in Kriging<a class="headerlink" href="#configuring-an-arbitrary-trend-in-kriging" title="Permalink to this headline">¶</a></h1>
 <p>The goal of this example is to show how to configure an arbitrary trend in a Kriging metamodel.</p>
 <p>In general, any collection of multivariate functions can be used as the <cite>basis</cite> argument of a <cite>KrigingAlgorithm</cite>. In practice, it might not be convenient to create a multivariate basis and this is why we sometimes create it by tensorization of univariate functions. In this example, we first use Legendre polynomials as our univariate functions, then we create an orthogonal polynomial basis corresponding to the input marginals.</p>
-<p>For this purpose, we use the cantilever beam example.</p>
+<p>For this purpose, we use the <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a> example.</p>
 <div class="section" id="definition-of-the-model">
 <h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
@@ -131,32 +131,18 @@
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We define the symbolic function which evaluates the output Y depending on the inputs E, F, L and I.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;F*L^3/(3*E*I)&quot;</span><span class="p">])</span>
+<p>We load the cantilever beam use case</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span> <span class="k">as</span> <span class="n">cantilever_beam</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">cantilever_beam</span><span class="o">.</span><span class="n">CantileverBeam</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We load the function (model) which evaluates the output Y depending on the inputs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">model</span>
 </pre></div>
 </div>
 <p>Then we define the distribution of the input random vector.</p>
-<p>Young’s modulus E</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">E</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.27</span><span class="p">,</span> <span class="mf">2.5e7</span><span class="p">,</span> <span class="mf">5.0e7</span><span class="p">)</span> <span class="c1"># in N/m^2</span>
-<span class="n">E</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">)</span>
-<span class="c1"># Load F</span>
-<span class="n">F</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LogNormal</span><span class="p">()</span> <span class="c1"># in N</span>
-<span class="n">F</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">()([</span><span class="mf">30.e3</span><span class="p">,</span> <span class="mf">9e3</span><span class="p">,</span> <span class="mf">15.e3</span><span class="p">]))</span>
-<span class="n">F</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
-<span class="c1"># Length L</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">250.</span><span class="p">,</span> <span class="mf">260.</span><span class="p">)</span> <span class="c1"># in cm</span>
-<span class="n">L</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
-<span class="c1"># Moment of inertia I</span>
-<span class="n">I</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">450</span><span class="p">)</span> <span class="c1"># in cm^4</span>
-<span class="n">I</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Finally, we define the dependency using a <cite>NormalCopula</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># number of inputs</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
-<span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span>
-<span class="n">myCopula</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="o">.</span><span class="n">GetCorrelationFromSpearmanCorrelation</span><span class="p">(</span><span class="n">R</span><span class="p">))</span>
-<span class="n">myDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">E</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">I</span><span class="p">],</span> <span class="n">myCopula</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">dim</span> <span class="c1"># number of inputs</span>
+<span class="n">myDistribution</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">distribution</span>
 </pre></div>
 </div>
 </div>
@@ -234,14 +220,14 @@
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=12 values=[9.37146e-20,2.64601e-12,1.65944e-15,4.20447e-17,3.18577e-17,-5.57247e-15,3.94631e-12,1.20909e-09,-2.04196e-10,-1.87901e-10,7.79485e-13,-7.28798e-13]]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=12 values=[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50]]
 </pre></div>
 </div>
 <p>We see that the number of coefficients in the trend corresponds to the number of functions in the basis.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>SquaredExponential(scale=[1,1,1,1], amplitude=[1.94219])</p>
+<p>SquaredExponential(scale=[1,1,1,1], amplitude=[0.0316175])</p>
 <br />
 <br /><p>The <cite>SquaredExponential</cite> model has one amplitude coefficient and 4 scale coefficients. This is because this covariance model is anisotropic : each of the 4 input variables is associated with its own scale coefficient.</p>
 </div>
@@ -250,7 +236,7 @@
 <p>In order to create a Legendre basis which better corresponds to the input marginals, we could consider the orthogonal basis which would be associated to uniform marginals. To compute the bounds of these uniform distributions, we may consider the 1% and 99% quantiles of each marginal.</p>
 <p>There is, however, a simpler way to proceed. We can simply orthogonalize the input marginals and create the orthogonal polynomial basis corresponding to the inputs. This corresponds to the method we would use in the polynomial chaos.</p>
 <p>We first create the polynomial basis which corresponds to the inputs.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">([</span><span class="n">E</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">I</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">([</span><span class="n">cb</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">I</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Then we create the multivariate basis which has maximum degree equal to 2.</p>
@@ -303,7 +289,7 @@
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=15 values=[9.37146e-20,2.64601e-12,1.65944e-15,4.20447e-17,3.18577e-17,-5.57247e-15,3.94631e-12,1.20909e-09,-2.04196e-10,-1.87901e-10,7.79485e-13,-7.28798e-13,2.10889e-14,1.45866e-14,-9.90571e-16]]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=15 values=[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50,1.39896e-44,7.63508e-52,-7.60276e-46]]
 </pre></div>
 </div>
 </div>
@@ -316,7 +302,7 @@
 <li><p>wavelets with <cite>HaarWaveletFactory</cite>,</p></li>
 </ul>
 <p>or any other univariate factory.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.011 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.009 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-beam-arbitrary-trend-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/c7f0dc232969f181a83960db28c2f58e/plot_kriging_beam_arbitrary_trend.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_beam_arbitrary_trend.py</span></code></a></p>
@@ -348,7 +334,7 @@
         <li class="right" >
           <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
@@ -357,8 +343,8 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Oct 21, 2020.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.0+.
+      Last updated on Nov 16, 2020.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.0+.
     </div>
   </body>
 </html>

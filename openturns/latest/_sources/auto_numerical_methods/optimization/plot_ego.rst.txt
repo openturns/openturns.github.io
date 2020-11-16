@@ -25,39 +25,6 @@ variance.
 Then the new point is evaluated using the original model and the metamodel is
 relearnt on the extended design of experiment.
 
-Ackley test-case
-----------------
-
-Introduction
-^^^^^^^^^^^^
-
-The Ackley test case is a real function defined in dimension :math:`d` where :math:`d` is an integer. 
-
-The Ackley function is defined by the equation:
-
-.. math::
-   f(\mathbf{x}) = -a \exp\left(-b\sqrt{\frac{1}{d}\sum_{i=1}^d}x_i^2\right)-\exp\left(\frac{1}{d}\sum_{i=1}^d \cos(c x_i)\right)+a+\exp(1)
-
-
-for any :math:`\mathbf{x} \in [-15,15]^d`. However, we consider the smaller interval :math:`[-4,4]^d` in this example, for visual purposes.
-
-We use the dimension :math:`d=2` with the parameters :math:`a=20`, :math:`b=0.2`, :math:`c=2\pi`. 
-
-The solution is 
-
-.. math::
-   \mathbf{x}^\star=(0,0,...,0)
-
-
-where 
-
-.. math::
-   f_{min} = f(\mathbf{x}^\star) = 0.
-
-
-Define the problem
-^^^^^^^^^^^^^^^^^^
-
 
 .. code-block:: default
 
@@ -76,34 +43,49 @@ Define the problem
 
 
 
-.. code-block:: default
+Ackley test-case
+----------------
 
-    dim = 2
+We first apply the EGO algorithm on the :ref:`Ackley function<use-case-ackley>`.
 
-    # model
-    def ackley(X):
-        a = 20.0
-        b = 0.2
-        c = 2.0 * m.pi
-        d = len(X)
-        sumOfSquared = sum(x**2 for x in X) / d
-        sumOfCos = sum(m.cos(c * x) for x in X) / d
-        f = - a * m.exp(- b * m.sqrt(sumOfSquared)) \
-            - m.exp(sumOfCos) + a + m.exp(1.0)
-        return [f]
+Define the problem
+^^^^^^^^^^^^^^^^^^
 
-    model = ot.PythonFunction(dim, 1, ackley)
-
-
-
-
-
-
-
+The Ackley model is defined in the usecases module in a data class `AckleyModel` :
 
 
 .. code-block:: default
 
+    from openturns.usecases import ackley_function as ackley_function
+    am = ackley_function.AckleyModel()
+
+
+
+
+
+
+
+
+We get the Ackley function :
+
+
+.. code-block:: default
+
+    model = am.model
+
+
+
+
+
+
+
+
+We specify the domain of the model :
+
+
+.. code-block:: default
+
+    dim = am.dim
     lowerbound = ot.Point([-4.0] * dim)
     upperbound = ot.Point([4.0] * dim)
 
@@ -114,10 +96,12 @@ Define the problem
 
 
 
+We know that the global minimum is at the center of the domain. It is stored in the `AckleyModel` data class. 
+
 
 .. code-block:: default
 
-    xexact = [0.0] * dim
+    xexact = am.x0
 
 
 
@@ -125,6 +109,8 @@ Define the problem
 
 
 
+
+The minimum value attained `fexact` is :
 
 
 .. code-block:: default
@@ -188,7 +174,7 @@ Before using the EGO algorithm, we must create an initial kriging. In order to d
 
 .. code-block:: default
 
-    graph = ot.Graph("Initial LHS design of experiment - n=%d" % (sampleSize), ":math:`x_0`", ":math:`x_1`", True)
+    graph = ot.Graph("Initial LHS design of experiment - n=%d" % (sampleSize), "$x_0$", "$x_1$", True)
     cloud = ot.Cloud(inputSample)
     graph.add(cloud)
     view = viewer.View(graph)
@@ -292,7 +278,7 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
 
 .. raw:: html
 
-    <p>[0.903637,-0.0172579]</p>
+    <p>[0.0782936,0.0108398]</p>
     <br />
     <br />
 
@@ -308,7 +294,7 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
 
 .. raw:: html
 
-    <p>[2.63818]</p>
+    <p>[0.381764]</p>
     <br />
     <br />
 
@@ -333,20 +319,17 @@ Compared to the minimum function value, we see that the EGO algorithm provides s
 
 .. code-block:: default
 
-    result.drawOptimalValueHistory()
+    graph = result.drawOptimalValueHistory()
+    view = viewer.View(graph)
 
 
 
 
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_003.png
+    :alt: Optimal value history
+    :class: sphx-glr-single-img
 
 
-    class=Graph name=Optimal value history implementation=class=GraphImplementation name=Optimal value history title=Optimal value history xTitle=Iteration number yTitle=Optimal value axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=optimal value implementation=class=Curve name=optimal value derived from class=DrawableImplementation name=optimal value legend=optimal value data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=10 dimension=2 data=[[0,3.82247],[1,3.82247],[2,3.82247],[3,3.82247],[4,3.20818],[5,3.20818],[6,2.63818],[7,2.63818],[8,2.63818],[9,2.63818]] color=red fillStyle=solid lineStyle=solid pointStyle=none lineWidth=1]
 
 
 
@@ -381,7 +364,7 @@ Compared to the minimum function value, we see that the EGO algorithm provides s
 
 
 
-.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_003.png
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_004.png
     :alt: Ackley function. Initial : black bullet. Solution : green diamond.
     :class: sphx-glr-single-img
 
@@ -420,7 +403,7 @@ However, the final solution produced by the EGO algorithm is not very accurate. 
 
 .. raw:: html
 
-    <p>[0.952167,-4.95077e-08]</p>
+    <p>[1.48118e-08,-9.31735e-09]</p>
     <br />
     <br />
 
@@ -435,7 +418,7 @@ The corrected solution is now extremely accurate.
 
 
 
-.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_004.png
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_005.png
     :alt: Optimal value history
     :class: sphx-glr-single-img
 
@@ -446,98 +429,18 @@ The corrected solution is now extremely accurate.
 Branin test-case
 ----------------
 
-Introduction
-^^^^^^^^^^^^
-
-The Branin function is defined in 2 dimensions based on the functions :math:`g`:
-
-.. math:: 
-   g(u_1, u_2) = \frac{\left(u_2-5.1\frac{u_1^2}{4\pi^2}+5\frac{u_1}{\pi}-6\right)^2+10\left(1-\frac{1}{8 \pi}\right)  \cos(u_1)+10-54.8104}{51.9496}
-
-
-and :math:`t`:
-
-.. math:: 
-   t(x_1, x2) = (15 x_1 - 5, 15 x_2)^T.
-
-
-Finally, the Branin function is the composition of the two previous functions:
-
-.. math::
-   f_{Branin}(x_1, x_2) = g \circ  t(x_1, x_2)
-
-
-for any :math:`\mathbf{x} \in [0, 1]^2`. 
-
-There are three global minimas:
-
-.. math::
-   \mathbf{x}^\star=(0.123895, 0.818329),
-
-
-.. math::
-   \mathbf{x}^\star=(0.542773, 0.151666),
-
-
-and :
-
-.. math::
-   \mathbf{x}^\star=(0.961652, 0.165000)
-
-
-where the function value is:
-
-.. math::
-   f_{min} = f_{Branin}(\mathbf{x}^\star) = -0.97947643837.
-
-
-
-We assume that the output of the Branin function is noisy, with a gaussian noise. 
-In other words, the objective function is:
-
-.. math::
-   f(x_1, x_2) = f_{Branin}(x_1, x_2) + \epsilon
-
-
-where :math:`\epsilon` is a random variable with gaussian distribution. 
-
-This time the AEI formulation is used, meaning that the objective has two outputs: the first one is the objective function value and the second one is the noise variance.
-
-Here we assume a constant noise variance: 
-
-.. math::
-   \sigma_{\epsilon} = 0.1.
-
+We now take a look at the :ref:`Branin-Hoo<use-case-branin>` function.
 
 Define the problem
 ^^^^^^^^^^^^^^^^^^
 
-
-.. code-block:: default
-
-    dim = 2
-
-    trueNoiseFunction = 0.1
-    # model
-    branin = ot.SymbolicFunction(['x1', 'x2'], 
-                                 ['((x2-(5.1/(4*pi_^2))*x1^2+5*x1/pi_-6)^2+10*(1-1/8*pi_)*cos(x1)+10-54.8104)/51.9496', 
-                                  str(trueNoiseFunction)])
-    transfo = ot.SymbolicFunction(['u1', 'u2'], 
-                                  ['15*u1-5', '15*u2'])
-    model = ot.ComposedFunction(branin, transfo)
-
-
-
-
-
-
-
+The Branin model is defined in the usecases module in a data class `BraninModel` :
 
 
 .. code-block:: default
 
-    lowerbound = ot.Point([0.0] * dim)
-    upperbound = ot.Point([1.0] * dim)
+    from openturns.usecases import branin_function as branin_function
+    bm = branin_function.BraninModel()
 
 
 
@@ -545,10 +448,42 @@ Define the problem
 
 
 
+
+We load the dimension,
 
 
 .. code-block:: default
 
+    dim = bm.dim
+
+
+
+
+
+
+
+
+the domain boundaries,
+
+
+.. code-block:: default
+
+    lowerbound = bm.lowerbound
+    upperbound = bm.upperbound
+
+
+
+
+
+
+
+
+and we load the model function :
+
+
+.. code-block:: default
+
+    model = bm.model
     objectiveFunction = model.getMarginal(0)
 
 
@@ -558,13 +493,12 @@ Define the problem
 
 
 
+We build a sample out of the three minima :
+
 
 .. code-block:: default
 
-    xexact1 = ot.Point([0.123895,0.818329])
-    xexact2 = ot.Point([0.542773,0.151666])
-    xexact3 = ot.Point([0.961652,0.165000])
-    xexact = ot.Sample([xexact1, xexact2, xexact3])
+    xexact = ot.Sample([bm.xexact1, bm.xexact2, bm.xexact3])
 
 
 
@@ -572,6 +506,8 @@ Define the problem
 
 
 
+
+The minimum value attained `fexact` is :
 
 
 .. code-block:: default
@@ -604,7 +540,7 @@ Define the problem
 
 
 
-.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_005.png
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_006.png
     :alt: Branin function
     :class: sphx-glr-single-img
 
@@ -637,7 +573,7 @@ Create the initial kriging
 
 .. code-block:: default
 
-    graph = ot.Graph("Initial LHS design of experiment - n=%d" % (sampleSize), ":math:`x_0`", ":math:`x_1`", True)
+    graph = ot.Graph("Initial LHS design of experiment - n=%d" % (sampleSize), "$x_0$", "$x_1$", True)
     cloud = ot.Cloud(inputSample)
     graph.add(cloud)
     view = viewer.View(graph)
@@ -645,7 +581,7 @@ Create the initial kriging
 
 
 
-.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_006.png
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_007.png
     :alt: Initial LHS design of experiment - n=50
     :class: sphx-glr-single-img
 
@@ -684,7 +620,7 @@ Create the initial kriging
 Create and solve the problem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-problem
+We define the problem :
 
 
 .. code-block:: default
@@ -703,7 +639,7 @@ problem
 
 We configure the maximum number of function evaluations to 20. We assume that the function is noisy, with a constant variance. 
 
-algo
+We configure the algorithm :
 
 
 .. code-block:: default
@@ -756,7 +692,7 @@ algo
 
 .. raw:: html
 
-    <p>[0.121986,0.827663]</p>
+    <p>[0.529867,0.154731]</p>
     <br />
     <br />
 
@@ -772,7 +708,7 @@ algo
 
 .. raw:: html
 
-    <p>[-0.979331]</p>
+    <p>[-0.977061]</p>
     <br />
     <br />
 
@@ -827,7 +763,7 @@ algo
 
 
 
-.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_007.png
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_008.png
     :alt: Branin function. Initial : black bullet. Solution : green diamond.
     :class: sphx-glr-single-img
 
@@ -847,7 +783,7 @@ We see that the EGO algorithm found the second local minimum. Given the limited 
 
 
 
-.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_008.png
+.. image:: /auto_numerical_methods/optimization/images/sphx_glr_plot_ego_009.png
     :alt: Optimal value history
     :class: sphx-glr-single-img
 
@@ -858,7 +794,7 @@ We see that the EGO algorithm found the second local minimum. Given the limited 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.054 seconds)
+   **Total running time of the script:** ( 0 minutes  5.536 seconds)
 
 
 .. _sphx_glr_download_auto_numerical_methods_optimization_plot_ego.py:

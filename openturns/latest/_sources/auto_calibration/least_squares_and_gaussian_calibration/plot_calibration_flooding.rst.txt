@@ -12,58 +12,7 @@
 Calibration of the flooding model
 =================================
 
-Model
------
-
-The simulator predicts the water height :math:`H` depending on the flowrate :math:`Q`.
-
-We consider the following four variable:
-
-* :math:`Q` : the river flowrate (:math:`m^3/s`)
-* :math:`Ks` : the Strickler coefficient (:math:`m^{1/3}/s`)
-* :math:`Z_v` : the downstream riverbed level (m)
-* :math:`Z_m` : the upstream riverbed level (m)
-
-When the Strickler coefficient increases, the riverbed generates less friction to the water flow.
-
-Parameters
-----------
-
-We consider the following parameters:
-
-* the length of the river :math:`L` = 5000 (m),
-* the width of the river :math:`B` = 300 (m).
-
-Outputs
--------
-
-We make the hypothesis that the slope of the river is nonpositive and close to zero, which implies: 
-
-.. math::
-   \alpha = \frac{Z_m - Z_v}{L},
-
-
-if :math:`Z_m \geq Z_v`. 
-The height of the river is:
-
-.. math::
-   H = \left(\frac{Q}{K_s B \sqrt{\alpha}}\right)^{0.6},
-
-
-for any :math:`K_s, Q>0`.
-
-<img src="_static/river_section_adjusted_light.png" width="400" />
-
-Distribution
-------------
-
-We assume that the river flowrate has the following truncated Gumbel distribution:
-
-========   ===============================
-Variable   Distribution
-========   ===============================
-Q          Gumbel(scale=558, mode=1013)>0
-========   ===============================
+In this example we are interested in the calibration of the :ref:`flooding model <use-case-flood-model>`.
 
 Parameters to calibrate
 -----------------------
@@ -136,6 +85,21 @@ Generate the observations
 
 
 
+We load the flooding use case :
+
+
+.. code-block:: default
+
+    from openturns.usecases import flood_model as flood_model
+    fm = flood_model.FloodModel()
+
+
+
+
+
+
+
+
 We define the model :math:`g` which has 4 inputs and one output H.
 
 The nonlinear least squares does not take into account for bounds in the parameters. Therefore, we ensure that the output is computed whatever the inputs. The model fails into two situations:
@@ -181,14 +145,12 @@ In these cases, we return an infinite number, so that the optimization algorithm
 
 
 
-Create the input distribution for :math:`Q`.
+We load the input distribution for :math:`Q` :
 
 
 .. code-block:: default
 
-    Q = ot.Gumbel(558.0, 1013.0)
-    Q = ot.TruncatedDistribution(Q,ot.TruncatedDistribution.LOWER)
-    Q.setDescription(["Q (m3/s)"])
+    Q = fm.Q
     Q
 
 
@@ -413,7 +375,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[-2.31196e+08,8.2249e+23,8.2249e+23]</p>
+    <p>[4.88644e+08,2.08618e+23,2.08618e+23]</p>
     <br />
     <br />
 
@@ -439,9 +401,9 @@ The `getParameterPosterior` method returns the posterior gaussian distribution o
 
 .. raw:: html
 
-    <p>Normal(mu = [-2.31196e+08,8.2249e+23,8.2249e+23], sigma = [1.41239e+27,1.11035e+33,1.11035e+33], R = [[  1            1.35902e-25 -1.35902e-25 ]<br>
-     [  1.35902e-25  1            1           ]<br>
-     [ -1.35902e-25  1            1           ]])</p>
+    <p>Normal(mu = [4.88644e+08,2.08618e+23,2.08618e+23], sigma = [2.54995e+26,2.00465e+32,2.00465e+32], R = [[  1            9.40306e-26 -9.40306e-26 ]<br>
+     [  9.40306e-26  1            1           ]<br>
+     [ -9.40306e-26  1            1           ]])</p>
     <br />
     <br />
 
@@ -461,9 +423,9 @@ Let us compute a 95% confidence interval for the solution :math:`\theta^\star`.
 
 .. raw:: html
 
-    <p>[-3.1598e+27, 3.1598e+27]<br>
-    [-2.48408e+33, 2.48408e+33]<br>
-    [-2.48408e+33, 2.48408e+33]</p>
+    <p>[-5.70302e+26, 5.70302e+26]<br>
+    [-4.48343e+32, 4.48343e+32]<br>
+    [-4.48343e+32, 4.48343e+32]</p>
     <br />
     <br />
 
@@ -487,11 +449,11 @@ The confidence interval is *very* large.
 .. raw:: html
 
     <p>5x3<br>
-    [[ -0.100606   0.503031  -0.503031  ]<br>
-     [ -0.0956906  0.478453  -0.478453  ]<br>
-     [ -0.128719   0.643594  -0.643594  ]<br>
-     [ -0.140039   0.700194  -0.700194  ]<br>
-     [ -0.145577   0.727884  -0.727884  ]]</p>
+    [[ -0.185062  0.92531  -0.92531  ]<br>
+     [ -0.135774  0.678871 -0.678871 ]<br>
+     [ -0.102219  0.511093 -0.511093 ]<br>
+     [ -0.15354   0.767699 -0.767699 ]<br>
+     [ -0.149497  0.747487 -0.747487 ]]</p>
     <br />
     <br />
 
@@ -507,7 +469,7 @@ The confidence interval is *very* large.
 
 .. raw:: html
 
-    <p>[9.56026,1.8671e-10,1.75312e-25]</p>
+    <p>[8.99149,1.82595e-10,1.42612e-25]</p>
     <br />
     <br />
 
@@ -584,7 +546,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[27.5341,47.102,52.898]</p>
+    <p>[27.5672,47.0914,52.9086]</p>
     <br />
     <br />
 
@@ -605,9 +567,9 @@ This confidence interval is based on bootstrap, based on a sample size equal to 
 
 .. raw:: html
 
-    <p>[27.3631, 27.6712]<br>
-    [47.0443, 47.174]<br>
-    [52.826, 52.9557]</p>
+    <p>[27.3828, 27.7132]<br>
+    [47.0298, 47.1693]<br>
+    [52.8307, 52.9702]</p>
     <br />
     <br />
 
@@ -665,7 +627,7 @@ We see that there is a much better fit after calibration, since the predictions 
 
 .. raw:: html
 
-    <p>Normal(mu = -0.000462233, sigma = 0.109565)</p>
+    <p>Normal(mu = -0.00344428, sigma = 0.111195)</p>
     <br />
     <br />
 
@@ -838,7 +800,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[24.4375,48.1125,51.8875]</p>
+    <p>[24.4485,48.1103,51.8897]</p>
     <br />
     <br />
 
@@ -916,9 +878,9 @@ The `getParameterPosterior` method returns the posterior gaussian distribution o
 
 .. raw:: html
 
-    <p>Normal(mu = [24.4375,48.1125,51.8875], sigma = [4.08438,0.816875,0.816875], R = [[  1         0.498609 -0.498609 ]<br>
-     [  0.498609  1         0.498609 ]<br>
-     [ -0.498609  0.498609  1        ]])</p>
+    <p>Normal(mu = [24.4485,48.1103,51.8897], sigma = [4.08462,0.816925,0.816925], R = [[  1         0.498428 -0.498428 ]<br>
+     [  0.498428  1         0.498428 ]<br>
+     [ -0.498428  0.498428  1        ]])</p>
     <br />
     <br />
 
@@ -936,9 +898,9 @@ We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
 .. raw:: html
 
-    <p>[14.8708, 34.0042]<br>
-    [46.1992, 50.0258]<br>
-    [49.9742, 53.8008]</p>
+    <p>[14.8749, 34.0221]<br>
+    [46.1956, 50.025]<br>
+    [49.975, 53.8044]</p>
     <br />
     <br />
 
@@ -1026,7 +988,7 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 .. raw:: html
 
-    <p>[30.2825,47.6608,52.3392]</p>
+    <p>[30.307,47.6581,52.3419]</p>
     <br />
     <br />
 
@@ -1116,9 +1078,9 @@ We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
 .. raw:: html
 
-    <p>[30.1914, 30.7413]<br>
-    [47.602, 47.6726]<br>
-    [52.3274, 52.398]</p>
+    <p>[30.2569, 30.8322]<br>
+    [47.5907, 47.6644]<br>
+    [52.3356, 52.4093]</p>
     <br />
     <br />
 
@@ -1221,7 +1183,7 @@ As we can see, this does not change much the posterior distribution, which remai
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.732 seconds)
+   **Total running time of the script:** ( 0 minutes  5.580 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_least_squares_and_gaussian_calibration_plot_calibration_flooding.py:

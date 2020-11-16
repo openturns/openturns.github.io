@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis &#8212; OpenTURNS 1.16rc1 documentation</title>
-    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
+    <title>Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis &#8212; OpenTURNS 1.16 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
@@ -60,7 +60,7 @@
         <li class="right" >
           <a href="plot_sensitivity_ancova.html" title="ANCOVA sensitivity indices"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Reliability &amp; Sensitivity</a> &#187;</li>
@@ -119,15 +119,8 @@
 </div>
 <div class="sphx-glr-example-title section" id="estimate-sobol-indices-for-the-ishigami-function-by-a-sampling-method-a-quick-start-guide-to-sensitivity-analysis">
 <span id="sphx-glr-auto-reliability-sensitivity-sensitivity-analysis-plot-sensitivity-sobol-py"></span><h1>Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis<a class="headerlink" href="#estimate-sobol-indices-for-the-ishigami-function-by-a-sampling-method-a-quick-start-guide-to-sensitivity-analysis" title="Permalink to this headline">¶</a></h1>
-<p>In this example, we estimate the Sobol’ indices for the Ishigami function by sampling methods.</p>
-<p>Let <img class="math" src="../../_images/math/18e88e002a30c98db52f9ff1e04cebf89ddeae55.svg" alt="a=7"/> and <img class="math" src="../../_images/math/5dea9e9b130221ccb4b7c175182e37f421cc41cc.svg" alt="b=0.1"/>. We consider the function</p>
-<div class="math">
-<p><img src="../../_images/math/d2d79a2a1e608d1f109d43b53261276652bb9731.svg" alt="g(X_1,X_2,X_3) = \sin(X_1)+a \sin (X_2)^2 + b X_3^4 \sin(X_1)"/></p>
-</div><p>for any <img class="math" src="../../_images/math/dfb09e35eba35fefd35899f447cf6c501f995aa7.svg" alt="X_1,X_2,X_3\in[-\pi,\pi]"/></p>
-<p>We assume that the random variables <img class="math" src="../../_images/math/7c05174d825623f831d1ddedf71489dd203a1d36.svg" alt="X_1,X_2,X_3"/> are independent and identically distributed according to the uniform distribution on the interval <img class="math" src="../../_images/math/4f3778d520222634f4a7473d665b710c01ead9a7.svg" alt="[-\pi, \pi]"/>:</p>
-<div class="math">
-<p><img src="../../_images/math/4b0664dde8f61c2006643cafdc6c6db67465b1bb.svg" alt="X_1,X_2,X_3\sim \mathcal{U}(-\pi,\pi)."/></p>
-</div><div class="section" id="introduction">
+<p>In this example, we estimate the Sobol’ indices for the <a class="reference internal" href="../../usecases/use_case_ishigami.html#use-case-ishigami"><span class="std std-ref">Ishigami function</span></a> by sampling methods.</p>
+<div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>In this example we are going to quantify the correlation between the input variables and the output variable of a model thanks to Sobol indices.</p>
 <p>Sobol indices are designed to evaluate the importance of a single variable or a specific set of variables. Here the Sobol indices are estimated by sampling from the distributions of the input variables and propagating uncertainty through a function.</p>
@@ -154,25 +147,22 @@
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Create the Ishigami test function.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">formula</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sin(X1) + 7. * sin(X2)^2 + 0.1 * X3^4 * sin(X1)&#39;</span><span class="p">]</span>
-<span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">,</span> <span class="s1">&#39;X2&#39;</span><span class="p">,</span> <span class="s1">&#39;X3&#39;</span><span class="p">]</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span><span class="n">input_names</span><span class="p">,</span> <span class="n">formula</span><span class="p">)</span>
+<p>We load the Ishigami model from the usecases model :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">ishigami_function</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ishigami_function</span><span class="o">.</span><span class="n">IshigamiModel</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Create the probabilistic model</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputDimension</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">distributionList</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)]</span> <span class="o">*</span> <span class="n">inputDimension</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">distributionList</span><span class="p">)</span>
+<p>The <cite>IshigamiModel</cite> data class contains the input distribution <img class="math" src="../../_images/math/fa93c864ee4f13f2a2a6910eb3870ead0c74722c.svg" alt="X=(X_1, X_2, X_3)"/> in <cite>im.distributionX</cite> and the Ishigami function in <cite>im.model</cite>.
+We also have access to the input variable names with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_names</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="draw-the-function">
 <h2>Draw the function<a class="headerlink" href="#draw-the-function" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">sampleX</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">sampleY</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">sampleX</span><span class="p">)</span>
+<span class="n">sampleX</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">sampleY</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">sampleX</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotXvsY</span><span class="p">(</span><span class="n">sampleX</span><span class="p">,</span> <span class="n">sampleY</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">)):</span>
@@ -206,8 +196,9 @@
 <h2>Estimate the Sobol’ indices<a class="headerlink" href="#estimate-the-sobol-indices" title="Permalink to this headline">¶</a></h2>
 <p>We first create a design of experiments with the <cite>SobolIndicesExperiment</cite>. Since we are not interested in second order indices for the moment, we use the default value of the third argument (we will come back to this topic later).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">sie</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+<span class="n">sie</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesExperiment</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
 <span class="n">inputDesign</span> <span class="o">=</span> <span class="n">sie</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">input_names</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
 <span class="n">inputDesign</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="n">input_names</span><span class="p">)</span>
 <span class="n">inputDesign</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
 </pre></div>
@@ -218,7 +209,7 @@
 </div>
 <p>We see that 5000 function evaluations are required to estimate the first order and total Sobol’ indices.</p>
 <p>Then we evaluate the outputs corresponding to this design of experiments.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputDesign</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputDesign</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputDesign</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesign</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Then we estimate the Sobol’ indices with the <cite>SaltelliSensitivityAlgorithm</cite>.</p>
@@ -229,12 +220,12 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getFirstOrderIndices</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>[0.334197,0.42868,-0.0246479]</p>
+<p>[0.262063,0.403644,0.0435311]</p>
 <br />
 <br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getTotalOrderIndices</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>[0.538721,0.440278,0.2622]</p>
+<p>[0.529997,0.441213,0.27389]</p>
 <br />
 <br /><p>The <cite>draw</cite> method produces the following graph. The vertical bars represent the 95% confidence intervals of the estimates.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
@@ -253,11 +244,11 @@
 <h2>Estimate the second order indices<a class="headerlink" href="#estimate-the-second-order-indices" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">computeSecondOrder</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">sie</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">computeSecondOrder</span><span class="p">)</span>
+<span class="n">sie</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesExperiment</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">computeSecondOrder</span><span class="p">)</span>
 <span class="n">inputDesign</span> <span class="o">=</span> <span class="n">sie</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">inputDesign</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span>
 <span class="n">inputDesign</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="n">input_names</span><span class="p">)</span>
-<span class="n">outputDesign</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputDesign</span><span class="p">)</span>
+<span class="n">outputDesign</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesign</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -269,15 +260,15 @@
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">second_order</span> <span class="o">=</span> <span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getSecondOrderIndices</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;2nd order indice (</span><span class="si">%d</span><span class="s1">,</span><span class="si">%d</span><span class="s1">)=</span><span class="si">%g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">second_order</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2nd order indice (1,0)=-0.0805798
-2nd order indice (2,0)=0.0914596
-2nd order indice (2,1)=-0.0988192
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2nd order indice (1,0)=0.0120302
+2nd order indice (2,0)=0.217984
+2nd order indice (2,1)=0.0590756
 </pre></div>
 </div>
 <p>This shows that the only significant interaction is the one between <img class="math" src="../../_images/math/62d59fb7f8f04bccb5f423e857e56202c3105759.svg" alt="X_1"/> and <img class="math" src="../../_images/math/95abe78c151b2cb0c10ff82e5a32d90ffddbea56.svg" alt="X_3"/> (beware of Python’s index shift: 0 denotes the first input variable).</p>
@@ -303,7 +294,7 @@
 </div>
 <img alt="Sobol' indices - MartinezSensitivityAlgorithm" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_sensitivity_sobol_004.png" />
 <p>We see that the results do not change significantly in this particular situation.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.495 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.511 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-sensitivity-analysis-plot-sensitivity-sobol-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/70f0c96883d438ab1e87001437f5ac80/plot_sensitivity_sobol.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_sensitivity_sobol.py</span></code></a></p>
@@ -335,7 +326,7 @@
         <li class="right" >
           <a href="plot_sensitivity_ancova.html" title="ANCOVA sensitivity indices"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16rc1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
@@ -344,8 +335,8 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Oct 21, 2020.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.0+.
+      Last updated on Nov 16, 2020.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.0+.
     </div>
   </body>
 </html>

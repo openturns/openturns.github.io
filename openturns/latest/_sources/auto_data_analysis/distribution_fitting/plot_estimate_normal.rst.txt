@@ -9,10 +9,14 @@
     .. _sphx_glr_auto_data_analysis_distribution_fitting_plot_estimate_normal.py:
 
 
-Fit a normal distribution
-=========================
+Fit a parametric distribution
+=============================
 
-In this example we are going to estimate the parameters of a gaussian distribution from a sample.
+In this example we estimate the parameters of a distribution from a given sample.
+Once we are settled on a good candidate, we use the corresponding factory to fit 
+the distribution. Each distribution factory has one or several estimators available. 
+They are all derived from either the Maximum Likelihood method or from the method of moments (see :ref:`parametric_estimation`). 
+
 
 
 .. code-block:: default
@@ -30,12 +34,20 @@ In this example we are going to estimate the parameters of a gaussian distributi
 
 
 
-Create data
+
+
+The Normal distribution
+-----------------------
+
+The parameters are estimated by the method of moments.
+
+
+We consider a sample, here created from a standard normal distribution :
 
 
 .. code-block:: default
 
-    sample = ot.Normal().getSample(50)
+    sample = ot.Normal().getSample(1000)
 
 
 
@@ -44,13 +56,26 @@ Create data
 
 
 
-Estimate a normal distribution
+We can estimate a normal distribution with `ǸormalFactory` :
 
 
 .. code-block:: default
 
     distribution = ot.NormalFactory().build(sample)
-    print(distribution)
+
+
+
+
+
+
+
+
+We take a look at the estimated parameters with the `getParameter` method :
+
+
+.. code-block:: default
+
+    print(distribution.getParameter())
 
 
 
@@ -62,7 +87,84 @@ Estimate a normal distribution
 
  .. code-block:: none
 
-    Normal(mu = 0.136954, sigma = 0.94417)
+    [0.00320214,1.02733]
+
+
+
+
+We draw the fitted distribution
+
+
+.. code-block:: default
+
+    graph = distribution.drawPDF()
+    graph.setTitle("Fitted Normal distribution")
+    view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_normal_001.png
+    :alt: Fitted Normal distribution
+    :class: sphx-glr-single-img
+
+
+
+
+
+The Student distribution
+------------------------
+
+The parameters of the Student law are estimated by a mixed method of moments and reduces MLE. 
+
+
+We generate a sample from a Student distribution with parameters :math:`\nu=5.0`, :math:`\mu = -0.5` and a scale parameter :math:`\sigma=2.0`.
+
+
+.. code-block:: default
+
+    sample = ot.Student(5.0, -0.5, 2.0).getSample(1000)
+
+
+
+
+
+
+
+
+We use the factory to build an estimated distribution :
+
+
+.. code-block:: default
+
+    distribution = ot.StudentFactory().build(sample)
+
+
+
+
+
+
+
+
+We can obtain the estimated parameters with the `getParameter` method :
+
+
+.. code-block:: default
+
+    print(distribution.getParameter())
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [3.65576,-0.515215,1.84614]
 
 
 
@@ -73,15 +175,70 @@ Draw fitted distribution
 .. code-block:: default
 
     graph = distribution.drawPDF()
+    graph.setTitle("Fitted Student distribution")
     view = viewer.View(graph)
+
+
+
+
+.. image:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_normal_002.png
+    :alt: Fitted Student distribution
+    :class: sphx-glr-single-img
+
+
+
+
+
+The Pareto distribution
+-----------------------
+
+By default the parameters of the Pareto distribution are estimated by least squares.
+
+
+We use a sample from a Pareto distribution with a scale parameter :math:`\beta=1.0`, a shape parameter :math:`\alpha > 1.0` and a location parameter :math:`\gamma = 0.0`.
+
+
+.. code-block:: default
+
+    sample = ot.Pareto(1.0, 1.0, 0.0).getSample(1000)
+
+
+
+
+
+
+
+
+Draw fitted distribution
+
+
+.. code-block:: default
+
+    distribution = ot.ParetoFactory().build(sample)
+
+    print(distribution.getParameter())
+
+    graph = distribution.drawPDF()
+    graph.setTitle("Fitted Pareto distribution")
+    view = viewer.View(graph)
+
+
     plt.show()
 
 
 
-.. image:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_normal_001.png
-    :alt: plot estimate normal
+.. image:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_normal_003.png
+    :alt: Fitted Pareto distribution
     :class: sphx-glr-single-img
 
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.787856,0.944192,0.246677]
 
 
 
@@ -89,7 +246,7 @@ Draw fitted distribution
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.073 seconds)
+   **Total running time of the script:** ( 0 minutes  0.328 seconds)
 
 
 .. _sphx_glr_download_auto_data_analysis_distribution_fitting_plot_estimate_normal.py:
