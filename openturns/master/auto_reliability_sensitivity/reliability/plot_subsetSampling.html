@@ -135,17 +135,18 @@ X \sim  \mathcal{N}(\mu = [0.25, 0.25], \sigma = [1,1], cov = I_2)
 p = \mathbb{P} \{ g(X) \leq 0 \}
 \end{align*}"/></p>
 </div><p>First, import the python modules:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span>  <span class="nn">openturns</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
 </pre></div>
 </div>
 <div class="section" id="create-the-probabilistic-model-y-g-x">
 <h2>Create the probabilistic model <img class="math" src="../../_images/math/a4a0c2c41a5d38507710acd057ce73f0e5bf0f42.svg" alt="Y = g(X)"/><a class="headerlink" href="#create-the-probabilistic-model-y-g-x" title="Permalink to this headline">¶</a></h2>
 <p>Create the input random vector <img class="math" src="../../_images/math/ea775056706c0642a79ca7b47cbc53cd1a63fc8d.svg" alt="X"/>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">RandomVector</span><span class="p">(</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.25</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">IdentityMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.25</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">IdentityMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
 </pre></div>
 </div>
 <p>Create the function <img class="math" src="../../_images/math/658ae44ee69111e3048325f416f44d6080707928.svg" alt="g"/>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">=</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;20-(x1-x2)^2-8*(x1+x2-4)^3&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">=</span><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;20-(x1-x2)^2-8*(x1+x2-4)^3&#39;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;function g: &#39;</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -154,23 +155,23 @@ p = \mathbb{P} \{ g(X) \leq 0 \}
 </pre></div>
 </div>
 <p>In order to be able to get the subset samples used in the algorithm, it is necessary to transform the <em>SymbolicFunction</em> into a <em>MemoizeFunction</em>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create the output random vector <img class="math" src="../../_images/math/a4a0c2c41a5d38507710acd057ce73f0e5bf0f42.svg" alt="Y = g(X)"/>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">X</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="create-the-event-y-g-x-leq-0">
 <h2>Create the event <img class="math" src="../../_images/math/2d4e2e13dfb1cb70e165a6c26ec714496b2e4c46.svg" alt="\{ Y = g(X) \leq 0 \}"/><a class="headerlink" href="#create-the-event-y-g-x-leq-0" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">myEvent</span> <span class="o">=</span> <span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">LessOrEqual</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">myEvent</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">LessOrEqual</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="evaluate-the-probability-with-the-subset-sampling-technique">
 <h2>Evaluate the probability with the subset sampling technique<a class="headerlink" href="#evaluate-the-probability-with-the-subset-sampling-technique" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">SubsetSampling</span><span class="p">(</span><span class="n">myEvent</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SubsetSampling</span><span class="p">(</span><span class="n">myEvent</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In order to get all the inputs and outputs that realize the event, you have to mention it now:</p>
@@ -265,7 +266,7 @@ Current coefficient of variation =  0.08723895892311931
 </pre></div>
 </div>
 <p>The following graph draws each subset sample and the frontier <img class="math" src="../../_images/math/f3ea213950f76b622c00586f3505236940dc2248.svg" alt="g(x_1, x_2) = l_i"/> where <img class="math" src="../../_images/math/b41d7b07e1ad3fa3bebf65540b3a42e70081dd8c.svg" alt="l_i"/> is the threshold at the step <img class="math" src="../../_images/math/bc9e0812a00024d261751577fdd3d3b800392b97.svg" alt="i"/>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;Subset sampling: samples&#39;</span><span class="p">)</span>
@@ -276,10 +277,10 @@ Current coefficient of variation =  0.08723895892311931
 </div>
 <p>Add all the subset samples:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Ns</span><span class="p">):</span>
-    <span class="n">cloud</span> <span class="o">=</span> <span class="n">Cloud</span><span class="p">(</span><span class="n">list_subSamples</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">list_subSamples</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="c1">#cloud.setPointStyle(&quot;dot&quot;)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
-<span class="n">col</span> <span class="o">=</span> <span class="n">Drawable</span><span class="p">()</span><span class="o">.</span><span class="n">BuildDefaultPalette</span><span class="p">(</span><span class="n">Ns</span><span class="p">)</span>
+<span class="n">col</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Drawable</span><span class="p">()</span><span class="o">.</span><span class="n">BuildDefaultPalette</span><span class="p">(</span><span class="n">Ns</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -295,15 +296,19 @@ Current coefficient of variation =  0.08723895892311931
     <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Show</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="Subset sampling: samples" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_subsetSampling_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;openturns.viewer.View object at 0x7fd0884d66d0&gt;
+</pre></div>
+</div>
 </div>
 <div class="section" id="draw-the-frontiers-only">
 <h2>Draw the frontiers only<a class="headerlink" href="#draw-the-frontiers-only" title="Permalink to this headline">¶</a></h2>
 <p>The following graph enables to understand the progresison of the algorithm:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">=</span><span class="n">Graph</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">=</span><span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">dr</span> <span class="o">=</span> <span class="n">gIsoLines</span><span class="o">.</span><span class="n">getDrawable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -320,10 +325,14 @@ Current coefficient of variation =  0.08723895892311931
 <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
 
-<span class="n">Show</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="Subset sampling: thresholds" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_subsetSampling_002.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;openturns.viewer.View object at 0x7fd088537850&gt;
+</pre></div>
+</div>
 </div>
 <div class="section" id="get-all-the-input-and-output-points-that-realized-the-event">
 <h2>Get all the input and output points that realized the event<a class="headerlink" href="#get-all-the-input-and-output-points-that-realized-the-event" title="Permalink to this headline">¶</a></h2>
@@ -338,16 +347,16 @@ Current coefficient of variation =  0.08723895892311931
 </pre></div>
 </div>
 <p>Here we have to avoid a bug of the version 1.15 because <em>getEventInputSample()</em> gives the sample in the stadrad space: we have to push it backward to the physical space.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dist</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">([</span><span class="mf">0.25</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">IdentityMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.25</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">IdentityMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">transformFunc</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">getInverseIsoProbabilisticTransformation</span><span class="p">()</span>
 <span class="n">inputEventSample</span> <span class="o">=</span> <span class="n">transformFunc</span><span class="p">(</span><span class="n">inputEventSample</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Draw them! They are all in the event space.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">=</span><span class="n">Graph</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">=</span><span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">cloud</span> <span class="o">=</span> <span class="n">Cloud</span><span class="p">(</span><span class="n">inputEventSample</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">inputEventSample</span><span class="p">)</span>
 <span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s1">&#39;dot&#39;</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
 <span class="n">gIsoLines</span> <span class="o">=</span>  <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1000</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
@@ -355,11 +364,15 @@ Current coefficient of variation =  0.08723895892311931
 <span class="n">dr</span><span class="o">.</span><span class="n">setLevels</span><span class="p">([</span><span class="mf">0.0</span><span class="p">])</span>
 <span class="n">dr</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
-<span class="n">Show</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="plot subsetSampling" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_subsetSampling_003.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.914 seconds)</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;openturns.viewer.View object at 0x7fd062df0730&gt;
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.775 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-reliability-plot-subsetsampling-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/2f3036e653772b82db3176d4cafdf2e9/plot_subsetSampling.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_subsetSampling.py</span></code></a></p>

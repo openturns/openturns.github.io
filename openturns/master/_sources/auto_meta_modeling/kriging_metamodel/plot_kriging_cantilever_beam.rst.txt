@@ -12,7 +12,7 @@
 Kriging the cantilever beam model
 =================================
 
-In this example, we create a kriging metamodel of the :ref:`cantilever beam <use-case-cantilever-beam>`. We use a squared exponential covariance model for the kriging. In order to estimate the hyper-parameters, we use a design of experiments which size is 20.
+In this example, we create a Kriging metamodel of the :ref:`cantilever beam <use-case-cantilever-beam>`. We use a squared exponential covariance kernel for the Gaussian process. In order to estimate the hyper-parameters, we use a design of experiments of size is 20.
 
 Definition of the model
 -----------------------
@@ -76,24 +76,10 @@ Then we define the distribution of the input random vector.
 
 
 
-We use a transformation because data contain very large values.
-
-
-.. code-block:: default
-
-    transformation = myDistribution.getIsoProbabilisticTransformation()
-
-
-
-
-
-
-
-
 Create the design of experiments
 --------------------------------
 
-We consider a simple Monte-Carlo sampling as a design of experiments. This is why we generate an input sample using the `getSample` method of the distribution. Then we evaluate the output using the `model` function.
+We consider a simple Monte-Carlo sample as a design of experiments. This is why we generate an input sample using the `getSample` method of the distribution. Then we evaluate the output using the `model` function.
 
 
 .. code-block:: default
@@ -134,18 +120,74 @@ The following figure presents the distribution of the vertical deviations Y on t
 Create the metamodel
 --------------------
 
-In order to create the kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class. Then we use a squared exponential covariance model. Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments. 
+In order to create the Kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class. Then we use a squared exponential covariance kernel.
+The `SquaredExponential` kernel has one amplitude coefficient and 4 scale coefficients. This is because this covariance kernel is anisotropic : each of the 4 input variables is associated with its own scale coefficient. 
 
 
 .. code-block:: default
 
-    dimension = myDistribution.getDimension()
-    basis = ot.ConstantBasisFactory(dimension).build()
-    covarianceModel = ot.SquaredExponential([1.]*dimension, [1.0])
-    algo = ot.KrigingAlgorithm(transformation(X_train), Y_train, covarianceModel, basis)
-    algo.run()
-    result = algo.getResult()
-    krigingMetamodel = result.getMetaModel()
+    basis = ot.ConstantBasisFactory(dim).build()
+    covarianceModel = ot.SquaredExponential(dim)
+
+
+
+
+
+
+
+
+Typically, the optimization algorithm is quite good at setting sensible optimization bounds.
+In this case, however, the range of the input domain is extreme.
+
+
+.. code-block:: default
+
+    print("Lower and upper bounds of X_train:")
+    print(X_train.getMin(), X_train.getMax())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Lower and upper bounds of X_train:
+    [6.5271e+10,234.153,2.50037,1.35332e-07] [7.12959e+10,351.819,2.59834,1.6038e-07]
+
+
+
+
+We need to manually define sensible optimization bounds.
+Note that since the amplitude parameter is computed analytically (this is possible when the output dimension is 1), we only need to set bounds on the scale parameter.
+
+
+.. code-block:: default
+
+    scaleOptimizationBounds = ot.Interval([1.0, 1.0, 1.0, 1.0e-10], [1.0e11, 1.0e3, 1.0e1, 1.0e-5])
+
+
+
+
+
+
+
+
+Finally, we use the `KrigingAlgorithm` class to create the Kriging metamodel.
+It requires a training sample, a covariance kernel and a trend basis as input arguments. 
+We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
+We must not forget to actually set the optimization bounds defined above.
+
+
+.. code-block:: default
+
+    covarianceModel.setScale(X_train.getMax())
+    algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
+    algo.setOptimizationBounds(scaleOptimizationBounds)
+
 
 
 
@@ -161,7 +203,23 @@ We can then print the constant trend of the metamodel, which have been estimated
 
 .. code-block:: default
 
-    result.getTrendCoefficients()
+    algo.run()
+    result = algo.getResult()
+    krigingMetamodel = result.getMetaModel()
+
+
+
+
+
+
+
+
+The `getTrendCoefficients` method returns the coefficients of the trend.
+
+
+.. code-block:: default
+
+    print(result.getTrendCoefficients())
 
 
 
@@ -173,8 +231,8 @@ We can then print the constant trend of the metamodel, which have been estimated
 
  .. code-block:: none
 
+    [[0.515099]]
 
-    [class=Point name=Unnamed dimension=1 values=[0.166863]]
 
 
 
@@ -192,14 +250,14 @@ We can also print the hyperparameters of the covariance model, which have been e
 
 .. raw:: html
 
-    <p>SquaredExponential(scale=[5.25598,4.89996,4.56237,7.84169], amplitude=[0.0394524])</p>
+    <p>SquaredExponential(scale=[7.12959e+10,351.905,2.52342,2.42561e-07], amplitude=[0.465044])</p>
     <br />
     <br />
 
 Validate the metamodel
 ----------------------
 
-We finally want to validate the kriging metamodel. This is why we generate a validation sample which size is equal to 100 and we evaluate the output of the model on this sample.
+We finally want to validate the Kriging metamodel. This is why we generate a validation sample with size 100 and we evaluate the output of the model on this sample.
 
 
 .. code-block:: default
@@ -220,7 +278,7 @@ The `MetaModelValidation` classe makes the validation easy. To create it, we use
 
 .. code-block:: default
 
-    val = ot.MetaModelValidation(transformation(X_test), Y_test, krigingMetamodel)
+    val = ot.MetaModelValidation(X_test, Y_test, krigingMetamodel)
 
 
 
@@ -235,7 +293,7 @@ The `computePredictivityFactor` computes the Q2 factor.
 .. code-block:: default
 
     Q2 = val.computePredictivityFactor()[0]
-    Q2
+    print(Q2)
 
 
 
@@ -247,12 +305,10 @@ The `computePredictivityFactor` computes the Q2 factor.
 
  .. code-block:: none
 
-
-    0.9912968960793251
-
+    0.9998821617702343
 
 
-Since the Q2 is larger than 95%, we can say that the quality is acceptable. 
+
 
 The residuals are the difference between the model and the metamodel. 
 
@@ -261,20 +317,23 @@ The residuals are the difference between the model and the metamodel.
 
     r = val.getResidualSample()
     graph = ot.HistogramFactory().build(r).drawPDF()
+    graph.setXTitle("Residuals (cm)")
+    graph.setTitle("Distribution of the residuals")
+    graph.setLegends([""])
     view = viewer.View(graph)
 
 
 
 
 .. image:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_cantilever_beam_002.png
-    :alt: y0 PDF
+    :alt: Distribution of the residuals
     :class: sphx-glr-single-img
 
 
 
 
 
-We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first   sign of good quality. Furthermore, the residuals are most of the times contained in the [-1,1] interval, which is a sign of quality given the amplitude of the output (approximately from 5 to 25 cm).
+We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first sign of good quality.
 
 The `drawValidation` method allows to compare the observed outputs and the metamodel outputs.
 
@@ -290,21 +349,17 @@ The `drawValidation` method allows to compare the observed outputs and the metam
 
 
 .. image:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_cantilever_beam_003.png
-    :alt: Q2 = 99.13%
+    :alt: Q2 = 99.99%
     :class: sphx-glr-single-img
 
 
 
 
 
-We observe that the metamodel predictions are close to the model outputs, since most red points are close to the diagonal. However, when we consider extreme deviations (i.e. less than 10 or larger than 20), then the quality is less obvious.
-
-Given that the kriging metamodel quality is sensitive to the design of experiments, it might be interesting to consider a Latin Hypercube Sampling (LHS) design to further improve the predictions quality.
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.302 seconds)
+   **Total running time of the script:** ( 0 minutes  0.214 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_cantilever_beam.py:

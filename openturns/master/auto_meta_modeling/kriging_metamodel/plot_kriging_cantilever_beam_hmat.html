@@ -21,8 +21,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Configuring an arbitrary trend in Kriging" href="plot_kriging_beam_arbitrary_trend.html" />
-    <link rel="prev" title="Kriging the cantilever beam model" href="plot_kriging_cantilever_beam.html" />
+    <link rel="next" title="Configuring the trend in Kriging" href="plot_kriging_beam_trend.html" />
+    <link rel="prev" title="Configuring an arbitrary trend in Kriging" href="plot_kriging_beam_arbitrary_trend.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -54,10 +54,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_kriging_beam_arbitrary_trend.html" title="Configuring an arbitrary trend in Kriging"
+          <a href="plot_kriging_beam_trend.html" title="Configuring the trend in Kriging"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_cantilever_beam.html" title="Kriging the cantilever beam model"
+          <a href="plot_kriging_beam_arbitrary_trend.html" title="Configuring an arbitrary trend in Kriging"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -80,11 +80,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="plot_kriging_cantilever_beam.html"
-                        title="previous chapter">Kriging the cantilever beam model</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="plot_kriging_beam_arbitrary_trend.html"
-                        title="next chapter">Configuring an arbitrary trend in Kriging</a></p>
+                        title="previous chapter">Configuring an arbitrary trend in Kriging</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plot_kriging_beam_trend.html"
+                        title="next chapter">Configuring the trend in Kriging</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -116,7 +116,7 @@
 </div>
 <div class="sphx-glr-example-title section" id="kriging-the-cantilever-beam-model-using-hmat">
 <span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-kriging-cantilever-beam-hmat-py"></span><h1>Kriging the cantilever beam model using HMAT<a class="headerlink" href="#kriging-the-cantilever-beam-model-using-hmat" title="Permalink to this headline">¶</a></h1>
-<p>In this example, we create a kriging metamodel of the <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a>. We use a squared exponential covariance model for the kriging. In order to estimate the hyper-parameters, we use a design of experiments which size is 100.</p>
+<p>In this example, we create a Kriging metamodel of the <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a>. We use a squared exponential covariance kernel for the Gaussian process. In order to estimate the hyper-parameters, we use a design of experiments of size is 20.</p>
 <div class="section" id="definition-of-the-model">
 <h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
@@ -125,29 +125,25 @@
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We first load the model from the usecases module :</p>
+<p>We load the cantilever beam use case :</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span> <span class="k">as</span> <span class="n">cantilever_beam</span>
 <span class="n">cb</span> <span class="o">=</span> <span class="n">cantilever_beam</span><span class="o">.</span><span class="n">CantileverBeam</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>We define the model which evaluates the output Y depending on the inputs.</p>
+<p>We define the function which evaluates the output depending on the inputs.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">model</span>
 </pre></div>
 </div>
-<p>Then we load the distribution of the input random vector.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">dim</span> <span class="c1"># number of inputs</span>
+<p>Then we define the distribution of the input random vector.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">dim</span> <span class="c1"># number of inputs</span>
 <span class="n">myDistribution</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">distribution</span>
-</pre></div>
-</div>
-<p>We use a transformation because data contain very large values.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">transformation</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getIsoProbabilisticTransformation</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="create-the-design-of-experiments">
 <h2>Create the design of experiments<a class="headerlink" href="#create-the-design-of-experiments" title="Permalink to this headline">¶</a></h2>
-<p>We consider a simple Monte-Carlo sampling as a design of experiments. This is why we generate an input sample using the <cite>getSample</cite> method of the distribution. Then we evaluate the output using the <cite>model</cite> function.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">100</span>
+<p>We consider a simple Monte-Carlo sample as a design of experiments. This is why we generate an input sample using the <cite>getSample</cite> method of the distribution. Then we evaluate the output using the <cite>model</cite> function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize_train</span><span class="p">)</span>
 <span class="n">Y_train</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 </pre></div>
@@ -164,11 +160,6 @@
 </div>
 <div class="section" id="create-the-metamodel">
 <h2>Create the metamodel<a class="headerlink" href="#create-the-metamodel" title="Permalink to this headline">¶</a></h2>
-<p>In order to create the kriging metamodel, we first select a constant trend with the <cite>ConstantBasisFactory</cite> class. Then we use a squared exponential covariance model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
-</pre></div>
-</div>
 <p>We rely on <cite>H-Matrix</cite> approximation for accelerating the evaluation.
 We change default parameters (compression, recompression) to higher values. The model is less accurate but very fast to build &amp; evaluate.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsString</span><span class="p">(</span><span class="s2">&quot;KrigingAlgorithm-LinearAlgebra&quot;</span><span class="p">,</span>  <span class="s2">&quot;HMAT&quot;</span><span class="p">)</span>
@@ -176,59 +167,91 @@ We change default parameters (compression, recompression) to higher values. The 
 <span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsScalar</span><span class="p">(</span> <span class="s2">&quot;HMatrix-RecompressionEpsilon&quot;</span><span class="p">,</span>  <span class="mf">1e-4</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Finally, we use the <cite>KrigingAlgorithm</cite> class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">transformation</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
-<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-<span class="n">krigingMetamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+<p>In order to create the Kriging metamodel, we first select a constant trend with the <cite>ConstantBasisFactory</cite> class. Then we use a squared exponential covariance kernel.
+The <cite>SquaredExponential</cite> kernel has one amplitude coefficient and 4 scale coefficients. This is because this covariance kernel is anisotropic : each of the 4 input variables is associated with its own scale coefficient.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Typically, the optimization algorithm is quite good at setting sensible optimization bounds.
+In this case, however, the range of the input domain is extreme.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lower and upper bounds of X_train:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMin</span><span class="p">(),</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lower and upper bounds of X_train:
+[6.50131e+10,262.222,2.5196,1.309e-07] [7.07581e+10,340.736,2.5983,1.6534e-07]
+</pre></div>
+</div>
+<p>We need to manually define sensible optimization bounds.
+Note that since the amplitude parameter is computed analytically (this is possible when the output dimension is 1), we only need to set bounds on the scale parameter.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0e11</span><span class="p">,</span> <span class="mf">1.0e3</span><span class="p">,</span> <span class="mf">1.0e1</span><span class="p">,</span> <span class="mf">1.0e-5</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Finally, we use the <cite>KrigingAlgorithm</cite> class to create the Kriging metamodel.
+It requires a training sample, a covariance kernel and a trend basis as input arguments.
+We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
+We must not forget to actually set the optimization bounds defined above.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>run</cite> method has optimized the hyperparameters of the metamodel.</p>
 <p>We can then print the constant trend of the metamodel, which have been estimated using the least squares method.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">krigingMetamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <cite>getTrendCoefficients</cite> method returns the coefficients of the trend.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">())</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=1 values=[0.174399]]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[0.177988]]
 </pre></div>
 </div>
 <p>We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>SquaredExponential(scale=[3.2328,1.76623,2.31046,2.9777], amplitude=[0.0101131])</p>
+<p>SquaredExponential(scale=[7.07581e+10,339.644,2.59797,4.14099e-08], amplitude=[0.0516536])</p>
 <br />
 <br /></div>
 <div class="section" id="validate-the-metamodel">
 <h2>Validate the metamodel<a class="headerlink" href="#validate-the-metamodel" title="Permalink to this headline">¶</a></h2>
-<p>We finally want to validate the kriging metamodel. This is why we generate a validation sample which size is equal to 100 and we evaluate the output of the model on this sample.</p>
+<p>We finally want to validate the Kriging metamodel. This is why we generate a validation sample with size 100 and we evaluate the output of the model on this sample.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize_test</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize_test</span><span class="p">)</span>
 <span class="n">Y_test</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>MetaModelValidation</cite> classe makes the validation easy. To create it, we use the validation samples and the metamodel.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">transformation</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingMetamodel</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingMetamodel</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <cite>computePredictivityFactor</cite> computes the Q2 factor.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Q2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computePredictivityFactor</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">Q2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Q2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9820450980214541
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.8409285118953813
 </pre></div>
 </div>
-<p>Since the Q2 is larger than 95%, we can say that the quality is acceptable.</p>
 <p>The residuals are the difference between the model and the metamodel.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">getResidualSample</span><span class="p">()</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Residuals (cm)&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Distribution of the residuals&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="y0 PDF" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kriging_cantilever_beam_hmat_002.png" />
-<p>We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first   sign of good quality. Furthermore, the residuals are most of the times contained in the [-1,1] interval, which is a sign of quality given the amplitude of the output (approximately from 5 to 25 cm).</p>
+<img alt="Distribution of the residuals" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kriging_cantilever_beam_hmat_002.png" />
+<p>We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first sign of good quality.</p>
 <p>The <cite>drawValidation</cite> method allows to compare the observed outputs and the metamodel outputs.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Q2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">Q2</span><span class="p">))</span>
@@ -237,10 +260,8 @@ We change default parameters (compression, recompression) to higher values. The 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="Q2 = 98.20%" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kriging_cantilever_beam_hmat_003.png" />
-<p>We observe that the metamodel predictions are close to the model outputs, since most red points are close to the diagonal. However, when we consider extreme deviations (i.e. less than 10 or larger than 20), then the quality is less obvious.</p>
-<p>Given that the kriging metamodel quality is sensitive to the design of experiments, it might be interesting to consider a Latin Hypercube Sampling (LHS) design to further improve the predictions quality.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.455 seconds)</p>
+<img alt="Q2 = 84.09%" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kriging_cantilever_beam_hmat_003.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.246 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-cantilever-beam-hmat-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/89dcfc183c079a2f24c2e232abb9594c/plot_kriging_cantilever_beam_hmat.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_cantilever_beam_hmat.py</span></code></a></p>
@@ -267,10 +288,10 @@ We change default parameters (compression, recompression) to higher values. The 
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_kriging_beam_arbitrary_trend.html" title="Configuring an arbitrary trend in Kriging"
+          <a href="plot_kriging_beam_trend.html" title="Configuring the trend in Kriging"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_cantilever_beam.html" title="Kriging the cantilever beam model"
+          <a href="plot_kriging_beam_arbitrary_trend.html" title="Configuring an arbitrary trend in Kriging"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
