@@ -140,16 +140,52 @@ so the resulting discretized matrix can have negative eigenvalues if you’re no
 <p>We consider the scalar stochastic process <img class="math" src="../../_images/math/e43bc3d64c5e6147b45e3e049233828a1925328b.svg" alt="X: \Omega \times\cD \mapsto \Rset"/>, where <img class="math" src="../../_images/math/618a7c39b58ad250fa9cb814428eb6f7d847c40f.svg" alt="\omega \in \Omega"/> is an event, <img class="math" src="../../_images/math/f0cad2673764d18c3de844ca2634c60acbd5c744.svg" alt="\cD"/> is a domain of <img class="math" src="../../_images/math/f7082db9266714a9e0575c9ac32ea519ce86a22c.svg" alt="\Rset^n"/>.</p>
 <p>The functional covariance function is defined by:</p>
 <div class="math">
-<p><img src="../../_images/math/1d5b319b5ef15157af6b6097f02da64779097de1.svg" alt="C(\vect{s}, \vect{t}) = \sigma^2 \rho(\vect{s} - \vect{t}), \quad \forall (\vect{s}, \vect{t}) \in \cD"/></p>
+<p><img src="../../_images/math/13cc45fc7620ca8e1348d918a38567f950d73b74.svg" alt="C(\vect{s}, \vect{t}) = \sigma^2 \rho\left(\frac{\vect{s} - \vect{t}}{\vect{\theta}}\right), \quad \forall (\vect{s}, \vect{t}) \in \cD"/></p>
 </div><p>where <img class="math" src="../../_images/math/7293d6aa7d1c3693b66393d3091aab23ac3b611a.svg" alt="\rho(\tau)"/> is the provided correlation function.</p>
 <p class="rubric">Examples</p>
-<p>Create a covariance model defined by a damped cosine correlation function:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<p>Create a <a class="reference internal" href="openturns.CovarianceModel.html#openturns.CovarianceModel" title="openturns.CovarianceModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">CovarianceModel</span></code></a> defined by a damped cosine correlation function as follows:</p>
+<div class="math">
+<p><img src="../../_images/math/fc183e5823b25d544f6021f2fdfb1ac595975d0b.svg" alt="\rho(\tau) = e^{-\tau}\cos \left( 2\pi\tau \right)"/></p>
+</div><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;tau&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;exp(-tau)*cos(2*pi_*tau)&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">covModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">StationaryFunctionalCovarianceModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="n">rho</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tau</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">covModel</span><span class="p">(</span><span class="n">tau</span><span class="p">))</span>
 <span class="go">[[ 0.732029 ]]</span>
+</pre></div>
+</div>
+<p>If the correlation function has hyperparameters, we must turn it into a <a class="reference internal" href="openturns.ParametricFunction.html#openturns.ParametricFunction" title="openturns.ParametricFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParametricFunction</span></code></a>.
+In the example below, we illustrate this by introducing a power parameter <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/> to the dampening function:</p>
+<div class="math">
+<p><img src="../../_images/math/12ae69b9b27e090edcb739482473073803f7e5e3.svg" alt="\rho(\tau) &amp;= e^{-\tau}\left(\cos \left( 2\pi\tau \right)\right)^n \\
+           &amp;= e^{-\tau}e^{n\times \ln\left(\cos \left( 2\pi\tau \right)\right)}"/></p>
+</div><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rho_param</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;exp(-tau)*exp(n * log(cos(2*pi_*tau)))&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">rho_param</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">covModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">StationaryFunctionalCovarianceModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="n">rho</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The full list of parameters for this <a class="reference internal" href="openturns.CovarianceModel.html#openturns.CovarianceModel" title="openturns.CovarianceModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">CovarianceModel</span></code></a> contains the parameter <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">covModel</span><span class="o">.</span><span class="n">getFullParameterDescription</span><span class="p">()</span>
+<span class="go">[scale_0,amplitude_0,n]</span>
+</pre></div>
+</div>
+<p>However, only the scale and amplitude parameters are active by default:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get the list of all active parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">covModel</span><span class="o">.</span><span class="n">getParameterDescription</span><span class="p">())</span>
+<span class="go">[scale_0,amplitude_0]</span>
+</pre></div>
+</div>
+<p>Active parameters of a <a class="reference internal" href="openturns.CovarianceModel.html#openturns.CovarianceModel" title="openturns.CovarianceModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">CovarianceModel</span></code></a> are those that must be estimated.
+Let us make all parameters active, including <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/>.
+The <a class="reference internal" href="#openturns.StationaryFunctionalCovarianceModel.setActiveParameter" title="openturns.StationaryFunctionalCovarianceModel.setActiveParameter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setActiveParameter()</span></code></a> method takes a list of integers as input:
+each integer is understood as the index of a parameter in the list yielded by <a class="reference internal" href="#openturns.StationaryFunctionalCovarianceModel.getFullParameterDescription" title="openturns.StationaryFunctionalCovarianceModel.getFullParameterDescription"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getFullParameterDescription()</span></code></a>.
+Here parameter #0 is <cite>scale_0</cite>, parameter #1 is <cite>amplitude_0</cite> and parameter #2 is <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">covModel</span><span class="o">.</span><span class="n">setActiveParameter</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>We can check that all parameters are now active:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">covModel</span><span class="o">.</span><span class="n">getParameterDescription</span><span class="p">())</span>
+<span class="go">[scale_0,amplitude_0,n]</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>

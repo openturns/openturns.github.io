@@ -21,7 +21,7 @@
 Calibration of the flooding model
 =================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-58
+.. GENERATED FROM PYTHON SOURCE LINES 6-73
 
 In this example we are interested in the calibration of the :ref:`flooding model <use-case-flood-model>`.
 
@@ -44,7 +44,7 @@ Observations
 ------------
 
 In this section, we describe the statistical model associated with the :math:`n` observations.
-The errors of the water heights are associated with a gaussian distribution with a zero mean and a standard variation equal to:
+The errors of the water heights are associated with a normal distribution with a zero mean and a standard variation equal to:
 
 .. math::
    \sigma=0.1.
@@ -74,14 +74,29 @@ The observations are the couples :math:`\{(Q_i,H_i)\}_{i=1,...,n}`, i.e. each ob
 Analysis
 --------
 
-In this model, the variables :math:`Z_m` and :math:`Z_v` are not identifiables, since only the difference :math:`Z_m-Z_v` matters. Hence, calibrating this model requires some regularization.
+First, the slope :math:`\alpha` only depends on the difference :math:`Z_m - Z_v`. 
+This is why :math:`Z_v` and :math:`Z_m` cannot be identified at the same time. 
+In algebraic terms, there is an infinite number of couples :math:`(Z_v, Z_m)` which 
+generate the same difference :math:`Z_m - Z_v`. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-62
+Second, the denominator of the expression of :math:`H` involves the product 
+:math:`K_s B \sqrt{\alpha}`. 
+In algebraic terms, there is an infinite number of couples :math:`(K_s, \alpha)` which 
+generate the same product :math:`K_s \sqrt{\alpha}`. 
+This is why either :math:`K_s` or :math:`\alpha` can be identified separately, 
+but not at the same time. 
+This shows that only one parameter can be identified. 
+
+Hence, calibrating this model requires some regularization.
+We return to this topic when analyzing the singular values of 
+the Jacobian matrix.
+
+.. GENERATED FROM PYTHON SOURCE LINES 75-77
 
 Generate the observations
 -------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-71
+.. GENERATED FROM PYTHON SOURCE LINES 79-86
 
 .. code-block:: default
 
@@ -99,11 +114,11 @@ Generate the observations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-73
+.. GENERATED FROM PYTHON SOURCE LINES 87-88
 
 We load the flooding use case :
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-76
+.. GENERATED FROM PYTHON SOURCE LINES 88-91
 
 .. code-block:: default
 
@@ -117,7 +132,7 @@ We load the flooding use case :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-85
+.. GENERATED FROM PYTHON SOURCE LINES 92-100
 
 We define the model :math:`g` which has 4 inputs and one output H.
 
@@ -128,7 +143,7 @@ The nonlinear least squares does not take into account for bounds in the paramet
 
 In these cases, we return an infinite number, so that the optimization algorithm does not get trapped.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-99
+.. GENERATED FROM PYTHON SOURCE LINES 102-114
 
 .. code-block:: default
 
@@ -151,7 +166,7 @@ In these cases, we return an infinite number, so that the optimization algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-104
+.. GENERATED FROM PYTHON SOURCE LINES 115-119
 
 .. code-block:: default
 
@@ -166,35 +181,37 @@ In these cases, we return an infinite number, so that the optimization algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-106
+.. GENERATED FROM PYTHON SOURCE LINES 120-121
 
 We load the input distribution for :math:`Q` :
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-111
+.. GENERATED FROM PYTHON SOURCE LINES 123-126
 
 .. code-block:: default
 
     Q = fm.Q
-    Q
+    print(Q)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[)</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-113
+    TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[)
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 127-128
 
 Set the parameters to be calibrated.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-122
+.. GENERATED FROM PYTHON SOURCE LINES 130-137
 
 .. code-block:: default
 
@@ -212,11 +229,11 @@ Set the parameters to be calibrated.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-124
+.. GENERATED FROM PYTHON SOURCE LINES 138-139
 
 Create the joint input distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-128
+.. GENERATED FROM PYTHON SOURCE LINES 141-143
 
 .. code-block:: default
 
@@ -229,11 +246,11 @@ Create the joint input distribution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+.. GENERATED FROM PYTHON SOURCE LINES 144-145
 
 Create a Monte-Carlo sample of the output H.
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-136
+.. GENERATED FROM PYTHON SOURCE LINES 147-151
 
 .. code-block:: default
 
@@ -248,11 +265,11 @@ Create a Monte-Carlo sample of the output H.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-138
+.. GENERATED FROM PYTHON SOURCE LINES 152-153
 
 Observe the distribution of the output H.
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-143
+.. GENERATED FROM PYTHON SOURCE LINES 155-158
 
 .. code-block:: default
 
@@ -270,11 +287,11 @@ Observe the distribution of the output H.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-145
+.. GENERATED FROM PYTHON SOURCE LINES 159-160
 
 Generate the observation noise and add it to the output of the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-152
+.. GENERATED FROM PYTHON SOURCE LINES 162-167
 
 .. code-block:: default
 
@@ -290,11 +307,11 @@ Generate the observation noise and add it to the output of the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-154
+.. GENERATED FROM PYTHON SOURCE LINES 168-169
 
 Plot the Y observations versus the X observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-158
+.. GENERATED FROM PYTHON SOURCE LINES 171-173
 
 .. code-block:: default
 
@@ -307,7 +324,7 @@ Plot the Y observations versus the X observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-164
+.. GENERATED FROM PYTHON SOURCE LINES 174-179
 
 .. code-block:: default
 
@@ -327,16 +344,16 @@ Plot the Y observations versus the X observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-167
+.. GENERATED FROM PYTHON SOURCE LINES 180-182
 
 Setting the calibration parameters
 ----------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-170
+.. GENERATED FROM PYTHON SOURCE LINES 184-185
 
-Define the value of the reference values of the :math:`\theta` parameter. In the bayesian framework, this is called the mean of the *prior* gaussian distribution. In the data assimilation framework, this is called the *background*.
+Define the value of the reference values of the :math:`\theta` parameter. In the bayesian framework, this is called the mean of the *prior* normal distribution. In the data assimilation framework, this is called the *background*.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-177
+.. GENERATED FROM PYTHON SOURCE LINES 187-192
 
 .. code-block:: default
 
@@ -352,11 +369,11 @@ Define the value of the reference values of the :math:`\theta` parameter. In the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-179
+.. GENERATED FROM PYTHON SOURCE LINES 193-194
 
-The following statement create the calibrated function from the model. The calibrated parameters Ks, Zv, Zm are at indices 1, 2, 3 in the inputs arguments of the model.
+The following statement create the calibrated function from the model. The calibrated parameters :math:`K_s`, :math:`Z_v`, :math:`Z_m` are at indices 1, 2, 3 in the inputs arguments of the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-184
+.. GENERATED FROM PYTHON SOURCE LINES 196-199
 
 .. code-block:: default
 
@@ -370,16 +387,16 @@ The following statement create the calibrated function from the model. The calib
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-187
+.. GENERATED FROM PYTHON SOURCE LINES 200-202
 
 Calibration with linear least squares
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-190
+.. GENERATED FROM PYTHON SOURCE LINES 204-205
 
 The `LinearLeastSquaresCalibration` class performs the linear least squares calibration by linearizing the model in the neighbourhood of the reference point.
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-194
+.. GENERATED FROM PYTHON SOURCE LINES 207-209
 
 .. code-block:: default
 
@@ -392,11 +409,11 @@ The `LinearLeastSquaresCalibration` class performs the linear least squares cali
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-196
+.. GENERATED FROM PYTHON SOURCE LINES 210-211
 
 The `run` method computes the solution of the problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-200
+.. GENERATED FROM PYTHON SOURCE LINES 213-215
 
 .. code-block:: default
 
@@ -409,7 +426,7 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-203
+.. GENERATED FROM PYTHON SOURCE LINES 216-218
 
 .. code-block:: default
 
@@ -422,99 +439,105 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-205
+.. GENERATED FROM PYTHON SOURCE LINES 219-220
 
 The `getParameterMAP` method returns the maximum of the posterior distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-210
+.. GENERATED FROM PYTHON SOURCE LINES 222-225
 
 .. code-block:: default
 
     thetaStar = calibrationResult.getParameterMAP()
-    thetaStar
+    print(thetaStar)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[-1.5344e+09,3.82448e+23,3.82448e+23]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-212
+    [-1.5344e+09,3.82448e+23,3.82448e+23]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 226-227
 
 In this case, we see that there seems to be a great distance from the reference value of :math:`\theta` to the optimum: the values seem too large in magnitude. The value of the optimum :math:`K_s` is nonpositive. In fact, there is an identification problem because the Jacobian matrix is rank-degenerate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-216
+.. GENERATED FROM PYTHON SOURCE LINES 229-231
 
 Diagnostic of the identification issue
 --------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 218-221
+.. GENERATED FROM PYTHON SOURCE LINES 233-236
 
 In this section, we show how to diagnose the identification problem.
 
-The `getParameterPosterior` method returns the posterior gaussian distribution of :math:`\theta`.
+The `getParameterPosterior` method returns the posterior normal distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-226
+.. GENERATED FROM PYTHON SOURCE LINES 238-241
 
 .. code-block:: default
 
     distributionPosterior = calibrationResult.getParameterPosterior()
-    distributionPosterior
+    print(distributionPosterior)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>Normal(mu = [-1.5344e+09,3.82448e+23,3.82448e+23], sigma = [1.87726e+26,1.47581e+32,1.47581e+32], R = [[  1            5.72409e-25 -5.72409e-25 ]<br>
-     [  5.72409e-25  1            1           ]<br>
-     [ -5.72409e-25  1            1           ]])</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 227-230
+    Normal(mu = [-1.5344e+09,3.82448e+23,3.82448e+23], sigma = [1.87726e+26,1.47581e+32,1.47581e+32], R = [[  1            5.72409e-25 -5.72409e-25 ]
+     [  5.72409e-25  1            1           ]
+     [ -5.72409e-25  1            1           ]])
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 242-245
 
 We see that there is a large covariance matrix diagonal. 
 
 Let us compute a 95% confidence interval for the solution :math:`\theta^\star`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-234
+.. GENERATED FROM PYTHON SOURCE LINES 247-249
 
 .. code-block:: default
 
-    distributionPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0]
+    print(distributionPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[-4.19405e+26, 4.19405e+26]<br>
-    [-3.29716e+32, 3.29716e+32]<br>
-    [-3.29716e+32, 3.29716e+32]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-236
+    [-4.19405e+26, 4.19405e+26]
+    [-3.29716e+32, 3.29716e+32]
+    [-3.29716e+32, 3.29716e+32]
 
-The confidence interval is *very* large.
 
-.. GENERATED FROM PYTHON SOURCE LINES 238-245
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 250-251
+
+The confidence interval is *very* large. In order to clarify the situation, we compute the Jacobian matrix of the model at the candidate point. 
+
+.. GENERATED FROM PYTHON SOURCE LINES 253-260
 
 .. code-block:: default
 
@@ -523,73 +546,94 @@ The confidence interval is *very* large.
     jacobianMatrix = ot.Matrix(nbobs,thetaDim)
     for i in range(nbobs):
         jacobianMatrix[i,:] = mycf.parameterGradient(Qobs[i]).transpose()
-    jacobianMatrix[0:5,:]
+    print(jacobianMatrix[0:5,:])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>5x3<br>
-    [[ -0.103257   0.516284  -0.516284  ]<br>
-     [ -0.149304   0.746522  -0.746522  ]<br>
-     [ -0.105068   0.525341  -0.525341  ]<br>
-     [ -0.0900736  0.450368  -0.450368  ]<br>
-     [ -0.10892    0.544602  -0.544602  ]]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-248
+    5x3
+    [[ -0.103257   0.516284  -0.516284  ]
+     [ -0.149304   0.746522  -0.746522  ]
+     [ -0.105068   0.525341  -0.525341  ]
+     [ -0.0900736  0.450368  -0.450368  ]
+     [ -0.10892    0.544602  -0.544602  ]]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 261-262
+
+The rank of the problem can be seen from the singular values of the Jacobian matrix. 
+
+.. GENERATED FROM PYTHON SOURCE LINES 264-266
 
 .. code-block:: default
 
-    jacobianMatrix.computeSingularValues()
+    print(jacobianMatrix.computeSingularValues())
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[8.87203,1.54711e-10,2.98131e-25]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-252
+    [8.87203,1.54711e-10,2.98131e-25]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 267-283
 
 We can see that there are two singular values which are relatively close to zero. 
 
 This explains why the Jacobian matrix is close to being rank-degenerate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-256
+Moreover, this allows to compute the actual dimensionality of the problem. 
+The algorithm we use computes the singular values in descending order. 
+Moreover, by definition, the singular values are nonnegative. 
+We see that the first singular value is close to :math:`10`
+and the others are very close to :math:`0` in comparison. 
+This implies that the (numerical) rank of the Jacobian matrix is 1, 
+even if there are 3 parameters. 
+
+Hence, only one parameter can be identified, be it :math:`K_s`, :math:`Z_v` or :math:`Z_m`. 
+The choice of the particular parameter to identify is free. 
+However, in hydraulic studies, the parameter :math:`K_s` is classically
+calibrated while :math:`Z_v` and :math:`Z_m` are left constant. 
+
+.. GENERATED FROM PYTHON SOURCE LINES 285-287
 
 Conclusion of the linear least squares calibration
 --------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 258-262
+.. GENERATED FROM PYTHON SOURCE LINES 289-293
 
 There are several methods to solve the problem.
 
-* Given that the problem is not identifiable, we can use some regularization method. Two methods are provided in the library: the gaussian linear least squares `GaussianLinearCalibration` and the gaussian non linear least squares `GaussianNonlinearCalibration`.
-* We can change the problem, replacing it with a problem which is identifiable. In the flooding model, replacing :math:`Z_v-Z_m` with :math:`\Delta Z` allows to solve the issue.
+* Given that the problem is not identifiable, we can use some regularization method. Two methods are provided in the library: the Gaussian linear least squares `GaussianLinearCalibration` and the Gaussian non linear least squares `GaussianNonlinearCalibration`.
+* We can change the problem, replacing it with a problem which is identifiable. In the flooding model, we can view :math:`Z_v` and :math:`Z_m` as constants and calibrate :math:`K_s` only.
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-266
+.. GENERATED FROM PYTHON SOURCE LINES 295-297
 
 Calibration with non linear least squares
 -----------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-269
+.. GENERATED FROM PYTHON SOURCE LINES 299-300
 
 The `NonLinearLeastSquaresCalibration` class performs the non linear least squares calibration by minimizing the squared euclidian norm between the predictions and the observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-273
+.. GENERATED FROM PYTHON SOURCE LINES 302-304
 
 .. code-block:: default
 
@@ -602,11 +646,11 @@ The `NonLinearLeastSquaresCalibration` class performs the non linear least squar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 274-275
+.. GENERATED FROM PYTHON SOURCE LINES 305-306
 
 The `run` method computes the solution of the problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 277-279
+.. GENERATED FROM PYTHON SOURCE LINES 308-310
 
 .. code-block:: default
 
@@ -619,7 +663,7 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-282
+.. GENERATED FROM PYTHON SOURCE LINES 311-313
 
 .. code-block:: default
 
@@ -632,68 +676,72 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-285
+.. GENERATED FROM PYTHON SOURCE LINES 314-316
 
 Analysis of the results
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-288
+.. GENERATED FROM PYTHON SOURCE LINES 318-319
 
 The `getParameterMAP` method returns the maximum of the posterior distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-293
+.. GENERATED FROM PYTHON SOURCE LINES 321-324
 
 .. code-block:: default
 
     thetaMAP = calibrationResult.getParameterMAP()
-    thetaMAP
+    print(thetaMAP)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[27.6494,47.065,52.935]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-297
+    [27.6494,47.065,52.935]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 325-328
 
 We can compute a 95% confidence interval of the parameter :math:`\theta^\star`. 
 
 This confidence interval is based on bootstrap, based on a sample size equal to 100 (as long as the value of the `ResourceMap` key "NonLinearLeastSquaresCalibration-BootstrapSize" is unchanged). This confidence interval reflects the sensitivity of the optimum to the variability in the observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-302
+.. GENERATED FROM PYTHON SOURCE LINES 330-333
 
 .. code-block:: default
 
     thetaPosterior = calibrationResult.getParameterPosterior()
-    thetaPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0]
+    print(thetaPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[27.5083, 27.8092]<br>
-    [46.9972, 47.1249]<br>
-    [52.8751, 53.0028]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 303-304
+    [27.5083, 27.8092]
+    [46.9972, 47.1249]
+    [52.8751, 53.0028]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 334-335
 
 In this case, the value of the parameter :math:`K_s` is quite accurately computed, but there is a relatively large uncertainty on the values of :math:`Z_v` and :math:`Z_m`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 306-310
+.. GENERATED FROM PYTHON SOURCE LINES 337-341
 
 .. code-block:: default
 
@@ -712,11 +760,11 @@ In this case, the value of the parameter :math:`K_s` is quite accurately compute
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 311-312
+.. GENERATED FROM PYTHON SOURCE LINES 342-343
 
 We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).
 
-.. GENERATED FROM PYTHON SOURCE LINES 314-317
+.. GENERATED FROM PYTHON SOURCE LINES 345-348
 
 .. code-block:: default
 
@@ -734,35 +782,37 @@ We see that there is a good fit after calibration, since the predictions after c
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 318-319
+.. GENERATED FROM PYTHON SOURCE LINES 349-350
 
 We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 321-324
+.. GENERATED FROM PYTHON SOURCE LINES 352-355
 
 .. code-block:: default
 
     observationError = calibrationResult.getObservationsError()
-    observationError
+    print(observationError)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>Normal(mu = 0.00262637, sigma = 0.0951039)</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 325-326
+    Normal(mu = 0.00262637, sigma = 0.0951039)
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 356-357
 
 We can see that the observation error is close to have a zero mean and a standard deviation equal to 0.1.
 
-.. GENERATED FROM PYTHON SOURCE LINES 328-332
+.. GENERATED FROM PYTHON SOURCE LINES 359-363
 
 .. code-block:: default
 
@@ -774,20 +824,20 @@ We can see that the observation error is close to have a zero mean and a standar
 
 
 .. image:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_flooding_005.png
-    :alt: plot calibration flooding
+    :alt: , Residual analysis
     :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-336
+.. GENERATED FROM PYTHON SOURCE LINES 364-367
 
 The analysis of the residuals shows that the distribution is centered on zero and symmetric. This indicates that the calibration performed well. 
 
-Moreover, the distribution of the residuals is close to being gaussian.
+Moreover, the distribution of the residuals is close to being Gaussian.
 
-.. GENERATED FROM PYTHON SOURCE LINES 338-341
+.. GENERATED FROM PYTHON SOURCE LINES 369-372
 
 .. code-block:: default
 
@@ -805,16 +855,16 @@ Moreover, the distribution of the residuals is close to being gaussian.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 342-344
+.. GENERATED FROM PYTHON SOURCE LINES 373-375
 
 Gaussian linear calibration
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 346-347
+.. GENERATED FROM PYTHON SOURCE LINES 377-378
 
 The standard deviation of the observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 349-351
+.. GENERATED FROM PYTHON SOURCE LINES 380-382
 
 .. code-block:: default
 
@@ -827,11 +877,11 @@ The standard deviation of the observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 352-353
+.. GENERATED FROM PYTHON SOURCE LINES 383-384
 
 Define the covariance matrix of the output Y of the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 355-358
+.. GENERATED FROM PYTHON SOURCE LINES 386-389
 
 .. code-block:: default
 
@@ -845,11 +895,11 @@ Define the covariance matrix of the output Y of the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 359-360
+.. GENERATED FROM PYTHON SOURCE LINES 390-391
 
 Define the covariance matrix of the parameters :math:`\theta` to calibrate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 362-366
+.. GENERATED FROM PYTHON SOURCE LINES 393-397
 
 .. code-block:: default
 
@@ -864,7 +914,7 @@ Define the covariance matrix of the parameters :math:`\theta` to calibrate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 367-373
+.. GENERATED FROM PYTHON SOURCE LINES 398-404
 
 .. code-block:: default
 
@@ -872,28 +922,30 @@ Define the covariance matrix of the parameters :math:`\theta` to calibrate.
     sigma[0,0] = sigmaKs**2
     sigma[1,1] = sigmaZv**2
     sigma[2,2] = sigmaZm**2
-    sigma
+    print(sigma)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[[ 25  0  0 ]<br>
-     [  0  1  0 ]<br>
-     [  0  0  1 ]]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 374-375
+    [[ 25  0  0 ]
+     [  0  1  0 ]
+     [  0  0  1 ]]
 
-The `GaussianLinearCalibration` class performs the gaussian linear calibration by linearizing the model in the neighbourhood of the prior.
 
-.. GENERATED FROM PYTHON SOURCE LINES 377-379
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 405-406
+
+The `GaussianLinearCalibration` class performs Gaussian linear calibration by linearizing the model in the neighbourhood of the prior.
+
+.. GENERATED FROM PYTHON SOURCE LINES 408-410
 
 .. code-block:: default
 
@@ -906,11 +958,11 @@ The `GaussianLinearCalibration` class performs the gaussian linear calibration b
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 380-381
+.. GENERATED FROM PYTHON SOURCE LINES 411-412
 
 The `run` method computes the solution of the problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 383-385
+.. GENERATED FROM PYTHON SOURCE LINES 414-416
 
 .. code-block:: default
 
@@ -923,7 +975,7 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 386-388
+.. GENERATED FROM PYTHON SOURCE LINES 417-419
 
 .. code-block:: default
 
@@ -936,36 +988,38 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 389-391
+.. GENERATED FROM PYTHON SOURCE LINES 420-422
 
 Analysis of the results
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 393-394
+.. GENERATED FROM PYTHON SOURCE LINES 424-425
 
 The `getParameterMAP` method returns the maximum of the posterior distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-399
+.. GENERATED FROM PYTHON SOURCE LINES 427-430
 
 .. code-block:: default
 
     thetaStar = calibrationResult.getParameterMAP()
-    thetaStar
+    print(thetaStar)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[24.4781,48.1044,51.8956]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 400-404
+    [24.4781,48.1044,51.8956]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 431-435
 
 .. code-block:: default
 
@@ -984,11 +1038,11 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-406
+.. GENERATED FROM PYTHON SOURCE LINES 436-437
 
 We see that the output of the model after calibration is closer to the observations. However, there is still a distance from the outputs of the model to the observations. This indicates that the calibration cannot be performed with this method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 408-411
+.. GENERATED FROM PYTHON SOURCE LINES 439-442
 
 .. code-block:: default
 
@@ -1006,11 +1060,11 @@ We see that the output of the model after calibration is closer to the observati
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 412-413
+.. GENERATED FROM PYTHON SOURCE LINES 443-444
 
 In this case, the fit is better after calibration, but not perfect. Indeed, the cloud of points after calibration is not centered on the diagonal. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-419
+.. GENERATED FROM PYTHON SOURCE LINES 446-450
 
 .. code-block:: default
 
@@ -1022,77 +1076,81 @@ In this case, the fit is better after calibration, but not perfect. Indeed, the 
 
 
 .. image:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_flooding_009.png
-    :alt: plot calibration flooding
+    :alt: , Residual analysis
     :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 420-421
+.. GENERATED FROM PYTHON SOURCE LINES 451-452
 
-We see that the distribution of the residual is not centered on zero: the mean residual is approximately -0.5, which implies that the predictions are, on average, smaller than the observations. This is a proof that the calibration cannot be performed with this method in this particular case.
+We see that the distribution of the residual is not centered on zero: the mean residual is approximately :math:`-0.5`, which implies that the predictions are, on average, smaller than the observations. This is a proof that the calibration cannot be performed with this method in this particular case.
 
-.. GENERATED FROM PYTHON SOURCE LINES 423-424
+.. GENERATED FROM PYTHON SOURCE LINES 454-455
 
-The `getParameterPosterior` method returns the posterior gaussian distribution of :math:`\theta`.
+The `getParameterPosterior` method returns the posterior normal distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 426-429
+.. GENERATED FROM PYTHON SOURCE LINES 457-460
 
 .. code-block:: default
 
     distributionPosterior = calibrationResult.getParameterPosterior()
-    distributionPosterior
+    print(distributionPosterior)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>Normal(mu = [24.4781,48.1044,51.8956], sigma = [4.08468,0.816936,0.816936], R = [[  1         0.498385 -0.498385 ]<br>
-     [  0.498385  1         0.498385 ]<br>
-     [ -0.498385  0.498385  1        ]])</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-431
+    Normal(mu = [24.4781,48.1044,51.8956], sigma = [4.08468,0.816936,0.816936], R = [[  1         0.498385 -0.498385 ]
+     [  0.498385  1         0.498385 ]
+     [ -0.498385  0.498385  1        ]])
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 461-462
 
 We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 433-435
+.. GENERATED FROM PYTHON SOURCE LINES 464-466
 
 .. code-block:: default
 
-    distributionPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0]
+    print(distributionPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[14.8981, 34.058]<br>
-    [46.1884, 50.0204]<br>
-    [49.9796, 53.8116]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 436-437
+    [14.8981, 34.058]
+    [46.1884, 50.0204]
+    [49.9796, 53.8116]
 
-We see that there is a large uncertainty on the value of the parameter :math:`K_s` which can be as small as 14 and as large as 34. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 439-440
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 467-468
+
+We see that there is a large uncertainty on the value of the parameter :math:`K_s` which can be as small as :math:`14` and as large as :math:`34`. 
+
+.. GENERATED FROM PYTHON SOURCE LINES 470-471
 
 We can compare the prior and posterior distributions of the marginals of :math:`\theta`. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 442-445
+.. GENERATED FROM PYTHON SOURCE LINES 473-476
 
 .. code-block:: default
 
@@ -1110,20 +1168,20 @@ We can compare the prior and posterior distributions of the marginals of :math:`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 446-447
+.. GENERATED FROM PYTHON SOURCE LINES 477-478
 
 The two distributions are different, which shows that the calibration is sensible to the observations (if the observations were not sensible, the two distributions were superimposed). Moreover, the two distributions are quite close, which implies that the prior distribution has played a roled in the calibration (otherwise the two distributions would be completely different, indicating that only the observations were taken into account). 
 
-.. GENERATED FROM PYTHON SOURCE LINES 449-451
+.. GENERATED FROM PYTHON SOURCE LINES 480-482
 
 Gaussian nonlinear calibration
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 453-454
+.. GENERATED FROM PYTHON SOURCE LINES 484-485
 
-The `GaussianNonLinearCalibration` class performs the gaussian nonlinear calibration.
+The `GaussianNonLinearCalibration` class performs Gaussian nonlinear calibration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 456-458
+.. GENERATED FROM PYTHON SOURCE LINES 487-489
 
 .. code-block:: default
 
@@ -1136,11 +1194,11 @@ The `GaussianNonLinearCalibration` class performs the gaussian nonlinear calibra
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 459-460
+.. GENERATED FROM PYTHON SOURCE LINES 490-491
 
 The `run` method computes the solution of the problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 462-464
+.. GENERATED FROM PYTHON SOURCE LINES 493-495
 
 .. code-block:: default
 
@@ -1153,7 +1211,7 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 465-467
+.. GENERATED FROM PYTHON SOURCE LINES 496-498
 
 .. code-block:: default
 
@@ -1166,36 +1224,38 @@ The `run` method computes the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-470
+.. GENERATED FROM PYTHON SOURCE LINES 499-501
 
 Analysis of the results
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 472-473
+.. GENERATED FROM PYTHON SOURCE LINES 503-504
 
 The `getParameterMAP` method returns the maximum of the posterior distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 475-478
+.. GENERATED FROM PYTHON SOURCE LINES 506-509
 
 .. code-block:: default
 
     thetaStar = calibrationResult.getParameterMAP()
-    thetaStar
+    print(thetaStar)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[30.4264,47.6447,52.3553]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 479-483
+    [30.4264,47.6447,52.3553]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 510-514
 
 .. code-block:: default
 
@@ -1214,11 +1274,11 @@ The `getParameterMAP` method returns the maximum of the posterior distribution o
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 484-485
+.. GENERATED FROM PYTHON SOURCE LINES 515-516
 
 We see that the output of the model after calibration is in the middle of the observations: the calibration seems correct.
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-490
+.. GENERATED FROM PYTHON SOURCE LINES 518-521
 
 .. code-block:: default
 
@@ -1236,11 +1296,11 @@ We see that the output of the model after calibration is in the middle of the ob
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 491-492
+.. GENERATED FROM PYTHON SOURCE LINES 522-523
 
 The fit is excellent after calibration. Indeed, the cloud of points after calibration is on the diagonal. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 494-497
+.. GENERATED FROM PYTHON SOURCE LINES 525-528
 
 .. code-block:: default
 
@@ -1251,22 +1311,22 @@ The fit is excellent after calibration. Indeed, the cloud of points after calibr
 
 
 .. image:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_flooding_013.png
-    :alt: plot calibration flooding
+    :alt: , Residual analysis
     :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 498-499
+.. GENERATED FROM PYTHON SOURCE LINES 529-530
 
 We see that the histogram of the residual is centered on zero. This is a proof that the calibration did perform correctly.
 
-.. GENERATED FROM PYTHON SOURCE LINES 501-502
+.. GENERATED FROM PYTHON SOURCE LINES 532-533
 
-The `getParameterPosterior` method returns the posterior gaussian distribution of :math:`\theta`.
+The `getParameterPosterior` method returns the posterior normal distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 504-506
+.. GENERATED FROM PYTHON SOURCE LINES 535-537
 
 .. code-block:: default
 
@@ -1279,40 +1339,42 @@ The `getParameterPosterior` method returns the posterior gaussian distribution o
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 507-508
+.. GENERATED FROM PYTHON SOURCE LINES 538-539
 
 We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 510-512
+.. GENERATED FROM PYTHON SOURCE LINES 541-543
 
 .. code-block:: default
 
-    distributionPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0]
+    print(distributionPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[30.3861, 30.9228]<br>
-    [47.5811, 47.6498]<br>
-    [52.3502, 52.4189]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 513-514
+    [30.3861, 30.9228]
+    [47.5811, 47.6498]
+    [52.3502, 52.4189]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 544-545
 
 We see that there is a small uncertainty on the value of all parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 516-517
+.. GENERATED FROM PYTHON SOURCE LINES 547-548
 
 We can compare the prior and posterior distributions of the marginals of :math:`\theta`. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 519-522
+.. GENERATED FROM PYTHON SOURCE LINES 550-553
 
 .. code-block:: default
 
@@ -1330,11 +1392,11 @@ We can compare the prior and posterior distributions of the marginals of :math:`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 523-524
+.. GENERATED FROM PYTHON SOURCE LINES 554-555
 
 The two distributions are very different, with a spiky posterior distribution. This shows that the calibration is very sensible to the observations. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 526-535
+.. GENERATED FROM PYTHON SOURCE LINES 557-566
 
 Tuning the posterior distribution estimation
 --------------------------------------------
@@ -1342,11 +1404,11 @@ Tuning the posterior distribution estimation
 The "GaussianNonLinearCalibration-BootstrapSize" key controls the posterior distribution estimation.
 
 * If "GaussianNonLinearCalibration-BootstrapSize" > 0 (by default it is equal to 100), then a bootstrap resample algorithm is used to see the dispersion of the MAP estimator. This allows to see the variability of the estimator with respect to the finite observation sample.
-* If "GaussianNonLinearCalibration-BootstrapSize" is zero, then the gaussian linear calibration estimator is used (i.e. the `GaussianLinearCalibration` class) at the optimum. This is called the Laplace approximation. 
+* If "GaussianNonLinearCalibration-BootstrapSize" is zero, then the Gaussian linear calibration estimator is used (i.e. the `GaussianLinearCalibration` class) at the optimum. This is called the Laplace approximation. 
 
 We must configure the key before creating the object (otherwise changing the parameter does not change the result). 
 
-.. GENERATED FROM PYTHON SOURCE LINES 537-539
+.. GENERATED FROM PYTHON SOURCE LINES 568-570
 
 .. code-block:: default
 
@@ -1359,7 +1421,7 @@ We must configure the key before creating the object (otherwise changing the par
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 540-542
+.. GENERATED FROM PYTHON SOURCE LINES 571-573
 
 .. code-block:: default
 
@@ -1372,7 +1434,7 @@ We must configure the key before creating the object (otherwise changing the par
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 543-545
+.. GENERATED FROM PYTHON SOURCE LINES 574-576
 
 .. code-block:: default
 
@@ -1385,7 +1447,7 @@ We must configure the key before creating the object (otherwise changing the par
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 546-548
+.. GENERATED FROM PYTHON SOURCE LINES 577-579
 
 .. code-block:: default
 
@@ -1398,7 +1460,7 @@ We must configure the key before creating the object (otherwise changing the par
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 549-552
+.. GENERATED FROM PYTHON SOURCE LINES 580-583
 
 .. code-block:: default
 
@@ -1412,14 +1474,14 @@ We must configure the key before creating the object (otherwise changing the par
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 553-554
+.. GENERATED FROM PYTHON SOURCE LINES 584-585
 
 As we can see, this does not change much the posterior distribution, which remains spiky. 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.600 seconds)
+   **Total running time of the script:** ( 0 minutes  6.492 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_least_squares_and_gaussian_calibration_plot_calibration_flooding.py:

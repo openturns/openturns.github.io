@@ -142,7 +142,7 @@ to download the full example code</p>
 <div class="section" id="observations">
 <h2>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h2>
 <p>In this section, we describe the statistical model associated with the <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/> observations.
-The errors of the water heights are associated with a gaussian distribution with a zero mean and a standard variation equal to:</p>
+The errors of the water heights are associated with a normal distribution with a zero mean and a standard variation equal to:</p>
 <div class="math">
 <p><img src="../../_images/math/cc9e07440dff8a3cd441a1ba96af3f321a65f0fd.svg" alt="\sigma=0.1."/></p>
 </div><p>Therefore, the observed water heights are:</p>
@@ -159,7 +159,20 @@ We consider a sample size equal to:</p>
 </div>
 <div class="section" id="analysis">
 <h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
-<p>In this model, the variables <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/> and <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/> are not identifiables, since only the difference <img class="math" src="../../_images/math/9999c7bca80e36bd32d0ecd9475b8562e3ff7c32.svg" alt="Z_m-Z_v"/> matters. Hence, calibrating this model requires some regularization.</p>
+<p>First, the slope <img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha"/> only depends on the difference <img class="math" src="../../_images/math/044221d063154bb6ae26d2d0538eaa7923ee65e3.svg" alt="Z_m - Z_v"/>.
+This is why <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/> and <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/> cannot be identified at the same time.
+In algebraic terms, there is an infinite number of couples <img class="math" src="../../_images/math/cb5491b212036afae62a628065a5093e8ed93200.svg" alt="(Z_v, Z_m)"/> which
+generate the same difference <img class="math" src="../../_images/math/044221d063154bb6ae26d2d0538eaa7923ee65e3.svg" alt="Z_m - Z_v"/>.</p>
+<p>Second, the denominator of the expression of <img class="math" src="../../_images/math/43ab00daa3571041f87a561d387de75cad96009c.svg" alt="H"/> involves the product
+<img class="math" src="../../_images/math/a84860e1c7081d92bc38969dfef711cfce73ccbd.svg" alt="K_s B \sqrt{\alpha}"/>.
+In algebraic terms, there is an infinite number of couples <img class="math" src="../../_images/math/1837018674ae8430da721c06f27b3a143ce864d8.svg" alt="(K_s, \alpha)"/> which
+generate the same product <img class="math" src="../../_images/math/938be452cd7be61d6b2780a6cf591d646267b22f.svg" alt="K_s \sqrt{\alpha}"/>.
+This is why either <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> or <img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha"/> can be identified separately,
+but not at the same time.
+This shows that only one parameter can be identified.</p>
+<p>Hence, calibrating this model requires some regularization.
+We return to this topic when analyzing the singular values of
+the Jacobian matrix.</p>
 </div>
 <div class="section" id="generate-the-observations">
 <h2>Generate the observations<a class="headerlink" href="#generate-the-observations" title="Permalink to this headline">¶</a></h2>
@@ -202,14 +215,14 @@ We consider a sample size equal to:</p>
 </div>
 <p>We load the input distribution for <img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/> :</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Q</span> <span class="o">=</span> <span class="n">fm</span><span class="o">.</span><span class="n">Q</span>
-<span class="n">Q</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[)</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[)
+</pre></div>
 </div>
-<br />
-<br /><p>Set the parameters to be calibrated.</p>
+<p>Set the parameters to be calibrated.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K_s</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 <span class="n">Z_v</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">50.0</span><span class="p">)</span>
 <span class="n">Z_m</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">55.0</span><span class="p">)</span>
@@ -255,14 +268,14 @@ We consider a sample size equal to:</p>
 </div>
 <div class="section" id="setting-the-calibration-parameters">
 <h2>Setting the calibration parameters<a class="headerlink" href="#setting-the-calibration-parameters" title="Permalink to this headline">¶</a></h2>
-<p>Define the value of the reference values of the <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/> parameter. In the bayesian framework, this is called the mean of the <em>prior</em> gaussian distribution. In the data assimilation framework, this is called the <em>background</em>.</p>
+<p>Define the value of the reference values of the <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/> parameter. In the bayesian framework, this is called the mean of the <em>prior</em> normal distribution. In the data assimilation framework, this is called the <em>background</em>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">KsInitial</span> <span class="o">=</span> <span class="mf">20.</span>
 <span class="n">ZvInitial</span> <span class="o">=</span> <span class="mf">49.</span>
 <span class="n">ZmInitial</span> <span class="o">=</span> <span class="mf">51.</span>
 <span class="n">thetaPrior</span> <span class="o">=</span> <span class="p">[</span><span class="n">KsInitial</span><span class="p">,</span> <span class="n">ZvInitial</span><span class="p">,</span> <span class="n">ZmInitial</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>The following statement create the calibrated function from the model. The calibrated parameters Ks, Zv, Zm are at indices 1, 2, 3 in the inputs arguments of the model.</p>
+<p>The following statement create the calibrated function from the model. The calibrated parameters <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/>, <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/>, <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/> are at indices 1, 2, 3 in the inputs arguments of the model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibratedIndices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 <span class="n">mycf</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">calibratedIndices</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">)</span>
 </pre></div>
@@ -283,74 +296,86 @@ We consider a sample size equal to:</p>
 </div>
 <p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaStar</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
-<span class="n">thetaStar</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">thetaStar</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[-1.5344e+09,3.82448e+23,3.82448e+23]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[-1.5344e+09,3.82448e+23,3.82448e+23]
+</pre></div>
 </div>
-<br />
-<br /><p>In this case, we see that there seems to be a great distance from the reference value of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/> to the optimum: the values seem too large in magnitude. The value of the optimum <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> is nonpositive. In fact, there is an identification problem because the Jacobian matrix is rank-degenerate.</p>
+<p>In this case, we see that there seems to be a great distance from the reference value of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/> to the optimum: the values seem too large in magnitude. The value of the optimum <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> is nonpositive. In fact, there is an identification problem because the Jacobian matrix is rank-degenerate.</p>
 </div>
 <div class="section" id="diagnostic-of-the-identification-issue">
 <h2>Diagnostic of the identification issue<a class="headerlink" href="#diagnostic-of-the-identification-issue" title="Permalink to this headline">¶</a></h2>
 <p>In this section, we show how to diagnose the identification problem.</p>
-<p>The <cite>getParameterPosterior</cite> method returns the posterior gaussian distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
+<p>The <cite>getParameterPosterior</cite> method returns the posterior normal distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distributionPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
-<span class="n">distributionPosterior</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">distributionPosterior</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>Normal(mu = [-1.5344e+09,3.82448e+23,3.82448e+23], sigma = [1.87726e+26,1.47581e+32,1.47581e+32], R = [[  1            5.72409e-25 -5.72409e-25 ]<br>
- [  5.72409e-25  1            1           ]<br>
- [ -5.72409e-25  1            1           ]])</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Normal(mu = [-1.5344e+09,3.82448e+23,3.82448e+23], sigma = [1.87726e+26,1.47581e+32,1.47581e+32], R = [[  1            5.72409e-25 -5.72409e-25 ]
+ [  5.72409e-25  1            1           ]
+ [ -5.72409e-25  1            1           ]])
+</pre></div>
 </div>
-<br />
-<br /><p>We see that there is a large covariance matrix diagonal.</p>
+<p>We see that there is a large covariance matrix diagonal.</p>
 <p>Let us compute a 95% confidence interval for the solution <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star"/>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distributionPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">distributionPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[-4.19405e+26, 4.19405e+26]<br>
-[-3.29716e+32, 3.29716e+32]<br>
-[-3.29716e+32, 3.29716e+32]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[-4.19405e+26, 4.19405e+26]
+[-3.29716e+32, 3.29716e+32]
+[-3.29716e+32, 3.29716e+32]
+</pre></div>
 </div>
-<br />
-<br /><p>The confidence interval is <em>very</em> large.</p>
+<p>The confidence interval is <em>very</em> large. In order to clarify the situation, we compute the Jacobian matrix of the model at the candidate point.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mycf</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">thetaPrior</span><span class="p">)</span>
 <span class="n">thetaDim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">thetaPrior</span><span class="p">)</span>
 <span class="n">jacobianMatrix</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">nbobs</span><span class="p">,</span><span class="n">thetaDim</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbobs</span><span class="p">):</span>
     <span class="n">jacobianMatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">mycf</span><span class="o">.</span><span class="n">parameterGradient</span><span class="p">(</span><span class="n">Qobs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-<span class="n">jacobianMatrix</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,:]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">jacobianMatrix</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,:])</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>5x3<br>
-[[ -0.103257   0.516284  -0.516284  ]<br>
- [ -0.149304   0.746522  -0.746522  ]<br>
- [ -0.105068   0.525341  -0.525341  ]<br>
- [ -0.0900736  0.450368  -0.450368  ]<br>
- [ -0.10892    0.544602  -0.544602  ]]</p>
-</div>
-<br />
-<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jacobianMatrix</span><span class="o">.</span><span class="n">computeSingularValues</span><span class="p">()</span>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>5x3
+[[ -0.103257   0.516284  -0.516284  ]
+ [ -0.149304   0.746522  -0.746522  ]
+ [ -0.105068   0.525341  -0.525341  ]
+ [ -0.0900736  0.450368  -0.450368  ]
+ [ -0.10892    0.544602  -0.544602  ]]
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[8.87203,1.54711e-10,2.98131e-25]</p>
+<p>The rank of the problem can be seen from the singular values of the Jacobian matrix.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">jacobianMatrix</span><span class="o">.</span><span class="n">computeSingularValues</span><span class="p">())</span>
+</pre></div>
 </div>
-<br />
-<br /><p>We can see that there are two singular values which are relatively close to zero.</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[8.87203,1.54711e-10,2.98131e-25]
+</pre></div>
+</div>
+<p>We can see that there are two singular values which are relatively close to zero.</p>
 <p>This explains why the Jacobian matrix is close to being rank-degenerate.</p>
+<p>Moreover, this allows to compute the actual dimensionality of the problem.
+The algorithm we use computes the singular values in descending order.
+Moreover, by definition, the singular values are nonnegative.
+We see that the first singular value is close to <img class="math" src="../../_images/math/d0ace541ba5740bf18f92e375cc534f9a7b5ceeb.svg" alt="10"/>
+and the others are very close to <img class="math" src="../../_images/math/919aee1dbe276bb63ee7a88b62487eea3957e41e.svg" alt="0"/> in comparison.
+This implies that the (numerical) rank of the Jacobian matrix is 1,
+even if there are 3 parameters.</p>
+<p>Hence, only one parameter can be identified, be it <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/>, <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/> or <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/>.
+The choice of the particular parameter to identify is free.
+However, in hydraulic studies, the parameter <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> is classically
+calibrated while <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/> and <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/> are left constant.</p>
 </div>
 <div class="section" id="conclusion-of-the-linear-least-squares-calibration">
 <h2>Conclusion of the linear least squares calibration<a class="headerlink" href="#conclusion-of-the-linear-least-squares-calibration" title="Permalink to this headline">¶</a></h2>
 <p>There are several methods to solve the problem.</p>
 <ul class="simple">
-<li><p>Given that the problem is not identifiable, we can use some regularization method. Two methods are provided in the library: the gaussian linear least squares <cite>GaussianLinearCalibration</cite> and the gaussian non linear least squares <cite>GaussianNonlinearCalibration</cite>.</p></li>
-<li><p>We can change the problem, replacing it with a problem which is identifiable. In the flooding model, replacing <img class="math" src="../../_images/math/d7c4fb1beb3f35e0bff85a40d7565241e0b439a1.svg" alt="Z_v-Z_m"/> with <img class="math" src="../../_images/math/1ab7dbcff841bbdc3c8316d4a2aa6b0c0161e91d.svg" alt="\Delta Z"/> allows to solve the issue.</p></li>
+<li><p>Given that the problem is not identifiable, we can use some regularization method. Two methods are provided in the library: the Gaussian linear least squares <cite>GaussianLinearCalibration</cite> and the Gaussian non linear least squares <cite>GaussianNonlinearCalibration</cite>.</p></li>
+<li><p>We can change the problem, replacing it with a problem which is identifiable. In the flooding model, we can view <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/> and <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/> as constants and calibrate <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> only.</p></li>
 </ul>
 </div>
 <div class="section" id="calibration-with-non-linear-least-squares">
@@ -371,26 +396,26 @@ We consider a sample size equal to:</p>
 <h2>Analysis of the results<a class="headerlink" href="#analysis-of-the-results" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaMAP</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
-<span class="n">thetaMAP</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">thetaMAP</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[27.6494,47.065,52.935]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[27.6494,47.065,52.935]
+</pre></div>
 </div>
-<br />
-<br /><p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star"/>.</p>
+<p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star"/>.</p>
 <p>This confidence interval is based on bootstrap, based on a sample size equal to 100 (as long as the value of the <cite>ResourceMap</cite> key “NonLinearLeastSquaresCalibration-BootstrapSize” is unchanged). This confidence interval reflects the sensitivity of the optimum to the variability in the observations.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
-<span class="n">thetaPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">thetaPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[27.5083, 27.8092]<br>
-[46.9972, 47.1249]<br>
-[52.8751, 53.0028]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[27.5083, 27.8092]
+[46.9972, 47.1249]
+[52.8751, 53.0028]
+</pre></div>
 </div>
-<br />
-<br /><p>In this case, the value of the parameter <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> is quite accurately computed, but there is a relatively large uncertainty on the values of <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/> and <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/>.</p>
+<p>In this case, the value of the parameter <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> is quite accurately computed, but there is a relatively large uncertainty on the values of <img class="math" src="../../_images/math/8c65111b411d8acc67c23f70a96820c191e76c60.svg" alt="Z_v"/> and <img class="math" src="../../_images/math/297121d3454c7810542417c95f368e09e5bbdd7c.svg" alt="Z_m"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
@@ -405,22 +430,22 @@ We consider a sample size equal to:</p>
 <img alt="plot calibration flooding" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_calibration_flooding_004.png" />
 <p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
-<span class="n">observationError</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">observationError</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>Normal(mu = 0.00262637, sigma = 0.0951039)</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Normal(mu = 0.00262637, sigma = 0.0951039)
+</pre></div>
 </div>
-<br />
-<br /><p>We can see that the observation error is close to have a zero mean and a standard deviation equal to 0.1.</p>
+<p>We can see that the observation error is close to have a zero mean and a standard deviation equal to 0.1.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot calibration flooding" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_calibration_flooding_005.png" />
+<img alt=", Residual analysis" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_calibration_flooding_005.png" />
 <p>The analysis of the residuals shows that the distribution is centered on zero and symmetric. This indicates that the calibration performed well.</p>
-<p>Moreover, the distribution of the residuals is close to being gaussian.</p>
+<p>Moreover, the distribution of the residuals is close to being Gaussian.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
@@ -448,16 +473,16 @@ We consider a sample size equal to:</p>
 <span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaKs</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">sigma</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaZv</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">sigma</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaZm</span><span class="o">**</span><span class="mi">2</span>
-<span class="n">sigma</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[[ 25  0  0 ]<br>
- [  0  1  0 ]<br>
- [  0  0  1 ]]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 25  0  0 ]
+ [  0  1  0 ]
+ [  0  0  1 ]]
+</pre></div>
 </div>
-<br />
-<br /><p>The <cite>GaussianLinearCalibration</cite> class performs the gaussian linear calibration by linearizing the model in the neighbourhood of the prior.</p>
+<p>The <cite>GaussianLinearCalibration</cite> class performs Gaussian linear calibration by linearizing the model in the neighbourhood of the prior.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianLinearCalibration</span><span class="p">(</span><span class="n">mycf</span><span class="p">,</span> <span class="n">Qobs</span><span class="p">,</span> <span class="n">Hobs</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">errorCovariance</span><span class="p">,</span><span class="s2">&quot;SVD&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -473,14 +498,14 @@ We consider a sample size equal to:</p>
 <h2>Analysis of the results<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaStar</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
-<span class="n">thetaStar</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">thetaStar</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[24.4781,48.1044,51.8956]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[24.4781,48.1044,51.8956]
+</pre></div>
 </div>
-<br />
-<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
@@ -498,30 +523,30 @@ We consider a sample size equal to:</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot calibration flooding" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_calibration_flooding_009.png" />
-<p>We see that the distribution of the residual is not centered on zero: the mean residual is approximately -0.5, which implies that the predictions are, on average, smaller than the observations. This is a proof that the calibration cannot be performed with this method in this particular case.</p>
-<p>The <cite>getParameterPosterior</cite> method returns the posterior gaussian distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
+<img alt=", Residual analysis" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_calibration_flooding_009.png" />
+<p>We see that the distribution of the residual is not centered on zero: the mean residual is approximately <img class="math" src="../../_images/math/d88e7a4328f79e0163ebc915cb68ee884751ea16.svg" alt="-0.5"/>, which implies that the predictions are, on average, smaller than the observations. This is a proof that the calibration cannot be performed with this method in this particular case.</p>
+<p>The <cite>getParameterPosterior</cite> method returns the posterior normal distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distributionPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
-<span class="n">distributionPosterior</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">distributionPosterior</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>Normal(mu = [24.4781,48.1044,51.8956], sigma = [4.08468,0.816936,0.816936], R = [[  1         0.498385 -0.498385 ]<br>
- [  0.498385  1         0.498385 ]<br>
- [ -0.498385  0.498385  1        ]])</p>
-</div>
-<br />
-<br /><p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star"/>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distributionPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Normal(mu = [24.4781,48.1044,51.8956], sigma = [4.08468,0.816936,0.816936], R = [[  1         0.498385 -0.498385 ]
+ [  0.498385  1         0.498385 ]
+ [ -0.498385  0.498385  1        ]])
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[14.8981, 34.058]<br>
-[46.1884, 50.0204]<br>
-[49.9796, 53.8116]</p>
+<p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">distributionPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
 </div>
-<br />
-<br /><p>We see that there is a large uncertainty on the value of the parameter <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> which can be as small as 14 and as large as 34.</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[14.8981, 34.058]
+[46.1884, 50.0204]
+[49.9796, 53.8116]
+</pre></div>
+</div>
+<p>We see that there is a large uncertainty on the value of the parameter <img class="math" src="../../_images/math/e44d8c9524edab58aff01eacfa07ca07dac18df2.svg" alt="K_s"/> which can be as small as <img class="math" src="../../_images/math/e2eaa582d50a3c63b6056bc5675194709e37aeab.svg" alt="14"/> and as large as <img class="math" src="../../_images/math/809148c78a3b9e5afac56f17434e6e217f1309ea.svg" alt="34"/>.</p>
 <p>We can compare the prior and posterior distributions of the marginals of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
@@ -532,7 +557,7 @@ We consider a sample size equal to:</p>
 </div>
 <div class="section" id="gaussian-nonlinear-calibration">
 <h2>Gaussian nonlinear calibration<a class="headerlink" href="#gaussian-nonlinear-calibration" title="Permalink to this headline">¶</a></h2>
-<p>The <cite>GaussianNonLinearCalibration</cite> class performs the gaussian nonlinear calibration.</p>
+<p>The <cite>GaussianNonLinearCalibration</cite> class performs Gaussian nonlinear calibration.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianNonLinearCalibration</span><span class="p">(</span><span class="n">mycf</span><span class="p">,</span> <span class="n">Qobs</span><span class="p">,</span> <span class="n">Hobs</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">errorCovariance</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -548,14 +573,14 @@ We consider a sample size equal to:</p>
 <h2>Analysis of the results<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaStar</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
-<span class="n">thetaStar</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">thetaStar</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[30.4264,47.6447,52.3553]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[30.4264,47.6447,52.3553]
+</pre></div>
 </div>
-<br />
-<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
@@ -572,23 +597,23 @@ We consider a sample size equal to:</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="plot calibration flooding" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_calibration_flooding_013.png" />
+<img alt=", Residual analysis" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_calibration_flooding_013.png" />
 <p>We see that the histogram of the residual is centered on zero. This is a proof that the calibration did perform correctly.</p>
-<p>The <cite>getParameterPosterior</cite> method returns the posterior gaussian distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
+<p>The <cite>getParameterPosterior</cite> method returns the posterior normal distribution of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distributionPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We can compute a 95% confidence interval of the parameter <img class="math" src="../../_images/math/b57c014f32c1e20b3d05757fc29e0d77fec3cb67.svg" alt="\theta^\star"/>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distributionPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">distributionPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[30.3861, 30.9228]<br>
-[47.5811, 47.6498]<br>
-[52.3502, 52.4189]</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[30.3861, 30.9228]
+[47.5811, 47.6498]
+[52.3502, 52.4189]
+</pre></div>
 </div>
-<br />
-<br /><p>We see that there is a small uncertainty on the value of all parameters.</p>
+<p>We see that there is a small uncertainty on the value of all parameters.</p>
 <p>We can compare the prior and posterior distributions of the marginals of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
@@ -602,7 +627,7 @@ We consider a sample size equal to:</p>
 <p>The “GaussianNonLinearCalibration-BootstrapSize” key controls the posterior distribution estimation.</p>
 <ul class="simple">
 <li><p>If “GaussianNonLinearCalibration-BootstrapSize” &gt; 0 (by default it is equal to 100), then a bootstrap resample algorithm is used to see the dispersion of the MAP estimator. This allows to see the variability of the estimator with respect to the finite observation sample.</p></li>
-<li><p>If “GaussianNonLinearCalibration-BootstrapSize” is zero, then the gaussian linear calibration estimator is used (i.e. the <cite>GaussianLinearCalibration</cite> class) at the optimum. This is called the Laplace approximation.</p></li>
+<li><p>If “GaussianNonLinearCalibration-BootstrapSize” is zero, then the Gaussian linear calibration estimator is used (i.e. the <cite>GaussianLinearCalibration</cite> class) at the optimum. This is called the Laplace approximation.</p></li>
 </ul>
 <p>We must configure the key before creating the object (otherwise changing the parameter does not change the result).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap_SetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;GaussianNonLinearCalibration-BootstrapSize&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
@@ -623,7 +648,7 @@ We consider a sample size equal to:</p>
 </pre></div>
 </div>
 <p>As we can see, this does not change much the posterior distribution, which remains spiky.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.600 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.492 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-flooding-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/6caf8ab6cf6fefe73b8f4c85fd8eff29/plot_calibration_flooding.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_calibration_flooding.py</span></code></a></p>
