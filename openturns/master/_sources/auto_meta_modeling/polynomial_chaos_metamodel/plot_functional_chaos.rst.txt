@@ -89,7 +89,7 @@ Then we create a sample `inputSample` and compute the corresponding output sampl
 .. code-block:: default
 
     distribution = ot.Normal(dimension)
-    samplesize = 100
+    samplesize = 80
     inputSample  = distribution.getSample(samplesize)
     outputSample = model(inputSample)
 
@@ -209,7 +209,7 @@ Plot the corresponding validation graphics.
 
 
 .. image:: /auto_meta_modeling/polynomial_chaos_metamodel/images/sphx_glr_plot_functional_chaos_002.png
-    :alt: Metamodel validation Q2=[0.603732,0.976158]
+    :alt: Metamodel validation Q2=[0.693516,0.977897]
     :class: sphx-glr-single-img
 
 
@@ -245,49 +245,49 @@ Compute and print Sobol' indices
 
      input dimension: 2
      output dimension: 2
-     basis size: 17
-     mean: [0.407373,1.46576]
-     std-dev: [0.769986,4.5017]
+     basis size: 18
+     mean: [0.395632,1.60116]
+     std-dev: [0.822187,5.11647]
     ------------------------------------------------------------
     Marginal: 0
     Index   | Multi-indice                  | Part of variance  
     ------------------------------------------------------------
-         13 | [3,1]                         | 0.294779
-         15 | [2,2]                         | 0.210211
-          7 | [4,0]                         | 0.173475
-         14 | [1,3]                         | 0.121324
-          4 | [0,2]                         | 0.092324
-          6 | [1,1]                         | 0.0562688
-          8 | [0,4]                         | 0.0382743
+         13 | [3,1]                         | 0.338217
+         15 | [2,2]                         | 0.212762
+          7 | [4,0]                         | 0.18727
+         14 | [1,3]                         | 0.112033
+          4 | [0,2]                         | 0.0725352
+          6 | [1,1]                         | 0.0376132
+          8 | [0,4]                         | 0.0338696
     ------------------------------------------------------------
 
 
     ------------------------------------------------------------
     Component | Sobol index            | Sobol total index      
     ------------------------------------------------------------
-            0 | 0.183395               | 0.867453              
-            1 | 0.132547               | 0.816605              
+            0 | 0.192657               | 0.893303              
+            1 | 0.106697               | 0.807343              
     ------------------------------------------------------------
 
     Marginal: 1
     Index   | Multi-indice                  | Part of variance  
     ------------------------------------------------------------
-          9 | [5,0]                         | 0.27903
-         11 | [7,0]                         | 0.151266
-          6 | [1,1]                         | 0.140602
-          2 | [0,1]                         | 0.134901
-          1 | [1,0]                         | 0.111672
-         10 | [2,1]                         | 0.0698017
-          3 | [2,0]                         | 0.068406
-         13 | [3,1]                         | 0.035412
+          9 | [5,0]                         | 0.297898
+         11 | [7,0]                         | 0.155081
+          6 | [1,1]                         | 0.135652
+          2 | [0,1]                         | 0.113661
+          1 | [1,0]                         | 0.113553
+          3 | [2,0]                         | 0.0725952
+         10 | [2,1]                         | 0.0660207
+         13 | [3,1]                         | 0.0363435
     ------------------------------------------------------------
 
 
     ------------------------------------------------------------
     Component | Sobol index            | Sobol total index      
     ------------------------------------------------------------
-            0 | 0.619252               | 0.865074              
-            1 | 0.134926               | 0.380748              
+            0 | 0.648262               | 0.886312              
+            1 | 0.113688               | 0.351738              
     ------------------------------------------------------------
 
 
@@ -382,14 +382,13 @@ The default value of this parameter is 10.
 
 This is why we explore the values from 5 to 15.
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-173
+.. GENERATED FROM PYTHON SOURCE LINES 158-171
 
 .. code-block:: default
 
-    degrees = ot.Sample([[i] for i in range(5, 12)])
-    numberOfDegrees = degrees.getSize()
-    coefficientOfPredictivity = ot.Sample(numberOfDegrees,2)
-    for maximumDegree in range(5, 12):
+    degrees = range(5, 12)
+    q2 = ot.Sample(len(degrees), 2)
+    for maximumDegree in degrees:
         ot.ResourceMap.SetAsUnsignedInteger("FunctionalChaosAlgorithm-MaximumTotalDegree",maximumDegree)
         print("Maximum total degree =", maximumDegree)
         algo = ot.FunctionalChaosAlgorithm(inputSample, outputSample)
@@ -398,8 +397,7 @@ This is why we explore the values from 5 to 15.
         metamodel = result.getMetaModel()
         for outputIndex in range(2):
             val = ot.MetaModelValidation(inputTest, outputTest[:,outputIndex], metamodel.getMarginal(outputIndex))
-            Q2 = val.computePredictivityFactor()[0]
-            coefficientOfPredictivity[maximumDegree-5,outputIndex] = Q2
+            q2[maximumDegree - degrees[0], outputIndex] = val.computePredictivityFactor()[0]
 
 
 
@@ -422,16 +420,16 @@ This is why we explore the values from 5 to 15.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-188
+.. GENERATED FROM PYTHON SOURCE LINES 172-186
 
 .. code-block:: default
 
     graph = ot.Graph("Predictivity","Total degree","Q2",True)
-    cloud = ot.Cloud(degrees,coefficientOfPredictivity[:,0])
+    cloud = ot.Cloud([[d] for d in degrees], q2[:,0])
     cloud.setLegend("Output #0")
     cloud.setPointStyle("bullet")
     graph.add(cloud)
-    cloud = ot.Cloud(degrees,coefficientOfPredictivity[:,1])
+    cloud = ot.Cloud([[d] for d in degrees], q2[:,1])
     cloud.setLegend("Output #1")
     cloud.setColor("red")
     cloud.setPointStyle("bullet")
@@ -451,7 +449,7 @@ This is why we explore the values from 5 to 15.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-197
+.. GENERATED FROM PYTHON SOURCE LINES 187-195
 
 We see that a total degree lower than 9 is not sufficient to describe the first output with good predictivity. However, the coefficient of predictivity drops when the total degree gets greater than 12. 
 The predictivity of the second output seems to be much less satisfactory: a little more work would be required to improve the metamodel. 
@@ -465,7 +463,7 @@ In this situation, the following methods may be used.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  0.364 seconds)
+   **Total running time of the script:** ( 1 minutes  7.843 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_polynomial_chaos_metamodel_plot_functional_chaos.py:
