@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create a Kronecker covariance model &#8212; OpenTURNS 1.17dev documentation</title>
+    <title>Sample trajectories from a Gaussian Process with correlated outputs &#8212; OpenTURNS 1.17dev documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
@@ -22,8 +22,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Create a functional basis process" href="plot_functional_basis_process.html" />
-    <link rel="prev" title="Create a gaussian process from a cov. model using HMatrix" href="plot_gaussian_process_covariance_hmat.html" />
+    <link rel="next" title="Draw fields" href="plot_process_manipulation.html" />
+    <link rel="prev" title="Create a process from random vectors and processes" href="plot_mixRVandProcess.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -55,26 +55,36 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_functional_basis_process.html" title="Create a functional basis process"
+          <a href="plot_process_manipulation.html" title="Draw fields"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_gaussian_process_covariance_hmat.html" title="Create a gaussian process from a cov. model using HMatrix"
+          <a href="plot_mixRVandProcess.html" title="Create a process from random vectors and processes"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Probabilistic modeling</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Create a Kronecker covariance model</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Sample trajectories from a Gaussian Process with correlated outputs</a></li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Sample trajectories from a Gaussian Process with correlated outputs</a><ul>
+<li><a class="reference internal" href="#create-a-kronecker-covariance-function">Create a Kronecker covariance function</a></li>
+<li><a class="reference internal" href="#build-a-gaussian-process-with-kronecker-covariance-function">Build a Gaussian Process with Kronecker covariance function</a></li>
+<li><a class="reference internal" href="#change-the-correlation-between-the-outputs">Change the correlation between the outputs</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="plot_gaussian_process_covariance_hmat.html"
-                        title="previous chapter">Create a gaussian process from a cov. model using HMatrix</a></p>
+  <p class="topless"><a href="plot_mixRVandProcess.html"
+                        title="previous chapter">Create a process from random vectors and processes</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="plot_functional_basis_process.html"
-                        title="next chapter">Create a functional basis process</a></p>
+  <p class="topless"><a href="plot_process_manipulation.html"
+                        title="next chapter">Draw fields</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -105,82 +115,162 @@
 <p>Click <a class="reference internal" href="#sphx-glr-download-auto-probabilistic-modeling-stochastic-processes-plot-kronecker-covmodel-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="create-a-kronecker-covariance-model">
-<span id="sphx-glr-auto-probabilistic-modeling-stochastic-processes-plot-kronecker-covmodel-py"></span><h1>Create a Kronecker covariance model<a class="headerlink" href="#create-a-kronecker-covariance-model" title="Permalink to this headline">¶</a></h1>
-<p>This example illustrates how the User can create a Kronecker covariance function, which allows defining a multivariate covariance function with a specific covariance structure.</p>
-<p>For that purpose, a spatial covariance matrix <img class="math" src="../../_images/math/c15047eb5bc817bed6a8d1839c0b7f83b8f05527.svg" alt="\mat{C}^{stat}"/> is needed in addition to a scalar correlation function <img class="math" src="../../_images/math/09820a9ba8f1a0ddc3447517995f320d383df448.svg" alt="\rho"/>.</p>
-<blockquote>
-<div><p>We recall that the Kronecker covariance model is defined by</p>
-</div></blockquote>
-<div class="math">
-<p><img src="../../_images/math/e1ec0ff0c37298e04b249a8168d14092f93fdba2.svg" alt="C(\vect{s}, \vect{t}) = \rho\left(\dfrac{\vect{s}}{\theta}, \dfrac{\vect{t}}{\theta}\right) C^{stat}"/></p>
-</div><p>where the output covariance matrix <img class="math" src="../../_images/math/ba86c3ef2b91fe0de96f886b7501af9371eb52c9.svg" alt="C^{stat}"/> is given by</p>
-<div class="math">
-<p><img src="../../_images/math/3f21de5d301d9e41400363a2596785ec1ac65d96.svg" alt="C^{stat} = \mbox{Diag}(\vect{\sigma}) \, \mat{R} \,  \mbox{Diag}(\vect{\sigma})."/></p>
-</div><p><img class="math" src="../../_images/math/d16921df6b431de54f23ef4a1a7bf275ecace21c.svg" alt="\vect{\sigma}"/> and <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/> are respectively the amplitude and scale vectors.</p>
-<p>The library implements this multivariate model thanks to the <em>KroneckerCovarianceModel</em> class which can be instanciated from:</p>
-<ul class="simple">
-<li><p>the correlation function and amplitude vectors <img class="math" src="../../_images/math/5aedd61ea362f37c772ad908e8bc2ad2a40bb01d.svg" alt="(\rho, \vect{\sigma})"/>: in that case, by default <img class="math" src="../../_images/math/23aead7f5fa6983160494a0200607376314dac4f.svg" alt="\mat{R} = \mat{I}"/>;</p></li>
-<li><p>the correlation function, the amplitude vector and the spatial correlation matrix <img class="math" src="../../_images/math/ed2506271ae9f29dbfd6a987153d2c473e70ea0d.svg" alt="(\rho, \vect{\sigma}, \mat{R})"/>;</p></li>
-<li><p>the correlation function, the amplitude vector and the spatial covariance matrix <img class="math" src="../../_images/math/8e2a07340bfd5ca98c0de43e7a689a9a10174e39.svg" alt="(\rho, \vect{\sigma}, \mat{C})"/>;</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<div class="sphx-glr-example-title section" id="sample-trajectories-from-a-gaussian-process-with-correlated-outputs">
+<span id="sphx-glr-auto-probabilistic-modeling-stochastic-processes-plot-kronecker-covmodel-py"></span><h1>Sample trajectories from a Gaussian Process with correlated outputs<a class="headerlink" href="#sample-trajectories-from-a-gaussian-process-with-correlated-outputs" title="Permalink to this headline">¶</a></h1>
+<p>A <a class="reference internal" href="../../user_manual/_generated/openturns.KroneckerCovarianceModel.html#openturns.KroneckerCovarianceModel" title="openturns.KroneckerCovarianceModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">KroneckerCovarianceModel</span></code></a> takes a covariance function
+with 1-d output and makes its output multidimensional.</p>
+<p>In this example, we use one to define a Gaussian Process with 2 correlated scalar outputs.</p>
+<p>For that purpose, a covariance matrix for the outputs is needed
+in addition to a scalar correlation function <img class="math" src="../../_images/math/09820a9ba8f1a0ddc3447517995f320d383df448.svg" alt="\rho"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">m</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">square</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Scale vector (input dimension 1)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">theta</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">]</span>
-
-<span class="c1"># Create the rho function</span>
+<div class="section" id="create-a-kronecker-covariance-function">
+<h2>Create a Kronecker covariance function<a class="headerlink" href="#create-a-kronecker-covariance-function" title="Permalink to this headline">¶</a></h2>
+<p>First, define the scalar correlation function <img class="math" src="../../_images/math/09820a9ba8f1a0ddc3447517995f320d383df448.svg" alt="\rho"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">theta</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">]</span>
 <span class="n">rho</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-
-<span class="c1"># Create the amplitude vector (output dimension 2)</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-
-<span class="c1"># output correlation</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
-
-<span class="c1"># output covariance</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.0</span>
-<span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5.0</span>
-<span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
 </pre></div>
 </div>
-<p>Create the covariance model from the amplitude and correlation, no spatial correlation</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">KroneckerCovarianceModel</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+<p>Second, define the covariance matrix of the outputs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>KroneckerCovarianceModel(rho=MaternModel(scale=[4], amplitude=[1], nu=1.5), amplitude=[1,2], no spatial correlation)</p>
-</div>
-<br />
-<br /><p>or from the correlation function, amplitude, and spatialCovariance</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">KroneckerCovarianceModel</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1   0.9 ]
+ [ 0.9 1.5 ]]
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>KroneckerCovarianceModel(rho=MaternModel(scale=[4], amplitude=[1], nu=1.5), amplitude=[1,2], spatial correlation=<br>
-[[ 1    0.01 ]<br>
- [ 0.01 1    ]])</p>
-</div>
-<br />
-<br /><p>or from the correlation model and spatialCovariance</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">KroneckerCovarianceModel</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+<p>Use these ingredients to build the <a class="reference internal" href="../../user_manual/_generated/openturns.KroneckerCovarianceModel.html#openturns.KroneckerCovarianceModel" title="openturns.KroneckerCovarianceModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">KroneckerCovarianceModel</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kronecker</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KroneckerCovarianceModel</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>KroneckerCovarianceModel(rho=MaternModel(scale=[4], amplitude=[1], nu=1.5), amplitude=[2,2.23607], spatial correlation=<br>
-[[ 1        0.111803 ]<br>
- [ 0.111803 1        ]])</p>
 </div>
-<br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.002 seconds)</p>
+<div class="section" id="build-a-gaussian-process-with-kronecker-covariance-function">
+<h2>Build a Gaussian Process with Kronecker covariance function<a class="headerlink" href="#build-a-gaussian-process-with-kronecker-covariance-function" title="Permalink to this headline">¶</a></h2>
+<p>Define a <a class="reference internal" href="../../user_manual/_generated/openturns.GaussianProcess.html#openturns.GaussianProcess" title="openturns.GaussianProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcess</span></code></a> with null trend using this covariance function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gp</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianProcess</span><span class="p">(</span><span class="n">kronecker</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Sample and draw a realization of the Gaussian process.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">realization</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">getRealization</span><span class="p">()</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">realization</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">realization</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Drawable</span><span class="o">.</span><span class="n">BuildDefaultPalette</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Y1&quot;</span><span class="p">,</span> <span class="s2">&quot;Y2&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot kronecker covmodel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kronecker_covmodel_001.png" />
+<p>Draw the trajectory on the complex plane.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">realization</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Real part&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;Imaginary part&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Trajectory on the complex plane&quot;</span><span class="p">)</span>
+<span class="n">diagonal</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+<span class="n">diagonal</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dotdash&quot;</span><span class="p">)</span>
+<span class="n">diagonal</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;grey&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diagonal</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">square_axes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="Trajectory on the complex plane" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kronecker_covmodel_002.png" />
+</div>
+<div class="section" id="change-the-correlation-between-the-outputs">
+<h2>Change the correlation between the outputs<a class="headerlink" href="#change-the-correlation-between-the-outputs" title="Permalink to this headline">¶</a></h2>
+<p>By setting covariance matrix of the outputs, we have implicitely set the
+amplitudes and the correlation matrix of the Kronecker covariance function.</p>
+<p>The amplitudes are the square roots of the diagonal elements
+of the covariance matrix.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recall C</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1   0.9 ]
+ [ 0.9 1.5 ]]
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print squared amplitudes</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="n">kronecker</span><span class="o">.</span><span class="n">getAmplitude</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[1.  1.5]
+</pre></div>
+</div>
+<p>The diagonal of the correlation matrix is by definition filled with ones.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output_correlation</span> <span class="o">=</span> <span class="n">kronecker</span><span class="o">.</span><span class="n">getOutputCorrelation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output_correlation</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1        0.734847 ]
+ [ 0.734847 1        ]]
+</pre></div>
+</div>
+<p>Since the correlation matrix is symmetric
+and its diagonal necessarily contains ones,
+we only need to change its upper right (or bottom left) element.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output_correlation</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output_correlation</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 1   0.9 ]
+ [ 0.9 1   ]]
+</pre></div>
+</div>
+<p>Changing the output correlation matrix does not change the amplitudes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kronecker</span><span class="o">.</span><span class="n">setOutputCorrelation</span><span class="p">(</span><span class="n">output_correlation</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="n">kronecker</span><span class="o">.</span><span class="n">getAmplitude</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[1.  1.5]
+</pre></div>
+</div>
+<p>Let us resample a trajectory.</p>
+<p>To show the effect ot the output correlation change,
+we use the same random seed in order to get a comparable trajectory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gp</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianProcess</span><span class="p">(</span><span class="n">kronecker</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">realization</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">getRealization</span><span class="p">()</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">realization</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">realization</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Drawable</span><span class="o">.</span><span class="n">BuildDefaultPalette</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Y1&quot;</span><span class="p">,</span> <span class="s2">&quot;Y2&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot kronecker covmodel" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kronecker_covmodel_003.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">realization</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Real part&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;Imaginary part&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Trajectory on the complex plane&quot;</span><span class="p">)</span>
+<span class="n">diagonal</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+<span class="n">diagonal</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dotdash&quot;</span><span class="p">)</span>
+<span class="n">diagonal</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;grey&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diagonal</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">square_axes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="Trajectory on the complex plane" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_kronecker_covmodel_004.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.282 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-probabilistic-modeling-stochastic-processes-plot-kronecker-covmodel-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/bc410c5123a9b18a77bbec7595b5456c/plot_kronecker_covmodel.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kronecker_covmodel.py</span></code></a></p>
@@ -190,6 +280,7 @@ to download the full example code</p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
 </div>
 
 
@@ -206,16 +297,16 @@ to download the full example code</p>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_functional_basis_process.html" title="Create a functional basis process"
+          <a href="plot_process_manipulation.html" title="Draw fields"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_gaussian_process_covariance_hmat.html" title="Create a gaussian process from a cov. model using HMatrix"
+          <a href="plot_mixRVandProcess.html" title="Create a process from random vectors and processes"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Probabilistic modeling</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Create a Kronecker covariance model</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Sample trajectories from a Gaussian Process with correlated outputs</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
