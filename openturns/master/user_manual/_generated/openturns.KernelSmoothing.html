@@ -103,6 +103,10 @@
             
   <div class="section" id="kernelsmoothing">
 <h1>KernelSmoothing<a class="headerlink" href="#kernelsmoothing" title="Permalink to this headline">¶</a></h1>
+<p>(<a class="reference external" href="../../pyplots/KernelSmoothing.py">Source code</a>, <a class="reference external" href="../../pyplots/KernelSmoothing.png">png</a>, <a class="reference external" href="../../pyplots/KernelSmoothing.hires.png">hires.png</a>, <a class="reference external" href="../../pyplots/KernelSmoothing.pdf">pdf</a>)</p>
+<div class="figure align-default">
+<img alt="../../_images/KernelSmoothing.png" class="plot-directive" src="../../_images/KernelSmoothing.png" />
+</div>
 <dl class="py class">
 <dt id="openturns.KernelSmoothing">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">KernelSmoothing</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.KernelSmoothing" title="Permalink to this definition">¶</a></dt>
@@ -124,11 +128,11 @@ By default, the correction is not provided.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The binning mecanism creates a regular grid of <em>binNumber</em> intervals in each
+<p>The binning mechanism creates a regular grid of <em>binNumber</em> intervals in each
 dimension, then the unit weight of each point is linearly affected to the vertices
 of the bin containing the point. See <a class="reference internal" href="../../bibliography.html#wand1994" id="id1"><span>[wand1994]</span></a> for the details.</p>
 <p>The boundary correction is available only in one dimension, and it is done using
-the mirroring technique. See the notes of the <em>setBoundingOption</em> method for the
+the mirroring technique. See the notes of the <a class="reference internal" href="#openturns.KernelSmoothing.setBoundingOption" title="openturns.KernelSmoothing.setBoundingOption"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setBoundingOption()</span></code></a> method for
 details.</p>
 <p>When applied to multivariate samples, the kernel is the kernel product of the
 univariate distribution specified in the constructor.</p>
@@ -136,15 +140,57 @@ univariate distribution specified in the constructor.</p>
 <p>Fit a distribution on data thanks to the kernel smoothing technique:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gamma</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fittedDist</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ks</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fittedDist</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">fittedDist</span><span class="o">.</span><span class="n">getClassName</span><span class="p">())</span>
+<span class="go">Distribution</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="#openturns.KernelSmoothing.build" title="openturns.KernelSmoothing.build"><code class="xref py py-meth docutils literal notranslate"><span class="pre">build()</span></code></a> method produces a generic <a class="reference internal" href="openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></a>
+object. Other build methods (detailed below) produce more specific objects.</p>
+<p>Get the bandwidth:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bandwidth</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">getBandwidth</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>
+<span class="go">[1.03374]</span>
+</pre></div>
+</div>
+<p>The bandwidth was guessed by the <a class="reference internal" href="#openturns.KernelSmoothing.build" title="openturns.KernelSmoothing.build"><code class="xref py py-meth docutils literal notranslate"><span class="pre">build()</span></code></a> method.
+It could also have been provided by the user.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bandwidth</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fittedDist</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Compare the PDFs:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">fittedDist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gamma</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Drawable</span><span class="o">.</span><span class="n">BuildDefaultPalette</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s1">&#39;KS dist&#39;</span><span class="p">,</span> <span class="s1">&#39;Gamma&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The default values of the parameters of the constructor usually provide good results.
+Nevertheless, the parameters can be manually set.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ks</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bined</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># by default True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">binNumber</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ks</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">bined</span><span class="p">,</span> <span class="n">binNumber</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">boundaryCorrection</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># by default False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ks</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">bined</span><span class="p">,</span> <span class="n">binNumber</span><span class="p">,</span> <span class="n">boundaryCorrection</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Variants of the <a class="reference internal" href="#openturns.KernelSmoothing.build" title="openturns.KernelSmoothing.build"><code class="xref py py-meth docutils literal notranslate"><span class="pre">build()</span></code></a> method can be used when the distribution to build
+is expected to be of a certain type. In those cases however,
+the bandwidth must be user-specified.
+To use <a class="reference internal" href="#openturns.KernelSmoothing.buildAsTruncatedDistribution" title="openturns.KernelSmoothing.buildAsTruncatedDistribution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">buildAsTruncatedDistribution()</span></code></a>, boundary correction must be enabled.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">buildAsKernelMixture</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getClassName</span><span class="p">())</span>
+<span class="go">KernelMixture</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">buildAsMixture</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getClassName</span><span class="p">())</span>
+<span class="go">Mixture</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ks</span><span class="o">.</span><span class="n">buildAsTruncatedDistribution</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getClassName</span><span class="p">())</span>
+<span class="go">TruncatedDistribution</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -315,7 +361,7 @@ univariate distribution specified in the constructor.</p>
 <dd class="field-odd"><dl>
 <dt><strong>sample</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Data on which the distribution is fitted. Any dimension.</p>
 </dd>
-<dt><strong>bandwidth</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a>, optional</span></dt><dd><p>Contains the bandwith in each direction.</p>
+<dt><strong>bandwidth</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Contains the bandwith in each direction.</p>
 </dd>
 </dl>
 </dd>
@@ -346,7 +392,7 @@ univariate distribution specified in the constructor.</p>
 <dd class="field-odd"><dl>
 <dt><strong>sample</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Data on which the distribution is fitted. Any dimension.</p>
 </dd>
-<dt><strong>bandwidth</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a>, optional</span></dt><dd><p>Contains the bandwith in each direction.</p>
+<dt><strong>bandwidth</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Contains the bandwith in each direction.</p>
 </dd>
 </dl>
 </dd>
@@ -377,7 +423,7 @@ univariate distribution specified in the constructor.</p>
 <dd class="field-odd"><dl>
 <dt><strong>sample</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Data on which the distribution is fitted. Any dimension.</p>
 </dd>
-<dt><strong>bandwidth</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a>, optional</span></dt><dd><p>Contains the bandwith in each direction.</p>
+<dt><strong>bandwidth</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Contains the bandwith in each direction.</p>
 </dd>
 </dl>
 </dd>
