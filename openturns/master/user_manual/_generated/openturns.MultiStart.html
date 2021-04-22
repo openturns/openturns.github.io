@@ -107,7 +107,7 @@
 <dt id="openturns.MultiStart">
 <em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">MultiStart</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multi-start optimization algorithm.</p>
-<p>The algorithm runs an optimization solver for N starting points and returns the
+<p>The algorithm runs an optimization solver for multiple starting points and returns the
 best result of each local search.
 The algorithm succeeds when at least one local search succeeds.</p>
 <dl class="field-list">
@@ -115,7 +115,7 @@ The algorithm succeeds when at least one local search succeeds.</p>
 <dd class="field-odd"><dl>
 <dt><strong>solver</strong><span class="classifier"><a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm" title="openturns.OptimizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationAlgorithm</span></code></a></span></dt><dd><p>The internal solver</p>
 </dd>
-<dt><strong>startingPoints</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Starting point candidates</p>
+<dt><strong>startingSample</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>Starting points set</p>
 </dd>
 </dl>
 </dd>
@@ -124,19 +124,39 @@ The algorithm succeeds when at least one local search succeeds.</p>
 <p>A global number of evaluations can be explicitely set,
 in that case all starting points might not be used depending on the number
 of evaluations allocated to the internal solver.</p>
-<p class="rubric">Examples</p>
+<p>The starting point of <em>solver</em> is ignored.
+If you want to use it, add it to <em>startingSample</em>.</p>
+<p>Starting points provided through the <em>startingSample</em> parameter
+should be within the bounds of the
+<a class="reference internal" href="openturns.OptimizationProblem.html#openturns.OptimizationProblem" title="openturns.OptimizationProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationProblem</span></code></a>, but this is not checked.
+Examples
+——–
+First define the <a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm" title="openturns.OptimizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationAlgorithm</span></code></a> to be run from multiple starting points.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;x^2+y^2*(1-x)^3&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="o">-</span><span class="mf">3.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="o">-</span><span class="mf">2.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TNC</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">startingPoints</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">startingPoints</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Starting points must be manually specified.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uniform</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">startingSample</span> <span class="o">=</span> <span class="n">uniform</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">startingSample</span><span class="p">)</span>
+<span class="go">    [ X0        X1        ]</span>
+<span class="go">0 : [  1.14938   2.84712  ]</span>
+<span class="go">1 : [  2.41403   2.6034   ]</span>
+<span class="go">2 : [ -1.32362   0.515201 ]</span>
+<span class="go">3 : [ -1.83749  -1.68397  ]</span>
+<span class="go">4 : [ -0.264715 -0.536216 ]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">startingSample</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">())</span>
+<span class="go">[3,3]</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -177,7 +197,7 @@ of evaluations allocated to the internal solver.</p>
 <td><p>Accessor to the object’s name.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.getOptimizationAlgorithm" title="openturns.MultiStart.getOptimizationAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOptimizationAlgorithm</span></code></a>()</p></td>
-<td><p>Solver accessor.</p></td>
+<td><p>Internal solver accessor.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.getProblem" title="openturns.MultiStart.getProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getProblem</span></code></a>()</p></td>
 <td><p>Accessor to optimization problem.</p></td>
@@ -192,10 +212,10 @@ of evaluations allocated to the internal solver.</p>
 <td><p>Accessor to the object’s shadowed id.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.getStartingPoint" title="openturns.MultiStart.getStartingPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStartingPoint</span></code></a>()</p></td>
-<td><p>Accessor to starting point.</p></td>
+<td><p>Inherited but raises an Exception.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.getStartingPoints" title="openturns.MultiStart.getStartingPoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStartingPoints</span></code></a>()</p></td>
-<td><p>Starting points accessor.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.getStartingSample" title="openturns.MultiStart.getStartingSample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStartingSample</span></code></a>()</p></td>
+<td><p>Accessor to the sample of starting points.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.getVerbose" title="openturns.MultiStart.getVerbose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVerbose</span></code></a>()</p></td>
 <td><p>Accessor to the verbosity flag.</p></td>
@@ -237,10 +257,10 @@ of evaluations allocated to the internal solver.</p>
 <td><p>Accessor to the object’s name.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.setOptimizationAlgorithm" title="openturns.MultiStart.setOptimizationAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setOptimizationAlgorithm</span></code></a>(solver)</p></td>
-<td><p>Solver accessor.</p></td>
+<td><p>Internal solver accessor.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.setProblem" title="openturns.MultiStart.setProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProblem</span></code></a>(problem)</p></td>
-<td><p>Accessor to optimization problem.</p></td>
+<td><p>Sets the optimization problem.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.setProgressCallback" title="openturns.MultiStart.setProgressCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProgressCallback</span></code></a>(*args)</p></td>
 <td><p>Set up a progress callback.</p></td>
@@ -251,11 +271,11 @@ of evaluations allocated to the internal solver.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.setShadowedId" title="openturns.MultiStart.setShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setShadowedId</span></code></a>(id)</p></td>
 <td><p>Accessor to the object’s shadowed id.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.setStartingPoint" title="openturns.MultiStart.setStartingPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingPoint</span></code></a>(startingPoint)</p></td>
-<td><p>Accessor to starting point.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.setStartingPoint" title="openturns.MultiStart.setStartingPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingPoint</span></code></a>(point)</p></td>
+<td><p>Inherited but raises an Exception.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.setStartingPoints" title="openturns.MultiStart.setStartingPoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingPoints</span></code></a>(sample)</p></td>
-<td><p>Starting points accessor.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.MultiStart.setStartingSample" title="openturns.MultiStart.setStartingSample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingSample</span></code></a>(startingSample)</p></td>
+<td><p>Accessor to the sample of starting points.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.setStopCallback" title="openturns.MultiStart.setStopCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStopCallback</span></code></a>(*args)</p></td>
 <td><p>Set up a stop callback.</p></td>
@@ -265,6 +285,20 @@ of evaluations allocated to the internal solver.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.MultiStart.setVisibility" title="openturns.MultiStart.setVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setVisibility</span></code></a>(visible)</p></td>
 <td><p>Accessor to the object’s visibility state.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 68%" />
+<col style="width: 32%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>getStartingPoints</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>setStartingPoints</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -425,7 +459,7 @@ if <img class="math" src="../../_images/math/2f059c58b49656dc75485655e0efbf5a180
 <dl class="py method">
 <dt id="openturns.MultiStart.getOptimizationAlgorithm">
 <code class="sig-name descname"><span class="pre">getOptimizationAlgorithm</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.getOptimizationAlgorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solver accessor.</p>
+<dd><p>Internal solver accessor.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl>
@@ -495,29 +529,16 @@ if <img class="math" src="../../_images/math/2f059c58b49656dc75485655e0efbf5a180
 <dl class="py method">
 <dt id="openturns.MultiStart.getStartingPoint">
 <code class="sig-name descname"><span class="pre">getStartingPoint</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.getStartingPoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to starting point.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl>
-<dt><strong>startingPoint</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Starting point.</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<dd><p>Inherited but raises an Exception.</p>
+<p class="rubric">Notes</p>
+<p>This method is inherited from <a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm" title="openturns.OptimizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationAlgorithm</span></code></a> but makes
+no sense in a multi-start context.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="openturns.MultiStart.getStartingPoints">
-<code class="sig-name descname"><span class="pre">getStartingPoints</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.getStartingPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starting points accessor.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl>
-<dt><strong>startingPointNumber</strong><span class="classifier"><a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></span></dt><dd><p>Starting points</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<dt id="openturns.MultiStart.getStartingSample">
+<code class="sig-name descname"><span class="pre">getStartingSample</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.getStartingSample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the sample of starting points.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -704,7 +725,7 @@ if <img class="math" src="../../_images/math/2f059c58b49656dc75485655e0efbf5a180
 <dl class="py method">
 <dt id="openturns.MultiStart.setOptimizationAlgorithm">
 <code class="sig-name descname"><span class="pre">setOptimizationAlgorithm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.setOptimizationAlgorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solver accessor.</p>
+<dd><p>Internal solver accessor.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
@@ -718,7 +739,7 @@ if <img class="math" src="../../_images/math/2f059c58b49656dc75485655e0efbf5a180
 <dl class="py method">
 <dt id="openturns.MultiStart.setProblem">
 <code class="sig-name descname"><span class="pre">setProblem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.setProblem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to optimization problem.</p>
+<dd><p>Sets the optimization problem.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
@@ -789,26 +810,21 @@ if <img class="math" src="../../_images/math/2f059c58b49656dc75485655e0efbf5a180
 
 <dl class="py method">
 <dt id="openturns.MultiStart.setStartingPoint">
-<code class="sig-name descname"><span class="pre">setStartingPoint</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startingPoint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.setStartingPoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to starting point.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>startingPoint</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Starting point.</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<code class="sig-name descname"><span class="pre">setStartingPoint</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.setStartingPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inherited but raises an Exception.</p>
+<p class="rubric">Notes</p>
+<p>This method is inherited from <a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm" title="openturns.OptimizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationAlgorithm</span></code></a> but makes
+no sense in a multi-start context.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="openturns.MultiStart.setStartingPoints">
-<code class="sig-name descname"><span class="pre">setStartingPoints</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.setStartingPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starting points accessor.</p>
-<dl class="field-list">
+<dt id="openturns.MultiStart.setStartingSample">
+<code class="sig-name descname"><span class="pre">setStartingSample</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startingSample</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.setStartingSample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the sample of starting points.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>startingPointNumber</strong><span class="classifier"><a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></span></dt><dd><p>Starting points</p>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>startingSample</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>A new sample of starting points to overwrite the existing sample</p>
 </dd>
 </dl>
 </dd>

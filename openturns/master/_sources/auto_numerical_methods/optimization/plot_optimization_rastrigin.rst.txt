@@ -21,50 +21,37 @@
 Optimization of the Rastrigin test function
 ===========================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-21
-
 The Rastrigin function is defined by:
 
 .. math::
-   f(\mathbf{x}) = A + \sum_{i=1}^n \left[x_i^2 - A\cos(2 \pi x_i)\right]
+   f(\vect{x}) = A + \sum_{i=1}^n \left[x_i^2 - A\cos(2 \pi x_i)\right]
 
-where :math:`A=10` and :math:`\mathbf{x}\in[-5.12,5.12]^n`. 
+where :math:`A=10` and :math:`\vect{x}\in[-5.12,5.12]^n`.
 
-It has a global minimum at :math:`\mathbf{x} = \mathbf{0}` where :math:`f(\mathbf{x})=0`.
+It has a global minimum at :math:`\vect{x} = \vect{0}` where :math:`f(\vect{x})= - 10`.
 
-This function has several local minimas. This is why we use the `Multistart` algorithm. In our example, we consider the bidimensional case, i.e. :math:`n=2`.
+This function has many local minima, so optimization algorithms must be run from multiple starting points.
 
-*Reference*:
+In our example, we consider the bidimensional case, i.e. :math:`n=2`.
 
-* Rastrigin, L. A. "Systems of extremal control." Mir, Moscow (1974).
-* G. Rudolph. "Globale Optimierung mit parallelen Evolutionsstrategien". Diplomarbeit. Department of Computer Science, University of Dortmund, July 1990.
+**References**:
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-26
+- Rastrigin, L. A. "Systems of extremal control." Mir, Moscow (1974).
+- Rudolph, G. "Globale Optimierung mit parallelen Evolutionsstrategien". Diplomarbeit. Department of Computer Science, University of Dortmund, July 1990.
+
+.. GENERATED FROM PYTHON SOURCE LINES 26-28
 
 Definition of the problem
 -------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-35
+.. GENERATED FROM PYTHON SOURCE LINES 30-45
 
 .. code-block:: default
 
     import openturns as ot
     import openturns.viewer as viewer
-    from matplotlib import pylab as plt
     import numpy as np
     ot.Log.Show(ot.Log.NONE)
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 36-43
-
-.. code-block:: default
 
     def rastriginPy(X):
         A = 10.0
@@ -72,19 +59,9 @@ Definition of the problem
         y = A + sum(delta)
         return [y]
 
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 44-46
-
-.. code-block:: default
-
-    rastriginPy([1.0, 1.0])
+    dim = 2
+    rastrigin = ot.PythonFunction(dim, 1, rastriginPy)
+    print(rastrigin([1.0, 1.0]))
 
 
 
@@ -96,71 +73,16 @@ Definition of the problem
 
  .. code-block:: none
 
-
-    [-8.0]
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 47-49
-
-.. code-block:: default
-
-    dim = 2
+    [-8]
 
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
+Making `rastrigin` into a :class:`~openturns.MemoizeFunction` will make it recall all evaluated points.
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 50-52
-
-.. code-block:: default
-
-    rastrigin = ot.PythonFunction(dim, 1, rastriginPy)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 53-57
-
-.. code-block:: default
-
-    lowerbound = [-5.12] * dim
-    upperbound = [5.12] * dim
-    bounds = ot.Interval(lowerbound, upperbound)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 58-60
-
-.. code-block:: default
-
-    xexact = [0.0] * dim
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 61-63
-
-Plot the iso-values of the objective function
----------------------------------------------
-
-.. GENERATED FROM PYTHON SOURCE LINES 65-67
+.. GENERATED FROM PYTHON SOURCE LINES 49-51
 
 .. code-block:: default
 
@@ -173,13 +95,64 @@ Plot the iso-values of the objective function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-72
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
+
+This example is academic and the point achieving the global minimum of the function is known.
+
+.. GENERATED FROM PYTHON SOURCE LINES 55-58
+
+.. code-block:: default
+
+    xexact = [0.0] * dim
+    print(xexact)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.0, 0.0]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
+
+The optimization bounds must be specified.
+
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
+
+.. code-block:: default
+
+    lowerbound = [-4.4] * dim
+    upperbound = [5.12] * dim
+    bounds = ot.Interval(lowerbound, upperbound)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 67-69
+
+Plot the iso-values of the objective function
+---------------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 .. code-block:: default
 
     graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
     graph.setTitle("Rastrigin function")
-    view = viewer.View(graph)
+    view = viewer.View(graph, legend_kw={'bbox_to_anchor':(1,1), 'loc':"upper left"})
+    view.getFigure().tight_layout()
 
 
 
@@ -192,25 +165,20 @@ Plot the iso-values of the objective function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-74
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
-We see that the Rastrigin function has several local minimas. However, there is only one single global minimum at :math:`\mathbf{x}^\star=(0, 0)`.
+We see that the Rastrigin function has several local minima. However, there is only one single global minimum at :math:`\vect{x}^\star=(0, 0)`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-78
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
 
-Define the starting points
---------------------------
+Create the problem and set the optimization algorithm
+-----------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-81
-
-The starting points are computed from `Uniform` distributions in the input domain. We consider a set of 100 starting points. 
-
-.. GENERATED FROM PYTHON SOURCE LINES 83-86
+.. GENERATED FROM PYTHON SOURCE LINES 84-86
 
 .. code-block:: default
 
-    U = ot.Uniform(-5.12, 5.12)
-    distribution = ot.ComposedDistribution([U]*dim)
+    problem = ot.OptimizationProblem(rastrigin)
 
 
 
@@ -219,30 +187,44 @@ The starting points are computed from `Uniform` distributions in the input domai
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-90
+.. GENERATED FROM PYTHON SOURCE LINES 87-88
 
-.. code-block:: default
+We use the :class:`~openturns.Cobyla` algorithm and run it from multiple starting points selected by a :class:`~openturns.LowDiscrepancyExperiment`.
 
-    size = 100
-    startingPoints = distribution.getSample(size)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 91-99
+.. GENERATED FROM PYTHON SOURCE LINES 90-95
 
 .. code-block:: default
 
+    size = 64
+    distribution = ot.ComposedDistribution([ot.Uniform(lowerbound[0], upperbound[0])] * dim)
+    experiment = ot.LowDiscrepancyExperiment(ot.SobolSequence(), distribution, size)
+    solver = ot.MultiStart(ot.Cobyla(problem), experiment.generate())
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 96-98
+
+Visualize the starting points of the optimization algorithm
+-----------------------------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 100-111
+
+.. code-block:: default
+
+    startingPoints = solver.getStartingPoints()
     graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
     graph.setTitle("Rastrigin function")
     cloud = ot.Cloud(startingPoints)
     cloud.setPointStyle("bullet")
     cloud.setColor("black")
     graph.add(cloud)
+    graph.setLegends([""])
+    # sphinx_gallery_thumbnail_number = 2
     view = viewer.View(graph)
 
 
@@ -256,78 +238,40 @@ The starting points are computed from `Uniform` distributions in the input domai
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-101
+.. GENERATED FROM PYTHON SOURCE LINES 112-113
 
-We see that the starting points are randomly chosen in the input domain of the function. 
+We see that the starting points are well spread accross the input domain of the function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-105
+.. GENERATED FROM PYTHON SOURCE LINES 115-117
 
-Create and solve the optimization problem
------------------------------------------
+Solve the optimization problem
+------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-110
-
-.. code-block:: default
-
-    problem = ot.OptimizationProblem(rastrigin)
-    problem.setBounds(bounds)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 111-113
+.. GENERATED FROM PYTHON SOURCE LINES 119-124
 
 .. code-block:: default
 
-    solver = ot.TNC(problem)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 114-118
-
-.. code-block:: default
-
-    algo = ot.MultiStart(solver, startingPoints)
-    algo.run()
-    result = algo.getResult()
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 119-122
-
-.. code-block:: default
-
+    solver.run()
+    result = solver.getResult()
     xoptim = result.getOptimalPoint()
-    xoptim
+    print(xoptim)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[1.15868e-11,-1.44231e-11]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-125
+    [2.94029e-06,6.14939e-06]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 125-127
 
 .. code-block:: default
 
@@ -348,11 +292,20 @@ Create and solve the optimization problem
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-127
+.. GENERATED FROM PYTHON SOURCE LINES 128-129
 
-We can see that the solver found a very accurate approximation of the exact solution. 
+We can see that the solver found a very accurate approximation of the exact solution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-131
+.. GENERATED FROM PYTHON SOURCE LINES 131-137
+
+Analyze the optimization process
+--------------------------------
+
+:class:`~openturns.MultiStart` ran an instance of :class:`~openturns.Cobyla` from each starting point.
+
+Let us focus on the instance that found the global minimum. How many times did it evaluate `rastrigin`?
+
+.. GENERATED FROM PYTHON SOURCE LINES 139-141
 
 .. code-block:: default
 
@@ -369,34 +322,27 @@ We can see that the solver found a very accurate approximation of the exact solu
  .. code-block:: none
 
 
-    23
+    41
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-134
+.. GENERATED FROM PYTHON SOURCE LINES 142-143
+
+Let us view these evaluation points.
+
+.. GENERATED FROM PYTHON SOURCE LINES 145-155
 
 .. code-block:: default
 
     inputSample = result.getInputSample()
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 135-143
-
-.. code-block:: default
-
     graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
     graph.setTitle("Rastrigin function")
     cloud = ot.Cloud(inputSample)
     cloud.setPointStyle("bullet")
     cloud.setColor("black")
     graph.add(cloud)
-    view = viewer.View(graph)
+    view = viewer.View(graph, legend_kw={'bbox_to_anchor':(1,1), 'loc':"upper left"})
+    view.getFigure().tight_layout()
 
 
 
@@ -409,11 +355,11 @@ We can see that the solver found a very accurate approximation of the exact solu
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-145
+.. GENERATED FROM PYTHON SOURCE LINES 156-157
 
-We see that the algorithm evaluated the function more often in the neighbourhood of the solution. 
+How fast did it find the global minimum?
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-150
+.. GENERATED FROM PYTHON SOURCE LINES 159-162
 
 .. code-block:: default
 
@@ -431,56 +377,27 @@ We see that the algorithm evaluated the function more often in the neighbourhood
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-153
+.. GENERATED FROM PYTHON SOURCE LINES 163-168
 
-.. code-block:: default
+Let us now analyze the :class:`~openturns.MultiStart` process as a whole.
 
-    rastrigin.getEvaluationCallsNumber()
+Since `rastrigin` is a :class:`~openturns.MemoizeFunction`,
+it has a :meth:`~openturns.MemoizeFunction.getInputHistory` method
+which lets us see all points it was evaluated on since its creation.
 
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-
-    34160
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 154-155
-
-In order to see where the `rastrigin` function was evaluated, we use the `getInputHistory` method. 
-
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
+.. GENERATED FROM PYTHON SOURCE LINES 170-180
 
 .. code-block:: default
 
     inputSample = rastrigin.getInputHistory()
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 160-169
-
-.. code-block:: default
-
     graph = rastrigin.draw(lowerbound, upperbound, [100]*dim)
     graph.setTitle("Rastrigin function")
     cloud = ot.Cloud(inputSample)
     cloud.setPointStyle("bullet")
     cloud.setColor("black")
     graph.add(cloud)
-    view = viewer.View(graph)
-    plt.show()
+    view = viewer.View(graph, legend_kw={'bbox_to_anchor':(1,1), 'loc':"upper left"})
+    view.getFigure().tight_layout()
 
 
 
@@ -493,14 +410,34 @@ In order to see where the `rastrigin` function was evaluated, we use the `getInp
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-171
+.. GENERATED FROM PYTHON SOURCE LINES 181-182
 
-We see that the algorithm explored different regions of the space before finding the global minimum. 
+How many times did all :class:`~openturns.Cobyla` instances combined call `rastrigin`?
+
+.. GENERATED FROM PYTHON SOURCE LINES 184-185
+
+.. code-block:: default
+
+    rastrigin.getInputHistory().getSize()
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    2339
+
+
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.851 seconds)
+   **Total running time of the script:** ( 0 minutes  0.843 seconds)
 
 
 .. _sphx_glr_download_auto_numerical_methods_optimization_plot_optimization_rastrigin.py:

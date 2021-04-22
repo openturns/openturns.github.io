@@ -145,6 +145,37 @@ and the <img class="math" src="../../../_images/math/80b394abd4fb264a3879675f92f
 <p><img src="../../../_images/math/fb767aa6eb25c5ed0b02a3d8161851b5b4287050.svg" alt="\tilde{Y} = a_0 + \sum_{i \in I} a_i \phi_i(X) + \epsilon"/></p>
 </div><p>where <img class="math" src="../../../_images/math/0d105e8ee3d8ee933b1f68424693c02a02189d3a.svg" alt="\epsilon"/> is the residual, supposed to follow the standard Normal
 distribution, <img class="math" src="../../../_images/math/7ffa398a2109f04e25591d01c4f97ec6e97d753f.svg" alt="\phi_i"/> the i-th element of the basis.</p>
+<p class="rubric">Examples</p>
+<p>Definition of the data set</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span><span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;x1 + x2 + sin(x2 * 2 * pi_)/5 + 1e-3 * x3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()]</span><span class="o">*</span><span class="n">dimension</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_sample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_sample</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">input_sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Creation of a basis</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">functions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_description</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span><span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span><span class="n">input_description</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;1.0&#39;</span><span class="p">]))</span> <span class="c1">#Constant term</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span> <span class="c1">#Linear terms</span>
+<span class="gp">... </span>    <span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span><span class="n">input_description</span><span class="p">,</span> <span class="p">[</span><span class="n">input_description</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Basis</span><span class="p">(</span><span class="n">functions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Stepwise regression</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">minimalIndices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">direction</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#Forward selection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">penalty</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="c1">#Akaike Information Criterion, log(n) can be used for a BIC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo_forward</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearModelStepwiseAlgorithm</span><span class="p">(</span><span class="n">input_sample</span><span class="p">,</span> <span class="n">basis</span><span class="p">,</span> <span class="n">output_sample</span><span class="p">,</span> <span class="n">minimalIndices</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo_forward</span><span class="o">.</span><span class="n">setPenalty</span><span class="p">(</span><span class="n">penalty</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo_forward</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_forward</span> <span class="o">=</span> <span class="n">algo_forward</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>

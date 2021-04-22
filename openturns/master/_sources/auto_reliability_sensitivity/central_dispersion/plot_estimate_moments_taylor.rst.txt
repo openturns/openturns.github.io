@@ -20,18 +20,21 @@
 
 Estimate moments from Taylor expansions
 =======================================
-
-.. GENERATED FROM PYTHON SOURCE LINES 8-9
-
 In this example we are going to estimate mean and standard deviation of an output variable of interest thanks to the Taylor variance decomposition method of order 1 or 2.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-17
+.. GENERATED FROM PYTHON SOURCE LINES 8-10
+
+Model definition
+----------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 12-19
 
 .. code-block:: default
 
     from __future__ import print_function
     import openturns as ot
     import openturns.viewer as viewer
+    import numpy as np
     from matplotlib import pylab as plt
     ot.Log.Show(ot.Log.NONE)
 
@@ -42,11 +45,11 @@ In this example we are going to estimate mean and standard deviation of an outpu
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Create a composite random vector
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-33
+.. GENERATED FROM PYTHON SOURCE LINES 21-35
 
 .. code-block:: default
 
@@ -71,11 +74,16 @@ Create a composite random vector
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-38
+
+Taylor expansion based estimation of the moments
+------------------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 We create a Taylor expansion method to approximate moments
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-37
+.. GENERATED FROM PYTHON SOURCE LINES 41-43
 
 .. code-block:: default
 
@@ -88,11 +96,16 @@ We create a Taylor expansion method to approximate moments
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
+
+Analysis of the results
+-----------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 get 1st order mean
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-41
+.. GENERATED FROM PYTHON SOURCE LINES 49-51
 
 .. code-block:: default
 
@@ -113,11 +126,11 @@ get 1st order mean
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 get 2nd order mean
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-45
+.. GENERATED FROM PYTHON SOURCE LINES 53-55
 
 .. code-block:: default
 
@@ -138,11 +151,11 @@ get 2nd order mean
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 get covariance
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-49
+.. GENERATED FROM PYTHON SOURCE LINES 57-59
 
 .. code-block:: default
 
@@ -163,11 +176,11 @@ get covariance
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 draw importance factors
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-53
+.. GENERATED FROM PYTHON SOURCE LINES 61-63
 
 .. code-block:: default
 
@@ -186,11 +199,11 @@ draw importance factors
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 draw importance factors
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-58
+.. GENERATED FROM PYTHON SOURCE LINES 65-68
 
 .. code-block:: default
 
@@ -208,11 +221,11 @@ draw importance factors
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
 Get the value of the output at the mean point
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-62
+.. GENERATED FROM PYTHON SOURCE LINES 70-72
 
 .. code-block:: default
 
@@ -231,11 +244,11 @@ Get the value of the output at the mean point
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Get the gradient value of the output at the mean point
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-66
+.. GENERATED FROM PYTHON SOURCE LINES 74-76
 
 .. code-block:: default
 
@@ -257,16 +270,108 @@ Get the gradient value of the output at the mean point
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Get the hessian value of the output at the mean point
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-70
+.. GENERATED FROM PYTHON SOURCE LINES 78-81
 
 .. code-block:: default
 
     taylor.getHessianAtMean()
     plt.show()
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
+
+Using finite difference gradients
+---------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 86-89
+
+When no gradient and/or functions are provided for the model, a finite difference
+approach is relied on automatically. However, it is possible to manually specify
+the characteristic of the considered difference steps.
+
+.. GENERATED FROM PYTHON SOURCE LINES 89-94
+
+.. code-block:: default
+
+    def myPythonFunction(X):
+        x1, x2, x3, x4 = X
+        return [np.cos(x2*x2+x4)/(x1*x1+1.+x3**4)]
+    myFunc = ot.PythonFunction(4,1,myPythonFunction)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
+
+For instance, a user-defined constant step value can be considered
+
+.. GENERATED FROM PYTHON SOURCE LINES 96-103
+
+.. code-block:: default
+
+    gradEpsilon = [1e-8]*4
+    hessianEpsilon = [1e-7]*4
+    gradStep = ot.ConstantStep(gradEpsilon) # Costant gradient step
+    hessianStep = ot.ConstantStep(hessianEpsilon)  # Constant Hessian step
+    myFunc.setGradient(ot.CenteredFiniteDifferenceGradient(gradStep, myFunc.getEvaluation()))
+    myFunc.setHessian(ot.CenteredFiniteDifferenceHessian(hessianStep, myFunc.getEvaluation()))
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 104-106
+
+Alternatively, we can consider a finite difference step value which 
+depends on the location in the input space by relying on the BlendedStep class:
+
+.. GENERATED FROM PYTHON SOURCE LINES 106-113
+
+.. code-block:: default
+
+    gradEpsilon = [1e-8]*4
+    hessianEpsilon = [1e-7]*4
+    gradStep = ot.BlendedStep(gradEpsilon) # Costant gradient step
+    hessianStep = ot.BlendedStep(hessianEpsilon)  # Constant Hessian step
+    myFunc.setGradient(ot.CenteredFiniteDifferenceGradient(gradStep, myFunc.getEvaluation()))
+    myFunc.setHessian(ot.CenteredFiniteDifferenceHessian(hessianStep, myFunc.getEvaluation()))
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 114-115
+
+We can then proceed in the same way as before
+
+.. GENERATED FROM PYTHON SOURCE LINES 115-119
+
+.. code-block:: default
+
+    Y = ot.CompositeRandomVector(myFunc, X)
+    taylor = ot.TaylorExpansionMoments(Y)
+
+
 
 
 
