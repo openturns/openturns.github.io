@@ -1,6 +1,6 @@
 """
-Create a custom stationary covariance model
-===========================================
+Create a stationary covariance model
+====================================
 """
 # %%
 # This use case illustrates how the user can define his own stationary covariance model thanks to the object *UserDefinedStationaryCovarianceModel* defined from:
@@ -37,10 +37,10 @@ def gamma(tau):
     return 1.0 / (1.0 + tau * tau)
 
 # Create the collection of HermitianMatrix
-coll = ot.CovarianceMatrixCollection()
+coll = ot.SquareMatrixCollection()
 for k in range(N):
     t = mesh.getValue(k)
-    matrix = ot.CovarianceMatrix([[gamma(t)]])
+    matrix = ot.SquareMatrix([[gamma(t)]])
     coll.add(matrix)
 
 # %%

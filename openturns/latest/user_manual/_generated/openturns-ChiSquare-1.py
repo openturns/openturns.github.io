@@ -1,6 +1,7 @@
 import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
+title = None
 if ot.ChiSquare().__class__.__name__ == 'Bernoulli':
     distribution = ot.Bernoulli(0.7)
 elif ot.ChiSquare().__class__.__name__ == 'Binomial':
@@ -30,13 +31,19 @@ elif ot.ChiSquare().__class__.__name__ == 'RandomMixture':
 elif ot.ChiSquare().__class__.__name__ == 'TruncatedDistribution':
     distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
 elif ot.ChiSquare().__class__.__name__ == 'UserDefined':
-    distribution = ot.UserDefined([[0.0], [1.0], [2.0]], [0.2, 0.7, 0.1])
+    distribution = ot.UserDefined([[1.0], [2.0], [3.0]], [0.4, 0.5, 1.0])
 elif ot.ChiSquare().__class__.__name__ == 'ZipfMandelbrot':
     distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
+elif ot.ChiSquare().__class__.__name__ == 'Normal':
+    cov = ot.CovarianceMatrix([[1.0, -0.5], [-0.5, 1.0]])
+    distribution = ot.Normal([0.0, 0.0], cov)
+    title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
 else:
     distribution = ot.ChiSquare()
+
 dimension = distribution.getDimension()
-title = str(distribution)[:100].split('\n')[0]
+if title is None:
+    title = str(distribution)[:100].split('\n')[0]
 if dimension == 1:
     distribution.setDescription(['$x$'])
     pdf_graph = distribution.drawPDF()
@@ -48,9 +55,14 @@ if dimension == 1:
     View(cdf_graph, figure=fig, axes=[cdf_axis], add_legend=False)
     fig.suptitle(title)
 elif dimension == 2:
-    distribution.setDescription(['$x_1$', '$x_2$'])
+    grid = ot.GridLayout(1, 2)
     pdf_graph = distribution.drawPDF()
-    pdf_graph.setTitle(title)
-    fig = plt.figure(figsize=(10, 5))
-    pdf_axis = fig.add_subplot(111)
-    View(pdf_graph, figure=fig, axes=[pdf_axis], add_legend=False, square_axes=False)
+    pdf_graph.setLegends([''])
+    cdf_graph = distribution.drawCDF()
+    cdf_graph.setLegends([''])
+    grid.setGraph(0, 0, pdf_graph)
+    grid.setGraph(0, 1, cdf_graph)
+    grid.setTitle(title)
+    fig = View(grid).getFigure()
+    fig.axes[0].set_title('PDF')
+    fig.axes[1].set_title('CDF')

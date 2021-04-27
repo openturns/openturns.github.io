@@ -1,6 +1,6 @@
 """
-Configure the optimization solver of a kriging algorithm
-========================================================
+Kriging :configure the optimization solver
+==========================================
 """
 # %%
 # The goal of this example is to show how to fine-tune the optimization solver used to estimate the hyperparameters of the covariance model of the kriging metamodel. 
@@ -35,8 +35,6 @@ Configure the optimization solver of a kriging algorithm
 
 # %%
 import openturns as ot
-import openturns.viewer as viewer
-from matplotlib import pylab as plt
 ot.Log.Show(ot.Log.NONE)
 
 # %%
@@ -127,7 +125,7 @@ basic_covariance_model
 solver = algo.getOptimizationAlgorithm()
 
 # %%
-# By default, the optimizer is the TNC algorithm with bound constraints. 
+# Get the default optimizer.
 
 # %%
 solverImplementation = solver.getImplementation()
@@ -308,7 +306,7 @@ K = 25 # design size
 LHS = ot.LHSExperiment(boundedDistribution, K)
 LHS.setAlwaysShuffle(True)
 SA_profile = ot.GeometricProfile(10., 0.95, 20000)
-LHS_optimization_algo = ot.SimulatedAnnealingLHS(LHS, SA_profile, ot.SpaceFillingC2())
+LHS_optimization_algo = ot.SimulatedAnnealingLHS(LHS, ot.SpaceFillingC2(), SA_profile)
 LHS_optimization_algo.generate()
 LHS_design = LHS_optimization_algo.getResult()
 starting_points = LHS_design.getOptimalDesign()
@@ -335,6 +333,7 @@ multiStartSolver = ot.MultiStart(solver, starting_points)
 
 # %%
 algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
+algo.setOptimizationBounds(bounds)
 algo.setOptimizationAlgorithm(multiStartSolver)
 algo.run()
 

@@ -1,6 +1,6 @@
 """
-Central tendency analysis on the cantilever beam example
-========================================================
+Analyse the central tendency of a cantilever beam
+=================================================
 """
 # %%
 # In this example we perform a central tendency analysis of a random variable Y using the various methods available. We consider the :ref:`cantilever beam <use-case-cantilever-beam>` example and show how to use the `TaylorExpansionMoments` and `ExpectationSimulationAlgorithm` classes. 
@@ -24,7 +24,7 @@ cb = cantilever_beam.CantileverBeam()
 # We set a `mean` vector and a unitary standard deviation : 
 dim = cb.dim
 mean = [50.0, 1.0, 10.0, 5.0]
-sigma = ot.Point(dim, 1.0)
+sigma = [1.0] * dim
 R = ot.IdentityMatrix(dim)
 
 # %%
@@ -96,7 +96,7 @@ print('monte carlo mean=', expectation_mean, 'var=', expectation_result.getVaria
 # %%
 Y_s = Y.getSample(1000)
 y_mean = Y_s.computeMean()
-y_stddev = Y_s.computeStandardDeviationPerComponent()
+y_stddev = Y_s.computeStandardDeviation()
 y_quantile_95p = Y_s.computeQuantilePerComponent(0.95)
 print('mean=', y_mean, 'stddev=', y_stddev, 'quantile@95%', y_quantile_95p)
 

@@ -22,6 +22,7 @@ import openturns as ot
 import openturns.viewer as viewer
 from matplotlib import pylab as plt
 import math as m
+ot.RandomGenerator.SetSeed(0)
 ot.ResourceMap.SetAsString("KrigingAlgorithm-LinearAlgebra",  "LAPACK")
 ot.Log.Show(ot.Log.NONE)
 
@@ -48,8 +49,8 @@ model = am.model
 # %%
 # We specify the domain of the model :
 dim = am.dim
-lowerbound = ot.Point([-4.0] * dim)
-upperbound = ot.Point([4.0] * dim)
+lowerbound = [-4.0] * dim
+upperbound = [4.0] * dim
 
 # %%
 # We know that the global minimum is at the center of the domain. It is stored in the `AckleyModel` data class. 
@@ -310,7 +311,7 @@ view = viewer.View(graph)
 
 # %%
 graph = result.drawOptimalValueHistory()
-view = viewer.View(graph)
+view = viewer.View(graph, axes_kw={"xticks": range(0, result.getIterationNumber(), 5)})
 
 plt.show()
 # %%

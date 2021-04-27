@@ -1,6 +1,6 @@
 """
-Simulate new trajectories from a kriging metamodel
-==================================================
+Kriging : generate trajectories from a metamodel
+================================================
 """
 # %%
 # The main goal of this example is to show how to simulate new trajectories from a kriging metamodel.
@@ -207,6 +207,7 @@ type(trajectories)
 # The `getSample` method returns a `ProcessSample`. By comparison, the `getSample` method of a `KrigingRandomVector` would return a `Sample`. 
 
 # %%
+# sphinx_gallery_thumbnail_number = 3
 graph = trajectories.drawMarginal()
 graph.add(plot_data_test(x_test,y_test))
 graph.add(plot_data_train(x_train,y_train))

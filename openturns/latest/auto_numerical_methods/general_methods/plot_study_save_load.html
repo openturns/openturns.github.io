@@ -5,18 +5,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Save/load a study &#8212; OpenTURNS 1.16 documentation</title>
+    <title>Save/load a study &#8212; OpenTURNS 1.17rc1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/openturns.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/js/mysearchtools.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
@@ -60,7 +61,7 @@
         <li class="right" >
           <a href="plot_estimate_integral_iterated_quadrature.html" title="Estimate an integral"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Numerical methods</a> &#187;</li>
@@ -102,7 +103,8 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-numerical-methods-general-methods-plot-study-save-load-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-numerical-methods-general-methods-plot-study-save-load-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="save-load-a-study">
 <span id="sphx-glr-auto-numerical-methods-general-methods-plot-study-save-load-py"></span><h1>Save/load a study<a class="headerlink" href="#save-load-a-study" title="Permalink to this headline">¶</a></h1>
@@ -153,8 +155,9 @@
 </ul>
 <p>Each object is identified whether with:</p>
 <ul class="simple">
-<li><p>its name: it is useful to give names to the objects we want to save. If no name has been given by the user, we can use the name by default. The name of each object saved can be checked in the file.XML created or by printing the study in the python interface (with the command print).</p></li>
-<li><p>its id number : this id number is unique for each object. It is useful to distinguish objects of same type which names are identical, equal to the default name given (‘Unnamed’). This id number may be checked by printing the study loaded in the python interface (with the command print): be careful, this print operation must be performed after having loaded the study (the id number may be different from the one indicated in the file.XML associated to the study).</p></li>
+<li><p>its name: it is useful to give names to the objects we want to save. If no name has been given by the user, we can use the default name. The name of each saved object can be checked in the output XML file or with the python <cite>print</cite> command (applied to the <cite>Study</cite> object).</p></li>
+<li><p>its id number: this id number is unique to each object. It distinguishes objects with identical type and name (like the default name “Unnamed”). This id number may be checked by printing the study <strong>after</strong> it has been loaded in the python interface (with the <cite>print</cite> command). It can differ from the id number indicated in the XML file the study was loaded from.</p></li>
+<li><p>for HDF5 storage (see below): the id serves both as xml id and hdf5 dataset name. Id uniqueness forbids any misleading in reading/writing hdf5 datasets.</p></li>
 </ul>
 <p>Create a Study Object</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">study</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Study</span><span class="p">()</span>
@@ -163,6 +166,12 @@
 <p>Associate it to an XML file</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;study.xml&#39;</span>
 <span class="n">study</span><span class="o">.</span><span class="n">setStorageManager</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">XMLStorageManager</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Alternatively, large amounts of data can be stored in binary HDF5 file. An XML file (<cite>study_h5.xml</cite>) serves as header for binary data, which are stored in the automatically created <cite>study_h5.h5</cite> file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">study_h5</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Study</span><span class="p">()</span>
+<span class="n">fileName_h5</span> <span class="o">=</span> <span class="s1">&#39;study_h5.xml&#39;</span>
+<span class="n">study_h5</span><span class="o">.</span><span class="n">setStorageManager</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">XMLH5StorageManager</span><span class="p">(</span><span class="n">fileName_h5</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Add an object to the study; at this point it is not written to disk yet</p>
@@ -255,7 +264,7 @@ Normal(mu = 4, sigma = 3)
         <li class="right" >
           <a href="plot_estimate_integral_iterated_quadrature.html" title="Estimate an integral"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.16 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.17rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Numerical methods</a> &#187;</li>
@@ -263,9 +272,9 @@ Normal(mu = 4, sigma = 3)
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 16, 2020.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.0+.
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Apr 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
     </div>
   </body>
 </html>

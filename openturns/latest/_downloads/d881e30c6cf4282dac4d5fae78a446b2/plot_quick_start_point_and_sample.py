@@ -54,7 +54,7 @@ p[1] = 2
 p
 
 # %%
-p.getDimension ()
+p.getDimension()
 
 # %%
 # The `Sample` class
@@ -101,14 +101,14 @@ row = data [3, :]
 row
 
 # %%
-type ( row )
+print(type(row))
 
 # %%
 column = data [:, 2]
 column
 
 # %%
-type ( column )
+print(type(column))
 
 # %%
 # We see that:
@@ -122,7 +122,28 @@ type ( column )
 # The following statement extracts several columns (with indices 0 and 2) and creates a new `Sample`. 
 
 # %%
-data.getMarginal ([0 , 2])
+data.getMarginal([0 , 2])
+
+# %%
+# Slicing can also be used to set a `Sample` row or column.
+
+# %%
+sample = ot.Sample([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]])
+p = [8.0, 10.0]
+sample[2, :] = p
+sample
+
+# %%
+sample = ot.Sample([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]])
+s = ot.Sample([[3.0],
+               [5.0],
+               [7.0]])
+sample[:, 1] = s
+sample
 
 # %%
 # Create a `Point` or a `Sample` from a Python list
@@ -131,7 +152,7 @@ data.getMarginal ([0 , 2])
 # The following statement creates a `Point` from a Python list.
 
 # %%
-p1 = ot.Point ([2 , 3])
+p1 = ot.Point([2 , 3])
 p1
 
 # %%
@@ -144,7 +165,7 @@ p2
 # In the following statement, we create a point by iterating over the components of a `Point`. 
 
 # %%
-p3 = ot.Point ([i*i for i in p1])
+p3 = ot.Point([i*i for i in p1])
 p3
 
 # %%
