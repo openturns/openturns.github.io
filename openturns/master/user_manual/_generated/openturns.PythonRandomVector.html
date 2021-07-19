@@ -104,6 +104,10 @@
             
   <section id="pythonrandomvector">
 <h1>PythonRandomVector<a class="headerlink" href="#pythonrandomvector" title="Permalink to this headline">¶</a></h1>
+<p>(<a class="reference external" href="../../pyplots/PythonRandomVector.py">Source code</a>, <a class="reference external" href="../../pyplots/PythonRandomVector.png">png</a>, <a class="reference external" href="../../pyplots/PythonRandomVector.hires.png">hires.png</a>, <a class="reference external" href="../../pyplots/PythonRandomVector.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../../_images/PythonRandomVector.png" class="plot-directive" src="../../_images/PythonRandomVector.png" />
+</figure>
 <dl class="py class">
 <dt class="sig sig-object py" id="openturns.PythonRandomVector">
 <em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">PythonRandomVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.PythonRandomVector" title="Permalink to this definition">¶</a></dt>
@@ -174,6 +178,50 @@ Default is 0.</p>
 <span class="go"> [ 0         0.0833333 ]]</span>
 </pre></div>
 </div>
+<p>Random vectors can admit parameters.</p>
+<p>In the following example, we define a <cite>RandomVector</cite>
+to sample from a normal multivariate normal distribution
+truncated to a ball.
+We implement the <cite>setParameter</cite> method to define the ball’s center.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">NormalTruncatedToBall</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">PythonRandomVector</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">_center</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">_normal</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">_max_dist</span> <span class="o">=</span> <span class="n">max_dist</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">getRealization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SpecFunc</span><span class="o">.</span><span class="n">MaxScalar</span>
+<span class="gp">... </span>       <span class="k">while</span> <span class="n">dist</span><span class="o">&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_dist</span><span class="p">:</span>
+<span class="gp">... </span>           <span class="n">candidate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normal</span><span class="o">.</span><span class="n">getRealization</span><span class="p">()</span>
+<span class="gp">... </span>           <span class="n">dist</span> <span class="o">=</span> <span class="p">(</span><span class="n">candidate</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="n">candidate</span>
+<span class="gp">...</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">setParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span> <span class="c1"># the parameter influences sampling</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">_center</span> <span class="o">=</span> <span class="n">center</span>
+<span class="gp">...</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">getParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># implemented for the sake of consistency</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_center</span>
+<span class="gp">...</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">getParameterDescription</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># optional</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;center_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getDimension</span><span class="p">())]</span>
+</pre></div>
+</div>
+<p>Define an instance of this <cite>RandomVector</cite> and set the parameter:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myRV</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">NormalTruncatedToBall</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myRV</span><span class="o">.</span><span class="n">setParameter</span><span class="p">([</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Get a sample and plot it:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span> <span class="o">=</span> <span class="n">myRV</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Sample from a PythonRandomVector&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -181,22 +229,13 @@ Default is 0.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.getCovariance" title="openturns.PythonRandomVector.getCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCovariance</span></code></a>()</p></td>
-<td><p>Get the covariance.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.getDescription" title="openturns.PythonRandomVector.getDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDescription</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.getDescription" title="openturns.PythonRandomVector.getDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDescription</span></code></a>()</p></td>
 <td><p>Get the description.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.getDimension" title="openturns.PythonRandomVector.getDimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDimension</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.getDimension" title="openturns.PythonRandomVector.getDimension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDimension</span></code></a>()</p></td>
 <td><p>Get the dimension.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.getMean" title="openturns.PythonRandomVector.getMean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMean</span></code></a>()</p></td>
-<td><p>Get the mean.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.getRealization" title="openturns.PythonRandomVector.getRealization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRealization</span></code></a>()</p></td>
-<td><p>Get a realization of the random vector.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.setDescription" title="openturns.PythonRandomVector.setDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDescription</span></code></a>(desc)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.PythonRandomVector.setDescription" title="openturns.PythonRandomVector.setDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDescription</span></code></a>(desc)</p></td>
 <td><p>Set the description.</p></td>
 </tr>
 </tbody>
@@ -205,20 +244,6 @@ Default is 0.</p>
 <dt class="sig sig-object py" id="openturns.PythonRandomVector.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.PythonRandomVector.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="openturns.PythonRandomVector.getCovariance">
-<span class="sig-name descname"><span class="pre">getCovariance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.PythonRandomVector.getCovariance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the covariance.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl>
-<dt><strong>covariance</strong><span class="classifier"><a class="reference internal" href="openturns.CovarianceMatrix.html#openturns.CovarianceMatrix" title="openturns.CovarianceMatrix"><code class="xref py py-class docutils literal notranslate"><span class="pre">CovarianceMatrix</span></code></a></span></dt><dd><p>Covariance of the RandomVector.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.PythonRandomVector.getDescription">
@@ -242,34 +267,6 @@ Default is 0.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>dim</strong><span class="classifier">positive int</span></dt><dd><p>Dimension of the RandomVector.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="openturns.PythonRandomVector.getMean">
-<span class="sig-name descname"><span class="pre">getMean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.PythonRandomVector.getMean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the mean.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl>
-<dt><strong>mean</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Mean of the RandomVector.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="openturns.PythonRandomVector.getRealization">
-<span class="sig-name descname"><span class="pre">getRealization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.PythonRandomVector.getRealization" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a realization of the random vector.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl>
-<dt><strong>realization</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Sequence of values randomly determined from the RandomVector definition.</p>
 </dd>
 </dl>
 </dd>
