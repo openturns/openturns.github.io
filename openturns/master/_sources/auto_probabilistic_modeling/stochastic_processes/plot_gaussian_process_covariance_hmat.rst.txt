@@ -21,11 +21,13 @@
 Create a gaussian process from a cov. model using HMatrix
 =========================================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-7
+.. GENERATED FROM PYTHON SOURCE LINES 6-9
 
-In this basic example we are going to build a gaussian process from its covariance model and using the `HMatrix` as sampling method.
+In this basic example we build a gaussian process from its covariance model and use the `HMatrix` method as a sampling method.
+Several methods and parameters are presented to set the HMatrix compression.
+This is an advanced topic and we should highlight key ideas only in this example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-19
+.. GENERATED FROM PYTHON SOURCE LINES 12-18
 
 .. code-block:: default
 
@@ -33,7 +35,7 @@ In this basic example we are going to build a gaussian process from its covarian
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
-    ot.Log.Show(ot.Log.NONE)
+    #ot.Log.Show(ot.Log.NONE)
 
 
 
@@ -42,18 +44,21 @@ In this basic example we are going to build a gaussian process from its covarian
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
-Define the covariance model :
+Definition of the covariance model
+----------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-28
+We define our Gaussian process from its covariance model. We consider a Gaussian kernel with the following parameters.
+
+.. GENERATED FROM PYTHON SOURCE LINES 25-30
 
 .. code-block:: default
 
     dimension = 1
     amplitude = [1.0] * dimension
-    scale = [10] * dimension
-    covarianceModel = ot.AbsoluteExponential(scale, amplitude)
+    scale = [1] * dimension
+    covarianceModel = ot.GeneralizedExponential(scale, amplitude, 2)
 
 
 
@@ -62,15 +67,11 @@ Define the covariance model :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-30
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
-Define the time grid on which we want to sample the gaussian process :
+We define the time grid on which we want to sample the Gaussian process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
-
-define a mesh
-
-.. GENERATED FROM PYTHON SOURCE LINES 33-38
+.. GENERATED FROM PYTHON SOURCE LINES 34-39
 
 .. code-block:: default
 
@@ -86,15 +87,11 @@ define a mesh
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
-Finally define the gaussian process :
+Finally we define the Gaussian process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
-
-create the process
-
-.. GENERATED FROM PYTHON SOURCE LINES 43-46
+.. GENERATED FROM PYTHON SOURCE LINES 41-44
 
 .. code-block:: default
 
@@ -111,16 +108,25 @@ create the process
 
  .. code-block:: none
 
-    GaussianProcess(trend=[x0]->[0.0], covariance=AbsoluteExponential(scale=[10], amplitude=[1]))
+    GaussianProcess(trend=[x0]->[0.0], covariance=GeneralizedExponential(scale=[1], amplitude=[1], p=2))
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 45-51
 
-We set the sampling method to `HMAT`
+Basics on the HMatrix algebra
+-----------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-52
+The `HMatrix` framework uses efficient linear algebra techniques to speed-up the
+(Cholesky) factorization of the covariance matrix.
+This method can be tuned with several parameters. We should concentrate on the easiest ones. 
+
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
+
+We set the sampling method to `HMAT` (0 is the classical/dense case).
+
+.. GENERATED FROM PYTHON SOURCE LINES 54-57
 
 .. code-block:: default
 
@@ -133,15 +139,54 @@ We set the sampling method to `HMAT`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
-We sample the process : 
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+The `HMatrix` framework uses an algebraic algorithm to compress sub-blocks of the matrix. Several algorithms are available and can be set from the ResourceMap key.
 
-draw a sample
+.. GENERATED FROM PYTHON SOURCE LINES 59-61
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-62
+.. code-block:: default
+
+    ot.ResourceMap.SetAsString("HMatrix-CompressionMethod",  "AcaRandom")
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 62-64
+
+There are two threshold used in the HMatrix framework. The `AssemblyEpsilon` is the most important one.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 64-68
+
+.. code-block:: default
+
+    ot.ResourceMap.SetAsScalar("HMatrix-AssemblyEpsilon",  1e-7)
+    ot.ResourceMap.SetAsScalar("HMatrix-RecompressionEpsilon",  1e-7)
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 69-71
+
+Process sampling
+----------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
+
+We eventually draw samples of this covariance model.
+
+.. GENERATED FROM PYTHON SOURCE LINES 74-79
 
 .. code-block:: default
 
@@ -162,14 +207,14 @@ draw a sample
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
-We notice here that we are able to sample the covariance model over a mesh of size `10000`, which is usually tricky on laptop. This is mainly due to the compression.
+We notice here that we are able to sample the covariance model over a mesh of size `10000`, which is usually tricky on a laptop. This is mainly due to the compression.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.837 seconds)
+   **Total running time of the script:** ( 0 minutes  4.237 seconds)
 
 
 .. _sphx_glr_download_auto_probabilistic_modeling_stochastic_processes_plot_gaussian_process_covariance_hmat.py:
