@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Bayesian calibration of the flooding model &#8212; OpenTURNS 1.18dev documentation</title>
+    <title>Bayesian calibration of the flooding model &#8212; OpenTURNS 1.19dev documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -63,7 +63,7 @@
         <li class="right" >
           <a href="plot_rwmh_python_distribution.html" title="Posterior sampling using a PythonDistribution"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Calibration</a> &#187;</li>
@@ -162,15 +162,17 @@ We consider a sample size equal to:</p>
 </section>
 <section id="generate-the-observations">
 <h2>Generate the observations<a class="headerlink" href="#generate-the-observations" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
+<span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">flood_model</span> <span class="k">as</span> <span class="n">flood_model</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
 </pre></div>
 </div>
 <p>A basic implementation of the probabilistic model is available in the usecases module :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">flood_model</span> <span class="k">as</span> <span class="n">flood_model</span>
-<span class="n">fm</span> <span class="o">=</span> <span class="n">flood_model</span><span class="o">.</span><span class="n">FloodModel</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fm</span> <span class="o">=</span> <span class="n">flood_model</span><span class="o">.</span><span class="n">FloodModel</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We define the model <img class="math" src="../../_images/math/658ae44ee69111e3048325f416f44d6080707928.svg" alt="g"/> which has 4 inputs and one output H.</p>
@@ -180,7 +182,7 @@ We consider a sample size equal to:</p>
 <li><p>if <img class="math" src="../../_images/math/747754aa15335a1c45edd090361530371d3f0e21.svg" alt="Z_v-Z_m&lt;0"/>.</p></li>
 </ul>
 <p>In these cases, we return an infinite number.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">functionFlooding</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">functionFlooding</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="n">L</span> <span class="o">=</span> <span class="mf">5.0e3</span>
     <span class="n">B</span> <span class="o">=</span> <span class="mf">300.0</span>
     <span class="n">Q</span><span class="p">,</span> <span class="n">K_s</span><span class="p">,</span> <span class="n">Z_v</span><span class="p">,</span> <span class="n">Z_m</span> <span class="o">=</span> <span class="n">X</span>
@@ -221,19 +223,19 @@ We consider a sample size equal to:</p>
 </pre></div>
 </div>
 <p>Generate the observation noise and add it to the output of the model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigmaObservationNoiseH</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># (m)</span>
-<span class="n">noiseH</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="n">sigmaObservationNoiseH</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigmaObservationNoiseH</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># (m)</span>
+<span class="n">noiseH</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">sigmaObservationNoiseH</span><span class="p">)</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">sampleNoiseH</span> <span class="o">=</span> <span class="n">noiseH</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">nbobs</span><span class="p">)</span>
 <span class="n">Hobs</span> <span class="o">=</span> <span class="n">outputH</span> <span class="o">+</span> <span class="n">sampleNoiseH</span>
 </pre></div>
 </div>
 <p>Plot the Y observations versus the X observations.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Qobs</span> <span class="o">=</span> <span class="n">inputSample</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Qobs</span> <span class="o">=</span> <span class="n">inputSample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Observations&quot;</span><span class="p">,</span><span class="s2">&quot;Q (m3/s)&quot;</span><span class="p">,</span><span class="s2">&quot;H (m)&quot;</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">Qobs</span><span class="p">,</span><span class="n">Hobs</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Observations&quot;</span><span class="p">,</span> <span class="s2">&quot;Q (m3/s)&quot;</span><span class="p">,</span> <span class="s2">&quot;H (m)&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">Qobs</span><span class="p">,</span> <span class="n">Hobs</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
@@ -245,8 +247,9 @@ We consider a sample size equal to:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fullModelPy</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="n">Q</span><span class="p">,</span> <span class="n">K_s</span><span class="p">,</span> <span class="n">Z_v</span><span class="p">,</span> <span class="n">Z_m</span> <span class="o">=</span> <span class="n">X</span>
     <span class="n">H</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">X</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">sigmaH</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># (m^2) The standard deviation of the observation error.</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">H</span><span class="p">,</span><span class="n">sigmaH</span><span class="p">]</span>
+    <span class="n">sigmaH</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># (m^2) The standard deviation of the observation error.</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">sigmaH</span><span class="p">]</span>
+
 
 <span class="n">fullModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">fullModelPy</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">fullModel</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Qobs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -272,9 +275,9 @@ We consider a sample size equal to:</p>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parameterPriorCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="n">paramDim</span><span class="p">)</span>
-<span class="n">parameterPriorCovariance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaKs</span><span class="o">**</span><span class="mi">2</span>
-<span class="n">parameterPriorCovariance</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaZv</span><span class="o">**</span><span class="mi">2</span>
-<span class="n">parameterPriorCovariance</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaZm</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">parameterPriorCovariance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaKs</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">parameterPriorCovariance</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaZv</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">parameterPriorCovariance</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaZm</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">parameterPriorCovariance</span>
 </pre></div>
 </div>
@@ -285,7 +288,7 @@ We consider a sample size equal to:</p>
 </div>
 <br />
 <br /><p>Define the the prior distribution <img class="math" src="../../_images/math/80ef82252669162d81d1ee215dbf4f04d7bf236f.svg" alt="\pi(\underline{\theta})"/> of the parameter <img class="math" src="../../_images/math/ee2cb507476c463256f5e73e5a247a5d08ea6b56.svg" alt="\underline{\theta}"/></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">parameterPriorMean</span><span class="p">,</span><span class="n">parameterPriorCovariance</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">parameterPriorMean</span><span class="p">,</span> <span class="n">parameterPriorCovariance</span><span class="p">)</span>
 <span class="n">prior</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s1">&#39;Ks&#39;</span><span class="p">,</span> <span class="s1">&#39;Zv&#39;</span><span class="p">,</span> <span class="s1">&#39;Zm&#39;</span><span class="p">])</span>
 <span class="n">prior</span>
 </pre></div>
@@ -307,7 +310,7 @@ We consider a sample size equal to:</p>
 </div>
 <br />
 <br /><p>Proposal distribution: uniform.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proposal</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">),</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proposal</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)]</span>
 <span class="n">proposal</span>
 </pre></div>
 </div>
@@ -373,10 +376,7 @@ We consider a sample size equal to:</p>
 </pre></div>
 </div>
 <p>Display prior vs posterior for each parameter.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
-<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="k">for</span> <span class="n">parameter_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">paramDim</span><span class="p">):</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
@@ -390,7 +390,7 @@ We consider a sample size equal to:</p>
 <span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Bayesian calibration&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_bayesian_calibration_flooding_002.png" srcset="../../_images/sphx_glr_plot_bayesian_calibration_flooding_002.png" alt="Bayesian calibration" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.003 seconds)</p>
+<img src="../../_images/sphx_glr_plot_bayesian_calibration_flooding_002.png" srcset="../../_images/sphx_glr_plot_bayesian_calibration_flooding_002.png" alt="Bayesian calibration" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.329 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-calibration-bayesian-calibration-plot-bayesian-calibration-flooding-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e4d2551968c198c67c79607b0f3bcbe8/plot_bayesian_calibration_flooding.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_bayesian_calibration_flooding.py</span></code></a></p>
@@ -422,7 +422,7 @@ We consider a sample size equal to:</p>
         <li class="right" >
           <a href="plot_rwmh_python_distribution.html" title="Posterior sampling using a PythonDistribution"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Calibration</a> &#187;</li>

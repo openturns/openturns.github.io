@@ -23,29 +23,29 @@ Kriging :configure the optimization solver
 
 .. GENERATED FROM PYTHON SOURCE LINES 6-31
 
-The goal of this example is to show how to fine-tune the optimization solver used to estimate the hyperparameters of the covariance model of the kriging metamodel. 
+The goal of this example is to show how to fine-tune the optimization solver used to estimate the hyperparameters of the covariance model of the kriging metamodel.
 
 Introduction
 ------------
 
-In a kriging metamodel, there are various types of parameters which are estimated from the data. 
+In a kriging metamodel, there are various types of parameters which are estimated from the data.
 
-* The parameters :math:`{\bf \beta}` associated with the deterministic trend. These parameters are computed based on linear least squares. 
-* The parameters of the covariance model. 
+* The parameters :math:`{\bf \beta}` associated with the deterministic trend. These parameters are computed based on linear least squares.
+* The parameters of the covariance model.
 
 The covariance model has two types of parameters.
 
-* The amplitude parameter :math:`\sigma^2` is estimated from the data. If the output dimension is equal to one, this parameter is estimated using the analytic variance estimator which maximizes the likelihood. Otherwise, if output dimension is greater than one or analytical sigma disabled, this parameter is estimated from numerical optimization. 
-* The other parameters :math:`{\bf \theta}\in\mathbb{R}^d` where :math:`d` is the spatial dimension of the covariance model. Often, the parameter :math:`{\bf \theta}` is a scale parameter. This step involves an optimization algorithm. 
+* The amplitude parameter :math:`\sigma^2` is estimated from the data. If the output dimension is equal to one, this parameter is estimated using the analytic variance estimator which maximizes the likelihood. Otherwise, if output dimension is greater than one or analytical sigma disabled, this parameter is estimated from numerical optimization.
+* The other parameters :math:`{\bf \theta}\in\mathbb{R}^d` where :math:`d` is the spatial dimension of the covariance model. Often, the parameter :math:`{\bf \theta}` is a scale parameter. This step involves an optimization algorithm.
 
-All these parameters are estimated with the `GeneralLinearModelAlgorithm` class. 
+All these parameters are estimated with the `GeneralLinearModelAlgorithm` class.
 
-The estimation of the :math:`{\bf \theta}` parameters is the step which has the highest CPU cost. Moreover, the maximization of likelihood may be associated with difficulties e.g. many local maximums or even the non convergence of the optimization algorithm. In this case, it might be useful to fine tune the optimization algorithm so that the convergence of the optimization algorithm is, hopefully, improved. 
+The estimation of the :math:`{\bf \theta}` parameters is the step which has the highest CPU cost. Moreover, the maximization of likelihood may be associated with difficulties e.g. many local maximums or even the non convergence of the optimization algorithm. In this case, it might be useful to fine tune the optimization algorithm so that the convergence of the optimization algorithm is, hopefully, improved.
 
-Furthermore, there are several situations in which the optimization can be initialized or completely bypassed. Suppose for example that we have already created an initial kriging metamodel with :math:`N` points and we want to add a single new point. 
+Furthermore, there are several situations in which the optimization can be initialized or completely bypassed. Suppose for example that we have already created an initial kriging metamodel with :math:`N` points and we want to add a single new point.
 
-* It might be interesting to initialize the optimization algorithm with the optimum found for the previous kriging metamodel: this may reduce the number of iterations required to maximize the likelihood. 
-* We may as well completely bypass the optimization step: if the previous covariance model was correctly estimated, the update of the parameters may or may not significantly improve the estimates. 
+* It might be interesting to initialize the optimization algorithm with the optimum found for the previous kriging metamodel: this may reduce the number of iterations required to maximize the likelihood.
+* We may as well completely bypass the optimization step: if the previous covariance model was correctly estimated, the update of the parameters may or may not significantly improve the estimates.
 
 This is why the goal of this example is to see how to configure the optimization of the hyperparameters of a kriging metamodel.
 
@@ -87,7 +87,7 @@ We define the symbolic function which evaluates the output Y depending on the in
 
 .. GENERATED FROM PYTHON SOURCE LINES 47-48
 
-Then we define the distribution of the input random vector. 
+Then we define the distribution of the input random vector.
 
 .. GENERATED FROM PYTHON SOURCE LINES 50-51
 
@@ -97,17 +97,17 @@ Young's modulus E
 
 .. code-block:: default
 
-    E = ot.Beta(0.9, 2.27, 2.5e7, 5.0e7) # in N/m^2
+    E = ot.Beta(0.9, 2.27, 2.5e7, 5.0e7)  # in N/m^2
     E.setDescription("E")
     # Load F
-    F = ot.LogNormal() # in N
+    F = ot.LogNormal()  # in N
     F.setParameter(ot.LogNormalMuSigma()([30.e3, 9e3, 15.e3]))
     F.setDescription("F")
     # Length L
-    L = ot.Uniform(250., 260.) # in cm
+    L = ot.Uniform(250., 260.)  # in cm
     L.setDescription("L")
     # Moment of inertia I
-    I = ot.Beta(2.5, 1.5, 310, 450) # in cm^4
+    I = ot.Beta(2.5, 1.5, 310, 450)  # in cm^4
     I.setDescription("I")
 
 
@@ -121,14 +121,15 @@ Young's modulus E
 
 Finally, we define the dependency using a `NormalCopula`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-74
+.. GENERATED FROM PYTHON SOURCE LINES 68-75
 
 .. code-block:: default
 
-    dim = 4 # number of inputs
+    dim = 4  # number of inputs
     R = ot.CorrelationMatrix(dim)
-    R[2, 3] = -0.2 
-    myCopula = ot.NormalCopula(ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(R))
+    R[2, 3] = -0.2
+    myCopula = ot.NormalCopula(
+        ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(R))
     myDistribution = ot.ComposedDistribution([E, F, L, I], myCopula)
 
 
@@ -138,16 +139,16 @@ Finally, we define the dependency using a `NormalCopula`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-77
+.. GENERATED FROM PYTHON SOURCE LINES 76-78
 
 Create the design of experiments
 --------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-80
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 We consider a simple Monte-Carlo sampling as a design of experiments. This is why we generate an input sample using the `getSample` method of the distribution. Then we evaluate the output using the `model` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-86
+.. GENERATED FROM PYTHON SOURCE LINES 83-87
 
 .. code-block:: default
 
@@ -162,16 +163,16 @@ We consider a simple Monte-Carlo sampling as a design of experiments. This is wh
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-89
+.. GENERATED FROM PYTHON SOURCE LINES 88-90
 
 Create the metamodel
 --------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-92
+.. GENERATED FROM PYTHON SOURCE LINES 92-93
 
-In order to create the kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class. Then we use a squared exponential covariance model. Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments. 
+In order to create the kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class. Then we use a squared exponential covariance model. Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-102
+.. GENERATED FROM PYTHON SOURCE LINES 95-103
 
 .. code-block:: default
 
@@ -190,13 +191,13 @@ In order to create the kriging metamodel, we first select a constant trend with 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-106
+.. GENERATED FROM PYTHON SOURCE LINES 104-107
 
-The `run` method has optimized the hyperparameters of the metamodel. 
+The `run` method has optimized the hyperparameters of the metamodel.
 
 We can then print the constant trend of the metamodel, which have been estimated using the least squares method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-110
+.. GENERATED FROM PYTHON SOURCE LINES 109-111
 
 .. code-block:: default
 
@@ -217,11 +218,11 @@ We can then print the constant trend of the metamodel, which have been estimated
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-112
+.. GENERATED FROM PYTHON SOURCE LINES 112-113
 
-We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood. 
+We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-117
+.. GENERATED FROM PYTHON SOURCE LINES 115-118
 
 .. code-block:: default
 
@@ -241,16 +242,16 @@ We can also print the hyperparameters of the covariance model, which have been e
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-120
+.. GENERATED FROM PYTHON SOURCE LINES 119-121
 
 Get the optimizer algorithm
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-123
+.. GENERATED FROM PYTHON SOURCE LINES 123-124
 
-The `getOptimizationAlgorithm` method returns the optimization algorithm used to optimize the :math:`{\bf \theta}` parameters of the `SquaredExponential` covariance model. 
+The `getOptimizationAlgorithm` method returns the optimization algorithm used to optimize the :math:`{\bf \theta}` parameters of the `SquaredExponential` covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-127
+.. GENERATED FROM PYTHON SOURCE LINES 126-128
 
 .. code-block:: default
 
@@ -263,11 +264,11 @@ The `getOptimizationAlgorithm` method returns the optimization algorithm used to
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 Get the default optimizer.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-134
+.. GENERATED FROM PYTHON SOURCE LINES 132-135
 
 .. code-block:: default
 
@@ -289,11 +290,11 @@ Get the default optimizer.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-136
+.. GENERATED FROM PYTHON SOURCE LINES 136-137
 
-The `getOptimizationBounds` method returns the bounds. The dimension of these bounds correspond to the spatial dimension of the covariance model. In the metamodeling context, this correspond to the input dimension of the model. 
+The `getOptimizationBounds` method returns the bounds. The dimension of these bounds correspond to the spatial dimension of the covariance model. In the metamodeling context, this correspond to the input dimension of the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-141
+.. GENERATED FROM PYTHON SOURCE LINES 139-142
 
 .. code-block:: default
 
@@ -315,7 +316,7 @@ The `getOptimizationBounds` method returns the bounds. The dimension of these bo
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-145
+.. GENERATED FROM PYTHON SOURCE LINES 143-146
 
 .. code-block:: default
 
@@ -335,7 +336,7 @@ The `getOptimizationBounds` method returns the bounds. The dimension of these bo
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-149
+.. GENERATED FROM PYTHON SOURCE LINES 147-150
 
 .. code-block:: default
 
@@ -355,11 +356,11 @@ The `getOptimizationBounds` method returns the bounds. The dimension of these bo
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-151
+.. GENERATED FROM PYTHON SOURCE LINES 151-152
 
 The `getOptimizeParameters` method returns `True` if these parameters are to be optimized.
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-155
+.. GENERATED FROM PYTHON SOURCE LINES 154-156
 
 .. code-block:: default
 
@@ -380,20 +381,20 @@ The `getOptimizeParameters` method returns `True` if these parameters are to be 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-158
+.. GENERATED FROM PYTHON SOURCE LINES 157-159
 
 Configure the starting point of the optimization
 ------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-161
+.. GENERATED FROM PYTHON SOURCE LINES 161-162
 
 The starting point of the optimization is based on the parameters of the covariance model. In the following example, we configure the parameters of the covariance model to the arbitrary values `[12.,34.,56.,78.]`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-166
+.. GENERATED FROM PYTHON SOURCE LINES 164-167
 
 .. code-block:: default
 
-    covarianceModel = ot.SquaredExponential([12.,34.,56.,78.], [1.0])
+    covarianceModel = ot.SquaredExponential([12., 34., 56., 78.], [1.0])
     algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
 
 
@@ -403,7 +404,7 @@ The starting point of the optimization is based on the parameters of the covaria
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-169
+.. GENERATED FROM PYTHON SOURCE LINES 168-170
 
 .. code-block:: default
 
@@ -416,7 +417,7 @@ The starting point of the optimization is based on the parameters of the covaria
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-173
+.. GENERATED FROM PYTHON SOURCE LINES 171-174
 
 .. code-block:: default
 
@@ -436,11 +437,11 @@ The starting point of the optimization is based on the parameters of the covaria
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-175
+.. GENERATED FROM PYTHON SOURCE LINES 175-176
 
 In order to see the difference with the default optimization, we print the previous optimized covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-179
+.. GENERATED FROM PYTHON SOURCE LINES 178-180
 
 .. code-block:: default
 
@@ -459,24 +460,24 @@ In order to see the difference with the default optimization, we print the previ
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-181
+.. GENERATED FROM PYTHON SOURCE LINES 181-182
 
-We observe that this does not change much the values of the parameters in this case. 
+We observe that this does not change much the values of the parameters in this case.
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-185
+.. GENERATED FROM PYTHON SOURCE LINES 184-186
 
 Disabling the optimization
 --------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-188
+.. GENERATED FROM PYTHON SOURCE LINES 188-189
 
-It is sometimes useful to completely disable the optimization of the parameters. In order to see the effect of this, we first initialize the parameters of the covariance model with the arbitrary values `[12.,34.,56.,78.]`. 
+It is sometimes useful to completely disable the optimization of the parameters. In order to see the effect of this, we first initialize the parameters of the covariance model with the arbitrary values `[12.,34.,56.,78.]`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-193
+.. GENERATED FROM PYTHON SOURCE LINES 191-194
 
 .. code-block:: default
 
-    covarianceModel = ot.SquaredExponential([12.,34.,56.,78.], [91.0])
+    covarianceModel = ot.SquaredExponential([12., 34., 56., 78.], [91.0])
     algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
 
 
@@ -486,11 +487,11 @@ It is sometimes useful to completely disable the optimization of the parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-195
+.. GENERATED FROM PYTHON SOURCE LINES 195-196
 
 The `setOptimizeParameters` method can be used to disable the optimization of the parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-199
+.. GENERATED FROM PYTHON SOURCE LINES 198-200
 
 .. code-block:: default
 
@@ -503,11 +504,11 @@ The `setOptimizeParameters` method can be used to disable the optimization of th
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-201
+.. GENERATED FROM PYTHON SOURCE LINES 201-202
 
-Then we run the algorithm and get the result. 
+Then we run the algorithm and get the result.
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-206
+.. GENERATED FROM PYTHON SOURCE LINES 204-207
 
 .. code-block:: default
 
@@ -521,11 +522,11 @@ Then we run the algorithm and get the result.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-208
+.. GENERATED FROM PYTHON SOURCE LINES 208-209
 
 We observe that the covariance model is unchanged.
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-212
+.. GENERATED FROM PYTHON SOURCE LINES 211-213
 
 .. code-block:: default
 
@@ -544,11 +545,11 @@ We observe that the covariance model is unchanged.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-214
+.. GENERATED FROM PYTHON SOURCE LINES 214-215
 
 The trend, however, is still optimized, using linear least squares.
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-218
+.. GENERATED FROM PYTHON SOURCE LINES 217-219
 
 .. code-block:: default
 
@@ -569,18 +570,18 @@ The trend, however, is still optimized, using linear least squares.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-223
+.. GENERATED FROM PYTHON SOURCE LINES 220-224
 
 Reuse the parameters from a previous optimization
 -------------------------------------------------
 
 In this example, we show how to reuse the optimized parameters of a previous kriging and configure a new one. Furthermore, we disable the optimization so that the parameters of the covariance model are not updated. This make the process of adding a new point very fast: it improves the quality by adding a new point in the design of experiments without paying the price of the update of the covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-226
+.. GENERATED FROM PYTHON SOURCE LINES 226-227
 
-Step 1: Run a first kriging algorithm. 
+Step 1: Run a first kriging algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-237
+.. GENERATED FROM PYTHON SOURCE LINES 229-238
 
 .. code-block:: default
 
@@ -606,11 +607,11 @@ Step 1: Run a first kriging algorithm.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 238-239
+.. GENERATED FROM PYTHON SOURCE LINES 239-240
 
 Step 2: Create a new point and add it to the previous training design.
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-244
+.. GENERATED FROM PYTHON SOURCE LINES 242-245
 
 .. code-block:: default
 
@@ -624,7 +625,7 @@ Step 2: Create a new point and add it to the previous training design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 245-248
+.. GENERATED FROM PYTHON SOURCE LINES 246-249
 
 .. code-block:: default
 
@@ -646,7 +647,7 @@ Step 2: Create a new point and add it to the previous training design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-252
+.. GENERATED FROM PYTHON SOURCE LINES 250-253
 
 .. code-block:: default
 
@@ -668,11 +669,11 @@ Step 2: Create a new point and add it to the previous training design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-254
+.. GENERATED FROM PYTHON SOURCE LINES 254-255
 
 Step 3: Create an updated kriging, using the new point with the old covariance parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-264
+.. GENERATED FROM PYTHON SOURCE LINES 257-265
 
 .. code-block:: default
 
@@ -697,16 +698,16 @@ Step 3: Create an updated kriging, using the new point with the old covariance p
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-274
+.. GENERATED FROM PYTHON SOURCE LINES 266-275
 
 .. code-block:: default
 
-    def printCovarianceParameterChange(covarianceModel1,covarianceModel2):
+    def printCovarianceParameterChange(covarianceModel1, covarianceModel2):
         parameters1 = covarianceModel1.getFullParameter()
         parameters2 = covarianceModel2.getFullParameter()
         for i in range(parameters1.getDimension()):
             deltai = abs(parameters1[i] - parameters2[i])
-            print("Change in the parameter #%d = %s" % (i,deltai))
+            print("Change in the parameter #%d = %s" % (i, deltai))
         return
 
 
@@ -717,11 +718,11 @@ Step 3: Create an updated kriging, using the new point with the old covariance p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-277
+.. GENERATED FROM PYTHON SOURCE LINES 276-278
 
 .. code-block:: default
 
-    printCovarianceParameterChange(covarianceModel,notUpdatedCovarianceModel)
+    printCovarianceParameterChange(covarianceModel, notUpdatedCovarianceModel)
 
 
 
@@ -742,20 +743,20 @@ Step 3: Create an updated kriging, using the new point with the old covariance p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 278-279
+.. GENERATED FROM PYTHON SOURCE LINES 279-280
 
 We see that the parameters did not change *at all*: disabling the optimization allows to keep a constant covariance model. In a practical algorithm, we may, for example, add a block of 10 new points before updating the parameters of the covariance model. At this point, we may reuse the previous covariance model so that the optimization starts from a better point, compared to the parameters default values. This will reduce the cost of the optimization.
 
-.. GENERATED FROM PYTHON SOURCE LINES 281-283
+.. GENERATED FROM PYTHON SOURCE LINES 282-284
 
 Configure the optimization solver
 ---------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 285-286
+.. GENERATED FROM PYTHON SOURCE LINES 286-287
 
-The following example checks the robustness of the optimization of the kriging algorithm with respect to the optimization of the likelihood function in the covariance model parameters estimation. We use a `MultiStart` algorithm in order to avoid to be trapped by a local minimum. Furthermore, we generate the design of experiments using a `LHSExperiments`, which guarantees that the points will fill the space. 
+The following example checks the robustness of the optimization of the kriging algorithm with respect to the optimization of the likelihood function in the covariance model parameters estimation. We use a `MultiStart` algorithm in order to avoid to be trapped by a local minimum. Furthermore, we generate the design of experiments using a `LHSExperiments`, which guarantees that the points will fill the space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 288-292
+.. GENERATED FROM PYTHON SOURCE LINES 289-293
 
 .. code-block:: default
 
@@ -770,11 +771,11 @@ The following example checks the robustness of the optimization of the kriging a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-294
+.. GENERATED FROM PYTHON SOURCE LINES 294-295
 
 First, we create a multivariate distribution, based on independent `Uniform` marginals which have the bounds required by the covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-301
+.. GENERATED FROM PYTHON SOURCE LINES 297-302
 
 .. code-block:: default
 
@@ -790,19 +791,20 @@ First, we create a multivariate distribution, based on independent `Uniform` mar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 302-303
+.. GENERATED FROM PYTHON SOURCE LINES 303-304
 
 We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in the sample space. This LHS is optimized so as to fill the space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 305-315
+.. GENERATED FROM PYTHON SOURCE LINES 306-317
 
 .. code-block:: default
 
-    K = 25 # design size
+    K = 25  # design size
     LHS = ot.LHSExperiment(boundedDistribution, K)
     LHS.setAlwaysShuffle(True)
     SA_profile = ot.GeometricProfile(10., 0.95, 20000)
-    LHS_optimization_algo = ot.SimulatedAnnealingLHS(LHS, ot.SpaceFillingC2(), SA_profile)
+    LHS_optimization_algo = ot.SimulatedAnnealingLHS(
+        LHS, ot.SpaceFillingC2(), SA_profile)
     LHS_optimization_algo.generate()
     LHS_design = LHS_optimization_algo.getResult()
     starting_points = LHS_design.getOptimalDesign()
@@ -823,11 +825,11 @@ We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in t
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 316-317
+.. GENERATED FROM PYTHON SOURCE LINES 318-319
 
 We can check that the minimum and maximum in the sample correspond to the bounds of the design of experiment.
 
-.. GENERATED FROM PYTHON SOURCE LINES 319-321
+.. GENERATED FROM PYTHON SOURCE LINES 321-323
 
 .. code-block:: default
 
@@ -848,7 +850,7 @@ We can check that the minimum and maximum in the sample correspond to the bounds
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 322-324
+.. GENERATED FROM PYTHON SOURCE LINES 324-326
 
 .. code-block:: default
 
@@ -869,11 +871,11 @@ We can check that the minimum and maximum in the sample correspond to the bounds
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 325-326
+.. GENERATED FROM PYTHON SOURCE LINES 327-328
 
 Then we create a `MultiStart` algorithm based on the LHS starting points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 328-331
+.. GENERATED FROM PYTHON SOURCE LINES 330-333
 
 .. code-block:: default
 
@@ -887,11 +889,11 @@ Then we create a `MultiStart` algorithm based on the LHS starting points.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 332-333
+.. GENERATED FROM PYTHON SOURCE LINES 334-335
 
-Finally, we configure the optimization algorithm so as to use the `MultiStart` algorithm. 
+Finally, we configure the optimization algorithm so as to use the `MultiStart` algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 335-340
+.. GENERATED FROM PYTHON SOURCE LINES 337-342
 
 .. code-block:: default
 
@@ -907,7 +909,7 @@ Finally, we configure the optimization algorithm so as to use the `MultiStart` a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 341-344
+.. GENERATED FROM PYTHON SOURCE LINES 343-346
 
 .. code-block:: default
 
@@ -927,11 +929,12 @@ Finally, we configure the optimization algorithm so as to use the `MultiStart` a
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-347
+.. GENERATED FROM PYTHON SOURCE LINES 347-350
 
 .. code-block:: default
 
-    printCovarianceParameterChange(finetune_covariance_model,basic_covariance_model)
+    printCovarianceParameterChange(
+        finetune_covariance_model, basic_covariance_model)
 
 
 
@@ -952,14 +955,14 @@ Finally, we configure the optimization algorithm so as to use the `MultiStart` a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 348-349
+.. GENERATED FROM PYTHON SOURCE LINES 351-352
 
 We see that there are no changes in the estimated parameters. This shows that the first optimization of the parameters worked fine.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.221 seconds)
+   **Total running time of the script:** ( 0 minutes  0.318 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_hyperparameters_optimization.py:

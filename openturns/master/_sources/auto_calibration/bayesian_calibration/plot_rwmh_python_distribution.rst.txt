@@ -94,9 +94,10 @@ The following methods must be defined:
    We formally define a bivariate distribution on the :math:`(t_i, f_i)` couple, even though :math:`f_i` has no distribution (it is simply a covariate).
    This is not an issue, since the sole purpose of this :class:`~openturns.PythonDistribution` object is to pass the likelihood calculation over to :class:`~openturns.RandomWalkMetropolisHastings`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-101
+.. GENERATED FROM PYTHON SOURCE LINES 68-103
 
 .. code-block:: default
+
 
 
     class CensoredWeibull(ot.PythonDistribution):
@@ -108,6 +109,7 @@ The following methods must be defined:
                 if x[1]=0: x[0] is a censoring time
                 if x[1]=1: x[0] is a time-to failure
         """
+
         def __init__(self, beta=5000.0, alpha=2.0):
             super(CensoredWeibull, self).__init__(2)
             self.beta = beta
@@ -117,18 +119,18 @@ The following methods must be defined:
             return ot.Interval([0, 0], [1, 1], [True]*2, [False, True])
 
         def computeLogPDF(self, x):
-            if not (self.alpha>0.0 and self.beta>0.0):
+            if not (self.alpha > 0.0 and self.beta > 0.0):
                 return -np.inf
-            log_pdf = -( x[0] / self.beta )**self.alpha
-            log_pdf += ( self.alpha - 1 ) * np.log( x[0] / self.beta ) * x[1]
-            log_pdf += np.log( self.alpha / self.beta ) * x[1]
+            log_pdf = -(x[0] / self.beta)**self.alpha
+            log_pdf += (self.alpha - 1) * np.log(x[0] / self.beta) * x[1]
+            log_pdf += np.log(self.alpha / self.beta) * x[1]
             return log_pdf
 
-        def setParameter( self, parameter ):
+        def setParameter(self, parameter):
             self.beta = parameter[0]
             self.alpha = parameter[1]
 
-        def getParameter( self ):
+        def getParameter(self):
             return [self.beta, self.alpha]
 
 
@@ -138,16 +140,17 @@ The following methods must be defined:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-103
+.. GENERATED FROM PYTHON SOURCE LINES 104-105
 
 Convert to :class:`~openturns.Distribution`
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-109
+.. GENERATED FROM PYTHON SOURCE LINES 107-112
 
 .. code-block:: default
 
 
-    conditional = ot.Distribution( CensoredWeibull() )
+
+    conditional = ot.Distribution(CensoredWeibull())
 
 
 
@@ -157,21 +160,21 @@ Convert to :class:`~openturns.Distribution`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-114
+.. GENERATED FROM PYTHON SOURCE LINES 113-117
 
 Observations, prior, initial point and proposal distributions
 -------------------------------------------------------------
 
 Define the observations
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-123
+.. GENERATED FROM PYTHON SOURCE LINES 120-126
 
 .. code-block:: default
 
 
     Tobs = np.array([4380, 1791, 1611, 1291, 6132, 5694, 5296, 4818, 4818, 4380])
-    fail = np.array( [True]*4+[False]*6 )
-    x = ot.Sample( np.vstack((Tobs, fail)).T )
+    fail = np.array([True]*4+[False]*6)
+    x = ot.Sample(np.vstack((Tobs, fail)).T)
 
 
 
@@ -181,12 +184,12 @@ Define the observations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-126
+.. GENERATED FROM PYTHON SOURCE LINES 127-129
 
 Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distribution for :math:`\beta`
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-141
+.. GENERATED FROM PYTHON SOURCE LINES 131-144
 
 .. code-block:: default
 
@@ -194,12 +197,13 @@ Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distrib
     alpha_min, alpha_max = 0.5, 3.8
     a_beta, b_beta = 2, 2e-4
 
-    priorCopula = ot.IndependentCopula(2)# prior independence
-    priorMarginals = [] # prior marginals
-    priorMarginals.append(ot.Gamma(a_beta, b_beta)) # Gamma prior for beta
-    priorMarginals.append(ot.Uniform(alpha_min, alpha_max)) # uniform prior for alpha
-    prior=ot.ComposedDistribution( priorMarginals, priorCopula )
-    prior.setDescription(['beta','alpha'])
+    priorCopula = ot.IndependentCopula(2)  # prior independence
+    priorMarginals = []  # prior marginals
+    priorMarginals.append(ot.Gamma(a_beta, b_beta))  # Gamma prior for beta
+    priorMarginals.append(ot.Uniform(alpha_min, alpha_max)
+                          )  # uniform prior for alpha
+    prior = ot.ComposedDistribution(priorMarginals, priorCopula)
+    prior.setDescription(['beta', 'alpha'])
 
 
 
@@ -209,13 +213,12 @@ Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distrib
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 142-144
+.. GENERATED FROM PYTHON SOURCE LINES 145-147
 
 We select prior means as the initial point of the Metropolis-Hastings algorithm.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-149
+.. GENERATED FROM PYTHON SOURCE LINES 149-152
 
 .. code-block:: default
 
@@ -229,19 +232,19 @@ We select prior means as the initial point of the Metropolis-Hastings algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-152
+.. GENERATED FROM PYTHON SOURCE LINES 153-155
 
 For our random walk proposal distributions, we choose normal steps, with standard deviation equal to roughly :math:`10\%` of the prior range (for the uniform prior) or standard deviation (for the normal prior).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-159
+.. GENERATED FROM PYTHON SOURCE LINES 157-162
 
 .. code-block:: default
 
 
-    proposal=[]
-    proposal.append( ot.Normal(0., 0.1 * np.sqrt( a_beta / b_beta**2 ) ) )
-    proposal.append( ot.Normal(0., 0.1 * ( alpha_max - alpha_min ) ) )
+    proposal = []
+    proposal.append(ot.Normal(0., 0.1 * np.sqrt(a_beta / b_beta**2)))
+    proposal.append(ot.Normal(0., 0.1 * (alpha_max - alpha_min)))
 
 
 
@@ -250,24 +253,25 @@ For our random walk proposal distributions, we choose normal steps, with standar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-162
+.. GENERATED FROM PYTHON SOURCE LINES 163-165
 
 Sample from the posterior distribution
 --------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-174
+.. GENERATED FROM PYTHON SOURCE LINES 167-178
 
 .. code-block:: default
 
 
-    RWMHsampler = ot.RandomWalkMetropolisHastings(prior, conditional, x, initialState, proposal)
+    RWMHsampler = ot.RandomWalkMetropolisHastings(
+        prior, conditional, x, initialState, proposal)
     strategy = ot.CalibrationStrategyCollection(2)
     RWMHsampler.setCalibrationStrategyPerComponent(strategy)
     RWMHsampler.setVerbose(True)
     sampleSize = 10000
     sample = RWMHsampler.getSample(sampleSize)
     # compute acceptance rate
-    print("Acceptance rate: %s"%(RWMHsampler.getAcceptanceRate()))
+    print("Acceptance rate: %s" % (RWMHsampler.getAcceptanceRate()))
 
 
 
@@ -284,12 +288,12 @@ Sample from the posterior distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-177
+.. GENERATED FROM PYTHON SOURCE LINES 179-181
 
 Plot prior to posterior marginal plots
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-191
+.. GENERATED FROM PYTHON SOURCE LINES 183-195
 
 .. code-block:: default
 
@@ -320,7 +324,7 @@ Plot prior to posterior marginal plots
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  15.702 seconds)
+   **Total running time of the script:** ( 0 minutes  18.777 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_bayesian_calibration_plot_rwmh_python_distribution.py:

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Define a function with a field output: the viscous free fall example &#8212; OpenTURNS 1.18dev documentation</title>
+    <title>Define a function with a field output: the viscous free fall example &#8212; OpenTURNS 1.19dev documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -63,7 +63,7 @@
         <li class="right" >
           <a href="plot_vertexvalue_function.html" title="Vertex value function"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Functional modeling</a> &#187;</li>
@@ -132,9 +132,9 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p>We first define the time grid associated with the model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tmin</span><span class="o">=</span><span class="mf">0.0</span> <span class="c1"># Minimum time</span>
-<span class="n">tmax</span><span class="o">=</span><span class="mf">12.</span> <span class="c1"># Maximum time</span>
-<span class="n">gridsize</span><span class="o">=</span><span class="mi">100</span> <span class="c1"># Number of time steps</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tmin</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Minimum time</span>
+<span class="n">tmax</span> <span class="o">=</span> <span class="mf">12.</span>  <span class="c1"># Maximum time</span>
+<span class="n">gridsize</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Number of time steps</span>
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntervalMesher</span><span class="p">([</span><span class="n">gridsize</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">tmin</span><span class="p">,</span> <span class="n">tmax</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -171,22 +171,23 @@ to download the full example code</p>
 </div>
 <p>Then we define the Python function which computes the altitude at each time value. In order to compute all altitudes with a vectorized evaluation, we first convert the vertices into a <cite>numpy</cite> <cite>array</cite> and use the <cite>numpy</cite> function <cite>exp</cite> and <cite>maximum</cite>: this increases the evaluation performance of the script.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">AltiFunc</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-    <span class="n">g</span>  <span class="o">=</span> <span class="mf">9.81</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>
     <span class="n">z0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">v0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">m</span>  <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">c</span>  <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="n">m</span> <span class="o">/</span> <span class="n">c</span>
     <span class="n">vinf</span> <span class="o">=</span> <span class="o">-</span> <span class="n">m</span> <span class="o">*</span> <span class="n">g</span> <span class="o">/</span> <span class="n">c</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z0</span> <span class="o">+</span> <span class="n">vinf</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">v0</span> <span class="o">-</span> <span class="n">vinf</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="n">t</span> <span class="o">/</span> <span class="n">tau</span><span class="p">))</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z0</span> <span class="o">+</span> <span class="n">vinf</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">v0</span> <span class="o">-</span> <span class="n">vinf</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="n">t</span> <span class="o">/</span> <span class="n">tau</span><span class="p">))</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[[</span><span class="n">zeta</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">zeta</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>In order to create a <cite>Function</cite> from this Python function, we use the <cite>PythonPointToFieldFunction</cite> class. Since the altitude is the only output field, the third argument <cite>outputDimension</cite> is equal to <cite>1</cite>. If we had computed the speed as an extra output field, we would have set <cite>2</cite> instead.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputDimension</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">alti</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonPointToFieldFunction</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">outputDimension</span><span class="p">,</span> <span class="n">AltiFunc</span><span class="p">)</span>
+<span class="n">alti</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonPointToFieldFunction</span><span class="p">(</span>
+    <span class="n">dimension</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">outputDimension</span><span class="p">,</span> <span class="n">AltiFunc</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -211,7 +212,7 @@ to download the full example code</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_viscous_fall_field_function_001.png" srcset="../../_images/sphx_glr_plot_viscous_fall_field_function_001.png" alt="Viscous free fall: 10 trajectories" class = "sphx-glr-single-img"/><p>We see that the object first moves up and then falls down. Not all objects, however, achieve the same maximum altitude. We see that some trajectories reach a higher maximum altitude than others. Moreover, at the final time <img class="math" src="../../_images/math/bbb1e8e3de9b39bff8b6973f5b8864f566bdb617.svg" alt="t_{max}"/>, one trajectory hits the ground: <img class="math" src="../../_images/math/d91d829e62c6d8ca3c56e887c07ecdc60ced8cdd.svg" alt="z(t_{max})=0"/> for this trajectory.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.142 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.166 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-functional-modeling-field-functions-plot-viscous-fall-field-function-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/74822125fb5e30da114d8b97cf1fbd68/plot_viscous_fall_field_function.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_viscous_fall_field_function.py</span></code></a></p>
@@ -243,7 +244,7 @@ to download the full example code</p>
         <li class="right" >
           <a href="plot_vertexvalue_function.html" title="Vertex value function"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Functional modeling</a> &#187;</li>

@@ -23,13 +23,13 @@ Tensor approximation of the cantilever beam model
 
 .. GENERATED FROM PYTHON SOURCE LINES 6-9
 
-In this example, we create a low-rank approximation in the canonical tensor format of the cantilever beam. 
+In this example, we create a low-rank approximation in the canonical tensor format of the cantilever beam.
 
-In order to fit the hyper-parameters of the approximation, we use a design of experiments which size is 10000. 
+In order to fit the hyper-parameters of the approximation, we use a design of experiments which size is 10000.
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-49
 
-We consider a cantilever beam defined by its Young’s modulus :math:`E`, its length :math:`L` and its section modulus :math:`I`. One end of the cantilever beam is built in a wall and we apply a concentrated bending load :math:`F` at the other end of the beam, resulting in a deviation :math:`Y`. 
+We consider a cantilever beam defined by its Young’s modulus :math:`E`, its length :math:`L` and its section modulus :math:`I`. One end of the cantilever beam is built in a wall and we apply a concentrated bending load :math:`F` at the other end of the beam, resulting in a deviation :math:`Y`.
 
 .. figure:: ../../_static/beam.png
    :align: center
@@ -108,7 +108,7 @@ We define the symbolic function which evaluates the output Y depending on the in
 
 .. GENERATED FROM PYTHON SOURCE LINES 67-68
 
-Then we define the distribution of the input random vector. 
+Then we define the distribution of the input random vector.
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-71
 
@@ -118,17 +118,17 @@ Young's modulus E
 
 .. code-block:: default
 
-    E = ot.Beta(0.9, 3.5, 2.5e7, 5.0e7) # in N/m^2
+    E = ot.Beta(0.9, 3.5, 2.5e7, 5.0e7)  # in N/m^2
     E.setDescription("E")
     # Load F
-    F = ot.LogNormal() # in N
+    F = ot.LogNormal()  # in N
     F.setParameter(ot.LogNormalMuSigma()([30.e3, 9e3, 15.e3]))
     F.setDescription("F")
     # Length L
-    L = ot.Uniform(250., 260.) # in cm
+    L = ot.Uniform(250., 260.)  # in cm
     L.setDescription("L")
     # Moment of inertia I
-    I = ot.Beta(2.5, 4, 310, 450) # in cm^4
+    I = ot.Beta(2.5, 4, 310, 450)  # in cm^4
     I.setDescription("I")
 
 
@@ -181,7 +181,7 @@ We consider a simple Monte-Carlo sampling as a design of experiments. This is wh
 
 .. GENERATED FROM PYTHON SOURCE LINES 103-104
 
-The following figure presents the distribution of the vertical deviations Y on the training sample. We observe that the large deviations occur less often. 
+The following figure presents the distribution of the vertical deviations Y on the training sample. We observe that the large deviations occur less often.
 
 .. GENERATED FROM PYTHON SOURCE LINES 106-112
 
@@ -229,11 +229,12 @@ We should define :
  - The marginal degrees :math:`n_j`. Here we set the degrees to [4, 15, 3, 2]
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-140
+.. GENERATED FROM PYTHON SOURCE LINES 135-141
 
 .. code-block:: default
 
-    factoryCollection = [ot.OrthogonalUniVariatePolynomialFunctionFactory(ot.StandardDistributionPolynomialFactory(_)) for _ in [E,F,L,I]]
+    factoryCollection = [ot.OrthogonalUniVariatePolynomialFunctionFactory(
+        ot.StandardDistributionPolynomialFactory(_)) for _ in [E, F, L, I]]
     functionFactory = ot.OrthogonalProductFunctionFactory(factoryCollection)
     nk = [4, 15, 3, 2]
     maxRank = 1
@@ -245,15 +246,16 @@ We should define :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-142
+.. GENERATED FROM PYTHON SOURCE LINES 142-143
 
 Finally we might launch the algorithm:
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-149
+.. GENERATED FROM PYTHON SOURCE LINES 145-151
 
 .. code-block:: default
 
-    algo = ot.TensorApproximationAlgorithm(X_train, Y_train, myDistribution, functionFactory, nk, maxRank)
+    algo = ot.TensorApproximationAlgorithm(
+        X_train, Y_train, myDistribution, functionFactory, nk, maxRank)
     algo.run()
     result = algo.getResult()
     metamodel = result.getMetaModel()
@@ -265,13 +267,13 @@ Finally we might launch the algorithm:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-153
+.. GENERATED FROM PYTHON SOURCE LINES 152-155
 
-The `run` method has optimized the hyperparameters of the metamodel (:math:`\beta` coefficients). 
+The `run` method has optimized the hyperparameters of the metamodel (:math:`\beta` coefficients).
 
 We can then print the coefficients which have been estimated using a double loop.
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-162
+.. GENERATED FROM PYTHON SOURCE LINES 157-164
 
 .. code-block:: default
 
@@ -324,16 +326,16 @@ We can then print the coefficients which have been estimated using a double loop
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-165
+.. GENERATED FROM PYTHON SOURCE LINES 165-167
 
 Validate the metamodel
 ----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-168
+.. GENERATED FROM PYTHON SOURCE LINES 169-170
 
 We finally want to validate the kriging metamodel. This is why we generate a validation sample which size is equal to 100 and we evaluate the output of the model on this sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-174
+.. GENERATED FROM PYTHON SOURCE LINES 172-176
 
 .. code-block:: default
 
@@ -348,11 +350,11 @@ We finally want to validate the kriging metamodel. This is why we generate a val
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-176
+.. GENERATED FROM PYTHON SOURCE LINES 177-178
 
-The `MetaModelValidation` classe makes the validation easy. To create it, we use the validation samples and the metamodel. 
+The `MetaModelValidation` classe makes the validation easy. To create it, we use the validation samples and the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-180
+.. GENERATED FROM PYTHON SOURCE LINES 180-182
 
 .. code-block:: default
 
@@ -365,11 +367,11 @@ The `MetaModelValidation` classe makes the validation easy. To create it, we use
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-182
+.. GENERATED FROM PYTHON SOURCE LINES 183-184
 
-The `computePredictivityFactor` computes the Q2 factor. 
+The `computePredictivityFactor` computes the Q2 factor.
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-187
+.. GENERATED FROM PYTHON SOURCE LINES 186-189
 
 .. code-block:: default
 
@@ -391,15 +393,15 @@ The `computePredictivityFactor` computes the Q2 factor.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-189
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
 
-Since the Q2 is larger than 95%, we can say that the quality is acceptable. 
+Since the Q2 is larger than 95%, we can say that the quality is acceptable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-192
+.. GENERATED FROM PYTHON SOURCE LINES 193-194
 
-The residuals are the difference between the model and the metamodel. 
+The residuals are the difference between the model and the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-198
+.. GENERATED FROM PYTHON SOURCE LINES 196-200
 
 .. code-block:: default
 
@@ -419,15 +421,15 @@ The residuals are the difference between the model and the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-200
+.. GENERATED FROM PYTHON SOURCE LINES 201-202
 
 We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first   sign of good quality. Furthermore, the residuals are most of the times contained in the [-1,1] interval, which is a sign of quality given the amplitude of the output (approximately from 5 to 25 cm).
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-203
+.. GENERATED FROM PYTHON SOURCE LINES 204-205
 
 The `drawValidation` method allows to compare the observed outputs and the metamodel outputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-210
+.. GENERATED FROM PYTHON SOURCE LINES 207-212
 
 .. code-block:: default
 
@@ -448,7 +450,7 @@ The `drawValidation` method allows to compare the observed outputs and the metam
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-214
+.. GENERATED FROM PYTHON SOURCE LINES 213-216
 
 We observe that the metamodel predictions are close to the model outputs, since most red points are close to the diagonal. However, when we consider extreme deviations (i.e. less than 10 or larger than 20), then the quality is less obvious.
 
@@ -457,7 +459,7 @@ Given that the kriging metamodel quality is sensitive to the design of experimen
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.269 seconds)
+   **Total running time of the script:** ( 0 minutes  2.812 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_low_rank_tensors_metamodel_plot_tensor_cantilever_beam.py:

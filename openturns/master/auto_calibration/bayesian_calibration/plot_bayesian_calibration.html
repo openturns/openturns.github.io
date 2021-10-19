@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Bayesian calibration of a computer code &#8212; OpenTURNS 1.18dev documentation</title>
+    <title>Bayesian calibration of a computer code &#8212; OpenTURNS 1.19dev documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -63,7 +63,7 @@
         <li class="right" >
           <a href="../least_squares_and_gaussian_calibration/plot_calibration_flooding.html" title="Calibration of the flooding model"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Calibration</a> &#187;</li>
@@ -170,7 +170,9 @@ Again, this is implemented as a probability distribution</p></li>
 requires a vector <img class="math" src="../../_images/math/44edc5201d2174f2333a9199312127164983d5aa.svg" alt="\underline{\theta}_0"/> initial values for the calibration parameters,
 as well as the proposal laws used to update each parameter sequentially.</p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
@@ -212,7 +214,7 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
 <li><p>Define the parametric model <img class="math" src="../../_images/math/3bfbd7bce76c345c2ef3c7f56f861c7c868d535c.svg" alt="z = f(x,\theta)"/> that associates each observation <img class="math" src="../../_images/math/8796c964f035c17f755797d51f050539a5e75915.svg" alt="x_i"/> and values of the  parameters <img class="math" src="../../_images/math/4a214d98ecaa481c3d193c6d03c6d8f62f252017.svg" alt="\theta_i"/> to the parameters of the distribution of the corresponding observation: here <img class="math" src="../../_images/math/934440aac880f667edc2b6918697e56ff4e3d2d3.svg" alt="z=(\mu, \sigma)"/> where <img class="math" src="../../_images/math/27bac18d6a2d4509501cd348773fd83bd46a0dc6.svg" alt="\mu"/>, the first output of the model, is the mean and <img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/>, the second output of the model, is the standard deviation.</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fullModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span>
-    <span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;theta1&#39;</span><span class="p">,</span> <span class="s1">&#39;theta2&#39;</span><span class="p">,</span> <span class="s1">&#39;theta3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;theta1+theta2*x1+theta3*x1^2&#39;</span><span class="p">,</span><span class="s1">&#39;1.0&#39;</span><span class="p">])</span>
+    <span class="p">[</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;theta1&#39;</span><span class="p">,</span> <span class="s1">&#39;theta2&#39;</span><span class="p">,</span> <span class="s1">&#39;theta3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;theta1+theta2*x1+theta3*x1^2&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">])</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">fullModel</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_obs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">model</span>
 </pre></div>
@@ -226,7 +228,7 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">noiseStandardDeviation</span> <span class="o">=</span> <span class="mf">1.</span>
-<span class="n">noise</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">noiseStandardDeviation</span><span class="p">)</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noiseStandardDeviation</span><span class="p">)</span>
 <span class="n">noiseSample</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">obsSize</span><span class="p">)</span>
 <span class="n">noiseSample</span>
 </pre></div>
@@ -250,13 +252,13 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
 <li><p>Define the vector of observations <img class="math" src="../../_images/math/0ffee592382c3b0811eb93d860f3e36cd9d42aa2.svg" alt="y_i"/></p></li>
 </ul>
 <p>In this model, we use a constant value of the parameter. The “true” value of <img class="math" src="../../_images/math/7e3e48300089e25fc3edb19ddc60fb5e8bbfea3d.svg" alt="\theta"/> is used to compute the model outputs.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaTrue</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">4.5</span><span class="p">,</span><span class="mf">4.8</span><span class="p">,</span><span class="mf">2.2</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaTrue</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y_obs</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">obsSize</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y_obs</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">obsSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obsSize</span><span class="p">):</span>
     <span class="n">model</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">x_obs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="n">y_obs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">thetaTrue</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">noiseSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y_obs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">thetaTrue</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">noiseSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="n">y_obs</span>
 </pre></div>
 </div>
@@ -278,13 +280,13 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
 <br /><ul class="simple">
 <li><p>Draw the model vs the observations.</p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functionnalModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">fullModel</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">thetaTrue</span><span class="p">)</span>
-<span class="n">graphModel</span> <span class="o">=</span> <span class="n">functionnalModel</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">)</span>
-<span class="n">observations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_obs</span><span class="p">,</span><span class="n">y_obs</span><span class="p">)</span>
-<span class="n">observations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_obs</span><span class="p">,</span><span class="n">y_obs</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functionnalModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">fullModel</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">thetaTrue</span><span class="p">)</span>
+<span class="n">graphModel</span> <span class="o">=</span> <span class="n">functionnalModel</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+<span class="n">observations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_obs</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">)</span>
+<span class="n">observations</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_obs</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">)</span>
 <span class="n">observations</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 <span class="n">graphModel</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">observations</span><span class="p">)</span>
-<span class="n">graphModel</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Model&quot;</span><span class="p">,</span><span class="s2">&quot;Observations&quot;</span><span class="p">])</span>
+<span class="n">graphModel</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="s2">&quot;Observations&quot;</span><span class="p">])</span>
 <span class="n">graphModel</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graphModel</span><span class="p">)</span>
 </pre></div>
@@ -304,10 +306,10 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
 <br /><ul class="simple">
 <li><p>Define the mean <img class="math" src="../../_images/math/d462786850bd2fc21fd050569b5468293157c893.svg" alt="\mu_\theta"/>, the covariance matrix <img class="math" src="../../_images/math/3f1a11f37be68795e110c0934f2a70d38b8a68c3.svg" alt="\Sigma_\theta"/>, then the prior distribution <img class="math" src="../../_images/math/80ef82252669162d81d1ee215dbf4f04d7bf236f.svg" alt="\pi(\underline{\theta})"/> of the parameter <img class="math" src="../../_images/math/ee2cb507476c463256f5e73e5a247a5d08ea6b56.svg" alt="\underline{\theta}"/>.</p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPriorMean</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPriorMean</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigma0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.5</span><span class="p">]</span>  <span class="c1"># standard deviations</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigma0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>  <span class="c1"># standard deviations</span>
 <span class="n">thetaPriorCovarianceMatrix</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="n">paramDim</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">paramDim</span><span class="p">):</span>
     <span class="n">thetaPriorCovarianceMatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigma0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
@@ -400,10 +402,7 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
 </pre></div>
 </div>
 <p>Display prior vs posterior for each parameter.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
-<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="k">for</span> <span class="n">parameter_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">paramDim</span><span class="p">):</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
@@ -419,7 +418,7 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_bayesian_calibration_002.png" srcset="../../_images/sphx_glr_plot_bayesian_calibration_002.png" alt="Bayesian calibration" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.886 seconds)</p>
+<img src="../../_images/sphx_glr_plot_bayesian_calibration_002.png" srcset="../../_images/sphx_glr_plot_bayesian_calibration_002.png" alt="Bayesian calibration" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.410 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-calibration-bayesian-calibration-plot-bayesian-calibration-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/557f6965239dde7b8b9613eb917dc826/plot_bayesian_calibration.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_bayesian_calibration.py</span></code></a></p>
@@ -451,7 +450,7 @@ as well as the proposal laws used to update each parameter sequentially.</p></li
         <li class="right" >
           <a href="../least_squares_and_gaussian_calibration/plot_calibration_flooding.html" title="Calibration of the flooding model"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Calibration</a> &#187;</li>

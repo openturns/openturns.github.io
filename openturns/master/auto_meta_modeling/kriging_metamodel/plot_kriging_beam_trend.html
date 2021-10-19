@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Choose the trend basis of a kriging metamodel &#8212; OpenTURNS 1.18dev documentation</title>
+    <title>Choose the trend basis of a kriging metamodel &#8212; OpenTURNS 1.19dev documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -63,7 +63,7 @@
         <li class="right" >
           <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Meta modeling</a> &#187;</li>
@@ -131,15 +131,15 @@ to download the full example code</p>
 <p>For this purpose, we use the <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a> example.</p>
 <section id="definition-of-the-model">
 <h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span> <span class="k">as</span> <span class="n">cantilever_beam</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We load the use case :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span> <span class="k">as</span> <span class="n">cantilever_beam</span>
-<span class="n">cb</span> <span class="o">=</span> <span class="n">cantilever_beam</span><span class="o">.</span><span class="n">CantileverBeam</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cb</span> <span class="o">=</span> <span class="n">cantilever_beam</span><span class="o">.</span><span class="n">CantileverBeam</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We define the function which evaluates the output depending on the inputs.</p>
@@ -147,7 +147,7 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p>Then we define the distribution of the input random vector.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">dim</span> <span class="c1"># number of inputs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">dim</span>  <span class="c1"># number of inputs</span>
 <span class="n">myDistribution</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">distribution</span>
 </pre></div>
 </div>
@@ -182,7 +182,8 @@ In this case, however, the range of the input domain is extreme.</p>
 </div>
 <p>We need to manually define sensible optimization bounds.
 Note that since the amplitude parameter is computed analytically (this is possible when the output dimension is 1), we only need to set bounds on the scale parameter.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0e11</span><span class="p">,</span> <span class="mf">1.0e3</span><span class="p">,</span> <span class="mf">1.0e1</span><span class="p">,</span> <span class="mf">1.0e-5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span>
+    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0e11</span><span class="p">,</span> <span class="mf">1.0e3</span><span class="p">,</span> <span class="mf">1.0e1</span><span class="p">,</span> <span class="mf">1.0e-5</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Finally, we use the <cite>KrigingAlgorithm</cite> class to create the Kriging metamodel.
@@ -287,20 +288,23 @@ SquaredExponential(scale=[6.88439e+10,323.088,2.59143,1.5807e-07], amplitude=[1.
     <span class="n">Q2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computePredictivityFactor</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span><span class="o">.</span><span class="n">getGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">, Q2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="n">Q2</span><span class="p">),</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">, Q2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="n">Q2</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">graph</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GridLayout</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">grid</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Different trends&quot;</span><span class="p">)</span>
-<span class="n">graphConstant</span> <span class="o">=</span> <span class="n">drawMetaModelValidation</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingWithConstantTrend</span><span class="p">,</span> <span class="s2">&quot;Constant&quot;</span><span class="p">)</span>
-<span class="n">graphLinear</span> <span class="o">=</span> <span class="n">drawMetaModelValidation</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingWithLinearTrend</span><span class="p">,</span> <span class="s2">&quot;Linear&quot;</span><span class="p">)</span>
-<span class="n">graphQuadratic</span> <span class="o">=</span> <span class="n">drawMetaModelValidation</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingWithQuadraticTrend</span><span class="p">,</span> <span class="s2">&quot;Quadratic&quot;</span><span class="p">)</span>
+<span class="n">graphConstant</span> <span class="o">=</span> <span class="n">drawMetaModelValidation</span><span class="p">(</span>
+    <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingWithConstantTrend</span><span class="p">,</span> <span class="s2">&quot;Constant&quot;</span><span class="p">)</span>
+<span class="n">graphLinear</span> <span class="o">=</span> <span class="n">drawMetaModelValidation</span><span class="p">(</span>
+    <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingWithLinearTrend</span><span class="p">,</span> <span class="s2">&quot;Linear&quot;</span><span class="p">)</span>
+<span class="n">graphQuadratic</span> <span class="o">=</span> <span class="n">drawMetaModelValidation</span><span class="p">(</span>
+    <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingWithQuadraticTrend</span><span class="p">,</span> <span class="s2">&quot;Quadratic&quot;</span><span class="p">)</span>
 <span class="n">grid</span><span class="o">.</span><span class="n">setGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">graphConstant</span><span class="p">)</span>
 <span class="n">grid</span><span class="o">.</span><span class="n">setGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">graphLinear</span><span class="p">)</span>
 <span class="n">grid</span><span class="o">.</span><span class="n">setGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">graphQuadratic</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="p">)})</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="p">)})</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_kriging_beam_trend_001.png" srcset="../../_images/sphx_glr_plot_kriging_beam_trend_001.png" alt="Different trends" class = "sphx-glr-single-img"/><p>We observe that the three trends perform very well in this case. With more coefficients, the Kriging metamodel is more flexibile and can adjust better to the training sample. This does not mean, however, that the trend coefficients will provide a good fit for the validation sample.</p>
@@ -312,7 +316,7 @@ SquaredExponential(scale=[6.88439e+10,323.088,2.59143,1.5807e-07], amplitude=[1.
 </ul>
 <p>In the cantilever beam example, fitting the metamodel to a training sample with only 10 points is made much easier because the function to approximate is almost linear.
 In this case, a quadratic trend is not advisable because it can interpolate all points in the training sample.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.272 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.374 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-beam-trend-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/07e83939e4f0e58db51e367618e6db5b/plot_kriging_beam_trend.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_beam_trend.py</span></code></a></p>
@@ -344,7 +348,7 @@ In this case, a quadratic trend is not advisable because it can interpolate all 
         <li class="right" >
           <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
