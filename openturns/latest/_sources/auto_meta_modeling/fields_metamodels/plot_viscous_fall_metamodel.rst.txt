@@ -50,15 +50,15 @@ Define the model
 
 .. GENERATED FROM PYTHON SOURCE LINES 22-23
 
-We first define the time grid associated with the model. 
+We first define the time grid associated with the model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 25-30
 
 .. code-block:: default
 
-    tmin=0.0 # Minimum time
-    tmax=12. # Maximum time
-    gridsize=100 # Number of time steps
+    tmin = 0.0  # Minimum time
+    tmax = 12.  # Maximum time
+    gridsize = 100  # Number of time steps
     mesh = ot.IntervalMesher([gridsize-1]).build(ot.Interval(tmin, tmax))
 
 
@@ -134,16 +134,16 @@ Then we define the Python function which computes the altitude at each time valu
 .. code-block:: default
 
     def AltiFunc(X):
-        g  = 9.81
+        g = 9.81
         z0 = X[0]
         v0 = X[1]
-        m  = X[2]
-        c  = X[3]
+        m = X[2]
+        c = X[3]
         tau = m / c
         vinf = - m * g / c
         t = np.array(vertices)
-        z = z0 + vinf * t + tau * (v0 - vinf) * (1 - np.exp( - t / tau))
-        z = np.maximum(z,0.)
+        z = z0 + vinf * t + tau * (v0 - vinf) * (1 - np.exp(- t / tau))
+        z = np.maximum(z, 0.)
         return [[zeta[0]] for zeta in z]
 
 
@@ -158,12 +158,13 @@ Then we define the Python function which computes the altitude at each time valu
 
 In order to create a `Function` from this Python function, we use the `PythonPointToFieldFunction` class. Since the altitude is the only output field, the third argument `outputDimension` is equal to `1`. If we had computed the speed as an extra output field, we would have set `2` instead.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-73
+.. GENERATED FROM PYTHON SOURCE LINES 70-74
 
 .. code-block:: default
 
     outputDimension = 1
-    alti = ot.PythonPointToFieldFunction(dimension, mesh, outputDimension, AltiFunc)
+    alti = ot.PythonPointToFieldFunction(
+        dimension, mesh, outputDimension, AltiFunc)
 
 
 
@@ -172,11 +173,11 @@ In order to create a `Function` from this Python function, we use the `PythonPoi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-75
+.. GENERATED FROM PYTHON SOURCE LINES 75-76
 
 Compute a training sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-82
+.. GENERATED FROM PYTHON SOURCE LINES 78-83
 
 .. code-block:: default
 
@@ -192,12 +193,12 @@ Compute a training sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-85
+.. GENERATED FROM PYTHON SOURCE LINES 84-86
 
 Compute the KL decomposition of the output
 ------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-92
+.. GENERATED FROM PYTHON SOURCE LINES 88-93
 
 .. code-block:: default
 
@@ -213,7 +214,7 @@ Compute the KL decomposition of the output
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-99
+.. GENERATED FROM PYTHON SOURCE LINES 94-100
 
 .. code-block:: default
 
@@ -226,19 +227,20 @@ Compute the KL decomposition of the output
 
 
 
-.. image:: /auto_meta_modeling/fields_metamodels/images/sphx_glr_plot_viscous_fall_metamodel_001.png
-    :alt: KL modes
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_meta_modeling/fields_metamodels/images/sphx_glr_plot_viscous_fall_metamodel_001.png
+   :alt: KL modes
+   :srcset: /auto_meta_modeling/fields_metamodels/images/sphx_glr_plot_viscous_fall_metamodel_001.png
+   :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-101
+.. GENERATED FROM PYTHON SOURCE LINES 101-102
 
-We create the `postProcessingKL` function which takes coefficients of the the K.-L. modes as inputs and returns the trajectories. 
+We create the `postProcessingKL` function which takes coefficients of the the K.-L. modes as inputs and returns the trajectories.
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-105
+.. GENERATED FROM PYTHON SOURCE LINES 104-106
 
 .. code-block:: default
 
@@ -251,11 +253,11 @@ We create the `postProcessingKL` function which takes coefficients of the the K.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-107
+.. GENERATED FROM PYTHON SOURCE LINES 107-108
 
-The `project` method computes the projection of the output sample (i.e. the trajectories) onto the K.-L. modes. 
+The `project` method computes the projection of the output sample (i.e. the trajectories) onto the K.-L. modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-111
+.. GENERATED FROM PYTHON SOURCE LINES 110-112
 
 .. code-block:: default
 
@@ -268,15 +270,16 @@ The `project` method computes the projection of the output sample (i.e. the traj
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-113
+.. GENERATED FROM PYTHON SOURCE LINES 113-114
 
 We limit the sampling size of the Lilliefors selection in order to reduce the computational burden.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-117
+.. GENERATED FROM PYTHON SOURCE LINES 116-119
 
 .. code-block:: default
 
-    ot.ResourceMap.SetAsUnsignedInteger("FittingTest-LillieforsMaximumSamplingSize", 1)
+    ot.ResourceMap.SetAsUnsignedInteger(
+        "FittingTest-LillieforsMaximumSamplingSize", 1)
 
 
 
@@ -285,11 +288,11 @@ We limit the sampling size of the Lilliefors selection in order to reduce the co
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-119
+.. GENERATED FROM PYTHON SOURCE LINES 120-121
 
-We create a polynomial chaos metamodel which takes the input sample and returns the K.-L. modes. 
+We create a polynomial chaos metamodel which takes the input sample and returns the K.-L. modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-125
+.. GENERATED FROM PYTHON SOURCE LINES 123-127
 
 .. code-block:: default
 
@@ -304,15 +307,16 @@ We create a polynomial chaos metamodel which takes the input sample and returns 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-127
+.. GENERATED FROM PYTHON SOURCE LINES 128-129
 
 The final metamodel is a composition of the KL lifting function and the polynomial chaos metamodel. In order to combine these two functions, we use the `PointToFieldConnection` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-131
+.. GENERATED FROM PYTHON SOURCE LINES 131-134
 
 .. code-block:: default
 
-    metaModel = ot.PointToFieldConnection(karhunenLoeveLiftingFunction, chaosMetamodel)
+    metaModel = ot.PointToFieldConnection(
+        karhunenLoeveLiftingFunction, chaosMetamodel)
 
 
 
@@ -321,16 +325,16 @@ The final metamodel is a composition of the KL lifting function and the polynomi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-134
+.. GENERATED FROM PYTHON SOURCE LINES 135-137
 
 Validate the metamodel
 ----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-137
+.. GENERATED FROM PYTHON SOURCE LINES 139-140
 
 Create a validation sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-143
+.. GENERATED FROM PYTHON SOURCE LINES 142-146
 
 .. code-block:: default
 
@@ -345,7 +349,7 @@ Create a validation sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-155
+.. GENERATED FROM PYTHON SOURCE LINES 147-158
 
 .. code-block:: default
 
@@ -363,22 +367,23 @@ Create a validation sample.
 
 
 
-.. image:: /auto_meta_modeling/fields_metamodels/images/sphx_glr_plot_viscous_fall_metamodel_002.png
-    :alt: Model/metamodel comparison
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_meta_modeling/fields_metamodels/images/sphx_glr_plot_viscous_fall_metamodel_002.png
+   :alt: Model/metamodel comparison
+   :srcset: /auto_meta_modeling/fields_metamodels/images/sphx_glr_plot_viscous_fall_metamodel_002.png
+   :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-157
+.. GENERATED FROM PYTHON SOURCE LINES 159-160
 
 We see that the blue trajectories (i.e. the metamodel) are close to the red trajectories (i.e. the validation sample). This shows that the metamodel is quite accurate. However, we observe that the trajectory singularity that occurs when the object touches the ground (i.e. when :math:`z` is equal to zero), makes the metamodel less accurate.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  15.706 seconds)
+   **Total running time of the script:** ( 0 minutes  10.428 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_fields_metamodels_plot_viscous_fall_metamodel.py:
