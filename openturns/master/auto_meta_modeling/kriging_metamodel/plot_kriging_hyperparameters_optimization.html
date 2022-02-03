@@ -23,8 +23,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Kriging: metamodel of the Branin-Hoo function" href="plot_kriging_branin_function.html" />
-    <link rel="prev" title="Kriging : generate trajectories from a metamodel" href="plot_kriging_simulate.html" />
+    <link rel="next" title="Kriging : choose a trend vector space" href="plot_kriging_chose_trend.html" />
+    <link rel="prev" title="Advanced kriging" href="plot_kriging_advanced.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -57,10 +57,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_kriging_branin_function.html" title="Kriging: metamodel of the Branin-Hoo function"
+          <a href="plot_kriging_chose_trend.html" title="Kriging : choose a trend vector space"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_simulate.html" title="Kriging : generate trajectories from a metamodel"
+          <a href="plot_kriging_advanced.html" title="Advanced kriging"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -83,7 +83,8 @@
 <li><a class="reference internal" href="#configure-the-starting-point-of-the-optimization">Configure the starting point of the optimization</a></li>
 <li><a class="reference internal" href="#disabling-the-optimization">Disabling the optimization</a></li>
 <li><a class="reference internal" href="#reuse-the-parameters-from-a-previous-optimization">Reuse the parameters from a previous optimization</a></li>
-<li><a class="reference internal" href="#configure-the-optimization-solver">Configure the optimization solver</a></li>
+<li><a class="reference internal" href="#configure-the-local-optimization-solver">Configure the local optimization solver</a></li>
+<li><a class="reference internal" href="#configure-the-global-optimization-solver">Configure the global optimization solver</a></li>
 </ul>
 </li>
 </ul>
@@ -91,13 +92,13 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_kriging_simulate.html"
-                          title="previous chapter">Kriging : generate trajectories from a metamodel</a></p>
+    <p class="topless"><a href="plot_kriging_advanced.html"
+                          title="previous chapter">Advanced kriging</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plot_kriging_branin_function.html"
-                          title="next chapter">Kriging: metamodel of the Branin-Hoo function</a></p>
+    <p class="topless"><a href="plot_kriging_chose_trend.html"
+                          title="next chapter">Kriging : choose a trend vector space</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -156,6 +157,7 @@ to download the full example code</p>
 <div class="section" id="definition-of-the-model">
 <h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -169,10 +171,10 @@ to download the full example code</p>
 <span class="n">E</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">)</span>
 <span class="c1"># Load F</span>
 <span class="n">F</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LogNormal</span><span class="p">()</span>  <span class="c1"># in N</span>
-<span class="n">F</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">()([</span><span class="mf">30.e3</span><span class="p">,</span> <span class="mf">9e3</span><span class="p">,</span> <span class="mf">15.e3</span><span class="p">]))</span>
+<span class="n">F</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">()([</span><span class="mf">30.0e3</span><span class="p">,</span> <span class="mf">9e3</span><span class="p">,</span> <span class="mf">15.0e3</span><span class="p">]))</span>
 <span class="n">F</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
 <span class="c1"># Length L</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">250.</span><span class="p">,</span> <span class="mf">260.</span><span class="p">)</span>  <span class="c1"># in cm</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">250.0</span><span class="p">,</span> <span class="mf">260.0</span><span class="p">)</span>  <span class="c1"># in cm</span>
 <span class="n">L</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
 <span class="c1"># Moment of inertia I</span>
 <span class="n">I</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">450</span><span class="p">)</span>  <span class="c1"># in cm^4</span>
@@ -183,8 +185,7 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># number of inputs</span>
 <span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 <span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span>
-<span class="n">myCopula</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="p">(</span>
-    <span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="o">.</span><span class="n">GetCorrelationFromSpearmanCorrelation</span><span class="p">(</span><span class="n">R</span><span class="p">))</span>
+<span class="n">myCopula</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="o">.</span><span class="n">GetCorrelationFromSpearmanCorrelation</span><span class="p">(</span><span class="n">R</span><span class="p">))</span>
 <span class="n">myDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">([</span><span class="n">E</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">I</span><span class="p">],</span> <span class="n">myCopula</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -203,11 +204,36 @@ to download the full example code</p>
 <p>In order to create the kriging metamodel, we first select a constant trend with the <cite>ConstantBasisFactory</cite> class. Then we use a squared exponential covariance model. Finally, we use the <cite>KrigingAlgorithm</cite> class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+
+<span class="c1"># Trick B, v2</span>
+<span class="n">x_range</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">()</span> <span class="o">-</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMin</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x_range:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x_range</span><span class="p">)</span>
+<span class="n">scale_max_factor</span> <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># Must be &gt; 1, tune this to match your problem</span>
+<span class="n">scale_min_factor</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Must be &lt; 1, tune this to match your problem</span>
+<span class="n">maximum_scale_bounds</span> <span class="o">=</span> <span class="n">scale_max_factor</span> <span class="o">*</span> <span class="n">x_range</span>
+<span class="n">minimum_scale_bounds</span> <span class="o">=</span> <span class="n">scale_min_factor</span> <span class="o">*</span> <span class="n">x_range</span>
+<span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">minimum_scale_bounds</span><span class="p">,</span> <span class="n">maximum_scale_bounds</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;scaleOptimizationBounds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
+
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">krigingMetamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>x_range:
+[2.12636e+07,24296.8,7.35174,106.039]
+scaleOptimizationBounds
+[2.12636e+06, 8.50545e+07]
+[2429.68, 97187.2]
+[0.735174, 29.407]
+[10.6039, 424.154]
 </pre></div>
 </div>
 <p>The <cite>run</cite> method has optimized the hyperparameters of the metamodel.</p>
@@ -216,19 +242,19 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=1 values=[13.3786]]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=1 values=[18.049]]
 </pre></div>
 </div>
 <p>We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">basic_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
-<span class="n">basic_covariance_model</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">basic_covariance_model</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[1,1,1,1], amplitude=[5.08434])</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[8.50447e+07,30226.6,29.407,424.154], amplitude=[13.7982])
+</pre></div>
 </div>
-<br />
-<br /></div>
+</div>
 <div class="section" id="get-the-optimizer-algorithm">
 <h2>Get the optimizer algorithm<a class="headerlink" href="#get-the-optimizer-algorithm" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>getOptimizationAlgorithm</cite> method returns the optimization algorithm used to optimize the <img class="math" src="../../_images/math/faaffaa41e6112abe2aad6241e3e817f6f3b14bf.svg" alt="{\bf \theta}"/> parameters of the <cite>SquaredExponential</cite> covariance model.</p>
@@ -254,23 +280,28 @@ to download the full example code</p>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lbounds</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">getLowerBound</span><span class="p">()</span>
-<span class="n">lbounds</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lbounds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lbounds</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[0.01,0.01,0.01,0.01]</p>
-</div>
-<br />
-<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ubounds</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()</span>
-<span class="n">ubounds</span>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>lbounds
+[2.12636e+06,2429.68,0.735174,10.6039]
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>[2.27497e+07,81879.1,18.2918,178.813]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ubounds</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ubounds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ubounds</span><span class="p">)</span>
+</pre></div>
 </div>
-<br />
-<br /><p>The <cite>getOptimizeParameters</cite> method returns <cite>True</cite> if these parameters are to be optimized.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">getOptimizeParameters</span><span class="p">()</span>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ubounds
+[8.50545e+07,97187.2,29.407,424.154]
+</pre></div>
+</div>
+<p>The <cite>getOptimizeParameters</cite> method returns <cite>True</cite> if these parameters are to be optimized.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">isOptimize</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getOptimizeParameters</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">isOptimize</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -281,36 +312,40 @@ to download the full example code</p>
 <div class="section" id="configure-the-starting-point-of-the-optimization">
 <h2>Configure the starting point of the optimization<a class="headerlink" href="#configure-the-starting-point-of-the-optimization" title="Permalink to this headline">¶</a></h2>
 <p>The starting point of the optimization is based on the parameters of the covariance model. In the following example, we configure the parameters of the covariance model to the arbitrary values <cite>[12.,34.,56.,78.]</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">12.</span><span class="p">,</span> <span class="mf">34.</span><span class="p">,</span> <span class="mf">56.</span><span class="p">,</span> <span class="mf">78.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">34.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">78.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-<span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="n">new_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">new_covariance_model</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[12,34,18.2918,78], amplitude=[5.08434])</p>
-</div>
-<br />
-<br /><p>In order to see the difference with the default optimization, we print the previous optimized covariance model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">basic_covariance_model</span>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[8.50447e+07,30226.6,29.407,424.154], amplitude=[13.7982])
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[1,1,1,1], amplitude=[5.08434])</p>
+<p>In order to see the difference with the default optimization, we print the previous optimized covariance model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">basic_covariance_model</span><span class="p">)</span>
+</pre></div>
 </div>
-<br />
-<br /><p>We observe that this does not change much the values of the parameters in this case.</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[8.50447e+07,30226.6,29.407,424.154], amplitude=[13.7982])
+</pre></div>
+</div>
+<p>We observe that this does not change much the values of the parameters in this case.</p>
 </div>
 <div class="section" id="disabling-the-optimization">
 <h2>Disabling the optimization<a class="headerlink" href="#disabling-the-optimization" title="Permalink to this headline">¶</a></h2>
 <p>It is sometimes useful to completely disable the optimization of the parameters. In order to see the effect of this, we first initialize the parameters of the covariance model with the arbitrary values <cite>[12.,34.,56.,78.]</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">12.</span><span class="p">,</span> <span class="mf">34.</span><span class="p">,</span> <span class="mf">56.</span><span class="p">,</span> <span class="mf">78.</span><span class="p">],</span> <span class="p">[</span><span class="mf">91.0</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">34.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">78.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">91.0</span><span class="p">])</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
 </pre></div>
 </div>
 <p>The <cite>setOptimizeParameters</cite> method can be used to disable the optimization of the parameters.</p>
@@ -322,20 +357,22 @@ to download the full example code</p>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>We observe that the covariance model is unchanged.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<p>We observe that the covariance model is unchanged:
+the parameters have not been optimized, as required.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">updated_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">updated_covariance_model</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[12,34,56,78], amplitude=[91])</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[12,34,56,78], amplitude=[91])
+</pre></div>
 </div>
-<br />
-<br /><p>The trend, however, is still optimized, using linear least squares.</p>
+<p>The trend, however, is still optimized, using linear least squares.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=1 values=[13.3786]]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[class=Point name=Unnamed dimension=1 values=[12.0499]]
 </pre></div>
 </div>
 </div>
@@ -345,19 +382,21 @@ to download the full example code</p>
 <p>Step 1: Run a first kriging algorithm.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
-<span class="n">covarianceModel</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">covarianceModel</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[1,1,1,1], amplitude=[5.08434])</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[8.50447e+07,30226.6,29.407,424.154], amplitude=[13.7982])
+</pre></div>
 </div>
-<br />
-<br /><p>Step 2: Create a new point and add it to the previous training design.</p>
+<p>Step 2: Create a new point and add it to the previous training design.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_new</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">Y_new</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>
 </pre></div>
@@ -384,14 +423,14 @@ to download the full example code</p>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">notUpdatedCovarianceModel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
-<span class="n">notUpdatedCovarianceModel</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">notUpdatedCovarianceModel</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[1,1,1,1], amplitude=[5.08434])</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[8.50447e+07,30226.6,29.407,424.154], amplitude=[13.7982])
+</pre></div>
 </div>
-<br />
-<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">printCovarianceParameterChange</span><span class="p">(</span><span class="n">covarianceModel1</span><span class="p">,</span> <span class="n">covarianceModel2</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">printCovarianceParameterChange</span><span class="p">(</span><span class="n">covarianceModel1</span><span class="p">,</span> <span class="n">covarianceModel2</span><span class="p">):</span>
     <span class="n">parameters1</span> <span class="o">=</span> <span class="n">covarianceModel1</span><span class="o">.</span><span class="n">getFullParameter</span><span class="p">()</span>
     <span class="n">parameters2</span> <span class="o">=</span> <span class="n">covarianceModel2</span><span class="o">.</span><span class="n">getFullParameter</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">parameters1</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
@@ -413,8 +452,42 @@ Change in the parameter #4 = 0.0
 </div>
 <p>We see that the parameters did not change <em>at all</em>: disabling the optimization allows to keep a constant covariance model. In a practical algorithm, we may, for example, add a block of 10 new points before updating the parameters of the covariance model. At this point, we may reuse the previous covariance model so that the optimization starts from a better point, compared to the parameters default values. This will reduce the cost of the optimization.</p>
 </div>
-<div class="section" id="configure-the-optimization-solver">
-<h2>Configure the optimization solver<a class="headerlink" href="#configure-the-optimization-solver" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="configure-the-local-optimization-solver">
+<h2>Configure the local optimization solver<a class="headerlink" href="#configure-the-local-optimization-solver" title="Permalink to this headline">¶</a></h2>
+<p>The following example shows how to set the local optimization solver.
+We choose the SLSQP algorithm from NLOPT.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">problem</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">getProblem</span><span class="p">()</span>
+<span class="n">local_solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NLopt</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="s2">&quot;LD_SLSQP&quot;</span><span class="p">)</span>
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">local_solver</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">finetune_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[8.50447e+07,30226.6,29.407,424.154], amplitude=[13.7982])
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">printCovarianceParameterChange</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">,</span> <span class="n">basic_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Change in the parameter #0 = 0.0
+Change in the parameter #1 = 0.0
+Change in the parameter #2 = 0.0
+Change in the parameter #3 = 0.0
+Change in the parameter #4 = 0.0
+</pre></div>
+</div>
+</div>
+<div class="section" id="configure-the-global-optimization-solver">
+<h2>Configure the global optimization solver<a class="headerlink" href="#configure-the-global-optimization-solver" title="Permalink to this headline">¶</a></h2>
 <p>The following example checks the robustness of the optimization of the kriging algorithm with respect to the optimization of the likelihood function in the covariance model parameters estimation. We use a <cite>MultiStart</cite> algorithm in order to avoid to be trapped by a local minimum. Furthermore, we generate the design of experiments using a <cite>LHSExperiments</cite>, which guarantees that the points will fill the space.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize_train</span><span class="p">)</span>
@@ -432,9 +505,8 @@ Change in the parameter #4 = 0.0
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">=</span> <span class="mi">25</span>  <span class="c1"># design size</span>
 <span class="n">LHS</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">boundedDistribution</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
 <span class="n">LHS</span><span class="o">.</span><span class="n">setAlwaysShuffle</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">SA_profile</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GeometricProfile</span><span class="p">(</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
-<span class="n">LHS_optimization_algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulatedAnnealingLHS</span><span class="p">(</span>
-    <span class="n">LHS</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SpaceFillingC2</span><span class="p">(),</span> <span class="n">SA_profile</span><span class="p">)</span>
+<span class="n">SA_profile</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GeometricProfile</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
+<span class="n">LHS_optimization_algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulatedAnnealingLHS</span><span class="p">(</span><span class="n">LHS</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SpaceFillingC2</span><span class="p">(),</span> <span class="n">SA_profile</span><span class="p">)</span>
 <span class="n">LHS_optimization_algo</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="n">LHS_design</span> <span class="o">=</span> <span class="n">LHS_optimization_algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">starting_points</span> <span class="o">=</span> <span class="n">LHS_design</span><span class="o">.</span><span class="n">getOptimalDesign</span><span class="p">()</span>
@@ -446,18 +518,18 @@ Change in the parameter #4 = 0.0
 </pre></div>
 </div>
 <p>We can check that the minimum and maximum in the sample correspond to the bounds of the design of experiment.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lbounds</span><span class="p">,</span> <span class="n">ubounds</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">lbounds</span><span class="p">,</span> <span class="n">ubounds</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(class=Point name=Unnamed dimension=4 values=[0.01,0.01,0.01,0.01], class=Point name=Unnamed dimension=4 values=[2.27497e+07,81879.1,18.2918,178.813])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[2.12636e+06,2429.68,0.735174,10.6039] [8.50545e+07,97187.2,29.407,424.154]
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">starting_points</span><span class="o">.</span><span class="n">getMin</span><span class="p">(),</span> <span class="n">starting_points</span><span class="o">.</span><span class="n">getMax</span><span class="p">()</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(class=Point name=Unnamed dimension=4 values=[8192.53,1897.95,0.606147,5.1413], class=Point name=Unnamed dimension=4 values=[2.26853e+07,81252.5,17.7015,177.663])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(class=Point name=Unnamed dimension=4 values=[3.58268e+06,4126.37,0.875832,25.501], class=Point name=Unnamed dimension=4 values=[8.21336e+07,95739.1,28.6265,414.801])
 </pre></div>
 </div>
 <p>Then we create a <cite>MultiStart</cite> algorithm based on the LHS starting points.</p>
@@ -467,21 +539,20 @@ Change in the parameter #4 = 0.0
 </div>
 <p>Finally, we configure the optimization algorithm so as to use the <cite>MultiStart</cite> algorithm.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
-<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">multiStartSolver</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">finetune_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
-<span class="n">finetune_covariance_model</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[1,1,1,1], amplitude=[5.08434])</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[8.50447e+07,30226.6,29.407,424.154], amplitude=[13.7982])
+</pre></div>
 </div>
-<br />
-<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">printCovarianceParameterChange</span><span class="p">(</span>
-    <span class="n">finetune_covariance_model</span><span class="p">,</span> <span class="n">basic_covariance_model</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">printCovarianceParameterChange</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">,</span> <span class="n">basic_covariance_model</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -493,7 +564,7 @@ Change in the parameter #4 = 0.0
 </pre></div>
 </div>
 <p>We see that there are no changes in the estimated parameters. This shows that the first optimization of the parameters worked fine.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.224 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.196 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-hyperparameters-optimization-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/06b69b36ded61f91f0e533e211435c93/plot_kriging_hyperparameters_optimization.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_hyperparameters_optimization.py</span></code></a></p>
@@ -520,10 +591,10 @@ Change in the parameter #4 = 0.0
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_kriging_branin_function.html" title="Kriging: metamodel of the Branin-Hoo function"
+          <a href="plot_kriging_chose_trend.html" title="Kriging : choose a trend vector space"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_simulate.html" title="Kriging : generate trajectories from a metamodel"
+          <a href="plot_kriging_advanced.html" title="Advanced kriging"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
