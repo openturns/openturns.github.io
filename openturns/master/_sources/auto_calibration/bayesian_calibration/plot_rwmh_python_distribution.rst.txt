@@ -21,7 +21,7 @@
 Posterior sampling using a PythonDistribution
 =============================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-46
+.. GENERATED FROM PYTHON SOURCE LINES 6-52
 
 In this example we are going to show how to do Bayesian inference using the :class:`~openturns.RandomWalkMetropolisHastings` algorithm in a statistical model defined through a :class:`~openturns.PythonDistribution`.
 
@@ -52,11 +52,17 @@ Its PDF is known up to a multiplicative constant:
 
 The :class:`~openturns.RandomWalkMetropolisHastings` class can be used to sample from the posterior distribution. It relies on the following objects:
 
-- The conditional density :math:`p(t_{1:n}|f_{1:n}, \alpha, \beta)` will be defined as a :class:`~openturns.PythonDistribution`.
 - The prior probability density :math:`\pi(\vect{\theta})` reflects beliefs about the possible values
   of :math:`\vect{\theta} = (\alpha, \beta)` before the experimental data are considered.
-- Initial values :math:`\vect{\theta}_0` for the calibration parameters.
-- Proposal distributions used to update each parameter sequentially.
+- Initial values :math:`\vect{\theta}_0` of the parameters.
+- An proposal distribution used to update parameters.
+
+Additionnaly we want to define the likelihood term defined by these objects:
+
+- The conditional density :math:`p(t_{1:n}|f_{1:n}, \alpha, \beta)` will be defined as a :class:`~openturns.PythonDistribution`.
+- The sample of observations acting as the parameters of the conditional density
+
+
 
 Set up the PythonDistribution
 -----------------------------
@@ -64,7 +70,7 @@ Set up the PythonDistribution
 
 The censured Weibuill likelihood is outside the usual catalog of probability distributions in OpenTURNS, hence we need to define it using the :class:`~openturns.PythonDistribution` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-56
+.. GENERATED FROM PYTHON SOURCE LINES 55-62
 
 .. code-block:: default
 
@@ -82,7 +88,7 @@ The censured Weibuill likelihood is outside the usual catalog of probability dis
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-66
+.. GENERATED FROM PYTHON SOURCE LINES 63-72
 
 The following methods must be defined:
 
@@ -94,7 +100,7 @@ The following methods must be defined:
    We formally define a bivariate distribution on the :math:`(t_i, f_i)` couple, even though :math:`f_i` has no distribution (it is simply a covariate).
    This is not an issue, since the sole purpose of this :class:`~openturns.PythonDistribution` object is to pass the likelihood calculation over to :class:`~openturns.RandomWalkMetropolisHastings`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-103
+.. GENERATED FROM PYTHON SOURCE LINES 74-109
 
 .. code-block:: default
 
@@ -140,11 +146,11 @@ The following methods must be defined:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-105
+.. GENERATED FROM PYTHON SOURCE LINES 110-111
 
 Convert to :class:`~openturns.Distribution`
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-112
+.. GENERATED FROM PYTHON SOURCE LINES 113-118
 
 .. code-block:: default
 
@@ -160,14 +166,14 @@ Convert to :class:`~openturns.Distribution`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-117
+.. GENERATED FROM PYTHON SOURCE LINES 119-123
 
 Observations, prior, initial point and proposal distributions
 -------------------------------------------------------------
 
 Define the observations
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-126
+.. GENERATED FROM PYTHON SOURCE LINES 126-132
 
 .. code-block:: default
 
@@ -184,12 +190,12 @@ Define the observations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-129
+.. GENERATED FROM PYTHON SOURCE LINES 133-135
 
-Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distribution for :math:`\beta`
+Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distribution for :math:`\beta`.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-144
+.. GENERATED FROM PYTHON SOURCE LINES 137-150
 
 .. code-block:: default
 
@@ -213,17 +219,17 @@ Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distrib
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-147
+.. GENERATED FROM PYTHON SOURCE LINES 151-153
 
 We select prior means as the initial point of the Metropolis-Hastings algorithm.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-152
+.. GENERATED FROM PYTHON SOURCE LINES 155-158
 
 .. code-block:: default
 
 
-    initialState = ot.Point([a_beta / b_beta, 0.5*(alpha_max - alpha_min)])
+    initialState = [a_beta / b_beta, 0.5*(alpha_max - alpha_min)]
 
 
 
@@ -232,12 +238,12 @@ We select prior means as the initial point of the Metropolis-Hastings algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-155
+.. GENERATED FROM PYTHON SOURCE LINES 159-161
 
 For our random walk proposal distributions, we choose normal steps, with standard deviation equal to roughly :math:`10\%` of the prior range (for the uniform prior) or standard deviation (for the normal prior).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-162
+.. GENERATED FROM PYTHON SOURCE LINES 163-169
 
 .. code-block:: default
 
@@ -245,6 +251,7 @@ For our random walk proposal distributions, we choose normal steps, with standar
     proposal = []
     proposal.append(ot.Normal(0., 0.1 * np.sqrt(a_beta / b_beta**2)))
     proposal.append(ot.Normal(0., 0.1 * (alpha_max - alpha_min)))
+    proposal = ot.ComposedDistribution(proposal)
 
 
 
@@ -253,25 +260,22 @@ For our random walk proposal distributions, we choose normal steps, with standar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-165
+.. GENERATED FROM PYTHON SOURCE LINES 170-172
 
 Sample from the posterior distribution
 --------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-178
+.. GENERATED FROM PYTHON SOURCE LINES 174-182
 
 .. code-block:: default
 
 
-    RWMHsampler = ot.RandomWalkMetropolisHastings(
-        prior, conditional, x, initialState, proposal)
-    strategy = ot.CalibrationStrategyCollection(2)
-    RWMHsampler.setCalibrationStrategyPerComponent(strategy)
-    RWMHsampler.setVerbose(True)
+    sampler = ot.RandomWalkMetropolisHastings(prior, initialState, proposal)
+    sampler.setLikelihood(conditional, x)
     sampleSize = 10000
-    sample = RWMHsampler.getSample(sampleSize)
+    sample = sampler.getSample(sampleSize)
     # compute acceptance rate
-    print("Acceptance rate: %s" % (RWMHsampler.getAcceptanceRate()))
+    print("Acceptance rate: %s" % (sampler.getAcceptanceRate()))
 
 
 
@@ -283,17 +287,17 @@ Sample from the posterior distribution
 
  .. code-block:: none
 
-    Acceptance rate: [0.9168,0.7598]
+    Acceptance rate: 0.7194
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-181
+.. GENERATED FROM PYTHON SOURCE LINES 183-185
 
-Plot prior to posterior marginal plots
+Plot prior to posterior marginal plots.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-195
+.. GENERATED FROM PYTHON SOURCE LINES 187-200
 
 .. code-block:: default
 
@@ -312,6 +316,7 @@ Plot prior to posterior marginal plots
 
 
 
+
 .. image-sg:: /auto_calibration/bayesian_calibration/images/sphx_glr_plot_rwmh_python_distribution_001.png
    :alt: Bayesian inference
    :srcset: /auto_calibration/bayesian_calibration/images/sphx_glr_plot_rwmh_python_distribution_001.png
@@ -321,10 +326,101 @@ Plot prior to posterior marginal plots
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 201-203
+
+Define an improper prior
+--------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 205-210
+
+Now, define an improper prior:
+
+.. math::
+  \mathcal \pi(\beta, \alpha) \propto \frac{1}{\beta}.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 210-215
+
+.. code-block:: default
+
+
+    logpdf = ot.SymbolicFunction(['beta', 'alpha'], ['-log(beta)'])
+    support = ot.Interval([0] * 2, [1] * 2)
+    support.setFiniteUpperBound([False] * 2)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 216-217
+
+Sample from the posterior distribution
+
+.. GENERATED FROM PYTHON SOURCE LINES 217-223
+
+.. code-block:: default
+
+
+    sampler2 = ot.RandomWalkMetropolisHastings(logpdf, support, initialState, proposal)
+    sampler2.setLikelihood(conditional, x)
+    sample2 = sampler2.getSample(1000)
+    print("Acceptance rate: %s" % (sampler2.getAcceptanceRate()))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Acceptance rate: 0.729
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 224-226
+
+Plot posterior marginal plots only as prior cannot be drawn meaningfully.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 228-240
+
+.. code-block:: default
+
+    kernel = ot.KernelSmoothing()
+    posterior = kernel.build(sample)
+    grid = ot.GridLayout(1, 2)
+    grid.setTitle('Bayesian inference (with log-pdf)')
+    for parameter_index in range(2):
+        graph = posterior.getMarginal(parameter_index).drawPDF()
+        graph.setColors(ot.Drawable.BuildDefaultPalette(2))
+        graph.setLegends(['Posterior'])
+        grid.setGraph(0, parameter_index, graph)
+    _ = View(grid)
+
+    View.ShowAll()
+
+
+
+.. image-sg:: /auto_calibration/bayesian_calibration/images/sphx_glr_plot_rwmh_python_distribution_002.png
+   :alt: Bayesian inference (with log-pdf)
+   :srcset: /auto_calibration/bayesian_calibration/images/sphx_glr_plot_rwmh_python_distribution_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.866 seconds)
+   **Total running time of the script:** ( 0 minutes  6.149 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_bayesian_calibration_plot_rwmh_python_distribution.py:

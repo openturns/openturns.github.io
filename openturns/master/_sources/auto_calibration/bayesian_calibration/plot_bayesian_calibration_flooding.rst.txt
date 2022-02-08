@@ -28,7 +28,7 @@ Abstract
 
 The goal of this example is to present the statistical hypotheses of the bayesian calibration of the :ref:`flooding model<use-case-flood-model>`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-63
+.. GENERATED FROM PYTHON SOURCE LINES 13-64
 
 Parameters to calibrate
 -----------------------
@@ -36,7 +36,7 @@ Parameters to calibrate
 The vector of parameters to calibrate is:
 
 .. math::
-   \theta = (K_s,Z_v,Z_m).
+   \vect{\theta} = (K_s,Z_v,Z_m).
 
 
 The variables to calibrate are :math:`(K_s,Z_v,Z_m)` and are set to the following values:
@@ -74,25 +74,25 @@ We consider a sample size equal to:
    n=20.
 
 
-The observations are the couples :math:`\{(Q_i,H_i)\}_{i=1,...,n}`, i.e. each observation is a couple made of the flowrate and the corresponding river height.
+The observations are the couples :math:`\{(Q_i,H_i)\}_{i=1,...,n}`,
+i.e. each observation is a couple made of the flowrate and the corresponding river height.
 
 Analysis
 --------
 
 In this model, the variables :math:`Z_m` and :math:`Z_v` are not identifiables, since only the difference :math:`Z_m-Z_v` matters. Hence, calibrating this model requires some regularization.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-67
+.. GENERATED FROM PYTHON SOURCE LINES 66-68
 
 Generate the observations
 -------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-77
+.. GENERATED FROM PYTHON SOURCE LINES 70-77
 
 .. code-block:: default
 
     import pylab as pl
-    from openturns.viewer import View
-    from openturns.usecases import flood_model as flood_model
+    from openturns.usecases import flood_model
     import openturns.viewer as viewer
     import numpy as np
     import openturns as ot
@@ -231,7 +231,7 @@ We create the joint input distribution.
 
 .. GENERATED FROM PYTHON SOURCE LINES 133-134
 
-Create a Monte-Carlo sample of the output H.
+Create a Monte-Carlo sample of the output :math:`H`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 136-140
 
@@ -313,43 +313,49 @@ Plot the Y observations versus the X observations.
 Setting the calibration parameters
 ----------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-169
+.. GENERATED FROM PYTHON SOURCE LINES 168-173
 
-Define the parametric model :math:`z = f(x,\theta)` that associates each observation :math:`x_i` and values of the  parameters :math:`\theta_i` to the parameters of the distribution of the corresponding observation: here :math:`z=(\mu, \sigma)`
+Define the parametric model :math:`\vect z = f_Q(\vect\theta)` that associates each observation
+:math:`Q` and value of the parameters :math:`\vect \theta = (K_s, Z_v, Z_m)`
+to the parameters of the distribution of the corresponding observation:
+here :math:`\vect z=(\mu, \sigma)` with :math:`\mu = G(Q, K_s, Z_v, Z_m)`
+and :math:`\sigma = 0.5`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-182
+.. GENERATED FROM PYTHON SOURCE LINES 175-186
 
 .. code-block:: default
 
     def fullModelPy(X):
         Q, K_s, Z_v, Z_m = X
-        H = g(X)[0]
-        sigmaH = 0.5  # (m^2) The standard deviation of the observation error.
-        return [H, sigmaH]
+        mu = g(X)[0]
+        sigma = 0.5  # (m^2) The standard deviation of the observation error.
+        return [mu, sigma]
 
 
     fullModel = ot.PythonFunction(4, 2, fullModelPy)
-    model = ot.ParametricFunction(fullModel, [0], Qobs[0])
-    model
+    linkFunction = ot.ParametricFunction(fullModel, [0], [np.nan])
+    print(linkFunction)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>ParametricEvaluation(class=PythonEvaluation name=OpenTURNSPythonFunction, parameters positions=[0], parameters=[x0 : 1726.31], input positions=[1,2,3])</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-184
+    ParametricEvaluation(class=PythonEvaluation name=OpenTURNSPythonFunction, parameters positions=[0], parameters=[x0 : nan], input positions=[1,2,3])
 
-Define the value of the reference values of the :math:`\theta` parameter. In the bayesian framework, this is called the mean of the *prior* gaussian distribution. In the data assimilation framework, this is called the *background*.
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-192
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 187-188
+
+Define the value of the reference values of the :math:`\vect\theta` parameter. In the Bayesian framework, this is called the mean of the *prior* Gaussian distribution. In the data assimilation framework, this is called the *background*.
+
+.. GENERATED FROM PYTHON SOURCE LINES 190-196
 
 .. code-block:: default
 
@@ -366,11 +372,11 @@ Define the value of the reference values of the :math:`\theta` parameter. In the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-194
+.. GENERATED FROM PYTHON SOURCE LINES 197-198
 
-Define the covariance matrix of the parameters :math:`\theta` to calibrate.
+Define the covariance matrix of the parameters :math:`\vect\theta` to calibrate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-200
+.. GENERATED FROM PYTHON SOURCE LINES 200-204
 
 .. code-block:: default
 
@@ -385,7 +391,7 @@ Define the covariance matrix of the parameters :math:`\theta` to calibrate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-207
+.. GENERATED FROM PYTHON SOURCE LINES 205-210
 
 .. code-block:: default
 
@@ -393,157 +399,84 @@ Define the covariance matrix of the parameters :math:`\theta` to calibrate.
     parameterPriorCovariance[0, 0] = sigmaKs**2
     parameterPriorCovariance[1, 1] = sigmaZv**2
     parameterPriorCovariance[2, 2] = sigmaZm**2
-    parameterPriorCovariance
 
 
 
 
 
 
-.. raw:: html
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[[ 25  0  0 ]<br>
-     [  0  1  0 ]<br>
-     [  0  0  1 ]]</p>
-    </div>
-    <br />
-    <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-209
+.. GENERATED FROM PYTHON SOURCE LINES 211-212
 
-Define the the prior distribution :math:`\pi(\underline{\theta})` of the parameter :math:`\underline{\theta}`
+Define the the prior distribution :math:`\pi(\vect\theta)` of the parameter :math:`\vect\theta`
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-215
+.. GENERATED FROM PYTHON SOURCE LINES 214-217
 
 .. code-block:: default
 
     prior = ot.Normal(parameterPriorMean, parameterPriorCovariance)
     prior.setDescription(['Ks', 'Zv', 'Zm'])
-    prior
 
 
 
 
 
 
-.. raw:: html
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>Normal(mu = [20,49,51], sigma = [5,1,1], R = [[ 1 0 0 ]<br>
-     [ 0 1 0 ]<br>
-     [ 0 0 1 ]])</p>
-    </div>
-    <br />
-    <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-219
+.. GENERATED FROM PYTHON SOURCE LINES 218-221
 
-Define the distribution of observations :math:`\underline{y} | \underline{z}` conditional on model predictions.
+Define the distribution of observations :math:`\vect{y} | \vect{z}` conditional on model predictions.
 
-Note that its parameter dimension is the one of :math:`\underline{z}`, so the model must be adjusted accordingly. In other words, the input argument of the `setParameter` method of the conditional distribution must be equal to the dimension of the output of the `model`. Hence, we do not have to set the actual parameters: only the type of distribution is used.
+Note that its parameter dimension is the one of :math:`\vect{z}`, so the model must be adjusted accordingly. In other words, the input argument of the `setParameter` method of the conditional distribution must be equal to the dimension of the output of the `model`. Hence, we do not have to set the actual parameters: only the type of distribution is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-224
+.. GENERATED FROM PYTHON SOURCE LINES 223-225
 
 .. code-block:: default
 
     conditional = ot.Normal()
-    conditional
 
 
 
 
 
 
-.. raw:: html
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>Normal(mu = 0, sigma = 1)</p>
-    </div>
-    <br />
-    <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-226
+.. GENERATED FROM PYTHON SOURCE LINES 226-229
 
-Proposal distribution: uniform.
+The proposed steps for :math:`K_s` :math:`Z_v` and :math:`Z_m`
+will all follow uniform distributions,
+but with different supports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-231
+.. GENERATED FROM PYTHON SOURCE LINES 231-233
 
 .. code-block:: default
 
     proposal = [ot.Uniform(-5., 5.), ot.Uniform(-1., 1.), ot.Uniform(-1., 1.)]
-    proposal
 
 
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-
-    [class=Uniform name=Uniform dimension=1 a=-5 b=5, class=Uniform name=Uniform dimension=1 a=-1 b=1, class=Uniform name=Uniform dimension=1 a=-1 b=1]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-236
+.. GENERATED FROM PYTHON SOURCE LINES 234-236
 
-Test the MCMC sampler
+Build a Gibbs sampler
 ---------------------
 
-The MCMC sampler essentially computes the log-likelihood of the parameters.
-
-.. GENERATED FROM PYTHON SOURCE LINES 238-240
+.. GENERATED FROM PYTHON SOURCE LINES 236-242
 
 .. code-block:: default
 
-    mymcmc = ot.MCMC(prior, conditional, model, Qobs, Hobs, parameterPriorMean)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 241-243
-
-.. code-block:: default
-
-    mymcmc.computeLogLikelihood(parameterPriorMean)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-
-    -146.3520105560049
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 244-246
-
-Test the Metropolis-Hastings sampler
-------------------------------------
-
-.. GENERATED FROM PYTHON SOURCE LINES 248-249
-
-- Creation of the Random Walk Metropolis-Hastings (RWMH) sampler.
-
-.. GENERATED FROM PYTHON SOURCE LINES 251-253
-
-.. code-block:: default
 
     initialState = parameterPriorMean
+    mh_coll = [ot.RandomWalkMetropolisHastings(prior, initialState, proposal[i], [i]) for i in range(paramDim)]
+    for mh in mh_coll: mh.setLikelihood(conditional, Hobs, linkFunction, Qobs)
+    sampler = ot.Gibbs(mh_coll)
 
 
 
@@ -552,34 +485,16 @@ Test the Metropolis-Hastings sampler
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-257
+.. GENERATED FROM PYTHON SOURCE LINES 243-244
 
-.. code-block:: default
+Tuning of the Gibbs algorithm.
 
-    RWMHsampler = ot.RandomWalkMetropolisHastings(
-        prior, conditional, model, Qobs, Hobs, initialState, proposal)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 258-259
-
-Tuning of the RWMH algorithm.
-
-.. GENERATED FROM PYTHON SOURCE LINES 261-262
-
-Strategy of calibration for the random walk (trivial example: default).
-
-.. GENERATED FROM PYTHON SOURCE LINES 264-267
+.. GENERATED FROM PYTHON SOURCE LINES 246-249
 
 .. code-block:: default
 
-    strategy = ot.CalibrationStrategyCollection(paramDim)
-    RWMHsampler.setCalibrationStrategyPerComponent(strategy)
+    sampler.setThinning(1)
+    sampler.setBurnIn(200)
 
 
 
@@ -588,35 +503,16 @@ Strategy of calibration for the random walk (trivial example: default).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-269
+.. GENERATED FROM PYTHON SOURCE LINES 250-251
 
-Other parameters.
+Generate a sample from the posterior distribution of :math:`\vect \theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-275
-
-.. code-block:: default
-
-    RWMHsampler.setVerbose(True)
-    RWMHsampler.setThinning(1)
-    RWMHsampler.setBurnIn(200)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 276-277
-
-Generate a sample from the posterior distribution of the parameters theta.
-
-.. GENERATED FROM PYTHON SOURCE LINES 279-282
+.. GENERATED FROM PYTHON SOURCE LINES 253-256
 
 .. code-block:: default
 
     sampleSize = 1000
-    sample = RWMHsampler.getSample(sampleSize)
+    sample = sampler.getSample(sampleSize)
 
 
 
@@ -625,36 +521,40 @@ Generate a sample from the posterior distribution of the parameters theta.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-284
+.. GENERATED FROM PYTHON SOURCE LINES 257-258
 
-Look at the acceptance rate (basic checking of the efficiency of the tuning; value close to 0.2 usually recommended).
+Look at the acceptance rates of the random walk Metropolis-Hastings samplers.
 
-.. GENERATED FROM PYTHON SOURCE LINES 286-288
+.. GENERATED FROM PYTHON SOURCE LINES 258-261
 
 .. code-block:: default
 
-    RWMHsampler.getAcceptanceRate()
+
+    [mh.getAcceptanceRate() for mh in sampler.getMetropolisHastingsCollection()]
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ Out:
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[0.513333,0.623333,0.595833]</p>
-    </div>
-    <br />
-    <br />
+ .. code-block:: none
 
-.. GENERATED FROM PYTHON SOURCE LINES 289-290
+
+    [0.5433333333333333, 0.655, 0.6416666666666667]
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 262-263
 
 Build the distribution of the posterior by kernel smoothing.
 
-.. GENERATED FROM PYTHON SOURCE LINES 292-295
+.. GENERATED FROM PYTHON SOURCE LINES 263-267
 
 .. code-block:: default
+
 
     kernel = ot.KernelSmoothing()
     posterior = kernel.build(sample)
@@ -666,11 +566,11 @@ Build the distribution of the posterior by kernel smoothing.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-297
+.. GENERATED FROM PYTHON SOURCE LINES 268-269
 
 Display prior vs posterior for each parameter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-312
+.. GENERATED FROM PYTHON SOURCE LINES 269-282
 
 .. code-block:: default
 
@@ -702,7 +602,7 @@ Display prior vs posterior for each parameter.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.536 seconds)
+   **Total running time of the script:** ( 0 minutes  1.425 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_bayesian_calibration_plot_bayesian_calibration_flooding.py:
