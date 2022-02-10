@@ -2,9 +2,9 @@ var classOrthogonalBasis =
 [
     [ "OrthogonalBasis", "classOrthogonalBasis.html#a0af32b196b86eefa21e72516cf2d4f84", null ],
     [ "OrthogonalBasis", "classOrthogonalBasis.html#ac2efa95f69e5fbf055f83c316175a951", null ],
-    [ "__repr__", "classOrthogonalBasis.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "build", "classOrthogonalBasis.html#aa9dfbeab138bfe350d8ddbd19881a1b0", null ],
-    [ "build", "classOrthogonalBasis.html#a831ee8f2936898acde4e864526c905f1", null ],
-    [ "getEnumerateFunction", "classOrthogonalBasis.html#a8f3c253755e698a6be3c9dcc99344de6", null ],
-    [ "getMeasure", "classOrthogonalBasis.html#ae506a14c608b02d9f0bf23ea2a119e00", null ]
+    [ "__repr__", "classOrthogonalBasis.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "build", "classOrthogonalBasis.html#a83d86600d741d7964c65afd89fdfb260", null ],
+    [ "build", "classOrthogonalBasis.html#a949919723423df98612bc2456e2c8b70", null ],
+    [ "getEnumerateFunction", "classOrthogonalBasis.html#a495d0c4145a654470dc86b4a8c315512", null ],
+    [ "getMeasure", "classOrthogonalBasis.html#a385364e120d99793484d71d23b11bfde", null ]
 ];

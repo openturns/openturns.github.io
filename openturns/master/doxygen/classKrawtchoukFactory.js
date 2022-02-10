@@ -2,11 +2,11 @@ var classKrawtchoukFactory =
 [
     [ "KrawtchoukFactory", "classKrawtchoukFactory.html#a77d9d96ee28465d282c90e467c24e8de", null ],
     [ "KrawtchoukFactory", "classKrawtchoukFactory.html#a5cf407d8af0073537b901d7cdf213431", null ],
-    [ "__repr__", "classKrawtchoukFactory.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classKrawtchoukFactory.html#a4c40ac2a3ec9d1c617e5c7f9e124ddcf", null ],
-    [ "getN", "classKrawtchoukFactory.html#a48a6567255c9687b2ea4a3da01b0c7e1", null ],
-    [ "getP", "classKrawtchoukFactory.html#a68d03019554b884a0d785e33340dab1b", null ],
-    [ "getRecurrenceCoefficients", "classKrawtchoukFactory.html#a85a7099489fcb1f14fed61f0725cf993", null ],
-    [ "load", "classKrawtchoukFactory.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classKrawtchoukFactory.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classKrawtchoukFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classKrawtchoukFactory.html#aaf3d42aff38886fd4a87b27ae37aa63a", null ],
+    [ "getN", "classKrawtchoukFactory.html#a4561f296bb771c14441eb6f044017ce4", null ],
+    [ "getP", "classKrawtchoukFactory.html#ad2945000260086ca8faa816289ab91a4", null ],
+    [ "getRecurrenceCoefficients", "classKrawtchoukFactory.html#a5978e2da6ab27ab5f86c62685ea9a097", null ],
+    [ "load", "classKrawtchoukFactory.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classKrawtchoukFactory.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

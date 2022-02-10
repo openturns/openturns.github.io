@@ -1,13 +1,14 @@
 var classIdentityEvaluation =
 [
     [ "IdentityEvaluation", "classIdentityEvaluation.html#a7c2a7d0f9a49a9af227f93b203308891", null ],
-    [ "__repr__", "classIdentityEvaluation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classIdentityEvaluation.html#a3bc017d3c8a32afa5804a702d648b146", null ],
-    [ "getInputDimension", "classIdentityEvaluation.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getOutputDimension", "classIdentityEvaluation.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "load", "classIdentityEvaluation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator()", "classIdentityEvaluation.html#ae324fcf5ff934b5ce3c647aad457dc71", null ],
-    [ "operator()", "classIdentityEvaluation.html#aabaff938d71748cb401f14623ce250bc", null ],
-    [ "operator==", "classIdentityEvaluation.html#af36aea538d2fa66d0a192a18cfe67ce1", null ],
-    [ "save", "classIdentityEvaluation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classIdentityEvaluation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classIdentityEvaluation.html#a898a5e4cc47ab92293b88c92b5c49110", null ],
+    [ "getInputDimension", "classIdentityEvaluation.html#a18e8247fe0b964d07224b26b4fac3b05", null ],
+    [ "getOutputDimension", "classIdentityEvaluation.html#aa409c90a5dc176fbe63e37476a6f200b", null ],
+    [ "isLinear", "classIdentityEvaluation.html#a1ac49501515bad07776ff2f87110a099", null ],
+    [ "load", "classIdentityEvaluation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator()", "classIdentityEvaluation.html#ad22e9a473cc02a5c93814db911457a16", null ],
+    [ "operator()", "classIdentityEvaluation.html#a31767a0c4f564bcff7485dc4b926c17c", null ],
+    [ "operator==", "classIdentityEvaluation.html#a753a7ea274b08f698cf90199cd2cb5b4", null ],
+    [ "save", "classIdentityEvaluation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

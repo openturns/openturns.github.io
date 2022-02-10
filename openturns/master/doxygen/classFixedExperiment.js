@@ -3,11 +3,11 @@ var classFixedExperiment =
     [ "FixedExperiment", "classFixedExperiment.html#aa07da6061bfdf6039cdfde97db29a9f1", null ],
     [ "FixedExperiment", "classFixedExperiment.html#a50211582b5546cfbad2ef8e290926a16", null ],
     [ "FixedExperiment", "classFixedExperiment.html#a3513e11ec54776113babb3e2290061ba", null ],
-    [ "__repr__", "classFixedExperiment.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classFixedExperiment.html#a357b6a94ecb00961901c965d44f87377", null ],
-    [ "generateWithWeights", "classFixedExperiment.html#a9fc7558dd00e630390ccf82b92f22988", null ],
-    [ "hasUniformWeights", "classFixedExperiment.html#a08c848a6e18934f30ad83911d0375b07", null ],
-    [ "load", "classFixedExperiment.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classFixedExperiment.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
-    [ "setDistribution", "classFixedExperiment.html#a525e0df80e2fd9f6134c201a13f1bef6", null ]
+    [ "__repr__", "classFixedExperiment.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classFixedExperiment.html#aa4e49de132d92d8d8980fbf6d4948a51", null ],
+    [ "generateWithWeights", "classFixedExperiment.html#a5db25c4c4517b6dd9f034fd0a682bff1", null ],
+    [ "hasUniformWeights", "classFixedExperiment.html#a13e71968ecfb88b1139722ff6bb87693", null ],
+    [ "load", "classFixedExperiment.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classFixedExperiment.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
+    [ "setDistribution", "classFixedExperiment.html#aa5f32d1d2ec2565fc0434e4cd3bce664", null ]
 ];

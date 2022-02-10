@@ -1,6 +1,9 @@
 var classHistogramFactory =
 [
     [ "HistogramFactory", "classHistogramFactory.html#a921c5fbb0a944b5469a7e4108d3041d3", null ],
-    [ "clone", "classHistogramFactory.html#a6d4a3b4f9c4b55c57964362a40207db5", null ],
-    [ "computeSilvermanBandwidth", "classHistogramFactory.html#ac57bf4acc0df07a922c96ecdae5c8c0e", null ]
+    [ "build", "classHistogramFactory.html#a95493143bffab6a94c2e6c0fd7700f15", null ],
+    [ "build", "classHistogramFactory.html#aebd4202ff9b7e5ca9614e306af85f31a", null ],
+    [ "build", "classHistogramFactory.html#a739e2965f2a901099fc10d499d6cd867", null ],
+    [ "clone", "classHistogramFactory.html#a23be75600fd631c87dfd580721021be2", null ],
+    [ "computeBandwidth", "classHistogramFactory.html#a61d75ff285a85e63bfd6892055c75180", null ]
 ];

@@ -5,10 +5,10 @@ var classNearestNeighbourAlgorithm =
     [ "NearestNeighbourAlgorithm", "classNearestNeighbourAlgorithm.html#aa08527412897dc2a6aaecca2f9953577", null ],
     [ "NearestNeighbourAlgorithm", "classNearestNeighbourAlgorithm.html#a6794d92dd7f3702577c453ecfcda72b5", null ],
     [ "NearestNeighbourAlgorithm", "classNearestNeighbourAlgorithm.html#acf804e375d9eeac9603e2b380af01bba", null ],
-    [ "__repr__", "classNearestNeighbourAlgorithm.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "__str__", "classNearestNeighbourAlgorithm.html#a52e42d2cad038d44d425597aa45f4234", null ],
-    [ "getSample", "classNearestNeighbourAlgorithm.html#a39efe23b32b6acf2803eca059f5ff607", null ],
-    [ "query", "classNearestNeighbourAlgorithm.html#a2c2828022420074bb47bbeb33cba4d0d", null ],
-    [ "query", "classNearestNeighbourAlgorithm.html#a9d78bb766be0f4632f1f6a85697bc707", null ],
-    [ "queryK", "classNearestNeighbourAlgorithm.html#a01e421c042fd15d2de70d7f5bf037689", null ]
+    [ "__repr__", "classNearestNeighbourAlgorithm.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "__str__", "classNearestNeighbourAlgorithm.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
+    [ "getSample", "classNearestNeighbourAlgorithm.html#a2ac7ff9a0d02568404a30818d96c67a2", null ],
+    [ "query", "classNearestNeighbourAlgorithm.html#ac5213cbb6be042da8b8fd60156aa7b9b", null ],
+    [ "query", "classNearestNeighbourAlgorithm.html#a2a6b016c0fc237456c731d9d6241b704", null ],
+    [ "queryK", "classNearestNeighbourAlgorithm.html#a8d0530bed1cbbf4adcb19d95124e8218", null ]
 ];

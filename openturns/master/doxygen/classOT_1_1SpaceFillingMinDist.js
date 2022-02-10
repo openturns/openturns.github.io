@@ -1,7 +1,7 @@
 var classOT_1_1SpaceFillingMinDist =
 [
     [ "SpaceFillingMinDist", "classOT_1_1SpaceFillingMinDist.html#ab588eb9c149862c44eeb0053df000bff", null ],
-    [ "__repr__", "classOT_1_1SpaceFillingMinDist.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classOT_1_1SpaceFillingMinDist.html#a99912dd902b6b092d5e8e7fbeffce167", null ],
-    [ "evaluate", "classOT_1_1SpaceFillingMinDist.html#a36d7dc9f60b0e5860401a0eb64e5fc3c", null ]
+    [ "__repr__", "classOT_1_1SpaceFillingMinDist.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classOT_1_1SpaceFillingMinDist.html#a6574e568202d8ca88b6d0bc6ac0d3abf", null ],
+    [ "evaluate", "classOT_1_1SpaceFillingMinDist.html#a08d5e7c80d0e88d78b2781b5e7c9d5c3", null ]
 ];

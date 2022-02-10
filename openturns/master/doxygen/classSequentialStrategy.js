@@ -2,10 +2,10 @@ var classSequentialStrategy =
 [
     [ "SequentialStrategy", "classSequentialStrategy.html#a36edd19a981f91abdb55ece4b688bebc", null ],
     [ "SequentialStrategy", "classSequentialStrategy.html#a62bfa289ea57ee07cb3a53e77feb3cb1", null ],
-    [ "__repr__", "classSequentialStrategy.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classSequentialStrategy.html#a10b0b9871279b76d9453d32e2691979c", null ],
-    [ "computeInitialBasis", "classSequentialStrategy.html#ac439939c209ff63bdb7cceb03e44077f", null ],
-    [ "load", "classSequentialStrategy.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classSequentialStrategy.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
-    [ "updateBasis", "classSequentialStrategy.html#ac44d0f4234552042ae6dea54fb22f5d6", null ]
+    [ "__repr__", "classSequentialStrategy.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classSequentialStrategy.html#a46218eb03ed06852051a48e661b787a2", null ],
+    [ "computeInitialBasis", "classSequentialStrategy.html#aa560342c4b9d70c2875dcb98913ed237", null ],
+    [ "load", "classSequentialStrategy.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classSequentialStrategy.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
+    [ "updateBasis", "classSequentialStrategy.html#ad8a409167f7250b4a30f2a4fff5eca93", null ]
 ];

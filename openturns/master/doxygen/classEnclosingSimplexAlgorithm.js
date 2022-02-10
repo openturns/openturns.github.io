@@ -5,10 +5,10 @@ var classEnclosingSimplexAlgorithm =
     [ "EnclosingSimplexAlgorithm", "classEnclosingSimplexAlgorithm.html#ac099de44e1e078e695fe5996f506c344", null ],
     [ "EnclosingSimplexAlgorithm", "classEnclosingSimplexAlgorithm.html#af93ae1e995b2cafa51887b479de17e80", null ],
     [ "EnclosingSimplexAlgorithm", "classEnclosingSimplexAlgorithm.html#ac58f877061405a25cbcc3b5523b1e367", null ],
-    [ "__repr__", "classEnclosingSimplexAlgorithm.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "__str__", "classEnclosingSimplexAlgorithm.html#a52e42d2cad038d44d425597aa45f4234", null ],
-    [ "getSimplices", "classEnclosingSimplexAlgorithm.html#a5bba69cc1e549a8a58d8398c92bd0a53", null ],
-    [ "getVertices", "classEnclosingSimplexAlgorithm.html#a072089e2c6647a2ca6d83de1287f808c", null ],
-    [ "query", "classEnclosingSimplexAlgorithm.html#a2c2828022420074bb47bbeb33cba4d0d", null ],
-    [ "query", "classEnclosingSimplexAlgorithm.html#a9d78bb766be0f4632f1f6a85697bc707", null ]
+    [ "__repr__", "classEnclosingSimplexAlgorithm.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "__str__", "classEnclosingSimplexAlgorithm.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
+    [ "getSimplices", "classEnclosingSimplexAlgorithm.html#a920ab88bcca9728e06d0aab82baa4500", null ],
+    [ "getVertices", "classEnclosingSimplexAlgorithm.html#a15b4d99834d3110317a965a051228796", null ],
+    [ "query", "classEnclosingSimplexAlgorithm.html#ac5213cbb6be042da8b8fd60156aa7b9b", null ],
+    [ "query", "classEnclosingSimplexAlgorithm.html#a2a6b016c0fc237456c731d9d6241b704", null ]
 ];

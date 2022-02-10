@@ -2,11 +2,11 @@ var classDomainDifference =
 [
     [ "DomainDifference", "classDomainDifference.html#aa638790804de40fdc68b92c3d8e2f606", null ],
     [ "DomainDifference", "classDomainDifference.html#a62512e0bc0b273f8128bac4de5e5a070", null ],
-    [ "__repr__", "classDomainDifference.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classDomainDifference.html#aa944d7746502cf7fd990710b484242d4", null ],
-    [ "contains", "classDomainDifference.html#a24e3e6c7dcaf513180cd532d5fd4c3e2", null ],
-    [ "contains", "classDomainDifference.html#a723c2d3103290b96bd9a3e4863ac273d", null ],
-    [ "load", "classDomainDifference.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator==", "classDomainDifference.html#af4319c58326af6d2e2c7ef8b1819f929", null ],
-    [ "save", "classDomainDifference.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classDomainDifference.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classDomainDifference.html#ac8e46ee644d8b21b086ab9b967c29e3f", null ],
+    [ "contains", "classDomainDifference.html#a71f175d31dbfdbc28e9411825c9945a4", null ],
+    [ "contains", "classDomainDifference.html#a5df94288d5a2738ec22f7d3a43b893c4", null ],
+    [ "load", "classDomainDifference.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator==", "classDomainDifference.html#a69b79c4fb2081e318aa8149377ffd48e", null ],
+    [ "save", "classDomainDifference.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

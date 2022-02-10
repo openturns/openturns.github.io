@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zipfmandelbrot',['ZipfMandelbrot',['../classZipfMandelbrot.html',1,'']]]
+  ['zipfmandelbrot_3518',['ZipfMandelbrot',['../classZipfMandelbrot.html',1,'']]]
 ];

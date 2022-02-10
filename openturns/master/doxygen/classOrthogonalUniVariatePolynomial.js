@@ -3,10 +3,10 @@ var classOrthogonalUniVariatePolynomial =
     [ "OrthogonalUniVariatePolynomial", "classOrthogonalUniVariatePolynomial.html#ad461d856790fe12a670b82f1c5efa100", null ],
     [ "OrthogonalUniVariatePolynomial", "classOrthogonalUniVariatePolynomial.html#afa750517a8802a02803108904daa1007", null ],
     [ "OrthogonalUniVariatePolynomial", "classOrthogonalUniVariatePolynomial.html#a02764569e10262e543816989f1e67f20", null ],
-    [ "clone", "classOrthogonalUniVariatePolynomial.html#ad291a2f5744db454bf8873943984b298", null ],
-    [ "getRecurrenceCoefficients", "classOrthogonalUniVariatePolynomial.html#aa558dea5cf3b3cf00fa2ab16fb632ab5", null ],
-    [ "getRoots", "classOrthogonalUniVariatePolynomial.html#ac97a25187436537bcabd399e8e9a9dd2", null ],
-    [ "load", "classOrthogonalUniVariatePolynomial.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator()", "classOrthogonalUniVariatePolynomial.html#a8b3fa1c8d0a2eb6f55ceef504a8a2141", null ],
-    [ "save", "classOrthogonalUniVariatePolynomial.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "clone", "classOrthogonalUniVariatePolynomial.html#a6e029700a406e138c2fa7571d1d4aaa1", null ],
+    [ "getRecurrenceCoefficients", "classOrthogonalUniVariatePolynomial.html#a151a8c95252d941c1cb90909ab6e4373", null ],
+    [ "getRoots", "classOrthogonalUniVariatePolynomial.html#a4e4d35426725b60700aa2efe89ab063f", null ],
+    [ "load", "classOrthogonalUniVariatePolynomial.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator()", "classOrthogonalUniVariatePolynomial.html#a1d01f4c80cb6f264fbd3ffa9ea8277c3", null ],
+    [ "save", "classOrthogonalUniVariatePolynomial.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

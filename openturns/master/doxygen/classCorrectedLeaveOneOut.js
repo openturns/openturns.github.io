@@ -1,9 +1,9 @@
 var classCorrectedLeaveOneOut =
 [
     [ "CorrectedLeaveOneOut", "classCorrectedLeaveOneOut.html#aa2fdd1a77dce04cd9fa77113703320df", null ],
-    [ "__repr__", "classCorrectedLeaveOneOut.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classCorrectedLeaveOneOut.html#aaec67ddec28c00d15bbe84183afd52fe", null ],
-    [ "load", "classCorrectedLeaveOneOut.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "run", "classCorrectedLeaveOneOut.html#a4fc0fe5c06eb7b62f81105547ef5a6d5", null ],
-    [ "save", "classCorrectedLeaveOneOut.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classCorrectedLeaveOneOut.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classCorrectedLeaveOneOut.html#a1f9ce72e38992d9d22c5610ed8866561", null ],
+    [ "load", "classCorrectedLeaveOneOut.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "run", "classCorrectedLeaveOneOut.html#a28cfcafc57d318bf6f63fb6626e6929d", null ],
+    [ "save", "classCorrectedLeaveOneOut.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

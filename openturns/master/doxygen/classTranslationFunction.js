@@ -1,7 +1,7 @@
 var classTranslationFunction =
 [
     [ "TranslationFunction", "classTranslationFunction.html#a9df0bb77887f027e25ed0ae26c2b3d24", null ],
-    [ "__repr__", "classTranslationFunction.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "getConstant", "classTranslationFunction.html#acf74421dd63f553f84d05429d8d408ca", null ],
-    [ "operator==", "classTranslationFunction.html#ae317a319069f6fe5b37c49543a943884", null ]
+    [ "__repr__", "classTranslationFunction.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "getConstant", "classTranslationFunction.html#aa3f98e254bbab292a2d6b70211635c5b", null ],
+    [ "operator==", "classTranslationFunction.html#a3819bfb6bd0573a57a7ad21596591077", null ]
 ];

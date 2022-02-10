@@ -4,9 +4,9 @@ var classARMAFactory =
     [ "ARMAFactory", "classARMAFactory.html#a8602fd58982b177f81f8b2970ea9524d", null ],
     [ "ARMAFactory", "classARMAFactory.html#a395a9bef16ea2fe037bba6a6f9d3788a", null ],
     [ "ARMAFactory", "classARMAFactory.html#a08960baafaba939255ba8b3cdbd4d6e5", null ],
-    [ "__repr__", "classARMAFactory.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "__str__", "classARMAFactory.html#a52e42d2cad038d44d425597aa45f4234", null ],
-    [ "build", "classARMAFactory.html#a9e75b7604089e8664fad7ca18763eac0", null ],
-    [ "build", "classARMAFactory.html#aece59e3286eb63cdae561b5ff3829f87", null ],
-    [ "clone", "classARMAFactory.html#a11d05d2d73a17e20ad01dea46902f993", null ]
+    [ "__repr__", "classARMAFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "__str__", "classARMAFactory.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
+    [ "build", "classARMAFactory.html#adbb114570ed043844ed0c17a6e596d96", null ],
+    [ "build", "classARMAFactory.html#a312a4b3730e6025db04daf8d77138610", null ],
+    [ "clone", "classARMAFactory.html#ac2cf271f7549553cff2ff266e0cd2bc4", null ]
 ];

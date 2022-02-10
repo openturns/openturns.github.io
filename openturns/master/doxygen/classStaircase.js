@@ -4,11 +4,11 @@ var classStaircase =
     [ "Staircase", "classStaircase.html#a08711a13b0cf3ab04e8949b7ffadfc1d", null ],
     [ "Staircase", "classStaircase.html#a1a59debaed2ee0969198f4a28141b27c", null ],
     [ "Staircase", "classStaircase.html#a89abb7d0b0a902da988356fb0406a7e1", null ],
-    [ "__repr__", "classStaircase.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "checkData", "classStaircase.html#ad5ea32fbc0758f56f1a249dc50e54d35", null ],
-    [ "clone", "classStaircase.html#aa8beb0ecad6e1e9bbd648c1f3a0660ff", null ],
-    [ "draw", "classStaircase.html#a6b4f0c07408f2d5af8e79ff3464550aa", null ],
-    [ "getPattern", "classStaircase.html#a6d24eed3a540cdf924c7d516418e936b", null ],
-    [ "load", "classStaircase.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classStaircase.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classStaircase.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "checkData", "classStaircase.html#aa0dd3ed4110ab8446e83725450ec5a00", null ],
+    [ "clone", "classStaircase.html#ad4100e206a3f0fd19eae07eca652798e", null ],
+    [ "draw", "classStaircase.html#ae17fd7773904c891a90f420413363e75", null ],
+    [ "getPattern", "classStaircase.html#a1ce12459a12627c7a3f8c3d0cddd9fd9", null ],
+    [ "load", "classStaircase.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classStaircase.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

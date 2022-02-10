@@ -2,11 +2,11 @@ var classJacobiFactory =
 [
     [ "JacobiFactory", "classJacobiFactory.html#a7975f479bd31e13eedc1bc0ffab5dc2b", null ],
     [ "JacobiFactory", "classJacobiFactory.html#ac141e1f5a14fee6e551cb647ede02e24", null ],
-    [ "__repr__", "classJacobiFactory.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classJacobiFactory.html#a5d74af9d889b2e1bae1426c98c5ad75b", null ],
-    [ "getAlpha", "classJacobiFactory.html#a77f06420eeddf066399154d5ad21cc34", null ],
-    [ "getBeta", "classJacobiFactory.html#a59e478d6c59b979860a704b4028103ec", null ],
-    [ "getRecurrenceCoefficients", "classJacobiFactory.html#a44445fd45f90809c7e39667b6ff15178", null ],
-    [ "load", "classJacobiFactory.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classJacobiFactory.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classJacobiFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classJacobiFactory.html#a2fbf3aa6d01ebb470e7e1a3586313e66", null ],
+    [ "getAlpha", "classJacobiFactory.html#ac7b4e1a28299f13b6ef2ef64d65de2f8", null ],
+    [ "getBeta", "classJacobiFactory.html#ad05d7cf0a0aae8615eac6c4158c7ec90", null ],
+    [ "getRecurrenceCoefficients", "classJacobiFactory.html#a8d120b84c2d6ef60ae7995e2e0bc802a", null ],
+    [ "load", "classJacobiFactory.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classJacobiFactory.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

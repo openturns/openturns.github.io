@@ -1,17 +1,18 @@
 var classLowDiscrepancySequenceImplementation =
 [
     [ "LowDiscrepancySequenceImplementation", "classLowDiscrepancySequenceImplementation.html#a714161d5e3da5fb20ddb2e149cb49465", null ],
-    [ "__repr__", "classLowDiscrepancySequenceImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classLowDiscrepancySequenceImplementation.html#af610ecb77408fb27eb7b8c5972974199", null ],
-    [ "ComputeFirstPrimeNumbers", "classLowDiscrepancySequenceImplementation.html#a15288154b7ca71c787075526df5021c7", null ],
-    [ "ComputeNextPrimeNumber", "classLowDiscrepancySequenceImplementation.html#a87614d63f2b64718bd70b99fcaf6c33c", null ],
+    [ "__repr__", "classLowDiscrepancySequenceImplementation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classLowDiscrepancySequenceImplementation.html#aa6ef05dde3ea9f93c7dbbf94da95b374", null ],
     [ "ComputeStarDiscrepancy", "classLowDiscrepancySequenceImplementation.html#adf6bc0172a771d32c1b700f82044e06d", null ],
-    [ "generate", "classLowDiscrepancySequenceImplementation.html#a2c1e010abbba7510d26f75fca16487c6", null ],
-    [ "generate", "classLowDiscrepancySequenceImplementation.html#a0feb082eb95c0696b1c68af909569e29", null ],
-    [ "getDimension", "classLowDiscrepancySequenceImplementation.html#aa2ecd0f05f7350ab14b8dd1ba6b95fc0", null ],
-    [ "GetPrimeNumbers", "classLowDiscrepancySequenceImplementation.html#ab449e4d72295f2e518fc367367a5b646", null ],
+    [ "generate", "classLowDiscrepancySequenceImplementation.html#a9c5c83440642887fd180fa1b2a036467", null ],
+    [ "generate", "classLowDiscrepancySequenceImplementation.html#a9a382cf415b26304684940047fa0ac72", null ],
+    [ "getDimension", "classLowDiscrepancySequenceImplementation.html#a2060c1b021e46a7109bd9db2b38bcc5e", null ],
+    [ "GetFirstPrimeNumbers", "classLowDiscrepancySequenceImplementation.html#ab9c48555668fe54e445a5824e56d9db3", null ],
+    [ "GetNextPrimeNumber", "classLowDiscrepancySequenceImplementation.html#ac20ff5c8f82cd75d3f159e0857b90816", null ],
     [ "initialize", "classLowDiscrepancySequenceImplementation.html#a6fb1f8b616f10103d2bd3af046666af8", null ],
-    [ "load", "classLowDiscrepancySequenceImplementation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classLowDiscrepancySequenceImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
-    [ "dimension_", "classLowDiscrepancySequenceImplementation.html#ae0d1a00ab7bad9edc41690f25d628f1e", null ]
+    [ "load", "classLowDiscrepancySequenceImplementation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classLowDiscrepancySequenceImplementation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
+    [ "setScramblingState", "classLowDiscrepancySequenceImplementation.html#ab5f33e7f851d54d130467e75545ec175", null ],
+    [ "dimension_", "classLowDiscrepancySequenceImplementation.html#ae0d1a00ab7bad9edc41690f25d628f1e", null ],
+    [ "LCGState_", "classLowDiscrepancySequenceImplementation.html#adf03aaf65e8ceaf7a02d13b6ab2ce6e4", null ]
 ];

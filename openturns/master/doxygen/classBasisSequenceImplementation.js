@@ -2,15 +2,15 @@ var classBasisSequenceImplementation =
 [
     [ "BasisSequenceImplementation", "classBasisSequenceImplementation.html#afadf6c9f775688015204eb779ef4a2b8", null ],
     [ "BasisSequenceImplementation", "classBasisSequenceImplementation.html#afe2190704ce8ed97d9e135d415af3f0e", null ],
-    [ "__repr__", "classBasisSequenceImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
+    [ "__repr__", "classBasisSequenceImplementation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "add", "classBasisSequenceImplementation.html#a6e8d250e75a48fa661aaf031dbbe3074", null ],
-    [ "clone", "classBasisSequenceImplementation.html#a35fd16c0f39b1f9f34630b2b13a33b1e", null ],
-    [ "getBasis", "classBasisSequenceImplementation.html#ae0edd5834650adcb098f551e24eb2e2a", null ],
-    [ "getDimension", "classBasisSequenceImplementation.html#aa2ecd0f05f7350ab14b8dd1ba6b95fc0", null ],
-    [ "getIndices", "classBasisSequenceImplementation.html#a032277e51e5122456c293916c42b48b8", null ],
-    [ "getIndicesCollection", "classBasisSequenceImplementation.html#a13082db88312ac5320e1c22ef5b1bdaf", null ],
-    [ "getMasterBasis", "classBasisSequenceImplementation.html#ac0e250fa6bb7327d65b5dc74a8ad54e6", null ],
-    [ "getSize", "classBasisSequenceImplementation.html#a899216457913845e4b761bd4832d951e", null ],
-    [ "load", "classBasisSequenceImplementation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classBasisSequenceImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "clone", "classBasisSequenceImplementation.html#a0c38c4ba07e5069dcf3cdf8f1819379c", null ],
+    [ "getBasis", "classBasisSequenceImplementation.html#a459c2a5f7404bb38de2a548e32286059", null ],
+    [ "getDimension", "classBasisSequenceImplementation.html#a2060c1b021e46a7109bd9db2b38bcc5e", null ],
+    [ "getIndices", "classBasisSequenceImplementation.html#a36628d90d4a029cba8e1dfa34221038d", null ],
+    [ "getIndicesCollection", "classBasisSequenceImplementation.html#a1eb1d625faa2c6b98cfe58821dda16a9", null ],
+    [ "getMasterBasis", "classBasisSequenceImplementation.html#a1d78af58e8b169dfe913ecb469bdbded", null ],
+    [ "getSize", "classBasisSequenceImplementation.html#a4edfd9d7170ead1e13619811c398faa8", null ],
+    [ "load", "classBasisSequenceImplementation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classBasisSequenceImplementation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

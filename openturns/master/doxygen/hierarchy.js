@@ -1,173 +1,30 @@
 var hierarchy =
 [
     [ "ANCOVA", "classANCOVA.html", null ],
-    [ "Atomic", "structAtomic.html", null ],
+    [ "AtomicInt", "classAtomicInt.html", null ],
     [ "Bulk< T >", "structBulk.html", null ],
     [ "Catalog", "classCatalog.html", null ],
     [ "Catalog_init", "structCatalog__init.html", null ],
     [ "cobyla", "classcobyla.html", null ],
-    [ "Collection< T >", "classCollection.html", [
-      [ "PersistentCollection< T >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Basis >", "classCollection.html", [
-      [ "PersistentCollection< Basis >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< CalibrationStrategy >", "classCollection.html", [
-      [ "PersistentCollection< CalibrationStrategy >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< CanonicalTensorEvaluation >", "classCollection.html", [
-      [ "PersistentCollection< CanonicalTensorEvaluation >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Coefficients >", "classCollection.html", [
-      [ "PersistentCollection< Coefficients >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Complex >", "classCollection.html", [
-      [ "PersistentCollection< Complex >", "classPersistentCollection.html", [
-        [ "ELLIPTICAL", "classAnalyticalResult.html#a755bd1ac25fc5878fe0a50d1ad755367ac6bcc2946fcd74ccf710812b92b8875a", null ],
-        [ "CLASSICAL", "classAnalyticalResult.html#a755bd1ac25fc5878fe0a50d1ad755367a648824b3676352bfab53d9bcf217389d", null ],
-        [ "PHYSICAL", "classAnalyticalResult.html#a755bd1ac25fc5878fe0a50d1ad755367a1212ef902b38594c5e3a18a86ec90edc", null ],
-        [ "NotSet", "structCSVParserState.html#aa01498a3ceb2fa74dc9536c16caef1daaf271cc6723424336df7064060973a62e", null ],
-        [ "RealField", "structCSVParserState.html#aa01498a3ceb2fa74dc9536c16caef1daa418add9c7c00ebd1ebb30eaecaa11b8a", null ],
-        [ "StringField", "structCSVParserState.html#aa01498a3ceb2fa74dc9536c16caef1daaad94cacbdcfed95ae7213931c9e5540d", null ],
-        [ "G1K3", "classGaussKronrodRule.html#a4cfbc34af4a491159a7a436c8c60c8c1a0ef9c5fc4255c1bae2d4947aa64a84ee", null ],
-        [ "G3K7", "classGaussKronrodRule.html#a4cfbc34af4a491159a7a436c8c60c8c1a792b21f3d1119865c205786bc2f04e05", null ],
-        [ "G7K15", "classGaussKronrodRule.html#a4cfbc34af4a491159a7a436c8c60c8c1aa0046744b11e0ac2b12109c36fd6e097", null ],
-        [ "G11K23", "classGaussKronrodRule.html#a4cfbc34af4a491159a7a436c8c60c8c1a578761be6fcc8c62af37b4f9a9d3f5c1", null ],
-        [ "G15K31", "classGaussKronrodRule.html#a4cfbc34af4a491159a7a436c8c60c8c1a9ed91d5ece7baa059504588691d2a181", null ],
-        [ "G25K51", "classGaussKronrodRule.html#a4cfbc34af4a491159a7a436c8c60c8c1a046d23322420cf6caa0096273018cfb2", null ],
-        [ "PNG", "classGraphImplementation.html#ab4e88c89b3b7ea1735996cc4def22d58a842c5fc4bbe3f780e57c76d1a3cafe9f", null ],
-        [ "EPS", "classGraphImplementation.html#ab4e88c89b3b7ea1735996cc4def22d58a7fe95fbd95752a82e28a74b8abf4e8e7", null ],
-        [ "FIG", "classGraphImplementation.html#ab4e88c89b3b7ea1735996cc4def22d58ac196489d5efd4f77696870b17db91143", null ],
-        [ "PDF", "classGraphImplementation.html#ab4e88c89b3b7ea1735996cc4def22d58a720cd43d342ea9926f03e2283c8de04f", null ],
-        [ "ALL", "classGraphImplementation.html#ab4e88c89b3b7ea1735996cc4def22d58ab1d5eac4b1dca480c8056eaea7663b7a", null ],
-        [ "NONE", "classGraphImplementation.html#aa7c09bd20b9da4a09bab0f42064cda8bac157bdf0b85a40d2619cbc8bc1ae5fe2", null ],
-        [ "LOGX", "classGraphImplementation.html#aa7c09bd20b9da4a09bab0f42064cda8bad7ad62dbc6fa99b401b8b29907454b29", null ],
-        [ "LOGY", "classGraphImplementation.html#aa7c09bd20b9da4a09bab0f42064cda8ba36fb6a6c9620221a220d2dca0bf0aa9f", null ],
-        [ "LOGXY", "classGraphImplementation.html#aa7c09bd20b9da4a09bab0f42064cda8ba1fe3e84cb4dc51a719fd52506a9204b8", null ],
-        [ "NONE", "classKernelSmoothing.html#a9048bd9767df70cc76d658a97adedebfac157bdf0b85a40d2619cbc8bc1ae5fe2", null ],
-        [ "LOWER", "classKernelSmoothing.html#a9048bd9767df70cc76d658a97adedebfaa1017e9b343135a54a98b6f479354d16", null ],
-        [ "UPPER", "classKernelSmoothing.html#a9048bd9767df70cc76d658a97adedebfae704d5d328a8522a6193aa3efb28c724", null ],
-        [ "BOTH", "classKernelSmoothing.html#a9048bd9767df70cc76d658a97adedebfa627abe5a430420baf29ebe1940a7f2fb", null ],
-        [ "FROM", "classMarginalTransformationEvaluation.html#a921d21989af360f21b88c48045073205a60efb85363b2afd235602dc0aee155f0", null ],
-        [ "TO", "classMarginalTransformationEvaluation.html#a921d21989af360f21b88c48045073205a7a745bf8e4299d36823f18d0c317cee8", null ],
-        [ "ANALYSIS", "classOrthogonalUniVariateFunctionFactory.html#aae5e0761e7736aae52f8ddc3652f3feca527e9dc0890cdd2074771cae319bd06a", null ],
-        [ "PROBABILITY", "classOrthogonalUniVariateFunctionFactory.html#aae5e0761e7736aae52f8ddc3652f3feca75e0d9a230aa82a7e53939b27afc576a", null ],
-        [ "ANALYSIS", "classOrthogonalUniVariatePolynomialFactory.html#aae5e0761e7736aae52f8ddc3652f3feca527e9dc0890cdd2074771cae319bd06a", null ],
-        [ "PROBABILITY", "classOrthogonalUniVariatePolynomialFactory.html#aae5e0761e7736aae52f8ddc3652f3feca75e0d9a230aa82a7e53939b27afc576a", null ],
-        [ "LOWER", "classTruncatedDistribution.html#a0a52e46c48c746adbcc33cea7c389f48aa1017e9b343135a54a98b6f479354d16", null ],
-        [ "UPPER", "classTruncatedDistribution.html#a0a52e46c48c746adbcc33cea7c389f48ae704d5d328a8522a6193aa3efb28c724", null ],
-        [ "DEFAULT", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca88ec7d5086d2469ba843c7fcceade8a6", null ],
-        [ "BOLD", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca39fc1130a1e2c8f8c1ad3deee8c0c5dc", null ],
-        [ "UNDERLINE", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca895c5910ff658a6cbdcd1c94d0081ebc", null ],
-        [ "BLINK", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca43e7c26b8df0104b9f389e32ac3f72c7", null ],
-        [ "BLACKFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca2d1137e28c173736bc787ec357e4fda8", null ],
-        [ "REDFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1caa255e2bb966fb91b3a44c975ed5d535b", null ],
-        [ "GREENFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca0117121f29259c4f6f35647e73e34e70", null ],
-        [ "YELLOWFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca3501ec2f9ee9c5abb4374fd611576f41", null ],
-        [ "BLUEFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca05893c0b8674ef0b7ff49dd6916cf56a", null ],
-        [ "PURPLEFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1caedf1e3f24ad2b91e368aa4f874944bb7", null ],
-        [ "CYANFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1cacde0de27ee21788850244db81b943364", null ],
-        [ "WHITEFG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca18a3f5f57f4dfb744e84c6540ebcbeb8", null ],
-        [ "BLACKBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca3a09ec2ed0f83f8d4e20c7f1e8758971", null ],
-        [ "REDBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1cafb3c4036c73720a11cca9e3de15392e0", null ],
-        [ "GREENBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1caba164cfb01d8596cc65329535a9de99f", null ],
-        [ "YELLOWBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1caa9ea52eec682bb40cd0347f5f6340ccb", null ],
-        [ "BLUEBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca0ed5b1967aacc9fc55992399acae070b", null ],
-        [ "PURPLEBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca8ca7ba13d33a0507d4433d6dba3851b4", null ],
-        [ "CYANBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca086e348ea27f2cc0979be8ae10f09c6e", null ],
-        [ "WHITEBG", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1ca45602846abde5f4eb224516b8348bb9e", null ],
-        [ "LASTCOLOR", "structTTY.html#ab87bacfdad76e61b9412d7124be44c1cac64085e5556a7c4af9bacebb95a461e7", null ],
-        [ "ComplexMatrixImplementation", "classComplexMatrixImplementation.html", null ],
-        [ "ComplexTensorImplementation", "classComplexTensorImplementation.html", null ]
-      ] ]
-    ] ],
-    [ "Collection< Copula >", "classCollection.html", [
-      [ "PersistentCollection< Copula >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< CovarianceMatrix >", "classCollection.html", [
-      [ "PersistentCollection< CovarianceMatrix >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< CovarianceModel >", "classCollection.html", [
-      [ "PersistentCollection< CovarianceModel >", "classPersistentCollection.html", null ]
-    ] ],
+    [ "Collection", "classCollection.html", null ],
+    [ "Collection< CanonicalTensorEvaluation >", "classCollection.html", null ],
+    [ "Collection< Complex >", "classCollection.html", null ],
     [ "Collection< DesignProxy >", "classCollection.html", null ],
-    [ "Collection< Distribution >", "classCollection.html", [
-      [ "PersistentCollection< Distribution >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Drawable >", "classCollection.html", [
-      [ "PersistentCollection< Drawable >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Function >", "classCollection.html", [
-      [ "PersistentCollection< Function >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< HermitianMatrix >", "classCollection.html", [
-      [ "PersistentCollection< HermitianMatrix >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Indices >", "classCollection.html", [
-      [ "PersistentCollection< Indices >", "classPersistentCollection.html", null ]
-    ] ],
+    [ "Collection< Distribution >", "classCollection.html", null ],
+    [ "Collection< Function >", "classCollection.html", null ],
+    [ "Collection< Indices >", "classCollection.html", null ],
+    [ "Collection< LevelSet >", "classCollection.html", null ],
     [ "Collection< OrthogonalUniVariatePolynomial >", "classCollection.html", null ],
-    [ "Collection< OrthogonalUniVariatePolynomialFamily >", "classCollection.html", [
-      [ "PersistentCollection< OrthogonalUniVariatePolynomialFamily >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< PersistentCollection >", "classCollection.html", [
-      [ "PersistentCollection< PersistentCollection >", "classPersistentCollection.html", null ]
-    ] ],
     [ "Collection< PiecewiseHermiteEvaluation >", "classCollection.html", null ],
-    [ "Collection< Point >", "classCollection.html", [
-      [ "PersistentCollection< Point >", "classPersistentCollection.html", null ]
-    ] ],
+    [ "Collection< Point >", "classCollection.html", null ],
     [ "Collection< Pointer< DistributionImplementation > >", "classCollection.html", null ],
     [ "Collection< Pointer< exprtk::expression< Scalar > > >", "classCollection.html", null ],
     [ "Collection< Pointer< MuParser > >", "classCollection.html", null ],
-    [ "Collection< Process >", "classCollection.html", [
-      [ "PersistentCollection< Process >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Sample >", "classCollection.html", [
-      [ "PersistentCollection< Sample >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< Scalar >", "classCollection.html", [
-      [ "PersistentCollection< Scalar >", "classPersistentCollection.html", [
-        [ "MatrixImplementation", "classMatrixImplementation.html", null ],
-        [ "Point", "classPoint.html", [
-          [ "PointWithDescription", "classPointWithDescription.html", null ]
-        ] ],
-        [ "TensorImplementation", "classTensorImplementation.html", null ]
-      ] ]
-    ] ],
-    [ "Collection< SquareMatrix >", "classCollection.html", [
-      [ "PersistentCollection< SquareMatrix >", "classPersistentCollection.html", [
-        [ "ARMACoefficients", "classARMACoefficients.html", null ]
-      ] ]
-    ] ],
-    [ "Collection< String >", "classCollection.html", [
-      [ "PersistentCollection< String >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< TriangularComplexMatrix >", "classCollection.html", [
-      [ "PersistentCollection< TriangularComplexMatrix >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< UniVariateFunction >", "classCollection.html", [
-      [ "PersistentCollection< UniVariateFunction >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< UniVariateFunctionFamily >", "classCollection.html", [
-      [ "PersistentCollection< UniVariateFunctionFamily >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< UniVariatePolynomial >", "classCollection.html", [
-      [ "PersistentCollection< UniVariatePolynomial >", "classPersistentCollection.html", null ]
-    ] ],
-    [ "Collection< UnsignedInteger >", "classCollection.html", [
-      [ "PersistentCollection< UnsignedInteger >", "classPersistentCollection.html", [
-        [ "Indices", "classIndices.html", null ]
-      ] ]
-    ] ],
-    [ "Collection< WhittleFactoryState >", "classCollection.html", [
-      [ "PersistentCollection< WhittleFactoryState >", "classPersistentCollection.html", null ]
-    ] ],
+    [ "Collection< Scalar >", "classCollection.html", null ],
+    [ "Collection< UniVariateFunction >", "classCollection.html", null ],
     [ "CorrelationAnalysis", "classCorrelationAnalysis.html", null ],
     [ "CSVParserState", "structCSVParserState.html", null ],
     [ "DistFunc", "classDistFunc.html", null ],
-    [ "DlibBfgsSearchStrategy", "classDlibBfgsSearchStrategy.html", null ],
-    [ "DlibConjugateGradientSearchStrategy", "classDlibConjugateGradientSearchStrategy.html", null ],
     [ "Exception", "classException.html", [
       [ "ConfigurationFileParsingException", "classConfigurationFileParsingException.html", null ],
       [ "DynamicLibraryException", "classDynamicLibraryException.html", null ],
@@ -187,12 +44,16 @@ var hierarchy =
       [ "XMLParserException", "classXMLParserException.html", null ]
     ] ],
     [ "ExitCode", "classTest_1_1ExitCode.html", null ],
+    [ "Factory", "classFactory.html", null ],
     [ "FAST", "classFAST.html", null ],
     [ "FittingTest", "classFittingTest.html", null ],
-    [ "GenericCounterImplementation", "classGenericCounterImplementation.html", null ],
     [ "HypothesisTest", "classHypothesisTest.html", null ],
     [ "IdFactory", "classIdFactory.html", null ],
     [ "KDNearestNeighboursFinder", "classKDNearestNeighboursFinder.html", null ],
+    [ "KLGenMatProd", "classKLGenMatProd.html", [
+      [ "KLMatProdHMat", "classKLMatProdHMat.html", null ],
+      [ "KLMatProdLapack", "classKLMatProdLapack.html", null ]
+    ] ],
     [ "LINEARLEASTSQUARESCALIBRATION", "classLINEARLEASTSQUARESCALIBRATION.html", null ],
     [ "LinearModelTest", "classLinearModelTest.html", null ],
     [ "log", "classlog.html", null ],
@@ -230,9 +91,6 @@ var hierarchy =
         [ "TypedInterfaceObject< CalibrationAlgorithmImplementation >", "classTypedInterfaceObject.html", [
           [ "CalibrationAlgorithm", "classCalibrationAlgorithm.html", null ]
         ] ],
-        [ "TypedInterfaceObject< CalibrationStrategyImplementation >", "classTypedInterfaceObject.html", [
-          [ "CalibrationStrategy", "classCalibrationStrategy.html", null ]
-        ] ],
         [ "TypedInterfaceObject< ClassifierImplementation >", "classTypedInterfaceObject.html", [
           [ "Classifier", "classClassifier.html", null ]
         ] ],
@@ -263,9 +121,7 @@ var hierarchy =
           [ "DistributionFactory", "classDistributionFactory.html", null ]
         ] ],
         [ "TypedInterfaceObject< DistributionImplementation >", "classTypedInterfaceObject.html", [
-          [ "Distribution", "classDistribution.html", [
-            [ "Copula", "classCopula.html", null ]
-          ] ]
+          [ "Distribution", "classDistribution.html", null ]
         ] ],
         [ "TypedInterfaceObject< DistributionParametersImplementation >", "classTypedInterfaceObject.html", [
           [ "DistributionParameters", "classDistributionParameters.html", null ]
@@ -312,6 +168,7 @@ var hierarchy =
             [ "AggregatedFunction", "classAggregatedFunction.html", null ],
             [ "BoxCoxTransform", "classBoxCoxTransform.html", null ],
             [ "DatabaseFunction", "classDatabaseFunction.html", null ],
+            [ "DistanceToDomainFunction", "classDistanceToDomainFunction.html", null ],
             [ "DistributionTransformation", "classDistributionTransformation.html", null ],
             [ "DlibFunction", "classDlibFunction.html", null ],
             [ "DualLinearCombinationFunction", "classDualLinearCombinationFunction.html", null ],
@@ -377,6 +234,9 @@ var hierarchy =
             ] ]
           ] ]
         ] ],
+        [ "TypedInterfaceObject< MetropolisHastingsImplementation >", "classTypedInterfaceObject.html", [
+          [ "MetropolisHastings", "classMetropolisHastings.html", null ]
+        ] ],
         [ "TypedInterfaceObject< NearestNeighbourAlgorithmImplementation >", "classTypedInterfaceObject.html", [
           [ "NearestNeighbourAlgorithm", "classNearestNeighbourAlgorithm.html", null ]
         ] ],
@@ -415,9 +275,8 @@ var hierarchy =
         ] ],
         [ "TypedInterfaceObject< RandomVectorImplementation >", "classTypedInterfaceObject.html", [
           [ "RandomVector", "classRandomVector.html", [
-            [ "Event", "classEvent.html", [
-              [ "StandardEvent", "classStandardEvent.html", null ]
-            ] ]
+            [ "StandardEvent", "classStandardEvent.html", null ],
+            [ "ThresholdEvent", "classThresholdEvent.html", null ]
           ] ]
         ] ],
         [ "TypedInterfaceObject< RootStrategyImplementation >", "classTypedInterfaceObject.html", [
@@ -479,8 +338,11 @@ var hierarchy =
           [ "SequentialStrategy", "classSequentialStrategy.html", null ]
         ] ],
         [ "Analytical", "classAnalytical.html", [
-          [ "FORM", "classFORM.html", null ],
-          [ "SORM", "classSORM.html", null ]
+          [ "FORM", "classFORM.html", [
+            [ "MultiFORM", "classMultiFORM.html", null ]
+          ] ],
+          [ "SORM", "classSORM.html", null ],
+          [ "SystemFORM", "classSystemFORM.html", null ]
         ] ],
         [ "AnalyticalResult", "classAnalyticalResult.html", [
           [ "FORMResult", "classFORMResult.html", null ],
@@ -520,11 +382,12 @@ var hierarchy =
         [ "BoxCoxFactory", "classBoxCoxFactory.html", null ],
         [ "Cache< KeyType, ValueType >", "classCache.html", null ],
         [ "CalibrationAlgorithmImplementation", "classCalibrationAlgorithmImplementation.html", [
-          [ "GaussianLinearCalibration", "classGaussianLinearCalibration.html", null ]
+          [ "GaussianLinearCalibration", "classGaussianLinearCalibration.html", null ],
+          [ "GaussianNonLinearCalibration", "classGaussianNonLinearCalibration.html", null ]
         ] ],
         [ "CalibrationResult", "classCalibrationResult.html", null ],
-        [ "CalibrationStrategyImplementation", "classCalibrationStrategyImplementation.html", null ],
         [ "ClassifierImplementation", "classClassifierImplementation.html", [
+          [ "MinimumVolumeClassifier", "classMinimumVolumeClassifier.html", null ],
           [ "MixtureClassifier", "classMixtureClassifier.html", null ]
         ] ],
         [ "CombinatorialGeneratorImplementation", "classCombinatorialGeneratorImplementation.html", [
@@ -544,22 +407,23 @@ var hierarchy =
           [ "StationaryCovarianceModelFactory", "classStationaryCovarianceModelFactory.html", null ]
         ] ],
         [ "CovarianceModelImplementation", "classCovarianceModelImplementation.html", [
+          [ "AbsoluteExponential", "classAbsoluteExponential.html", null ],
+          [ "DiracCovarianceModel", "classDiracCovarianceModel.html", null ],
+          [ "ExponentiallyDampedCosineModel", "classExponentiallyDampedCosineModel.html", null ],
+          [ "ExponentialModel", "classExponentialModel.html", null ],
           [ "FractionalBrownianMotionModel", "classFractionalBrownianMotionModel.html", null ],
+          [ "GeneralizedExponential", "classGeneralizedExponential.html", null ],
+          [ "IsotropicCovarianceModel", "classIsotropicCovarianceModel.html", null ],
+          [ "KroneckerCovarianceModel", "classKroneckerCovarianceModel.html", null ],
+          [ "MaternModel", "classMaternModel.html", null ],
           [ "ProductCovarianceModel", "classProductCovarianceModel.html", null ],
           [ "RankMCovarianceModel", "classRankMCovarianceModel.html", null ],
-          [ "StationaryCovarianceModel", "classStationaryCovarianceModel.html", [
-            [ "AbsoluteExponential", "classAbsoluteExponential.html", null ],
-            [ "DiracCovarianceModel", "classDiracCovarianceModel.html", null ],
-            [ "ExponentiallyDampedCosineModel", "classExponentiallyDampedCosineModel.html", null ],
-            [ "ExponentialModel", "classExponentialModel.html", null ],
-            [ "GeneralizedExponential", "classGeneralizedExponential.html", null ],
-            [ "MaternModel", "classMaternModel.html", null ],
-            [ "SphericalModel", "classSphericalModel.html", null ],
-            [ "SquaredExponential", "classSquaredExponential.html", null ],
-            [ "UserDefinedStationaryCovarianceModel", "classUserDefinedStationaryCovarianceModel.html", null ]
-          ] ],
+          [ "SphericalModel", "classSphericalModel.html", null ],
+          [ "SquaredExponential", "classSquaredExponential.html", null ],
+          [ "StationaryFunctionalCovarianceModel", "classStationaryFunctionalCovarianceModel.html", null ],
           [ "TensorizedCovarianceModel", "classTensorizedCovarianceModel.html", null ],
-          [ "UserDefinedCovarianceModel", "classUserDefinedCovarianceModel.html", null ]
+          [ "UserDefinedCovarianceModel", "classUserDefinedCovarianceModel.html", null ],
+          [ "UserDefinedStationaryCovarianceModel", "classUserDefinedStationaryCovarianceModel.html", null ]
         ] ],
         [ "DickeyFullerTest", "classDickeyFullerTest.html", null ],
         [ "DistributionFactoryImplementation", "classDistributionFactoryImplementation.html", [
@@ -581,6 +445,7 @@ var hierarchy =
           [ "FrankCopulaFactory", "classFrankCopulaFactory.html", null ],
           [ "FrechetFactory", "classFrechetFactory.html", null ],
           [ "GammaFactory", "classGammaFactory.html", null ],
+          [ "GeneralizedExtremeValueFactory", "classGeneralizedExtremeValueFactory.html", null ],
           [ "GeneralizedParetoFactory", "classGeneralizedParetoFactory.html", null ],
           [ "GeometricFactory", "classGeometricFactory.html", null ],
           [ "GumbelCopulaFactory", "classGumbelCopulaFactory.html", null ],
@@ -589,6 +454,7 @@ var hierarchy =
           [ "InverseNormalFactory", "classInverseNormalFactory.html", null ],
           [ "KernelSmoothing", "classKernelSmoothing.html", null ],
           [ "LaplaceFactory", "classLaplaceFactory.html", null ],
+          [ "LeastSquaresDistributionFactory", "classLeastSquaresDistributionFactory.html", null ],
           [ "LogisticFactory", "classLogisticFactory.html", null ],
           [ "LogNormalFactory", "classLogNormalFactory.html", null ],
           [ "LogUniformFactory", "classLogUniformFactory.html", null ],
@@ -599,6 +465,8 @@ var hierarchy =
           [ "NegativeBinomialFactory", "classNegativeBinomialFactory.html", null ],
           [ "NormalCopulaFactory", "classNormalCopulaFactory.html", null ],
           [ "NormalFactory", "classNormalFactory.html", null ],
+          [ "ParetoFactory", "classParetoFactory.html", null ],
+          [ "PlackettCopulaFactory", "classPlackettCopulaFactory.html", null ],
           [ "PoissonFactory", "classPoissonFactory.html", null ],
           [ "RayleighFactory", "classRayleighFactory.html", null ],
           [ "RiceFactory", "classRiceFactory.html", null ],
@@ -609,10 +477,19 @@ var hierarchy =
           [ "TruncatedNormalFactory", "classTruncatedNormalFactory.html", null ],
           [ "UniformFactory", "classUniformFactory.html", null ],
           [ "UserDefinedFactory", "classUserDefinedFactory.html", null ],
-          [ "WeibullFactory", "classWeibullFactory.html", null ]
+          [ "VonMisesFactory", "classVonMisesFactory.html", null ],
+          [ "WeibullMaxFactory", "classWeibullMaxFactory.html", null ],
+          [ "WeibullMinFactory", "classWeibullMinFactory.html", null ]
         ] ],
         [ "DistributionFactoryResult", "classDistributionFactoryResult.html", null ],
         [ "DistributionImplementation", "classDistributionImplementation.html", [
+          [ "ArchimedeanCopula", "classArchimedeanCopula.html", [
+            [ "AliMikhailHaqCopula", "classAliMikhailHaqCopula.html", null ],
+            [ "ClaytonCopula", "classClaytonCopula.html", null ],
+            [ "FrankCopula", "classFrankCopula.html", null ],
+            [ "GumbelCopula", "classGumbelCopula.html", null ]
+          ] ],
+          [ "ComposedCopula", "classComposedCopula.html", null ],
           [ "ComposedDistribution", "classComposedDistribution.html", null ],
           [ "CompositeDistribution", "classCompositeDistribution.html", null ],
           [ "ContinuousDistribution", "classContinuousDistribution.html", [
@@ -624,24 +501,6 @@ var hierarchy =
             [ "Burr", "classBurr.html", null ],
             [ "Chi", "classChi.html", null ],
             [ "ChiSquare", "classChiSquare.html", null ],
-            [ "CopulaImplementation", "classCopulaImplementation.html", [
-              [ "ArchimedeanCopula", "classArchimedeanCopula.html", [
-                [ "AliMikhailHaqCopula", "classAliMikhailHaqCopula.html", null ],
-                [ "ClaytonCopula", "classClaytonCopula.html", null ],
-                [ "FrankCopula", "classFrankCopula.html", null ],
-                [ "GumbelCopula", "classGumbelCopula.html", null ]
-              ] ],
-              [ "ComposedCopula", "classComposedCopula.html", null ],
-              [ "ExtremeValueCopula", "classExtremeValueCopula.html", null ],
-              [ "FarlieGumbelMorgensternCopula", "classFarlieGumbelMorgensternCopula.html", null ],
-              [ "IndependentCopula", "classIndependentCopula.html", null ],
-              [ "MinCopula", "classMinCopula.html", null ],
-              [ "NormalCopula", "classNormalCopula.html", null ],
-              [ "OrdinalSumCopula", "classOrdinalSumCopula.html", null ],
-              [ "SklarCopula", "classSklarCopula.html", [
-                [ "MaximumEntropyOrderStatisticsCopula", "classMaximumEntropyOrderStatisticsCopula.html", null ]
-              ] ]
-            ] ],
             [ "Dirichlet", "classDirichlet.html", null ],
             [ "EllipticalDistribution", "classEllipticalDistribution.html", [
               [ "Normal", "classNormal.html", null ],
@@ -670,17 +529,20 @@ var hierarchy =
             [ "MeixnerDistribution", "classMeixnerDistribution.html", null ],
             [ "NonCentralChiSquare", "classNonCentralChiSquare.html", null ],
             [ "NonCentralStudent", "classNonCentralStudent.html", null ],
+            [ "Pareto", "classPareto.html", null ],
             [ "PosteriorDistribution", "classPosteriorDistribution.html", null ],
             [ "ProductDistribution", "classProductDistribution.html", null ],
             [ "RatioDistribution", "classRatioDistribution.html", null ],
             [ "Rayleigh", "classRayleigh.html", null ],
             [ "Rice", "classRice.html", null ],
+            [ "SquaredNormal", "classSquaredNormal.html", null ],
             [ "Trapezoidal", "classTrapezoidal.html", null ],
             [ "Triangular", "classTriangular.html", null ],
             [ "TruncatedNormal", "classTruncatedNormal.html", null ],
             [ "Uniform", "classUniform.html", null ],
             [ "VonMises", "classVonMises.html", null ],
-            [ "Weibull", "classWeibull.html", null ],
+            [ "WeibullMax", "classWeibullMax.html", null ],
+            [ "WeibullMin", "classWeibullMin.html", null ],
             [ "Wishart", "classWishart.html", null ]
           ] ],
           [ "CumulativeDistributionNetwork", "classCumulativeDistributionNetwork.html", null ],
@@ -688,6 +550,7 @@ var hierarchy =
             [ "Bernoulli", "classBernoulli.html", null ],
             [ "Binomial", "classBinomial.html", null ],
             [ "Dirac", "classDirac.html", null ],
+            [ "DiscreteCompoundDistribution", "classDiscreteCompoundDistribution.html", null ],
             [ "Geometric", "classGeometric.html", null ],
             [ "Hypergeometric", "classHypergeometric.html", null ],
             [ "KPermutationsDistribution", "classKPermutationsDistribution.html", null ],
@@ -698,14 +561,28 @@ var hierarchy =
             [ "UserDefined", "classUserDefined.html", null ],
             [ "ZipfMandelbrot", "classZipfMandelbrot.html", null ]
           ] ],
+          [ "ExtremeValueCopula", "classExtremeValueCopula.html", [
+            [ "JoeCopula", "classJoeCopula.html", null ]
+          ] ],
+          [ "FarlieGumbelMorgensternCopula", "classFarlieGumbelMorgensternCopula.html", null ],
+          [ "IndependentCopula", "classIndependentCopula.html", null ],
           [ "MarginalDistribution", "classMarginalDistribution.html", null ],
+          [ "MarshallOlkinCopula", "classMarshallOlkinCopula.html", null ],
           [ "MaximumDistribution", "classMaximumDistribution.html", null ],
+          [ "MinCopula", "classMinCopula.html", null ],
+          [ "MixedHistogramUserDefined", "classMixedHistogramUserDefined.html", null ],
           [ "Mixture", "classMixture.html", [
             [ "ConditionalDistribution", "classConditionalDistribution.html", null ]
           ] ],
+          [ "NormalCopula", "classNormalCopula.html", null ],
+          [ "OrdinalSumCopula", "classOrdinalSumCopula.html", null ],
           [ "ParametrizedDistribution", "classParametrizedDistribution.html", null ],
+          [ "PlackettCopula", "classPlackettCopula.html", null ],
           [ "RandomMixture", "classRandomMixture.html", [
             [ "SmoothedUniform", "classSmoothedUniform.html", null ]
+          ] ],
+          [ "SklarCopula", "classSklarCopula.html", [
+            [ "MaximumEntropyOrderStatisticsCopula", "classMaximumEntropyOrderStatisticsCopula.html", null ]
           ] ],
           [ "TruncatedDistribution", "classTruncatedDistribution.html", null ]
         ] ],
@@ -713,11 +590,13 @@ var hierarchy =
           [ "ArcsineMuSigma", "classArcsineMuSigma.html", null ],
           [ "BetaMuSigma", "classBetaMuSigma.html", null ],
           [ "GammaMuSigma", "classGammaMuSigma.html", null ],
-          [ "GumbelAB", "classGumbelAB.html", null ],
+          [ "GumbelLambdaGamma", "classGumbelLambdaGamma.html", null ],
           [ "GumbelMuSigma", "classGumbelMuSigma.html", null ],
+          [ "LogNormalMuErrorFactor", "classLogNormalMuErrorFactor.html", null ],
           [ "LogNormalMuSigma", "classLogNormalMuSigma.html", null ],
           [ "LogNormalMuSigmaOverMu", "classLogNormalMuSigmaOverMu.html", null ],
-          [ "WeibullMuSigma", "classWeibullMuSigma.html", null ]
+          [ "WeibullMaxMuSigma", "classWeibullMaxMuSigma.html", null ],
+          [ "WeibullMinMuSigma", "classWeibullMinMuSigma.html", null ]
         ] ],
         [ "DomainImplementation", "classDomainImplementation.html", [
           [ "DomainDifference", "classDomainDifference.html", null ],
@@ -733,7 +612,6 @@ var hierarchy =
           [ "Cloud", "classCloud.html", null ],
           [ "Contour", "classContour.html", null ],
           [ "Curve", "classCurve.html", null ],
-          [ "Pairs", "classPairs.html", null ],
           [ "Pie", "classPie.html", null ],
           [ "Polygon", "classPolygon.html", null ],
           [ "PolygonArray", "classPolygonArray.html", null ],
@@ -757,6 +635,7 @@ var hierarchy =
           [ "CanonicalTensorEvaluation", "classCanonicalTensorEvaluation.html", null ],
           [ "ComposedEvaluation", "classComposedEvaluation.html", null ],
           [ "DatabaseEvaluation", "classDatabaseEvaluation.html", null ],
+          [ "DistanceToDomainEvaluation", "classDistanceToDomainEvaluation.html", null ],
           [ "DualLinearCombinationEvaluation", "classDualLinearCombinationEvaluation.html", null ],
           [ "EvaluationProxy", "classEvaluationProxy.html", [
             [ "MemoizeEvaluation", "classMemoizeEvaluation.html", null ]
@@ -775,6 +654,7 @@ var hierarchy =
             [ "InverseNatafEllipticalDistributionEvaluation", "classInverseNatafEllipticalDistributionEvaluation.html", null ],
             [ "NatafEllipticalDistributionEvaluation", "classNatafEllipticalDistributionEvaluation.html", null ]
           ] ],
+          [ "MarginalEvaluation", "classMarginalEvaluation.html", null ],
           [ "MarginalTransformationEvaluation", "classMarginalTransformationEvaluation.html", null ],
           [ "MethodBoundEvaluation< EvaluableObject, ReturnType_, ArgumentType_ >", "classMethodBoundEvaluation.html", null ],
           [ "NatafEllipticalCopulaEvaluation", "classNatafEllipticalCopulaEvaluation.html", null ],
@@ -823,6 +703,7 @@ var hierarchy =
         ] ],
         [ "FieldFunctionImplementation", "classFieldFunctionImplementation.html", [
           [ "FieldToFieldConnection", "classFieldToFieldConnection.html", null ],
+          [ "KarhunenLoeveReduction", "classKarhunenLoeveReduction.html", null ],
           [ "P1LagrangeInterpolation", "classP1LagrangeInterpolation.html", null ],
           [ "ValueFunction", "classValueFunction.html", null ],
           [ "VertexValueFunction", "classVertexValueFunction.html", [
@@ -839,7 +720,7 @@ var hierarchy =
         ] ],
         [ "FilteringWindowsImplementation", "classFilteringWindowsImplementation.html", [
           [ "Hamming", "classHamming.html", null ],
-          [ "Hanning", "classHanning.html", null ]
+          [ "Hann", "classHann.html", null ]
         ] ],
         [ "FiniteDifferenceStepImplementation", "classFiniteDifferenceStepImplementation.html", [
           [ "BlendedStep", "classBlendedStep.html", null ],
@@ -877,6 +758,7 @@ var hierarchy =
           [ "KrigingGradient", "classKrigingGradient.html", null ],
           [ "LinearCombinationGradient", "classLinearCombinationGradient.html", null ],
           [ "LinearGradient", "classLinearGradient.html", null ],
+          [ "MarginalGradient", "classMarginalGradient.html", null ],
           [ "MarginalTransformationGradient", "classMarginalTransformationGradient.html", null ],
           [ "NatafEllipticalCopulaGradient", "classNatafEllipticalCopulaGradient.html", null ],
           [ "NatafIndependentCopulaGradient", "classNatafIndependentCopulaGradient.html", null ],
@@ -888,6 +770,7 @@ var hierarchy =
           [ "SymbolicGradient", "classSymbolicGradient.html", null ]
         ] ],
         [ "GraphImplementation", "classGraphImplementation.html", null ],
+        [ "GridLayout", "classGridLayout.html", null ],
         [ "HessianImplementation", "classHessianImplementation.html", [
           [ "AggregatedHessian", "classAggregatedHessian.html", null ],
           [ "BoxCoxHessian", "classBoxCoxHessian.html", null ],
@@ -904,10 +787,12 @@ var hierarchy =
           [ "InverseNatafEllipticalCopulaHessian", "classInverseNatafEllipticalCopulaHessian.html", null ],
           [ "InverseNatafIndependentCopulaHessian", "classInverseNatafIndependentCopulaHessian.html", null ],
           [ "LinearCombinationHessian", "classLinearCombinationHessian.html", null ],
+          [ "MarginalHessian", "classMarginalHessian.html", null ],
           [ "MarginalTransformationHessian", "classMarginalTransformationHessian.html", null ],
           [ "NatafEllipticalCopulaHessian", "classNatafEllipticalCopulaHessian.html", null ],
           [ "NatafIndependentCopulaHessian", "classNatafIndependentCopulaHessian.html", null ],
           [ "NoHessian", "classNoHessian.html", null ],
+          [ "NullHessian", "classNullHessian.html", null ],
           [ "ParametricHessian", "classParametricHessian.html", null ],
           [ "ProductHessian", "classProductHessian.html", null ],
           [ "ProductPolynomialHessian", "classProductPolynomialHessian.html", null ],
@@ -924,6 +809,7 @@ var hierarchy =
           [ "BipartiteGraph", "classBipartiteGraph.html", null ]
         ] ],
         [ "IntegrationAlgorithmImplementation", "classIntegrationAlgorithmImplementation.html", [
+          [ "FejerAlgorithm", "classFejerAlgorithm.html", null ],
           [ "FilonQuadrature", "classFilonQuadrature.html", null ],
           [ "GaussKronrod", "classGaussKronrod.html", null ],
           [ "GaussLegendre", "classGaussLegendre.html", null ],
@@ -936,6 +822,7 @@ var hierarchy =
           [ "KarhunenLoeveSVDAlgorithm", "classKarhunenLoeveSVDAlgorithm.html", null ]
         ] ],
         [ "KarhunenLoeveResultImplementation", "classKarhunenLoeveResultImplementation.html", null ],
+        [ "KarhunenLoeveValidation", "classKarhunenLoeveValidation.html", null ],
         [ "LeastSquaresMethodImplementation", "classLeastSquaresMethodImplementation.html", [
           [ "CholeskyMethod", "classCholeskyMethod.html", null ],
           [ "QRMethod", "classQRMethod.html", null ],
@@ -945,6 +832,7 @@ var hierarchy =
         [ "LevelSetMesher", "classLevelSetMesher.html", null ],
         [ "LinearLeastSquares", "classLinearLeastSquares.html", null ],
         [ "LinearModelAnalysis", "classLinearModelAnalysis.html", null ],
+        [ "LinearModelStepwiseAlgorithm", "classLinearModelStepwiseAlgorithm.html", null ],
         [ "LinearTaylor", "classLinearTaylor.html", null ],
         [ "LowDiscrepancySequenceImplementation", "classLowDiscrepancySequenceImplementation.html", [
           [ "FaureSequence", "classFaureSequence.html", null ],
@@ -971,6 +859,7 @@ var hierarchy =
           [ "TensorApproximationResult", "classTensorApproximationResult.html", null ]
         ] ],
         [ "MetaModelValidation", "classMetaModelValidation.html", null ],
+        [ "MultiFORMResult", "classMultiFORMResult.html", null ],
         [ "NearestNeighbourAlgorithmImplementation", "classNearestNeighbourAlgorithmImplementation.html", [
           [ "KDTree", "classKDTree.html", null ],
           [ "NaiveNearestNeighbour", "classNaiveNearestNeighbour.html", null ],
@@ -985,16 +874,14 @@ var hierarchy =
         ] ],
         [ "OptimizationAlgorithmImplementation", "classOptimizationAlgorithmImplementation.html", [
           [ "AbdoRackwitz", "classAbdoRackwitz.html", null ],
+          [ "Bonmin", "classBonmin.html", null ],
           [ "Ceres", "classCeres.html", null ],
           [ "CMinpack", "classCMinpack.html", null ],
           [ "Dlib", "classDlib.html", null ],
           [ "EfficientGlobalOptimization", "classEfficientGlobalOptimization.html", null ],
+          [ "Ipopt", "classIpopt.html", null ],
           [ "MultiStart", "classMultiStart.html", null ],
           [ "NLopt", "classNLopt.html", null ],
-          [ "OPTpp", "classOPTpp.html", null ],
-          [ "OPTppImplementation", "classOPTppImplementation.html", [
-            [ "OptGSS", "classOptGSS.html", null ]
-          ] ],
           [ "SQP", "classSQP.html", null ],
           [ "TNC", "classTNC.html", null ]
         ] ],
@@ -1028,38 +915,11 @@ var hierarchy =
           [ "GeometricProfile", "classOT_1_1GeometricProfile.html", null ],
           [ "LinearProfile", "classOT_1_1LinearProfile.html", null ]
         ] ],
-        [ "PersistentCollection< T >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Basis >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< CalibrationStrategy >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< CanonicalTensorEvaluation >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Coefficients >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Complex >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Copula >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< CovarianceMatrix >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< CovarianceModel >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Distribution >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Drawable >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Function >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< HermitianMatrix >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Indices >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< OrthogonalUniVariatePolynomialFamily >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< PersistentCollection >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Point >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Process >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Sample >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< Scalar >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< SquareMatrix >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< String >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< TriangularComplexMatrix >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< UniVariateFunction >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< UniVariateFunctionFamily >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< UniVariatePolynomial >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< UnsignedInteger >", "classPersistentCollection.html", null ],
-        [ "PersistentCollection< WhittleFactoryState >", "classPersistentCollection.html", null ],
         [ "PointToFieldFunctionImplementation", "classPointToFieldFunctionImplementation.html", [
           [ "KarhunenLoeveLifting", "classKarhunenLoeveLifting.html", null ],
           [ "ParametricPointToFieldFunction", "classParametricPointToFieldFunction.html", null ],
-          [ "PointToFieldConnection", "classPointToFieldConnection.html", null ]
+          [ "PointToFieldConnection", "classPointToFieldConnection.html", null ],
+          [ "VertexValuePointToFieldFunction", "classVertexValuePointToFieldFunction.html", null ]
         ] ],
         [ "ProcessImplementation", "classProcessImplementation.html", [
           [ "AggregatedProcess", "classAggregatedProcess.html", null ],
@@ -1084,16 +944,20 @@ var hierarchy =
         [ "RandomGeneratorState", "classRandomGeneratorState.html", null ],
         [ "RandomVectorImplementation", "classRandomVectorImplementation.html", [
           [ "CompositeRandomVector", "classCompositeRandomVector.html", [
-            [ "EventDomain", "classEventDomain.html", null ],
-            [ "EventRandomVector", "classEventRandomVector.html", null ],
-            [ "FunctionalChaosRandomVector", "classFunctionalChaosRandomVector.html", null ]
+            [ "DomainEvent", "classDomainEvent.html", null ],
+            [ "FunctionalChaosRandomVector", "classFunctionalChaosRandomVector.html", null ],
+            [ "ThresholdEventImplementation", "classThresholdEventImplementation.html", null ]
           ] ],
           [ "ConditionalRandomVector", "classConditionalRandomVector.html", null ],
           [ "ConstantRandomVector", "classConstantRandomVector.html", null ],
-          [ "EventProcess", "classEventProcess.html", null ],
-          [ "MCMC", "classMCMC.html", [
+          [ "Gibbs", "classGibbs.html", null ],
+          [ "IntersectionEvent", "classIntersectionEvent.html", null ],
+          [ "MetropolisHastingsImplementation", "classMetropolisHastingsImplementation.html", [
+            [ "RandomVectorMetropolisHastings", "classRandomVectorMetropolisHastings.html", null ],
             [ "RandomWalkMetropolisHastings", "classRandomWalkMetropolisHastings.html", null ]
           ] ],
+          [ "ProcessEvent", "classProcessEvent.html", null ],
+          [ "UnionEvent", "classUnionEvent.html", null ],
           [ "UsualRandomVector", "classUsualRandomVector.html", [
             [ "KrigingRandomVector", "classKrigingRandomVector.html", null ]
           ] ]
@@ -1110,7 +974,7 @@ var hierarchy =
         ] ],
         [ "SimulationAlgorithm", "classSimulationAlgorithm.html", [
           [ "EventSimulation", "classEventSimulation.html", [
-            [ "AdaptiveDirectionalSampling", "classAdaptiveDirectionalSampling.html", null ],
+            [ "AdaptiveDirectionalStratification", "classAdaptiveDirectionalStratification.html", null ],
             [ "DirectionalSampling", "classDirectionalSampling.html", null ],
             [ "LHS", "classLHS.html", null ],
             [ "PostAnalyticalSimulation", "classPostAnalyticalSimulation.html", [
@@ -1142,12 +1006,17 @@ var hierarchy =
           [ "Brent", "classBrent.html", null ],
           [ "Secant", "classSecant.html", null ]
         ] ],
+        [ "SparseMatrix", "classSparseMatrix.html", null ],
         [ "SpectralModelImplementation", "classSpectralModelImplementation.html", [
           [ "CauchyModel", "classCauchyModel.html", null ],
           [ "UserDefinedSpectralModel", "classUserDefinedSpectralModel.html", null ]
         ] ],
         [ "SphereUniformNormImplementation", "classSphereUniformNormImplementation.html", [
           [ "SphereUniformNorm1D", "classSphereUniformNorm1D.html", null ]
+        ] ],
+        [ "SplitterImplementation", "classSplitterImplementation.html", [
+          [ "KFoldSplitter", "classKFoldSplitter.html", null ],
+          [ "LeaveOneOutSplitter", "classLeaveOneOutSplitter.html", null ]
         ] ],
         [ "StrongMaximumTest", "classStrongMaximumTest.html", null ],
         [ "SymbolicParserImplementation", "classSymbolicParserImplementation.html", null ],
@@ -1173,7 +1042,6 @@ var hierarchy =
         [ "WhittleFactoryState", "classWhittleFactoryState.html", null ]
       ] ],
       [ "StorageManager", "classStorageManager.html", [
-        [ "BinaryStorageManager", "classBinaryStorageManager.html", null ],
         [ "XMLStorageManager", "classXMLStorageManager.html", null ]
       ] ],
       [ "Study", "classStudy.html", null ],
@@ -1184,20 +1052,61 @@ var hierarchy =
     [ "OSSFormater< T >", "structOSSFormater.html", null ],
     [ "OStream", "classOStream.html", null ],
     [ "Path", "classPath.html", null ],
-    [ "PersistentObjectFactory", "classPersistentObjectFactory.html", [
-      [ "Factory< PERSISTENT >", "classFactory.html", null ]
+    [ "PersistentCollection", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Basis >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< CanonicalTensorEvaluation >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Coefficients >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Complex >", "classPersistentCollection.html", [
+      [ "ComplexMatrixImplementation", "classComplexMatrixImplementation.html", null ],
+      [ "ComplexTensorImplementation", "classComplexTensorImplementation.html", null ]
     ] ],
+    [ "PersistentCollection< CovarianceModel >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Distribution >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Drawable >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< FORMResult >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Function >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Graph >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< HermitianMatrix >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Indices >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< MetropolisHastings >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< OrthogonalUniVariatePolynomialFamily >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< PersistentCollection< Function > >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Point >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Process >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< RandomVector >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Sample >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< Scalar >", "classPersistentCollection.html", [
+      [ "MatrixImplementation", "classMatrixImplementation.html", null ],
+      [ "Point", "classPoint.html", [
+        [ "PointWithDescription", "classPointWithDescription.html", null ]
+      ] ],
+      [ "TensorImplementation", "classTensorImplementation.html", null ]
+    ] ],
+    [ "PersistentCollection< SquareMatrix >", "classPersistentCollection.html", [
+      [ "ARMACoefficients", "classARMACoefficients.html", null ]
+    ] ],
+    [ "PersistentCollection< String >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< TriangularComplexMatrix >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< UniVariateFunction >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< UniVariateFunctionFamily >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< UniVariatePolynomial >", "classPersistentCollection.html", null ],
+    [ "PersistentCollection< UnsignedInteger >", "classPersistentCollection.html", [
+      [ "Indices", "classIndices.html", null ]
+    ] ],
+    [ "PersistentCollection< WhittleFactoryState >", "classPersistentCollection.html", null ],
+    [ "PersistentObjectFactory", "classPersistentObjectFactory.html", null ],
     [ "PlatformInfo", "classPlatformInfo.html", null ],
     [ "Pointer< T, IMPL >", "classPointer.html", null ],
     [ "Pointer< AggregatedEvaluation >", "classPointer.html", null ],
     [ "Pointer< ApproximationAlgorithmImplementationFactory >", "classPointer.html", null ],
-    [ "Pointer< BinaryStorageManagerState >", "classPointer.html", null ],
     [ "Pointer< BoxCoxEvaluation >", "classPointer.html", null ],
     [ "Pointer< CacheType >", "classPointer.html", null ],
     [ "Pointer< Description >", "classPointer.html", null ],
     [ "Pointer< DistributionImplementation >", "classPointer.html", null ],
     [ "Pointer< DualLinearCombinationEvaluation >", "classPointer.html", null ],
     [ "Pointer< EvaluationImplementation >", "classPointer.html", null ],
+    [ "Pointer< GradientImplementation >", "classPointer.html", null ],
+    [ "Pointer< HessianImplementation >", "classPointer.html", null ],
     [ "Pointer< HMatrixClusterTree >", "classPointer.html", null ],
     [ "Pointer< ImplementationType >", "classPointer.html", null ],
     [ "Pointer< InverseBoxCoxEvaluation >", "classPointer.html", null ],
@@ -1206,8 +1115,6 @@ var hierarchy =
     [ "Pointer< Mesh >", "classPointer.html", null ],
     [ "Pointer< NLopt >", "classPointer.html", null ],
     [ "Pointer< Node >", "classPointer.html", null ],
-    [ "Pointer< OPTPP::NLPBase >", "classPointer.html", null ],
-    [ "Pointer< OPTppImplementation >", "classPointer.html", null ],
     [ "Pointer< ParametricEvaluation >", "classPointer.html", null ],
     [ "Pointer< PersistentObject >", "classPointer.html", null ],
     [ "Pointer< ProductUniVariateFunctionEvaluation >", "classPointer.html", null ],
@@ -1216,46 +1123,22 @@ var hierarchy =
     [ "Pointer< String >", "classPointer.html", null ],
     [ "Pointer< SymbolicEvaluation >", "classPointer.html", null ],
     [ "Pointer< XMLDoc >", "classPointer.html", null ],
+    [ "Pointer< XMLH5StorageManagerImplementation >", "classPointer.html", null ],
     [ "Pointer< XMLStorageManagerState >", "classPointer.html", null ],
     [ "PointInSourceFile", "classPointInSourceFile.html", null ],
     [ "RandomGenerator", "classRandomGenerator.html", null ],
     [ "ResourceMap", "classResourceMap.html", null ],
     [ "ResourceMap_init", "structResourceMap__init.html", null ],
     [ "SaveAction", "structSaveAction.html", null ],
-    [ "SharedPointer< T >", "classSharedPointer.html", null ],
-    [ "SharedPointer< AggregatedEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< ApproximationAlgorithmImplementationFactory >", "classSharedPointer.html", null ],
-    [ "SharedPointer< BinaryStorageManagerState >", "classSharedPointer.html", null ],
-    [ "SharedPointer< BoxCoxEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< CacheType >", "classSharedPointer.html", null ],
-    [ "SharedPointer< Description >", "classSharedPointer.html", null ],
-    [ "SharedPointer< DistributionImplementation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< DualLinearCombinationEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< EvaluationImplementation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< HMatrixClusterTree >", "classSharedPointer.html", null ],
-    [ "SharedPointer< ImplementationType >", "classSharedPointer.html", null ],
-    [ "SharedPointer< InverseBoxCoxEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< LinearCombinationEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< MarginalTransformationEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< Mesh >", "classSharedPointer.html", null ],
-    [ "SharedPointer< NLopt >", "classSharedPointer.html", null ],
-    [ "SharedPointer< Node >", "classSharedPointer.html", null ],
-    [ "SharedPointer< OPTPP::NLPBase >", "classSharedPointer.html", null ],
-    [ "SharedPointer< OPTppImplementation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< ParametricEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< PersistentObject >", "classSharedPointer.html", null ],
-    [ "SharedPointer< ProductUniVariateFunctionEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< StorageManager >", "classSharedPointer.html", null ],
-    [ "SharedPointer< StorageManager::InternalObject >", "classSharedPointer.html", null ],
-    [ "SharedPointer< String >", "classSharedPointer.html", null ],
-    [ "SharedPointer< SymbolicEvaluation >", "classSharedPointer.html", null ],
-    [ "SharedPointer< XMLDoc >", "classSharedPointer.html", null ],
-    [ "SharedPointer< XMLStorageManagerState >", "classSharedPointer.html", null ],
     [ "SpecFunc", "classSpecFunc.html", null ],
+    [ "TBB", "classTBB.html", null ],
     [ "TBB_init", "structTBB__init.html", null ],
     [ "Test", "classTest.html", null ],
     [ "TestFailed", "classTest_1_1TestFailed.html", null ],
-    [ "THREEDVAR", "classTHREEDVAR.html", null ],
     [ "TTY", "structTTY.html", null ],
-    [ "WelchFactory", "classWelchFactory.html", null ]
+    [ "WelchFactory", "classWelchFactory.html", null ],
+    [ "XML", "classXML.html", null ],
+    [ "XMLDoc", "classXMLDoc.html", null ],
+    [ "XMLH5StorageManagerImplementation", "classXMLH5StorageManagerImplementation.html", null ],
+    [ "XMLH5StorageManagerState", "structXMLH5StorageManagerState.html", null ]
 ];

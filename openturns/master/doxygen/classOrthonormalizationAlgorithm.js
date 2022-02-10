@@ -4,8 +4,8 @@ var classOrthonormalizationAlgorithm =
     [ "OrthonormalizationAlgorithm", "classOrthonormalizationAlgorithm.html#ac8cbbbec33ce46c5afbc3f85e98c3286", null ],
     [ "OrthonormalizationAlgorithm", "classOrthonormalizationAlgorithm.html#a236b154271447a6b4b15ffcd75e68891", null ],
     [ "OrthonormalizationAlgorithm", "classOrthonormalizationAlgorithm.html#a42c8abc29a649e57a2929a1af00f3d03", null ],
-    [ "__repr__", "classOrthonormalizationAlgorithm.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "__str__", "classOrthonormalizationAlgorithm.html#a52e42d2cad038d44d425597aa45f4234", null ],
-    [ "getMeasure", "classOrthonormalizationAlgorithm.html#ae506a14c608b02d9f0bf23ea2a119e00", null ],
-    [ "getRecurrenceCoefficients", "classOrthonormalizationAlgorithm.html#a92ca161feb8ff1624a93039135a3def0", null ]
+    [ "__repr__", "classOrthonormalizationAlgorithm.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "__str__", "classOrthonormalizationAlgorithm.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
+    [ "getMeasure", "classOrthonormalizationAlgorithm.html#a385364e120d99793484d71d23b11bfde", null ],
+    [ "getRecurrenceCoefficients", "classOrthonormalizationAlgorithm.html#a9b171fa79ab7f84619e3ef8f826c4fd4", null ]
 ];

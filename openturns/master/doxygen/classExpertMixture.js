@@ -2,13 +2,13 @@ var classExpertMixture =
 [
     [ "ExpertMixture", "classExpertMixture.html#ac5885c014b3b1ccdf2c7bfb7e76999db", null ],
     [ "ExpertMixture", "classExpertMixture.html#a75c94bc9df70da6c2dda1900d8e10e03", null ],
-    [ "__repr__", "classExpertMixture.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classExpertMixture.html#adac3dd738b884a4d895494099d81b9cf", null ],
-    [ "getClassifier", "classExpertMixture.html#aa5bcc3fceccd0c07b18d2dbb2c52206c", null ],
-    [ "getExperts", "classExpertMixture.html#a730741962626650795ff1fe71056dab5", null ],
-    [ "getInputDimension", "classExpertMixture.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getOutputDimension", "classExpertMixture.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "load", "classExpertMixture.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator==", "classExpertMixture.html#acc7fb3f872d2c7f7cd4e61ab0635b235", null ],
-    [ "save", "classExpertMixture.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classExpertMixture.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classExpertMixture.html#a9c60dc6a03c4a7039e3b81973f94edee", null ],
+    [ "getClassifier", "classExpertMixture.html#adf13a818a118beccf5324a47202ec7f1", null ],
+    [ "getExperts", "classExpertMixture.html#aec319539e0e9c56f90dfb6e0efe789eb", null ],
+    [ "getInputDimension", "classExpertMixture.html#a18e8247fe0b964d07224b26b4fac3b05", null ],
+    [ "getOutputDimension", "classExpertMixture.html#aa409c90a5dc176fbe63e37476a6f200b", null ],
+    [ "load", "classExpertMixture.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator==", "classExpertMixture.html#a2bf54f18543b6037d1d061d7b9a6b7d8", null ],
+    [ "save", "classExpertMixture.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

@@ -2,14 +2,15 @@ var classTranslationEvaluation =
 [
     [ "TranslationEvaluation", "classTranslationEvaluation.html#a219df11f246be363692a6554d7503515", null ],
     [ "TranslationEvaluation", "classTranslationEvaluation.html#ae08d1d54843058956cc68c31294c1cb9", null ],
-    [ "__repr__", "classTranslationEvaluation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classTranslationEvaluation.html#a6e8d6c800e5a14cae0227871f4cd1669", null ],
-    [ "getConstant", "classTranslationEvaluation.html#acf74421dd63f553f84d05429d8d408ca", null ],
-    [ "getInputDimension", "classTranslationEvaluation.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getOutputDimension", "classTranslationEvaluation.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "load", "classTranslationEvaluation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator()", "classTranslationEvaluation.html#ae324fcf5ff934b5ce3c647aad457dc71", null ],
-    [ "operator()", "classTranslationEvaluation.html#aabaff938d71748cb401f14623ce250bc", null ],
-    [ "operator==", "classTranslationEvaluation.html#a9d6a87b6480c39e790a403a406d9a12d", null ],
-    [ "save", "classTranslationEvaluation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classTranslationEvaluation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classTranslationEvaluation.html#a65dfbfb390381b8aa862fcb00b15bb4f", null ],
+    [ "getConstant", "classTranslationEvaluation.html#aa3f98e254bbab292a2d6b70211635c5b", null ],
+    [ "getInputDimension", "classTranslationEvaluation.html#a18e8247fe0b964d07224b26b4fac3b05", null ],
+    [ "getOutputDimension", "classTranslationEvaluation.html#aa409c90a5dc176fbe63e37476a6f200b", null ],
+    [ "isLinear", "classTranslationEvaluation.html#a1ac49501515bad07776ff2f87110a099", null ],
+    [ "load", "classTranslationEvaluation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator()", "classTranslationEvaluation.html#ad22e9a473cc02a5c93814db911457a16", null ],
+    [ "operator()", "classTranslationEvaluation.html#a31767a0c4f564bcff7485dc4b926c17c", null ],
+    [ "operator==", "classTranslationEvaluation.html#ab69918bfd74530eca42c1481a64a02b5", null ],
+    [ "save", "classTranslationEvaluation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

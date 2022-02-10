@@ -4,11 +4,13 @@ var classOrthogonalProductPolynomialFactory =
     [ "OrthogonalProductPolynomialFactory", "classOrthogonalProductPolynomialFactory.html#a9868894a15da1156d27ff24e91b75ad7", null ],
     [ "OrthogonalProductPolynomialFactory", "classOrthogonalProductPolynomialFactory.html#a8d2c7323e2f693b2796b65b8c17ec576", null ],
     [ "OrthogonalProductPolynomialFactory", "classOrthogonalProductPolynomialFactory.html#a52cb66d4115860f43e1bc72e623185e2", null ],
-    [ "__repr__", "classOrthogonalProductPolynomialFactory.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classOrthogonalProductPolynomialFactory.html#a087b60bddb903b13128f518ab0932be2", null ],
-    [ "getEnumerateFunction", "classOrthogonalProductPolynomialFactory.html#a8f3c253755e698a6be3c9dcc99344de6", null ],
-    [ "getNodesAndWeights", "classOrthogonalProductPolynomialFactory.html#aba6aa5d6d84f8602d3f2252daf37efb6", null ],
-    [ "getPolynomialFamilyCollection", "classOrthogonalProductPolynomialFactory.html#aa0254f76ca20cae1bf4b2780544ed56d", null ],
-    [ "load", "classOrthogonalProductPolynomialFactory.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classOrthogonalProductPolynomialFactory.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classOrthogonalProductPolynomialFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "build", "classOrthogonalProductPolynomialFactory.html#a83d86600d741d7964c65afd89fdfb260", null ],
+    [ "build", "classOrthogonalProductPolynomialFactory.html#a923058bb6c148be9e3e3d43735dfca4c", null ],
+    [ "clone", "classOrthogonalProductPolynomialFactory.html#ae4910a2a814cb4dfa85d36cf9fa4704f", null ],
+    [ "getEnumerateFunction", "classOrthogonalProductPolynomialFactory.html#a18e3ead7fd025915f5baf9b459b20caf", null ],
+    [ "getNodesAndWeights", "classOrthogonalProductPolynomialFactory.html#a3f490f6362f49db8574e27e8181f1de6", null ],
+    [ "getPolynomialFamilyCollection", "classOrthogonalProductPolynomialFactory.html#ad4cf133c33cab3f86e92d40bc9f41fb0", null ],
+    [ "load", "classOrthogonalProductPolynomialFactory.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classOrthogonalProductPolynomialFactory.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

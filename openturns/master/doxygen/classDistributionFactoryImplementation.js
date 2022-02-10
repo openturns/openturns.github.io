@@ -1,15 +1,15 @@
 var classDistributionFactoryImplementation =
 [
     [ "DistributionFactoryImplementation", "classDistributionFactoryImplementation.html#ab8d824cfcc7c097778d62143244b8591", null ],
-    [ "__repr__", "classDistributionFactoryImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "__str__", "classDistributionFactoryImplementation.html#a52e42d2cad038d44d425597aa45f4234", null ],
-    [ "build", "classDistributionFactoryImplementation.html#aa488a257e902da47ceb9a3df33d3c7b2", null ],
-    [ "build", "classDistributionFactoryImplementation.html#aa53bff357408b734d3ce2c1639a54a1b", null ],
-    [ "build", "classDistributionFactoryImplementation.html#aeee18e41fb0c2ae218a94a85047296aa", null ],
-    [ "buildEstimator", "classDistributionFactoryImplementation.html#ad42f61cbdfdc6948d458a5d02b3d5e68", null ],
-    [ "buildEstimator", "classDistributionFactoryImplementation.html#a58bbdf25ec83d1e6e847a6fec00d4bf2", null ],
-    [ "clone", "classDistributionFactoryImplementation.html#ab0392d24509825aa531a1f497280bf6e", null ],
-    [ "getBootstrapSize", "classDistributionFactoryImplementation.html#a9f1480f1cfe0bc738386c8d7a663ec74", null ],
-    [ "load", "classDistributionFactoryImplementation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classDistributionFactoryImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classDistributionFactoryImplementation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "__str__", "classDistributionFactoryImplementation.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
+    [ "build", "classDistributionFactoryImplementation.html#a95493143bffab6a94c2e6c0fd7700f15", null ],
+    [ "build", "classDistributionFactoryImplementation.html#aebd4202ff9b7e5ca9614e306af85f31a", null ],
+    [ "build", "classDistributionFactoryImplementation.html#a739e2965f2a901099fc10d499d6cd867", null ],
+    [ "buildEstimator", "classDistributionFactoryImplementation.html#a97069645d38647c8679be577a0c14dc4", null ],
+    [ "buildEstimator", "classDistributionFactoryImplementation.html#a021e2c2ed860d9736c70f4b33a701d57", null ],
+    [ "clone", "classDistributionFactoryImplementation.html#a357ed1f8b7d78920d13aec7782c57ec5", null ],
+    [ "getBootstrapSize", "classDistributionFactoryImplementation.html#ade627c89298f8983e738baaba704bd02", null ],
+    [ "load", "classDistributionFactoryImplementation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classDistributionFactoryImplementation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

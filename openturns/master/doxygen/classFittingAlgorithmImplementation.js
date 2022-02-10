@@ -1,9 +1,9 @@
 var classFittingAlgorithmImplementation =
 [
     [ "FittingAlgorithmImplementation", "classFittingAlgorithmImplementation.html#aa621333c74529ab5fc8ebe57c6217a6b", null ],
-    [ "__repr__", "classFittingAlgorithmImplementation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classFittingAlgorithmImplementation.html#ac2a1cdf3df4944f9e509671c18046a39", null ],
-    [ "load", "classFittingAlgorithmImplementation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "run", "classFittingAlgorithmImplementation.html#a4fc0fe5c06eb7b62f81105547ef5a6d5", null ],
-    [ "save", "classFittingAlgorithmImplementation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classFittingAlgorithmImplementation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classFittingAlgorithmImplementation.html#a19b65508b3c3edb168344b2428ed3bfa", null ],
+    [ "load", "classFittingAlgorithmImplementation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "run", "classFittingAlgorithmImplementation.html#a9914345ef36872a8afce14ea6060b600", null ],
+    [ "save", "classFittingAlgorithmImplementation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

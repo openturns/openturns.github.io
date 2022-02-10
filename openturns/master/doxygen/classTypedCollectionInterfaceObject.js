@@ -8,11 +8,11 @@ var classTypedCollectionInterfaceObject =
     [ "erase", "classTypedCollectionInterfaceObject.html#af946e03747ceb9b679b70b040c424e69", null ],
     [ "erase", "classTypedCollectionInterfaceObject.html#a79cd0cca3689d77130b12e1a28cf8269", null ],
     [ "erase", "classTypedCollectionInterfaceObject.html#a52ad328e5c697737061217a50433672d", null ],
-    [ "getDimension", "classTypedCollectionInterfaceObject.html#aa2ecd0f05f7350ab14b8dd1ba6b95fc0", null ],
-    [ "getSize", "classTypedCollectionInterfaceObject.html#a899216457913845e4b761bd4832d951e", null ],
-    [ "isEmpty", "classTypedCollectionInterfaceObject.html#a94cadb456d5309818a8c5edf5be51ef3", null ],
+    [ "getDimension", "classTypedCollectionInterfaceObject.html#a2060c1b021e46a7109bd9db2b38bcc5e", null ],
+    [ "getSize", "classTypedCollectionInterfaceObject.html#a4edfd9d7170ead1e13619811c398faa8", null ],
+    [ "isEmpty", "classTypedCollectionInterfaceObject.html#acde4d858ff6e439ebd370f118b2457c8", null ],
     [ "operator[]", "classTypedCollectionInterfaceObject.html#aa166c960e31b6d4bffc14853096257d5", null ],
-    [ "operator[]", "classTypedCollectionInterfaceObject.html#a99d35e189123bb3b8ca531ee0b04942a", null ],
+    [ "operator[]", "classTypedCollectionInterfaceObject.html#aca31abf91388d4a61f4dbb2f36061e76", null ],
     [ "rbegin", "classTypedCollectionInterfaceObject.html#acea44ed500a54b2bb93e16b86e81afa8", null ],
     [ "rend", "classTypedCollectionInterfaceObject.html#a68c599ddcbfddc65170de524ac165e44", null ]
 ];

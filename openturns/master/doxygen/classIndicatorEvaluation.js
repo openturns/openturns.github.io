@@ -1,15 +1,12 @@
 var classIndicatorEvaluation =
 [
     [ "IndicatorEvaluation", "classIndicatorEvaluation.html#a0e053817e6ed8e3862209f19c5dbe375", null ],
-    [ "IndicatorEvaluation", "classIndicatorEvaluation.html#a7a9a5b248f2b02b717aca3b4282e5bd0", null ],
-    [ "__repr__", "classIndicatorEvaluation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classIndicatorEvaluation.html#a5b46fb381e29d9273d02b92999a20d8c", null ],
-    [ "getComparisonOperator", "classIndicatorEvaluation.html#a258d212db2e3ed6139e40edfdb34784a", null ],
-    [ "getEvaluation", "classIndicatorEvaluation.html#aaab9d5980bb078879ef9d8ce02f96bbb", null ],
-    [ "getInputDimension", "classIndicatorEvaluation.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getOutputDimension", "classIndicatorEvaluation.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "getThreshold", "classIndicatorEvaluation.html#a448f333fdd30cc10e106860d49e574db", null ],
-    [ "load", "classIndicatorEvaluation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator==", "classIndicatorEvaluation.html#a9be97eecd11047ee8ffb354ec02f2430", null ],
-    [ "save", "classIndicatorEvaluation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "IndicatorEvaluation", "classIndicatorEvaluation.html#a1e4ce56c2f77c35fd031993825c6bf0a", null ],
+    [ "__repr__", "classIndicatorEvaluation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classIndicatorEvaluation.html#ad379e8e245f2be0860b58d30f2f08391", null ],
+    [ "getInputDimension", "classIndicatorEvaluation.html#a18e8247fe0b964d07224b26b4fac3b05", null ],
+    [ "getOutputDimension", "classIndicatorEvaluation.html#aa409c90a5dc176fbe63e37476a6f200b", null ],
+    [ "load", "classIndicatorEvaluation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator==", "classIndicatorEvaluation.html#a5395a6ef63ea3ddc604612498a86f7b1", null ],
+    [ "save", "classIndicatorEvaluation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

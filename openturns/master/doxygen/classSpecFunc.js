@@ -1,4 +1,4 @@
 var classSpecFunc =
 [
-    [ "ISQRT2PI", "classSpecFunc.html#ae761d1a70c4ab7f11a69255c796bbac0", null ]
+    [ "ISQRT2PI", "classSpecFunc.html#ae2845a696a8a3f40a48ee32f238c88b9", null ]
 ];

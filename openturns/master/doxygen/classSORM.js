@@ -1,12 +1,12 @@
 var classSORM =
 [
     [ "SORM", "classSORM.html#a1de15a26d4e57569c15948b73c55bd11", null ],
-    [ "SORM", "classSORM.html#a595922b013d84c8e2ea5ce11a91c8572", null ],
-    [ "__repr__", "classSORM.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classSORM.html#a1a2cdfec762b4c30cc071ab0f5e93dd2", null ],
-    [ "getResult", "classSORM.html#af1e098a06e4f86a8d90da5dbd75e4038", null ],
-    [ "load", "classSORM.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "run", "classSORM.html#a13a43e6d814de94978c515cb084873b1", null ],
-    [ "save", "classSORM.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
+    [ "SORM", "classSORM.html#a1fc8b923f8f19f505b46d26cc4d35dcc", null ],
+    [ "__repr__", "classSORM.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classSORM.html#a3c64f1effd1e4e2535c68b37ea1ffe2b", null ],
+    [ "getResult", "classSORM.html#a80914a3d73956d5c693363fd409f6daa", null ],
+    [ "load", "classSORM.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "run", "classSORM.html#ad1717410afd0be936c6213a63c8005fb", null ],
+    [ "save", "classSORM.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
     [ "setResult", "classSORM.html#a56c274e07d70cb8c81b71faa8a19113b", null ]
 ];

@@ -2,10 +2,13 @@ var classGaussKronrod =
 [
     [ "GaussKronrod", "classGaussKronrod.html#a17a9bb158037a32787a09c809756fefa", null ],
     [ "GaussKronrod", "classGaussKronrod.html#a00fe2523f5a2304e9145706eb41c7beb", null ],
-    [ "__repr__", "classGaussKronrod.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "__str__", "classGaussKronrod.html#a52e42d2cad038d44d425597aa45f4234", null ],
-    [ "clone", "classGaussKronrod.html#a4fab0a003766358836e61575e83ccb8a", null ],
-    [ "getMaximumError", "classGaussKronrod.html#a21846c44edb743b48c5019f939267cc2", null ],
-    [ "getMaximumSubIntervals", "classGaussKronrod.html#ab0a7df69ce11da8bbc3b3b04dbcb19cc", null ],
-    [ "getRule", "classGaussKronrod.html#ae3d62f0e9a0dd80dab898b6fe9b0cdeb", null ]
+    [ "__repr__", "classGaussKronrod.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "__str__", "classGaussKronrod.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
+    [ "clone", "classGaussKronrod.html#aa94fd6d025482533d0af2e8da2373fc0", null ],
+    [ "getMaximumError", "classGaussKronrod.html#a278c848230f50f82c3be03bc6b6bbd14", null ],
+    [ "getMaximumSubIntervals", "classGaussKronrod.html#a99b96bcd8df55c60627360230a118715", null ],
+    [ "getRule", "classGaussKronrod.html#aaded8ec8bac2b4e75a7db6f36d5bc969", null ],
+    [ "integrate", "classGaussKronrod.html#aa37be8bac27c49b30619bfd36957a119", null ],
+    [ "integrate", "classGaussKronrod.html#ad0df8233d96f845e8c65c9fdec3e5c2e", null ],
+    [ "integrate", "classGaussKronrod.html#a8fb6d7f0bb3b275e031dfdc12a55c9d6", null ]
 ];

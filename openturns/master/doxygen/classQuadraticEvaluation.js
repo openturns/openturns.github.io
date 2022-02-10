@@ -2,16 +2,16 @@ var classQuadraticEvaluation =
 [
     [ "QuadraticEvaluation", "classQuadraticEvaluation.html#ae8e5849f5d6774d5f4c3f2561a79a160", null ],
     [ "QuadraticEvaluation", "classQuadraticEvaluation.html#aba6720e8d0afb8e4cabe1678eaa9b0d0", null ],
-    [ "__repr__", "classQuadraticEvaluation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classQuadraticEvaluation.html#af5dacc4bc445864d34a6258f2291a61e", null ],
-    [ "getCenter", "classQuadraticEvaluation.html#a9e97a8efe26be94cbe5202c7f345e175", null ],
-    [ "getConstant", "classQuadraticEvaluation.html#acf74421dd63f553f84d05429d8d408ca", null ],
-    [ "getInputDimension", "classQuadraticEvaluation.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getLinear", "classQuadraticEvaluation.html#a2bf71920c69913636bcfff2dffdfb88b", null ],
-    [ "getOutputDimension", "classQuadraticEvaluation.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "getQuadratic", "classQuadraticEvaluation.html#a1e5254a4badb144ffcd29d93f15c11e4", null ],
-    [ "load", "classQuadraticEvaluation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator()", "classQuadraticEvaluation.html#ae324fcf5ff934b5ce3c647aad457dc71", null ],
-    [ "operator==", "classQuadraticEvaluation.html#a27216a8b391243ebb2b0ec824cbf4d43", null ],
-    [ "save", "classQuadraticEvaluation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classQuadraticEvaluation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classQuadraticEvaluation.html#a78a9d38d3d01e4a43be23c94a108a497", null ],
+    [ "getCenter", "classQuadraticEvaluation.html#ac2ba7fbe2fad7d4910aa71ee034078e7", null ],
+    [ "getConstant", "classQuadraticEvaluation.html#aa3f98e254bbab292a2d6b70211635c5b", null ],
+    [ "getInputDimension", "classQuadraticEvaluation.html#a18e8247fe0b964d07224b26b4fac3b05", null ],
+    [ "getLinear", "classQuadraticEvaluation.html#a4db2c47505001603d4a5da5339b3b219", null ],
+    [ "getOutputDimension", "classQuadraticEvaluation.html#aa409c90a5dc176fbe63e37476a6f200b", null ],
+    [ "getQuadratic", "classQuadraticEvaluation.html#aba5fcaaa0f106b9fa6bc69085dd880fb", null ],
+    [ "load", "classQuadraticEvaluation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator()", "classQuadraticEvaluation.html#ad22e9a473cc02a5c93814db911457a16", null ],
+    [ "operator==", "classQuadraticEvaluation.html#ae691ce6732bae8dbfd228f36fea01d5b", null ],
+    [ "save", "classQuadraticEvaluation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

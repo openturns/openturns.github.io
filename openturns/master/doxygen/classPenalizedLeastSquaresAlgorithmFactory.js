@@ -1,9 +1,9 @@
 var classPenalizedLeastSquaresAlgorithmFactory =
 [
-    [ "PenalizedLeastSquaresAlgorithmFactory", "classPenalizedLeastSquaresAlgorithmFactory.html#a3422efc3e3fd23ce229dd3703fe5d061", null ],
-    [ "__repr__", "classPenalizedLeastSquaresAlgorithmFactory.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "build", "classPenalizedLeastSquaresAlgorithmFactory.html#a787b6762be6fa6b3d10eef54225b6c55", null ],
-    [ "clone", "classPenalizedLeastSquaresAlgorithmFactory.html#a8b315654527768b1d058b68a3a9c7e8e", null ],
-    [ "load", "classPenalizedLeastSquaresAlgorithmFactory.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classPenalizedLeastSquaresAlgorithmFactory.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "PenalizedLeastSquaresAlgorithmFactory", "classPenalizedLeastSquaresAlgorithmFactory.html#a4ac57698919899ea3af700572fa65f96", null ],
+    [ "__repr__", "classPenalizedLeastSquaresAlgorithmFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "build", "classPenalizedLeastSquaresAlgorithmFactory.html#a05f1fb877d877e172d950e17b59b87d9", null ],
+    [ "clone", "classPenalizedLeastSquaresAlgorithmFactory.html#ae1dd80e7885fef1d800cf2d1613a4b39", null ],
+    [ "load", "classPenalizedLeastSquaresAlgorithmFactory.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classPenalizedLeastSquaresAlgorithmFactory.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

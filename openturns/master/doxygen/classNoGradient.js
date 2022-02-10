@@ -1,11 +1,11 @@
 var classNoGradient =
 [
     [ "NoGradient", "classNoGradient.html#a2f175d442269ee5d57cbee42f8e6347a", null ],
-    [ "__repr__", "classNoGradient.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classNoGradient.html#a409ad915e6b66b8ca52c17c63d63aeea", null ],
-    [ "getInputDimension", "classNoGradient.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getOutputDimension", "classNoGradient.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "gradient", "classNoGradient.html#a5189ef9fc1995c4570898aeecc129719", null ],
-    [ "isActualImplementation", "classNoGradient.html#a61e2b931e0b321588fa9136ba58f05d2", null ],
-    [ "operator==", "classNoGradient.html#a223f02e3359009b1a40f6dec5130bcb2", null ]
+    [ "__repr__", "classNoGradient.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classNoGradient.html#a1cc0bd78b511419185967d889489d7c1", null ],
+    [ "getInputDimension", "classNoGradient.html#a18e8247fe0b964d07224b26b4fac3b05", null ],
+    [ "getOutputDimension", "classNoGradient.html#aa409c90a5dc176fbe63e37476a6f200b", null ],
+    [ "gradient", "classNoGradient.html#a26746000a06a56270b019b1db50cdee4", null ],
+    [ "isActualImplementation", "classNoGradient.html#ac2adf073e000f531927cfd83aba78cad", null ],
+    [ "operator==", "classNoGradient.html#a528ea1281a9541270ec8713b06212590", null ]
 ];

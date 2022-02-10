@@ -1,89 +1,28 @@
-var NAVTREE =
-[
-  [ "OpenTURNS library", "index.html", [
-    [ "OpenTURNS API documentation", "index.html", [
-      [ "Base", "index.html#Base", null ],
-      [ "Uncertainty", "index.html#Uncertainty", null ]
-    ] ],
-    [ "Namespaces", null, [
-      [ "Namespace List", "namespaces.html", "namespaces" ],
-      [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ]
-      ] ]
-    ] ],
-    [ "Classes", null, [
-      [ "Class List", "annotated.html", "annotated" ],
-      [ "Class Index", "classes.html", null ],
-      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
-      [ "Class Members", "functions.html", [
-        [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", "functions_vars" ],
-        [ "Typedefs", "functions_type.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
-      ] ]
-    ] ],
-    [ "Files", null, [
-      [ "File List", "files.html", "files" ]
-    ] ]
-  ] ]
-];
+/*
+ @licstart  The following is the entire license notice for the
+ JavaScript code in this file.
 
-var NAVTREEINDEX =
-[
-"ANCOVA_8hxx_source.html",
-"FunctionalChaosRandomVector_8hxx_source.html",
-"NormalGamma_8hxx_source.html",
-"TaylorExpansionMoments_8hxx_source.html",
-"classAggregatedGradient.html#a23c94eef235026e36299f22a979f96a5",
-"classBasisSequence.html#ad24e7010ec04f1bd0f86101654c67aaf",
-"classBoxCoxGradient.html#a671dbd62908a9393439f7eb49d3d4834",
-"classChiSquare.html#ac6de3c1654d6f98c39ec022dba595a94",
-"classComplexTensor.html#aa10995a845ec8df49c9dbeb9ed306854",
-"classConstantGradient.html#afcdf5fef462d407a4b042c4150162eea",
-"classDatabaseFunction.html#a29ef6e742ffb6955a4c44fbc7b4b1d54",
-"classDistribution.html#adfa121c637ea23192f72ffe8960834d0",
-"classDomainDifference.html#a62512e0bc0b273f8128bac4de5e5a070",
-"classEllipticalDistribution.html#ab52489b2b205a82c3e8420b1fc8aad3c",
-"classEventSimulation.html#ab52489b2b205a82c3e8420b1fc8aad3c",
-"classField.html#a276c68f9e4d0da6097efa998556d5498",
-"classFisherSnedecor.html#aebd7966ce58afe6240311091e25e85bb",
-"classFunctionalChaosRandomVector.html",
-"classGeneralizedPareto.html#ac6de3c1654d6f98c39ec022dba595a94",
-"classHaltonSequence.html#a6fb1f8b616f10103d2bd3af046666af8",
-"classIndependentCopula.html#a0929aea4cb419fe63781acf011841636",
-"classInverseNatafEllipticalCopulaEvaluation.html#ad7d48607df945b4abbe3e3b249be050c",
-"classKarhunenLoeveP1Algorithm.html#a736066e832bb8153161d763b9c86788d",
-"classLHS.html#af2bb720d301762ee5b5328b815dffd02",
-"classLinearEvaluation.html",
-"classLowDiscrepancySequenceImplementation.html#a87614d63f2b64718bd70b99fcaf6c33c",
-"classMaximumEntropyOrderStatisticsDistribution.html",
-"classMixture.html",
-"classNearestNeighbourAlgorithmImplementation.html#a39efe23b32b6acf2803eca059f5ff607",
-"classODESolverImplementation.html#a671dbd62908a9393439f7eb49d3d4834",
-"classOptimizationProblemImplementation.html#aa2ecd0f05f7350ab14b8dd1ba6b95fc0",
-"classPairs.html#ac969b4b0176230757ac8f715f6ae07d6",
-"classPointToFieldFunction.html#a7ead4464f44ee17803e4830710a723c7",
-"classProcessImplementation.html#ab537012b74fcd89809d7d562edcbe152",
-"classQuadraticEvaluation.html#acf74421dd63f553f84d05429d8d408ca",
-"classRegularGrid.html#a671dbd62908a9393439f7eb49d3d4834",
-"classSample.html#ab537012b74fcd89809d7d562edcbe152",
-"classSobolIndicesAlgorithmImplementation.html#afaeaa44aa1cd2f9fd499fd83c704ae44",
-"classSquareMatrix.html#a3e93f482aafef322ba2691f97f385c55",
-"classSymbolicGradient.html#a18a48d9d68da8ec493e3078956ba71bd",
-"classTimeSeries.html#aaab5528400941e4afc0e56f158f154b2",
-"classTypedInterfaceObject.html#a7396f0151acc5f3b18e6bb70c84f70bf",
-"classWeibull.html#aebd7966ce58afe6240311091e25e85bb",
-"functions_y.html"
-];
+ Copyright (C) 1997-2019 by Dimitri van Heesch
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of version 2 of the GNU General Public License as 
+ published by the Free Software Foundation.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+ @licend  The above is the entire license notice
+ for the JavaScript code in this file
+ */
 var navTreeSubIndices = new Array();
+var arrowDown = '&#9660;';
+var arrowRight = '&#9658;';
 
 function getData(varName)
 {
@@ -105,6 +44,21 @@ function stripPath2(uri)
   return m ? uri.substring(i-6) : s;
 }
 
+function hashValue()
+{
+  return $(location).attr('hash').substring(1).replace(/[^\w\-]/g,'');
+}
+
+function hashUrl()
+{
+  return '#'+hashValue();
+}
+
+function pathName()
+{
+  return $(location).attr('pathname').replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, '');
+}
+
 function localStorageSupported()
 {
   try {
@@ -114,7 +68,6 @@ function localStorageSupported()
     return false;
   }
 }
-
 
 function storeLink(link)
 {
@@ -127,7 +80,7 @@ function deleteLink()
 {
   if (localStorageSupported()) {
     window.localStorage.setItem('navpath','');
-  } 
+  }
 }
 
 function cachedLink()
@@ -141,21 +94,13 @@ function cachedLink()
 
 function getScript(scriptName,func,show)
 {
-  var head = document.getElementsByTagName("head")[0]; 
+  var head = document.getElementsByTagName("head")[0];
   var script = document.createElement('script');
   script.id = scriptName;
   script.type = 'text/javascript';
-  script.onload = func; 
-  script.src = scriptName+'.js'; 
-  if ($.browser.msie && $.browser.version<=8) { 
-    // script.onload does not work with older versions of IE
-    script.onreadystatechange = function() {
-      if (script.readyState=='complete' || script.readyState=='loaded') { 
-        func(); if (show) showRoot(); 
-      }
-    }
-  }
-  head.appendChild(script); 
+  script.onload = func;
+  script.src = scriptName+'.js';
+  head.appendChild(script);
 }
 
 function createIndent(o,domNode,node,level)
@@ -164,18 +109,17 @@ function createIndent(o,domNode,node,level)
   var n = node;
   while (n.parentNode) { level++; n=n.parentNode; }
   if (node.childrenData) {
-    var imgNode = document.createElement("img");
+    var imgNode = document.createElement("span");
+    imgNode.className = 'arrow';
     imgNode.style.paddingLeft=(16*level).toString()+'px';
-    imgNode.width  = 16;
-    imgNode.height = 22;
-    imgNode.border = 0;
+    imgNode.innerHTML=arrowRight;
     node.plus_img = imgNode;
     node.expandToggle = document.createElement("a");
     node.expandToggle.href = "javascript:void(0)";
     node.expandToggle.onclick = function() {
       if (node.expanded) {
         $(node.getChildrenUL()).slideUp("fast");
-        node.plus_img.src = node.relpath+"ftv2pnode.png";
+        node.plus_img.innerHTML=arrowRight;
         node.expanded = false;
       } else {
         expandNode(o, node, false, false);
@@ -183,15 +127,13 @@ function createIndent(o,domNode,node,level)
     }
     node.expandToggle.appendChild(imgNode);
     domNode.appendChild(node.expandToggle);
-    imgNode.src = node.relpath+"ftv2pnode.png";
   } else {
     var span = document.createElement("span");
-    span.style.display = 'inline-block';
+    span.className = 'arrow';
     span.style.width   = 16*(level+1)+'px';
-    span.style.height  = '22px';
     span.innerHTML = '&#160;';
     domNode.appendChild(span);
-  } 
+  }
 }
 
 var animationInProgress = false;
@@ -199,11 +141,14 @@ var animationInProgress = false;
 function gotoAnchor(anchor,aname,updateLocation)
 {
   var pos, docContent = $('#doc-content');
-  if (anchor.parent().attr('class')=='memItemLeft' ||
-      anchor.parent().attr('class')=='fieldtype' ||
-      anchor.parent().is(':header')) 
+  var ancParent = $(anchor.parent());
+  if (ancParent.hasClass('memItemLeft') ||
+      ancParent.hasClass('memtitle') ||
+      ancParent.hasClass('fieldname') ||
+      ancParent.hasClass('fieldtype') ||
+      ancParent.is(':header'))
   {
-    pos = anchor.parent().position().top;
+    pos = ancParent.position().top;
   } else if (anchor.position()) {
     pos = anchor.position().top;
   }
@@ -261,9 +206,9 @@ function newNode(o, po, text, link, childrenData, lastNode)
     a.className = stripPath(link.replace('#',':'));
     if (link.indexOf('#')!=-1) {
       var aname = '#'+link.split('#')[1];
-      var srcPage = stripPath($(location).attr('pathname'));
+      var srcPage = stripPath(pathName());
       var targetPage = stripPath(link.split('#')[0]);
-      a.href = srcPage!=targetPage ? url : "javascript:void(0)"; 
+      a.href = srcPage!=targetPage ? url : "javascript:void(0)";
       a.onclick = function(){
         storeLink(link);
         if (!$(a).parent().parent().hasClass('selected'))
@@ -281,7 +226,7 @@ function newNode(o, po, text, link, childrenData, lastNode)
       a.onclick = function() { storeLink(link); }
     }
   } else {
-    if (childrenData != null) 
+    if (childrenData != null)
     {
       a.className = "nolink";
       a.href = "javascript:void(0)";
@@ -311,7 +256,7 @@ function showRoot()
   (function (){ // retry until we can scroll to the selected item
     try {
       var navtree=$('#nav-tree');
-      navtree.scrollTo('#selected',0,{offset:-windowHeight/2});
+      navtree.scrollTo('#selected',100,{offset:-windowHeight/2});
     } catch (err) {
       setTimeout(arguments.callee, 0);
     }
@@ -330,17 +275,9 @@ function expandNode(o, node, imm, showRoot)
     } else {
       if (!node.childrenVisited) {
         getNode(o, node);
-      } if (imm || ($.browser.msie && $.browser.version>8)) { 
-        // somehow slideDown jumps to the start of tree for IE9 :-(
-        $(node.getChildrenUL()).show();
-      } else {
-        $(node.getChildrenUL()).slideDown("fast");
       }
-      if (node.isLast) {
-        node.plus_img.src = node.relpath+"ftv2mlastnode.png";
-      } else {
-        node.plus_img.src = node.relpath+"ftv2mnode.png";
-      }
+      $(node.getChildrenUL()).slideDown("fast");
+      node.plus_img.innerHTML = arrowDown;
       node.expanded = true;
     }
   }
@@ -355,14 +292,13 @@ function glowEffect(n,duration)
 
 function highlightAnchor()
 {
-  var aname = $(location).attr('hash');
+  var aname = hashUrl();
   var anchor = $(aname);
   if (anchor.parent().attr('class')=='memItemLeft'){
-    var rows = $('.memberdecls tr[class$="'+
-               window.location.hash.substring(1)+'"]');
+    var rows = $('.memberdecls tr[class$="'+hashValue()+'"]');
     glowEffect(rows.children(),300); // member without details
-  } else if (anchor.parents().slice(2).prop('tagName')=='TR') {
-    glowEffect(anchor.parents('div.memitem'),1000); // enum value
+  } else if (anchor.parent().attr('class')=='fieldname'){
+    glowEffect(anchor.parent().parent(),1000); // enum value
   } else if (anchor.parent().attr('class')=='fieldtype'){
     glowEffect(anchor.parent().parent(),1000); // struct field
   } else if (anchor.parent().is(":header")) {
@@ -370,14 +306,13 @@ function highlightAnchor()
   } else {
     glowEffect(anchor.next(),1000); // normal member
   }
-  gotoAnchor(anchor,aname,false);
 }
 
 function selectAndHighlight(hash,n)
 {
   var a;
   if (hash) {
-    var link=stripPath($(location).attr('pathname'))+':'+hash.substring(1);
+    var link=stripPath(pathName())+':'+hash.substring(1);
     a=$('.item a[class$="'+link+'"]');
   }
   if (a && a.length) {
@@ -410,11 +345,7 @@ function showNode(o, node, index, hash)
         getNode(o, node);
       }
       $(node.getChildrenUL()).css({'display':'block'});
-      if (node.isLast) {
-        node.plus_img.src = node.relpath+"ftv2mlastnode.png";
-      } else {
-        node.plus_img.src = node.relpath+"ftv2mnode.png";
-      }
+      node.plus_img.innerHTML = arrowDown;
       node.expanded = true;
       var n = node.children[o.breadcrumbs[index]];
       if (index+1<o.breadcrumbs.length) {
@@ -488,14 +419,13 @@ function navTo(o,root,hash,relpath)
   if (link) {
     var parts = link.split('#');
     root = parts[0];
-    if (parts.length>1) hash = '#'+parts[1];
+    if (parts.length>1) hash = '#'+parts[1].replace(/[^\w\-]/g,'');
     else hash='';
   }
   if (hash.match(/^#l\d+$/)) {
     var anchor=$('a[name='+hash.substring(1)+']');
     glowEffect(anchor.parent(),1000); // line number
     hash=''; // strip line number anchors
-    //root=root.replace(/_source\./,'.'); // source link to doc link
   }
   var url=root+hash;
   var i=-1;
@@ -529,13 +459,25 @@ function toggleSyncButton(relpath)
   if (navSync.hasClass('sync')) {
     navSync.removeClass('sync');
     showSyncOff(navSync,relpath);
-    storeLink(stripPath2($(location).attr('pathname'))+$(location).attr('hash'));
+    storeLink(stripPath2(pathName())+hashUrl());
   } else {
     navSync.addClass('sync');
     showSyncOn(navSync,relpath);
     deleteLink();
   }
 }
+
+var loadTriggered = false;
+var readyTriggered = false;
+var loadObject,loadToRoot,loadUrl,loadRelPath;
+
+$(window).on('load',function(){
+  if (readyTriggered) { // ready first
+    navTo(loadObject,loadToRoot,loadUrl,loadRelPath);
+    showRoot();
+  }
+  loadTriggered=true;
+});
 
 function initNavTree(toroot,relpath)
 {
@@ -552,10 +494,9 @@ function initNavTree(toroot,relpath)
   o.node.relpath = relpath;
   o.node.expanded = false;
   o.node.isLast = true;
-  o.node.plus_img = document.createElement("img");
-  o.node.plus_img.src = relpath+"ftv2pnode.png";
-  o.node.plus_img.width = 16;
-  o.node.plus_img.height = 22;
+  o.node.plus_img = document.createElement("span");
+  o.node.plus_img.className = 'arrow';
+  o.node.plus_img.innerHTML = arrowRight;
 
   if (localStorageSupported()) {
     var navSync = $('#nav-sync');
@@ -568,31 +509,36 @@ function initNavTree(toroot,relpath)
     navSync.click(function(){ toggleSyncButton(relpath); });
   }
 
-  $(window).load(function(){
-    navTo(o,toroot,window.location.hash,relpath);
+  if (loadTriggered) { // load before ready
+    navTo(o,toroot,hashUrl(),relpath);
     showRoot();
-  });
+  } else { // ready before load
+    loadObject  = o;
+    loadToRoot  = toroot;
+    loadUrl     = hashUrl();
+    loadRelPath = relpath;
+    readyTriggered=true;
+  }
 
   $(window).bind('hashchange', function(){
      if (window.location.hash && window.location.hash.length>1){
        var a;
        if ($(location).attr('hash')){
-         var clslink=stripPath($(location).attr('pathname'))+':'+
-                               $(location).attr('hash').substring(1);
-         a=$('.item a[class$="'+clslink+'"]');
+         var clslink=stripPath(pathName())+':'+hashValue();
+         a=$('.item a[class$="'+clslink.replace(/</g,'\\3c ')+'"]');
        }
        if (a==null || !$(a).parent().parent().hasClass('selected')){
          $('.item').removeClass('selected');
          $('.item').removeAttr('id');
        }
-       var link=stripPath2($(location).attr('pathname'));
-       navTo(o,link,$(location).attr('hash'),relpath);
+       var link=stripPath2(pathName());
+       navTo(o,link,hashUrl(),relpath);
      } else if (!animationInProgress) {
        $('#doc-content').scrollTop(0);
        $('.item').removeClass('selected');
        $('.item').removeAttr('id');
-       navTo(o,toroot,window.location.hash,relpath);
+       navTo(o,toroot,hashUrl(),relpath);
      }
   })
 }
-
+/* @license-end */

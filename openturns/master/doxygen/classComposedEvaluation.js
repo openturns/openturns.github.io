@@ -1,16 +1,18 @@
 var classComposedEvaluation =
 [
     [ "ComposedEvaluation", "classComposedEvaluation.html#a8eaf169942eed82f64e8e7147d8019f7", null ],
-    [ "__repr__", "classComposedEvaluation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classComposedEvaluation.html#abe5d22b18f9700db58862e6ae96f07b6", null ],
-    [ "getInputDimension", "classComposedEvaluation.html#a6f2b6c0bde947ddea88f3e383bad97de", null ],
-    [ "getLeftEvaluation", "classComposedEvaluation.html#a3e80d6ff38eee929cd2f9735ff55de67", null ],
-    [ "getMarginal", "classComposedEvaluation.html#a1a69dff94834a291836799ac03752bf9", null ],
-    [ "getMarginal", "classComposedEvaluation.html#af843cc3d5b57190531abe29f1e11e450", null ],
-    [ "getOutputDimension", "classComposedEvaluation.html#a23c94eef235026e36299f22a979f96a5", null ],
-    [ "getParameter", "classComposedEvaluation.html#a07a2baf2e35aa00cc5c567019e387849", null ],
-    [ "getParameterDescription", "classComposedEvaluation.html#ab197ca4929709450d800f6e8f90ff837", null ],
-    [ "load", "classComposedEvaluation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator==", "classComposedEvaluation.html#a193d901b4c8d5b3bc1a08450e9a2cf00", null ],
-    [ "save", "classComposedEvaluation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classComposedEvaluation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classComposedEvaluation.html#a0578d2e1ae07c170a92df3d8f9c7cf31", null ],
+    [ "getInputDimension", "classComposedEvaluation.html#a18e8247fe0b964d07224b26b4fac3b05", null ],
+    [ "getLeftEvaluation", "classComposedEvaluation.html#a0203a0d3d268004c08ab6c5bce1f5524", null ],
+    [ "getMarginal", "classComposedEvaluation.html#a6eb7a1ac6e50d213530e7c480b119828", null ],
+    [ "getMarginal", "classComposedEvaluation.html#aac4a391a6be5ad8a64f63569ab301f1b", null ],
+    [ "getOutputDimension", "classComposedEvaluation.html#aa409c90a5dc176fbe63e37476a6f200b", null ],
+    [ "getParameter", "classComposedEvaluation.html#a26d0f759f5842cc4dbbf0dc25386c3c4", null ],
+    [ "getParameterDescription", "classComposedEvaluation.html#adf6e993c5cc732c98aae1eb839ad9c56", null ],
+    [ "isLinear", "classComposedEvaluation.html#a1ac49501515bad07776ff2f87110a099", null ],
+    [ "isParallel", "classComposedEvaluation.html#a6862b1a2939654782773403c0ade6559", null ],
+    [ "load", "classComposedEvaluation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator==", "classComposedEvaluation.html#a38eb20925b84827c9b1492aaebb1171e", null ],
+    [ "save", "classComposedEvaluation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

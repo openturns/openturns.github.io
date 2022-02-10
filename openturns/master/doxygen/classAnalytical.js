@@ -1,17 +1,17 @@
 var classAnalytical =
 [
-    [ "Analytical", "classAnalytical.html#a775e70478fbba16729ea64ea5f294c9c", null ],
+    [ "Analytical", "classAnalytical.html#ab510d0b73e73bf4a37b3a89d78c1017a", null ],
     [ "Analytical", "classAnalytical.html#a66daecdd6b60af69c4e1b0ae78a7cda3", null ],
-    [ "__repr__", "classAnalytical.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classAnalytical.html#a92ae91b23b92bb3d86b57e966a52a176", null ],
-    [ "getAnalyticalResult", "classAnalytical.html#a055736d4448f05386abbbba54539a38e", null ],
-    [ "getEvent", "classAnalytical.html#a8c26bcc78b88c44fbe7a1a87ab86397e", null ],
-    [ "getNearestPointAlgorithm", "classAnalytical.html#a6840e6fec52f76c7d32e37d4a703e207", null ],
-    [ "getPhysicalStartingPoint", "classAnalytical.html#ab20dfd525d9c0586a4ff5cb57acebd54", null ],
-    [ "load", "classAnalytical.html#a671dbd62908a9393439f7eb49d3d4834", null ],
+    [ "__repr__", "classAnalytical.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classAnalytical.html#ab3d585428e1913802ee8bfacb7fd99d7", null ],
+    [ "getAnalyticalResult", "classAnalytical.html#a5cc7eec70492e3e47cf99ed0dc7a2757", null ],
+    [ "getEvent", "classAnalytical.html#aa7728cdf4ad16000481cac87774d2f87", null ],
+    [ "getNearestPointAlgorithm", "classAnalytical.html#afb383b8c8ee5141655381683d585390a", null ],
+    [ "getPhysicalStartingPoint", "classAnalytical.html#a70ad7c331fbee99c3fa051239496ace7", null ],
+    [ "load", "classAnalytical.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "run", "classAnalytical.html#a13a43e6d814de94978c515cb084873b1", null ],
-    [ "save", "classAnalytical.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
-    [ "setEvent", "classAnalytical.html#afebf9f57fe4b4040e850bb855d9c2019", null ],
+    [ "save", "classAnalytical.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
+    [ "setEvent", "classAnalytical.html#a8493112cb91b1119543b8b31aa88466f", null ],
     [ "setNearestPointAlgorithm", "classAnalytical.html#a5b847a9e23f1fd15c175dadfcc7d2381", null ],
     [ "setPhysicalStartingPoint", "classAnalytical.html#a597652f79db49fff14ee0f6e96dd58cb", null ]
 ];

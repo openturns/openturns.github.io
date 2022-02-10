@@ -1,15 +1,15 @@
 var classEventSimulation =
 [
-    [ "EventSimulation", "classEventSimulation.html#a262149a01ec7f032b958e7c67b0bb222", null ],
+    [ "EventSimulation", "classEventSimulation.html#adefa067858500fce7815c56dc492921b", null ],
     [ "EventSimulation", "classEventSimulation.html#a01f45d4529caf8d2a4057ce763000d3c", null ],
-    [ "__repr__", "classEventSimulation.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classEventSimulation.html#a7412c1c8ec208e24308166db601b0e52", null ],
+    [ "__repr__", "classEventSimulation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classEventSimulation.html#a7499c41b7bbebad7fdefbd1562936188", null ],
     [ "computeBlockSample", "classEventSimulation.html#a3a09fa3374d7a5cf70a51d404991093f", null ],
-    [ "drawProbabilityConvergence", "classEventSimulation.html#a4c8bf3605ef80ead37f46550e0f8b0c2", null ],
-    [ "getEvent", "classEventSimulation.html#a8c26bcc78b88c44fbe7a1a87ab86397e", null ],
-    [ "getResult", "classEventSimulation.html#ae5cbba804562f9b4ea92c98555b2e1e6", null ],
-    [ "load", "classEventSimulation.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "run", "classEventSimulation.html#a13a43e6d814de94978c515cb084873b1", null ],
-    [ "save", "classEventSimulation.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ],
+    [ "drawProbabilityConvergence", "classEventSimulation.html#ac9ffa889d8ba129ad6f1d856d98d3a5f", null ],
+    [ "getEvent", "classEventSimulation.html#aa7728cdf4ad16000481cac87774d2f87", null ],
+    [ "getResult", "classEventSimulation.html#a4a49d7ce18dccb7109703ed2c26e2fc2", null ],
+    [ "load", "classEventSimulation.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "run", "classEventSimulation.html#ad1717410afd0be936c6213a63c8005fb", null ],
+    [ "save", "classEventSimulation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
     [ "setResult", "classEventSimulation.html#a5e8ce58197ca45d0e8f3965f4d8e5721", null ]
 ];

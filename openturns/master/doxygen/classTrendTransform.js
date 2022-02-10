@@ -4,11 +4,11 @@ var classTrendTransform =
     [ "TrendTransform", "classTrendTransform.html#a306378ffb28ae122da99e21963c53e46", null ],
     [ "TrendTransform", "classTrendTransform.html#a39e34d0c38b7447c6a9ba250c8b799ea", null ],
     [ "TrendTransform", "classTrendTransform.html#a844ccb5f265c99e2d95149eba68b0d41", null ],
-    [ "__repr__", "classTrendTransform.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classTrendTransform.html#aef104ee879413a5e62d99e28eadd9b52", null ],
-    [ "getInverse", "classTrendTransform.html#abd779159086e21e2a916af6ac5078c3f", null ],
-    [ "getTrendFunction", "classTrendTransform.html#ab80cfa5e4635b4d4af8e82a5f500827c", null ],
-    [ "load", "classTrendTransform.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "operator==", "classTrendTransform.html#a746d86c128c1940c62db562a71d91d50", null ],
-    [ "save", "classTrendTransform.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classTrendTransform.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classTrendTransform.html#a2876a6116496f8dc9c923106f6c5f560", null ],
+    [ "getInverse", "classTrendTransform.html#acb1c72c0daa3c5c65556ad9fd32b208b", null ],
+    [ "getTrendFunction", "classTrendTransform.html#a03d0ef9203b58671f6f64ff997ac54d3", null ],
+    [ "load", "classTrendTransform.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "operator==", "classTrendTransform.html#a42218b9f4927a30d1a97d68776164e58", null ],
+    [ "save", "classTrendTransform.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

@@ -4,10 +4,10 @@ var classMauntzKucherenkoSensitivityAlgorithm =
     [ "MauntzKucherenkoSensitivityAlgorithm", "classMauntzKucherenkoSensitivityAlgorithm.html#a94c52b395cd0eb63a46d55b66bfd82b4", null ],
     [ "MauntzKucherenkoSensitivityAlgorithm", "classMauntzKucherenkoSensitivityAlgorithm.html#a1a7332f0d1cb3cab01e4cc8dfebe35ff", null ],
     [ "MauntzKucherenkoSensitivityAlgorithm", "classMauntzKucherenkoSensitivityAlgorithm.html#a95d6b10fcce184f4cb89db9d96366238", null ],
-    [ "__repr__", "classMauntzKucherenkoSensitivityAlgorithm.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classMauntzKucherenkoSensitivityAlgorithm.html#a43d93b0046f8e5597fe2a4529e5152f2", null ],
-    [ "computeAsymptoticDistribution", "classMauntzKucherenkoSensitivityAlgorithm.html#acdaf06571922fe3f12a1c8b6e1e13ab8", null ],
-    [ "computeIndices", "classMauntzKucherenkoSensitivityAlgorithm.html#a88dcd86e1caa9757fff1f204d8f09224", null ],
-    [ "load", "classMauntzKucherenkoSensitivityAlgorithm.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classMauntzKucherenkoSensitivityAlgorithm.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classMauntzKucherenkoSensitivityAlgorithm.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classMauntzKucherenkoSensitivityAlgorithm.html#a0d014d60e8fdc9d3f8fd5b4bfcf0921d", null ],
+    [ "computeAsymptoticDistribution", "classMauntzKucherenkoSensitivityAlgorithm.html#abe94f53dbd9371da160fcff91515a93f", null ],
+    [ "computeIndices", "classMauntzKucherenkoSensitivityAlgorithm.html#a9fe10d7e760ea7f2fb1a71f3f0ab9725", null ],
+    [ "load", "classMauntzKucherenkoSensitivityAlgorithm.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classMauntzKucherenkoSensitivityAlgorithm.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

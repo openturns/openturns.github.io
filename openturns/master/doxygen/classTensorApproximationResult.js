@@ -2,13 +2,13 @@ var classTensorApproximationResult =
 [
     [ "TensorApproximationResult", "classTensorApproximationResult.html#a2fa33fc5df0de1ba2a626baeea534717", null ],
     [ "TensorApproximationResult", "classTensorApproximationResult.html#a266eca775da2613be16732eaa5eab19c", null ],
-    [ "__repr__", "classTensorApproximationResult.html#ab52489b2b205a82c3e8420b1fc8aad3c", null ],
-    [ "clone", "classTensorApproximationResult.html#a216ed7de1e2ce077ae9be07979f09cd4", null ],
-    [ "getComposedMetaModel", "classTensorApproximationResult.html#ab7c1e894f6dbe3b88f878890ea2b4a3d", null ],
-    [ "getComposedModel", "classTensorApproximationResult.html#a529ac299a94cd9436b838b47fa3d19cf", null ],
-    [ "getDistribution", "classTensorApproximationResult.html#a6a421065a87dc28be9455433290de4c6", null ],
-    [ "getInverseTransformation", "classTensorApproximationResult.html#a4595114472e75516b140601cb6d62a42", null ],
-    [ "getTransformation", "classTensorApproximationResult.html#aaeb533af64479bbe7f831e629c2dfeda", null ],
-    [ "load", "classTensorApproximationResult.html#a671dbd62908a9393439f7eb49d3d4834", null ],
-    [ "save", "classTensorApproximationResult.html#a9ea1eaed6ee7b520dc4109c7a38e5094", null ]
+    [ "__repr__", "classTensorApproximationResult.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
+    [ "clone", "classTensorApproximationResult.html#a4d7a0bcb9a40c57b304835a5b8022ece", null ],
+    [ "getComposedMetaModel", "classTensorApproximationResult.html#a13161c00f49010ad938df224d7f99288", null ],
+    [ "getComposedModel", "classTensorApproximationResult.html#a6f2466a61b65f7ade99d2d099741813b", null ],
+    [ "getDistribution", "classTensorApproximationResult.html#af7655c33aac1fc99556da4e82d562ec5", null ],
+    [ "getInverseTransformation", "classTensorApproximationResult.html#a936440f72edad41f210e84ef44b56f67", null ],
+    [ "getTransformation", "classTensorApproximationResult.html#ae4b339ff860fb3937fa173299e29e074", null ],
+    [ "load", "classTensorApproximationResult.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classTensorApproximationResult.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];
