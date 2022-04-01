@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Bayesian calibration of the flooding model" href="plot_bayesian_calibration_flooding.html" />
-    <link rel="prev" title="Gibbs sampling of the posterior distribution" href="plot_gibbs.html" />
+    <link rel="prev" title="Sampling from an unnormalized probability density" href="plot_imh_python_distribution.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -60,7 +60,7 @@
           <a href="plot_bayesian_calibration_flooding.html" title="Bayesian calibration of the flooding model"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_gibbs.html" title="Gibbs sampling of the posterior distribution"
+          <a href="plot_imh_python_distribution.html" title="Sampling from an unnormalized probability density"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -83,8 +83,8 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_gibbs.html"
-                          title="previous chapter">Gibbs sampling of the posterior distribution</a></p>
+    <p class="topless"><a href="plot_imh_python_distribution.html"
+                          title="previous chapter">Sampling from an unnormalized probability density</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -181,6 +181,7 @@ in order to sample from the posterior distribution of the calibration parameters
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -191,9 +192,9 @@ in order to sample from the posterior distribution of the calibration parameters
 </pre></div>
 </div>
 <p>Define the observed inputs <img class="math" src="../../_images/math/8796c964f035c17f755797d51f050539a5e75915.svg" alt="x_i"/>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.</span>
-<span class="n">xmax</span> <span class="o">=</span> <span class="mf">3.</span>
-<span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">obsSize</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">obsSize</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">rg</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">obsSize</span><span class="p">)</span>
 <span class="n">x_obs</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
 </pre></div>
@@ -205,7 +206,8 @@ here <img class="math" src="../../_images/math/6da565bfaacc62e29298cc020e53b0386
 the first output of the model, is the mean and <img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/>,
 the second output of the model, is the standard deviation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fullModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span>
-    <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;theta1&#39;</span><span class="p">,</span> <span class="s1">&#39;theta2&#39;</span><span class="p">,</span> <span class="s1">&#39;theta3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;theta1+theta2*x+theta3*x^2&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">])</span>
+    <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;theta1&quot;</span><span class="p">,</span> <span class="s2">&quot;theta2&quot;</span><span class="p">,</span> <span class="s2">&quot;theta3&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;theta1+theta2*x+theta3*x^2&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>To differentiate between the two classes of inputs (<img class="math" src="../../_images/math/865f48ab61e258cd6e57c005da1578de4b22f440.svg" alt="x"/> and <img class="math" src="../../_images/math/e3589604ebf609d9164cb6328467ea55057730a7.svg" alt="\vect\theta"/>),
@@ -225,7 +227,7 @@ when we sample <img class="math" src="../../_images/math/e3589604ebf609d9164cb63
 </div>
 <p>Define the observation noise <img class="math" src="../../_images/math/a7c6c82d441f294a944fb58c5dc9a4e01548d220.svg" alt="\varepsilon {\sim} \mathcal N(0, 1)"/> and create a sample from it.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">noiseStandardDeviation</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">noiseStandardDeviation</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">noise</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noiseStandardDeviation</span><span class="p">)</span>
 <span class="n">noiseSample</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">obsSize</span><span class="p">)</span>
 </pre></div>
@@ -259,22 +261,22 @@ here sampled using the “true” value of <img class="math" src="../../_images/
 </pre></div>
 </div>
 <p>Define the mean <img class="math" src="../../_images/math/d462786850bd2fc21fd050569b5468293157c893.svg" alt="\mu_\theta"/>, the covariance matrix <img class="math" src="../../_images/math/3f1a11f37be68795e110c0934f2a70d38b8a68c3.svg" alt="\Sigma_\theta"/>, then the prior distribution <img class="math" src="../../_images/math/067ecb443e80120f8043fae923d7a18977cd56dd.svg" alt="\pi(\vect\theta)"/> of the parameter <img class="math" src="../../_images/math/e3589604ebf609d9164cb6328467ea55057730a7.svg" alt="\vect\theta"/>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPriorMean</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPriorMean</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigma0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>  <span class="c1"># standard deviations</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigma0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>  <span class="c1"># standard deviations</span>
 <span class="n">thetaPriorCovarianceMatrix</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="n">paramDim</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">paramDim</span><span class="p">):</span>
-    <span class="n">thetaPriorCovarianceMatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigma0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">thetaPriorCovarianceMatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigma0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
 
 <span class="n">prior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">thetaPriorMean</span><span class="p">,</span> <span class="n">thetaPriorCovarianceMatrix</span><span class="p">)</span>
-<span class="n">prior</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s1">&#39;theta1&#39;</span><span class="p">,</span> <span class="s1">&#39;theta2&#39;</span><span class="p">,</span> <span class="s1">&#39;theta3&#39;</span><span class="p">])</span>
+<span class="n">prior</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;theta1&quot;</span><span class="p">,</span> <span class="s2">&quot;theta2&quot;</span><span class="p">,</span> <span class="s2">&quot;theta3&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>The proposed steps for
 <img class="math" src="../../_images/math/7aac20ab1eb4c38ae4a8af0c998f3e1566e867b8.svg" alt="\theta_1"/>, <img class="math" src="../../_images/math/fd29a542eb2e15c489fc30b4911a69a88ce0ca01.svg" alt="\theta_2"/> and <img class="math" src="../../_images/math/125fbca292ba6e8f747a1e13bce2f89fec96435b.svg" alt="\theta_3"/>
 will all follow a uniform distribution.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proposal</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proposal</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="test-the-metropolis-hastings-sampler">
@@ -287,12 +289,16 @@ This involves a combination of the RWMH and the Gibbs algorithms.</p>
 <p>We create a <a class="reference internal" href="../../user_manual/_generated/openturns.RandomWalkMetropolisHastings.html#openturns.RandomWalkMetropolisHastings" title="openturns.RandomWalkMetropolisHastings"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomWalkMetropolisHastings</span></code></a> sampler for each component.
 Each sampler must be aware of the joint prior distribution.
 We also use the same proposal distribution, but this is not mandatory.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mh_coll</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">RandomWalkMetropolisHastings</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="n">initialState</span><span class="p">,</span> <span class="n">proposal</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">paramDim</span><span class="p">)]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mh_coll</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ot</span><span class="o">.</span><span class="n">RandomWalkMetropolisHastings</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="n">initialState</span><span class="p">,</span> <span class="n">proposal</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">paramDim</span><span class="p">)</span>
+<span class="p">]</span>
 </pre></div>
 </div>
 <p>Each sampler must be made aware of the likelihood.
 Otherwise we would sample from the prior!</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">mh</span> <span class="ow">in</span> <span class="n">mh_coll</span><span class="p">:</span> <span class="n">mh</span><span class="o">.</span><span class="n">setLikelihood</span><span class="p">(</span><span class="n">conditional</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">linkFunction</span><span class="p">,</span> <span class="n">x_obs</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">mh</span> <span class="ow">in</span> <span class="n">mh_coll</span><span class="p">:</span>
+    <span class="n">mh</span><span class="o">.</span><span class="n">setLikelihood</span><span class="p">(</span><span class="n">conditional</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">linkFunction</span><span class="p">,</span> <span class="n">x_obs</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Finally, the <a class="reference internal" href="../../user_manual/_generated/openturns.Gibbs.html#openturns.Gibbs" title="openturns.Gibbs"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gibbs</span></code></a> algorithm is constructed from all Metropolis-Hastings samplers.</p>
@@ -330,10 +336,10 @@ for Normal posterior distributions).</p>
 <span class="k">for</span> <span class="n">parameter_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">paramDim</span><span class="p">):</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
     <span class="n">priorGraph</span> <span class="o">=</span> <span class="n">prior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-    <span class="n">priorGraph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">])</span>
+    <span class="n">priorGraph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">])</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">priorGraph</span><span class="p">)</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s1">&#39;Posterior&#39;</span><span class="p">,</span> <span class="s1">&#39;Prior&#39;</span><span class="p">])</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">paramDim</span><span class="p">,</span> <span class="n">parameter_index</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Posterior&quot;</span><span class="p">,</span> <span class="s2">&quot;Prior&quot;</span><span class="p">])</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">paramDim</span><span class="p">,</span> <span class="n">parameter_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Bayesian calibration&quot;</span><span class="p">)</span>
@@ -341,7 +347,7 @@ for Normal posterior distributions).</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_bayesian_calibration_002.png" srcset="../../_images/sphx_glr_plot_bayesian_calibration_002.png" alt="Bayesian calibration" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.530 seconds)</p>
+<img src="../../_images/sphx_glr_plot_bayesian_calibration_002.png" srcset="../../_images/sphx_glr_plot_bayesian_calibration_002.png" alt="Bayesian calibration" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.501 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-calibration-bayesian-calibration-plot-bayesian-calibration-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/557f6965239dde7b8b9613eb917dc826/plot_bayesian_calibration.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_bayesian_calibration.py</span></code></a></p>
@@ -371,7 +377,7 @@ for Normal posterior distributions).</p>
           <a href="plot_bayesian_calibration_flooding.html" title="Bayesian calibration of the flooding model"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_gibbs.html" title="Gibbs sampling of the posterior distribution"
+          <a href="plot_imh_python_distribution.html" title="Sampling from an unnormalized probability density"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
