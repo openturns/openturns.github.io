@@ -329,9 +329,9 @@ relearnt on the extended design of experiment.</p>
 <span class="n">upperbound</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">upperbound</span>
 </pre></div>
 </div>
-<p>and we load the model function :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">model</span>
-<span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<p>and we load the model function and its noise :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">model</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">noiseModel</span>
 </pre></div>
 </div>
 <p>We build a sample out of the three minima :</p>
@@ -364,8 +364,8 @@ relearnt on the extended design of experiment.</p>
 <span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">sampleSize</span><span class="p">)</span>
 <span class="n">inputSample</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
-<span class="n">modelEval</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
-<span class="n">outputSample</span> <span class="o">=</span> <span class="n">modelEval</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">objectiveFunction</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">noiseSample</span> <span class="o">=</span> <span class="n">noise</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Initial LHS design of experiment - n=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span>
@@ -381,8 +381,7 @@ relearnt on the extended design of experiment.</p>
     <span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noise</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">modelEval</span><span class="p">]</span>
-<span class="n">kriging</span><span class="o">.</span><span class="n">setNoise</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kriging</span><span class="o">.</span><span class="n">setNoise</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">noiseSample</span><span class="p">])</span>
 <span class="n">kriging</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -391,20 +390,18 @@ relearnt on the extended design of experiment.</p>
 <h3>Create and solve the problem<a class="headerlink" href="#create-and-solve-the-problem" title="Permalink to this headline">¶</a></h3>
 <p>We define the problem :</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">()</span>
-<span class="n">problem</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">objectiveFunction</span><span class="p">)</span>
 <span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">)</span>
 <span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We configure the maximum number of function evaluations to 20. We assume that the function is noisy, with a constant variance.</p>
-<p>We configure the algorithm :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">kriging</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
-<span class="c1"># assume constant noise var</span>
-<span class="n">guessedNoiseFunction</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="n">noiseModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">guessedNoiseFunction</span><span class="p">)])</span>
-<span class="n">algo</span><span class="o">.</span><span class="n">setNoiseModel</span><span class="p">(</span><span class="n">noiseModel</span><span class="p">)</span>
+<p>We configure the algorithm, with the model noise:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">kriging</span><span class="o">.</span><span class="n">getResult</span><span class="p">(),</span> <span class="n">noise</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setMaximumEvaluationNumber</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We run the algorithm and get the result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -419,14 +416,14 @@ relearnt on the extended design of experiment.</p>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<p>[0.124449,0.803613]</p>
+<p>[0.124436,0.803624]</p>
 </div>
 <br />
 <br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<p>[-1.04663]</p>
+<p>[-1.04662]</p>
 </div>
 <br />
 <br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fexact</span>
@@ -466,7 +463,7 @@ relearnt on the extended design of experiment.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_009.png" srcset="../../_images/sphx_glr_plot_ego_009.png" alt="Optimal value history" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.192 seconds)</p>
+<img src="../../_images/sphx_glr_plot_ego_009.png" srcset="../../_images/sphx_glr_plot_ego_009.png" alt="Optimal value history" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.423 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-numerical-methods-optimization-plot-ego-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4346f1b4e6973c226ebe5a1caa84d80e/plot_ego.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_ego.py</span></code></a></p>
