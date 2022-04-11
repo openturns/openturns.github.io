@@ -23,8 +23,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Kriging: metamodel of the Branin-Hoo function" href="plot_kriging_branin_function.html" />
-    <link rel="prev" title="Kriging with an isotropic covariance function" href="plot_kriging_isotropic.html" />
+    <link rel="next" title="Choose the trend basis of a kriging metamodel" href="plot_kriging_beam_trend.html" />
+    <link rel="prev" title="Kriging the cantilever beam model using HMAT" href="plot_kriging_cantilever_beam_hmat.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -57,10 +57,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_kriging_branin_function.html" title="Kriging: metamodel of the Branin-Hoo function"
+          <a href="plot_kriging_beam_trend.html" title="Choose the trend basis of a kriging metamodel"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_isotropic.html" title="Kriging with an isotropic covariance function"
+          <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -86,13 +86,13 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_kriging_isotropic.html"
-                          title="previous chapter">Kriging with an isotropic covariance function</a></p>
+    <p class="topless"><a href="plot_kriging_cantilever_beam_hmat.html"
+                          title="previous chapter">Kriging the cantilever beam model using HMAT</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plot_kriging_branin_function.html"
-                          title="next chapter">Kriging: metamodel of the Branin-Hoo function</a></p>
+    <p class="topless"><a href="plot_kriging_beam_trend.html"
+                          title="next chapter">Choose the trend basis of a kriging metamodel</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -179,8 +179,7 @@ to download the full example code</p>
 <div class="section" id="creation-of-the-metamodel">
 <h2>Creation of the metamodel<a class="headerlink" href="#creation-of-the-metamodel" title="Permalink to this headline">¶</a></h2>
 <p>We begin by defining the function <cite>g</cite> as a symbolic function. Then we define the <cite>x_train</cite> variable which contains the inputs of the design of experiments of the training step. Then we compute the <cite>y_train</cite> corresponding outputs. The variable <cite>n_train</cite> is the size of the training design of experiments.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
@@ -189,9 +188,9 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;sin(x)&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">([[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">7.9</span><span class="p">,</span> <span class="mf">11.</span><span class="p">,</span> <span class="mf">11.5</span><span class="p">]])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">7.9</span><span class="p">,</span> <span class="mf">11.</span><span class="p">,</span> <span class="mf">11.5</span><span class="p">]]</span>
 <span class="n">y_train</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
-<span class="n">n_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="n">n_train</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
 <span class="n">n_train</span>
 </pre></div>
 </div>
@@ -200,13 +199,12 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p>In order to compare the function and its metamodel, we use a test (i.e. validation) design of experiments made of a regular grid of 100 points from 0 to 12. Then we convert this grid into a <cite>Sample</cite> and we compute the outputs of the function on this sample.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xmin</span> <span class="o">=</span> <span class="mf">0.</span>
-<span class="n">xmax</span> <span class="o">=</span> <span class="mf">12.</span>
-<span class="n">n_test</span> <span class="o">=</span> <span class="mi">100</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xmin</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mf">12.0</span>
+<span class="n">n_test</span> <span class="o">=</span> <span class="mi">101</span>
 <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n_test</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">myRegularGrid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
-<span class="n">x_test_coord</span> <span class="o">=</span> <span class="n">myRegularGrid</span><span class="o">.</span><span class="n">getValues</span><span class="p">()</span>
-<span class="n">x_test</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">([[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_test_coord</span><span class="p">])</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">myRegularGrid</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
 <span class="n">y_test</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -241,7 +239,7 @@ to download the full example code</p>
 <img src="../../_images/sphx_glr_plot_kriging_simulate_001.png" srcset="../../_images/sphx_glr_plot_kriging_simulate_001.png" alt="plot kriging simulate" class = "sphx-glr-single-img"/><p>We use the <cite>ConstantBasisFactory</cite> class to define the trend and the <cite>MaternModel</cite> class to define the covariance model. This Matérn model is based on the regularity parameter <img class="math" src="../../_images/math/23dc2a7979d65121a915cd568e72c6d38e5ad0bd.svg" alt="\nu=3/2"/>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">krigingResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
@@ -288,60 +286,7 @@ to download the full example code</p>
 <h2>Simulate new trajectories<a class="headerlink" href="#simulate-new-trajectories" title="Permalink to this headline">¶</a></h2>
 <p>In order to generate new trajectories of the conditioned gaussian process, we couild technically use the <cite>KrigingRandomVector</cite> class, because it provides the <cite>getSample</cite> method that we need. However, the <cite>KrigingRandomVector</cite> class was more specifically designed to create a <cite>RandomVector</cite> so that it can feed, for example, a function which has a field as input argument.</p>
 <p>This is why we use the <cite>ConditionedGaussianProcess</cite>, which provides a <cite>Process</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_test</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n_test</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">myRegularGrid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
-<span class="n">vertices</span> <span class="o">=</span> <span class="n">myRegularGrid</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>If we directly use the <cite>vertices</cite> values, we get:</p>
-<blockquote>
-<div><p>RuntimeError: InternalException : Error: the matrix is not definite positive.</p>
-</div></blockquote>
-<p>Indeed, some points in <cite>vertices</cite> are also in <cite>x_train</cite>. This is why the conditioned covariance matrix is singular at these points.</p>
-<p>This is why we define the following function which deletes points in <cite>vertices</cite> which are also found in <cite>x_train</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">deleteCommonValues</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Delete from x_test the values which are in x_train so that</span>
-<span class="sd">    values in x_test have no interect with x_train.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">x_test_filtered</span> <span class="o">=</span> <span class="n">x_test</span>  <span class="c1"># Initialize</span>
-    <span class="k">for</span> <span class="n">x_train_value</span> <span class="ow">in</span> <span class="n">x_train</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Checking </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_train_value</span><span class="p">))</span>
-        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">x_test</span> <span class="o">==</span> <span class="n">x_train_value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Delete </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_train_value</span><span class="p">))</span>
-            <span class="n">x_test_filtered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">x_test_filtered</span><span class="p">,</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   OK&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">x_test_filtered</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vertices_filtered</span> <span class="o">=</span> <span class="n">deleteCommonValues</span><span class="p">(</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()))</span>
-</pre></div>
-</div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Checking 1.0
-   OK
-Checking 3.0
-   OK
-Checking 4.0
-   Delete 4.0
-Checking 6.0
-   OK
-Checking 7.9
-   OK
-Checking 11.0
-   OK
-Checking 11.5
-   OK
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">evaluationMesh</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">([[</span><span class="n">vf</span><span class="p">]</span> <span class="k">for</span> <span class="n">vf</span> <span class="ow">in</span> <span class="n">vertices_filtered</span><span class="p">]))</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">process</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConditionedGaussianProcess</span><span class="p">(</span><span class="n">krigingResult</span><span class="p">,</span> <span class="n">evaluationMesh</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">process</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConditionedGaussianProcess</span><span class="p">(</span><span class="n">krigingResult</span><span class="p">,</span> <span class="n">myRegularGrid</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trajectories</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -368,7 +313,7 @@ Checking 11.5
 <ul class="simple">
 <li><p>Metamodeling with Gaussian processes, Bertrand Iooss, EDF R&amp;D, 2014, www.gdr-mascotnum.fr/media/sssamo14_iooss.pdf</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.243 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.253 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-simulate-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/6d66b604b13179074a41418501503709/plot_kriging_simulate.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_simulate.py</span></code></a></p>
@@ -395,10 +340,10 @@ Checking 11.5
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_kriging_branin_function.html" title="Kriging: metamodel of the Branin-Hoo function"
+          <a href="plot_kriging_beam_trend.html" title="Choose the trend basis of a kriging metamodel"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_isotropic.html" title="Kriging with an isotropic covariance function"
+          <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
