@@ -65,11 +65,10 @@ Creation of the metamodel
 
 We begin by defining the function `g` as a symbolic function. Then we define the `x_train` variable which contains the inputs of the design of experiments of the training step. Then we compute the `y_train` corresponding outputs. The variable `n_train` is the size of the training design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-53
+.. GENERATED FROM PYTHON SOURCE LINES 47-52
 
 .. code-block:: default
 
-    import numpy as np
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
@@ -82,7 +81,7 @@ We begin by defining the function `g` as a symbolic function. Then we define the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-56
+.. GENERATED FROM PYTHON SOURCE LINES 53-55
 
 .. code-block:: default
 
@@ -95,13 +94,13 @@ We begin by defining the function `g` as a symbolic function. Then we define the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-62
+.. GENERATED FROM PYTHON SOURCE LINES 56-61
 
 .. code-block:: default
 
-    x_train = ot.Sample([[x] for x in [1., 3., 4., 6., 7.9, 11., 11.5]])
+    x_train = [[x] for x in [1., 3., 4., 6., 7.9, 11., 11.5]]
     y_train = g(x_train)
-    n_train = x_train.getSize()
+    n_train = len(x_train)
     n_train
 
 
@@ -119,21 +118,20 @@ We begin by defining the function `g` as a symbolic function. Then we define the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 In order to compare the function and its metamodel, we use a test (i.e. validation) design of experiments made of a regular grid of 100 points from 0 to 12. Then we convert this grid into a `Sample` and we compute the outputs of the function on this sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-76
+.. GENERATED FROM PYTHON SOURCE LINES 65-74
 
 .. code-block:: default
 
-    xmin = 0.
-    xmax = 12.
-    n_test = 100
+    xmin = 0.0
+    xmax = 12.0
+    n_test = 101
     step = (xmax-xmin)/(n_test-1)
     myRegularGrid = ot.RegularGrid(xmin, step, n_test)
-    x_test_coord = myRegularGrid.getValues()
-    x_test = ot.Sample([[x] for x in x_test_coord])
+    x_test = myRegularGrid.getVertices()
     y_test = g(x_test)
 
 
@@ -144,11 +142,11 @@ In order to compare the function and its metamodel, we use a test (i.e. validati
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 75-76
 
 In order to observe the function and the location of the points in the input design of experiments, we define the following functions which plots the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-88
+.. GENERATED FROM PYTHON SOURCE LINES 78-86
 
 .. code-block:: default
 
@@ -167,7 +165,7 @@ In order to observe the function and the location of the points in the input des
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-98
+.. GENERATED FROM PYTHON SOURCE LINES 87-96
 
 .. code-block:: default
 
@@ -187,7 +185,7 @@ In order to observe the function and the location of the points in the input des
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-108
+.. GENERATED FROM PYTHON SOURCE LINES 97-106
 
 .. code-block:: default
 
@@ -212,17 +210,17 @@ In order to observe the function and the location of the points in the input des
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-110
+.. GENERATED FROM PYTHON SOURCE LINES 107-108
 
 We use the `ConstantBasisFactory` class to define the trend and the `MaternModel` class to define the covariance model. This Matérn model is based on the regularity parameter :math:`\nu=3/2`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-120
+.. GENERATED FROM PYTHON SOURCE LINES 110-118
 
 .. code-block:: default
 
     dimension = 1
     basis = ot.ConstantBasisFactory(dimension).build()
-    covarianceModel = ot.MaternModel([1.]*dimension, 1.5)
+    covarianceModel = ot.MaternModel([1.0]*dimension, 1.5)
     algo = ot.KrigingAlgorithm(x_train, y_train, covarianceModel, basis)
     algo.run()
     krigingResult = algo.getResult()
@@ -236,22 +234,22 @@ We use the `ConstantBasisFactory` class to define the trend and the `MaternModel
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>KrigingResult(covariance models=MaternModel(scale=[1.27443], amplitude=[0.822229], nu=1.5), covariance coefficients=0 : [  1.13913    ]<br>
-    1 : [  1.0175     ]<br>
-    2 : [ -1.76269    ]<br>
-    3 : [ -0.559144   ]<br>
-    4 : [  1.78756    ]<br>
-    5 : [ -1.61922    ]<br>
-    6 : [ -0.00313811 ], basis=[Basis( [class=LinearEvaluation name=Unnamed center=[0] constant=[1] linear=[[ 0 ]]] )], trend coefficients=[[0.00736087]])</p>
+    <p>KrigingResult(covariance models=MaternModel(scale=[1.27359], amplitude=[0.821928], nu=1.5), covariance coefficients=0 : [  1.13993    ]<br>
+    1 : [  1.01643    ]<br>
+    2 : [ -1.76178    ]<br>
+    3 : [ -0.559109   ]<br>
+    4 : [  1.78749    ]<br>
+    5 : [ -1.61708    ]<br>
+    6 : [ -0.00587581 ], basis=[Basis( [class=LinearEvaluation name=Unnamed center=[0] constant=[1] linear=[[ 0 ]]] )], trend coefficients=[[0.00730119]])</p>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-122
+.. GENERATED FROM PYTHON SOURCE LINES 119-120
 
 We observe that the `scale` and `amplitude` hyper-parameters have been optimized by the `run` method. Then we get the metamodel with `getMetaModel` and evaluate the outputs of the metamodel on the test design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-128
+.. GENERATED FROM PYTHON SOURCE LINES 122-126
 
 .. code-block:: default
 
@@ -266,11 +264,11 @@ We observe that the `scale` and `amplitude` hyper-parameters have been optimized
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+.. GENERATED FROM PYTHON SOURCE LINES 127-128
 
 The following function plots the kriging data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-140
+.. GENERATED FROM PYTHON SOURCE LINES 130-138
 
 .. code-block:: default
 
@@ -289,7 +287,7 @@ The following function plots the kriging data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-151
+.. GENERATED FROM PYTHON SOURCE LINES 139-149
 
 .. code-block:: default
 
@@ -315,7 +313,7 @@ The following function plots the kriging data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-158
+.. GENERATED FROM PYTHON SOURCE LINES 150-156
 
 Simulate new trajectories
 -------------------------
@@ -324,14 +322,11 @@ In order to generate new trajectories of the conditioned gaussian process, we co
 
 This is why we use the `ConditionedGaussianProcess`, which provides a `Process`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-166
+.. GENERATED FROM PYTHON SOURCE LINES 158-160
 
 .. code-block:: default
 
-    n_test = 100
-    step = (xmax-xmin)/(n_test-1)
-    myRegularGrid = ot.RegularGrid(xmin, step, n_test)
-    vertices = myRegularGrid.getVertices()
+    process = ot.ConditionedGaussianProcess(krigingResult, myRegularGrid)
 
 
 
@@ -340,107 +335,7 @@ This is why we use the `ConditionedGaussianProcess`, which provides a `Process`.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 167-174
-
-If we directly use the `vertices` values, we get:
-
-    RuntimeError: InternalException : Error: the matrix is not definite positive.
-
-Indeed, some points in `vertices` are also in `x_train`. This is why the conditioned covariance matrix is singular at these points.
-
-This is why we define the following function which deletes points in `vertices` which are also found in `x_train`.
-
-.. GENERATED FROM PYTHON SOURCE LINES 176-193
-
-.. code-block:: default
-
-    def deleteCommonValues(x_train, x_test):
-        '''
-        Delete from x_test the values which are in x_train so that
-        values in x_test have no interect with x_train.
-        '''
-        x_test_filtered = x_test  # Initialize
-        for x_train_value in x_train:
-            print("Checking %s" % (x_train_value))
-            indices = np.argwhere(x_test == x_train_value)
-            if len(indices) == 1:
-                print("   Delete %s" % (x_train_value))
-                x_test_filtered = np.delete(x_test_filtered, indices[0, 0])
-            else:
-                print("   OK")
-        return x_test_filtered
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 194-197
-
-.. code-block:: default
-
-    vertices_filtered = deleteCommonValues(
-        np.array(x_train.asPoint()), np.array(vertices.asPoint()))
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Checking 1.0
-       OK
-    Checking 3.0
-       OK
-    Checking 4.0
-       Delete 4.0
-    Checking 6.0
-       OK
-    Checking 7.9
-       OK
-    Checking 11.0
-       OK
-    Checking 11.5
-       OK
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 198-200
-
-.. code-block:: default
-
-    evaluationMesh = ot.Mesh(ot.Sample([[vf] for vf in vertices_filtered]))
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 201-203
-
-.. code-block:: default
-
-    process = ot.ConditionedGaussianProcess(krigingResult, evaluationMesh)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 204-207
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 .. code-block:: default
 
@@ -454,15 +349,15 @@ This is why we define the following function which deletes points in `vertices` 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-209
+.. GENERATED FROM PYTHON SOURCE LINES 165-166
 
 The `getSample` method returns a `ProcessSample`. By comparison, the `getSample` method of a `KrigingRandomVector` would return a `Sample`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-212
+.. GENERATED FROM PYTHON SOURCE LINES 168-169
 
 sphinx_gallery_thumbnail_number = 3
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-223
+.. GENERATED FROM PYTHON SOURCE LINES 169-180
 
 .. code-block:: default
 
@@ -489,7 +384,7 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-229
+.. GENERATED FROM PYTHON SOURCE LINES 181-186
 
 References
 ----------
@@ -500,7 +395,7 @@ References
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.387 seconds)
+   **Total running time of the script:** ( 0 minutes  0.229 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_simulate.py:

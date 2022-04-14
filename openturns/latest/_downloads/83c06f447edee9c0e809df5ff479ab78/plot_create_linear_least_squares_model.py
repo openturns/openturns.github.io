@@ -18,7 +18,6 @@ Create a linear least squares model
 #
 
 # %%
-from __future__ import print_function
 import openturns as ot
 import openturns.viewer as viewer
 from matplotlib import pylab as plt
@@ -29,13 +28,13 @@ x = [[0.5, 0.5], [-0.5, -0.5], [-0.5, 0.5], [0.5, -0.5]]
 x += [[0.25, 0.25], [-0.25, -0.25], [-0.25, 0.25], [0.25, -0.25]]
 
 # %%
-# Compute the output sample from the input sample and a function
+# Compute the output sample from the input sample and a function.
 formulas = ['cos(x1 + x2)', '(x2 + 1) * exp(x1 - 2 * x2)']
 model = ot.SymbolicFunction(['x1', 'x2'], formulas)
 y = model(x)
 
 # %%
-# create a linear least squares model
+# Create a linear least squares model.
 algo = ot.LinearLeastSquares(x, y)
 algo.run()
 

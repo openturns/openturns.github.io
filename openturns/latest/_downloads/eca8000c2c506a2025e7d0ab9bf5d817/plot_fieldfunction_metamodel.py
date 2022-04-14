@@ -6,18 +6,17 @@ Metamodel of a field function
 #
 # In this example we are going to create a metamodel of a field function following these steps:
 #
-# - Creation of a field model over an 1-d mesh
-# - Creation of a Gaussian process
-# - Karhunen-Loeve decomposition of a process with known covariance function
-# - Karhunen-Loeve decomposition of a process with known trajectories
-# - Projection of Fields
-# - Functional chaos decomposition between the coefficients of the input and output processes
-# - Build a metamodel of the whole field model
-# - Validate the metamodel
+# 1. Creation of a field model over an 1-d mesh.
+# 2. Creation of a Gaussian process.
+# 3. Karhunen-Loeve decomposition of a process with known covariance function.
+# 4. Karhunen-Loeve decomposition of a process with known trajectories.
+# 5. Projection of fields.
+# 6. Functional chaos decomposition between the coefficients of the input and output processes.
+# 7. Build a metamodel of the whole field model.
+# 8. Validate the metamodel.
 #
 
 # %%
-from __future__ import print_function
 import openturns as ot
 import openturns.viewer as viewer
 from matplotlib import pylab as plt
@@ -140,7 +139,7 @@ view = viewer.View(graph_modes_Y)
 # %%
 # Compare eigenvalues of X and Y
 graph_ev_X.add(graph_ev_Y)
-graph_ev_X.setTitle("Input/ouput eigenvalues comparison")
+graph_ev_X.setTitle("Input/output eigenvalues comparison")
 graph_ev_X.setYTitle(r"$\lambda_X, \lambda_Y$")
 graph_ev_X.setColors(["blue", "blue", "red", "red"])
 graph_ev_X.setLegends([r"$\lambda_X$", "", r"$\lambda_Y$", ""])

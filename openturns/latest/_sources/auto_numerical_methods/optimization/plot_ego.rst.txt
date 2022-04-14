@@ -40,8 +40,8 @@ relearnt on the extended design of experiment.
 
 .. code-block:: default
 
-    from openturns.usecases import branin_function as branin_function
-    from openturns.usecases import ackley_function as ackley_function
+    from openturns.usecases import branin_function
+    from openturns.usecases import ackley_function
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
@@ -576,14 +576,14 @@ the domain boundaries,
 
 .. GENERATED FROM PYTHON SOURCE LINES 210-211
 
-and we load the model function :
+and we load the model function and its noise :
 
 .. GENERATED FROM PYTHON SOURCE LINES 211-214
 
 .. code-block:: default
 
-    model = bm.model
-    objectiveFunction = model.getMarginal(0)
+    objectiveFunction = bm.model
+    noise = bm.noiseModel
 
 
 
@@ -674,8 +674,8 @@ Create the initial kriging
     sampleSize = 50
     experiment = ot.LHSExperiment(distribution, sampleSize)
     inputSample = experiment.generate()
-    modelEval = model(inputSample)
-    outputSample = modelEval.getMarginal(0)
+    outputSample = objectiveFunction(inputSample)
+    noiseSample = noise(inputSample)
 
 
 
@@ -722,12 +722,11 @@ Create the initial kriging
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-261
+.. GENERATED FROM PYTHON SOURCE LINES 257-260
 
 .. code-block:: default
 
-    noise = [x[1] for x in modelEval]
-    kriging.setNoise(noise)
+    kriging.setNoise([x[0] for x in noiseSample])
     kriging.run()
 
 
@@ -737,21 +736,21 @@ Create the initial kriging
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 262-264
+.. GENERATED FROM PYTHON SOURCE LINES 261-263
 
 Create and solve the problem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-267
+.. GENERATED FROM PYTHON SOURCE LINES 265-266
 
 We define the problem :
 
-.. GENERATED FROM PYTHON SOURCE LINES 267-272
+.. GENERATED FROM PYTHON SOURCE LINES 266-271
 
 .. code-block:: default
 
     problem = ot.OptimizationProblem()
-    problem.setObjective(model)
+    problem.setObjective(objectiveFunction)
     bounds = ot.Interval(lowerbound, upperbound)
     problem.setBounds(bounds)
 
@@ -762,24 +761,32 @@ We define the problem :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-274
+.. GENERATED FROM PYTHON SOURCE LINES 272-273
 
-We configure the maximum number of function evaluations to 20. We assume that the function is noisy, with a constant variance.
+We configure the algorithm, with the model noise:
 
-.. GENERATED FROM PYTHON SOURCE LINES 276-277
-
-We configure the algorithm :
-
-.. GENERATED FROM PYTHON SOURCE LINES 277-286
+.. GENERATED FROM PYTHON SOURCE LINES 273-276
 
 .. code-block:: default
 
-    algo = ot.EfficientGlobalOptimization(problem, kriging.getResult())
-    # assume constant noise var
-    guessedNoiseFunction = 0.1
-    noiseModel = ot.SymbolicFunction(['x1', 'x2'], [str(guessedNoiseFunction)])
-    algo.setNoiseModel(noiseModel)
+    algo = ot.EfficientGlobalOptimization(problem, kriging.getResult(), noise)
     algo.setMaximumEvaluationNumber(20)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 277-278
+
+We run the algorithm and get the result:
+
+.. GENERATED FROM PYTHON SOURCE LINES 278-281
+
+.. code-block:: default
+
     algo.run()
     result = algo.getResult()
 
@@ -790,7 +797,7 @@ We configure the algorithm :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-289
+.. GENERATED FROM PYTHON SOURCE LINES 282-284
 
 .. code-block:: default
 
@@ -811,7 +818,7 @@ We configure the algorithm :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-292
+.. GENERATED FROM PYTHON SOURCE LINES 285-287
 
 .. code-block:: default
 
@@ -825,12 +832,12 @@ We configure the algorithm :
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>[0.124453,0.803571]</p>
+    <p>[0.124442,0.803602]</p>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-295
+.. GENERATED FROM PYTHON SOURCE LINES 288-290
 
 .. code-block:: default
 
@@ -849,7 +856,7 @@ We configure the algorithm :
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-298
+.. GENERATED FROM PYTHON SOURCE LINES 291-293
 
 .. code-block:: default
 
@@ -872,7 +879,7 @@ We configure the algorithm :
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-301
+.. GENERATED FROM PYTHON SOURCE LINES 294-296
 
 .. code-block:: default
 
@@ -885,7 +892,7 @@ We configure the algorithm :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 302-316
+.. GENERATED FROM PYTHON SOURCE LINES 297-311
 
 .. code-block:: default
 
@@ -915,11 +922,11 @@ We configure the algorithm :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 317-318
+.. GENERATED FROM PYTHON SOURCE LINES 312-313
 
 We see that the EGO algorithm found the second local minimum. Given the limited number of function evaluations, the other local minimas have not been explored.
 
-.. GENERATED FROM PYTHON SOURCE LINES 320-325
+.. GENERATED FROM PYTHON SOURCE LINES 315-320
 
 .. code-block:: default
 
@@ -943,7 +950,7 @@ We see that the EGO algorithm found the second local minimum. Given the limited 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.802 seconds)
+   **Total running time of the script:** ( 0 minutes  4.498 seconds)
 
 
 .. _sphx_glr_download_auto_numerical_methods_optimization_plot_ego.py:

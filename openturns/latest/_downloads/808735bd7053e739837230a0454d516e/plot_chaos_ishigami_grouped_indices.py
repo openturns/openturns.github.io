@@ -7,7 +7,7 @@ Compute grouped indices for the Ishigami function
 # In this example, we compute grouped Sobol' indices for the :ref:`Ishigami function <use-case-ishigami>`.
 
 # %%
-from openturns.usecases import ishigami_function as ishigami_function
+from openturns.usecases import ishigami_function
 import openturns as ot
 import openturns.viewer as viewer
 from matplotlib import pylab as plt
@@ -16,17 +16,17 @@ import openturns.viewer as otv
 ot.Log.Show(ot.Log.NONE)
 
 # %%
-# We load the Ishigami test function from usecases module :
+# We load the Ishigami test function from usecases module:
 im = ishigami_function.IshigamiModel()
 
 # %%
 # The `IshigamiModel` data class contains the input distribution :math:`X=(X_1, X_2, X_3)` in `im.distributionX` and the Ishigami function in `im.model`.
-# We also have access to the input variable names with
+# We also have access to the input variable names with:
 input_names = im.distributionX.getDescription()
 
 
 # %%
-# Create a training sample
+# Create a training sample.
 
 # %%
 N = 100
@@ -55,7 +55,7 @@ result = chaosalgo.getResult()
 metamodel = result.getMetaModel()
 
 # %%
-# Print Sobol' indices
+# Print Sobol' indices.
 
 # %%
 chaosSI = ot.FunctionalChaosSobolIndices(result)
