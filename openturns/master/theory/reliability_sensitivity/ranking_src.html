@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Uncertainty ranking: SRC &#8212; OpenTURNS 1.20dev documentation</title>
+    <title>Uncertainty ranking: SRC and SRRC &#8212; OpenTURNS 1.20dev documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -25,8 +25,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Uncertainty ranking: SRRC" href="ranking_srrc.html" />
-    <link rel="prev" title="Uncertainty ranking: Spearman’s correlation" href="ranking_spearman.html" />
+    <link rel="next" title="Uncertainty ranking: PCC and PRCC" href="ranking_pcc.html" />
+    <link rel="prev" title="Taylor decomposition importance factors" href="taylor_importance_factors.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -59,29 +59,29 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="ranking_srrc.html" title="Uncertainty ranking: SRRC"
+          <a href="ranking_pcc.html" title="Uncertainty ranking: PCC and PRCC"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="ranking_spearman.html" title="Uncertainty ranking: Spearman’s correlation"
+          <a href="taylor_importance_factors.html" title="Taylor decomposition importance factors"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Uncertainty ranking: SRC</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Uncertainty ranking: SRC and SRRC</a></li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="ranking_spearman.html"
-                          title="previous chapter">Uncertainty ranking: Spearman’s correlation</a></p>
+    <p class="topless"><a href="taylor_importance_factors.html"
+                          title="previous chapter">Taylor decomposition importance factors</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="ranking_srrc.html"
-                          title="next chapter">Uncertainty ranking: SRRC</a></p>
+    <p class="topless"><a href="ranking_pcc.html"
+                          title="next chapter">Uncertainty ranking: PCC and PRCC</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -108,52 +108,70 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="uncertainty-ranking-src">
-<span id="ranking-src"></span><h1>Uncertainty ranking: SRC<a class="headerlink" href="#uncertainty-ranking-src" title="Permalink to this heading">¶</a></h1>
-<p>This method deals with analyzing the influence the random vector
-<img class="math" src="../../_images/math/84dbc9a0d0b3bd88087fb9719c831ad935ec6a58.svg" alt="\vect{X} = \left( X^1,\ldots,X^{n_X} \right)"/> has on a random
-variable <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> which is being studied for uncertainty. Here we
-attempt to measure linear relationships that exist between <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/>
-and the different components <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/>.</p>
+  <section id="uncertainty-ranking-src-and-srrc">
+<span id="ranking-src"></span><h1>Uncertainty ranking: SRC and SRRC<a class="headerlink" href="#uncertainty-ranking-src-and-srrc" title="Permalink to this heading">¶</a></h1>
+<p>Standard Regression Coefficients (SRC) deal with analyzing the influence the random vector
+<img class="math" src="../../_images/math/e962f62b7906d0cbd28bf793311348e9593c0930.svg" alt="\vect{X} = \left( X_1,\ldots,X_{n_X} \right)"/> has on a random
+variable <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/> which is being studied for uncertainty. Here we
+attempt to measure linear relationships that exist between <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>
+and the different components <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/>.</p>
 <p>The principle of the multiple linear regression model consists in
 attempting to find the function that links the
-variable <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> to the <img class="math" src="../../_images/math/414b0e45e46d2622e0895b30be5b21abc4636a17.svg" alt="n_x"/> variables
-<img class="math" src="../../_images/math/e61cbc5a7d2f1a8458e97e77089f73f916e073ba.svg" alt="X^1,\ldots,X^{n_X}"/> by means of a linear model:</p>
+variable <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/> to the <img class="math" src="../../_images/math/414b0e45e46d2622e0895b30be5b21abc4636a17.svg" alt="n_x"/> variables
+<img class="math" src="../../_images/math/508ee3b948dbe2ff69eedee64f30ee4310c9304e.svg" alt="X_1,\ldots,X_{n_X}"/> by means of a linear model:</p>
 <div class="math">
-<p><img src="../../_images/math/478c20d726ef8f62a70e217de1f64ebac48787de.svg" alt="Y^j = a_0^j + \sum_{i=1}^{n_X} a_i^j X^i + \varepsilon^j"/></p>
-</div><p>where <img class="math" src="../../_images/math/3e91061dbcaae9cbc72f25364d70df394a46847c.svg" alt="\varepsilon^j"/> describes a random variable with zero mean
-and standard deviation <img class="math" src="../../_images/math/2222b8e8ba0c89343f583ba4f4aaf5ea7ddba1c4.svg" alt="\sigma_{\varepsilon}^j"/> independent of the
-input variables <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/>. If the random variables
-<img class="math" src="../../_images/math/e61cbc5a7d2f1a8458e97e77089f73f916e073ba.svg" alt="X^1,\ldots,X^{n_X}"/> are independent and with finite variance
-<img class="math" src="../../_images/math/d9a7db51944b00c8f66debeec93fc3a230860dc3.svg" alt="\Var{X^k} = (\sigma_k)^2"/>, the variance of <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> can be
+<p><img src="../../_images/math/4e37d64bce733344ddc7997c9e1894486b3a6e7f.svg" alt="Y = a_0 + \sum_{i=1}^{n_X} a_i X_i + \varepsilon,"/></p>
+</div><p>where <img class="math" src="../../_images/math/1d9ab772a68d781a9a73c08e7953f063cd668479.svg" alt="\varepsilon"/> describes a random variable with zero mean
+and standard deviation <img class="math" src="../../_images/math/a2dd71c35ac98c75b4fcf024bb844ad1e2c59122.svg" alt="\sigma_{\varepsilon}"/> independent of the
+input variables <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/>. If the random variables
+<img class="math" src="../../_images/math/508ee3b948dbe2ff69eedee64f30ee4310c9304e.svg" alt="X_1,\ldots,X_{n_X}"/> are independent and with finite variance
+<img class="math" src="../../_images/math/90a66d97bacc85bb1097e6ee662be9dfdeade664.svg" alt="\Var{X_k} = (\sigma_i)^2"/>, the variance of <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/> can be
 estimated as follows:</p>
 <div class="math">
-<p><img src="../../_images/math/3429eb359e3d63d7df2757fe72432d6d9f4e296f.svg" alt="\Var{Y^j} = \sum_{i=1}^n (a_i^j)^2 \Var{X^i} + (\sigma_{\varepsilon}^j)^2 = (\sigma^j)^2"/></p>
+<p><img src="../../_images/math/1da3d5c20e7bc10df41d9b4ce79b115989ec9e75.svg" alt="\Var{Y} = \sum_{i=1}^n (a_i)^2 \Var{X_i} + (\sigma_{\varepsilon})^2 = (\sigma)^2."/></p>
+</div><p>From this we obtain the following coefficients:</p>
+<div class="math">
+<p><img src="../../_images/math/ec5eefd0c52bb70d64b7298df375a41aff751786.svg" alt="C_i = a_i \sqrt{\frac{\Var{X_k}}{\Var{Y}}}"/></p>
 </div><p>The estimators for the regression coefficients
-<img class="math" src="../../_images/math/a920fb01e0340fc4c89db5b8671b3addd56c134c.svg" alt="a_0^j,\ldots,a_{n_X}^j"/>, and the standard deviation
-<img class="math" src="../../_images/math/97ab33ffbfe0677c32498566514378bb36a2e3c3.svg" alt="\sigma^j"/> are obtained from a sample of
-<img class="math" src="../../_images/math/2f90ffde61183c346c37f30021feee9ddd81e436.svg" alt="(Y^j,X^1,\ldots,X^{n_X})"/>. Uncertainty ranking by linear
-regression ranks the <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> variables <img class="math" src="../../_images/math/d3d204e964f48e9e1f15903087e921ec4a465680.svg" alt="X^1,\ldots, X^{n_X}"/>
-in terms of the estimated contribution of each <img class="math" src="../../_images/math/6ac574c30611e02aab4785027a5c731ff5d214ff.svg" alt="X^k"/> to the
-variance of <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/>:</p>
+<img class="math" src="../../_images/math/063fdd3c71361fa6d59f001b00bfc1ac6ed2387c.svg" alt="a_0,\ldots,a_{n_X}"/>, and the standard deviation
+<img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/> are obtained from a sample of
+<img class="math" src="../../_images/math/f62d1d12d2cba1392b11c4668e8d9c1d365c8b75.svg" alt="(Y,X_1,\ldots,X_{n_X})"/>.
+The SRC coefficients are defined as the estimators <img class="math" src="../../_images/math/19ab2db603d6c3a743b4d1c5ded60b62b3a93ebc.svg" alt="\widehat{C}_i"/>
+of the coefficients <img class="math" src="../../_images/math/2d99875e3e4ab5d4414dbb1c6792f5b958253e31.svg" alt="C_i"/>:</p>
 <div class="math">
-<p><img src="../../_images/math/22e49e44adc963e19aa04fed1cfd55908b5edb45.svg" alt="C^j_k = \frac{\displaystyle (a_k^j)^2  \Var{X^k}}{ \Var{Y^j}}"/></p>
-</div><p>which is estimated by:</p>
-<div class="math">
-<p><img src="../../_images/math/fc7c1a22613ba09f9a569723decdf4c01f2f7826.svg" alt="\widehat{C}^j_k = \frac{\displaystyle (\widehat{a}_k^j)^2 \widehat{\sigma}_k^2}{\displaystyle (\widehat{\sigma^j})^2}"/></p>
-</div><p>where <img class="math" src="../../_images/math/5443a1eabfee331823709bdda37e00b44abb6073.svg" alt="\widehat{\sigma}_i"/> describes the empirical standard
-deviation of the sample of the input variables. This estimated
+<p><img src="../../_images/math/de81ce54d0e13a7cebc7695ff2d37b7edba78921.svg" alt="\widehat{C}_i = \frac{\displaystyle \widehat{a}_i \widehat{\sigma}_i}{\displaystyle \widehat{\sigma}},"/></p>
+</div><p>where <img class="math" src="../../_images/math/e4339ee66c7e281f271fa0a429737998a20edee1.svg" alt="\widehat{a}_i"/> denotes the estimate of the regression coefficient <img class="math" src="../../_images/math/9db368995e7864e132fd3f12b95acbb326e6ec45.svg" alt="a_i"/>,
+<img class="math" src="../../_images/math/5443a1eabfee331823709bdda37e00b44abb6073.svg" alt="\widehat{\sigma}_i"/> denotes the empirical standard
+deviation of the sample of the input variable <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/>
+and <img class="math" src="../../_images/math/381add7d707d69bfca1c71a5c42bf84d331c60b7.svg" alt="\widehat{\sigma}"/> denotes the empirical standard
+deviation of the sample of the output variable <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>.
+The absolute value of this estimated
 contribution is by definition between 0 and 1. The closer it is to 1,
-the greater the impact the variable <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> has on the dispersion of
-<img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/>.</p>
-<p>The contribution to the variance <img class="math" src="../../_images/math/2d99875e3e4ab5d4414dbb1c6792f5b958253e31.svg" alt="C_i"/> is sometimes described in
+the greater the impact the variable <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/> has on the dispersion of
+<img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>.</p>
+<p>The square <img class="math" src="../../_images/math/9e279bc14d3c88f97d7bd2f0adec23172b2590ae.svg" alt="(C_i)^2"/>, which is the contribution of <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/>
+to the variance of <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>,
+is sometimes described in
 the literature as the “importance factor”, because of the similarity
 between this approach to linear regression and the method of cumulative
-variance quadratic which uses the term importance factor.</p>
+variance which uses the term importance factor.</p>
+<p>It is a good idea to check the quality of the <a class="reference internal" href="../data_analysis/linear_regression.html#linear-regression"><span class="std std-ref">linear regression</span></a>
+before estimating the SRC coefficients: if the linear regression model
+is a poor fit to the data, then the SRC coefficients are useless.</p>
+<p>Note that if there exists a map <img class="math" src="../../_images/math/658ae44ee69111e3048325f416f44d6080707928.svg" alt="g"/> such that <img class="math" src="../../_images/math/e37532177797b159f35f1ef65d620488d7b30554.svg" alt="Y=g(X_1, ..., X_{n_X})"/>,
+then the squared SRC coefficients are equal to <a class="reference internal" href="sensitivity_sobol.html#sensitivity-sobol"><span class="std std-ref">Sobol’ indices</span></a>.</p>
+<p>Standard <em>Rank</em> Regression Coefficients (SRRC) are SRC coefficients
+computed on the ranked input variables
+<img class="math" src="../../_images/math/7f37b84cabcc66bf9d5f765379bbc1462a2bae1b.svg" alt="r\vect{X} = \left( rX_1,\ldots,rX_{n_X} \right)"/>
+and the ranked output variable <img class="math" src="../../_images/math/992d9f6f083eb69213f6725a1c9d89983f4baf85.svg" alt="rY"/>.
+They are useful when the relationship between <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>
+and <img class="math" src="../../_images/math/2bcbd5b2b78ef65f3c1a1987095a65863870aa77.svg" alt="\vect{X}"/> is not linear (so SRC cannot be used),
+but only monotonic.</p>
 <aside class="topic">
 <p class="topic-title">API:</p>
 <ul class="simple">
-<li><p>See <code class="xref py py-func docutils literal notranslate"><span class="pre">CorrelationAnalysis_SRC()</span></code></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis.computeSRC" title="openturns.CorrelationAnalysis.computeSRC"><code class="xref py py-meth docutils literal notranslate"><span class="pre">computeSRC()</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis.computeSRRC" title="openturns.CorrelationAnalysis.computeSRRC"><code class="xref py py-meth docutils literal notranslate"><span class="pre">computeSRRC()</span></code></a></p></li>
 </ul>
 </aside>
 <aside class="topic">
@@ -165,9 +183,9 @@ variance quadratic which uses the term importance factor.</p>
 <aside class="topic">
 <p class="topic-title">References:</p>
 <ul class="simple">
-<li><p>Saltelli, A., Chan, K., Scott, M. (2000). “Sensitivity Analysis”, John Wiley &amp; Sons publishers, Probability and Statistics series</p></li>
-<li><p>J.C. Helton, F.J. Davis (2003). “Latin Hypercube sampling and the propagation of uncertainty analyses of complex systems”. Reliability Engineering and System Safety 81, p.23-69</p></li>
-<li><p>J.P.C. Kleijnen, J.C. Helton (1999). “Statistical analyses of scatterplots to identify factors in large-scale simulations, part 1 : review and comparison of techniques”. Reliability Engineering and System Safety 65, p.147-185</p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#saltelli2000" id="id1"><span>[saltelli2000]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#helton2003" id="id2"><span>[helton2003]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#kleijnen1999" id="id3"><span>[kleijnen1999]</span></a></p></li>
 </ul>
 </aside>
 </section>
@@ -186,16 +204,16 @@ variance quadratic which uses the term importance factor.</p>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="ranking_srrc.html" title="Uncertainty ranking: SRRC"
+          <a href="ranking_pcc.html" title="Uncertainty ranking: PCC and PRCC"
              >next</a> |</li>
         <li class="right" >
-          <a href="ranking_spearman.html" title="Uncertainty ranking: Spearman’s correlation"
+          <a href="taylor_importance_factors.html" title="Taylor decomposition importance factors"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Uncertainty ranking: SRC</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Uncertainty ranking: SRC and SRRC</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
