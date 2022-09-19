@@ -1,0 +1,656 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Example of sensitivity analyses on the wing weight model &#8212; OpenTURNS 1.20dev documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Design of experiments" href="../design_of_experiments/index.html" />
+    <link rel="prev" title="The HSIC sensitivity indices: the Ishigami model" href="plot_hsic_estimators_ishigami.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../design_of_experiments/index.html" title="Design of experiments"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_hsic_estimators_ishigami.html" title="The HSIC sensitivity indices: the Ishigami model"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Sensitivity analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Example of sensitivity analyses on the wing weight model</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Example of sensitivity analyses on the wing weight model</a><ul>
+<li><a class="reference internal" href="#definition-of-the-model">Definition of the model</a></li>
+<li><a class="reference internal" href="#cross-cuts-of-the-function">Cross cuts of the function</a></li>
+<li><a class="reference internal" href="#data-generation">Data generation</a></li>
+<li><a class="reference internal" href="#pcc-coefficients">PCC coefficients</a></li>
+<li><a class="reference internal" href="#prcc-coefficients">PRCC coefficients</a></li>
+<li><a class="reference internal" href="#src-coefficients">SRC coefficients</a></li>
+<li><a class="reference internal" href="#srrc-coefficients">SRRC coefficients</a></li>
+<li><a class="reference internal" href="#pearson-coefficients">Pearson coefficients</a></li>
+<li><a class="reference internal" href="#spearman-coefficients">Spearman coefficients</a></li>
+<li><a class="reference internal" href="#taylor-expansion-importance-factors">Taylor expansion importance factors</a></li>
+<li><a class="reference internal" href="#sobol-indices">Sobol’ indices</a></li>
+<li><a class="reference internal" href="#hsic-indices">HSIC indices</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_hsic_estimators_ishigami.html"
+                          title="previous chapter">The HSIC sensitivity indices: the Ishigami model</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../design_of_experiments/index.html"
+                          title="next chapter">Design of experiments</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_reliability_sensitivity/sensitivity_analysis/plot_sensitivity_wingweight.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-reliability-sensitivity-sensitivity-analysis-plot-sensitivity-wingweight-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="example-of-sensitivity-analyses-on-the-wing-weight-model">
+<span id="sphx-glr-auto-reliability-sensitivity-sensitivity-analysis-plot-sensitivity-wingweight-py"></span><h1>Example of sensitivity analyses on the wing weight model<a class="headerlink" href="#example-of-sensitivity-analyses-on-the-wing-weight-model" title="Permalink to this heading">¶</a></h1>
+<p>This example is a brief overview of the use of the most usual sensitivity analysis techniques and how to call them:</p>
+<ul class="simple">
+<li><p>PCC: Partial Correlation Coefficients</p></li>
+<li><p>PRCC: Partial Rank Correlation Coefficients</p></li>
+<li><p>SRC: Standard Regression Coefficients</p></li>
+<li><p>SRRC: Standard Rank Regression Coefficients</p></li>
+<li><p>Pearson coefficients</p></li>
+<li><p>Spearman coefficients</p></li>
+<li><p>Taylor expansion importance factors</p></li>
+<li><p>Sobol’ indices</p></li>
+<li><p>HSIC : Hilbert-Schmidt Independence Criterion</p></li>
+</ul>
+<p>We present the methods on the <a class="reference internal" href="../../usecases/use_case_wingweight.html#use-case-wingweight"><span class="std std-ref">WingWeight function</span></a> and use the same notations.</p>
+<section id="definition-of-the-model">
+<h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this heading">¶</a></h2>
+<p>We load the model from the usecases module.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
+<span class="kn">from</span> <span class="nn">openturns.usecases.wingweight_function</span> <span class="kn">import</span> <span class="n">WingWeightModel</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">WingWeightModel</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="cross-cuts-of-the-function">
+<h2>Cross cuts of the function<a class="headerlink" href="#cross-cuts-of-the-function" title="Permalink to this heading">¶</a></h2>
+<p>Let’s have a look on 2D cross cuts of the wing weight function.
+For each 2D cross cut, the other variables are fixed to the input distribution mean values.
+This graph allows to have a first idea of the variations of the function in pair of dimensions.
+The colors of each contour plot are comparable. The number of contour levels are related to the amount of variation of the function in the corresponding coordinates.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">lowerBound</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getRange</span><span class="p">()</span><span class="o">.</span><span class="n">getLowerBound</span><span class="p">()</span>
+<span class="n">upperBound</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getRange</span><span class="p">()</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()</span>
+
+<span class="c1"># Definition of number of meshes in x and y axes for the 2D cross cut plots</span>
+<span class="n">nX</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">nY</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">crossCutIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">crossCutReferencePoint</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">crossCutIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="c1"># Definition of the reference point</span>
+                <span class="n">crossCutReferencePoint</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getMean</span><span class="p">()[</span><span class="n">k</span><span class="p">])</span>
+        <span class="c1"># Definition of 2D cross cut function</span>
+        <span class="n">crossCutFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">crossCutIndices</span><span class="p">,</span> <span class="n">crossCutReferencePoint</span><span class="p">)</span>
+        <span class="n">crossCutLowerBound</span> <span class="o">=</span> <span class="p">[</span><span class="n">lowerBound</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">lowerBound</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">crossCutUpperBound</span> <span class="o">=</span> <span class="p">[</span><span class="n">upperBound</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">upperBound</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="c1"># Definition of the mesh</span>
+        <span class="n">inputData</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Box</span><span class="p">([</span><span class="n">nX</span><span class="p">,</span> <span class="n">nY</span><span class="p">])</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="n">inputData</span> <span class="o">*=</span> <span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutUpperBound</span><span class="p">)</span><span class="o">-</span><span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">))</span>
+        <span class="n">inputData</span> <span class="o">+=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">)</span>
+        <span class="n">meshX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span><span class="n">nY</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">meshY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span><span class="n">nY</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">crossCutFunction</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+        <span class="n">meshZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span><span class="n">nY</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">150</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">101</span><span class="p">)]</span>
+
+        <span class="c1"># Creation of the contour</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">dim</span> <span class="o">+</span> <span class="n">j</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span><span class="n">meshZ</span><span class="p">,</span><span class="n">levels</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hsv&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+        <span class="c1"># Creation of axes title</span>
+        <span class="k">if</span> <span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span><span class="mi">9</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">j</span><span class="p">])</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_001.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_001.png" alt="plot sensitivity wingweight" class = "sphx-glr-single-img"/><p>We can see that the variables <img class="math" src="../../_images/math/2544cf60d3cd8023a0cd379658207b63ef51b9a4.svg" alt="t_c, N_z, A, W_{dg}"/> seem to be influent on the wing weight whereas <img class="math" src="../../_images/math/6e99b8649c56b6c69a5889a3e85402d6e5455e15.svg" alt="l, W_p, W_{fw}"/> do not have influence on the function.</p>
+</section>
+<section id="data-generation">
+<h2>Data generation<a class="headerlink" href="#data-generation" title="Permalink to this heading">¶</a></h2>
+<p>We create the input and output data for the estimation of the different sensitivity coefficients and we get the input variables description:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputNames</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+
+<span class="n">size</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">inputDesign</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="n">outputDesign</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesign</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s estimate the PCC, PRCC, SRC, SRRC, Pearson and Spearman coefficients, display and analyze them.
+ We create a <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis" title="openturns.CorrelationAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">CorrelationAnalysis</span></code></a> model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">corr_analysis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationAnalysis</span><span class="p">(</span><span class="n">inputDesign</span><span class="p">,</span> <span class="n">outputDesign</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="pcc-coefficients">
+<h2>PCC coefficients<a class="headerlink" href="#pcc-coefficients" title="Permalink to this heading">¶</a></h2>
+<p>We compute here PCC coefficients using the <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis" title="openturns.CorrelationAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">CorrelationAnalysis</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pcc_indices</span> <span class="o">=</span> <span class="n">corr_analysis</span><span class="o">.</span><span class="n">computePCC</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pcc_indices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.940186,0.0882968,0.968989,0.0101513,0.115705,0.315289,-0.947166,0.981847,0.917402,0.44622]#10
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawCorrelationCoefficients</span><span class="p">(</span>
+    <span class="n">pcc_indices</span><span class="p">,</span> <span class="n">inputNames</span><span class="p">,</span> <span class="s2">&quot;PCC coefficients - Wing weight&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_002.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_002.png" alt="PCC coefficients - Wing weight" class = "sphx-glr-single-img"/></section>
+<section id="prcc-coefficients">
+<h2>PRCC coefficients<a class="headerlink" href="#prcc-coefficients" title="Permalink to this heading">¶</a></h2>
+<p>We compute here PRCC coefficients using the <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis" title="openturns.CorrelationAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">CorrelationAnalysis</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prcc_indices</span> <span class="o">=</span> <span class="n">corr_analysis</span><span class="o">.</span><span class="n">computePRCC</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prcc_indices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.8486,0.0649984,0.913677,-0.0206522,0.0858264,0.179864,-0.862092,0.949614,0.816437,0.340957]#10
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawCorrelationCoefficients</span><span class="p">(</span>
+    <span class="n">prcc_indices</span><span class="p">,</span> <span class="n">inputNames</span><span class="p">,</span> <span class="s2">&quot;PRCC coefficients - Wing weight&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_003.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_003.png" alt="PRCC coefficients - Wing weight" class = "sphx-glr-single-img"/></section>
+<section id="src-coefficients">
+<h2>SRC coefficients<a class="headerlink" href="#src-coefficients" title="Permalink to this heading">¶</a></h2>
+<p>We compute here SRC coefficients using the <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis" title="openturns.CorrelationAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">CorrelationAnalysis</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">src_indices</span> <span class="o">=</span> <span class="n">corr_analysis</span><span class="o">.</span><span class="n">computeSRC</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">src_indices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.368479,0.0117622,0.519118,0.00135185,0.0153738,0.043904,-0.391804,0.692999,0.303627,0.0659533]#10
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawCorrelationCoefficients</span><span class="p">(</span>
+    <span class="n">src_indices</span><span class="p">,</span> <span class="n">inputNames</span><span class="p">,</span> <span class="s1">&#39;SRC coefficients - Wing weight&#39;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_004.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_004.png" alt="SRC coefficients - Wing weight" class = "sphx-glr-single-img"/><p>Normalized squared SRC coefficients (coefficients are made to sum to 1) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">squared_src_indices</span> <span class="o">=</span> <span class="n">corr_analysis</span><span class="o">.</span><span class="n">computeSquaredSRC</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">squared_src_indices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.119327,0.000121588,0.236833,1.60608e-06,0.000207717,0.00169402,0.134911,0.422061,0.0810197,0.00382282]#10
+</pre></div>
+</div>
+<p>And their associated graph:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawCorrelationCoefficients</span><span class="p">(</span>
+    <span class="n">squared_src_indices</span><span class="p">,</span> <span class="n">inputNames</span><span class="p">,</span> <span class="s1">&#39;Squared SRC coefficients - Wing weight&#39;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_005.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_005.png" alt="Squared SRC coefficients - Wing weight" class = "sphx-glr-single-img"/></section>
+<section id="srrc-coefficients">
+<h2>SRRC coefficients<a class="headerlink" href="#srrc-coefficients" title="Permalink to this heading">¶</a></h2>
+<p>We compute here SRRC coefficients using the <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis" title="openturns.CorrelationAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">CorrelationAnalysis</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">srrc_indices</span> <span class="o">=</span> <span class="n">corr_analysis</span><span class="o">.</span><span class="n">computeSRRC</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">srrc_indices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.361267,0.0145646,0.501659,-0.00463828,0.0191614,0.0407509,-0.380531,0.683358,0.313877,0.0808765]#10
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawCorrelationCoefficients</span><span class="p">(</span>
+    <span class="n">srrc_indices</span><span class="p">,</span> <span class="n">inputNames</span><span class="p">,</span> <span class="s1">&#39;SRRC coefficients - Wing weight&#39;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_006.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_006.png" alt="SRRC coefficients - Wing weight" class = "sphx-glr-single-img"/></section>
+<section id="pearson-coefficients">
+<h2>Pearson coefficients<a class="headerlink" href="#pearson-coefficients" title="Permalink to this heading">¶</a></h2>
+<p>We compute here the Pearson <img class="math" src="../../_images/math/09820a9ba8f1a0ddc3447517995f320d383df448.svg" alt="\rho"/> coefficients using the <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis" title="openturns.CorrelationAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">CorrelationAnalysis</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pearson_correlation</span> <span class="o">=</span> <span class="n">corr_analysis</span><span class="o">.</span><span class="n">computePearsonCorrelation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pearson_correlation</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.235512,-0.0328824,0.419915,-0.0135446,-0.0692302,0.0434365,-0.379096,0.612647,0.335063,0.0419078]#10
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">title_pearson_graph</span> <span class="o">=</span> <span class="s2">&quot;Pearson correlation coefficients - Wing weight&quot;</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawCorrelationCoefficients</span><span class="p">(</span><span class="n">pearson_correlation</span><span class="p">,</span>
+                                                             <span class="n">inputNames</span><span class="p">,</span>
+                                                             <span class="n">title_pearson_graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_007.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_007.png" alt="Pearson correlation coefficients - Wing weight" class = "sphx-glr-single-img"/></section>
+<section id="spearman-coefficients">
+<h2>Spearman coefficients<a class="headerlink" href="#spearman-coefficients" title="Permalink to this heading">¶</a></h2>
+<p>We compute here the Spearman <img class="math" src="../../_images/math/51270560d3a8b6a3147bc53ee24a388809c6213c.svg" alt="\rho_s"/> coefficients using the <a class="reference internal" href="../../user_manual/_generated/openturns.CorrelationAnalysis.html#openturns.CorrelationAnalysis" title="openturns.CorrelationAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">CorrelationAnalysis</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spearman_correlation</span> <span class="o">=</span> <span class="n">corr_analysis</span><span class="o">.</span><span class="n">computeSpearmanCorrelation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">spearman_correlation</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.226962,-0.0274201,0.40528,-0.0187471,-0.0642766,0.0358186,-0.366801,0.605454,0.344385,0.0551515]#10
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">title_spearman_graph</span> <span class="o">=</span> <span class="s2">&quot;Spearman correlation coefficients - Wing weight&quot;</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawCorrelationCoefficients</span><span class="p">(</span><span class="n">spearman_correlation</span><span class="p">,</span>
+                                                             <span class="n">inputNames</span><span class="p">,</span>
+                                                             <span class="n">title_spearman_graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_008.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_008.png" alt="Spearman correlation coefficients - Wing weight" class = "sphx-glr-single-img"/><p>The different computed correlation estimators show that the variables <img class="math" src="../../_images/math/ac8dedbff4e56195b6e39b7eab134e12b3fc5da4.svg" alt="S_w, A, N_z, t_c"/> seem to be the most correlated with the wing weight in absolute value.
+Pearson and Spearman coefficients do not reveal any linear nor monotonic correlation as no coefficients are equal to +/- 1.
+Coefficients about <img class="math" src="../../_images/math/b3ad7f90498c2d7dc56db7abc1ece7275e21e408.svg" alt="t_c"/> are negative revealing a negative correlation with the wing weight, that is consistent with the model expression.</p>
+</section>
+<section id="taylor-expansion-importance-factors">
+<h2>Taylor expansion importance factors<a class="headerlink" href="#taylor-expansion-importance-factors" title="Permalink to this heading">¶</a></h2>
+<p>We compute here the Taylor expansion importance factors using <a class="reference internal" href="../../user_manual/_generated/openturns.TaylorExpansionMoments.html#openturns.TaylorExpansionMoments" title="openturns.TaylorExpansionMoments"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaylorExpansionMoments</span></code></a>.</p>
+<p>We create a distribution-based RandomVector.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We create a composite RandomVector Y from X and m.model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We create a Taylor expansion method to approximate moments.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">taylor</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TaylorExpansionMoments</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We get the importance factors.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">taylor</span><span class="o">.</span><span class="n">getImportanceFactors</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[Sw : 0.130315, Wfw : 2.94004e-06, A : 0.228153, Lambda : 0, q : 8.25053e-05, l : 0.00180269, tc : 0.135002, Nz : 0.412794, Wdg : 0.0883317, Wp : 0.00351621]
+</pre></div>
+</div>
+<p>We draw the importance factors</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">taylor</span><span class="o">.</span><span class="n">drawImportanceFactors</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;Taylor expansion imporfance factors - Wing weight&#39;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_009.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_009.png" alt="Taylor expansion imporfance factors - Wing weight" class = "sphx-glr-single-img"/><p>The Taylor expansion importance factors is consistent with the previous estimators as <img class="math" src="../../_images/math/ac8dedbff4e56195b6e39b7eab134e12b3fc5da4.svg" alt="S_w, A, N_z, t_c"/> seem to be the most influent variables.
+To analyze the relevance of the previous indices, a Sobol’ analysis is now carried out.</p>
+</section>
+<section id="sobol-indices">
+<h2>Sobol’ indices<a class="headerlink" href="#sobol-indices" title="Permalink to this heading">¶</a></h2>
+<p>We compute the Sobol’ indices from both sampling approach and  Polynomial Chaos Expansion.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sizeSobol</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">sie</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesExperiment</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">sizeSobol</span><span class="p">)</span>
+<span class="n">inputDesignSobol</span> <span class="o">=</span> <span class="n">sie</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">inputNames</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+<span class="n">inputDesignSobol</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="n">inputNames</span><span class="p">)</span>
+<span class="n">inputDesignSobol</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>12000
+</pre></div>
+</div>
+<p>We see that 12000 function evaluations are required to estimate the first order and total Sobol’ indices.</p>
+<p>Then, we evaluate the outputs corresponding to this design of experiments.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputDesignSobol</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesignSobol</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We estimate the Sobol’ indices with the <a class="reference internal" href="../../user_manual/_generated/openturns.SaltelliSensitivityAlgorithm.html#openturns.SaltelliSensitivityAlgorithm" title="openturns.SaltelliSensitivityAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SaltelliSensitivityAlgorithm</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sensitivityAnalysis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SaltelliSensitivityAlgorithm</span><span class="p">(</span>
+    <span class="n">inputDesignSobol</span><span class="p">,</span> <span class="n">outputDesignSobol</span><span class="p">,</span> <span class="n">sizeSobol</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>getFirstOrderIndices</cite> and <cite>getTotalOrderIndices</cite> methods respectively return estimates of all first order and total Sobol’ indices.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;First order indices:&#39;</span><span class="p">,</span> <span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getFirstOrderIndices</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>First order indices: [0.0895403,-0.0324985,0.224239,-0.0324775,-0.0326605,-0.0297425,0.111533,0.459428,0.0692415,-0.0257065]#10
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total order indices:&#39;</span><span class="p">,</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getTotalOrderIndices</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Total order indices: [0.132254,1.75663e-05,0.25098,0.000159035,0.000417434,0.000214447,0.144213,0.410061,0.101327,0.00225025]#10
+</pre></div>
+</div>
+<p>The <cite>draw</cite> method produces the following graph. The vertical bars represent the 95% confidence intervals of the estimates.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;Sobol indices with Saltelli - wing weight&#39;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_010.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_010.png" alt="Sobol indices with Saltelli - wing weight" class = "sphx-glr-single-img"/><p>We see that several Sobol’ indices are negative, that is inconsistent with the theory. Therefore, a larger number of samples is required to get consistent indices</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sizeSobol</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">sie</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesExperiment</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">sizeSobol</span><span class="p">)</span>
+<span class="n">inputDesignSobol</span> <span class="o">=</span> <span class="n">sie</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">inputNames</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+<span class="n">inputDesignSobol</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="n">inputNames</span><span class="p">)</span>
+<span class="n">inputDesignSobol</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="n">outputDesignSobol</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesignSobol</span><span class="p">)</span>
+
+<span class="n">sensitivityAnalysis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SaltelliSensitivityAlgorithm</span><span class="p">(</span>
+    <span class="n">inputDesignSobol</span><span class="p">,</span> <span class="n">outputDesignSobol</span><span class="p">,</span> <span class="n">sizeSobol</span><span class="p">)</span>
+
+<span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getFirstOrderIndices</span><span class="p">()</span>
+<span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getTotalOrderIndices</span><span class="p">()</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;Sobol indices with Saltelli - wing weight&#39;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_011.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_011.png" alt="Sobol indices with Saltelli - wing weight" class = "sphx-glr-single-img"/><p>It improves the accuracy of the estimation but, for very low indices, Saltelli scheme is not accurate since several confidence intervals provide negative lower bounds.</p>
+<p>Now, we estimate the Sobol’ indices using Polynomial Chaos Expansion.
+We first create a Functional Chaos Expansion.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sizePCE</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">inputDesignPCE</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sizePCE</span><span class="p">)</span>
+<span class="n">outputDesignPCE</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesignPCE</span><span class="p">)</span>
+
+<span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
+<span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
+<span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span><span class="n">inputDesignPCE</span><span class="p">,</span> <span class="n">outputDesignPCE</span><span class="p">,</span> <span class="n">selectionAlgorithm</span><span class="p">)</span>
+<span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">enumfunc</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+<span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+    <span class="n">inputDesignPCE</span><span class="p">,</span> <span class="n">outputDesignPCE</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span><span class="p">)</span>
+
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getRelativeErrors</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.00955479]
+[1.07233e-06]
+</pre></div>
+</div>
+<p>The relative errors are very low: this indicates that the PCE model has good accuracy.</p>
+<p>Then, we exploit the surrogate model to compute the Sobol’ indices.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sensitivityAnalysis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="n">firstOrder</span> <span class="o">=</span> <span class="p">[</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getSobolIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+<span class="n">totalOrder</span> <span class="o">=</span> <span class="p">[</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getSobolTotalIndex</span><span class="p">(</span>
+    <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawSobolIndices</span><span class="p">(</span>
+    <span class="n">inputNames</span><span class="p">,</span> <span class="n">firstOrder</span><span class="p">,</span> <span class="n">totalOrder</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s1">&#39;Sobol indices by Polynomial Chaos Expansion - wing weight&#39;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensitivity_wingweight_012.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_012.png" alt="Sobol indices by Polynomial Chaos Expansion - wing weight" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> input dimension: 10
+ output dimension: 1
+ basis size: 105
+ mean: [268.111]
+ std-dev: [48.101]
+------------------------------------------------------------
+Index   | Multi-indice                  | Part of variance
+------------------------------------------------------------
+      6 | [0,0,0,0,0,0,0,1,0,0]         | 0.410796
+      2 | [0,0,1,0,0,0,0,0,0,0]         | 0.220073
+      5 | [0,0,0,0,0,0,1,0,0,0]         | 0.139081
+      1 | [1,0,0,0,0,0,0,0,0,0]         | 0.124534
+      7 | [0,0,0,0,0,0,0,0,1,0]         | 0.0844863
+------------------------------------------------------------
+
+
+------------------------------------------------------------
+Component | Sobol index            | Sobol total index
+------------------------------------------------------------
+        0 | 0.12455                | 0.127885
+        1 | 0                      | 5.11089e-06
+        2 | 0.220194               | 0.225845
+        3 | 0.000545033            | 0.000563498
+        4 | 6.52128e-05            | 8.87667e-05
+        5 | 0.00172527             | 0.00177244
+        6 | 0.141499               | 0.14544
+        7 | 0.412025               | 0.419721
+        8 | 0.0845279              | 0.08702
+        9 | 0.00329707             | 0.00334609
+------------------------------------------------------------
+</pre></div>
+</div>
+<p>The Sobol’ indices confirm the previous analyses, in terms of ranking of the most influent variables. We also see that five variables have a quasi null total Sobol’ indices, that indicates almost no influence on the wing weight.
+There is no discrepancy between first order and total Sobol’ indices, that indicates no or very low interaction between the variables in the variance of the output.</p>
+</section>
+<section id="hsic-indices">
+<h2>HSIC indices<a class="headerlink" href="#hsic-indices" title="Permalink to this heading">¶</a></h2>
+<p>We then estimate the HSIC indices using a data-driven approach by exploiting the design of experiments used to train the PCE model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputDesignHSIC</span> <span class="o">=</span> <span class="n">inputDesignPCE</span>
+<span class="n">outputDesignHSIC</span> <span class="o">=</span> <span class="n">outputDesignPCE</span>
+
+<span class="n">covarianceModelCollection</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">inputDesignHSIC</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">inputCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">inputCovariance</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">Xi</span><span class="o">.</span><span class="n">computeStandardDeviation</span><span class="p">())</span>
+    <span class="n">covarianceModelCollection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputCovariance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We define a covariance kernel associated to the output variable.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">outputCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">outputCovariance</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">outputDesignHSIC</span><span class="o">.</span><span class="n">computeStandardDeviation</span><span class="p">())</span>
+<span class="n">covarianceModelCollection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outputCovariance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this paragraph, we perform the analysis on the raw data: that is
+the global HSIC estimator.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">estimatorType</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICUStat</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We now build the HSIC estimator:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">globHSIC</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICEstimatorGlobalSensitivity</span><span class="p">(</span>
+    <span class="n">covarianceModelCollection</span><span class="p">,</span> <span class="n">inputDesignHSIC</span><span class="p">,</span> <span class="n">outputDesignHSIC</span><span class="p">,</span> <span class="n">estimatorType</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We get the R2-HSIC indices:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R2HSICIndices</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getR2HSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Global HSIC analysis&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2-HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">R2HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> Global HSIC analysis
+R2-HSIC Indices:  [0.0577484,-0.00373071,0.106967,0.00581159,-0.00530909,0.00704091,0.0595426,0.293652,0.0924003,-0.000969001]#10
+</pre></div>
+</div>
+<p>and the HSIC indices:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">HSICIndices</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getHSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>HSIC Indices:  [0.00508928,-0.000316705,0.0089892,0.000494318,-0.00045258,0.000609337,0.00510215,0.0252512,0.00787126,-8.01297e-05]#10
+</pre></div>
+</div>
+<p>The p-value by permutation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pvperm</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getPValuesPermutation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (permutation): &quot;</span><span class="p">,</span> <span class="n">pvperm</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (permutation):  [0,0.643564,0,0.188119,0.712871,0.168317,0,0,0,0.445545]#10
+</pre></div>
+</div>
+<p>We have an asymptotic estimate of the value for this estimator.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pvas</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getPValuesAsymptotic</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (asymptotic): &quot;</span><span class="p">,</span> <span class="n">pvas</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (asymptotic):  [9.37986e-06,0.654557,4.23007e-10,0.180937,0.755991,0.140928,9.18252e-06,8.64633e-23,2.26231e-08,0.473288]#10
+</pre></div>
+</div>
+<p>We vizualise the results.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph1</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawHSICIndices</span><span class="p">()</span>
+<span class="n">view1</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph1</span><span class="p">)</span>
+
+<span class="n">graph2</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawPValuesAsymptotic</span><span class="p">()</span>
+<span class="n">view2</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph2</span><span class="p">)</span>
+
+<span class="n">graph3</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawR2HSICIndices</span><span class="p">()</span>
+<span class="n">view3</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph3</span><span class="p">)</span>
+
+<span class="n">graph4</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawPValuesPermutation</span><span class="p">()</span>
+<span class="n">view4</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph4</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_sensitivity_wingweight_013.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_013.png" alt="HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_sensitivity_wingweight_014.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_014.png" alt="Asymptotic p-values" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_sensitivity_wingweight_015.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_015.png" alt="R2-HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_sensitivity_wingweight_016.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_016.png" alt="p-values by permutation" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p>The HSIC indices go in the same way as the other estimators in terms the most influent variables. The variables <img class="math" src="../../_images/math/8152b85cd0da34fd57bbf0e6b5567f9f842cc250.svg" alt="W_{fw}, q, l, W_p"/> seem to be independent to the output as the corresponding p-values are high. We can also see that the asymptotic p-values and p-values estimated by permutation are quite similar.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.833 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-sensitivity-analysis-plot-sensitivity-wingweight-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/b77fabceeed0488793aa1923f45f794f/plot_sensitivity_wingweight.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_sensitivity_wingweight.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ca1cafbe970135714f4ef620e84fc370/plot_sensitivity_wingweight.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_sensitivity_wingweight.ipynb</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../design_of_experiments/index.html" title="Design of experiments"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_hsic_estimators_ishigami.html" title="The HSIC sensitivity indices: the Ishigami model"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Sensitivity analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Example of sensitivity analyses on the wing weight model</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jan 01, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+  </body>
+</html>
