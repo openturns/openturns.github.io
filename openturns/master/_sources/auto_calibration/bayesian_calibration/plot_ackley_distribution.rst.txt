@@ -35,12 +35,13 @@ whose PDF :math:`f` is proportional to the Ackley function to the tenth power:
 where :math:`a` is the Ackey function defined in :ref:`use-case-ackley` page.
 In the following we call it the "Ackley distribution".
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-26
+.. GENERATED FROM PYTHON SOURCE LINES 18-27
 
 .. code-block:: default
 
 
     import openturns as ot
+    import openturns.experimental as otexp
     from openturns.viewer import View
     from openturns.usecases import ackley_function
     from numpy import exp, format_float_scientific
@@ -54,13 +55,13 @@ In the following we call it the "Ackley distribution".
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-30
+.. GENERATED FROM PYTHON SOURCE LINES 28-31
 
 Prepare the Metropolis-Hastings algorithm
 -----------------------------------------
 Define the Ackley distribution support and density (up to a constant factor).
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-41
+.. GENERATED FROM PYTHON SOURCE LINES 31-42
 
 .. code-block:: default
 
@@ -82,14 +83,14 @@ Define the Ackley distribution support and density (up to a constant factor).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-46
+.. GENERATED FROM PYTHON SOURCE LINES 43-47
 
 Define the proposal distribution as a :class:`~openturns.Histogram`.
 Its ticks (on the X axis of the PDF of the histogram) will remain the same,
 but its frequencies (on the Y axis) will be updated
 during the course of the Metropolis-Hastings algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-52
+.. GENERATED FROM PYTHON SOURCE LINES 47-53
 
 .. code-block:: default
 
@@ -106,7 +107,7 @@ during the course of the Metropolis-Hastings algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-61
+.. GENERATED FROM PYTHON SOURCE LINES 54-62
 
 The state of the Markov chain must be converted to an acceptable set
 of parameters for the :class:`~openturns.Histogram` distribution.
@@ -117,7 +118,7 @@ of the proposal distribution.
 In our case, the ticks will not depend on the inputs,
 but the frequencies will be outputs of the Ackley function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-137
+.. GENERATED FROM PYTHON SOURCE LINES 62-138
 
 .. code-block:: default
 
@@ -204,11 +205,11 @@ but the frequencies will be outputs of the Ackley function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-148
+.. GENERATED FROM PYTHON SOURCE LINES 139-149
 
 The 2 components of the state of the Markov chain will be updated
 one after the other, not simultaneously.
-We define 2 :class:`~openturns.UserDefinedMetropolisHastings` algorithms
+We define 2 :class:`~openturns.experimental.UserDefinedMetropolisHastings` algorithms
 encapsulated within a :class:`~openturns.Gibbs` algorithm,
 so we need 2 link functions, each corresponding to one of the marginals
 of the Ackley distribution.
@@ -217,7 +218,7 @@ Note that thanks to the :class:`~openturns.OpenTURNSPythonFunction` class,
 we were able to only code one template to be used by two different functions
 instead of directly coding two functions with the :class:`~openturns.PythonFunction` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-152
+.. GENERATED FROM PYTHON SOURCE LINES 149-153
 
 .. code-block:: default
 
@@ -232,7 +233,7 @@ instead of directly coding two functions with the :class:`~openturns.PythonFunct
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-161
+.. GENERATED FROM PYTHON SOURCE LINES 154-162
 
 Let us illustrate the first of these functions.
 We can start by evaluating it at :math:`(0.5, 1.5)`.
@@ -243,7 +244,7 @@ distribution that approximates the distribution of :math:`X_0`
 conditional on :math:`X_1 = 1.5`.
 Let us update the Histogram we created before with this set of parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-166
+.. GENERATED FROM PYTHON SOURCE LINES 162-167
 
 .. code-block:: default
 
@@ -265,13 +266,13 @@ Let us update the Histogram we created before with this set of parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-170
+.. GENERATED FROM PYTHON SOURCE LINES 168-171
 
 The `link_function_0` function computes histogram frequencies proportional
 to the values of the unnormalized Ackley distribution PDF
 along the :math:`X_1 = 1.5` line.
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-186
+.. GENERATED FROM PYTHON SOURCE LINES 171-187
 
 .. code-block:: default
 
@@ -303,12 +304,12 @@ along the :math:`X_1 = 1.5` line.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-189
+.. GENERATED FROM PYTHON SOURCE LINES 188-190
 
 Let us compare the histogram to the unnormalized PDF
 (we still need to rescale it to make it appear properly on the graph).
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-200
+.. GENERATED FROM PYTHON SOURCE LINES 190-201
 
 .. code-block:: default
 
@@ -335,12 +336,12 @@ Let us compare the histogram to the unnormalized PDF
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-203
+.. GENERATED FROM PYTHON SOURCE LINES 202-204
 
 Let us now do the same think with `link_function_1`.
 This time, the relevant cross-section is along the line :math:`X_1 = 0.5`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-235
+.. GENERATED FROM PYTHON SOURCE LINES 204-236
 
 .. code-block:: default
 
@@ -406,11 +407,11 @@ This time, the relevant cross-section is along the line :math:`X_1 = 0.5`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 236-237
+.. GENERATED FROM PYTHON SOURCE LINES 237-238
 
 We now choose the initial state of the Markov chain.
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-240
+.. GENERATED FROM PYTHON SOURCE LINES 238-241
 
 .. code-block:: default
 
@@ -424,22 +425,22 @@ We now choose the initial state of the Markov chain.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-245
+.. GENERATED FROM PYTHON SOURCE LINES 242-246
 
 Sample from the Ackley distribution
 -----------------------------------
 We can finally define the two Metropolis-Hastings algorithms
 and the Gibbs algorithm which encapsulates them.
 
-.. GENERATED FROM PYTHON SOURCE LINES 245-256
+.. GENERATED FROM PYTHON SOURCE LINES 246-257
 
 .. code-block:: default
 
 
-    gmh_0 = ot.UserDefinedMetropolisHastings(
+    gmh_0 = otexp.UserDefinedMetropolisHastings(
         ackley_logpdf, support, initialState, proposal, link_function_0, [0]
     )
-    gmh_1 = ot.UserDefinedMetropolisHastings(
+    gmh_1 = otexp.UserDefinedMetropolisHastings(
         ackley_logpdf, support, initialState, proposal, link_function_1, [1]
     )
     gibbs = ot.Gibbs([gmh_0, gmh_1])
@@ -453,11 +454,11 @@ and the Gibbs algorithm which encapsulates them.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-258
+.. GENERATED FROM PYTHON SOURCE LINES 258-259
 
 Print the acceptance rates of the two Metropolis-Hastings samplers
 
-.. GENERATED FROM PYTHON SOURCE LINES 258-264
+.. GENERATED FROM PYTHON SOURCE LINES 259-265
 
 .. code-block:: default
 
@@ -480,12 +481,12 @@ Print the acceptance rates of the two Metropolis-Hastings samplers
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-267
+.. GENERATED FROM PYTHON SOURCE LINES 266-268
 
 Draw the contour plot of the Ackley distribution PDF (up to a multiplicative constant)
 and the MCMC sample: we can see the sample is accurate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 267-280
+.. GENERATED FROM PYTHON SOURCE LINES 268-281
 
 .. code-block:: default
 
@@ -517,7 +518,7 @@ and the MCMC sample: we can see the sample is accurate.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.045 seconds)
+   **Total running time of the script:** ( 0 minutes  0.899 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_bayesian_calibration_plot_ackley_distribution.py:
