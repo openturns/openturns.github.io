@@ -454,8 +454,10 @@ of the dimensions.</p>
 <span class="n">marginal_number_of_nodes</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="n">dim_input</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getInputDimension</span><span class="p">()</span>
 <span class="n">marginalDegrees</span> <span class="o">=</span> <span class="p">[</span><span class="n">marginal_number_of_nodes</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim_input</span>
-<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussProductExperiment</span><span class="p">(</span><span class="n">standard_distribution</span><span class="p">,</span> <span class="n">marginalDegrees</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample size = &quot;</span><span class="p">,</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussProductExperiment</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">marginalDegrees</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generateWithWeights</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample size = &quot;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ComposedDistribution(Uniform(a = -1, b = 1), Uniform(a = -1, b = 1), Uniform(a = -1, b = 1), IndependentCopula(dimension = 3))
@@ -466,9 +468,9 @@ Sample size =  216
 of <img class="math" src="../../_images/math/ba096e688abd83f01fbb1d02e83aa2f7f3042529.svg" alt="6^3 = 216"/>.</p>
 <p>In the next cell, we compute the coefficients of the polynomial chaos expansion
 using integration.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntegrationStrategy</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntegrationStrategy</span><span class="p">()</span>
 <span class="n">chaosalgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
-    <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
 <span class="p">)</span>
 <span class="n">chaosalgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">chaosalgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
@@ -488,17 +490,17 @@ observations from the model.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Total number of coefficients :  56
 # Indice, Multi-indice, Degree : Value
-#0, [0,0,0] (0) : 3.504978362620624
+#0, [0,0,0] (0) : 3.5049783626206237
 #1, [1,0,0] (1) : 1.6254291279668338
-#2, [0,1,0] (1) : -2.242130092700023e-15
-#3, [0,0,1] (1) : -2.9152028013790243e-15
-#4, [2,0,0] (2) : 4.2934406030425976e-17
-#5, [1,1,0] (2) : -1.382140929484521e-15
-#6, [1,0,1] (2) : -4.7960767302068774e-15
-#7, [0,2,0] (2) : -0.6413919098131423
-#8, [0,1,1] (2) : -2.6150956400350367e-16
-#9, [0,0,2] (2) : 9.753482743679598e-16
-#10, [3,0,0] (3) : -1.2911039486376767
+#2, [0,1,0] (1) : -2.2703193491846463e-15
+#3, [0,0,1] (1) : -2.3397082882237186e-15
+#4, [2,0,0] (2) : -1.7299529864178709e-15
+#5, [1,1,0] (2) : -1.4151006755280804e-15
+#6, [1,0,1] (2) : -3.926980268742497e-15
+#7, [0,2,0] (2) : -0.6413919098131438
+#8, [0,1,1] (2) : -1.3834419720915037e-16
+#9, [0,0,2] (2) : -1.3791051634015616e-15
+#10, [3,0,0] (3) : -1.2911039486376783
 </pre></div>
 </div>
 <p>We see that there are 56 coefficients in the metamodel and that many of
@@ -511,15 +513,15 @@ have a relatively large polynomial degree.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Total number of coefficients :  56
 # Indice, Multi-indice, Degree : Value
-#0, [0,0,0] (0) : 3.504978362620624
+#0, [0,0,0] (0) : 3.5049783626206237
 #1, [1,0,0] (1) : 1.6254291279668338
-#7, [0,2,0] (2) : -0.6413919098131423
-#10, [3,0,0] (3) : -1.2911039486376767
-#15, [1,0,2] (3) : 1.3724300360555148
-#30, [0,4,0] (4) : -1.6122740106725129
-#35, [5,0,0] (5) : 0.20760614724812404
-#40, [3,0,2] (5) : -1.0901427864755067
-#49, [1,0,4] (5) : 0.40917958066434795
+#7, [0,2,0] (2) : -0.6413919098131438
+#10, [3,0,0] (3) : -1.2911039486376783
+#15, [1,0,2] (3) : 1.372430036055514
+#30, [0,4,0] (4) : -1.612274010672512
+#35, [5,0,0] (5) : 0.2076061472481225
+#40, [3,0,2] (5) : -1.0901427864755064
+#49, [1,0,4] (5) : 0.40917958066434534
 </pre></div>
 </div>
 <p>The previous experiments suggest to keep only the coefficients which are
@@ -572,7 +574,7 @@ relative factor and returns the Q2 score.</p>
         <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">chaosalgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
-        <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
     <span class="p">)</span>
     <span class="n">chaosalgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">chaosalgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
@@ -596,12 +598,12 @@ the 5 most significant coefficients. The factor is set to a relatively low value
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Q2 = -384.39%
 Total number of coefficients :  6
 # Indice, Multi-indice, Degree : Value
-#0, [0,0,0] (0) : 3.504978362620624
-#1, [11,0,0] (11) : -1.6603684437609039
-#2, [12,0,0] (12) : -4.269723903959831
-#3, [0,12,0] (12) : -4.133953684206097
-#4, [0,0,12] (12) : -4.269723903959828
-#5, [5,0,8] (13) : -0.0524712162857494
+#0, [0,0,0] (0) : 3.5049783626206237
+#1, [11,0,0] (11) : -1.660368443760905
+#2, [12,0,0] (12) : -4.269723903959823
+#3, [0,12,0] (12) : -4.133953684206096
+#4, [0,0,12] (12) : -4.2697239039598225
+#5, [5,0,8] (13) : -0.05247121628574973
 </pre></div>
 </div>
 <p>We see that when we keep only 5 coefficients among the first 500 ones,
@@ -621,15 +623,15 @@ of selected coefficients.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Q2 = 85.75%
 Total number of coefficients :  9
 # Indice, Multi-indice, Degree : Value
-#0, [0,0,0] (0) : 3.504978362620624
+#0, [0,0,0] (0) : 3.5049783626206237
 #1, [1,0,0] (1) : 1.6254291279668338
-#2, [0,2,0] (2) : -0.6413919098131423
-#3, [3,0,0] (3) : -1.2911039486376767
-#4, [1,0,2] (3) : 1.3724300360555148
-#5, [0,4,0] (4) : -1.6122740106725129
-#6, [5,0,0] (5) : 0.20760614724812404
-#7, [3,0,2] (5) : -1.0901427864755067
-#8, [1,0,4] (5) : 0.40917958066434795
+#2, [0,2,0] (2) : -0.6413919098131438
+#3, [3,0,0] (3) : -1.2911039486376783
+#4, [1,0,2] (3) : 1.372430036055514
+#5, [0,4,0] (4) : -1.612274010672512
+#6, [5,0,0] (5) : 0.2076061472481225
+#7, [3,0,2] (5) : -1.0901427864755064
+#8, [1,0,4] (5) : 0.40917958066434534
 </pre></div>
 </div>
 <p>When we keep only 10 coefficients among the first 56 ones, the polynomial
@@ -680,17 +682,17 @@ coefficients in this situation.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Q2 = 86.15%
 Total number of coefficients :  12
 # Indice, Multi-indice, Degree : Value
-#0, [0,0,0] (0) : 3.504978362620624
+#0, [0,0,0] (0) : 3.5049783626206237
 #1, [1,0,0] (1) : 1.6254291279668338
-#2, [0,2,0] (2) : -0.6413919098131423
-#3, [3,0,0] (3) : -1.2911039486376767
-#4, [1,0,2] (3) : 1.3724300360555148
-#5, [0,4,0] (4) : -1.6122740106725129
-#6, [5,0,0] (5) : 0.20760614724812404
-#7, [3,0,2] (5) : -1.0901427864755067
-#8, [1,0,4] (5) : 0.40917958066434795
-#9, [7,0,0] (7) : -0.207798642558144
-#10, [5,0,2] (7) : 0.17529211655600674
+#2, [0,2,0] (2) : -0.6413919098131438
+#3, [3,0,0] (3) : -1.2911039486376783
+#4, [1,0,2] (3) : 1.372430036055514
+#5, [0,4,0] (4) : -1.612274010672512
+#6, [5,0,0] (5) : 0.2076061472481225
+#7, [3,0,2] (5) : -1.0901427864755064
+#8, [1,0,4] (5) : 0.40917958066434534
+#9, [7,0,0] (7) : -0.20779864255814526
+#10, [5,0,2] (7) : 0.17529211655600668
 </pre></div>
 </div>
 <p>These parameters lead to a total number of coefficients equal to 12. Among
@@ -808,7 +810,7 @@ too close to zero and were below the threshold.</p>
 <p>We see that the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.CleaningStrategy.html#openturns.CleaningStrategy" title="openturns.CleaningStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">CleaningStrategy</span></code></a> class performs correctly in
 this particular case. We have seen how to select the hyperparameters which
 produce the best Q2 score.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.085 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.107 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-cleaning-strategy-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e3fd5d734a0eba35d5c47a04fa2a07ac/plot_chaos_cleaning_strategy.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_chaos_cleaning_strategy.py</span></code></a></p>

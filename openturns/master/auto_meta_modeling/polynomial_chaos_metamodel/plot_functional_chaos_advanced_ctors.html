@@ -275,8 +275,8 @@ The <cite>True</cite> boolean indicates if we are interested in the online monit
 <h2>STEP 3: Evaluation strategy of the approximation coefficients<a class="headerlink" href="#step-3-evaluation-strategy-of-the-approximation-coefficients" title="Permalink to this heading">¶</a></h2>
 <p>The technique illustrated is the Least Squares technique where the points come from an design of experiments. Here : the Monte Carlo sampling technique.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">evaluationCoeffStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span>
-    <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">))</span>
+<span class="n">evaluationCoeffStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">()</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">sampleSize</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can specify the approximation algorithm. This is the algorithm that generates a sequence of basis using Least Angle Regression.</p>
@@ -288,14 +288,20 @@ The <cite>True</cite> boolean indicates if we are interested in the online monit
 <span class="c1"># Finally the metamodel selection algorithm embbeded in LeastSquaresStrategy</span>
 <span class="n">approximationAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">(</span>
     <span class="n">basisSequenceFactory</span><span class="p">,</span> <span class="n">fittingAlgorithm</span><span class="p">)</span>
-<span class="n">evaluationCoeffStrategy_2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span>
-    <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">),</span> <span class="n">approximationAlgorithm</span><span class="p">)</span>
+<span class="n">evaluationCoeffStrategy_2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span><span class="n">approximationAlgorithm</span><span class="p">)</span>
+<span class="n">experiment_2</span> <span class="o">=</span> <span class="n">experiment</span>
 </pre></div>
 </div>
 <p>Try integration.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">marginalSizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">inputDimension</span>
-<span class="n">evaluationCoeffStrategy_3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntegrationStrategy</span><span class="p">(</span>
-    <span class="n">ot</span><span class="o">.</span><span class="n">GaussProductExperiment</span><span class="p">(</span><span class="n">distributionStandard</span><span class="p">,</span> <span class="n">marginalSizes</span><span class="p">))</span>
+<span class="n">evaluationCoeffStrategy_3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntegrationStrategy</span><span class="p">()</span>
+<span class="n">experiment_3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussProductExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">marginalSizes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Evaluate design of experiments.
+For the Gauss product we need to specify the non-uniform weights.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generateWithWeights</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -309,10 +315,10 @@ The <cite>True</cite> boolean indicates if we are interested in the online monit
 <li><p>and the evaluation strategy of the coefficients</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">polynomialChaosAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
-    <span class="n">model</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">truncatureBasisStrategy</span><span class="p">,</span> <span class="n">evaluationCoeffStrategy</span><span class="p">)</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">truncatureBasisStrategy</span><span class="p">,</span> <span class="n">evaluationCoeffStrategy</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.006 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.007 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-functional-chaos-advanced-ctors-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/04e50fbd5bc465983565ecb51c866206/plot_functional_chaos_advanced_ctors.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_functional_chaos_advanced_ctors.py</span></code></a></p>

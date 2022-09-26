@@ -437,8 +437,8 @@ The technique illustrated is the Least Squares technique where the points come f
 .. code-block:: default
 
     sampleSize = 100
-    evaluationCoeffStrategy = ot.LeastSquaresStrategy(
-        ot.MonteCarloExperiment(sampleSize))
+    evaluationCoeffStrategy = ot.LeastSquaresStrategy()
+    experiment = ot.MonteCarloExperiment(distribution, sampleSize)
 
 
 
@@ -476,8 +476,8 @@ This algorithm estimates the empirical error on each sub-basis using Leave One O
     # Finally the metamodel selection algorithm embbeded in LeastSquaresStrategy
     approximationAlgorithm = ot.LeastSquaresMetaModelSelectionFactory(
         basisSequenceFactory, fittingAlgorithm)
-    evaluationCoeffStrategy_2 = ot.LeastSquaresStrategy(
-        ot.MonteCarloExperiment(sampleSize), approximationAlgorithm)
+    evaluationCoeffStrategy_2 = ot.LeastSquaresStrategy(approximationAlgorithm)
+    experiment_2 = experiment
 
 
 
@@ -490,13 +490,13 @@ This algorithm estimates the empirical error on each sub-basis using Leave One O
 
 Try integration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-207
+.. GENERATED FROM PYTHON SOURCE LINES 201-205
 
 .. code-block:: default
 
     marginalSizes = [2] * inputDimension
-    evaluationCoeffStrategy_3 = ot.IntegrationStrategy(
-        ot.GaussProductExperiment(distributionStandard, marginalSizes))
+    evaluationCoeffStrategy_3 = ot.IntegrationStrategy()
+    experiment_3 = ot.GaussProductExperiment(distribution, marginalSizes)
 
 
 
@@ -505,7 +505,26 @@ Try integration.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-217
+.. GENERATED FROM PYTHON SOURCE LINES 206-208
+
+Evaluate design of experiments.
+For the Gauss product we need to specify the non-uniform weights.
+
+.. GENERATED FROM PYTHON SOURCE LINES 208-211
+
+.. code-block:: default
+
+    X, W = experiment.generateWithWeights()
+    Y = model(X)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 212-221
 
 STEP 4: Creation of the Functional Chaos Algorithm
 --------------------------------------------------
@@ -517,12 +536,12 @@ The `FunctionalChaosAlgorithm` class combines
 * the truncature strategy of the multivariate basis
 * and the evaluation strategy of the coefficients
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-221
+.. GENERATED FROM PYTHON SOURCE LINES 223-225
 
 .. code-block:: default
 
     polynomialChaosAlgorithm = ot.FunctionalChaosAlgorithm(
-        model, distribution, truncatureBasisStrategy, evaluationCoeffStrategy)
+        X, W, Y, distribution, truncatureBasisStrategy, evaluationCoeffStrategy)
 
 
 
@@ -533,7 +552,7 @@ The `FunctionalChaosAlgorithm` class combines
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.006 seconds)
+   **Total running time of the script:** ( 0 minutes  0.007 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_polynomial_chaos_metamodel_plot_functional_chaos_advanced_ctors.py:

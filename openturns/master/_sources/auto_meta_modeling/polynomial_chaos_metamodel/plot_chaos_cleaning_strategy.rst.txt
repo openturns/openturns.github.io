@@ -494,7 +494,7 @@ order to get that standardized distribution. Then we use the
 using 6 nodes on each
 of the dimensions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-414
+.. GENERATED FROM PYTHON SOURCE LINES 405-416
 
 .. code-block:: default
 
@@ -504,8 +504,10 @@ of the dimensions.
     marginal_number_of_nodes = 6
     dim_input = im.model.getInputDimension()
     marginalDegrees = [marginal_number_of_nodes] * dim_input
-    experiment = ot.GaussProductExperiment(standard_distribution, marginalDegrees)
-    print("Sample size = ", experiment.generate().getSize())
+    experiment = ot.GaussProductExperiment(im.distributionX, marginalDegrees)
+    X, W = experiment.generateWithWeights()
+    Y = im.model(X)
+    print("Sample size = ", X.getSize())
 
 
 
@@ -521,7 +523,7 @@ of the dimensions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-420
+.. GENERATED FROM PYTHON SOURCE LINES 417-422
 
 We see that 216 nodes are involved in this quadrature rule, which is the result   
 of :math:`6^3 = 216`.
@@ -529,13 +531,13 @@ of :math:`6^3 = 216`.
 In the next cell, we compute the coefficients of the polynomial chaos expansion   
 using integration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 423-430
+.. GENERATED FROM PYTHON SOURCE LINES 425-432
 
 .. code-block:: default
 
-    projectionStrategy = ot.IntegrationStrategy(experiment)
+    projectionStrategy = ot.IntegrationStrategy()
     chaosalgo = ot.FunctionalChaosAlgorithm(
-        im.model, im.distributionX, adaptiveStrategy, projectionStrategy
+        X, W, Y, im.distributionX, adaptiveStrategy, projectionStrategy
     )
     chaosalgo.run()
     result = chaosalgo.getResult()
@@ -547,14 +549,14 @@ using integration.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 431-435
+.. GENERATED FROM PYTHON SOURCE LINES 433-437
 
 We now validate the metamodel by drawing the validation graph. We see that   
 many points are close to the red test line, which indicates that the   
 predictions of the polynomial chaos expansion are close to the output   
 observations from the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 438-440
+.. GENERATED FROM PYTHON SOURCE LINES 440-442
 
 .. code-block:: default
 
@@ -572,12 +574,12 @@ observations from the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 441-443
+.. GENERATED FROM PYTHON SOURCE LINES 443-445
 
 In order to have a closer look on the result, we use the   
 `printCoefficientsTable` function in order to print the first 10 coefficients.
 
-.. GENERATED FROM PYTHON SOURCE LINES 446-449
+.. GENERATED FROM PYTHON SOURCE LINES 448-451
 
 .. code-block:: default
 
@@ -594,22 +596,22 @@ In order to have a closer look on the result, we use the
 
     Total number of coefficients :  56
     # Indice, Multi-indice, Degree : Value
-    #0, [0,0,0] (0) : 3.504978362620624
+    #0, [0,0,0] (0) : 3.5049783626206237
     #1, [1,0,0] (1) : 1.6254291279668338
-    #2, [0,1,0] (1) : -2.242130092700023e-15
-    #3, [0,0,1] (1) : -2.9152028013790243e-15
-    #4, [2,0,0] (2) : 4.2934406030425976e-17
-    #5, [1,1,0] (2) : -1.382140929484521e-15
-    #6, [1,0,1] (2) : -4.7960767302068774e-15
-    #7, [0,2,0] (2) : -0.6413919098131423
-    #8, [0,1,1] (2) : -2.6150956400350367e-16
-    #9, [0,0,2] (2) : 9.753482743679598e-16
-    #10, [3,0,0] (3) : -1.2911039486376767
+    #2, [0,1,0] (1) : -2.2703193491846463e-15
+    #3, [0,0,1] (1) : -2.3397082882237186e-15
+    #4, [2,0,0] (2) : -1.7299529864178709e-15
+    #5, [1,1,0] (2) : -1.4151006755280804e-15
+    #6, [1,0,1] (2) : -3.926980268742497e-15
+    #7, [0,2,0] (2) : -0.6413919098131438
+    #8, [0,1,1] (2) : -1.3834419720915037e-16
+    #9, [0,0,2] (2) : -1.3791051634015616e-15
+    #10, [3,0,0] (3) : -1.2911039486376783
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 450-456
+.. GENERATED FROM PYTHON SOURCE LINES 452-458
 
 We see that there are 56 coefficients in the metamodel and that many of   
 these coefficients are close to zero.
@@ -618,7 +620,7 @@ If we print only coefficients greater than :math:`10^{-14}`, we see that
 only a fraction of them are significant and that these significant coefficients   
 have a relatively large polynomial degree.
 
-.. GENERATED FROM PYTHON SOURCE LINES 459-462
+.. GENERATED FROM PYTHON SOURCE LINES 461-464
 
 .. code-block:: default
 
@@ -635,30 +637,30 @@ have a relatively large polynomial degree.
 
     Total number of coefficients :  56
     # Indice, Multi-indice, Degree : Value
-    #0, [0,0,0] (0) : 3.504978362620624
+    #0, [0,0,0] (0) : 3.5049783626206237
     #1, [1,0,0] (1) : 1.6254291279668338
-    #7, [0,2,0] (2) : -0.6413919098131423
-    #10, [3,0,0] (3) : -1.2911039486376767
-    #15, [1,0,2] (3) : 1.3724300360555148
-    #30, [0,4,0] (4) : -1.6122740106725129
-    #35, [5,0,0] (5) : 0.20760614724812404
-    #40, [3,0,2] (5) : -1.0901427864755067
-    #49, [1,0,4] (5) : 0.40917958066434795
+    #7, [0,2,0] (2) : -0.6413919098131438
+    #10, [3,0,0] (3) : -1.2911039486376783
+    #15, [1,0,2] (3) : 1.372430036055514
+    #30, [0,4,0] (4) : -1.612274010672512
+    #35, [5,0,0] (5) : 0.2076061472481225
+    #40, [3,0,2] (5) : -1.0901427864755064
+    #49, [1,0,4] (5) : 0.40917958066434534
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 463-465
+.. GENERATED FROM PYTHON SOURCE LINES 465-467
 
 The previous experiments suggest to keep only the coefficients which are   
 significant in the model: this is the topic of the next section.
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-470
+.. GENERATED FROM PYTHON SOURCE LINES 470-472
 
 Use a model selection method
 ----------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 474-484
+.. GENERATED FROM PYTHON SOURCE LINES 476-486
 
 The `CleaningStrategy` has the following algorithm. On input, it considers   
 only the first `maximumConsideredTerms` coefficients   
@@ -671,7 +673,7 @@ The following function will help to create a sparse PCE using the
 in the expansion, the number of significant coefficients to keep and the   
 relative factor and returns the Q2 score.
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-534
+.. GENERATED FROM PYTHON SOURCE LINES 489-536
 
 .. code-block:: default
 
@@ -711,7 +713,7 @@ relative factor and returns the Q2 score.
             True,
         )
         chaosalgo = ot.FunctionalChaosAlgorithm(
-            im.model, im.distributionX, adaptiveStrategy, projectionStrategy
+            X, W, Y, im.distributionX, adaptiveStrategy, projectionStrategy
         )
         chaosalgo.run()
         result = chaosalgo.getResult()
@@ -729,12 +731,12 @@ relative factor and returns the Q2 score.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 535-537
+.. GENERATED FROM PYTHON SOURCE LINES 537-539
 
 In the next cell, we consider at most 500 coefficients and keep only   
 the 5 most significant coefficients. The factor is set to a relatively low value.
 
-.. GENERATED FROM PYTHON SOURCE LINES 540-548
+.. GENERATED FROM PYTHON SOURCE LINES 542-550
 
 .. code-block:: default
 
@@ -757,17 +759,17 @@ the 5 most significant coefficients. The factor is set to a relatively low value
     Q2 = -384.39%
     Total number of coefficients :  6
     # Indice, Multi-indice, Degree : Value
-    #0, [0,0,0] (0) : 3.504978362620624
-    #1, [11,0,0] (11) : -1.6603684437609039
-    #2, [12,0,0] (12) : -4.269723903959831
-    #3, [0,12,0] (12) : -4.133953684206097
-    #4, [0,0,12] (12) : -4.269723903959828
-    #5, [5,0,8] (13) : -0.0524712162857494
+    #0, [0,0,0] (0) : 3.5049783626206237
+    #1, [11,0,0] (11) : -1.660368443760905
+    #2, [12,0,0] (12) : -4.269723903959823
+    #3, [0,12,0] (12) : -4.133953684206096
+    #4, [0,0,12] (12) : -4.2697239039598225
+    #5, [5,0,8] (13) : -0.05247121628574973
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 549-556
+.. GENERATED FROM PYTHON SOURCE LINES 551-558
 
 We see that when we keep only 5 coefficients among the first 500 ones,   
 these coefficients have a very high polynomial degree. Indeed, it occurs that   
@@ -777,7 +779,7 @@ criteria selects them as significant coefficients, which leads to a poor metamod
 Let us reduce the number of considered coefficients and increase the number   
 of selected coefficients.
 
-.. GENERATED FROM PYTHON SOURCE LINES 559-567
+.. GENERATED FROM PYTHON SOURCE LINES 561-569
 
 .. code-block:: default
 
@@ -800,20 +802,20 @@ of selected coefficients.
     Q2 = 85.75%
     Total number of coefficients :  9
     # Indice, Multi-indice, Degree : Value
-    #0, [0,0,0] (0) : 3.504978362620624
+    #0, [0,0,0] (0) : 3.5049783626206237
     #1, [1,0,0] (1) : 1.6254291279668338
-    #2, [0,2,0] (2) : -0.6413919098131423
-    #3, [3,0,0] (3) : -1.2911039486376767
-    #4, [1,0,2] (3) : 1.3724300360555148
-    #5, [0,4,0] (4) : -1.6122740106725129
-    #6, [5,0,0] (5) : 0.20760614724812404
-    #7, [3,0,2] (5) : -1.0901427864755067
-    #8, [1,0,4] (5) : 0.40917958066434795
+    #2, [0,2,0] (2) : -0.6413919098131438
+    #3, [3,0,0] (3) : -1.2911039486376783
+    #4, [1,0,2] (3) : 1.372430036055514
+    #5, [0,4,0] (4) : -1.612274010672512
+    #6, [5,0,0] (5) : 0.2076061472481225
+    #7, [3,0,2] (5) : -1.0901427864755064
+    #8, [1,0,4] (5) : 0.40917958066434534
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 568-580
+.. GENERATED FROM PYTHON SOURCE LINES 570-582
 
 When we keep only 10 coefficients among the first 56 ones, the polynomial   
 chaos metamodel is much better: the coefficients are associated with a low   
@@ -828,7 +830,7 @@ combination with highest :math:`Q^2` coefficient. As shown in [Muller2016]_
 page 268, the computed :math:`Q^2` may be optimistic, but this is not the   
 point of the current example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 584-605
+.. GENERATED FROM PYTHON SOURCE LINES 586-607
 
 .. code-block:: default
 
@@ -868,13 +870,13 @@ point of the current example.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 606-609
+.. GENERATED FROM PYTHON SOURCE LINES 608-611
 
 We see that the best solution could be to select at most 16 significant   
 coefficients among the first 101 ones. Let us see the Q2 score and the   
 coefficients in this situation. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 612-617
+.. GENERATED FROM PYTHON SOURCE LINES 614-619
 
 .. code-block:: default
 
@@ -894,29 +896,29 @@ coefficients in this situation.
     Q2 = 86.15%
     Total number of coefficients :  12
     # Indice, Multi-indice, Degree : Value
-    #0, [0,0,0] (0) : 3.504978362620624
+    #0, [0,0,0] (0) : 3.5049783626206237
     #1, [1,0,0] (1) : 1.6254291279668338
-    #2, [0,2,0] (2) : -0.6413919098131423
-    #3, [3,0,0] (3) : -1.2911039486376767
-    #4, [1,0,2] (3) : 1.3724300360555148
-    #5, [0,4,0] (4) : -1.6122740106725129
-    #6, [5,0,0] (5) : 0.20760614724812404
-    #7, [3,0,2] (5) : -1.0901427864755067
-    #8, [1,0,4] (5) : 0.40917958066434795
-    #9, [7,0,0] (7) : -0.207798642558144
-    #10, [5,0,2] (7) : 0.17529211655600674
+    #2, [0,2,0] (2) : -0.6413919098131438
+    #3, [3,0,0] (3) : -1.2911039486376783
+    #4, [1,0,2] (3) : 1.372430036055514
+    #5, [0,4,0] (4) : -1.612274010672512
+    #6, [5,0,0] (5) : 0.2076061472481225
+    #7, [3,0,2] (5) : -1.0901427864755064
+    #8, [1,0,4] (5) : 0.40917958066434534
+    #9, [7,0,0] (7) : -0.20779864255814526
+    #10, [5,0,2] (7) : 0.17529211655600668
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 618-622
+.. GENERATED FROM PYTHON SOURCE LINES 620-624
 
 These parameters lead to a total number of coefficients equal to 12. Among   
 the 16 most significant coefficients, only 12 satisfy the criteria. Most of   
 the coefficients have a small polynomial degree although some have a total   
 degree as large as 7.
 
-.. GENERATED FROM PYTHON SOURCE LINES 625-652
+.. GENERATED FROM PYTHON SOURCE LINES 627-654
 
 Intermediate steps of the algorithm
 -----------------------------------
@@ -946,7 +948,7 @@ Executing the function prints messages that we can process to produce the
 following listing. On each step, we print the list of integers corresponding   
 to the indices of the coefficients in the active multiindex set.
 
-.. GENERATED FROM PYTHON SOURCE LINES 655-691
+.. GENERATED FROM PYTHON SOURCE LINES 657-693
 
 .. code-block::
 
@@ -985,7 +987,7 @@ to the indices of the coefficients in the active multiindex set.
    Step 86: [0, 1, 7, 10, 15, 30, 35, 40, 49, 84, 89, 98]
    Step 87: [0, 1, 7, 10, 15, 30, 35, 40, 49, 84, 89, 98]
 
-.. GENERATED FROM PYTHON SOURCE LINES 694-737
+.. GENERATED FROM PYTHON SOURCE LINES 696-739
 
 The previous text (and a detailed analysis of the output file) allows to   
 understand what exactly happens in the algorithm. To understand each step,   
@@ -1031,7 +1033,7 @@ more coefficients since we provided 16 slots to fill thanks to the
 `mostSignificant` parameter. The considered coefficients were, however,   
 too close to zero and were below the threshold.
 
-.. GENERATED FROM PYTHON SOURCE LINES 741-747
+.. GENERATED FROM PYTHON SOURCE LINES 743-749
 
 Conclusion
 ----------
@@ -1043,7 +1045,7 @@ produce the best Q2 score.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.085 seconds)
+   **Total running time of the script:** ( 0 minutes  2.107 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_polynomial_chaos_metamodel_plot_chaos_cleaning_strategy.py:
