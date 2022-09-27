@@ -202,36 +202,40 @@ to download the full example code</p>
 The main interest is to use OpenTURNS metamodels in a simulation environment.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>⚠️ <strong>This functionality is experimental</strong>.</p>
+<p><strong>This functionality is experimental</strong>.</p>
 </div>
-<p>Currently, the inclusion of a metamodel in <a class="reference external" href="https://openmodelica.org/?id=78:omconnectioneditoromedit&amp;catid=10:main-category">OpenModelica GUI</a> has been performed once (see
-<a class="reference external" href="https://www.researchgate.net/publication/354810878_Analysis_and_reduction_of_models_using_Persalys">this paper</a>).</p>
+<p>Currently, the inclusion of a metamodel in
+<a class="reference external" href="https://openmodelica.org/?id=78:omconnectioneditoromedit&amp;catid=10:main-category">OpenModelica GUI</a></p>
+<blockquote>
+<div><p>has been performed once (see</p>
+</div></blockquote>
+<p><a class="reference external" href="https://www.researchgate.net/publication/354810878_Analysis_and_reduction_of_models_using_Persalys">this paper</a>).</p>
 <hr class="docutils" />
 <div class="section" id="model-generation">
 <h2>Model generation<a class="headerlink" href="#model-generation" title="Permalink to this headline">¶</a></h2>
 <p>First, we create the OpenTURNS function to export as Modelica model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">func</span></a> <span class="o">=</span> <a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span></a><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;exp(x)&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">otfmi</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+
+
+<a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">func</span></a> <span class="o">=</span> <a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span></a><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;exp(x)&quot;</span><span class="p">)</span>
 <a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inputPoint</span></a> <span class="o">=</span> <a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Point</span></a><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">func</span></a><span class="p">(</span><a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inputPoint</span></a><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[7.38906]
 </pre></div>
 </div>
 <p>We create the model constructor and the folder in which save the model:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">otfmi</span>
-<span class="n">fmuExporter</span> <span class="o">=</span> <span class="n">otfmi</span><span class="o">.</span><span class="n">FunctionExporter</span><span class="p">(</span><a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">func</span></a><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fmuExporter</span> <span class="o">=</span> <span class="n">otfmi</span><span class="o">.</span><span class="n">FunctionExporter</span><span class="p">(</span><a href="http://openturns.github.io/openturns/latest/user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">func</span></a><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
 <span class="n">model_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(),</span> <span class="s2">&quot;myExponential.mo&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/tmp/tmpbiws0eay/myExponential.mo
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/tmp/tmpv_texm6g/myExponential.mo
 </pre></div>
 </div>
 <p>We create the FunctionExporter instance and export the exponential function.
@@ -248,7 +252,8 @@ with other components.</p>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The export requires <a class="reference external" href="https://cmake.org/">CMake</a>, a C compiler, and the OpenModelica compiler <a class="reference external" href="https://www.openmodelica.org/?id=51:open-modelica-compiler-omccecatid=10:main-category">OMC</a>.</p>
+<p>The export requires <a class="reference external" href="https://cmake.org/">CMake</a>, a C compiler, and the
+OpenModelica compiler <a class="reference external" href="https://www.openmodelica.org/?id=51:open-modelica-compiler-omccecatid=10:main-category">OMC</a>.</p>
 </div>
 </div>
 <hr class="docutils" />
@@ -275,8 +280,8 @@ output corresponds to the exponential of the sine signal.</p>
 slow. In this case, 11 seconds of simulation were required for 50 time
 steps (i.e. 50 function calls).</p>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.376 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-example-ot-to-fmu-plot-model-exporter-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.377 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-example-ot-to-fmu-plot-model-exporter-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/a3db7c95cacf425bffdf81eb47cefb4f/plot_model_exporter.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_model_exporter.py</span></code></a></p>
 </div>
@@ -284,7 +289,6 @@ steps (i.e. 50 function calls).</p>
 <p><a class="reference download internal" download="" href="../../_downloads/38ec981a8f9477ad5cf14223ce661c77/plot_model_exporter.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_model_exporter.ipynb</span></code></a></p>
 </div>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
 </div>
 

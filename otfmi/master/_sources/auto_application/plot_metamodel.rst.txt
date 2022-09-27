@@ -68,16 +68,17 @@ We load the FMU as a FMUPointToFieldFunction (see the
 on the first time unit of the epidemiological model output. The single
 uncertain input of the model is the ``ìnfection_rate``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-65
+.. GENERATED FROM PYTHON SOURCE LINES 49-67
 
 .. code-block:: default
 
 
     import otfmi.example.utility
-    path_fmu = otfmi.example.utility.get_path_fmu("epid")
-
     import openturns as ot
-    mesh = ot.RegularGrid(0.0, 0.05, 20)  
+    import openturns.viewer as viewer
+
+    path_fmu = otfmi.example.utility.get_path_fmu("epid")
+    mesh = ot.RegularGrid(0.0, 0.05, 20)
     meshSample = mesh.getVertices()
 
     function = otfmi.FMUPointToFieldFunction(
@@ -86,7 +87,8 @@ uncertain input of the model is the ``ìnfection_rate``.
         inputs_fmu=["infection_rate"],
         outputs_fmu=["infected"],
         start_time=0.0,
-        final_time=1.0)
+        final_time=1.0,
+    )
 
 
 
@@ -95,13 +97,13 @@ uncertain input of the model is the ``ìnfection_rate``.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-69
+.. GENERATED FROM PYTHON SOURCE LINES 68-71
 
 We create a Monte-Carlo design of experiment, on which we
 simulate the FMU.
 The simulation inputs and outputs will be used to train the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-86
+.. GENERATED FROM PYTHON SOURCE LINES 71-84
 
 .. code-block:: default
 
@@ -110,16 +112,12 @@ The simulation inputs and outputs will be used to train the metamodel.
     inputSample = inputLaw.getSample(30)
     outputFMUSample = function(inputSample)
 
-    import openturns.viewer as viewer
-
     graph = outputFMUSample.draw().getGraph(0, 0)
     graph.setTitle("FMU simulations")
     graph.setXTitle("Time")
     graph.setYTitle("Number of infected")
     graph.setLegends(["{:.3f}".format(line[0]) for line in inputSample])
-    view = viewer.View(graph,
-        legend_kw={"title": "infection rate",
-        "loc": "upper left"})
+    view = viewer.View(graph, legend_kw={"title": "infection rate", "loc": "upper left"})
     view.ShowAll()
 
 
@@ -134,27 +132,28 @@ The simulation inputs and outputs will be used to train the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
+.. GENERATED FROM PYTHON SOURCE LINES 85-86
 
 We define a function to visualize the upcoming Karhunen-Loevem modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-112
+.. GENERATED FROM PYTHON SOURCE LINES 86-111
 
 .. code-block:: default
+
 
 
     def drawKL(scaledKL, KLev, mesh, title="Scaled KL modes"):
         graph_modes = scaledKL.drawMarginal()
         graph_modes.setTitle(title + " scaled KL modes")
-        graph_modes.setXTitle('$x$')
-        graph_modes.setYTitle(r'$\sqrt{\lambda_i}\phi_i$')
+        graph_modes.setXTitle("$x$")
+        graph_modes.setYTitle(r"$\sqrt{\lambda_i}\phi_i$")
         data_ev = [[i, KLev[i]] for i in range(scaledKL.getSize())]
         graph_ev = ot.Graph()
         graph_ev.add(ot.Curve(data_ev))
         graph_ev.add(ot.Cloud(data_ev))
         graph_ev.setTitle(title + " KL eigenvalues")
-        graph_ev.setXTitle('$k$')
-        graph_ev.setYTitle(r'$\lambda_i$')
+        graph_ev.setXTitle("$k$")
+        graph_ev.setYTitle(r"$\lambda_i$")
         graph_ev.setAxes(True)
         graph_ev.setGrid(True)
         graph_ev.setLogScale(2)
@@ -173,13 +172,13 @@ We define a function to visualize the upcoming Karhunen-Loevem modes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-116
+.. GENERATED FROM PYTHON SOURCE LINES 112-115
 
 We compute the Karhunen-Loeve decomposition of the model outputs.
 The underlying assumption is that these outputs are realizations of a
 stochastic process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-122
+.. GENERATED FROM PYTHON SOURCE LINES 115-121
 
 .. code-block:: default
 
@@ -196,11 +195,11 @@ stochastic process.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-124
+.. GENERATED FROM PYTHON SOURCE LINES 122-123
 
 Let be curious and plot the Karhunen-Loeve modes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-130
+.. GENERATED FROM PYTHON SOURCE LINES 123-129
 
 .. code-block:: default
 
@@ -222,12 +221,12 @@ Let be curious and plot the Karhunen-Loeve modes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-133
+.. GENERATED FROM PYTHON SOURCE LINES 130-132
 
 Now that Karhunen-Loeve algorithm is trained, we can project them
 in the smaller-dimension space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-137
+.. GENERATED FROM PYTHON SOURCE LINES 132-136
 
 .. code-block:: default
 
@@ -241,8 +240,6 @@ in the smaller-dimension space:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Karhunen-Loeve projection is dimension 3
@@ -250,24 +247,23 @@ in the smaller-dimension space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-141
+.. GENERATED FROM PYTHON SOURCE LINES 137-140
 
 We keep on following our road map, by metamodeling the projection
 of the curves on the smaller-dimension space.
 We metamodel the Karhunen-Loeve coefficients using ordinary Kriging.
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-153
+.. GENERATED FROM PYTHON SOURCE LINES 140-151
 
 .. code-block:: default
 
 
     dim = inputSample.getDimension()  # only 1 input dimension
     basis = ot.ConstantBasisFactory(dim).build()
-    covarianceModel = ot.SquaredExponential(dim)  
+    covarianceModel = ot.SquaredExponential(dim)
 
 
-    algo = ot.KrigingAlgorithm(
-        inputSample, projectionSample, covarianceModel, basis)
+    algo = ot.KrigingAlgorithm(inputSample, projectionSample, covarianceModel, basis)
     algo.run()
     result = algo.getResult()
     metamodel = result.getMetaModel()
@@ -279,14 +275,15 @@ We metamodel the Karhunen-Loeve coefficients using ordinary Kriging.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-156
+.. GENERATED FROM PYTHON SOURCE LINES 152-154
 
 We have created all pieces for a "PointToField" metamodel. Let put these
 pieces together:
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-163
+.. GENERATED FROM PYTHON SOURCE LINES 154-163
 
 .. code-block:: default
+
 
 
     def globalMetamodel(sample):
@@ -294,6 +291,7 @@ pieces together:
         restoreFunction = ot.KarhunenLoeveLifting(resultKL)
         emulatedProcessSample = restoreFunction(emulatedCoefficients)
         return emulatedProcessSample
+
 
 
 
@@ -339,9 +337,9 @@ First, we have a visual check:
 
     gridLayout = ot.GridLayout(1, 2)
 
-    graph1 = outputFMUTestSample.draw().getGraph(0,0)
+    graph1 = outputFMUTestSample.draw().getGraph(0, 0)
     graph1.setTitle("FMU simulations")
-    graph2 = outputMetamodelTestSample.draw().getGraph(0,0)
+    graph2 = outputMetamodelTestSample.draw().getGraph(0, 0)
     graph2.setTitle("Metamodel")
 
     for graph in [graph1, graph2]:
@@ -351,9 +349,9 @@ First, we have a visual check:
 
     gridLayout.setGraph(0, 0, graph1)
     gridLayout.setGraph(0, 1, graph2)
-    view = viewer.View(gridLayout,
-        legend_kw={"title": "infection rate",
-        "loc": "upper left"})
+    view = viewer.View(
+        gridLayout, legend_kw={"title": "infection rate", "loc": "upper left"}
+    )
     view.ShowAll()
 
 
@@ -403,7 +401,7 @@ mean error on the field is acceptable.
 We validate the Kriging (using the Karhunen-Loeve coefficients of the test
 sample):
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-221
+.. GENERATED FROM PYTHON SOURCE LINES 212-222
 
 .. code-block:: default
 
@@ -412,7 +410,8 @@ sample):
     coefficientSample = projectFunction(outputFMUTestSample)
 
     validationKriging = ot.MetaModelValidation(
-        inputTestSample, coefficientSample, metamodel)
+        inputTestSample, coefficientSample, metamodel
+    )
     Q2 = validationKriging.computePredictivityFactor()[0]
     print(Q2)
 
@@ -422,8 +421,6 @@ sample):
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     0.999994933345574
@@ -431,14 +428,14 @@ sample):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-226
+.. GENERATED FROM PYTHON SOURCE LINES 223-227
 
 The predictivity factor is very close to 1, which is satisfying.
 Further statistical tests exist in
 `OpenTURNS <http://openturns.github.io/openturns/master/contents.html>`_ to
 assert the quality of the obtained metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-239
+.. GENERATED FROM PYTHON SOURCE LINES 229-240
 
 ----------------------
 
@@ -455,32 +452,20 @@ etc.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.310 seconds)
+   **Total running time of the script:** ( 0 minutes  1.205 seconds)
 
 
 .. _sphx_glr_download_auto_application_plot_metamodel.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_metamodel.py <plot_metamodel.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_metamodel.ipynb <plot_metamodel.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_metamodel.py <plot_metamodel.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_metamodel.ipynb <plot_metamodel.ipynb>`

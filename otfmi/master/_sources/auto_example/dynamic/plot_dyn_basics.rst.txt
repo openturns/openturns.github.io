@@ -39,12 +39,16 @@ First, retrieve the path to *epid.fmu*.
 Recall the deviation model is dynamic, i.e. its output evolves over
 time.
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-24
+.. GENERATED FROM PYTHON SOURCE LINES 20-28
 
 .. code-block:: default
 
-
+    import openturns as ot
     import otfmi.example.utility
+    import matplotlib.pyplot as plt
+    import openturns.viewer as viewer
+
+
     path_fmu = otfmi.example.utility.get_path_fmu("epid")
 
 
@@ -54,18 +58,17 @@ time.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-27
+.. GENERATED FROM PYTHON SOURCE LINES 29-31
 
 Define the time grid for the FMU's output. The last value of the time grid,
 here 10., will define the FMU stop time for simulation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-33
+.. GENERATED FROM PYTHON SOURCE LINES 31-36
 
 .. code-block:: default
 
 
-    import openturns as ot
-    mesh = ot.RegularGrid(0.0, 0.1, 100)  
+    mesh = ot.RegularGrid(0.0, 0.1, 100)
     meshSample = mesh.getVertices()
     print(meshSample)
 
@@ -74,8 +77,6 @@ here 10., will define the FMU stop time for simulation.
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -184,17 +185,17 @@ here 10., will define the FMU stop time for simulation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-37
+.. GENERATED FROM PYTHON SOURCE LINES 37-40
 
 .. note::
-   The FMU solver uses its own time grid for simulation. 
-   The FMU output is then interpolated on the user-provided time grid. 
+   The FMU solver uses its own time grid for simulation.
+   The FMU output is then interpolated on the user-provided time grid.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Wrap the FMU in an :py:class:`openturns.PointToFieldFunction` object:
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-50
+.. GENERATED FROM PYTHON SOURCE LINES 43-54
 
 .. code-block:: default
 
@@ -205,7 +206,8 @@ Wrap the FMU in an :py:class:`openturns.PointToFieldFunction` object:
         inputs_fmu=["infection_rate"],
         outputs_fmu=["infected"],
         start_time=0.0,
-        final_time=10.0)
+        final_time=10.0,
+    )
     print(type(function))
 
 
@@ -214,8 +216,6 @@ Wrap the FMU in an :py:class:`openturns.PointToFieldFunction` object:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     <class 'openturns.func.PointToFieldFunction'>
@@ -223,19 +223,19 @@ Wrap the FMU in an :py:class:`openturns.PointToFieldFunction` object:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-55
+.. GENERATED FROM PYTHON SOURCE LINES 55-59
 
 .. note::
    The start and final times must define an interval comprising the mesh.
    Setting manually the start and final times is recommended to avoid
    uncontrolled simulation duration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-59
+.. GENERATED FROM PYTHON SOURCE LINES 61-63
 
 Simulate the function on an input :py:class:`openturns.Point` yields an output
 :py:class:`openturns.Sample`, corresponding to the output evolution over time:
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-69
+.. GENERATED FROM PYTHON SOURCE LINES 63-72
 
 .. code-block:: default
 
@@ -243,7 +243,6 @@ Simulate the function on an input :py:class:`openturns.Point` yields an output
     inputPoint = ot.Point([0.007])
     outputSample = function(inputPoint)
 
-    import matplotlib.pyplot as plt
     plt.xlabel("FMU simulation time (s)")
     plt.ylabel("Number of Infected")
     plt.plot(meshSample, outputSample)
@@ -261,20 +260,17 @@ Simulate the function on an input :py:class:`openturns.Point` yields an output
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-72
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 Simulate the function on a input :py:class:`openturns.Sample` yields a set of
 fields called :py:class:`openturns.ProcessSample`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-80
+.. GENERATED FROM PYTHON SOURCE LINES 75-80
 
 .. code-block:: default
 
 
-    inputSample = ot.Sample(
-        [[0.007],
-        [0.005],
-        [0.003]])
+    inputSample = ot.Sample([[0.007], [0.005], [0.003]])
     outputProcessSample = function(inputSample)
     print(outputProcessSample)
 
@@ -283,8 +279,6 @@ fields called :py:class:`openturns.ProcessSample`:
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -603,14 +597,12 @@ fields called :py:class:`openturns.ProcessSample`:
 Visualize the time evolution of the ``infected`` over time, depending on the
 `ìnfection_rate`` value:
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-93
+.. GENERATED FROM PYTHON SOURCE LINES 83-91
 
 .. code-block:: default
 
-
-    import openturns.viewer as viewer
     gridLayout = outputProcessSample.draw()
-    graph = gridLayout.getGraph(0,0)
+    graph = gridLayout.getGraph(0, 0)
     graph.setTitle("")
     graph.setXTitle("FMU simulation time (s)")
     graph.setYTitle("Number of infected")
@@ -632,32 +624,20 @@ Visualize the time evolution of the ``infected`` over time, depending on the
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.254 seconds)
+   **Total running time of the script:** ( 0 minutes  0.239 seconds)
 
 
 .. _sphx_glr_download_auto_example_dynamic_plot_dyn_basics.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_dyn_basics.py <plot_dyn_basics.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_dyn_basics.ipynb <plot_dyn_basics.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_dyn_basics.py <plot_dyn_basics.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_dyn_basics.ipynb <plot_dyn_basics.ipynb>`
