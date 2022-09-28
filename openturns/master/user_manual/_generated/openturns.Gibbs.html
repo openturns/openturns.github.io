@@ -105,6 +105,7 @@
 <li><a class="reference internal" href="#openturns.Gibbs.getShadowedId"><code class="docutils literal notranslate"><span class="pre">Gibbs.getShadowedId()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.getThinning"><code class="docutils literal notranslate"><span class="pre">Gibbs.getThinning()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.getThreshold"><code class="docutils literal notranslate"><span class="pre">Gibbs.getThreshold()</span></code></a></li>
+<li><a class="reference internal" href="#openturns.Gibbs.getUpdatingMethod"><code class="docutils literal notranslate"><span class="pre">Gibbs.getUpdatingMethod()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.getVisibility"><code class="docutils literal notranslate"><span class="pre">Gibbs.getVisibility()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.hasName"><code class="docutils literal notranslate"><span class="pre">Gibbs.hasName()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.hasVisibleName"><code class="docutils literal notranslate"><span class="pre">Gibbs.hasVisibleName()</span></code></a></li>
@@ -117,6 +118,7 @@
 <li><a class="reference internal" href="#openturns.Gibbs.setParameter"><code class="docutils literal notranslate"><span class="pre">Gibbs.setParameter()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.setShadowedId"><code class="docutils literal notranslate"><span class="pre">Gibbs.setShadowedId()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.setThinning"><code class="docutils literal notranslate"><span class="pre">Gibbs.setThinning()</span></code></a></li>
+<li><a class="reference internal" href="#openturns.Gibbs.setUpdatingMethod"><code class="docutils literal notranslate"><span class="pre">Gibbs.setUpdatingMethod()</span></code></a></li>
 <li><a class="reference internal" href="#openturns.Gibbs.setVisibility"><code class="docutils literal notranslate"><span class="pre">Gibbs.setVisibility()</span></code></a></li>
 </ul>
 </li>
@@ -185,9 +187,12 @@
 <p class="rubric">Notes</p>
 <p>Assume we want to sample from a complicated joint distribution.
 The Gibbs algorithm is a Markov Chain Monte-Carlo algorithm
-which sequentially calls samplers
-(implemented as <a class="reference internal" href="openturns.MetropolisHastings.html#openturns.MetropolisHastings" title="openturns.MetropolisHastings"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetropolisHastings</span></code></a> objects)
-of the conditional distributions of one or several components.</p>
+which calls samplers (implemented as <a class="reference internal" href="openturns.MetropolisHastings.html#openturns.MetropolisHastings" title="openturns.MetropolisHastings"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetropolisHastings</span></code></a> objects)
+in a predetermined sequence (by default)
+or randomly: see <a class="reference internal" href="#openturns.Gibbs.setUpdatingMethod" title="openturns.Gibbs.setUpdatingMethod"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setUpdatingMethod()</span></code></a> to manually choose the behavior,
+and note the default behavior can be changed by setting the
+<cite>Gibbs-DefaultUpdatingMethod</cite> <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> key.
+Each sampler samples from the conditional distributions of one or several components.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -214,7 +219,7 @@ of the conditional distributions of one or several components.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">linkFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">fullModel</span><span class="p">,</span> <span class="n">parametersSet</span><span class="p">,</span> <span class="n">parametersValue</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Calibration parameters</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Proposal distribution</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">proposal</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Prior distribution</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sigma0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">]</span><span class="o">*</span><span class="n">chainDim</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1">#  Covariance matrix</span>
@@ -227,13 +232,17 @@ of the conditional distributions of one or several components.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Conditional distribution y~N(z, 1.0)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conditional</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create a Gibbs sampler</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mh_coll</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">RandomWalkMetropolisHastings</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">proposal</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">chainDim</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">mh</span> <span class="ow">in</span> <span class="n">mh_coll</span><span class="p">:</span> <span class="n">mh</span><span class="o">.</span><span class="n">setLikelihood</span><span class="p">(</span><span class="n">conditional</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">linkFunction</span><span class="p">,</span> <span class="n">covariates</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gibbs</span><span class="p">(</span><span class="n">mh_coll</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coll</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">RandomWalkMetropolisHastings</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">chainDim</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">mh</span> <span class="ow">in</span> <span class="n">coll</span><span class="p">:</span> <span class="n">mh</span><span class="o">.</span><span class="n">setLikelihood</span><span class="p">(</span><span class="n">conditional</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">linkFunction</span><span class="p">,</span> <span class="n">covariates</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gibbs</span><span class="p">(</span><span class="n">coll</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span><span class="o">.</span><span class="n">setBurnIn</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sampler</span><span class="o">.</span><span class="n">setThinning</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get a realization</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mu</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">getRealization</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create a Gibbs sampler which updates one randomly chosen component at each step</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sampler2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gibbs</span><span class="p">(</span><span class="n">coll</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sampler2</span><span class="o">.</span><span class="n">setUpdatingMethod</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Gibbs</span><span class="o">.</span><span class="n">RANDOM_UPDATING</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mu2</span> <span class="o">=</span> <span class="n">sampler2</span><span class="o">.</span><span class="n">getRealization</span><span class="p">()</span>
 </pre></div>
 </div>
 <p class="rubric">Methods</p>
@@ -314,41 +323,47 @@ of the conditional distributions of one or several components.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.getThreshold" title="openturns.Gibbs.getThreshold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getThreshold</span></code></a>()</p></td>
 <td><p>Accessor to the threshold of the Event.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.getVisibility" title="openturns.Gibbs.getVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVisibility</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.getUpdatingMethod" title="openturns.Gibbs.getUpdatingMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getUpdatingMethod</span></code></a>()</p></td>
+<td><p>Get how the order of the samplers is determined.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.getVisibility" title="openturns.Gibbs.getVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVisibility</span></code></a>()</p></td>
 <td><p>Accessor to the object's visibility state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.hasName" title="openturns.Gibbs.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.hasName" title="openturns.Gibbs.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>()</p></td>
 <td><p>Test if the object is named.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.hasVisibleName" title="openturns.Gibbs.hasVisibleName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasVisibleName</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.hasVisibleName" title="openturns.Gibbs.hasVisibleName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasVisibleName</span></code></a>()</p></td>
 <td><p>Test if the object has a distinguishable name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.isComposite" title="openturns.Gibbs.isComposite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isComposite</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.isComposite" title="openturns.Gibbs.isComposite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isComposite</span></code></a>()</p></td>
 <td><p>Accessor to know if the RandomVector is a composite one.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.isEvent" title="openturns.Gibbs.isEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isEvent</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.isEvent" title="openturns.Gibbs.isEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isEvent</span></code></a>()</p></td>
 <td><p>Whether the random vector is an event.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setBurnIn" title="openturns.Gibbs.setBurnIn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setBurnIn</span></code></a>(burnIn)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setBurnIn" title="openturns.Gibbs.setBurnIn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setBurnIn</span></code></a>(burnIn)</p></td>
 <td><p>Set the length of the burn-in period.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setDescription" title="openturns.Gibbs.setDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDescription</span></code></a>(description)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setDescription" title="openturns.Gibbs.setDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDescription</span></code></a>(description)</p></td>
 <td><p>Accessor to the description of the RandomVector.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setHistory" title="openturns.Gibbs.setHistory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setHistory</span></code></a>(strategy)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setHistory" title="openturns.Gibbs.setHistory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setHistory</span></code></a>(strategy)</p></td>
 <td><p>Set the history storage.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setName" title="openturns.Gibbs.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setName" title="openturns.Gibbs.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setParameter" title="openturns.Gibbs.setParameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParameter</span></code></a>(parameters)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setParameter" title="openturns.Gibbs.setParameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParameter</span></code></a>(parameters)</p></td>
 <td><p>Accessor to the parameter of the distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setShadowedId" title="openturns.Gibbs.setShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setShadowedId</span></code></a>(id)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setShadowedId" title="openturns.Gibbs.setShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setShadowedId</span></code></a>(id)</p></td>
 <td><p>Accessor to the object's shadowed id.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setThinning" title="openturns.Gibbs.setThinning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setThinning</span></code></a>(thinning)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setThinning" title="openturns.Gibbs.setThinning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setThinning</span></code></a>(thinning)</p></td>
 <td><p>Set the thinning parameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.Gibbs.setUpdatingMethod" title="openturns.Gibbs.setUpdatingMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setUpdatingMethod</span></code></a>(updatingMethod)</p></td>
+<td><p>Set how the order of the samplers is determined.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.Gibbs.setVisibility" title="openturns.Gibbs.setVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setVisibility</span></code></a>(visible)</p></td>
 <td><p>Accessor to the object's visibility state.</p></td>
@@ -825,6 +840,28 @@ and <img class="math" src="../../_images/math/14feef167e3dd938706565e34c0c9ac190
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="openturns.Gibbs.getUpdatingMethod">
+<span class="sig-name descname"><span class="pre">getUpdatingMethod</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.Gibbs.getUpdatingMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get how the order of the samplers is determined.</p>
+<p>Available values are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>0 (Gibbs.DETERMINISTIC_UPDATING): the samplers are sequentially called in the given order.</p></li>
+<li><p>1 (Gibbs.RANDOM_UPDATING): one of the samplers is randomly selected to produce the next realization.</p></li>
+</ul>
+</div></blockquote>
+<p>Refer to the <a class="reference internal" href="#openturns.Gibbs.setUpdatingMethod" title="openturns.Gibbs.setUpdatingMethod"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setUpdatingMethod()</span></code></a> documentation for details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>updatingMethod</strong><span class="classifier">int</span></dt><dd><p>See above for the possible values and their meaning.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="openturns.Gibbs.getVisibility">
 <span class="sig-name descname"><span class="pre">getVisibility</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.Gibbs.getVisibility" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the object’s visibility state.</p>
@@ -996,6 +1033,31 @@ burn-in period.</p>
 <p>When generating a sample of size <img class="math" src="../../_images/math/0673f3d4e1420605f352372985b6a22266d58cd4.svg" alt="q"/>, the number of MCMC iterations
 performed is <img class="math" src="../../_images/math/975021c8832ab1c257b043f433a3e929ea31d1ed.svg" alt="l+1+(q-1)k"/> where <img class="math" src="../../_images/math/2b7bf1ba9fd7c751991e0e69d81f673f9e8ab5cb.svg" alt="l"/> is the burn-in period length
 and <img class="math" src="../../_images/math/14feef167e3dd938706565e34c0c9ac19065a615.svg" alt="k"/> the thinning parameter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.Gibbs.setUpdatingMethod">
+<span class="sig-name descname"><span class="pre">setUpdatingMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">updatingMethod</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.Gibbs.setUpdatingMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set how the order of the samplers is determined.</p>
+<p>Available values are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>0 (Gibbs.DETERMINISTIC_UPDATING): the samplers are sequentially called in the given order.</p></li>
+<li><p>1 (Gibbs.RANDOM_UPDATING): one of the samplers is randomly selected to produce the next realization.</p></li>
+</ul>
+</div></blockquote>
+<p>Note that under DETERMINISTIC_UPDATING,
+all samplers are called in the specified order every time <a class="reference internal" href="#openturns.Gibbs.getRealization" title="openturns.Gibbs.getRealization"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getRealization()</span></code></a> is called.
+By contrast, under RANDOM_UPDATING, only one sampler is called
+by <a class="reference internal" href="#openturns.Gibbs.getRealization" title="openturns.Gibbs.getRealization"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getRealization()</span></code></a>, and this sampler is randomly chosen among all specified samplers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>updatingMethod</strong><span class="classifier">int</span></dt><dd><p>See above for the possible values and their meaning.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
