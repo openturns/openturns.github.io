@@ -81,7 +81,6 @@
 <li><a class="reference internal" href="#">Create a polynomial chaos metamodel by integration on the cantilever beam</a><ul>
 <li><a class="reference internal" href="#create-a-polynomial-chaos-decomposition">Create a polynomial chaos decomposition</a></li>
 <li><a class="reference internal" href="#validate-the-metamodel">Validate the metamodel</a></li>
-<li><a class="reference internal" href="#sensitivity-analysis">Sensitivity analysis</a></li>
 <li><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
@@ -130,12 +129,19 @@ to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="create-a-polynomial-chaos-metamodel-by-integration-on-the-cantilever-beam">
 <span id="sphx-glr-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-cantilever-beam-integration-py"></span><h1>Create a polynomial chaos metamodel by integration on the cantilever beam<a class="headerlink" href="#create-a-polynomial-chaos-metamodel-by-integration-on-the-cantilever-beam" title="Permalink to this heading">¶</a></h1>
-<p>In this example, we create a polynomial chaos metamodel by integration on the <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a> example.</p>
-<p>In order to do this, we use the <cite>GaussProductExperiment</cite> class.</p>
+<p>In this example, we create a polynomial chaos metamodel by integration on the
+<a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a> example.
+We choose to evaluate the coefficients of the chaos decomposition by
+integration using various kinds of design of experiment:</p>
+<ul class="simple">
+<li><p>Gauss product</p></li>
+<li><p>Latin hypercube sampling</p></li>
+<li><p>Quasi Monte Carlo with a Sobol’ sequence</p></li>
+</ul>
+<p>We will compare the results obtained on each design.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span>
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -143,162 +149,156 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cb</span> <span class="o">=</span> <span class="n">cantilever_beam</span><span class="o">.</span><span class="n">CantileverBeam</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>In this example we consider all marginals independent. They are defined in the <cite>CantileverBeam</cite> data class as well as an independent distribution :</p>
+<p>In this example we consider all marginals independent.
+They are defined in the <a class="reference internal" href="../../user_manual/_generated/openturns.usecases.cantilever_beam.CantileverBeam.html#openturns.usecases.cantilever_beam.CantileverBeam" title="openturns.usecases.cantilever_beam.CantileverBeam"><code class="xref py py-class docutils literal notranslate"><span class="pre">CantileverBeam</span></code></a>  class:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dist_E</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">E</span>
 <span class="n">dist_F</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">F</span>
 <span class="n">dist_L</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">L</span>
 <span class="n">dist_I</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">I</span>
-<span class="n">myDistribution</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">independentDistribution</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">independentDistribution</span>
 </pre></div>
 </div>
+<p>We load the model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dim_input</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">dim</span>  <span class="c1"># dimension of the input</span>
 <span class="n">dim_output</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># dimension of the output</span>
-</pre></div>
-</div>
-<p>We load the model :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">model</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">model</span>
 </pre></div>
 </div>
 <section id="create-a-polynomial-chaos-decomposition">
 <h2>Create a polynomial chaos decomposition<a class="headerlink" href="#create-a-polynomial-chaos-decomposition" title="Permalink to this heading">¶</a></h2>
-<p>We create the multivariate polynomial basis by tensorization of the univariate polynomials and the default linear enumerate rule.</p>
+<p>We create the multivariate polynomial basis by tensorization of the
+univariate polynomials and the default linear enumerate rule.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
     <span class="p">[</span><span class="n">dist_E</span><span class="p">,</span> <span class="n">dist_F</span><span class="p">,</span> <span class="n">dist_L</span><span class="p">,</span> <span class="n">dist_I</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>Generate an training sample of size N with MC simulation.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># size of the experimental design</span>
-<span class="n">inputTrain</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="n">outputTrain</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputTrain</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>We select the <cite>FixedStrategy</cite> truncation rule, which corresponds to using the first <cite>P</cite> polynomials of the polynomial basis. In this case, we select <cite>P</cite> using the <cite>getStrataCumulatedCardinal</cite> method, so that all polynomials with total degree lower or equal to 5 are used.</p>
+<p>In this case, we select <cite>P</cite> using the
+<a class="reference internal" href="../../user_manual/_generated/openturns.EnumerateFunction.html#openturns.EnumerateFunction.getBasisSizeFromTotalDegree" title="openturns.EnumerateFunction.getBasisSizeFromTotalDegree"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getBasisSizeFromTotalDegree()</span></code></a> method,
+so that all polynomials with total degree lower or equal to 5 are used.
+This will lead to the computation of 126 coefficients.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">enumfunc</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
-<span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
-<span class="n">adaptiveStrategy</span>
+<span class="n">enum_func</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">enum_func</span><span class="o">.</span><span class="n">getBasisSizeFromTotalDegree</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P=</span><span class="si">{</span><span class="n">P</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="output_subarea output_html rendered_html output_result">
-<p>class=FixedStrategy derived from class=AdaptiveStrategyImplementation maximumDimension=126</p>
-</div>
-<br />
-<br /><p>We see that the number of polynomials is equal to 126. This will lead to the computation of 126 coefficients.</p>
-<p>We now set the method used to compute the coefficients; we select the integration method.</p>
-<p>We begin by getting the standard measure associated with the multivariate polynomial basis. We see that the range of the <cite>Beta</cite> distribution has been standardized into the [-1,1] interval. This is the same for the <cite>Uniform</cite> distribution and the second <cite>Beta</cite> distribution.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distributionStandard</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getMeasure</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">distributionStandard</span><span class="p">)</span>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>P=126
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ComposedDistribution(Beta(alpha = 0.9, beta = 3.5, a = -1, b = 1), LogNormal(muLog = 5.69881, sigmaLog = 0.0997513, gamma = 0), Uniform(a = -1, b = 1), Beta(alpha = 2.5, beta = 4, a = -1, b = 1), IndependentCopula(dimension = 4))
+<p>We select the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FixedStrategy.html#openturns.FixedStrategy" title="openturns.FixedStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedStrategy</span></code></a> truncation rule, which corresponds to using
+the first <cite>P</cite> polynomials of the polynomial basis.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>We begin by getting the standard measure associated with the multivariate polynomial basis.
+We see that the range of the <cite>Beta</cite> distribution has been standardized into the [-1,1] interval.
+This is the same for the <cite>Uniform</cite> distribution and the second <cite>Beta</cite> distribution.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">measure</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getMeasure</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;measure=</span><span class="si">{</span><span class="n">measure</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>measure=ComposedDistribution(Beta(alpha = 0.9, beta = 3.5, a = -1, b = 1), LogNormal(muLog = 5.69881, sigmaLog = 0.0997513, gamma = 0), Uniform(a = -1, b = 1), Beta(alpha = 2.5, beta = 4, a = -1, b = 1), IndependentCopula(dimension = 4))
+</pre></div>
+</div>
+<p>The choice of the <a class="reference internal" href="../../user_manual/_generated/openturns.GaussProductExperiment.html#openturns.GaussProductExperiment" title="openturns.GaussProductExperiment"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussProductExperiment</span></code></a> rule with 4 nodes
+in each of the 4 dimensions leads to <img class="math" src="../../_images/math/536a12b615666186ffbd5d2d89b0bd3f63b6f88f.svg" alt="4^4=256"/> evaluations of the model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">marginalSizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim_input</span>
-<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussProductExperiment</span><span class="p">(</span><span class="n">myDistribution</span><span class="p">,</span> <span class="n">marginalSizes</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>We can see the size of the associated design of experiments.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generateWithWeights</span><span class="p">()</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussProductExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">marginalSizes</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;N=</span><span class="si">{</span><span class="n">experiment</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generateWithWeights</span><span class="p">()</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="n">X</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>256
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>N=256
 </pre></div>
 </div>
-<p>The choice of the <cite>GaussProductExperiment</cite> rule leads to 256 evaluations of the model.</p>
+<p>We now set the method used to compute the coefficients; we select the integration method.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntegrationStrategy</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We can now create the functional chaos.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosalgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">myDistribution</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span><span class="p">)</span>
-<span class="n">chaosalgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span>
+                                   <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Get the result</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">chaosalgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The <cite>getMetaModel</cite> method returns the metamodel function.</p>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosResult.html#openturns.FunctionalChaosResult.getMetaModel" title="openturns.FunctionalChaosResult.getMetaModel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getMetaModel()</span></code></a> method returns the metamodel function.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="validate-the-metamodel">
 <h2>Validate the metamodel<a class="headerlink" href="#validate-the-metamodel" title="Permalink to this heading">¶</a></h2>
-<p>Generate a validation sample (which is independent of the training sample).</p>
+<p>Generate a new validation sample (which is independent of the training sample).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_valid</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">inputTest</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
-<span class="n">outputTest</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
+<span class="n">Y_test</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <cite>MetaModelValidation</cite> class validates the metamodel based on a validation sample.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">,</span> <span class="n">metamodel</span><span class="p">)</span>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a> class validates the metamodel
+based on a validation sample.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">metamodel</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Compute the <img class="math" src="../../_images/math/431f883847b598c249512efc815fa32340c7c170.svg" alt="Q^2"/> predictivity coefficient</p>
+<p>Compute the <img class="math" src="../../_images/math/431f883847b598c249512efc815fa32340c7c170.svg" alt="Q^2"/> predictivity coefficient.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Q2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computePredictivityFactor</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">Q2</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9999977826876493
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9999980369284825
 </pre></div>
 </div>
 <p>Plot the observed versus the predicted outputs.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Q2=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Q2</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gauss product N=</span><span class="si">{</span><span class="n">experiment</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span><span class="si">}</span><span class="s2"> - Q2=</span><span class="si">{</span><span class="n">Q2</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_001.png" srcset="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_001.png" alt="Q2=100.00%" class = "sphx-glr-single-img"/></section>
-<section id="sensitivity-analysis">
-<h2>Sensitivity analysis<a class="headerlink" href="#sensitivity-analysis" title="Permalink to this heading">¶</a></h2>
-<p>Retrieve Sobol’ sensitivity measures associated to the polynomial chaos decomposition of the model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosSI</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">chaosSI</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<img src="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_001.png" srcset="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_001.png" alt="Gauss product N=256 - Q2=100.00" class = "sphx-glr-single-img"/><p>Now repeat the same process on various designs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">draw_validation</span><span class="p">(</span><span class="n">experiment</span><span class="p">):</span>
+    <span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntegrationStrategy</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
+    <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+        <span class="n">g</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span><span class="p">)</span>
+    <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+    <span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
+    <span class="n">Y_test</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">metamodel</span><span class="p">)</span>
+    <span class="n">Q2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computePredictivityFactor</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">experiment</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> - N=</span><span class="si">{</span><span class="n">experiment</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span><span class="si">}</span><span class="s2"> - Q2=</span><span class="si">{</span><span class="n">Q2</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graph</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> input dimension: 4
- output dimension: 1
- basis size: 126
- mean: [0.170691]
- std-dev: [0.0203241]
-------------------------------------------------------------
-Index   | Multi-indice                  | Part of variance
-------------------------------------------------------------
-      2 | [0,1,0,0]                     | 0.70534
-      4 | [0,0,0,1]                     | 0.164639
-      3 | [0,0,1,0]                     | 0.0813041
-      1 | [1,0,0,0]                     | 0.0448651
-------------------------------------------------------------
+<p>Use an LHS design.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e6</span><span class="p">))</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">draw_validation</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_002.png" srcset="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_002.png" alt="LHSExperiment - N=1000000 - Q2=99.28" class = "sphx-glr-single-img"/><p>Use a low-discrepancy experiment (Quasi-Monte Carlo).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sequence</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolSequence</span><span class="p">()</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LowDiscrepancyExperiment</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">))</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">draw_validation</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
-
-------------------------------------------------------------
-Component | Sobol index            | Sobol total index
-------------------------------------------------------------
-        0 | 0.044908               | 0.0455157
-        1 | 0.70534                | 0.708258
-        2 | 0.0813125              | 0.0823703
-        3 | 0.165174               | 0.167125
-------------------------------------------------------------
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">first_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim_input</span><span class="p">)]</span>
-<span class="n">total_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolTotalIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim_input</span><span class="p">)]</span>
-<span class="n">input_names</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">getInputDescription</span><span class="p">()</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawSobolIndices</span><span class="p">(</span>
-    <span class="n">input_names</span><span class="p">,</span> <span class="n">first_order</span><span class="p">,</span> <span class="n">total_order</span><span class="p">)</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<img src="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_002.png" srcset="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_002.png" alt="Sobol' indices" class = "sphx-glr-single-img"/></section>
+<img src="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_003.png" srcset="../../_images/sphx_glr_plot_chaos_cantilever_beam_integration_003.png" alt="LowDiscrepancyExperiment - N=100000 - Q2=99.85" class = "sphx-glr-single-img"/></section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
-<p>We see that the coefficients are particularily well computed since the Q2 coefficient is excellent (perfect ?), even with a relatively limited amount of simulation (256 points).</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.287 seconds)</p>
+<p>With the Gauss product rule the coefficients are particularily well computed
+since the Q2 coefficient is excellent, even with the relatively limited amount
+of simulation (256 points).
+On the other hand the LHS and low-discrepancy experiments require many more
+points to achieve a Q2&gt;99%.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  18.109 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-cantilever-beam-integration-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4512ba82e27d8d26f06e460a839a418b/plot_chaos_cantilever_beam_integration.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_chaos_cantilever_beam_integration.py</span></code></a></p>
