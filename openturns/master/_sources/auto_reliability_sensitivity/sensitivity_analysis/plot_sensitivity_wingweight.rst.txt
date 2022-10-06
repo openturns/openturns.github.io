@@ -809,26 +809,18 @@ It improves the accuracy of the estimation but, for very low indices, Saltelli s
 .. GENERATED FROM PYTHON SOURCE LINES 333-335
 
 Now, we estimate the Sobol' indices using Polynomial Chaos Expansion.
-We first create a Functional Chaos Expansion.
+We create a Functional Chaos Expansion.
 
-.. GENERATED FROM PYTHON SOURCE LINES 335-355
+.. GENERATED FROM PYTHON SOURCE LINES 335-347
 
 .. code-block:: default
 
-    sizePCE = 200
+    sizePCE = 800
     inputDesignPCE = m.distributionX.getSample(sizePCE)
     outputDesignPCE = m.model(inputDesignPCE)
 
-    multivariateBasis = ot.OrthogonalProductPolynomialFactory(
-        [m.distributionX.getMarginal(i) for i in range(m.dim)])
-    selectionAlgorithm = ot.LeastSquaresMetaModelSelectionFactory()
-    projectionStrategy = ot.LeastSquaresStrategy(inputDesignPCE, outputDesignPCE, selectionAlgorithm)
-    totalDegree = 4
-    enumfunc = multivariateBasis.getEnumerateFunction()
-    P = enumfunc.getStrataCumulatedCardinal(totalDegree)
-    adaptiveStrategy = ot.FixedStrategy(multivariateBasis, P)
     algo = ot.FunctionalChaosAlgorithm(
-        inputDesignPCE, outputDesignPCE, m.distributionX, adaptiveStrategy, projectionStrategy)
+        inputDesignPCE, outputDesignPCE, m.distributionX)
 
     algo.run()
     result = algo.getResult()
@@ -843,21 +835,18 @@ We first create a Functional Chaos Expansion.
 
  .. code-block:: none
 
-    [0.00955479]
-    [1.07233e-06]
+    [0.000633307]
+    [1.56991e-09]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 356-357
+.. GENERATED FROM PYTHON SOURCE LINES 348-350
 
-The relative errors are very low: this indicates that the PCE model has good accuracy.
-
-.. GENERATED FROM PYTHON SOURCE LINES 359-360
-
+The relative errors are low : this indicates that the PCE model has good accuracy.
 Then, we exploit the surrogate model to compute the Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 360-370
+.. GENERATED FROM PYTHON SOURCE LINES 350-360
 
 .. code-block:: default
 
@@ -886,33 +875,33 @@ Then, we exploit the surrogate model to compute the Sobol' indices.
 
      input dimension: 10
      output dimension: 1
-     basis size: 105
-     mean: [268.111]
-     std-dev: [48.101]
+     basis size: 299
+     mean: [268.074]
+     std-dev: [48.0827]
     ------------------------------------------------------------
     Index   | Multi-indice                  | Part of variance  
     ------------------------------------------------------------
-          6 | [0,0,0,0,0,0,0,1,0,0]         | 0.410796
-          2 | [0,0,1,0,0,0,0,0,0,0]         | 0.220073
-          5 | [0,0,0,0,0,0,1,0,0,0]         | 0.139081
-          1 | [1,0,0,0,0,0,0,0,0,0]         | 0.124534
-          7 | [0,0,0,0,0,0,0,0,1,0]         | 0.0844863
+          7 | [0,0,0,0,0,0,0,1,0,0]         | 0.410327
+          3 | [0,0,1,0,0,0,0,0,0,0]         | 0.220054
+          6 | [0,0,0,0,0,0,1,0,0,0]         | 0.13849
+          1 | [1,0,0,0,0,0,0,0,0,0]         | 0.124432
+          8 | [0,0,0,0,0,0,0,0,1,0]         | 0.0849403
     ------------------------------------------------------------
 
 
     ------------------------------------------------------------
     Component | Sobol index            | Sobol total index      
     ------------------------------------------------------------
-            0 | 0.12455                | 0.127885              
-            1 | 0                      | 5.11089e-06           
-            2 | 0.220194               | 0.225845              
-            3 | 0.000545033            | 0.000563498           
-            4 | 6.52128e-05            | 8.87667e-05           
-            5 | 0.00172527             | 0.00177244            
-            6 | 0.141499               | 0.14544               
-            7 | 0.412025               | 0.419721              
-            8 | 0.0845279              | 0.08702               
-            9 | 0.00329707             | 0.00334609            
+            0 | 0.124441               | 0.127859              
+            1 | 2.77423e-06            | 2.93343e-06           
+            2 | 0.220203               | 0.225955              
+            3 | 0.000487693            | 0.000504128           
+            4 | 8.81411e-05            | 9.11378e-05           
+            5 | 0.00179913             | 0.00185859            
+            6 | 0.141038               | 0.145127              
+            7 | 0.411636               | 0.419666              
+            8 | 0.0849948              | 0.0876214             
+            9 | 0.00333265             | 0.00335527            
     ------------------------------------------------------------
 
 
@@ -920,26 +909,29 @@ Then, we exploit the surrogate model to compute the Sobol' indices.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 371-373
+.. GENERATED FROM PYTHON SOURCE LINES 361-365
 
 The Sobol' indices confirm the previous analyses, in terms of ranking of the most influent variables. We also see that five variables have a quasi null total Sobol' indices, that indicates almost no influence on the wing weight.
-There is no discrepancy between first order and total Sobol' indices, that indicates no or very low interaction between the variables in the variance of the output.
+There is no discrepancy between first order and total Sobol' indices, that indicates no or very low interaction between the variables in the variance of the output. 
+As the most important variables act only through decoupled first degree contributions, the hypothesis of a linear dependence between the input variables and the weight is legitimate.
+This explains why both squared SRC and Taylor give the exact same results even if the first one is based on a :math:`\mathcal{L}^2` linear approximation and the second one is based on a linear expansion around the mean value of the input variables.
 
-.. GENERATED FROM PYTHON SOURCE LINES 377-379
+.. GENERATED FROM PYTHON SOURCE LINES 369-371
 
 HSIC indices
 ------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-382
+.. GENERATED FROM PYTHON SOURCE LINES 373-374
 
-We then estimate the HSIC indices using a data-driven approach by exploiting the design of experiments used to train the PCE model.
+We then estimate the HSIC indices using a data-driven approach.
 
-.. GENERATED FROM PYTHON SOURCE LINES 382-387
+.. GENERATED FROM PYTHON SOURCE LINES 374-380
 
 .. code-block:: default
 
-    inputDesignHSIC = inputDesignPCE
-    outputDesignHSIC = outputDesignPCE
+    sizeHSIC = 250
+    inputDesignHSIC = m.distributionX.getSample(sizeHSIC)
+    outputDesignHSIC = m.model(inputDesignHSIC)
 
     covarianceModelCollection = []
 
@@ -950,7 +942,7 @@ We then estimate the HSIC indices using a data-driven approach by exploiting the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 388-394
+.. GENERATED FROM PYTHON SOURCE LINES 381-387
 
 .. code-block:: default
 
@@ -967,11 +959,11 @@ We then estimate the HSIC indices using a data-driven approach by exploiting the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 395-396
+.. GENERATED FROM PYTHON SOURCE LINES 388-389
 
 We define a covariance kernel associated to the output variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-400
+.. GENERATED FROM PYTHON SOURCE LINES 389-393
 
 .. code-block:: default
 
@@ -986,12 +978,12 @@ We define a covariance kernel associated to the output variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 401-403
+.. GENERATED FROM PYTHON SOURCE LINES 394-396
 
 In this paragraph, we perform the analysis on the raw data: that is
 the global HSIC estimator.
 
-.. GENERATED FROM PYTHON SOURCE LINES 404-407
+.. GENERATED FROM PYTHON SOURCE LINES 397-400
 
 .. code-block:: default
 
@@ -1005,11 +997,11 @@ the global HSIC estimator.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 408-409
+.. GENERATED FROM PYTHON SOURCE LINES 401-402
 
 We now build the HSIC estimator:
 
-.. GENERATED FROM PYTHON SOURCE LINES 409-412
+.. GENERATED FROM PYTHON SOURCE LINES 402-405
 
 .. code-block:: default
 
@@ -1023,11 +1015,11 @@ We now build the HSIC estimator:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 413-414
+.. GENERATED FROM PYTHON SOURCE LINES 406-407
 
 We get the R2-HSIC indices:
 
-.. GENERATED FROM PYTHON SOURCE LINES 414-418
+.. GENERATED FROM PYTHON SOURCE LINES 407-411
 
 .. code-block:: default
 
@@ -1045,16 +1037,16 @@ We get the R2-HSIC indices:
 
 
      Global HSIC analysis
-    R2-HSIC Indices:  [0.0577484,-0.00373071,0.106967,0.00581159,-0.00530909,0.00704091,0.0595426,0.293652,0.0924003,-0.000969001]#10
+    R2-HSIC Indices:  [0.102709,-0.00336782,0.148905,0.000299579,-0.00488949,0.00479322,0.0845911,0.34874,0.0601762,-0.00321501]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 419-420
+.. GENERATED FROM PYTHON SOURCE LINES 412-413
 
 and the HSIC indices:
 
-.. GENERATED FROM PYTHON SOURCE LINES 420-423
+.. GENERATED FROM PYTHON SOURCE LINES 413-416
 
 .. code-block:: default
 
@@ -1069,16 +1061,16 @@ and the HSIC indices:
 
  .. code-block:: none
 
-    HSIC Indices:  [0.00508928,-0.000316705,0.0089892,0.000494318,-0.00045258,0.000609337,0.00510215,0.0252512,0.00787126,-8.01297e-05]#10
+    HSIC Indices:  [0.00906902,-0.000293314,0.013635,2.72569e-05,-0.000444497,0.000436191,0.00777676,0.0309526,0.00545591,-0.000300297]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 424-425
+.. GENERATED FROM PYTHON SOURCE LINES 417-418
 
 The p-value by permutation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-428
+.. GENERATED FROM PYTHON SOURCE LINES 418-421
 
 .. code-block:: default
 
@@ -1093,16 +1085,16 @@ The p-value by permutation.
 
  .. code-block:: none
 
-    p-value (permutation):  [0,0.643564,0,0.188119,0.712871,0.168317,0,0,0,0.445545]#10
+    p-value (permutation):  [0,0.712871,0,0.376238,0.841584,0.128713,0,0,0,0.712871]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 429-430
+.. GENERATED FROM PYTHON SOURCE LINES 422-423
 
 We have an asymptotic estimate of the value for this estimator.
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-433
+.. GENERATED FROM PYTHON SOURCE LINES 423-426
 
 .. code-block:: default
 
@@ -1117,16 +1109,16 @@ We have an asymptotic estimate of the value for this estimator.
 
  .. code-block:: none
 
-    p-value (asymptotic):  [9.37986e-06,0.654557,4.23007e-10,0.180937,0.755991,0.140928,9.18252e-06,8.64633e-23,2.26231e-08,0.473288]#10
+    p-value (asymptotic):  [3.02901e-12,0.680845,1.28369e-16,0.392815,0.82049,0.169798,1.63072e-09,6.32092e-35,4.2536e-07,0.675604]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 434-435
+.. GENERATED FROM PYTHON SOURCE LINES 427-428
 
 We vizualise the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 435-447
+.. GENERATED FROM PYTHON SOURCE LINES 428-440
 
 .. code-block:: default
 
@@ -1180,14 +1172,14 @@ We vizualise the results.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 448-449
+.. GENERATED FROM PYTHON SOURCE LINES 441-442
 
 The HSIC indices go in the same way as the other estimators in terms the most influent variables. The variables :math:`W_{fw}, q, l, W_p` seem to be independent to the output as the corresponding p-values are high. We can also see that the asymptotic p-values and p-values estimated by permutation are quite similar.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.954 seconds)
+   **Total running time of the script:** ( 2 minutes  41.985 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_sensitivity_analysis_plot_sensitivity_wingweight.py:

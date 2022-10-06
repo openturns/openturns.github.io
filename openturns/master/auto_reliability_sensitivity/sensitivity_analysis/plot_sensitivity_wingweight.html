@@ -448,21 +448,13 @@ To analyze the relevance of the previous indices, a Sobol’ analysis is now car
 </div>
 <img src="../../_images/sphx_glr_plot_sensitivity_wingweight_011.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_011.png" alt="Sobol indices with Saltelli - wing weight" class = "sphx-glr-single-img"/><p>It improves the accuracy of the estimation but, for very low indices, Saltelli scheme is not accurate since several confidence intervals provide negative lower bounds.</p>
 <p>Now, we estimate the Sobol’ indices using Polynomial Chaos Expansion.
-We first create a Functional Chaos Expansion.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sizePCE</span> <span class="o">=</span> <span class="mi">200</span>
+We create a Functional Chaos Expansion.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sizePCE</span> <span class="o">=</span> <span class="mi">800</span>
 <span class="n">inputDesignPCE</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sizePCE</span><span class="p">)</span>
 <span class="n">outputDesignPCE</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesignPCE</span><span class="p">)</span>
 
-<span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">)])</span>
-<span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
-<span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span><span class="n">inputDesignPCE</span><span class="p">,</span> <span class="n">outputDesignPCE</span><span class="p">,</span> <span class="n">selectionAlgorithm</span><span class="p">)</span>
-<span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">enumfunc</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
-<span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
-    <span class="n">inputDesignPCE</span><span class="p">,</span> <span class="n">outputDesignPCE</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span><span class="p">)</span>
+    <span class="n">inputDesignPCE</span><span class="p">,</span> <span class="n">outputDesignPCE</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="p">)</span>
 
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
@@ -470,12 +462,12 @@ We first create a Functional Chaos Expansion.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getRelativeErrors</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.00955479]
-[1.07233e-06]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.000633307]
+[1.56991e-09]
 </pre></div>
 </div>
-<p>The relative errors are very low: this indicates that the PCE model has good accuracy.</p>
-<p>Then, we exploit the surrogate model to compute the Sobol’ indices.</p>
+<p>The relative errors are low : this indicates that the PCE model has good accuracy.
+Then, we exploit the surrogate model to compute the Sobol’ indices.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sensitivityAnalysis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 <span class="n">firstOrder</span> <span class="o">=</span> <span class="p">[</span><span class="n">sensitivityAnalysis</span><span class="o">.</span><span class="n">getSobolIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
@@ -489,44 +481,47 @@ We first create a Functional Chaos Expansion.</p>
 </div>
 <img src="../../_images/sphx_glr_plot_sensitivity_wingweight_012.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_012.png" alt="Sobol indices by Polynomial Chaos Expansion - wing weight" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> input dimension: 10
  output dimension: 1
- basis size: 105
- mean: [268.111]
- std-dev: [48.101]
+ basis size: 299
+ mean: [268.074]
+ std-dev: [48.0827]
 ------------------------------------------------------------
 Index   | Multi-indice                  | Part of variance
 ------------------------------------------------------------
-      6 | [0,0,0,0,0,0,0,1,0,0]         | 0.410796
-      2 | [0,0,1,0,0,0,0,0,0,0]         | 0.220073
-      5 | [0,0,0,0,0,0,1,0,0,0]         | 0.139081
-      1 | [1,0,0,0,0,0,0,0,0,0]         | 0.124534
-      7 | [0,0,0,0,0,0,0,0,1,0]         | 0.0844863
+      7 | [0,0,0,0,0,0,0,1,0,0]         | 0.410327
+      3 | [0,0,1,0,0,0,0,0,0,0]         | 0.220054
+      6 | [0,0,0,0,0,0,1,0,0,0]         | 0.13849
+      1 | [1,0,0,0,0,0,0,0,0,0]         | 0.124432
+      8 | [0,0,0,0,0,0,0,0,1,0]         | 0.0849403
 ------------------------------------------------------------
 
 
 ------------------------------------------------------------
 Component | Sobol index            | Sobol total index
 ------------------------------------------------------------
-        0 | 0.12455                | 0.127885
-        1 | 0                      | 5.11089e-06
-        2 | 0.220194               | 0.225845
-        3 | 0.000545033            | 0.000563498
-        4 | 6.52128e-05            | 8.87667e-05
-        5 | 0.00172527             | 0.00177244
-        6 | 0.141499               | 0.14544
-        7 | 0.412025               | 0.419721
-        8 | 0.0845279              | 0.08702
-        9 | 0.00329707             | 0.00334609
+        0 | 0.124441               | 0.127859
+        1 | 2.77423e-06            | 2.93343e-06
+        2 | 0.220203               | 0.225955
+        3 | 0.000487693            | 0.000504128
+        4 | 8.81411e-05            | 9.11378e-05
+        5 | 0.00179913             | 0.00185859
+        6 | 0.141038               | 0.145127
+        7 | 0.411636               | 0.419666
+        8 | 0.0849948              | 0.0876214
+        9 | 0.00333265             | 0.00335527
 ------------------------------------------------------------
 </pre></div>
 </div>
 <p>The Sobol’ indices confirm the previous analyses, in terms of ranking of the most influent variables. We also see that five variables have a quasi null total Sobol’ indices, that indicates almost no influence on the wing weight.
-There is no discrepancy between first order and total Sobol’ indices, that indicates no or very low interaction between the variables in the variance of the output.</p>
+There is no discrepancy between first order and total Sobol’ indices, that indicates no or very low interaction between the variables in the variance of the output.
+As the most important variables act only through decoupled first degree contributions, the hypothesis of a linear dependence between the input variables and the weight is legitimate.
+This explains why both squared SRC and Taylor give the exact same results even if the first one is based on a <img class="math" src="../../_images/math/bf14d459bb44e37a9e68156808f490bcbfb5be95.svg" alt="\mathcal{L}^2"/> linear approximation and the second one is based on a linear expansion around the mean value of the input variables.</p>
 </section>
 <section id="hsic-indices">
 <h2>HSIC indices<a class="headerlink" href="#hsic-indices" title="Permalink to this heading">¶</a></h2>
-<p>We then estimate the HSIC indices using a data-driven approach by exploiting the design of experiments used to train the PCE model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputDesignHSIC</span> <span class="o">=</span> <span class="n">inputDesignPCE</span>
-<span class="n">outputDesignHSIC</span> <span class="o">=</span> <span class="n">outputDesignPCE</span>
+<p>We then estimate the HSIC indices using a data-driven approach.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sizeHSIC</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">inputDesignHSIC</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sizeHSIC</span><span class="p">)</span>
+<span class="n">outputDesignHSIC</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputDesignHSIC</span><span class="p">)</span>
 
 <span class="n">covarianceModelCollection</span> <span class="o">=</span> <span class="p">[]</span>
 </pre></div>
@@ -561,7 +556,7 @@ the global HSIC estimator.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> Global HSIC analysis
-R2-HSIC Indices:  [0.0577484,-0.00373071,0.106967,0.00581159,-0.00530909,0.00704091,0.0595426,0.293652,0.0924003,-0.000969001]#10
+R2-HSIC Indices:  [0.102709,-0.00336782,0.148905,0.000299579,-0.00488949,0.00479322,0.0845911,0.34874,0.0601762,-0.00321501]#10
 </pre></div>
 </div>
 <p>and the HSIC indices:</p>
@@ -569,7 +564,7 @@ R2-HSIC Indices:  [0.0577484,-0.00373071,0.106967,0.00581159,-0.00530909,0.00704
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">HSICIndices</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>HSIC Indices:  [0.00508928,-0.000316705,0.0089892,0.000494318,-0.00045258,0.000609337,0.00510215,0.0252512,0.00787126,-8.01297e-05]#10
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>HSIC Indices:  [0.00906902,-0.000293314,0.013635,2.72569e-05,-0.000444497,0.000436191,0.00777676,0.0309526,0.00545591,-0.000300297]#10
 </pre></div>
 </div>
 <p>The p-value by permutation.</p>
@@ -577,7 +572,7 @@ R2-HSIC Indices:  [0.0577484,-0.00373071,0.106967,0.00581159,-0.00530909,0.00704
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (permutation): &quot;</span><span class="p">,</span> <span class="n">pvperm</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (permutation):  [0,0.643564,0,0.188119,0.712871,0.168317,0,0,0,0.445545]#10
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (permutation):  [0,0.712871,0,0.376238,0.841584,0.128713,0,0,0,0.712871]#10
 </pre></div>
 </div>
 <p>We have an asymptotic estimate of the value for this estimator.</p>
@@ -585,7 +580,7 @@ R2-HSIC Indices:  [0.0577484,-0.00373071,0.106967,0.00581159,-0.00530909,0.00704
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (asymptotic): &quot;</span><span class="p">,</span> <span class="n">pvas</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (asymptotic):  [9.37986e-06,0.654557,4.23007e-10,0.180937,0.755991,0.140928,9.18252e-06,8.64633e-23,2.26231e-08,0.473288]#10
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (asymptotic):  [3.02901e-12,0.680845,1.28369e-16,0.392815,0.82049,0.169798,1.63072e-09,6.32092e-35,4.2536e-07,0.675604]#10
 </pre></div>
 </div>
 <p>We vizualise the results.</p>
@@ -609,7 +604,7 @@ R2-HSIC Indices:  [0.0577484,-0.00373071,0.106967,0.00581159,-0.00530909,0.00704
 <li><img src="../../_images/sphx_glr_plot_sensitivity_wingweight_016.png" srcset="../../_images/sphx_glr_plot_sensitivity_wingweight_016.png" alt="p-values by permutation" class = "sphx-glr-multi-img"/></li>
 </ul>
 <p>The HSIC indices go in the same way as the other estimators in terms the most influent variables. The variables <img class="math" src="../../_images/math/8152b85cd0da34fd57bbf0e6b5567f9f842cc250.svg" alt="W_{fw}, q, l, W_p"/> seem to be independent to the output as the corresponding p-values are high. We can also see that the asymptotic p-values and p-values estimated by permutation are quite similar.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  11.954 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  41.985 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-sensitivity-analysis-plot-sensitivity-wingweight-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/b77fabceeed0488793aa1923f45f794f/plot_sensitivity_wingweight.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_sensitivity_wingweight.py</span></code></a></p>
