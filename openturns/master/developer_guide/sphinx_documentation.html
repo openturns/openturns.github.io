@@ -88,7 +88,8 @@
 <li><a class="reference internal" href="#bridge-pattern">Bridge pattern</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#integration-to-the-building-suite">Integration to the building suite</a></li>
+<li><a class="reference internal" href="#integration-to-the-build-system">Integration to the build system</a></li>
+<li><a class="reference internal" href="#example-gallery">Example gallery</a></li>
 </ul>
 </li>
 </ul>
@@ -151,6 +152,9 @@ of OpenTURNS objects.</p>
 Matplotlib/Sphinx extension is used for <em>executing</em> and <em>testing</em> the
 code blocks featured in the pages of this documentation, especially in the
 <a class="reference internal" href="../examples/examples.html#examples"><span class="std std-ref">examples section</span></a>.</p>
+</dd>
+<dt>sphinx_gallery.gen_gallery</dt><dd><p>The <a class="reference external" href="https://sphinx-gallery.github.io/stable/gen_modules/sphinx_gallery.gen_gallery.html">gen_gallery</a>
+extension from Sphinx-Gallery is used to generate pages from the examples directory.</p>
 </dd>
 </dl>
 </section>
@@ -239,8 +243,8 @@ SWIG header file:</p>
 </div>
 </section>
 </section>
-<section id="integration-to-the-building-suite">
-<h2>Integration to the building suite<a class="headerlink" href="#integration-to-the-building-suite" title="Permalink to this heading">¶</a></h2>
+<section id="integration-to-the-build-system">
+<h2>Integration to the build system<a class="headerlink" href="#integration-to-the-build-system" title="Permalink to this heading">¶</a></h2>
 <p>The separate docstring SWIG header files are included in the SWIG header files
 of the <a class="reference external" href="https://github.com/openturns">openturns repos</a>, so this does
 not need any further integration steps (out of the backslashes escaper CMake
@@ -256,6 +260,48 @@ Python tests.</p>
 </dl>
 <p>All these targets depend on the rst files located in the sources
 (<code class="file docutils literal notranslate"><span class="pre">$OT_SOURCE_DIR/python/doc/*.rst</span></code>).</p>
+</section>
+<section id="example-gallery">
+<h2>Example gallery<a class="headerlink" href="#example-gallery" title="Permalink to this heading">¶</a></h2>
+<p>Example pages are generated from Python scripts in the examples directory
+(<code class="file docutils literal notranslate"><span class="pre">$OT_SOURCE_DIR/python/doc/examples/*.py</span></code>).</p>
+<p>Each page allows to display notebook-like code or text cells.
+Each cell is delimited by a specific marker and the text cells are written in
+rst format, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="c1"># First cell (text) in *rst* format inside comments</span>
+<span class="c1"># Some formula :math:`\lambda = 4`</span>
+
+<span class="c1"># %%</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Second cell (code)&quot;</span><span class="p">)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Output cells are rendered at compilation time, so the script must
+not be too long to run.</p>
+<p>Figures are automatically generated from the matplotlib handles,
+for example using the openturns.viewer module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that sphinx runs the examples in the same Python process so you might want
+to reset the random generator at the beginning of your example for consistent
+results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The special variable <a class="reference external" href="https://sphinx-gallery.github.io/stable/configuration.html#choosing-thumbnail">sphinx_gallery_thumbnail_number</a>
+can be used to determine which figure is used as thumbnail in the examples gallery:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="c1"># sphinx_gallery_thumbnail_number = 3</span>
+</pre></div>
+</div>
 </section>
 </section>
 
