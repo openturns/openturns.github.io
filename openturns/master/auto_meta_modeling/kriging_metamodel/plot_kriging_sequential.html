@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Sequentially adding new points to a kriging &#8212; OpenTURNS 1.20dev documentation</title>
+    <title>Sequentially adding new points to a kriging &#8212; OpenTURNS 1.20rc1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -65,7 +65,7 @@
         <li class="right" >
           <a href="plot_kriging_1d.html" title="Kriging : quick-start"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
@@ -137,7 +137,7 @@ to download the full example code</p>
 <span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -146,7 +146,7 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p>Define the function.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;0.5*x^2 + sin(2.5*x)&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;0.5*x^2 + sin(2.5*x)&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Create the design of experiments.</p>
@@ -168,10 +168,10 @@ to download the full example code</p>
 <section id="create-the-algorithms">
 <h2>Create the algorithms<a class="headerlink" href="#create-the-algorithms" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">createMyBasicKriging</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a kriging from a pair of X and Y samples.</span>
 <span class="sd">    We use a 3/2 Matérn covariance model and a constant trend.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
     <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">1.5</span><span class="p">)</span>
     <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
@@ -181,25 +181,26 @@ to download the full example code</p>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">linearSample</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">npoints</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Returns a sample created from a regular grid</span>
-<span class="sd">    from xmin to xmax with npoints points.&#39;&#39;&#39;</span>
-    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">npoints</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Returns a sample created from a regular grid</span>
+<span class="sd">    from xmin to xmax with npoints points.&quot;&quot;&quot;</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">npoints</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">rg</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
     <span class="n">vertices</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">vertices</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_kriging_bounds</span><span class="p">(</span><span class="n">vLow</span><span class="p">,</span> <span class="n">vUp</span><span class="p">,</span> <span class="n">n_test</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    From two lists containing the lower and upper bounds of the region,</span>
 <span class="sd">    create a PolygonArray.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">palette</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Drawable</span><span class="o">.</span><span class="n">BuildDefaultPalette</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">myPaletteColor</span> <span class="o">=</span> <span class="n">palette</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">polyData</span> <span class="o">=</span> <span class="p">[[</span><span class="n">vLow</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vLow</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">vUp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">vUp</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_test</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
-    <span class="n">polygonList</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span>
-        <span class="n">polyData</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">myPaletteColor</span><span class="p">,</span> <span class="n">myPaletteColor</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_test</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">polyData</span> <span class="o">=</span> <span class="p">[[</span><span class="n">vLow</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vLow</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">vUp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">vUp</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_test</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">polygonList</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ot</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">polyData</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">myPaletteColor</span><span class="p">,</span> <span class="n">myPaletteColor</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_test</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span>
     <span class="n">boundsPoly</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PolygonArray</span><span class="p">(</span><span class="n">polygonList</span><span class="p">)</span>
     <span class="n">boundsPoly</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;95% bounds&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">boundsPoly</span>
@@ -210,10 +211,10 @@ to download the full example code</p>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotMyBasicKriging</span><span class="p">(</span><span class="n">krigResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a kriging result, plot the data, the kriging metamodel</span>
 <span class="sd">    and a confidence interval.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">samplesize</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
     <span class="n">meta</span> <span class="o">=</span> <span class="n">krigResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
     <span class="n">graphKriging</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
@@ -224,19 +225,20 @@ to download the full example code</p>
     <span class="n">yFunction</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
     <span class="n">yKrig</span> <span class="o">=</span> <span class="n">meta</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
     <span class="c1"># Compute the conditional covariance</span>
-    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.e-8</span><span class="p">])</span>
-    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">krigResult</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span>
-        <span class="n">xGrid</span><span class="p">)</span><span class="o">+</span><span class="n">epsilon</span>
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0e-8</span><span class="p">])</span>
+    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">krigResult</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
     <span class="n">conditionalSigma</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">conditionalVariance</span><span class="p">)</span>
     <span class="c1"># Compute the quantile of the Normal distribution</span>
-    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">level</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="n">quantileAlpha</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DistFunc</span><span class="o">.</span><span class="n">qNormal</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
     <span class="c1"># Graphics of the bounds</span>
-    <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1.e-8</span>
-    <span class="n">dataLower</span> <span class="o">=</span> <span class="p">[</span><span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)]</span>
-    <span class="n">dataUpper</span> <span class="o">=</span> <span class="p">[</span><span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)]</span>
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1.0e-8</span>
+    <span class="n">dataLower</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">dataUpper</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)</span>
+    <span class="p">]</span>
     <span class="c1"># Coordinates of the vertices of the Polygons</span>
     <span class="n">vLow</span> <span class="o">=</span> <span class="p">[[</span><span class="n">xGrid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dataLower</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)]</span>
     <span class="n">vUp</span> <span class="o">=</span> <span class="p">[[</span><span class="n">xGrid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dataUpper</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)]</span>
@@ -266,7 +268,7 @@ to download the full example code</p>
     <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;bottomright&quot;</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Size = </span><span class="si">%d</span><span class="s2">, Q2=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">samplesize</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="n">Q2</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Size = </span><span class="si">%d</span><span class="s2">, Q2=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">samplesize</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">Q2</span><span class="p">))</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">graph</span>
@@ -283,10 +285,10 @@ to download the full example code</p>
 <h2>Sequentially add new points<a class="headerlink" href="#sequentially-add-new-points" title="Permalink to this heading">¶</a></h2>
 <p>The following function is the building block of the algorithm. It returns a new point which maximizes the conditional variance.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">krigResult</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a new point to be added to the design of experiments.</span>
 <span class="sd">    This point maximizes the conditional variance of the kriging.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nbpoints</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="n">xGrid</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">nbpoints</span><span class="p">)</span>
     <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">krigResult</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
@@ -352,7 +354,7 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.754 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.616 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-sequential-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4095bff35e5799718c035c3373b63a54/plot_kriging_sequential.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_sequential.py</span></code></a></p>
@@ -383,7 +385,7 @@ to download the full example code</p>
         <li class="right" >
           <a href="plot_kriging_1d.html" title="Kriging : quick-start"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>

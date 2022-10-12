@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Use the post-analytical importance sampling algorithm &#8212; OpenTURNS 1.20dev documentation</title>
+    <title>Use the post-analytical importance sampling algorithm &#8212; OpenTURNS 1.20rc1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -26,8 +26,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Estimate a flooding probability" href="plot_flood_model.html" />
-    <link rel="prev" title="Use the Directional Sampling Algorithm" href="plot_estimate_probability_directional_sampling.html" />
+    <link rel="next" title="Use the Directional Sampling Algorithm" href="plot_estimate_probability_directional_sampling.html" />
+    <link rel="prev" title="Use the Adaptive Directional Stratification Algorithm" href="plot_estimate_probability_adaptive_directional_sampling.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -60,12 +60,12 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_flood_model.html" title="Estimate a flooding probability"
+          <a href="plot_estimate_probability_directional_sampling.html" title="Use the Directional Sampling Algorithm"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_estimate_probability_directional_sampling.html" title="Use the Directional Sampling Algorithm"
+          <a href="plot_estimate_probability_adaptive_directional_sampling.html" title="Use the Adaptive Directional Stratification Algorithm"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
@@ -77,13 +77,13 @@
         <div class="sphinxsidebarwrapper">
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_estimate_probability_directional_sampling.html"
-                          title="previous chapter">Use the Directional Sampling Algorithm</a></p>
+    <p class="topless"><a href="plot_estimate_probability_adaptive_directional_sampling.html"
+                          title="previous chapter">Use the Adaptive Directional Stratification Algorithm</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plot_flood_model.html"
-                          title="next chapter">Estimate a flooding probability</a></p>
+    <p class="topless"><a href="plot_estimate_probability_directional_sampling.html"
+                          title="next chapter">Use the Directional Sampling Algorithm</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -136,18 +136,16 @@ to download the full example code</p>
 <p>Let us note that the post FORM/SORM importance sampling method may be implemented thanks to the ImportanceSampling object, where the importance distribution is defined in the standard space: then, it requires that the event initially defined in the pysical space be transformed in the standard space.</p>
 <p>The controlled importance sampling technique is only accessible within the post analytical context.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">m</span>
+
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create a model</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;x1^2+x2&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x1^2+x2&quot;</span><span class="p">])</span>
 <span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.6</span>
-<span class="n">inputDist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="n">R</span><span class="p">)</span>
-<span class="n">inputDist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s1">&#39;X1&#39;</span><span class="p">,</span> <span class="s1">&#39;X2&#39;</span><span class="p">])</span>
+<span class="n">inputDist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">R</span><span class="p">)</span>
+<span class="n">inputDist</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;X2&quot;</span><span class="p">])</span>
 <span class="n">inputVector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">inputDist</span><span class="p">)</span>
 
 <span class="c1"># Create the output random vector Y=model(X)</span>
@@ -175,7 +173,7 @@ to download the full example code</p>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<p>probabilityEstimate=4.244373e-02 varianceEstimate=1.784441e-05 standard deviation=4.22e-03 coefficient of variation=9.95e-02 confidenceLength(0.95)=1.66e-02 outerSampling=220 blockSize=1</p>
+<p>probabilityEstimate=5.309800e-02 varianceEstimate=2.787874e-05 standard deviation=5.28e-03 coefficient of variation=9.94e-02 confidenceLength(0.95)=2.07e-02 outerSampling=195 blockSize=1</p>
 </div>
 <br />
 <br /><p>Create the post analytical controlled importance sampling simulation algorithm</p>
@@ -213,12 +211,12 @@ to download the full example code</p>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_flood_model.html" title="Estimate a flooding probability"
+          <a href="plot_estimate_probability_directional_sampling.html" title="Use the Directional Sampling Algorithm"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_estimate_probability_directional_sampling.html" title="Use the Directional Sampling Algorithm"
+          <a href="plot_estimate_probability_adaptive_directional_sampling.html" title="Use the Adaptive Directional Stratification Algorithm"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>

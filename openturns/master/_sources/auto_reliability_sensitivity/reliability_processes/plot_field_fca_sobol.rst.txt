@@ -70,8 +70,8 @@ We assemble a 4-d process from functional and Gaussian processes.
     T = 3.0
     NT = 32
     tg = ot.RegularGrid(0.0, T / NT, NT)
-    f1 = ot.SymbolicFunction(['t'], ['sin(t)'])
-    f2 = ot.SymbolicFunction(['t'], ['cos(t)^2'])
+    f1 = ot.SymbolicFunction(["t"], ["sin(t)"])
+    f2 = ot.SymbolicFunction(["t"], ["cos(t)^2"])
     coeff1_dist = ot.Normal([1.0] * 2, [0.6] * 2, ot.CorrelationMatrix(2))
     p1 = ot.FunctionalBasisProcess(coeff1_dist, ot.Basis([f1, f2]), tg)
     p2 = ot.GaussianProcess(ot.SquaredExponential([1.0], [T / 4.0]), tg)
@@ -100,7 +100,7 @@ Draw some input trajectories from our process
     ot.RandomGenerator.SetSeed(0)
     x = X.getSample(10)
     graph = x.drawMarginal(0)
-    graph.setTitle(f'{x.getSize()} input trajectories')
+    graph.setTitle(f"{x.getSize()} input trajectories")
     _ = View(graph)
 
 
@@ -119,20 +119,25 @@ Draw some input trajectories from our process
 
 Generate input realizations and the corresponding output from a Field->Point function
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-75
+.. GENERATED FROM PYTHON SOURCE LINES 60-80
 
 .. code-block:: default
+
+
 
     class pyf2p(ot.OpenTURNSPythonFieldToPointFunction):
         def __init__(self, mesh):
             super(pyf2p, self).__init__(mesh, 4, 1)
             self.setInputDescription(["x1", "x2", "x3", "x4"])
-            self.setOutputDescription(['y'])
+            self.setOutputDescription(["y"])
+
         def _exec(self, X):
             Xs = ot.Sample(X)
             x1, x2, x3, x4 = Xs.computeMean()
             y = x1 + x2 + x3 - x4 + x1 * x2 - x3 * x4 - 0.1 * x1 * x2 * x3
             return [y]
+
+
     f = ot.FieldToPointFunction(pyf2p(tg))
     N = 1000
     x = X.getSample(N)
@@ -145,12 +150,12 @@ Generate input realizations and the corresponding output from a Field->Point fun
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-78
+.. GENERATED FROM PYTHON SOURCE LINES 81-83
 
 Run the field-vector algorithm that performs KL-decomposition of the inputs
 and chaos learning between the KL coefficients and the ouput vectors
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-92
+.. GENERATED FROM PYTHON SOURCE LINES 83-101
 
 .. code-block:: default
 
@@ -158,14 +163,18 @@ and chaos learning between the KL coefficients and the ouput vectors
     # 1. KL parameters
     algo.setCenteredSample(False)  # our input sample is not centered (default)
     algo.setThreshold(4e-2)  # we expect to explain 96% of variance
-    algo.setRecompress(False)  # whether to re-truncate modes according to a global eigen value threshold across inputs (default)
-    algo.setNbModes(10) # max KL modes (default=unlimited)
+    algo.setRecompress(
+        False
+    )  # whether to re-truncate modes according to a global eigen value threshold across inputs (default)
+    algo.setNbModes(10)  # max KL modes (default=unlimited)
     # 2. chaos parameters:
-    bs = ot.ResourceMap.GetAsUnsignedInteger('FunctionalChaosAlgorithm-BasisSize')
-    ot.ResourceMap.SetAsUnsignedInteger('FunctionalChaosAlgorithm-BasisSize', N) # chaos basis size
-    ot.ResourceMap.SetAsBool('FunctionalChaosAlgorithm-Sparse', True)
+    bs = ot.ResourceMap.GetAsUnsignedInteger("FunctionalChaosAlgorithm-BasisSize")
+    ot.ResourceMap.SetAsUnsignedInteger(
+        "FunctionalChaosAlgorithm-BasisSize", N
+    )  # chaos basis size
+    ot.ResourceMap.SetAsBool("FunctionalChaosAlgorithm-Sparse", True)
     algo.run()
-    ot.ResourceMap.SetAsUnsignedInteger('FunctionalChaosAlgorithm-BasisSize', bs)
+    ot.ResourceMap.SetAsUnsignedInteger("FunctionalChaosAlgorithm-BasisSize", bs)
     result = algo.getResult()
 
 
@@ -175,12 +184,12 @@ and chaos learning between the KL coefficients and the ouput vectors
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-95
+.. GENERATED FROM PYTHON SOURCE LINES 102-104
 
 Retrieve the eigen values of each KL decomposition:
 we observe that each input process is represented by a different number of modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-99
+.. GENERATED FROM PYTHON SOURCE LINES 104-108
 
 .. code-block:: default
 
@@ -201,12 +210,12 @@ we observe that each input process is represented by a different number of modes
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-102
+.. GENERATED FROM PYTHON SOURCE LINES 109-111
 
 Retrieve the ratios of selected variance over cumulated variance:
 we see that all 3 inputs are perfectly represented, and the 2nd input almost perfectly.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-105
+.. GENERATED FROM PYTHON SOURCE LINES 111-114
 
 .. code-block:: default
 
@@ -226,13 +235,13 @@ we see that all 3 inputs are perfectly represented, and the 2nd input almost per
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-109
+.. GENERATED FROM PYTHON SOURCE LINES 115-118
 
 Graphically validate the KL decompositions:
 we also see that the 2nd input appear to be less well represented than the others.
 Note however that the 0.98 selected/cumulated variance ratio actually means it is very good.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-117
+.. GENERATED FROM PYTHON SOURCE LINES 118-126
 
 .. code-block:: default
 
@@ -240,7 +249,7 @@ Note however that the 0.98 selected/cumulated variance ratio actually means it i
     for i in range(x.getDimension()):
         validation = ot.KarhunenLoeveValidation(x.getMarginal(i), kl_results[i])
         graph = validation.drawValidation().getGraph(0, 0)
-        graph.setTitle(f'KL validation - marginal #{i} ratio={100.0 * ratios[i]:.2f} %')
+        graph.setTitle(f"KL validation - marginal #{i} ratio={100.0 * ratios[i]:.2f} %")
         View(graph)
         graphs.append(graph)
 
@@ -282,12 +291,12 @@ Note however that the 0.98 selected/cumulated variance ratio actually means it i
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-120
+.. GENERATED FROM PYTHON SOURCE LINES 127-129
 
 On the 2nd marginal we can filter out the points inside the 99% level-set
 to see that actually only a few points out of N are actually outliers.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-141
+.. GENERATED FROM PYTHON SOURCE LINES 129-150
 
 .. code-block:: default
 
@@ -297,7 +306,7 @@ to see that actually only a few points out of N are actually outliers.
     log_pdf = normal.computeLogPDF(data).asPoint()
     l_pair = [(log_pdf[i], data[i]) for i in range(len(data))]
     l_pair.sort(key=lambda t: t[0])
-    index_bad = int(0.01 * len(data)) # here 0.01 = (100-99)%
+    index_bad = int(0.01 * len(data))  # here 0.01 = (100-99)%
     beta = l_pair[index_bad][0]
     gnorm = normal.drawLogPDF(data.getMin(), data.getMax())
     bad = [l_pair[i][1] for i in range(index_bad + 1)]
@@ -324,12 +333,12 @@ to see that actually only a few points out of N are actually outliers.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-144
+.. GENERATED FROM PYTHON SOURCE LINES 151-153
 
 Inspect the chaos quality: residuals and relative errors.
 The relative error is very low; that means the chaos decomposition performs very well.
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-147
+.. GENERATED FROM PYTHON SOURCE LINES 153-156
 
 .. code-block:: default
 
@@ -350,13 +359,13 @@ The relative error is very low; that means the chaos decomposition performs very
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-151
+.. GENERATED FROM PYTHON SOURCE LINES 157-160
 
 Graphically validate the chaos result:
 we can see the points are very close to the diagonal; this means
 approximated points are very close to the learning points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-161
+.. GENERATED FROM PYTHON SOURCE LINES 160-170
 
 .. code-block:: default
 
@@ -367,7 +376,7 @@ approximated points are very close to the learning points.
     q2 = validation.computePredictivityFactor()
     print(f"q2={q2}")
     graph = validation.drawValidation()
-    graph.setTitle(f'Chaos validation - q2={q2}')
+    graph.setTitle(f"Chaos validation - q2={q2}")
     _ = View(graph)
 
 
@@ -388,12 +397,12 @@ approximated points are very close to the learning points.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-164
+.. GENERATED FROM PYTHON SOURCE LINES 171-173
 
 Perform an evaluation on a new realization and ensure the output
 is close to the evaluation with the reference function
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-170
+.. GENERATED FROM PYTHON SOURCE LINES 173-179
 
 .. code-block:: default
 
@@ -401,7 +410,7 @@ is close to the evaluation with the reference function
     x0 = X.getRealization()
     y0 = f(x0)
     y0hat = metamodel(x0)
-    print(f'y0={y0} y0^={y0hat}')
+    print(f"y0={y0} y0^={y0hat}")
 
 
 
@@ -416,12 +425,12 @@ is close to the evaluation with the reference function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-173
+.. GENERATED FROM PYTHON SOURCE LINES 180-182
 
 Retrieve the first order Sobol' indices
 The preponderant variables are x2, x4 whereas x1, x3 have a low influence on the output
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-177
+.. GENERATED FROM PYTHON SOURCE LINES 182-186
 
 .. code-block:: default
 
@@ -442,13 +451,13 @@ The preponderant variables are x2, x4 whereas x1, x3 have a low influence on the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-181
+.. GENERATED FROM PYTHON SOURCE LINES 187-190
 
 Retrieve the total Sorder obol' indices
 The x3,x4 variables have total order indices significantly different than
 their first order indices counterpart meaning they interact with other variables
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-184
+.. GENERATED FROM PYTHON SOURCE LINES 190-193
 
 .. code-block:: default
 
@@ -468,11 +477,11 @@ their first order indices counterpart meaning they interact with other variables
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-186
+.. GENERATED FROM PYTHON SOURCE LINES 194-195
 
 Draw the Sobol' indices
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-190
+.. GENERATED FROM PYTHON SOURCE LINES 195-199
 
 .. code-block:: default
 
@@ -495,7 +504,7 @@ Draw the Sobol' indices
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.541 seconds)
+   **Total running time of the script:** ( 0 minutes  7.563 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_processes_plot_field_fca_sobol.py:

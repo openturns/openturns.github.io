@@ -25,7 +25,7 @@ Analyse the central tendency of a cantilever beam
 
 In this example we perform a central tendency analysis of a random variable Y using the various methods available. We consider the :ref:`cantilever beam <use-case-cantilever-beam>` example and show how to use the `TaylorExpansionMoments` and `ExpectationSimulationAlgorithm` classes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-15
+.. GENERATED FROM PYTHON SOURCE LINES 9-16
 
 .. code-block:: default
 
@@ -33,6 +33,7 @@ In this example we perform a central tendency analysis of a random variable Y us
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -42,11 +43,11 @@ In this example we perform a central tendency analysis of a random variable Y us
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 We first load the data class from the usecases module :
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-19
+.. GENERATED FROM PYTHON SOURCE LINES 18-20
 
 .. code-block:: default
 
@@ -59,15 +60,15 @@ We first load the data class from the usecases module :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 We want to create the random variable of interest Y=g(X) where :math:`g(.)` is the physical model and :math:`X` is the input vectors. For this example we consider independent marginals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 We set a `mean` vector and a unitary standard deviation :
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-29
+.. GENERATED FROM PYTHON SOURCE LINES 25-30
 
 .. code-block:: default
 
@@ -83,17 +84,17 @@ We set a `mean` vector and a unitary standard deviation :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 We create the input parameters distribution and make a random vector :
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-35
+.. GENERATED FROM PYTHON SOURCE LINES 32-36
 
 .. code-block:: default
 
     distribution = ot.Normal(mean, sigma, R)
     X = ot.RandomVector(distribution)
-    X.setDescription(['E', 'F', 'L', 'I'])
+    X.setDescription(["E", "F", "L", "I"])
 
 
 
@@ -102,11 +103,11 @@ We create the input parameters distribution and make a random vector :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 `f` is the cantilever beam model :
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-39
+.. GENERATED FROM PYTHON SOURCE LINES 38-40
 
 .. code-block:: default
 
@@ -119,16 +120,16 @@ We create the input parameters distribution and make a random vector :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 The random variable of interest Y is then
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-44
+.. GENERATED FROM PYTHON SOURCE LINES 42-45
 
 .. code-block:: default
 
     Y = ot.CompositeRandomVector(f, X)
-    Y.setDescription('Y')
+    Y.setDescription("Y")
 
 
 
@@ -137,16 +138,16 @@ The random variable of interest Y is then
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-47
+.. GENERATED FROM PYTHON SOURCE LINES 46-48
 
 Taylor expansion
 ----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Perform Taylor approximation to get the expected value of Y and the importance factors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-64
+.. GENERATED FROM PYTHON SOURCE LINES 53-65
 
 .. code-block:: default
 
@@ -155,12 +156,12 @@ Perform Taylor approximation to get the expected value of Y and the importance f
     taylor_mean_so = taylor.getMeanSecondOrder()
     taylor_cov = taylor.getCovariance()
     taylor_if = taylor.getImportanceFactors()
-    print('model evaluation calls number=', f.getGradientCallsNumber())
-    print('model gradient calls number=', f.getGradientCallsNumber())
-    print('model hessian calls number=', f.getHessianCallsNumber())
-    print('taylor mean first order=', taylor_mean_fo)
-    print('taylor variance=', taylor_cov)
-    print('taylor importance factors=', taylor_if)
+    print("model evaluation calls number=", f.getGradientCallsNumber())
+    print("model gradient calls number=", f.getGradientCallsNumber())
+    print("model hessian calls number=", f.getHessianCallsNumber())
+    print("taylor mean first order=", taylor_mean_fo)
+    print("taylor variance=", taylor_cov)
+    print("taylor importance factors=", taylor_if)
 
 
 
@@ -180,7 +181,7 @@ Perform Taylor approximation to get the expected value of Y and the importance f
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-68
+.. GENERATED FROM PYTHON SOURCE LINES 66-69
 
 .. code-block:: default
 
@@ -199,32 +200,36 @@ Perform Taylor approximation to get the expected value of Y and the importance f
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 70-71
 
 We see that, at first order, the variable :math:`F` explains 88.5% of the variance of the output :math:`Y`. On the other hand, the variable :math:`E` is not significant in the variance of the output: at first order, the random variable :math:`E` could be replaced by a constant with no change to the output variance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 Monte-Carlo simulation
 ----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Perform a Monte Carlo simulation of Y to estimate its mean.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-89
+.. GENERATED FROM PYTHON SOURCE LINES 80-94
 
 .. code-block:: default
 
     algo = ot.ExpectationSimulationAlgorithm(Y)
     algo.setMaximumOuterSampling(1000)
-    algo.setCoefficientOfVariationCriterionType('NONE')
+    algo.setCoefficientOfVariationCriterionType("NONE")
     algo.run()
-    print('model evaluation calls number=', f.getEvaluationCallsNumber())
+    print("model evaluation calls number=", f.getEvaluationCallsNumber())
     expectation_result = algo.getResult()
     expectation_mean = expectation_result.getExpectationEstimate()
-    print('monte carlo mean=', expectation_mean, 'var=',
-          expectation_result.getVarianceEstimate())
+    print(
+        "monte carlo mean=",
+        expectation_mean,
+        "var=",
+        expectation_result.getVarianceEstimate(),
+    )
 
 
 
@@ -240,16 +245,16 @@ Perform a Monte Carlo simulation of Y to estimate its mean.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-92
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 Central dispersion analysis based on a sample
 ---------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-95
+.. GENERATED FROM PYTHON SOURCE LINES 99-100
 
 Directly compute statistical moments based on a sample of Y. Sometimes the probabilistic model is not available and the study needs to start from the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-103
+.. GENERATED FROM PYTHON SOURCE LINES 102-108
 
 .. code-block:: default
 
@@ -257,7 +262,7 @@ Directly compute statistical moments based on a sample of Y. Sometimes the proba
     y_mean = Y_s.computeMean()
     y_stddev = Y_s.computeStandardDeviation()
     y_quantile_95p = Y_s.computeQuantilePerComponent(0.95)
-    print('mean=', y_mean, 'stddev=', y_stddev, 'quantile@95%', y_quantile_95p)
+    print("mean=", y_mean, "stddev=", y_stddev, "quantile@95%", y_quantile_95p)
 
 
 
@@ -272,7 +277,7 @@ Directly compute statistical moments based on a sample of Y. Sometimes the proba
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-109
+.. GENERATED FROM PYTHON SOURCE LINES 109-114
 
 .. code-block:: default
 
@@ -296,7 +301,7 @@ Directly compute statistical moments based on a sample of Y. Sometimes the proba
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.149 seconds)
+   **Total running time of the script:** ( 0 minutes  0.113 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_central_dispersion_plot_central_tendency.py:

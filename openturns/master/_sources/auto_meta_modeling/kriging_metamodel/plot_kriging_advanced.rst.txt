@@ -37,7 +37,7 @@ We will choose the number of learning points, the basis and the covariance model
     import numpy as np
     import matplotlib.pyplot as plt
     import openturns.viewer as viewer
-    from matplotlib import pylab as plt
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -76,7 +76,7 @@ If the `with_error` boolean is `True`, then the data is computed by adding a gau
 
 .. code-block:: default
 
-    ref_func_with_error = ot.SymbolicFunction(['x', 'eps'], ['x * sin(x) + eps'])
+    ref_func_with_error = ot.SymbolicFunction(["x", "eps"], ["x * sin(x) + eps"])
     ref_func = ot.ParametricFunction(ref_func_with_error, [1], [0.0])
     x = np.vstack(np.linspace(xmin, xmax, n_pt))
     ot.RandomGenerator.SetSeed(1235)
@@ -102,8 +102,8 @@ If the `with_error` boolean is `True`, then the data is computed by adding a gau
 
     graph = ref_func.draw(xmin, xmax, 200)
     cloud = ot.Cloud(x, y)
-    cloud.setColor('red')
-    cloud.setPointStyle('bullet')
+    cloud.setColor("red")
+    cloud.setPointStyle("bullet")
     graph.add(cloud)
     graph.setLegends(["Function", "Data"])
     graph.setLegendPosition("topleft")
@@ -134,12 +134,13 @@ Create the kriging algorithm
 
     # 1. basis
     ot.ResourceMap.SetAsBool(
-        'GeneralLinearModelAlgorithm-UseAnalyticalAmplitudeEstimate', True)
+        "GeneralLinearModelAlgorithm-UseAnalyticalAmplitudeEstimate", True
+    )
     basis = ot.ConstantBasisFactory(dim).build()
     print(basis)
 
     # 2. covariance model
-    cov = ot.MaternModel([1.], [2.5], 1.5)
+    cov = ot.MaternModel([1.0], [2.5], 1.5)
     print(cov)
 
     # 3. kriging algorithm
@@ -151,8 +152,7 @@ Create the kriging algorithm
     # 4. Optimization
     # algokriging.setOptimizationAlgorithm(ot.NLopt('GN_DIRECT'))
     lhsExperiment = ot.LHSExperiment(ot.Uniform(1e-1, 1e2), 50)
-    algokriging.setOptimizationAlgorithm(
-        ot.MultiStart(ot.TNC(), lhsExperiment.generate()))
+    algokriging.setOptimizationAlgorithm(ot.MultiStart(ot.TNC(), lhsExperiment.generate()))
     algokriging.setOptimizationBounds(ot.Interval([0.1], [1e2]))
 
     # if we choose not to optimize parameters
@@ -189,13 +189,13 @@ get some results
 .. code-block:: default
 
     krigingResult = algokriging.getResult()
-    print('residual = ', krigingResult.getResiduals())
-    print('R2 = ', krigingResult.getRelativeErrors())
-    print('Optimal scale= {}'.format(krigingResult.getCovarianceModel().getScale()))
-    print('Optimal amplitude = {}'.format(
-        krigingResult.getCovarianceModel().getAmplitude()))
-    print('Optimal trend coefficients = {}'.format(
-        krigingResult.getTrendCoefficients()))
+    print("residual = ", krigingResult.getResiduals())
+    print("R2 = ", krigingResult.getRelativeErrors())
+    print("Optimal scale= {}".format(krigingResult.getCovarianceModel().getScale()))
+    print(
+        "Optimal amplitude = {}".format(krigingResult.getCovarianceModel().getAmplitude())
+    )
+    print("Optimal trend coefficients = {}".format(krigingResult.getTrendCoefficients()))
 
 
 
@@ -218,7 +218,7 @@ get some results
 
 get the metamodel
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-151
+.. GENERATED FROM PYTHON SOURCE LINES 110-150
 
 .. code-block:: default
 
@@ -243,7 +243,7 @@ get the metamodel
     View(graph, axes=[ax1])
 
     # On the right, the conditional kriging variance
-    graph = ot.Graph("", "x", "Conditional kriging variance", True, '')
+    graph = ot.Graph("", "x", "Conditional kriging variance", True, "")
     # Sample for the data
     sample = ot.Sample(n_pt, 2)
     sample[:, 0] = x
@@ -253,8 +253,7 @@ get the metamodel
     # Sample for the variance
     sample = ot.Sample(n_pts_plot, 2)
     sample[:, 0] = x_plot
-    variance = [
-        [krigingResult.getConditionalCovariance(xx)[0, 0]] for xx in x_plot]
+    variance = [[krigingResult.getConditionalCovariance(xx)[0, 0]] for xx in x_plot]
     sample[:, 1] = variance
     curve = ot.Curve(sample)
     curve.setColor("green")
@@ -281,32 +280,34 @@ get the metamodel
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-154
+.. GENERATED FROM PYTHON SOURCE LINES 151-153
 
 Display the confidence interval
 -------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-157
+.. GENERATED FROM PYTHON SOURCE LINES 155-156
 
 sphinx_gallery_thumbnail_number = 3
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-173
+.. GENERATED FROM PYTHON SOURCE LINES 156-174
 
 .. code-block:: default
 
     level = 0.95
-    quantile = ot.Normal().computeQuantile((1-level)/2)[0]
+    quantile = ot.Normal().computeQuantile((1 - level) / 2)[0]
     borne_sup = krigingMeta(x_plot) + quantile * np.sqrt(variance)
     borne_inf = krigingMeta(x_plot) - quantile * np.sqrt(variance)
 
     fig, ax = plt.subplots(figsize=(8, 8))
-    ax.plot(x, y, ('ro'))
-    ax.plot(x_plot, borne_sup, '--', color='orange', label='Confidence interval')
-    ax.plot(x_plot, borne_inf, '--', color='orange')
-    View(ref_func.draw(xmin, xmax, n_pts_plot),
-         axes=[ax], plot_kw={'label': '$x sin(x)$'})
-    View(krigingMeta.draw(xmin, xmax, n_pts_plot), plot_kw={
-         'color': 'green', 'label': 'prediction'}, axes=[ax])
+    ax.plot(x, y, ("ro"))
+    ax.plot(x_plot, borne_sup, "--", color="orange", label="Confidence interval")
+    ax.plot(x_plot, borne_inf, "--", color="orange")
+    View(ref_func.draw(xmin, xmax, n_pts_plot), axes=[ax], plot_kw={"label": "$x sin(x)$"})
+    View(
+        krigingMeta.draw(xmin, xmax, n_pts_plot),
+        plot_kw={"color": "green", "label": "prediction"},
+        axes=[ax],
+    )
     legend = ax.legend()
     ax.autoscale()
 
@@ -322,16 +323,16 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-176
+.. GENERATED FROM PYTHON SOURCE LINES 175-177
 
 Generate conditional trajectories
 ---------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-179
+.. GENERATED FROM PYTHON SOURCE LINES 179-180
 
 support for trajectories with training samples removed
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-184
+.. GENERATED FROM PYTHON SOURCE LINES 180-185
 
 .. code-block:: default
 
@@ -347,11 +348,11 @@ support for trajectories with training samples removed
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-186
+.. GENERATED FROM PYTHON SOURCE LINES 186-187
 
 Conditional Gaussian process
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-189
+.. GENERATED FROM PYTHON SOURCE LINES 187-190
 
 .. code-block:: default
 
@@ -365,23 +366,30 @@ Conditional Gaussian process
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-206
+.. GENERATED FROM PYTHON SOURCE LINES 191-214
 
 .. code-block:: default
 
     x_plot = np.vstack(np.linspace(xmin, xmax, n_pts_plot))
     fig, ax = plt.subplots(figsize=(8, 6))
-    ax.plot(x, y, ('ro'))
+    ax.plot(x, y, ("ro"))
     for i in range(krv_sample.getSize()):
         if i == 0:
-            ax.plot(values, krv_sample[i, :], '--',
-                    alpha=0.8, label='Conditional trajectories')
+            ax.plot(
+                values, krv_sample[i, :], "--", alpha=0.8, label="Conditional trajectories"
+            )
         else:
-            ax.plot(values, krv_sample[i, :], '--', alpha=0.8)
-    View(ref_func.draw(xmin, xmax, n_pts_plot), axes=[ax],
-         plot_kw={'color': 'black', 'label': '$x*sin(x)$'})
-    View(krigingMeta.draw(xmin, xmax, n_pts_plot), axes=[ax],
-         plot_kw={'color': 'green', 'label': 'prediction'})
+            ax.plot(values, krv_sample[i, :], "--", alpha=0.8)
+    View(
+        ref_func.draw(xmin, xmax, n_pts_plot),
+        axes=[ax],
+        plot_kw={"color": "black", "label": "$x*sin(x)$"},
+    )
+    View(
+        krigingMeta.draw(xmin, xmax, n_pts_plot),
+        axes=[ax],
+        plot_kw={"color": "green", "label": "prediction"},
+    )
     legend = ax.legend()
     ax.autoscale()
 
@@ -397,12 +405,12 @@ Conditional Gaussian process
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-209
+.. GENERATED FROM PYTHON SOURCE LINES 215-217
 
 Validation
 ----------
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-220
+.. GENERATED FROM PYTHON SOURCE LINES 219-228
 
 .. code-block:: default
 
@@ -422,7 +430,7 @@ Validation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-224
+.. GENERATED FROM PYTHON SOURCE LINES 229-232
 
 .. code-block:: default
 
@@ -442,7 +450,7 @@ Validation
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-228
+.. GENERATED FROM PYTHON SOURCE LINES 233-236
 
 .. code-block:: default
 
@@ -461,7 +469,7 @@ Validation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-233
+.. GENERATED FROM PYTHON SOURCE LINES 237-241
 
 .. code-block:: default
 
@@ -484,7 +492,7 @@ Validation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.928 seconds)
+   **Total running time of the script:** ( 0 minutes  0.794 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_advanced.py:

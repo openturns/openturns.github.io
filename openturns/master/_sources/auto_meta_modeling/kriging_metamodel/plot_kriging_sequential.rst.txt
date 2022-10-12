@@ -38,7 +38,7 @@ Create the function and the design of experiments
     from openturns.viewer import View
     import numpy as np
     import openturns.viewer as viewer
-    from matplotlib import pylab as plt
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -70,7 +70,7 @@ Define the function.
 
 .. code-block:: default
 
-    g = ot.SymbolicFunction(['x'], ['0.5*x^2 + sin(2.5*x)'])
+    g = ot.SymbolicFunction(["x"], ["0.5*x^2 + sin(2.5*x)"])
 
 
 
@@ -133,10 +133,10 @@ Create the algorithms
 .. code-block:: default
 
     def createMyBasicKriging(X, Y):
-        '''
+        """
         Create a kriging from a pair of X and Y samples.
         We use a 3/2 Matérn covariance model and a constant trend.
-        '''
+        """
         basis = ot.ConstantBasisFactory(dimension).build()
         covarianceModel = ot.MaternModel([1.0], 1.5)
         algo = ot.KrigingAlgorithm(X, Y, covarianceModel, basis)
@@ -157,9 +157,9 @@ Create the algorithms
 .. code-block:: default
 
     def linearSample(xmin, xmax, npoints):
-        '''Returns a sample created from a regular grid
-        from xmin to xmax with npoints points.'''
-        step = (xmax-xmin)/(npoints-1)
+        """Returns a sample created from a regular grid
+        from xmin to xmax with npoints points."""
+        step = (xmax - xmin) / (npoints - 1)
         rg = ot.RegularGrid(xmin, step, npoints)
         vertices = rg.getVertices()
         return vertices
@@ -172,21 +172,22 @@ Create the algorithms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-93
+.. GENERATED FROM PYTHON SOURCE LINES 77-94
 
 .. code-block:: default
 
     def plot_kriging_bounds(vLow, vUp, n_test):
-        '''
+        """
         From two lists containing the lower and upper bounds of the region,
         create a PolygonArray.
-        '''
+        """
         palette = ot.Drawable.BuildDefaultPalette(2)
         myPaletteColor = palette[1]
-        polyData = [[vLow[i], vLow[i+1], vUp[i+1], vUp[i]]
-                    for i in range(n_test-1)]
-        polygonList = [ot.Polygon(
-            polyData[i], myPaletteColor, myPaletteColor) for i in range(n_test-1)]
+        polyData = [[vLow[i], vLow[i + 1], vUp[i + 1], vUp[i]] for i in range(n_test - 1)]
+        polygonList = [
+            ot.Polygon(polyData[i], myPaletteColor, myPaletteColor)
+            for i in range(n_test - 1)
+        ]
         boundsPoly = ot.PolygonArray(polygonList)
         boundsPoly.setLegend("95% bounds")
         return boundsPoly
@@ -199,11 +200,11 @@ Create the algorithms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-95
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
 
 The following `sqrt` function will be used later to compute the standard deviation from the variance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-101
 
 .. code-block:: default
 
@@ -217,15 +218,15 @@ The following `sqrt` function will be used later to compute the standard deviati
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-164
+.. GENERATED FROM PYTHON SOURCE LINES 102-166
 
 .. code-block:: default
 
     def plotMyBasicKriging(krigResult, xMin, xMax, X, Y, level=0.95):
-        '''
+        """
         Given a kriging result, plot the data, the kriging metamodel
         and a confidence interval.
-        '''
+        """
         samplesize = X.getSize()
         meta = krigResult.getMetaModel()
         graphKriging = meta.draw(xMin, xMax)
@@ -236,19 +237,20 @@ The following `sqrt` function will be used later to compute the standard deviati
         yFunction = g(xGrid)
         yKrig = meta(xGrid)
         # Compute the conditional covariance
-        epsilon = ot.Sample(nbpoints, [1.e-8])
-        conditionalVariance = krigResult.getConditionalMarginalVariance(
-            xGrid)+epsilon
+        epsilon = ot.Sample(nbpoints, [1.0e-8])
+        conditionalVariance = krigResult.getConditionalMarginalVariance(xGrid) + epsilon
         conditionalSigma = sqrt(conditionalVariance)
         # Compute the quantile of the Normal distribution
-        alpha = 1-(1-level)/2
+        alpha = 1 - (1 - level) / 2
         quantileAlpha = ot.DistFunc.qNormal(alpha)
         # Graphics of the bounds
-        epsilon = 1.e-8
-        dataLower = [yKrig[i, 0] - quantileAlpha * conditionalSigma[i, 0]
-                     for i in range(nbpoints)]
-        dataUpper = [yKrig[i, 0] + quantileAlpha * conditionalSigma[i, 0]
-                     for i in range(nbpoints)]
+        epsilon = 1.0e-8
+        dataLower = [
+            yKrig[i, 0] - quantileAlpha * conditionalSigma[i, 0] for i in range(nbpoints)
+        ]
+        dataUpper = [
+            yKrig[i, 0] + quantileAlpha * conditionalSigma[i, 0] for i in range(nbpoints)
+        ]
         # Coordinates of the vertices of the Polygons
         vLow = [[xGrid[i, 0], dataLower[i]] for i in range(nbpoints)]
         vUp = [[xGrid[i, 0], dataUpper[i]] for i in range(nbpoints)]
@@ -278,7 +280,7 @@ The following `sqrt` function will be used later to compute the standard deviati
         graph.setLegendPosition("bottomright")
         graph.setAxes(True)
         graph.setGrid(True)
-        graph.setTitle("Size = %d, Q2=%.2f%%" % (samplesize, 100*Q2))
+        graph.setTitle("Size = %d, Q2=%.2f%%" % (samplesize, 100 * Q2))
         graph.setXTitle("X")
         graph.setYTitle("Y")
         return graph
@@ -291,11 +293,11 @@ The following `sqrt` function will be used later to compute the standard deviati
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-166
+.. GENERATED FROM PYTHON SOURCE LINES 167-168
 
 We start by creating the initial kriging metamodel on the 4 points in the design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-173
+.. GENERATED FROM PYTHON SOURCE LINES 170-175
 
 .. code-block:: default
 
@@ -316,24 +318,24 @@ We start by creating the initial kriging metamodel on the 4 points in the design
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-176
+.. GENERATED FROM PYTHON SOURCE LINES 176-178
 
 Sequentially add new points
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-179
+.. GENERATED FROM PYTHON SOURCE LINES 180-181
 
 The following function is the building block of the algorithm. It returns a new point which maximizes the conditional variance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-194
+.. GENERATED FROM PYTHON SOURCE LINES 183-197
 
 .. code-block:: default
 
     def getNewPoint(xMin, xMax, krigResult):
-        '''
+        """
         Returns a new point to be added to the design of experiments.
         This point maximizes the conditional variance of the kriging.
-        '''
+        """
         nbpoints = 50
         xGrid = linearSample(xMin, xMax, nbpoints)
         conditionalVariance = krigResult.getConditionalMarginalVariance(xGrid)
@@ -349,11 +351,12 @@ The following function is the building block of the algorithm. It returns a new 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-196
+
+.. GENERATED FROM PYTHON SOURCE LINES 198-199
 
 We first call `getNewPoint` to get a point to add to the design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-202
+.. GENERATED FROM PYTHON SOURCE LINES 202-205
 
 .. code-block:: default
 
@@ -373,11 +376,11 @@ We first call `getNewPoint` to get a point to add to the design of experiments.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-204
+.. GENERATED FROM PYTHON SOURCE LINES 206-207
 
 Then we evaluate the function on the new point and add it to the training design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-210
+.. GENERATED FROM PYTHON SOURCE LINES 209-213
 
 .. code-block:: default
 
@@ -392,15 +395,15 @@ Then we evaluate the function on the new point and add it to the training design
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-212
+.. GENERATED FROM PYTHON SOURCE LINES 214-215
 
 We now plot the updated kriging.
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-215
+.. GENERATED FROM PYTHON SOURCE LINES 217-218
 
 sphinx_gallery_thumbnail_number = 3
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-220
+.. GENERATED FROM PYTHON SOURCE LINES 218-223
 
 .. code-block:: default
 
@@ -421,11 +424,11 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-222
+.. GENERATED FROM PYTHON SOURCE LINES 224-225
 
 The algorithm added a point to the right bound of the domain.
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-234
+.. GENERATED FROM PYTHON SOURCE LINES 227-237
 
 .. code-block:: default
 
@@ -484,13 +487,13 @@ The algorithm added a point to the right bound of the domain.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-238
+.. GENERATED FROM PYTHON SOURCE LINES 238-241
 
 We observe that the second added point is the left bound of the domain. The remaining points were added strictly inside the domain where the accuracy was drastically improved.
 
 With only 10 points, the metamodel accuracy is already very good with a Q2 which is equal to 99.9%.
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-248
+.. GENERATED FROM PYTHON SOURCE LINES 243-251
 
 Conclusion
 ----------
@@ -501,7 +504,7 @@ The current example presents the naive implementation on the creation of a seque
 * Céline Scheidt. Analyse statistique d’expériences simulées : Modélisation adaptative de réponses non régulières par krigeage et plans d’expériences (2007). Thèse présentée pour obtenir le grade de Docteur de l’Université Louis Pasteur.
 * David Ginsbourger. Sequential Design of Computer Experiments. Wiley StatsRef: Statistics Reference Online, Wiley (2018 )
 
-.. GENERATED FROM PYTHON SOURCE LINES 248-250
+.. GENERATED FROM PYTHON SOURCE LINES 251-253
 
 .. code-block:: default
 
@@ -517,7 +520,7 @@ The current example presents the naive implementation on the creation of a seque
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.754 seconds)
+   **Total running time of the script:** ( 0 minutes  0.616 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_sequential.py:

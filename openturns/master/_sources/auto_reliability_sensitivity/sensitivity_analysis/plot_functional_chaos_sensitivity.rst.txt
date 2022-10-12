@@ -41,7 +41,7 @@ With parameters:
 - :math:`L`: length of borehole (m)
 - :math:`K_w`: hydraulic conductivity of borehole (:math:`m/yr`)
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-31
+.. GENERATED FROM PYTHON SOURCE LINES 25-32
 
 .. code-block:: default
 
@@ -49,6 +49,7 @@ With parameters:
     from operator import itemgetter
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -58,26 +59,29 @@ With parameters:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 borehole model
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-48
+.. GENERATED FROM PYTHON SOURCE LINES 34-52
 
 .. code-block:: default
 
     dimension = 8
-    input_names = ['rw', 'r', 'Tu', 'Hu', 'Tl', 'Hl', 'L', 'Kw']
-    model = ot.SymbolicFunction(input_names,
-                                ['(2*pi_*Tu*(Hu-Hl))/(ln(r/rw)*(1+(2*L*Tu)/(ln(r/rw)*rw^2*Kw)+Tu/Tl))'])
-    coll = [ot.Normal(0.1, 0.0161812),
-            ot.LogNormal(7.71, 1.0056),
-            ot.Uniform(63070.0, 115600.0),
-            ot.Uniform(990.0, 1110.0),
-            ot.Uniform(63.1, 116.0),
-            ot.Uniform(700.0, 820.0),
-            ot.Uniform(1120.0, 1680.0),
-            ot.Uniform(9855.0, 12045.0)]
+    input_names = ["rw", "r", "Tu", "Hu", "Tl", "Hl", "L", "Kw"]
+    model = ot.SymbolicFunction(
+        input_names, ["(2*pi_*Tu*(Hu-Hl))/(ln(r/rw)*(1+(2*L*Tu)/(ln(r/rw)*rw^2*Kw)+Tu/Tl))"]
+    )
+    coll = [
+        ot.Normal(0.1, 0.0161812),
+        ot.LogNormal(7.71, 1.0056),
+        ot.Uniform(63070.0, 115600.0),
+        ot.Uniform(990.0, 1110.0),
+        ot.Uniform(63.1, 116.0),
+        ot.Uniform(700.0, 820.0),
+        ot.Uniform(1120.0, 1680.0),
+        ot.Uniform(9855.0, 12045.0),
+    ]
     distribution = ot.ComposedDistribution(coll)
     distribution.setDescription(input_names)
 
@@ -88,11 +92,11 @@ borehole model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Freeze r, Tu, Tl from model to go faster
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-59
+.. GENERATED FROM PYTHON SOURCE LINES 54-64
 
 .. code-block:: default
 
@@ -100,7 +104,8 @@ Freeze r, Tu, Tl from model to go faster
     complement = ot.Indices(selection).complement(dimension)
     distribution = distribution.getMarginal(complement)
     model = ot.ParametricFunction(
-        model, selection, distribution.getMarginal(selection).getMean())
+        model, selection, distribution.getMarginal(selection).getMean()
+    )
     input_names_copy = list(input_names)
     input_names = itemgetter(*complement)(input_names)
     dimension = len(complement)
@@ -112,11 +117,11 @@ Freeze r, Tu, Tl from model to go faster
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 design of experiment
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-65
+.. GENERATED FROM PYTHON SOURCE LINES 66-70
 
 .. code-block:: default
 
@@ -131,11 +136,11 @@ design of experiment
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 create a functional chaos model
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-73
+.. GENERATED FROM PYTHON SOURCE LINES 72-78
 
 .. code-block:: default
 
@@ -159,11 +164,11 @@ create a functional chaos model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-75
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Quick summary of sensitivity analysis
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-78
+.. GENERATED FROM PYTHON SOURCE LINES 80-83
 
 .. code-block:: default
 
@@ -209,19 +214,17 @@ Quick summary of sensitivity analysis
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-80
+.. GENERATED FROM PYTHON SOURCE LINES 84-85
 
 draw Sobol' indices
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-87
+.. GENERATED FROM PYTHON SOURCE LINES 85-90
 
 .. code-block:: default
 
     first_order = [sensitivityAnalysis.getSobolIndex(i) for i in range(dimension)]
-    total_order = [sensitivityAnalysis.getSobolTotalIndex(
-        i) for i in range(dimension)]
-    graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(
-        input_names, first_order, total_order)
+    total_order = [sensitivityAnalysis.getSobolTotalIndex(i) for i in range(dimension)]
+    graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(input_names, first_order, total_order)
     view = viewer.View(graph)
 
 
@@ -236,19 +239,22 @@ draw Sobol' indices
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-90
+.. GENERATED FROM PYTHON SOURCE LINES 91-93
 
 We saw that total order indices are close to first order,
 so the higher order indices must be all quite close to 0
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-96
+.. GENERATED FROM PYTHON SOURCE LINES 93-102
 
 .. code-block:: default
 
     for i in range(dimension):
         for j in range(i):
-            print(input_names[i] + ' & ' + input_names[j], ":",
-                  sensitivityAnalysis.getSobolIndex([i, j]))
+            print(
+                input_names[i] + " & " + input_names[j],
+                ":",
+                sensitivityAnalysis.getSobolIndex([i, j]),
+            )
 
     plt.show()
 
@@ -276,7 +282,7 @@ so the higher order indices must be all quite close to 0
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.081 seconds)
+   **Total running time of the script:** ( 0 minutes  7.135 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_sensitivity_analysis_plot_functional_chaos_sensitivity.py:

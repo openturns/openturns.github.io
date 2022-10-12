@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Create a stationary covariance model &#8212; OpenTURNS 1.20dev documentation</title>
+    <title>Create a stationary covariance model &#8212; OpenTURNS 1.20rc1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Create a normal process" href="plot_create_normal_process.html" />
-    <link rel="prev" title="Manipulate a time series" href="plot_timeseries_manipulation.html" />
+    <link rel="prev" title="Use the Box-Cox transformation" href="plot_box_cox_transform.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -63,9 +63,9 @@
           <a href="plot_create_normal_process.html" title="Create a normal process"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_timeseries_manipulation.html" title="Manipulate a time series"
+          <a href="plot_box_cox_transform.html" title="Use the Box-Cox transformation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Probabilistic modeling</a> &#187;</li>
@@ -77,8 +77,8 @@
         <div class="sphinxsidebarwrapper">
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_timeseries_manipulation.html"
-                          title="previous chapter">Manipulate a time series</a></p>
+    <p class="topless"><a href="plot_box_cox_transform.html"
+                          title="previous chapter">Use the Box-Cox transformation</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -129,6 +129,7 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -177,18 +178,17 @@ Create the time grid</p>
     <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># Create the curve of the spectral function</span>
-<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;User Model&#39;</span><span class="p">)</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;User Model&quot;</span><span class="p">)</span>
 
 <span class="c1"># Create the graph</span>
-<span class="n">myGraph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s1">&#39;User covariance model&#39;</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;Covariance function&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">myGraph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;User covariance model&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;Covariance function&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 <span class="n">myGraph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
-<span class="n">myGraph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s1">&#39;topright&#39;</span><span class="p">)</span>
+<span class="n">myGraph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topright&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">myGraph</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_user_stationary_covmodel_001.png" srcset="../../_images/sphx_glr_plot_user_stationary_covmodel_001.png" alt="User covariance model" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.106 seconds)</p>
+<img src="../../_images/sphx_glr_plot_user_stationary_covmodel_001.png" srcset="../../_images/sphx_glr_plot_user_stationary_covmodel_001.png" alt="User covariance model" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.070 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-probabilistic-modeling-stochastic-processes-plot-user-stationary-covmodel-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/ddcbdc5255f6123b07daa3cc89cbf19e/plot_user_stationary_covmodel.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_user_stationary_covmodel.py</span></code></a></p>
@@ -216,9 +216,9 @@ Create the time grid</p>
           <a href="plot_create_normal_process.html" title="Create a normal process"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_timeseries_manipulation.html" title="Manipulate a time series"
+          <a href="plot_box_cox_transform.html" title="Use the Box-Cox transformation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Probabilistic modeling</a> &#187;</li>

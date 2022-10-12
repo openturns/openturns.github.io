@@ -42,13 +42,14 @@ and that :math:`X_1` and :math:`X_2` are independent.
 
 An interesting point in this example is that the output is multivariate. This is why we are going to use the `getMarginal` method in the script in order to select the output marginal that we want to manage.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-31
+.. GENERATED FROM PYTHON SOURCE LINES 26-32
 
 .. code-block:: default
 
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -58,18 +59,18 @@ An interesting point in this example is that the output is multivariate. This is
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 We first create the function `model`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-41
+.. GENERATED FROM PYTHON SOURCE LINES 36-42
 
 .. code-block:: default
 
     ot.RandomGenerator.SetSeed(0)
     dimension = 2
-    input_names = ['x1', 'x2']
-    formulas = ['cos(x1 + x2)', '(x2 + 1) * exp(x1)']
+    input_names = ["x1", "x2"]
+    formulas = ["cos(x1 + x2)", "(x2 + 1) * exp(x1)"]
     model = ot.SymbolicFunction(input_names, formulas)
 
 
@@ -79,11 +80,11 @@ We first create the function `model`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 Then we create a sample `inputSample` and compute the corresponding output sample `outputSample`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-50
+.. GENERATED FROM PYTHON SOURCE LINES 46-51
 
 .. code-block:: default
 
@@ -99,17 +100,16 @@ Then we create a sample `inputSample` and compute the corresponding output sampl
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-53
+.. GENERATED FROM PYTHON SOURCE LINES 52-54
 
 Create a functional chaos model.
 First, we need to fit a distribution on the input sample. We can do this automatically with the Lilliefors test.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-58
+.. GENERATED FROM PYTHON SOURCE LINES 56-58
 
 .. code-block:: default
 
-    ot.ResourceMap.SetAsUnsignedInteger(
-        "FittingTest-LillieforsMaximumSamplingSize", 100)
+    ot.ResourceMap.SetAsUnsignedInteger("FittingTest-LillieforsMaximumSamplingSize", 100)
 
 
 
@@ -138,22 +138,21 @@ First, we need to fit a distribution on the input sample. We can do this automat
 
 Plot the second output of our model depending on :math:`x_2` with :math:`x_1=0.5`. In order to do this, we create a `ParametricFunction` and set the value of :math:`x_1`. Then we use the `getMarginal` method to extract the second output (which index is equal to 1).
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-87
+.. GENERATED FROM PYTHON SOURCE LINES 68-86
 
 .. code-block:: default
 
     x1index = 0
     x1value = 0.5
-    x2min = -3.
-    x2max = 3.
+    x2min = -3.0
+    x2max = 3.0
     outputIndex = 1
     metamodelParametric = ot.ParametricFunction(metamodel, [x1index], [x1value])
     graph = metamodelParametric.getMarginal(outputIndex).draw(x2min, x2max)
     graph.setLegends(["Metamodel"])
     modelParametric = ot.ParametricFunction(model, [x1index], [x1value])
-    curve = modelParametric.getMarginal(
-        outputIndex).draw(x2min, x2max).getDrawable(0)
-    curve.setColor('red')
+    curve = modelParametric.getMarginal(outputIndex).draw(x2min, x2max).getDrawable(0)
+    curve.setColor("red")
     curve.setLegend("Model")
     graph.add(curve)
     graph.setLegendPosition("bottomright")
@@ -173,11 +172,11 @@ Plot the second output of our model depending on :math:`x_2` with :math:`x_1=0.5
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-89
+.. GENERATED FROM PYTHON SOURCE LINES 87-88
 
 We see that the metamodel fits approximately to the model, except perhaps for extreme values of :math:`x_2`. However, there is a better way of globally validating the metamodel, using the `MetaModelValidation` on a validation design of experiment.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-96
+.. GENERATED FROM PYTHON SOURCE LINES 90-95
 
 .. code-block:: default
 
@@ -193,18 +192,18 @@ We see that the metamodel fits approximately to the model, except perhaps for ex
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 96-97
 
 Plot the corresponding validation graphics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-106
+.. GENERATED FROM PYTHON SOURCE LINES 99-105
 
 .. code-block:: default
 
     val = ot.MetaModelValidation(inputTest, outputTest, metamodel)
     Q2 = val.computePredictivityFactor()
     graph = val.drawValidation()
-    graph.setTitle("Metamodel validation Q2="+str(Q2))
+    graph.setTitle("Metamodel validation Q2=" + str(Q2))
     view = viewer.View(graph)
 
 
@@ -219,17 +218,17 @@ Plot the corresponding validation graphics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-109
+.. GENERATED FROM PYTHON SOURCE LINES 106-108
 
 The coefficient of predictivity is not extremely satisfactory for the first output, but is would be sufficient for a central dispersion study.
 The second output has a much more satisfactory Q2: only one single extreme point is far from the diagonal of the graphics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-113
+.. GENERATED FROM PYTHON SOURCE LINES 110-112
 
 Compute and print Sobol' indices
 --------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-118
+.. GENERATED FROM PYTHON SOURCE LINES 114-117
 
 .. code-block:: default
 
@@ -301,25 +300,24 @@ Compute and print Sobol' indices
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+.. GENERATED FROM PYTHON SOURCE LINES 118-122
 
 Let us analyse the results of this global sensitivity analysis.
 
 * We see that the first output involves significant multi-indices with total degree 4. The contribution of the interactions are very significant in this model.
 * The second output involves multi-indices with total degrees from 1 to 7, with a significant contribution of multi-indices with total degress 5 and 7. The first variable is especially significant, with a significant contribution of the interactions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-126
+.. GENERATED FROM PYTHON SOURCE LINES 124-125
 
 Draw Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-133
+.. GENERATED FROM PYTHON SOURCE LINES 127-131
 
 .. code-block:: default
 
     sensitivityAnalysis = ot.FunctionalChaosSobolIndices(result)
     first_order = [sensitivityAnalysis.getSobolIndex(i) for i in range(dimension)]
-    total_order = [sensitivityAnalysis.getSobolTotalIndex(
-        i) for i in range(dimension)]
+    total_order = [sensitivityAnalysis.getSobolTotalIndex(i) for i in range(dimension)]
 
 
 
@@ -328,13 +326,12 @@ Draw Sobol' indices.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-140
+.. GENERATED FROM PYTHON SOURCE LINES 132-137
 
 .. code-block:: default
 
     input_names = model.getInputDescription()
-    graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(
-        input_names, first_order, total_order)
+    graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(input_names, first_order, total_order)
     graph.setLegendPosition("center")
     view = viewer.View(graph)
 
@@ -350,7 +347,7 @@ Draw Sobol' indices.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-150
+.. GENERATED FROM PYTHON SOURCE LINES 138-147
 
 Testing the sensitivity to the degree
 -------------------------------------
@@ -362,16 +359,15 @@ With the specific constructor of `FunctionalChaosAlgorithm` that we use, the `Fu
 
 This is why the following `for` loop explores various degrees to see the sensitivity of the metamodel predictivity depending on the degree.
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-153
+.. GENERATED FROM PYTHON SOURCE LINES 149-150
 
 The default value of this parameter is 10.
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-158
+.. GENERATED FROM PYTHON SOURCE LINES 152-154
 
 .. code-block:: default
 
-    ot.ResourceMap.GetAsUnsignedInteger(
-        "FunctionalChaosAlgorithm-MaximumTotalDegree")
+    ot.ResourceMap.GetAsUnsignedInteger("FunctionalChaosAlgorithm-MaximumTotalDegree")
 
 
 
@@ -386,11 +382,11 @@ The default value of this parameter is 10.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-160
+.. GENERATED FROM PYTHON SOURCE LINES 155-156
 
 This is why we explore the values from 5 to 15.
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-178
+.. GENERATED FROM PYTHON SOURCE LINES 158-175
 
 .. code-block:: default
 
@@ -398,7 +394,8 @@ This is why we explore the values from 5 to 15.
     q2 = ot.Sample(len(degrees), 2)
     for maximumDegree in degrees:
         ot.ResourceMap.SetAsUnsignedInteger(
-            "FunctionalChaosAlgorithm-MaximumTotalDegree", maximumDegree)
+            "FunctionalChaosAlgorithm-MaximumTotalDegree", maximumDegree
+        )
         print("Maximum total degree =", maximumDegree)
         algo = ot.FunctionalChaosAlgorithm(inputSample, outputSample)
         algo.run()
@@ -406,9 +403,9 @@ This is why we explore the values from 5 to 15.
         metamodel = result.getMetaModel()
         for outputIndex in range(2):
             val = ot.MetaModelValidation(
-                inputTest, outputTest[:, outputIndex], metamodel.getMarginal(outputIndex))
-            q2[maximumDegree - degrees[0],
-                outputIndex] = val.computePredictivityFactor()[0]
+                inputTest, outputTest[:, outputIndex], metamodel.getMarginal(outputIndex)
+            )
+            q2[maximumDegree - degrees[0], outputIndex] = val.computePredictivityFactor()[0]
 
 
 
@@ -429,7 +426,7 @@ This is why we explore the values from 5 to 15.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-193
+.. GENERATED FROM PYTHON SOURCE LINES 176-190
 
 .. code-block:: default
 
@@ -459,7 +456,7 @@ This is why we explore the values from 5 to 15.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-202
+.. GENERATED FROM PYTHON SOURCE LINES 191-199
 
 We see that a total degree lower than 9 is not sufficient to describe the first output with good predictivity. However, the coefficient of predictivity drops when the total degree gets greater than 12.
 The predictivity of the second output seems to be much less satisfactory: a little more work would be required to improve the metamodel.
@@ -473,7 +470,7 @@ In this situation, the following methods may be used.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.909 seconds)
+   **Total running time of the script:** ( 0 minutes  7.381 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_polynomial_chaos_metamodel_plot_functional_chaos.py:

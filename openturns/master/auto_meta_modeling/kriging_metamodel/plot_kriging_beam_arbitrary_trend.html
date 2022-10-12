@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Configuring an arbitrary trend in Kriging &#8212; OpenTURNS 1.20dev documentation</title>
+    <title>Configuring an arbitrary trend in Kriging &#8212; OpenTURNS 1.20rc1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -26,8 +26,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Kriging the cantilever beam model using HMAT" href="plot_kriging_cantilever_beam_hmat.html" />
-    <link rel="prev" title="Example of multi output Kriging on the fire satellite model" href="plot_kriging_multioutput_firesatellite.html" />
+    <link rel="next" title="Example of multi output Kriging on the fire satellite model" href="plot_kriging_multioutput_firesatellite.html" />
+    <link rel="prev" title="Kriging : cantilever beam model" href="plot_kriging_cantilever_beam.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -60,12 +60,12 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
+          <a href="plot_kriging_multioutput_firesatellite.html" title="Example of multi output Kriging on the fire satellite model"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_multioutput_firesatellite.html" title="Example of multi output Kriging on the fire satellite model"
+          <a href="plot_kriging_cantilever_beam.html" title="Kriging : cantilever beam model"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
@@ -92,13 +92,13 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_kriging_multioutput_firesatellite.html"
-                          title="previous chapter">Example of multi output Kriging on the fire satellite model</a></p>
+    <p class="topless"><a href="plot_kriging_cantilever_beam.html"
+                          title="previous chapter">Kriging : cantilever beam model</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plot_kriging_cantilever_beam_hmat.html"
-                          title="next chapter">Kriging the cantilever beam model using HMAT</a></p>
+    <p class="topless"><a href="plot_kriging_multioutput_firesatellite.html"
+                          title="next chapter">Example of multi output Kriging on the fire satellite model</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -133,14 +133,18 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="configuring-an-arbitrary-trend-in-kriging">
 <span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-kriging-beam-arbitrary-trend-py"></span><h1>Configuring an arbitrary trend in Kriging<a class="headerlink" href="#configuring-an-arbitrary-trend-in-kriging" title="Permalink to this heading">¶</a></h1>
 <p>The goal of this example is to show how to configure an arbitrary trend in a Kriging metamodel.</p>
-<p>In general, any collection of multivariate functions can be used as the <cite>basis</cite> argument of a <cite>KrigingAlgorithm</cite>. In practice, it might not be convenient to create a multivariate basis and this is why we sometimes create it by tensorization of univariate functions. In this example, we first use Legendre polynomials as our univariate functions, then we create an orthogonal polynomial basis corresponding to the input marginals.</p>
+<p>In general, any collection of multivariate functions can be used as the
+<cite>basis</cite> argument of a <cite>KrigingAlgorithm</cite>.
+In practice, it might not be convenient to create a multivariate basis and
+this is why we sometimes create it by tensorization of univariate functions.
+In this example, we first use Legendre polynomials as our univariate functions,
+then we create an orthogonal polynomial basis corresponding to the input marginals.</p>
 <p>For this purpose, we use the <a class="reference internal" href="../../usecases/use_case_cantilever_beam.html#use-case-cantilever-beam"><span class="std std-ref">cantilever beam</span></a> example.</p>
 <section id="definition-of-the-model">
 <h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">cantilever_beam</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+
 <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
@@ -184,12 +188,11 @@ to download the full example code</p>
 </div>
 <br />
 <br /><p>This interval does not correspond to the interval on which the input marginals are defined (we will come back to this topic later), but this will, anyway, create a consistent trend for the kriging.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">polyColl</span> <span class="o">=</span> <span class="p">[</span><span class="n">univariateFactory</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">polyColl</span> <span class="o">=</span> <span class="p">[</span><span class="n">univariateFactory</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearEnumerateFunction</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
-<span class="n">productBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
-    <span class="n">polyColl</span><span class="p">,</span> <span class="n">enumerateFunction</span><span class="p">)</span>
+<span class="n">productBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span><span class="n">polyColl</span><span class="p">,</span> <span class="n">enumerateFunction</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functions</span> <span class="o">=</span> <span class="p">[]</span>
@@ -221,7 +224,7 @@ to download the full example code</p>
 <section id="create-the-metamodel">
 <h2>Create the metamodel<a class="headerlink" href="#create-the-metamodel" title="Permalink to this heading">¶</a></h2>
 <p>In order to create the kriging metamodel, we first select a constant trend with the <cite>ConstantBasisFactory</cite> class. Then we use a squared exponential covariance model. Finally, we use the <cite>KrigingAlgorithm</cite> class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
@@ -252,15 +255,13 @@ to download the full example code</p>
 <p>In order to create a Legendre basis which better corresponds to the input marginals, we could consider the orthogonal basis which would be associated to uniform marginals. To compute the bounds of these uniform distributions, we may consider the 1% and 99% quantiles of each marginal.</p>
 <p>There is, however, a simpler way to proceed. We can simply orthogonalize the input marginals and create the orthogonal polynomial basis corresponding to the inputs. This corresponds to the method we would use in the polynomial chaos.</p>
 <p>We first create the polynomial basis which corresponds to the inputs.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">cb</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">I</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">([</span><span class="n">cb</span><span class="o">.</span><span class="n">E</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">II</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Then we create the multivariate basis which has maximum degree equal to 2.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
-<span class="n">numberOfTrendCoefficients</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span>
-    <span class="n">totalDegree</span><span class="p">)</span>
+<span class="n">numberOfTrendCoefficients</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
 <span class="n">numberOfTrendCoefficients</span>
 </pre></div>
 </div>
@@ -343,12 +344,12 @@ to download the full example code</p>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_kriging_cantilever_beam_hmat.html" title="Kriging the cantilever beam model using HMAT"
+          <a href="plot_kriging_multioutput_firesatellite.html" title="Example of multi output Kriging on the fire satellite model"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_multioutput_firesatellite.html" title="Example of multi output Kriging on the fire satellite model"
+          <a href="plot_kriging_cantilever_beam.html" title="Kriging : cantilever beam model"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20dev documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>

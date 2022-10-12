@@ -106,9 +106,9 @@ This function buils :math:`Y_t =(Y_t^1, Y_t^2)`.
     def buildNormal(b, t, mu_S, covariance, delta_t=1e-5):
         sigma = ot.CovarianceMatrix(2)
         sigma[0, 0] = covariance(t, t)[0, 0]
-        sigma[0, 1] = covariance(t, t+delta_t)[0, 0]
-        sigma[1, 1] = covariance(t+delta_t, t+delta_t)[0, 0]
-        return ot.Normal([b*t + mu_S, b*(t+delta_t) + mu_S], sigma)
+        sigma[0, 1] = covariance(t, t + delta_t)[0, 0]
+        sigma[1, 1] = covariance(t + delta_t, t + delta_t)[0, 0]
+        return ot.Normal([b * t + mu_S, b * (t + delta_t) + mu_S], sigma)
 
 
 
@@ -164,11 +164,13 @@ This function evaluates the probability using the Monte Carlo sampling. It defin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-126
+.. GENERATED FROM PYTHON SOURCE LINES 116-128
 
 .. code-block:: default
 
-    def computeCrossingProbability_MonteCarlo(b, t, mu_S, covariance, R, delta_t, n_block, n_iter, CoV):
+    def computeCrossingProbability_MonteCarlo(
+        b, t, mu_S, covariance, R, delta_t, n_block, n_iter, CoV
+    ):
         X, event = getXEvent(b, t, mu_S, covariance, R, delta_t)
         algo = ot.ProbabilitySimulationAlgorithm(event, ot.MonteCarloExperiment())
         algo.setBlockSize(n_block)
@@ -185,18 +187,22 @@ This function evaluates the probability using the Monte Carlo sampling. It defin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-128
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 This function evaluates the probability using the Low Discrepancy sampling.
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-141
+.. GENERATED FROM PYTHON SOURCE LINES 132-147
 
 .. code-block:: default
 
-    def computeCrossingProbability_QMC(b, t, mu_S, covariance, R, delta_t, n_block, n_iter, CoV):
+    def computeCrossingProbability_QMC(
+        b, t, mu_S, covariance, R, delta_t, n_block, n_iter, CoV
+    ):
         X, event = getXEvent(b, t, mu_S, covariance, R, delta_t)
-        algo = ot.ProbabilitySimulationAlgorithm(event, ot.LowDiscrepancyExperiment(
-            ot.SobolSequence(X.getDimension()), n_block, False))
+        algo = ot.ProbabilitySimulationAlgorithm(
+            event,
+            ot.LowDiscrepancyExperiment(ot.SobolSequence(X.getDimension()), n_block, False),
+        )
         algo.setBlockSize(n_block)
         algo.setMaximumOuterSampling(n_iter)
         algo.setMaximumCoefficientOfVariation(CoV)
@@ -211,11 +217,11 @@ This function evaluates the probability using the Low Discrepancy sampling.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-143
+.. GENERATED FROM PYTHON SOURCE LINES 148-149
 
 This function evaluates the probability using the FORM algorithm for event systems..
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-152
+.. GENERATED FROM PYTHON SOURCE LINES 151-158
 
 .. code-block:: default
 
@@ -233,25 +239,25 @@ This function evaluates the probability using the FORM algorithm for event syste
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-155
+.. GENERATED FROM PYTHON SOURCE LINES 159-161
 
 2. Evaluate the probability
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-163
+.. GENERATED FROM PYTHON SOURCE LINES 165-169
 
 First, fix some parameters: :math:`(\mu_R, \sigma_R, \mu_S, \sigma_S, \Delta t, T, b)` and the covariance model which is the Squared Exponential model.
 Be careful to the parameter  :math:`\Delta t` which is of great importance: if it is too small, the simulation methods have problems to converge because the correlation rate is too high between the instants :math:`t` and :math:`t+\Delta t`.
 We advice to take :math:`\Delta t \simeq 10^{-1}`.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-186
+.. GENERATED FROM PYTHON SOURCE LINES 171-192
 
 .. code-block:: default
 
     mu_S = 3.0
     sigma_S = 0.5
-    l = 10
+    ll = 10
 
     b = 0.01
 
@@ -259,7 +265,7 @@ We advice to take :math:`\Delta t \simeq 10^{-1}`.
     sigma_R = 0.3
     R = ot.Normal(mu_R, sigma_R)
 
-    covariance = ot.SquaredExponential([l/sqrt(2)], [sigma_S])
+    covariance = ot.SquaredExponential([ll / sqrt(2)], [sigma_S])
 
     t0 = 0.0
     t1 = 50.0
@@ -277,7 +283,7 @@ We advice to take :math:`\Delta t \simeq 10^{-1}`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-193
+.. GENERATED FROM PYTHON SOURCE LINES 193-199
 
 Use all the methods previously described:
 
@@ -286,7 +292,7 @@ Use all the methods previously described:
 - FORM: values in values_FORM
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-207
+.. GENERATED FROM PYTHON SOURCE LINES 201-220
 
 .. code-block:: default
 
@@ -295,12 +301,19 @@ Use all the methods previously described:
     values_FORM = list()
 
     for tick in times:
-        values_MC.append(computeCrossingProbability_MonteCarlo(
-            b, tick[0], mu_S, covariance, R, delta_t, 2**12, 2**3, 1e-2))
-        values_QMC.append(computeCrossingProbability_QMC(
-            b, tick[0], mu_S, covariance, R, delta_t, 2**12, 2**3, 1e-2))
-        values_FORM.append(computeCrossingProbability_FORM(
-            b, tick[0], mu_S, covariance, R, delta_t))
+        values_MC.append(
+            computeCrossingProbability_MonteCarlo(
+                b, tick[0], mu_S, covariance, R, delta_t, 2**12, 2**3, 1e-2
+            )
+        )
+        values_QMC.append(
+            computeCrossingProbability_QMC(
+                b, tick[0], mu_S, covariance, R, delta_t, 2**12, 2**3, 1e-2
+            )
+        )
+        values_FORM.append(
+            computeCrossingProbability_FORM(b, tick[0], mu_S, covariance, R, delta_t)
+        )
 
 
 
@@ -309,13 +322,13 @@ Use all the methods previously described:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-212
+.. GENERATED FROM PYTHON SOURCE LINES 221-225
 
 .. code-block:: default
 
-    print('Values MC = ', values_MC)
-    print('Values QMC = ', values_QMC)
-    print('Values FORM = ', values_FORM)
+    print("Values MC = ", values_MC)
+    print("Values QMC = ", values_QMC)
+    print("Values FORM = ", values_FORM)
 
 
 
@@ -325,18 +338,18 @@ Use all the methods previously described:
 
  .. code-block:: none
 
-    Values MC =  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.00030517578125, 0.0, 0.0, 0.0, 0.00030517578125, 0.0, 0.0, 0.0, 0.00030517578125, 0.0006103515625, 0.00030517578125, 0.0006103515625, 0.0006103515625, 0.001220703125, 0.0006103515625, 0.00030517578125, 0.001220703125, 0.00152587890625]
+    Values MC =  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.00030517578125, 0.0, 0.0006103515625, 0.0, 0.0, 0.0, 0.0006103515625, 0.0, 0.0006103515625, 0.0006103515625, 0.00030517578125, 0.00030517578125, 0.0, 0.0006103515625, 0.0006103515625, 0.00030517578125, 0.001220703125, 0.00091552734375, 0.0006103515625, 0.001220703125]
     Values QMC =  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0006103515625, 0.0, 0.0006103515625, 0.0, 0.0, 0.0, 0.00030517578125, 0.00030517578125, 0.0, 0.00030517578125, 0.0, 0.00091552734375, 0.0006103515625, 0.0, 0.00030517578125, 0.0, 0.0006103515625, 0.001220703125, 0.00091552734375, 0.0006103515625]
     Values FORM =  [6.407247215635151e-05, 7.202731335077214e-05, 8.087457564322269e-05, 9.070185003762527e-05, 0.00010160352566792341, 0.00011368175043642132, 0.0001270463113567539, 0.00014181490999748653, 0.00015811435561321604, 0.00017607979141239492, 0.00019585595855828544, 0.0002175971122863016, 0.0002414674411439194, 0.0002676410529682008, 0.0002963031348934401, 0.0003276489827287258, 0.0003618851406896481, 0.0003992284220557085, 0.00043990704747756264, 0.0004841609222492271, 0.0005322401306591526, 0.0005844062178788379, 0.0006409303353549256, 0.0007020945630748503, 0.0007681919142532408, 0.0008395236026959429]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-214
+.. GENERATED FROM PYTHON SOURCE LINES 226-227
 
 Draw the graphs!
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-232
+.. GENERATED FROM PYTHON SOURCE LINES 229-245
 
 .. code-block:: default
 
@@ -350,7 +363,7 @@ Draw the graphs!
     c = ot.Curve(times, [[p] for p in values_FORM])
     g.add(c)
     g.setLegends(["MC", "QMC", "FORM"])
-    g.setColors(["red", "blue", 'black'])
+    g.setColors(["red", "blue", "black"])
     g.setLegendPosition("topleft")
     g.setXTitle("t")
     g.setYTitle("Outcrossing rate")
@@ -371,7 +384,7 @@ Draw the graphs!
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.851 seconds)
+   **Total running time of the script:** ( 0 minutes  1.599 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_proba_system_event.py:
