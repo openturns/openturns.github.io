@@ -45,9 +45,9 @@ relearnt on the extended design of experiment.
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
-    import math as m
+
     ot.RandomGenerator.SetSeed(0)
-    ot.ResourceMap.SetAsString("KrigingAlgorithm-LinearAlgebra",  "LAPACK")
+    ot.ResourceMap.SetAsString("KrigingAlgorithm-LinearAlgebra", "LAPACK")
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -168,7 +168,7 @@ The minimum value attained `fexact` is :
 
 .. code-block:: default
 
-    graph = model.draw(lowerbound, upperbound, [100]*dim)
+    graph = model.draw(lowerbound, upperbound, [100] * dim)
     graph.setTitle("Ackley function")
     view = viewer.View(graph)
 
@@ -195,12 +195,13 @@ Create the initial kriging
 
 Before using the EGO algorithm, we must create an initial kriging. In order to do this, we must create a design of experiment which fills the space. In this situation, the `LHSExperiment` is a good place to start (but other design of experiments may allow to better fill the space). We use a uniform distribution in order to create a LHS design with 50 points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-88
+.. GENERATED FROM PYTHON SOURCE LINES 80-89
 
 .. code-block:: default
 
-    listUniformDistributions = [ot.Uniform(
-        lowerbound[i], upperbound[i]) for i in range(dim)]
+    listUniformDistributions = [
+        ot.Uniform(lowerbound[i], upperbound[i]) for i in range(dim)
+    ]
     distribution = ot.ComposedDistribution(listUniformDistributions)
     sampleSize = 50
     experiment = ot.LHSExperiment(distribution, sampleSize)
@@ -214,12 +215,13 @@ Before using the EGO algorithm, we must create an initial kriging. In order to d
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-95
+.. GENERATED FROM PYTHON SOURCE LINES 90-97
 
 .. code-block:: default
 
-    graph = ot.Graph("Initial LHS design of experiment - n=%d" %
-                     (sampleSize), "$x_0$", "$x_1$", True)
+    graph = ot.Graph(
+        "Initial LHS design of experiment - n=%d" % (sampleSize), "$x_0$", "$x_1$", True
+    )
     cloud = ot.Cloud(inputSample)
     graph.add(cloud)
     view = viewer.View(graph)
@@ -236,18 +238,17 @@ Before using the EGO algorithm, we must create an initial kriging. In order to d
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-97
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 We now create the kriging metamodel. We selected the `SquaredExponential` covariance model with a constant basis (the `MaternModel` may perform better in this case). We use default settings (1.0) for the scale parameters of the covariance model, but configure the amplitude to 0.1, which better corresponds to the properties of the Ackley function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-105
+.. GENERATED FROM PYTHON SOURCE LINES 101-106
 
 .. code-block:: default
 
     covarianceModel = ot.SquaredExponential([1.0] * dim, [0.5])
     basis = ot.ConstantBasisFactory(dim).build()
-    kriging = ot.KrigingAlgorithm(
-        inputSample, outputSample, covarianceModel, basis)
+    kriging = ot.KrigingAlgorithm(inputSample, outputSample, covarianceModel, basis)
     kriging.run()
 
 
@@ -257,14 +258,14 @@ We now create the kriging metamodel. We selected the `SquaredExponential` covari
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-110
+.. GENERATED FROM PYTHON SOURCE LINES 107-111
 
 Create the optimization problem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We finally create the `OptimizationProblem` and solve it with `EfficientGlobalOptimization`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-117
+.. GENERATED FROM PYTHON SOURCE LINES 113-118
 
 .. code-block:: default
 
@@ -280,13 +281,14 @@ We finally create the `OptimizationProblem` and solve it with `EfficientGlobalOp
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-121
+.. GENERATED FROM PYTHON SOURCE LINES 119-123
 
 In order to show the various options, we configure them all, even if most could be left to default settings in this case.
 
-The most important method is `setMaximumEvaluationNumber` which limits the number of iterations that the algorithm can perform. In the Ackley example, we choose to perform 10 iterations of the algorithm.
+The most important method is `setMaximumEvaluationNumber` which limits the number of iterations that the algorithm can perform.
+In the Ackley example, we choose to perform 10 iterations of the algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-128
+.. GENERATED FROM PYTHON SOURCE LINES 125-130
 
 .. code-block:: default
 
@@ -302,7 +304,7 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-131
+.. GENERATED FROM PYTHON SOURCE LINES 131-133
 
 .. code-block:: default
 
@@ -314,8 +316,6 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -323,7 +323,7 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-134
+.. GENERATED FROM PYTHON SOURCE LINES 134-136
 
 .. code-block:: default
 
@@ -342,7 +342,7 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-137
+.. GENERATED FROM PYTHON SOURCE LINES 137-139
 
 .. code-block:: default
 
@@ -361,7 +361,7 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-140
+.. GENERATED FROM PYTHON SOURCE LINES 140-142
 
 .. code-block:: default
 
@@ -380,11 +380,16 @@ The most important method is `setMaximumEvaluationNumber` which limits the numbe
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-142
+.. GENERATED FROM PYTHON SOURCE LINES 143-149
 
-Compared to the minimum function value, we see that the EGO algorithm provides solution which is not very accurate. However, the optimal point is in the neighbourhood of the exact solution, and this is quite an impressive success given the limited amount of function evaluations: only 60 evaluations for the initial DOE and 10 iterations of the EGO algorithm, for a total equal to 70 function evaluations.
+Compared to the minimum function value, we see that the EGO algorithm
+provides solution which is not very accurate.
+However, the optimal point is in the neighbourhood of the exact solution,
+and this is quite an impressive success given the limited amount of function
+evaluations: only 60 evaluations for the initial DOE and 10 iterations of
+the EGO algorithm, for a total equal to 70 function evaluations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-147
+.. GENERATED FROM PYTHON SOURCE LINES 151-154
 
 .. code-block:: default
 
@@ -403,7 +408,7 @@ Compared to the minimum function value, we see that the EGO algorithm provides s
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-150
+.. GENERATED FROM PYTHON SOURCE LINES 155-157
 
 .. code-block:: default
 
@@ -416,14 +421,13 @@ Compared to the minimum function value, we see that the EGO algorithm provides s
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-165
+.. GENERATED FROM PYTHON SOURCE LINES 158-171
 
 .. code-block:: default
 
-    graph = model.draw(lowerbound, upperbound, [100]*dim)
+    graph = model.draw(lowerbound, upperbound, [100] * dim)
     graph.setLegends([""])
-    graph.setTitle(
-        "Ackley function. Initial : black bullet. Solution : green diamond.")
+    graph.setTitle("Ackley function. Initial : black bullet. Solution : green diamond.")
     cloud = ot.Cloud(inputSample)
     cloud.setPointStyle("bullet")
     cloud.setColor("black")
@@ -446,17 +450,18 @@ Compared to the minimum function value, we see that the EGO algorithm provides s
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-169
+.. GENERATED FROM PYTHON SOURCE LINES 172-176
 
-We see that the initial (black) points are dispersed in the whole domain, while the solution points are much closer to the solution.
+We see that the initial (black) points are dispersed in the whole domain,
+while the solution points are much closer to the solution.
 
 However, the final solution produced by the EGO algorithm is not very accurate. This is why we finalize the process by adding a local optimization step.
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-176
+.. GENERATED FROM PYTHON SOURCE LINES 178-183
 
 .. code-block:: default
 
-    algo2 = ot.NLopt(problem, 'LD_LBFGS')
+    algo2 = ot.NLopt(problem, "LD_LBFGS")
     algo2.setStartingPoint(result.getOptimalPoint())
     algo2.run()
     result = algo2.getResult()
@@ -468,7 +473,7 @@ However, the final solution produced by the EGO algorithm is not very accurate. 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-179
+.. GENERATED FROM PYTHON SOURCE LINES 184-186
 
 .. code-block:: default
 
@@ -487,11 +492,11 @@ However, the final solution produced by the EGO algorithm is not very accurate. 
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-181
+.. GENERATED FROM PYTHON SOURCE LINES 187-188
 
 The corrected solution is now extremely accurate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-186
+.. GENERATED FROM PYTHON SOURCE LINES 190-193
 
 .. code-block:: default
 
@@ -510,23 +515,23 @@ The corrected solution is now extremely accurate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-191
+.. GENERATED FROM PYTHON SOURCE LINES 194-198
 
 Branin test-case
 ----------------
 
 We now take a look at the :ref:`Branin-Hoo<use-case-branin>` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-195
+.. GENERATED FROM PYTHON SOURCE LINES 200-202
 
 Define the problem
 ^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-198
+.. GENERATED FROM PYTHON SOURCE LINES 204-205
 
 The Branin model is defined in the usecases module in a data class `BraninModel` :
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-200
+.. GENERATED FROM PYTHON SOURCE LINES 205-207
 
 .. code-block:: default
 
@@ -539,11 +544,11 @@ The Branin model is defined in the usecases module in a data class `BraninModel`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-202
+.. GENERATED FROM PYTHON SOURCE LINES 208-209
 
 We load the dimension,
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-204
+.. GENERATED FROM PYTHON SOURCE LINES 209-211
 
 .. code-block:: default
 
@@ -556,11 +561,11 @@ We load the dimension,
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-206
+.. GENERATED FROM PYTHON SOURCE LINES 212-213
 
 the domain boundaries,
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-209
+.. GENERATED FROM PYTHON SOURCE LINES 213-216
 
 .. code-block:: default
 
@@ -574,11 +579,11 @@ the domain boundaries,
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-211
+.. GENERATED FROM PYTHON SOURCE LINES 217-218
 
 and we load the model function and its noise :
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-214
+.. GENERATED FROM PYTHON SOURCE LINES 218-221
 
 .. code-block:: default
 
@@ -592,11 +597,11 @@ and we load the model function and its noise :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-216
+.. GENERATED FROM PYTHON SOURCE LINES 222-223
 
 We build a sample out of the three minima :
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-218
+.. GENERATED FROM PYTHON SOURCE LINES 223-225
 
 .. code-block:: default
 
@@ -609,11 +614,11 @@ We build a sample out of the three minima :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-220
+.. GENERATED FROM PYTHON SOURCE LINES 226-227
 
 The minimum value attained `fexact` is :
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-223
+.. GENERATED FROM PYTHON SOURCE LINES 227-230
 
 .. code-block:: default
 
@@ -637,11 +642,11 @@ The minimum value attained `fexact` is :
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-228
+.. GENERATED FROM PYTHON SOURCE LINES 231-235
 
 .. code-block:: default
 
-    graph = objectiveFunction.draw(lowerbound, upperbound, [100]*dim)
+    graph = objectiveFunction.draw(lowerbound, upperbound, [100] * dim)
     graph.setTitle("Branin function")
     view = viewer.View(graph)
 
@@ -657,16 +662,16 @@ The minimum value attained `fexact` is :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-230
+.. GENERATED FROM PYTHON SOURCE LINES 236-237
 
 The Branin function has three local minimas.
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-234
+.. GENERATED FROM PYTHON SOURCE LINES 239-241
 
 Create the initial kriging
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 236-243
+.. GENERATED FROM PYTHON SOURCE LINES 243-250
 
 .. code-block:: default
 
@@ -684,12 +689,13 @@ Create the initial kriging
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-250
+.. GENERATED FROM PYTHON SOURCE LINES 251-258
 
 .. code-block:: default
 
-    graph = ot.Graph("Initial LHS design of experiment - n=%d" %
-                     (sampleSize), "$x_0$", "$x_1$", True)
+    graph = ot.Graph(
+        "Initial LHS design of experiment - n=%d" % (sampleSize), "$x_0$", "$x_1$", True
+    )
     cloud = ot.Cloud(inputSample)
     graph.add(cloud)
     view = viewer.View(graph)
@@ -706,14 +712,13 @@ Create the initial kriging
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-256
+.. GENERATED FROM PYTHON SOURCE LINES 259-263
 
 .. code-block:: default
 
     covarianceModel = ot.SquaredExponential([1.0] * dim, [1.0])
     basis = ot.ConstantBasisFactory(dim).build()
-    kriging = ot.KrigingAlgorithm(
-        inputSample, outputSample, covarianceModel, basis)
+    kriging = ot.KrigingAlgorithm(inputSample, outputSample, covarianceModel, basis)
 
 
 
@@ -722,7 +727,7 @@ Create the initial kriging
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-260
+.. GENERATED FROM PYTHON SOURCE LINES 264-267
 
 .. code-block:: default
 
@@ -736,16 +741,16 @@ Create the initial kriging
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 261-263
+.. GENERATED FROM PYTHON SOURCE LINES 268-270
 
 Create and solve the problem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-266
+.. GENERATED FROM PYTHON SOURCE LINES 272-273
 
 We define the problem :
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-271
+.. GENERATED FROM PYTHON SOURCE LINES 273-278
 
 .. code-block:: default
 
@@ -761,11 +766,11 @@ We define the problem :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 272-273
+.. GENERATED FROM PYTHON SOURCE LINES 279-280
 
 We configure the algorithm, with the model noise:
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-276
+.. GENERATED FROM PYTHON SOURCE LINES 280-283
 
 .. code-block:: default
 
@@ -779,11 +784,11 @@ We configure the algorithm, with the model noise:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 277-278
+.. GENERATED FROM PYTHON SOURCE LINES 284-285
 
 We run the algorithm and get the result:
 
-.. GENERATED FROM PYTHON SOURCE LINES 278-281
+.. GENERATED FROM PYTHON SOURCE LINES 285-288
 
 .. code-block:: default
 
@@ -797,7 +802,7 @@ We run the algorithm and get the result:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-284
+.. GENERATED FROM PYTHON SOURCE LINES 289-291
 
 .. code-block:: default
 
@@ -809,8 +814,6 @@ We run the algorithm and get the result:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -818,7 +821,7 @@ We run the algorithm and get the result:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 285-287
+.. GENERATED FROM PYTHON SOURCE LINES 292-294
 
 .. code-block:: default
 
@@ -832,12 +835,12 @@ We run the algorithm and get the result:
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>[0.124437,0.803642]</p>
+    <p>[0.124455,0.803593]</p>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 288-290
+.. GENERATED FROM PYTHON SOURCE LINES 295-297
 
 .. code-block:: default
 
@@ -856,7 +859,7 @@ We run the algorithm and get the result:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-293
+.. GENERATED FROM PYTHON SOURCE LINES 298-300
 
 .. code-block:: default
 
@@ -879,7 +882,7 @@ We run the algorithm and get the result:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-296
+.. GENERATED FROM PYTHON SOURCE LINES 301-303
 
 .. code-block:: default
 
@@ -892,14 +895,13 @@ We run the algorithm and get the result:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 297-311
+.. GENERATED FROM PYTHON SOURCE LINES 304-317
 
 .. code-block:: default
 
-    graph = objectiveFunction.draw(lowerbound, upperbound, [100]*dim)
+    graph = objectiveFunction.draw(lowerbound, upperbound, [100] * dim)
     graph.setLegends([""])
-    graph.setTitle(
-        "Branin function. Initial : black bullet. Solution : green diamond.")
+    graph.setTitle("Branin function. Initial : black bullet. Solution : green diamond.")
     cloud = ot.Cloud(inputSample)
     cloud.setPointStyle("bullet")
     cloud.setColor("black")
@@ -922,17 +924,16 @@ We run the algorithm and get the result:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 312-313
+.. GENERATED FROM PYTHON SOURCE LINES 318-319
 
 We see that the EGO algorithm found the second local minimum. Given the limited number of function evaluations, the other local minimas have not been explored.
 
-.. GENERATED FROM PYTHON SOURCE LINES 315-320
+.. GENERATED FROM PYTHON SOURCE LINES 321-325
 
 .. code-block:: default
 
     graph = result.drawOptimalValueHistory()
-    view = viewer.View(graph, axes_kw={"xticks": range(
-        0, result.getIterationNumber(), 5)})
+    view = viewer.View(graph, axes_kw={"xticks": range(0, result.getIterationNumber(), 5)})
 
     plt.show()
 
@@ -950,32 +951,20 @@ We see that the EGO algorithm found the second local minimum. Given the limited 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.829 seconds)
+   **Total running time of the script:** ( 0 minutes  4.286 seconds)
 
 
 .. _sphx_glr_download_auto_numerical_methods_optimization_plot_ego.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_ego.py <plot_ego.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_ego.ipynb <plot_ego.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_ego.py <plot_ego.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_ego.ipynb <plot_ego.ipynb>`

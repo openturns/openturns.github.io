@@ -32,12 +32,13 @@ While the estimation of marginals is quite straightforward, the estimation of th
 - assemble the estimated copulas
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-21
+.. GENERATED FROM PYTHON SOURCE LINES 16-22
 
 .. code-block:: default
 
     import openturns as ot
     import math as m
+
     ot.Log.Show(ot.Log.NONE)
     ot.RandomGenerator.SetSeed(0)
 
@@ -48,19 +49,23 @@ While the estimation of marginals is quite straightforward, the estimation of th
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 generate some multivariate data to estimate, with correlation
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-31
+.. GENERATED FROM PYTHON SOURCE LINES 24-36
 
 .. code-block:: default
 
     cop1 = ot.AliMikhailHaqCopula(0.6)
     cop2 = ot.ClaytonCopula(2.5)
     copula = ot.ComposedCopula([cop1, cop2])
-    marginals = [ot.Uniform(5.0, 6.0), ot.Arcsine(
-    ), ot.Normal(-40.0, 3.0), ot.Triangular(100.0, 150.0, 300.0)]
+    marginals = [
+        ot.Uniform(5.0, 6.0),
+        ot.Arcsine(),
+        ot.Normal(-40.0, 3.0),
+        ot.Triangular(100.0, 150.0, 300.0),
+    ]
     distribution = ot.ComposedDistribution(marginals, copula)
     sample = distribution.getSample(10000).getMarginal([0, 2, 3, 1])
 
@@ -71,23 +76,25 @@ generate some multivariate data to estimate, with correlation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 estimate marginals
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-45
+.. GENERATED FROM PYTHON SOURCE LINES 38-52
 
 .. code-block:: default
 
     dimension = sample.getDimension()
     marginalFactories = []
     for factory in ot.DistributionFactory.GetContinuousUniVariateFactories():
-        if str(factory).startswith('Histogram'):
+        if str(factory).startswith("Histogram"):
             # ~ non-parametric
             continue
         marginalFactories.append(factory)
-    estimated_marginals = [ot.FittingTest.BestModelBIC(
-        sample.getMarginal(i), marginalFactories)[0] for i in range(dimension)]
+    estimated_marginals = [
+        ot.FittingTest.BestModelBIC(sample.getMarginal(i), marginalFactories)[0]
+        for i in range(dimension)
+    ]
     estimated_marginals
 
 
@@ -97,8 +104,6 @@ estimate marginals
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -106,16 +111,15 @@ estimate marginals
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Find connected components of a graph defined from its adjacency matrix
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-75
+.. GENERATED FROM PYTHON SOURCE LINES 56-81
 
 .. code-block:: default
 
     def find_neighbours(head, covariance, to_visit, visited):
-        N = covariance.getDimension()
         visited[head] = 1
         to_visit.remove(head)
         current_component = [head]
@@ -147,14 +151,14 @@ Find connected components of a graph defined from its adjacency matrix
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-80
+.. GENERATED FROM PYTHON SOURCE LINES 82-86
 
 Estimate the copula
 -------------------
 
 First find the dependent components : we compute the `Spearman` correlation
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-85
+.. GENERATED FROM PYTHON SOURCE LINES 88-91
 
 .. code-block:: default
 
@@ -167,8 +171,6 @@ First find the dependent components : we compute the `Spearman` correlation
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     [[  1          -0.00167386  0.00312294  0.245006   ]
@@ -179,11 +181,11 @@ First find the dependent components : we compute the `Spearman` correlation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 92-93
 
 We filter and consider only significantly non-zero correlations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-95
+.. GENERATED FROM PYTHON SOURCE LINES 95-101
 
 .. code-block:: default
 
@@ -199,8 +201,6 @@ We filter and consider only significantly non-zero correlations.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     [[ 1 0 0 1 ]
@@ -211,7 +211,7 @@ We filter and consider only significantly non-zero correlations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-104
+.. GENERATED FROM PYTHON SOURCE LINES 102-110
 
 Note that we can apply the `HypothesisTest.Spearman` test. As the null hypothesis of the test is the `independence`, we must take the complementary of the binary measure as follow:
 
@@ -222,11 +222,11 @@ Note that we can apply the `HypothesisTest.Spearman` test. As the null hypothesi
 >>>           M[i, j] = 1 - ot.HypothesisTest.Spearman(sample[:,i], sample[:,j]).getBinaryQualityMeasure()
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-107
+.. GENERATED FROM PYTHON SOURCE LINES 112-113
 
 Now we find the independent blocs:
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-112
+.. GENERATED FROM PYTHON SOURCE LINES 115-118
 
 .. code-block:: default
 
@@ -239,8 +239,6 @@ Now we find the independent blocs:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -248,21 +246,20 @@ Now we find the independent blocs:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-116
+.. GENERATED FROM PYTHON SOURCE LINES 119-122
 
 For each dependent block, we estimate the most accurate non parameteric copula.
 
 To do this, we first need to transform the sample in such a way as to keep the copula intact but make all marginal samples follow the uniform distribution on [0,1].
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-124
+.. GENERATED FROM PYTHON SOURCE LINES 124-129
 
 .. code-block:: default
 
     copula_sample = ot.Sample(sample.getSize(), sample.getDimension())
     copula_sample.setDescription(sample.getDescription())
     for index in range(sample.getDimension()):
-        copula_sample[:, index] = estimated_marginals[index].computeCDF(
-            sample[:, index])
+        copula_sample[:, index] = estimated_marginals[index].computeCDF(sample[:, index])
 
 
 
@@ -271,7 +268,7 @@ To do this, we first need to transform the sample in such a way as to keep the c
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-136
+.. GENERATED FROM PYTHON SOURCE LINES 130-143
 
 .. code-block:: default
 
@@ -279,11 +276,13 @@ To do this, we first need to transform the sample in such a way as to keep the c
     for factory in ot.DistributionFactory.GetContinuousMultiVariateFactories():
         if not factory.build().isCopula():
             continue
-        if factory.getImplementation().getClassName() == 'BernsteinCopulaFactory':
+        if factory.getImplementation().getClassName() == "BernsteinCopulaFactory":
             continue
         copulaFactories.append(factory)
-    estimated_copulas = [ot.FittingTest.BestModelBIC(
-        copula_sample.getMarginal(bloc), copulaFactories)[0] for bloc in blocs]
+    estimated_copulas = [
+        ot.FittingTest.BestModelBIC(copula_sample.getMarginal(bloc), copulaFactories)[0]
+        for bloc in blocs
+    ]
     estimated_copulas
 
 
@@ -292,8 +291,6 @@ To do this, we first need to transform the sample in such a way as to keep the c
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -301,11 +298,11 @@ To do this, we first need to transform the sample in such a way as to keep the c
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-138
+.. GENERATED FROM PYTHON SOURCE LINES 144-145
 
 Finally we assemble the copula
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-142
+.. GENERATED FROM PYTHON SOURCE LINES 147-149
 
 .. code-block:: default
 
@@ -318,11 +315,11 @@ Finally we assemble the copula
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-144
+.. GENERATED FROM PYTHON SOURCE LINES 150-151
 
 Take care of the order of each bloc vs the order of original components !
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-155
+.. GENERATED FROM PYTHON SOURCE LINES 153-162
 
 .. code-block:: default
 
@@ -351,16 +348,15 @@ Take care of the order of each bloc vs the order of original components !
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-157
+.. GENERATED FROM PYTHON SOURCE LINES 163-164
 
 We build joint distribution from marginal distributions and dependency structure:
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-162
+.. GENERATED FROM PYTHON SOURCE LINES 166-168
 
 .. code-block:: default
 
-    estimated_distribution = ot.ComposedDistribution(
-        estimated_marginals, estimated_copula)
+    estimated_distribution = ot.ComposedDistribution(estimated_marginals, estimated_copula)
     estimated_distribution
 
 
@@ -381,32 +377,20 @@ We build joint distribution from marginal distributions and dependency structure
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.028 seconds)
+   **Total running time of the script:** ( 0 minutes  7.190 seconds)
 
 
 .. _sphx_glr_download_auto_data_analysis_distribution_fitting_plot_estimate_multivariate_distribution.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_estimate_multivariate_distribution.py <plot_estimate_multivariate_distribution.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_estimate_multivariate_distribution.ipynb <plot_estimate_multivariate_distribution.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_estimate_multivariate_distribution.py <plot_estimate_multivariate_distribution.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_estimate_multivariate_distribution.ipynb <plot_estimate_multivariate_distribution.ipynb>`

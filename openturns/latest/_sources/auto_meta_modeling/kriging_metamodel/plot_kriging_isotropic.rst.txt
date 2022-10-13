@@ -40,20 +40,32 @@ Modeling temperature across a surface
 -------------------------------------
 In this example, we collect temperature data over a floorplan using sensors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-36
+.. GENERATED FROM PYTHON SOURCE LINES 25-48
 
 .. code-block:: default
 
     import numpy as np
     import openturns as ot
     import matplotlib.pyplot as plt
+
     ot.Log.Show(ot.Log.NONE)
 
-    coordinates = ot.Sample([[100.0, 100.0], [500.0, 100.0], [900.0, 100.0],
-                             [100.0, 350.0], [500.0, 350.0], [900.0, 350.0],
-                             [100.0, 600.0], [500.0, 600.0], [900.0, 600.0]])
-    observations = ot.Sample([[25.0], [25.0], [10.0], [20.0], [
-                             25.0], [20.0], [15.0], [25.0], [25.0]])
+    coordinates = ot.Sample(
+        [
+            [100.0, 100.0],
+            [500.0, 100.0],
+            [900.0, 100.0],
+            [100.0, 350.0],
+            [500.0, 350.0],
+            [900.0, 350.0],
+            [100.0, 600.0],
+            [500.0, 600.0],
+            [900.0, 600.0],
+        ]
+    )
+    observations = ot.Sample(
+        [[25.0], [25.0], [10.0], [20.0], [25.0], [20.0], [15.0], [25.0], [25.0]]
+    )
 
 
 
@@ -62,11 +74,11 @@ In this example, we collect temperature data over a floorplan using sensors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Let us plot the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-49
+.. GENERATED FROM PYTHON SOURCE LINES 50-61
 
 .. code-block:: default
 
@@ -77,7 +89,7 @@ Let us plot the data.
 
     # Plot the data with a scatter plot and a color map.
     fig = plt.figure()
-    plt.scatter(x, y, c=observations, cmap='viridis')
+    plt.scatter(x, y, c=observations, cmap="viridis")
     plt.colorbar()
     plt.show()
 
@@ -93,7 +105,7 @@ Let us plot the data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-56
+.. GENERATED FROM PYTHON SOURCE LINES 62-68
 
 Because we are going to view several Kriging models in this example,
 we use a function to automate the process of optimizing the scale parameter
@@ -102,7 +114,7 @@ Since version 1.15 of the library, input data are no longer rescaled by the
 :class:`~openturns.KrigingAlgorithm` class, so we need to manually set
 sensible bounds for the scale parameter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-81
+.. GENERATED FROM PYTHON SOURCE LINES 68-94
 
 .. code-block:: default
 
@@ -112,18 +124,18 @@ sensible bounds for the scale parameter.
 
 
     def fitKriging(coordinates, observations, covarianceModel, basis):
-        '''
+        """
         Fit the parameters of a Kriging metamodel.
-        '''
+        """
         # Define the Kriging algorithm.
-        algo = ot.KrigingAlgorithm(
-            coordinates, observations, covarianceModel, basis)
+        algo = ot.KrigingAlgorithm(coordinates, observations, covarianceModel, basis)
 
         # Set the optimization bounds for the scale parameter to sensible values
         # given the data set.
         scale_dimension = covarianceModel.getScale().getDimension()
-        algo.setOptimizationBounds(ot.Interval([lower] * scale_dimension,
-                                               [upper] * scale_dimension))
+        algo.setOptimizationBounds(
+            ot.Interval([lower] * scale_dimension, [upper] * scale_dimension)
+        )
 
         # Run the Kriging algorithm and extract the fitted surrogate model.
         algo.run()
@@ -138,27 +150,28 @@ sensible bounds for the scale parameter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
+
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
 
 Let us define a helper function to plot Kriging predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-115
+.. GENERATED FROM PYTHON SOURCE LINES 96-129
 
 .. code-block:: default
 
 
 
     def plotKrigingPredictions(krigingMetamodel):
-        '''
+        """
         Plot the predictions of a Kriging metamodel.
-        '''
+        """
         # Create the mesh of the box [0., 1000.] * [0., 700.]
-        myInterval = ot.Interval([0., 0.], [1000., 700.])
+        myInterval = ot.Interval([0.0, 0.0], [1000.0, 700.0])
 
         # Define the number of intervals in each direction of the box
         nx = 20
         ny = 20
-        myIndices = [nx-1, ny-1]
+        myIndices = [nx - 1, ny - 1]
         myMesher = ot.IntervalMesher(myIndices)
         myMeshBox = myMesher.build(myInterval)
 
@@ -173,7 +186,7 @@ Let us define a helper function to plot Kriging predictions.
 
         # Plot
         plt.figure()
-        plt.pcolormesh(X, Y, predictions_array, shading='auto')
+        plt.pcolormesh(X, Y, predictions_array, shading="auto")
         plt.colorbar()
         plt.show()
         return
@@ -185,14 +198,15 @@ Let us define a helper function to plot Kriging predictions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-120
+
+.. GENERATED FROM PYTHON SOURCE LINES 130-134
 
 Predict with an anisotropic geometric covariance kernel
 -------------------------------------------------------
 In order to illustrate the usefulness of isotropic covariance kernels,
 we first perform prediction with an anisotropic geometric kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-129
+.. GENERATED FROM PYTHON SOURCE LINES 136-143
 
 Keep in mind that, when there are more than one input dimension,
 the :class:`~openturns.CovarianceModel` classes use a multidimensional
@@ -202,7 +216,7 @@ They are anisotropic geometric by default.
 Our example has two input dimensions,
 so :math:`\vect{\theta} = (\theta_1, \theta_2)`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-138
+.. GENERATED FROM PYTHON SOURCE LINES 143-153
 
 .. code-block:: default
 
@@ -212,7 +226,8 @@ so :math:`\vect{\theta} = (\theta_1, \theta_2)`.
     basis = ot.ConstantBasisFactory(inputDimension).build()
     covarianceModel = ot.SquaredExponential(inputDimension)
     krigingResult, krigingMetamodel = fitKriging(
-        coordinates, observations, covarianceModel, basis)
+        coordinates, observations, covarianceModel, basis
+    )
     plotKrigingPredictions(krigingMetamodel)
 
 
@@ -227,13 +242,13 @@ so :math:`\vect{\theta} = (\theta_1, \theta_2)`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-142
+.. GENERATED FROM PYTHON SOURCE LINES 154-157
 
 We see weird vertical columns on the plot.
 How did this happen? Let us have a look at the optimized scale parameter
 :math:`\hat{\vect{\theta}} = (\hat{\theta}_1, \hat{\theta}_2)`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-144
+.. GENERATED FROM PYTHON SOURCE LINES 157-159
 
 .. code-block:: default
 
@@ -245,8 +260,6 @@ How did this happen? Let us have a look at the optimized scale parameter
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     [50,344.691]
@@ -254,11 +267,11 @@ How did this happen? Let us have a look at the optimized scale parameter
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-146
+.. GENERATED FROM PYTHON SOURCE LINES 160-161
 
 The value of :math:`\hat{\theta}_1` is actually equal to the lower bound:
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-149
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 .. code-block:: default
 
@@ -271,8 +284,6 @@ The value of :math:`\hat{\theta}_1` is actually equal to the lower bound:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     50.0
@@ -280,12 +291,12 @@ The value of :math:`\hat{\theta}_1` is actually equal to the lower bound:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-152
+.. GENERATED FROM PYTHON SOURCE LINES 165-167
 
 This means that temperatures are likely to vary a lot along the X axis
 and much slower across the Y axis based on the observation data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-159
+.. GENERATED FROM PYTHON SOURCE LINES 169-174
 
 Predict with an isotropic covariance kernel
 ---------------------------------------------------
@@ -293,13 +304,12 @@ If we know that variations of the temperature are isotropic
 (i.e. with no priviledged direction),
 we can embed this information within the covariance kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-163
+.. GENERATED FROM PYTHON SOURCE LINES 174-177
 
 .. code-block:: default
 
 
-    isotropic = ot.IsotropicCovarianceModel(
-        ot.SquaredExponential(), inputDimension)
+    isotropic = ot.IsotropicCovarianceModel(ot.SquaredExponential(), inputDimension)
 
 
 
@@ -308,7 +318,7 @@ we can embed this information within the covariance kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-169
+.. GENERATED FROM PYTHON SOURCE LINES 178-183
 
 The :class:`~openturns.IsotropicCovarianceModel` class creates an isotropic
 version with a given input dimension of a :class:`~openturns.CovarianceModel`.
@@ -316,13 +326,14 @@ Because is is isotropic, it only needs one scale parameter :math:`\theta_{iso}`
 and it will make sure :math:`\theta_1 = \theta_2 = \theta_{iso}` at all times
 during the optimization.
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-174
+.. GENERATED FROM PYTHON SOURCE LINES 183-189
 
 .. code-block:: default
 
 
     krigingResult, krigingMetamodel = fitKriging(
-        coordinates, observations, isotropic, basis)
+        coordinates, observations, isotropic, basis
+    )
     print(krigingResult.getCovarianceModel().getScale())
 
 
@@ -331,8 +342,6 @@ during the optimization.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     [287.161]
@@ -340,11 +349,11 @@ during the optimization.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-176
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
 
 Prediction with the isotropic covariance kernel is much more satisfactory.
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-179
+.. GENERATED FROM PYTHON SOURCE LINES 191-194
 
 .. code-block:: default
 
@@ -366,32 +375,20 @@ Prediction with the isotropic covariance kernel is much more satisfactory.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.265 seconds)
+   **Total running time of the script:** ( 0 minutes  0.261 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_isotropic.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_kriging_isotropic.py <plot_kriging_isotropic.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_kriging_isotropic.ipynb <plot_kriging_isotropic.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_kriging_isotropic.py <plot_kriging_isotropic.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_kriging_isotropic.ipynb <plot_kriging_isotropic.ipynb>`

@@ -31,7 +31,7 @@ A detailed explanation of the model is presented :ref:`here <use-case-viscous-fa
 Define the model
 ----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-20
+.. GENERATED FROM PYTHON SOURCE LINES 14-21
 
 .. code-block:: default
 
@@ -39,6 +39,7 @@ Define the model
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
     import numpy as np
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -48,18 +49,18 @@ Define the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 We first define the time grid associated with the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-29
+.. GENERATED FROM PYTHON SOURCE LINES 25-30
 
 .. code-block:: default
 
     tmin = 0.0  # Minimum time
-    tmax = 12.  # Maximum time
+    tmax = 12.0  # Maximum time
     gridsize = 100  # Number of time steps
-    mesh = ot.IntervalMesher([gridsize-1]).build(ot.Interval(tmin, tmax))
+    mesh = ot.IntervalMesher([gridsize - 1]).build(ot.Interval(tmin, tmax))
 
 
 
@@ -68,7 +69,7 @@ We first define the time grid associated with the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-32
+.. GENERATED FROM PYTHON SOURCE LINES 31-33
 
 .. code-block:: default
 
@@ -81,11 +82,11 @@ We first define the time grid associated with the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Creation of the input distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-42
+.. GENERATED FROM PYTHON SOURCE LINES 37-43
 
 .. code-block:: default
 
@@ -102,7 +103,7 @@ Creation of the input distribution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-47
+.. GENERATED FROM PYTHON SOURCE LINES 44-48
 
 .. code-block:: default
 
@@ -116,8 +117,6 @@ Creation of the input distribution.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -125,11 +124,11 @@ Creation of the input distribution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Then we define the Python function which computes the altitude at each time value. This function has 5 inputs: `z0`, `v0`, `m`, `c` and `zmin`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-66
+.. GENERATED FROM PYTHON SOURCE LINES 52-67
 
 .. code-block:: default
 
@@ -141,9 +140,9 @@ Then we define the Python function which computes the altitude at each time valu
         c = X[3]
         zmin = X[4]
         tau = m / c
-        vinf = - m * g / c
+        vinf = -m * g / c
         t = np.array(vertices)
-        z = z0 + vinf * t + tau * (v0 - vinf) * (1 - np.exp(- t / tau))
+        z = z0 + vinf * t + tau * (v0 - vinf) * (1 - np.exp(-t / tau))
         z = np.maximum(z, zmin)
         return [[zeta[0]] for zeta in z]
 
@@ -155,13 +154,14 @@ Then we define the Python function which computes the altitude at each time valu
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-71
+.. GENERATED FROM PYTHON SOURCE LINES 68-73
 
 .. code-block:: default
 
     outputDimension = 1
     altitudeWithFiveInputs = ot.PythonPointToFieldFunction(
-        5, mesh, outputDimension, AltiFunc)
+        5, mesh, outputDimension, AltiFunc
+    )
 
 
 
@@ -170,21 +170,22 @@ Then we define the Python function which computes the altitude at each time valu
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
+.. GENERATED FROM PYTHON SOURCE LINES 74-76
 
 Restrict the number of inputs
 -----------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 78-79
 
 We define a function which has 4 inputs and 5 outputs: the 5th output `zmin` is set to zero.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-82
+.. GENERATED FROM PYTHON SOURCE LINES 81-85
 
 .. code-block:: default
 
     projectionFunction = ot.SymbolicFunction(
-        ["z0", "v0", "m", "c"], ["z0", "v0", "m", "c", "0.0"])
+        ["z0", "v0", "m", "c"], ["z0", "v0", "m", "c", "0.0"]
+    )
 
 
 
@@ -193,16 +194,17 @@ We define a function which has 4 inputs and 5 outputs: the 5th output `zmin` is 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
+.. GENERATED FROM PYTHON SOURCE LINES 86-87
 
 Then we use the `PointToFieldConnection` to create a function which has 4 inputs and returns the output field.
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-89
+.. GENERATED FROM PYTHON SOURCE LINES 89-93
 
 .. code-block:: default
 
     altitudeWithFourInputs = ot.PointToFieldConnection(
-        altitudeWithFiveInputs, projectionFunction)
+        altitudeWithFiveInputs, projectionFunction
+    )
 
 
 
@@ -211,16 +213,16 @@ Then we use the `PointToFieldConnection` to create a function which has 4 inputs
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-92
+.. GENERATED FROM PYTHON SOURCE LINES 94-96
 
 Sample trajectories
 --------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-95
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 In order to sample trajectories, we use the `getSample` method of the input distribution and apply the field function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-101
+.. GENERATED FROM PYTHON SOURCE LINES 101-105
 
 .. code-block:: default
 
@@ -235,18 +237,18 @@ In order to sample trajectories, we use the `getSample` method of the input dist
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-103
+.. GENERATED FROM PYTHON SOURCE LINES 106-107
 
 Draw some curves.
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-111
+.. GENERATED FROM PYTHON SOURCE LINES 109-115
 
 .. code-block:: default
 
     graph = outputSample.drawMarginal(0)
-    graph.setTitle('Viscous free fall: %d trajectories' % (size))
-    graph.setXTitle(r'$t$')
-    graph.setYTitle(r'$z$')
+    graph.setTitle("Viscous free fall: %d trajectories" % (size))
+    graph.setXTitle(r"$t$")
+    graph.setYTitle(r"$z$")
     view = viewer.View(graph)
     plt.show()
 
@@ -264,32 +266,20 @@ Draw some curves.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.080 seconds)
+   **Total running time of the script:** ( 0 minutes  0.082 seconds)
 
 
 .. _sphx_glr_download_auto_functional_modeling_field_functions_plot_viscous_fall_field_function_connection.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_viscous_fall_field_function_connection.py <plot_viscous_fall_field_function_connection.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_viscous_fall_field_function_connection.ipynb <plot_viscous_fall_field_function_connection.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_viscous_fall_field_function_connection.py <plot_viscous_fall_field_function_connection.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_viscous_fall_field_function_connection.ipynb <plot_viscous_fall_field_function_connection.ipynb>`

@@ -21,7 +21,7 @@
 Kriging :configure the optimization solver
 ==========================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-31
+.. GENERATED FROM PYTHON SOURCE LINES 6-33
 
 The goal of this example is to show how to fine-tune the optimization solver used to estimate the hyperparameters of the covariance model of the kriging metamodel.
 
@@ -40,7 +40,9 @@ The covariance model has two types of parameters.
 
 All these parameters are estimated with the `GeneralLinearModelAlgorithm` class.
 
-The estimation of the :math:`{\bf \theta}` parameters is the step which has the highest CPU cost. Moreover, the maximization of likelihood may be associated with difficulties e.g. many local maximums or even the non convergence of the optimization algorithm. In this case, it might be useful to fine tune the optimization algorithm so that the convergence of the optimization algorithm is, hopefully, improved.
+The estimation of the :math:`{\bf \theta}` parameters is the step which has the highest CPU cost.
+Moreover, the maximization of likelihood may be associated with difficulties e.g. many local maximums or even the non convergence of the optimization algorithm.
+In this case, it might be useful to fine tune the optimization algorithm so that the convergence of the optimization algorithm is, hopefully, improved.
 
 Furthermore, there are several situations in which the optimization can be initialized or completely bypassed. Suppose for example that we have already created an initial kriging metamodel with :math:`N` points and we want to add a single new point.
 
@@ -49,12 +51,12 @@ Furthermore, there are several situations in which the optimization can be initi
 
 This is why the goal of this example is to see how to configure the optimization of the hyperparameters of a kriging metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-35
+.. GENERATED FROM PYTHON SOURCE LINES 35-37
 
 Definition of the model
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-41
+.. GENERATED FROM PYTHON SOURCE LINES 39-43
 
 .. code-block:: default
 
@@ -69,11 +71,11 @@ Definition of the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 We define the symbolic function which evaluates the output Y depending on the inputs E, F, L and I.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-47
+.. GENERATED FROM PYTHON SOURCE LINES 47-49
 
 .. code-block:: default
 
@@ -86,15 +88,15 @@ We define the symbolic function which evaluates the output Y depending on the in
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Then we define the distribution of the input random vector.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Young's modulus E
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-65
+.. GENERATED FROM PYTHON SOURCE LINES 54-67
 
 .. code-block:: default
 
@@ -108,8 +110,8 @@ Young's modulus E
     L = ot.Uniform(250.0, 260.0)  # in cm
     L.setDescription("L")
     # Moment of inertia I
-    I = ot.Beta(2.5, 1.5, 310, 450)  # in cm^4
-    I.setDescription("I")
+    II = ot.Beta(2.5, 1.5, 310, 450)  # in cm^4
+    II.setDescription("I")
 
 
 
@@ -118,20 +120,19 @@ Young's modulus E
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Finally, we define the dependency using a `NormalCopula`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-76
+.. GENERATED FROM PYTHON SOURCE LINES 71-77
 
 .. code-block:: default
 
     dim = 4  # number of inputs
     R = ot.CorrelationMatrix(dim)
     R[2, 3] = -0.2
-    myCopula = ot.NormalCopula(
-        ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(R))
-    myDistribution = ot.ComposedDistribution([E, F, L, I], myCopula)
+    myCopula = ot.NormalCopula(ot.NormalCopula.GetCorrelationFromSpearmanCorrelation(R))
+    myDistribution = ot.ComposedDistribution([E, F, L, II], myCopula)
 
 
 
@@ -140,16 +141,16 @@ Finally, we define the dependency using a `NormalCopula`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-79
+.. GENERATED FROM PYTHON SOURCE LINES 78-80
 
 Create the design of experiments
 --------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
 We consider a simple Monte-Carlo sampling as a design of experiments. This is why we generate an input sample using the `getSample` method of the distribution. Then we evaluate the output using the `model` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-88
+.. GENERATED FROM PYTHON SOURCE LINES 85-89
 
 .. code-block:: default
 
@@ -164,16 +165,16 @@ We consider a simple Monte-Carlo sampling as a design of experiments. This is wh
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-91
+.. GENERATED FROM PYTHON SOURCE LINES 90-92
 
 Create the metamodel
 --------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-94
+.. GENERATED FROM PYTHON SOURCE LINES 94-95
 
 In order to create the kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class. Then we use a squared exponential covariance model. Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-120
+.. GENERATED FROM PYTHON SOURCE LINES 97-120
 
 .. code-block:: default
 
@@ -188,8 +189,7 @@ In order to create the kriging metamodel, we first select a constant trend with 
     scale_min_factor = 0.1  # Must be < 1, tune this to match your problem
     maximum_scale_bounds = scale_max_factor * x_range
     minimum_scale_bounds = scale_min_factor * x_range
-    scaleOptimizationBounds = ot.Interval(
-        minimum_scale_bounds, maximum_scale_bounds)
+    scaleOptimizationBounds = ot.Interval(minimum_scale_bounds, maximum_scale_bounds)
     print("scaleOptimizationBounds")
     print(scaleOptimizationBounds)
 
@@ -206,8 +206,6 @@ In order to create the kriging metamodel, we first select a constant trend with 
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -240,12 +238,10 @@ We can then print the constant trend of the metamodel, which have been estimated
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    [class=Point name=Unnamed dimension=1 values=[18.0661]]
+    [class=Point name=Unnamed dimension=1 values=[15.8282]]
 
 
 
@@ -266,11 +262,9 @@ We can also print the hyperparameters of the covariance model, which have been e
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    SquaredExponential(scale=[8.48592e+07,25965,29.407,424.154], amplitude=[11.0932])
+    SquaredExponential(scale=[2.98088e+07,20870,29.407,397.697], amplitude=[6.94428])
 
 
 
@@ -314,8 +308,6 @@ Get the default optimizer.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -340,8 +332,6 @@ The `getOptimizationBounds` method returns the bounds. The dimension of these bo
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -362,8 +352,6 @@ The `getOptimizationBounds` method returns the bounds. The dimension of these bo
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -386,8 +374,6 @@ The `getOptimizationBounds` method returns the bounds. The dimension of these bo
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -414,8 +400,6 @@ The `getOptimizeParameters` method returns `True` if these parameters are to be 
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -476,11 +460,9 @@ The starting point of the optimization is based on the parameters of the covaria
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    SquaredExponential(scale=[8.48592e+07,25965,29.407,424.154], amplitude=[11.0932])
+    SquaredExponential(scale=[2.98088e+07,20870,29.407,397.697], amplitude=[6.94428])
 
 
 
@@ -501,11 +483,9 @@ In order to see the difference with the default optimization, we print the previ
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    SquaredExponential(scale=[8.48592e+07,25965,29.407,424.154], amplitude=[11.0932])
+    SquaredExponential(scale=[2.98088e+07,20870,29.407,397.697], amplitude=[6.94428])
 
 
 
@@ -591,8 +571,6 @@ the parameters have not been optimized, as required.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     SquaredExponential(scale=[12,34,56,78], amplitude=[91])
@@ -616,8 +594,6 @@ The trend, however, is still optimized, using linear least squares.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -625,18 +601,21 @@ The trend, however, is still optimized, using linear least squares.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 247-251
+.. GENERATED FROM PYTHON SOURCE LINES 247-254
 
 Reuse the parameters from a previous optimization
 -------------------------------------------------
 
-In this example, we show how to reuse the optimized parameters of a previous kriging and configure a new one. Furthermore, we disable the optimization so that the parameters of the covariance model are not updated. This make the process of adding a new point very fast: it improves the quality by adding a new point in the design of experiments without paying the price of the update of the covariance model.
+In this example, we show how to reuse the optimized parameters of a previous kriging and configure a new one.
+Furthermore, we disable the optimization so that the parameters of the covariance model are not updated.
+This make the process of adding a new point very fast:
+it improves the quality by adding a new point in the design of experiments without paying the price of the update of the covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-254
+.. GENERATED FROM PYTHON SOURCE LINES 256-257
 
 Step 1: Run a first kriging algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-267
+.. GENERATED FROM PYTHON SOURCE LINES 259-270
 
 .. code-block:: default
 
@@ -657,20 +636,18 @@ Step 1: Run a first kriging algorithm.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    SquaredExponential(scale=[8.48592e+07,25965,29.407,424.154], amplitude=[11.0932])
+    SquaredExponential(scale=[2.98088e+07,20870,29.407,397.697], amplitude=[6.94428])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-269
+.. GENERATED FROM PYTHON SOURCE LINES 271-272
 
 Step 2: Create a new point and add it to the previous training design.
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-274
+.. GENERATED FROM PYTHON SOURCE LINES 274-277
 
 .. code-block:: default
 
@@ -684,7 +661,7 @@ Step 2: Create a new point and add it to the previous training design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-278
+.. GENERATED FROM PYTHON SOURCE LINES 278-281
 
 .. code-block:: default
 
@@ -697,8 +674,6 @@ Step 2: Create a new point and add it to the previous training design.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -706,7 +681,7 @@ Step 2: Create a new point and add it to the previous training design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 279-282
+.. GENERATED FROM PYTHON SOURCE LINES 282-285
 
 .. code-block:: default
 
@@ -719,8 +694,6 @@ Step 2: Create a new point and add it to the previous training design.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -728,11 +701,11 @@ Step 2: Create a new point and add it to the previous training design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-284
+.. GENERATED FROM PYTHON SOURCE LINES 286-287
 
 Step 3: Create an updated kriging, using the new point with the old covariance parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 286-294
+.. GENERATED FROM PYTHON SOURCE LINES 289-297
 
 .. code-block:: default
 
@@ -750,16 +723,14 @@ Step 3: Create an updated kriging, using the new point with the old covariance p
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    SquaredExponential(scale=[8.48592e+07,25965,29.407,424.154], amplitude=[11.0932])
+    SquaredExponential(scale=[2.98088e+07,20870,29.407,397.697], amplitude=[6.94428])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 295-304
+.. GENERATED FROM PYTHON SOURCE LINES 298-307
 
 .. code-block:: default
 
@@ -779,7 +750,7 @@ Step 3: Create an updated kriging, using the new point with the old covariance p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 305-307
+.. GENERATED FROM PYTHON SOURCE LINES 308-310
 
 .. code-block:: default
 
@@ -790,8 +761,6 @@ Step 3: Create an updated kriging, using the new point with the old covariance p
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -804,21 +773,24 @@ Step 3: Create an updated kriging, using the new point with the old covariance p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 308-309
+.. GENERATED FROM PYTHON SOURCE LINES 311-315
 
-We see that the parameters did not change *at all*: disabling the optimization allows one to keep a constant covariance model. In a practical algorithm, we may, for example, add a block of 10 new points before updating the parameters of the covariance model. At this point, we may reuse the previous covariance model so that the optimization starts from a better point, compared to the parameters default values. This will reduce the cost of the optimization.
+We see that the parameters did not change *at all*: disabling the optimization allows one to keep a constant covariance model.
+In a practical algorithm, we may, for example, add a block of 10 new points before updating the parameters of the covariance model.
+At this point, we may reuse the previous covariance model so that the optimization starts from a better point, compared to the parameters default values.
+This will reduce the cost of the optimization.
 
-.. GENERATED FROM PYTHON SOURCE LINES 311-313
+.. GENERATED FROM PYTHON SOURCE LINES 317-319
 
 Configure the local optimization solver
 ---------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 315-317
+.. GENERATED FROM PYTHON SOURCE LINES 321-323
 
 The following example shows how to set the local optimization solver.
 We choose the SLSQP algorithm from NLOPT.
 
-.. GENERATED FROM PYTHON SOURCE LINES 319-328
+.. GENERATED FROM PYTHON SOURCE LINES 325-334
 
 .. code-block:: default
 
@@ -838,7 +810,7 @@ We choose the SLSQP algorithm from NLOPT.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 329-332
+.. GENERATED FROM PYTHON SOURCE LINES 335-338
 
 .. code-block:: default
 
@@ -851,21 +823,18 @@ We choose the SLSQP algorithm from NLOPT.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    SquaredExponential(scale=[8.48592e+07,25965,29.407,424.154], amplitude=[11.0932])
+    SquaredExponential(scale=[2.98088e+07,20870,29.407,397.697], amplitude=[6.94428])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-337
+.. GENERATED FROM PYTHON SOURCE LINES 339-342
 
 .. code-block:: default
 
-    printCovarianceParameterChange(
-        finetune_covariance_model, basic_covariance_model)
+    printCovarianceParameterChange(finetune_covariance_model, basic_covariance_model)
 
 
 
@@ -873,8 +842,6 @@ We choose the SLSQP algorithm from NLOPT.
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -887,16 +854,18 @@ We choose the SLSQP algorithm from NLOPT.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 338-340
+.. GENERATED FROM PYTHON SOURCE LINES 343-345
 
 Configure the global optimization solver
 ----------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 342-343
+.. GENERATED FROM PYTHON SOURCE LINES 347-350
 
-The following example checks the robustness of the optimization of the kriging algorithm with respect to the optimization of the likelihood function in the covariance model parameters estimation. We use a `MultiStart` algorithm in order to avoid to be trapped by a local minimum. Furthermore, we generate the design of experiments using a `LHSExperiments`, which guarantees that the points will fill the space.
+The following example checks the robustness of the optimization of the kriging algorithm with respect to the optimization of the likelihood function in the covariance model parameters estimation.
+We use a `MultiStart` algorithm in order to avoid to be trapped by a local minimum.
+Furthermore, we generate the design of experiments using a `LHSExperiments`, which guarantees that the points will fill the space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-349
+.. GENERATED FROM PYTHON SOURCE LINES 352-356
 
 .. code-block:: default
 
@@ -911,11 +880,11 @@ The following example checks the robustness of the optimization of the kriging a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 350-351
+.. GENERATED FROM PYTHON SOURCE LINES 357-358
 
 First, we create a multivariate distribution, based on independent `Uniform` marginals which have the bounds required by the covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 353-356
+.. GENERATED FROM PYTHON SOURCE LINES 360-363
 
 .. code-block:: default
 
@@ -929,11 +898,11 @@ First, we create a multivariate distribution, based on independent `Uniform` mar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 357-358
+.. GENERATED FROM PYTHON SOURCE LINES 364-365
 
 We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in the sample space. This LHS is optimized so as to fill the space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 360-371
+.. GENERATED FROM PYTHON SOURCE LINES 367-377
 
 .. code-block:: default
 
@@ -941,8 +910,7 @@ We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in t
     LHS = ot.LHSExperiment(boundedDistribution, K)
     LHS.setAlwaysShuffle(True)
     SA_profile = ot.GeometricProfile(10.0, 0.95, 20000)
-    LHS_optimization_algo = ot.SimulatedAnnealingLHS(
-        LHS, ot.SpaceFillingC2(), SA_profile)
+    LHS_optimization_algo = ot.SimulatedAnnealingLHS(LHS, ot.SpaceFillingC2(), SA_profile)
     LHS_optimization_algo.generate()
     LHS_design = LHS_optimization_algo.getResult()
     starting_points = LHS_design.getOptimalDesign()
@@ -954,8 +922,6 @@ We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in t
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -963,11 +929,11 @@ We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in t
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 372-373
+.. GENERATED FROM PYTHON SOURCE LINES 378-379
 
 We can check that the minimum and maximum in the sample correspond to the bounds of the design of experiment.
 
-.. GENERATED FROM PYTHON SOURCE LINES 375-377
+.. GENERATED FROM PYTHON SOURCE LINES 381-383
 
 .. code-block:: default
 
@@ -979,8 +945,6 @@ We can check that the minimum and maximum in the sample correspond to the bounds
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     [2.12636e+06,2429.68,0.735174,10.6039] [8.50545e+07,97187.2,29.407,424.154]
@@ -988,7 +952,7 @@ We can check that the minimum and maximum in the sample correspond to the bounds
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 378-380
+.. GENERATED FROM PYTHON SOURCE LINES 384-386
 
 .. code-block:: default
 
@@ -1000,8 +964,6 @@ We can check that the minimum and maximum in the sample correspond to the bounds
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -1009,11 +971,11 @@ We can check that the minimum and maximum in the sample correspond to the bounds
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-382
+.. GENERATED FROM PYTHON SOURCE LINES 387-388
 
 Then we create a `MultiStart` algorithm based on the LHS starting points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 384-387
+.. GENERATED FROM PYTHON SOURCE LINES 390-393
 
 .. code-block:: default
 
@@ -1027,11 +989,11 @@ Then we create a `MultiStart` algorithm based on the LHS starting points.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 388-389
+.. GENERATED FROM PYTHON SOURCE LINES 394-395
 
 Finally, we configure the optimization algorithm so as to use the `MultiStart` algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 391-396
+.. GENERATED FROM PYTHON SOURCE LINES 397-402
 
 .. code-block:: default
 
@@ -1047,7 +1009,7 @@ Finally, we configure the optimization algorithm so as to use the `MultiStart` a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-400
+.. GENERATED FROM PYTHON SOURCE LINES 403-406
 
 .. code-block:: default
 
@@ -1060,29 +1022,24 @@ Finally, we configure the optimization algorithm so as to use the `MultiStart` a
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    SquaredExponential(scale=[8.48592e+07,25965,29.407,424.154], amplitude=[11.0932])
+    SquaredExponential(scale=[2.98088e+07,20870,29.407,397.697], amplitude=[6.94428])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 401-404
+.. GENERATED FROM PYTHON SOURCE LINES 407-409
 
 .. code-block:: default
 
-    printCovarianceParameterChange(
-        finetune_covariance_model, basic_covariance_model)
+    printCovarianceParameterChange(finetune_covariance_model, basic_covariance_model)
 
 
 
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -1095,39 +1052,27 @@ Finally, we configure the optimization algorithm so as to use the `MultiStart` a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-406
+.. GENERATED FROM PYTHON SOURCE LINES 410-411
 
 We see that there are no changes in the estimated parameters. This shows that the first optimization of the parameters worked fine.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.233 seconds)
+   **Total running time of the script:** ( 0 minutes  0.201 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_hyperparameters_optimization.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_kriging_hyperparameters_optimization.py <plot_kriging_hyperparameters_optimization.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_kriging_hyperparameters_optimization.ipynb <plot_kriging_hyperparameters_optimization.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_kriging_hyperparameters_optimization.py <plot_kriging_hyperparameters_optimization.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_kriging_hyperparameters_optimization.ipynb <plot_kriging_hyperparameters_optimization.ipynb>`

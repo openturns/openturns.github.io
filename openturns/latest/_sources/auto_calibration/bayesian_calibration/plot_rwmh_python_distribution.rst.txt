@@ -21,7 +21,7 @@
 Posterior sampling using a PythonDistribution
 =============================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-52
+.. GENERATED FROM PYTHON SOURCE LINES 6-57
 
 In this example we are going to show how to do Bayesian inference using the :class:`~openturns.RandomWalkMetropolisHastings` algorithm in a statistical model defined through a :class:`~openturns.PythonDistribution`.
 
@@ -29,7 +29,12 @@ This method is illustrated on a simple lifetime study test-case, which involves 
 
 In the following, we assume that the lifetime :math:`T_i` of an industrial component follows the Weibull distribution :math:`\mathcal W(\alpha, \beta)`, with CDF  given by :math:`F(t|\alpha,\beta)= 1 - e^{-\left( \frac{t}{\beta} \right)^\alpha}`.
 
-Our goal is to estimate the model parameters :math:`\alpha, \beta` based on a dataset of recorded failures :math:`(t_1, \ldots, t_n),` some of which correspond to actual failures, and the remaining are right-censored. Let :math:`(f_1, \ldots, f_n) \in \{0,1\}^n` represent the nature of each datum, :math:`f_i=1` if :math:`t_i` corresponds to an actual failure, :math:`f_i=0` if it is right-censored.
+Our goal is to estimate the model parameters :math:`\alpha, \beta` based on
+a dataset of recorded failures :math:`(t_1, \ldots, t_n),` some of which
+correspond to actual failures, and the remaining are right-censored.
+Let :math:`(f_1, \ldots, f_n) \in \{0,1\}^n` represent the nature of each
+datum, :math:`f_i=1` if :math:`t_i` corresponds to an actual failure,
+:math:`f_i=0` if it is right-censored.
 
 Note that the likelihood of each recorded failure is given by the Weibull density:
 
@@ -70,7 +75,7 @@ Set up the PythonDistribution
 
 The censured Weibuill likelihood is outside the usual catalog of probability distributions in OpenTURNS, hence we need to define it using the :class:`~openturns.PythonDistribution` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-62
+.. GENERATED FROM PYTHON SOURCE LINES 60-68
 
 .. code-block:: default
 
@@ -78,6 +83,7 @@ The censured Weibuill likelihood is outside the usual catalog of probability dis
     import numpy as np
     import openturns as ot
     from openturns.viewer import View
+
     ot.Log.Show(ot.Log.NONE)
     ot.RandomGenerator.SetSeed(123)
 
@@ -88,7 +94,7 @@ The censured Weibuill likelihood is outside the usual catalog of probability dis
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-72
+.. GENERATED FROM PYTHON SOURCE LINES 69-78
 
 The following methods must be defined:
 
@@ -100,7 +106,7 @@ The following methods must be defined:
    We formally define a bivariate distribution on the :math:`(t_i, f_i)` couple, even though :math:`f_i` has no distribution (it is simply a covariate).
    This is not an issue, since the sole purpose of this :class:`~openturns.PythonDistribution` object is to pass the likelihood calculation over to :class:`~openturns.RandomWalkMetropolisHastings`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-109
+.. GENERATED FROM PYTHON SOURCE LINES 80-116
 
 .. code-block:: default
 
@@ -122,12 +128,12 @@ The following methods must be defined:
             self.alpha = alpha
 
         def getRange(self):
-            return ot.Interval([0, 0], [1, 1], [True]*2, [False, True])
+            return ot.Interval([0, 0], [1, 1], [True] * 2, [False, True])
 
         def computeLogPDF(self, x):
             if not (self.alpha > 0.0 and self.beta > 0.0):
                 return -np.inf
-            log_pdf = -(x[0] / self.beta)**self.alpha
+            log_pdf = -((x[0] / self.beta) ** self.alpha)
             log_pdf += (self.alpha - 1) * np.log(x[0] / self.beta) * x[1]
             log_pdf += np.log(self.alpha / self.beta) * x[1]
             return log_pdf
@@ -146,11 +152,12 @@ The following methods must be defined:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+
+.. GENERATED FROM PYTHON SOURCE LINES 117-118
 
 Convert to :class:`~openturns.Distribution`
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-118
+.. GENERATED FROM PYTHON SOURCE LINES 120-125
 
 .. code-block:: default
 
@@ -166,20 +173,20 @@ Convert to :class:`~openturns.Distribution`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+.. GENERATED FROM PYTHON SOURCE LINES 126-130
 
 Observations, prior, initial point and proposal distributions
 -------------------------------------------------------------
 
 Define the observations
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-132
+.. GENERATED FROM PYTHON SOURCE LINES 133-139
 
 .. code-block:: default
 
 
     Tobs = np.array([4380, 1791, 1611, 1291, 6132, 5694, 5296, 4818, 4818, 4380])
-    fail = np.array([True]*4+[False]*6)
+    fail = np.array([True] * 4 + [False] * 6)
     x = ot.Sample(np.vstack((Tobs, fail)).T)
 
 
@@ -190,12 +197,12 @@ Define the observations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-135
+.. GENERATED FROM PYTHON SOURCE LINES 140-142
 
 Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distribution for :math:`\beta`.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-150
+.. GENERATED FROM PYTHON SOURCE LINES 144-156
 
 .. code-block:: default
 
@@ -206,10 +213,9 @@ Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distrib
     priorCopula = ot.IndependentCopula(2)  # prior independence
     priorMarginals = []  # prior marginals
     priorMarginals.append(ot.Gamma(a_beta, b_beta))  # Gamma prior for beta
-    priorMarginals.append(ot.Uniform(alpha_min, alpha_max)
-                          )  # uniform prior for alpha
+    priorMarginals.append(ot.Uniform(alpha_min, alpha_max))  # uniform prior for alpha
     prior = ot.ComposedDistribution(priorMarginals, priorCopula)
-    prior.setDescription(['beta', 'alpha'])
+    prior.setDescription(["beta", "alpha"])
 
 
 
@@ -219,17 +225,17 @@ Define a uniform prior distribution for :math:`\alpha` and a Gamma prior distrib
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-153
+.. GENERATED FROM PYTHON SOURCE LINES 157-159
 
 We select prior means as the initial point of the Metropolis-Hastings algorithm.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-158
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 .. code-block:: default
 
 
-    initialState = [a_beta / b_beta, 0.5*(alpha_max - alpha_min)]
+    initialState = [a_beta / b_beta, 0.5 * (alpha_max - alpha_min)]
 
 
 
@@ -238,19 +244,19 @@ We select prior means as the initial point of the Metropolis-Hastings algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-161
+.. GENERATED FROM PYTHON SOURCE LINES 165-167
 
 For our random walk proposal distributions, we choose normal steps, with standard deviation equal to roughly :math:`10\%` of the prior range (for the uniform prior) or standard deviation (for the normal prior).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-169
+.. GENERATED FROM PYTHON SOURCE LINES 169-175
 
 .. code-block:: default
 
 
     proposal = []
-    proposal.append(ot.Normal(0., 0.1 * np.sqrt(a_beta / b_beta**2)))
-    proposal.append(ot.Normal(0., 0.1 * (alpha_max - alpha_min)))
+    proposal.append(ot.Normal(0.0, 0.1 * np.sqrt(a_beta / b_beta**2)))
+    proposal.append(ot.Normal(0.0, 0.1 * (alpha_max - alpha_min)))
     proposal = ot.ComposedDistribution(proposal)
 
 
@@ -260,12 +266,12 @@ For our random walk proposal distributions, we choose normal steps, with standar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-172
+.. GENERATED FROM PYTHON SOURCE LINES 176-178
 
 Sample from the posterior distribution
 --------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-182
+.. GENERATED FROM PYTHON SOURCE LINES 180-188
 
 .. code-block:: default
 
@@ -283,8 +289,6 @@ Sample from the posterior distribution
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Acceptance rate: 0.7194
@@ -292,25 +296,25 @@ Sample from the posterior distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-185
+.. GENERATED FROM PYTHON SOURCE LINES 189-191
 
 Plot prior to posterior marginal plots.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-200
+.. GENERATED FROM PYTHON SOURCE LINES 193-206
 
 .. code-block:: default
 
     kernel = ot.KernelSmoothing()
     posterior = kernel.build(sample)
     grid = ot.GridLayout(1, 2)
-    grid.setTitle('Bayesian inference')
+    grid.setTitle("Bayesian inference")
     for parameter_index in range(2):
         graph = posterior.getMarginal(parameter_index).drawPDF()
         priorGraph = prior.getMarginal(parameter_index).drawPDF()
         graph.add(priorGraph)
         graph.setColors(ot.Drawable.BuildDefaultPalette(2))
-        graph.setLegends(['Posterior', 'Prior'])
+        graph.setLegends(["Posterior", "Prior"])
         grid.setGraph(0, parameter_index, graph)
     _ = View(grid)
 
@@ -326,12 +330,12 @@ Plot prior to posterior marginal plots.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-203
+.. GENERATED FROM PYTHON SOURCE LINES 207-209
 
 Define an improper prior
 --------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-210
+.. GENERATED FROM PYTHON SOURCE LINES 211-216
 
 Now, define an improper prior:
 
@@ -339,12 +343,12 @@ Now, define an improper prior:
   \mathcal \pi(\beta, \alpha) \propto \frac{1}{\beta}.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-215
+.. GENERATED FROM PYTHON SOURCE LINES 216-221
 
 .. code-block:: default
 
 
-    logpdf = ot.SymbolicFunction(['beta', 'alpha'], ['-log(beta)'])
+    logpdf = ot.SymbolicFunction(["beta", "alpha"], ["-log(beta)"])
     support = ot.Interval([0] * 2, [1] * 2)
     support.setFiniteUpperBound([False] * 2)
 
@@ -355,17 +359,16 @@ Now, define an improper prior:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-217
+.. GENERATED FROM PYTHON SOURCE LINES 222-223
 
 Sample from the posterior distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-224
+.. GENERATED FROM PYTHON SOURCE LINES 223-229
 
 .. code-block:: default
 
 
-    sampler2 = ot.RandomWalkMetropolisHastings(
-        logpdf, support, initialState, proposal)
+    sampler2 = ot.RandomWalkMetropolisHastings(logpdf, support, initialState, proposal)
     sampler2.setLikelihood(conditional, x)
     sample2 = sampler2.getSample(1000)
     print("Acceptance rate: %s" % (sampler2.getAcceptanceRate()))
@@ -376,8 +379,6 @@ Sample from the posterior distribution
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Acceptance rate: 0.729
@@ -385,23 +386,23 @@ Sample from the posterior distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-227
+.. GENERATED FROM PYTHON SOURCE LINES 230-232
 
 Plot posterior marginal plots only as prior cannot be drawn meaningfully.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-241
+.. GENERATED FROM PYTHON SOURCE LINES 234-246
 
 .. code-block:: default
 
     kernel = ot.KernelSmoothing()
     posterior = kernel.build(sample)
     grid = ot.GridLayout(1, 2)
-    grid.setTitle('Bayesian inference (with log-pdf)')
+    grid.setTitle("Bayesian inference (with log-pdf)")
     for parameter_index in range(2):
         graph = posterior.getMarginal(parameter_index).drawPDF()
         graph.setColors(ot.Drawable.BuildDefaultPalette(2))
-        graph.setLegends(['Posterior'])
+        graph.setLegends(["Posterior"])
         grid.setGraph(0, parameter_index, graph)
     _ = View(grid)
 
@@ -421,32 +422,20 @@ Plot posterior marginal plots only as prior cannot be drawn meaningfully.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.161 seconds)
+   **Total running time of the script:** ( 0 minutes  6.919 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_bayesian_calibration_plot_rwmh_python_distribution.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_rwmh_python_distribution.py <plot_rwmh_python_distribution.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_rwmh_python_distribution.ipynb <plot_rwmh_python_distribution.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_rwmh_python_distribution.py <plot_rwmh_python_distribution.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_rwmh_python_distribution.ipynb <plot_rwmh_python_distribution.ipynb>`

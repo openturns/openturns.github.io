@@ -33,7 +33,7 @@ This example is drawn from [1].
 Draw the unnormalized probability density
 -----------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-30
+.. GENERATED FROM PYTHON SOURCE LINES 15-32
 
 .. code-block:: default
 
@@ -41,9 +41,11 @@ Draw the unnormalized probability density
     import openturns as ot
     from openturns.viewer import View
     from numpy import pi
+
     ot.RandomGenerator.SetSeed(1)
     f = ot.SymbolicFunction(
-        "x", "0.5 * (2 + sin(x)^2) * exp( -( 2 + cos(3*x)^3 + sin(2*x)^3) * x )")
+        "x", "0.5 * (2 + sin(x)^2) * exp( -( 2 + cos(3*x)^3 + sin(2*x)^3) * x )"
+    )
     lower_bound = 0.0
     upper_bound = 2.0 * pi
     graph = f.draw(lower_bound, upper_bound, 100)
@@ -64,7 +66,7 @@ Draw the unnormalized probability density
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-37
+.. GENERATED FROM PYTHON SOURCE LINES 33-39
 
 Independent Metropolis-Hastings
 -------------------------------
@@ -73,7 +75,7 @@ Let us use a mixture distribution to approximate the target distribution.
 This approximation will serve as the instrumental distribution
 in the independent Metropolis-Hastings algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-42
+.. GENERATED FROM PYTHON SOURCE LINES 39-44
 
 .. code-block:: default
 
@@ -89,11 +91,11 @@ in the independent Metropolis-Hastings algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Compare the instrumental density to the target density.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-53
+.. GENERATED FROM PYTHON SOURCE LINES 46-55
 
 .. code-block:: default
 
@@ -118,11 +120,11 @@ Compare the instrumental density to the target density.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 :class:`~MetropolisHastings` and derived classes can work directly with the logarithm of the target density.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-58
+.. GENERATED FROM PYTHON SOURCE LINES 57-60
 
 .. code-block:: default
 
@@ -136,22 +138,24 @@ Compare the instrumental density to the target density.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 In this case, it is easier to directly write it as a :class:`~openturns.SymbolicFunction`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-69
+.. GENERATED FROM PYTHON SOURCE LINES 62-73
 
 .. code-block:: default
 
 
     log_density = ot.SymbolicFunction(
-        "x", "log(2 + sin(x)^2) - (2 + cos(3*x)^3 + sin(2*x)^3) * x")
+        "x", "log(2 + sin(x)^2) - (2 + cos(3*x)^3 + sin(2*x)^3) * x"
+    )
 
     initialState = ot.Point([3.0])  # not important in this case
     support = ot.Interval([lower_bound], [upper_bound])
     independentMH = ot.IndependentMetropolisHastings(
-        log_density, support, initialState, instrumentalDistribution, [0])
+        log_density, support, initialState, instrumentalDistribution, [0]
+    )
 
 
 
@@ -160,11 +164,11 @@ In this case, it is easier to directly write it as a :class:`~openturns.Symbolic
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-71
+.. GENERATED FROM PYTHON SOURCE LINES 74-75
 
 Get a sample
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-76
+.. GENERATED FROM PYTHON SOURCE LINES 75-80
 
 .. code-block:: default
 
@@ -180,21 +184,25 @@ Get a sample
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 81-82
 
 Plot the PDF of the sample to compare it to the target density
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-91
+.. GENERATED FROM PYTHON SOURCE LINES 82-99
 
 .. code-block:: default
 
 
     kernel = ot.KernelSmoothing()
     posterior = kernel.build(sample)
-    graph = ot.Graph("Independent Metropolis-Hastings sample: {} points".format(
-        sampleSize), "", "", True, "topright")
-    graph.setBoundingBox(ot.Interval(
-        [lower_bound, 0.0], [upper_bound, f([0.0])[0]]))
+    graph = ot.Graph(
+        "Independent Metropolis-Hastings sample: {} points".format(sampleSize),
+        "",
+        "",
+        True,
+        "topright",
+    )
+    graph.setBoundingBox(ot.Interval([lower_bound, 0.0], [upper_bound, f([0.0])[0]]))
     graph.add(f.draw(lower_bound, upper_bound, 100))
     graph.add(posterior.drawPDF(lower_bound, upper_bound, 100))
     graph.setColors(ot.Drawable.BuildDefaultPalette(2))
@@ -213,28 +221,29 @@ Plot the PDF of the sample to compare it to the target density
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-96
+.. GENERATED FROM PYTHON SOURCE LINES 100-104
 
 Even with very few sampling points (500),
 independent Metropolis-Hastings
 (with a judiciously chosen instrumental distribution)
 manages to capture the main features of the target density.
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-102
+.. GENERATED FROM PYTHON SOURCE LINES 106-110
 
 Random walk Metropolis-Hastings
 -------------------------------
 
 Let us use a normal instrumental distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-107
+.. GENERATED FROM PYTHON SOURCE LINES 110-116
 
 .. code-block:: default
 
 
     instrumentalDistribution = ot.Normal(0.0, 2.5)
     randomwalkMH = ot.RandomWalkMetropolisHastings(
-        log_density, support, initialState, instrumentalDistribution, [0])
+        log_density, support, initialState, instrumentalDistribution, [0]
+    )
 
 
 
@@ -243,11 +252,11 @@ Let us use a normal instrumental distribution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-109
+.. GENERATED FROM PYTHON SOURCE LINES 117-118
 
 Get a sample
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-111
+.. GENERATED FROM PYTHON SOURCE LINES 118-120
 
 .. code-block:: default
 
@@ -260,21 +269,25 @@ Get a sample
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-113
+.. GENERATED FROM PYTHON SOURCE LINES 121-122
 
 Plot the PDF of the sample to compare it to the target density
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-127
+.. GENERATED FROM PYTHON SOURCE LINES 122-140
 
 .. code-block:: default
 
 
     kernel = ot.KernelSmoothing()
     posterior = kernel.build(sample)
-    graph = ot.Graph("Random walk Metropolis-Hastings sample: {} points".format(
-        sampleSize), "", "", True, "topright")
-    graph.setBoundingBox(ot.Interval(
-        [lower_bound, 0.0], [upper_bound, f([0.0])[0]]))
+    graph = ot.Graph(
+        "Random walk Metropolis-Hastings sample: {} points".format(sampleSize),
+        "",
+        "",
+        True,
+        "topright",
+    )
+    graph.setBoundingBox(ot.Interval([lower_bound, 0.0], [upper_bound, f([0.0])[0]]))
     graph.add(f.draw(lower_bound, upper_bound, 100))
     graph.add(posterior.drawPDF(lower_bound, upper_bound, 100))
     graph.setColors(ot.Drawable.BuildDefaultPalette(2))
@@ -294,7 +307,7 @@ Plot the PDF of the sample to compare it to the target density
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-131
+.. GENERATED FROM PYTHON SOURCE LINES 141-144
 
 References
 -----------
@@ -303,32 +316,20 @@ References
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.295 seconds)
+   **Total running time of the script:** ( 0 minutes  0.279 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_bayesian_calibration_plot_imh_python_distribution.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_imh_python_distribution.py <plot_imh_python_distribution.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_imh_python_distribution.ipynb <plot_imh_python_distribution.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_imh_python_distribution.py <plot_imh_python_distribution.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_imh_python_distribution.ipynb <plot_imh_python_distribution.ipynb>`

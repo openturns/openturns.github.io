@@ -35,13 +35,14 @@ In this example we are going to create a metamodel of a field function following
 8. Validate the metamodel.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-25
+.. GENERATED FROM PYTHON SOURCE LINES 20-26
 
 .. code-block:: default
 
     import openturns as ot
     import openturns.viewer as viewer
     from matplotlib import pylab as plt
+
     ot.Log.Show(ot.Log.NONE)
 
 
@@ -51,11 +52,11 @@ In this example we are going to create a metamodel of a field function following
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 27-28
 
 Input model
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-42
+.. GENERATED FROM PYTHON SOURCE LINES 28-43
 
 .. code-block:: default
 
@@ -80,8 +81,6 @@ Input model
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Create the input process
@@ -89,26 +88,26 @@ Input model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 for some pretty graphs
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-67
+.. GENERATED FROM PYTHON SOURCE LINES 45-68
 
 .. code-block:: default
 
     def drawKL(scaledKL, KLev, mesh, title="Scaled KL modes"):
         graph_modes = scaledKL.drawMarginal()
         graph_modes.setTitle(title + " scaled KL modes")
-        graph_modes.setXTitle('$x$')
-        graph_modes.setYTitle(r'$\sqrt{\lambda_i}\phi_i$')
+        graph_modes.setXTitle("$x$")
+        graph_modes.setYTitle(r"$\sqrt{\lambda_i}\phi_i$")
         data_ev = [[i, KLev[i]] for i in range(scaledKL.getSize())]
         graph_ev = ot.Graph()
         graph_ev.add(ot.Curve(data_ev))
         graph_ev.add(ot.Cloud(data_ev))
         graph_ev.setTitle(title + " KL eigenvalues")
-        graph_ev.setXTitle('$k$')
-        graph_ev.setYTitle(r'$\lambda_i$')
+        graph_ev.setXTitle("$k$")
+        graph_ev.setYTitle(r"$\lambda_i$")
         graph_ev.setAxes(True)
         graph_ev.setGrid(True)
         graph_ev.setLogScale(2)
@@ -127,18 +126,17 @@ for some pretty graphs
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
 Karhunen-Loeve decomposition of the input process
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-82
+.. GENERATED FROM PYTHON SOURCE LINES 70-82
 
 .. code-block:: default
 
     print("Compute the decomposition of the input process")
     threshold = 0.0001
-    algo_X = ot.KarhunenLoeveP1Algorithm(
-        mesh, process_X.getCovarianceModel(), threshold)
+    algo_X = ot.KarhunenLoeveP1Algorithm(mesh, process_X.getCovarianceModel(), threshold)
     algo_X.run()
     result_X = algo_X.getResult()
     phi_X = result_X.getScaledModesAsProcessSample()
@@ -158,8 +156,6 @@ Karhunen-Loeve decomposition of the input process
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -186,8 +182,6 @@ Input database generation
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -255,8 +249,6 @@ Dynamical model: convolution wrt kernel p
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Create the convolution function
@@ -280,8 +272,6 @@ Output database generation
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -317,8 +307,6 @@ Karhunen-Loeve decomposition of the output process
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -359,7 +347,7 @@ Compare eigenvalues of X and Y
 
 Polynomial chaos between KL coefficients
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-189
+.. GENERATED FROM PYTHON SOURCE LINES 151-205
 
 .. code-block:: default
 
@@ -375,30 +363,46 @@ Polynomial chaos between KL coefficients
     dimension_xi_Y = sample_xi_Y.getDimension()
     enumerateFunction = ot.LinearEnumerateFunction(dimension_xi_X)
     basis = ot.OrthogonalProductPolynomialFactory(
-        [ot.HermiteFactory()] * dimension_xi_X, enumerateFunction)
+        [ot.HermiteFactory()] * dimension_xi_X, enumerateFunction
+    )
     basisSize = enumerateFunction.getStrataCumulatedCardinal(degree)
     adaptive = ot.FixedStrategy(basis, basisSize)
     projection = ot.LeastSquaresStrategy(
-        ot.LeastSquaresMetaModelSelectionFactory(ot.LARS(), ot.CorrectedLeaveOneOut()))
-    ot.ResourceMap.SetAsScalar(
-        "LeastSquaresMetaModelSelection-ErrorThreshold", 1.0e-7)
+        ot.LeastSquaresMetaModelSelectionFactory(ot.LARS(), ot.CorrectedLeaveOneOut())
+    )
+    ot.ResourceMap.SetAsScalar("LeastSquaresMetaModelSelection-ErrorThreshold", 1.0e-7)
     algo_chaos = ot.FunctionalChaosAlgorithm(
-        sample_xi_X, sample_xi_Y, basis.getMeasure(), adaptive, projection)
+        sample_xi_X, sample_xi_Y, basis.getMeasure(), adaptive, projection
+    )
     algo_chaos.run()
     result_chaos = algo_chaos.getResult()
     meta_model = result_chaos.getMetaModel()
-    print("myConvolution=", myConvolution.getInputDimension(),
-          "->", myConvolution.getOutputDimension())
+    print(
+        "myConvolution=",
+        myConvolution.getInputDimension(),
+        "->",
+        myConvolution.getOutputDimension(),
+    )
     preprocessing = ot.KarhunenLoeveProjection(result_X)
-    print("preprocessing=", preprocessing.getInputDimension(),
-          "->", preprocessing.getOutputDimension())
-    print("meta_model=", meta_model.getInputDimension(),
-          "->", meta_model.getOutputDimension())
+    print(
+        "preprocessing=",
+        preprocessing.getInputDimension(),
+        "->",
+        preprocessing.getOutputDimension(),
+    )
+    print(
+        "meta_model=", meta_model.getInputDimension(), "->", meta_model.getOutputDimension()
+    )
     postprocessing = ot.KarhunenLoeveLifting(result_Y)
-    print("postprocessing=", postprocessing.getInputDimension(),
-          "->", postprocessing.getOutputDimension())
+    print(
+        "postprocessing=",
+        postprocessing.getInputDimension(),
+        "->",
+        postprocessing.getOutputDimension(),
+    )
     meta_model_field = ot.FieldToFieldConnection(
-        postprocessing, ot.FieldToPointConnection(meta_model, preprocessing))
+        postprocessing, ot.FieldToPointConnection(meta_model, preprocessing)
+    )
 
 
 
@@ -406,8 +410,6 @@ Polynomial chaos between KL coefficients
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -422,11 +424,11 @@ Polynomial chaos between KL coefficients
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-191
+.. GENERATED FROM PYTHON SOURCE LINES 206-207
 
 Meta_model validation
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-207
+.. GENERATED FROM PYTHON SOURCE LINES 207-223
 
 .. code-block:: default
 
@@ -458,7 +460,7 @@ Meta_model validation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-214
+.. GENERATED FROM PYTHON SOURCE LINES 224-230
 
 .. code-block:: default
 
@@ -480,7 +482,7 @@ Meta_model validation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-221
+.. GENERATED FROM PYTHON SOURCE LINES 231-237
 
 .. code-block:: default
 
@@ -505,32 +507,20 @@ Meta_model validation
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  16.367 seconds)
+   **Total running time of the script:** ( 0 minutes  16.077 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_fields_metamodels_plot_fieldfunction_metamodel.py:
 
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-     :download:`Download Python source code: plot_fieldfunction_metamodel.py <plot_fieldfunction_metamodel.py>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_fieldfunction_metamodel.ipynb <plot_fieldfunction_metamodel.ipynb>`
-
-
 .. only:: html
 
- .. rst-class:: sphx-glr-signature
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download Python source code: plot_fieldfunction_metamodel.py <plot_fieldfunction_metamodel.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: plot_fieldfunction_metamodel.ipynb <plot_fieldfunction_metamodel.ipynb>`
