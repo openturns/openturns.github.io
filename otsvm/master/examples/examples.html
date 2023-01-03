@@ -66,33 +66,32 @@ what to take as parameters, you must take a wide range values, for example <img 
 <img class="math" src="_images/math/7bd620e6fcfca5d3ced6bf730b7ef6ba2f9bfe66.svg" alt="kernel\ parameter \in \{10^-15, 10^-13...,10^3 \}"/>. Usually, the
 algorithm always converges, but this can take a long while, mostly if you have
 a lot of parameters to test.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">otsvm</span>
 
 <span class="c1"># create a function, here we create the Sobol function</span>
 <span class="n">dimension</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">meanTh</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
-<span class="n">inputVariables</span> <span class="o">=</span> <span class="n">Description</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
-<span class="n">outputVariables</span> <span class="o">=</span> <span class="n">Description</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+<span class="n">inputVariables</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Description</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+<span class="n">outputVariables</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Description</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">outputVariables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span>
-<span class="n">formula</span> <span class="o">=</span> <span class="n">Description</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">formula</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>
 <span class="n">covTh</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span>
     <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">i</span>
     <span class="n">covTh</span> <span class="o">=</span> <span class="n">covTh</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
     <span class="n">inputVariables</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;xi&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">formula</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">formula</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; * ((abs(4.0 * xi&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; -2.0) + &quot;</span> <span class="o">+</span>
-    <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;) / (1.0 + &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;))&quot;</span>
+    <span class="n">formula</span> <span class="o">+=</span> <span class="s2">&quot; * ((abs(4.0 * xi&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; -2.0) + &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;) / (1.0 + &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;))&quot;</span>
 <span class="n">covTh</span> <span class="o">=</span> <span class="n">covTh</span> <span class="o">-</span> <span class="mf">1.0</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="n">inputVariables</span><span class="p">,</span> <span class="n">outputVariables</span><span class="p">,</span> <span class="n">formula</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">inputVariables</span><span class="p">,</span> <span class="n">outputVariables</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Description</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">formula</span><span class="p">))</span>
 
 <span class="c1"># create the input distribution</span>
-<span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">marginals</span> <span class="o">=</span> <span class="n">DistributionCollection</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">marginals</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DistributionCollection</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span>
-    <span class="n">marginals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">marginals</span><span class="p">)</span>
+    <span class="n">marginals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">marginals</span><span class="p">)</span>
 
 <span class="c1"># create lists of kernel parameters and tradeoff factors</span>
 <span class="n">tradeoff</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
@@ -104,14 +103,14 @@ a lot of parameters to test.</p>
 <span class="n">dataOut</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">dataIn</span><span class="p">)</span>
 <span class="c1"># second, we create our svm regression object, we must select the third parameter</span>
 <span class="c1"># in an enumerate in the list { NormalRBF, Linear, Sigmoid, Polynomial }</span>
-<span class="n">Regression</span> <span class="o">=</span> <span class="n">SVMRegression</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">,</span> <span class="n">LibSVM</span><span class="o">.</span><span class="n">NormalRBF</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otsvm</span><span class="o">.</span><span class="n">SVMRegression</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">,</span> <span class="n">otsvm</span><span class="o">.</span><span class="n">LibSVM</span><span class="o">.</span><span class="n">NormalRBF</span><span class="p">)</span>
 <span class="c1"># third, we set kernel parameter and tradeoff factor</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 <span class="c1"># Perform the algorithm</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="c1"># Stream out the results</span>
-<span class="n">SVMRegressionResult</span> <span class="o">=</span> <span class="n">Regression</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="c1"># get the residual error</span>
 <span class="n">residual</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">()</span>
 <span class="c1"># get the relative error</span>
@@ -119,19 +118,18 @@ a lot of parameters to test.</p>
 
 <span class="c1"># second example : create the problem with an experiment plane:</span>
 <span class="c1"># first, we create the plane</span>
-<span class="n">myPlane</span> <span class="o">=</span> <span class="n">MonteCarloExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
-<span class="n">myExperiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="n">myPlane</span><span class="p">,</span> <span class="s2">&quot;example&quot;</span><span class="p">)</span>
+<span class="n">myExperiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
 <span class="c1"># second, we create our svm regression object, the first parameter is the</span>
 <span class="c1"># function</span>
-<span class="n">Regression2</span> <span class="o">=</span> <span class="n">SVMRegression</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">myExperiment</span><span class="p">,</span>
-                            <span class="n">LibSVM</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span>
+<span class="n">algo2</span> <span class="o">=</span> <span class="n">otsvm</span><span class="o">.</span><span class="n">SVMRegression</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">myExperiment</span><span class="p">,</span>
+                            <span class="n">otsvm</span><span class="o">.</span><span class="n">LibSVM</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span>
 <span class="c1"># third, we set kernel parameter and tradeoff factor</span>
-<span class="n">Regression2</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
-<span class="n">Regression2</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+<span class="n">algo2</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
+<span class="n">algo2</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 <span class="c1"># Perform the algorithm</span>
-<span class="n">Regression2</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">algo2</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="c1"># Stream out the results</span>
-<span class="n">SVMRegressionResult</span> <span class="o">=</span> <span class="n">Regression2</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo2</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="c1"># get the residual error</span>
 <span class="n">residual</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">()</span>
 <span class="c1"># get the relative error</span>
@@ -139,23 +137,23 @@ a lot of parameters to test.</p>
 
 <span class="c1"># third example : create the problem with an isoprobabilistic distribution</span>
 <span class="c1"># first, we create our distribution</span>
-<span class="n">marginals</span> <span class="o">=</span> <span class="n">DistributionCollection</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+<span class="n">marginals</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DistributionCollection</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span>
-    <span class="n">marginals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">marginals</span><span class="p">)</span>
+    <span class="n">marginals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedDistribution</span><span class="p">(</span><span class="n">marginals</span><span class="p">)</span>
 <span class="c1"># second, we create input and output samples</span>
 <span class="n">dataIn</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span>
 <span class="n">dataOut</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">dataIn</span><span class="p">)</span>
 <span class="c1"># third, we create our svm regression</span>
-<span class="n">Regression3</span> <span class="o">=</span> <span class="n">SVMRegression</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span>
-                            <span class="n">LibSVM</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">)</span>
+<span class="n">algo3</span> <span class="o">=</span> <span class="n">otsvm</span><span class="o">.</span><span class="n">SVMRegression</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span>
+                            <span class="n">otsvm</span><span class="o">.</span><span class="n">LibSVM</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">)</span>
 <span class="c1"># and to finish, we set kernel parameter and tradeoff factor</span>
-<span class="n">Regression3</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
-<span class="n">Regression3</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+<span class="n">algo3</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
+<span class="n">algo3</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 <span class="c1"># Perform the algorithm</span>
-<span class="n">Regression3</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">algo3</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="c1"># Stream out the results</span>
-<span class="n">SVMRegressionResult</span> <span class="o">=</span> <span class="n">Regression3</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo3</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="c1"># get the residual error</span>
 <span class="n">residual</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">()</span>
 <span class="c1"># get the relative error</span>
@@ -170,16 +168,16 @@ a lot of parameters to test.</p>
 <span class="c1"># second, we create our svm regression object</span>
 <span class="c1"># here, we select the Polynomial Kernel but by default his degree is 3. We want a</span>
 <span class="c1"># degree of 2</span>
-<span class="n">ResourceMap</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s2">&quot;LibSVM-DegreePolynomialKernel&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="s2">&quot;LibSVM-DegreePolynomialKernel&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
 <span class="c1"># now the degree of the Polynomial kernel is 2</span>
-<span class="n">Regression</span> <span class="o">=</span> <span class="n">SVMRegression</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">,</span> <span class="n">LibSVM</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otsvm</span><span class="o">.</span><span class="n">SVMRegression</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">,</span> <span class="n">otsvm</span><span class="o">.</span><span class="n">LibSVM</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">)</span>
 <span class="c1"># third, we set kernel parameter and tradeoff factor</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">tradeoff</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 <span class="c1"># Perform the algorithm</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="c1"># Stream out the results</span>
-<span class="n">SVMRegressionResult</span> <span class="o">=</span> <span class="n">Regression</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="c1"># get the residual error</span>
 <span class="n">residual</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">()</span>
 <span class="c1"># get the relative error</span>
@@ -198,20 +196,25 @@ a lot of parameters to test.</p>
 </ul>
 </dd>
 </dl>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># this example uses a csv file with the datas for the classification</span>
-<span class="c1"># we retreive the sample from the file sample.csv</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">otsvm</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># this example uses a csv file with the datas for the classification</span>
+<span class="c1"># we retrieve the sample from the file sample.csv</span>
 <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">dataInOut</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">()</span><span class="o">.</span><span class="n">ImportFromCSVFile</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/sample.csv&quot;</span><span class="p">)</span>
+<span class="n">dataInOut</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">ImportFromCSVFile</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/sample.csv&quot;</span><span class="p">)</span>
 
 <span class="c1"># we create dataIn and dataOut</span>
-<span class="n">dataIn</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="mi">861</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">dataOut</span> <span class="o">=</span> <span class="n">Sample</span><span class="p">(</span><span class="mi">861</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">dataIn</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="mi">861</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">dataOut</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="mi">861</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># we build the input Sample and the output Sample because we must separate</span>
 <span class="c1"># dataInOut</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">861</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">dataInOut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">dataIn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
@@ -223,16 +226,16 @@ a lot of parameters to test.</p>
 <span class="n">gamma</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.000001</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
 
 <span class="c1"># create the Classification Problem</span>
-<span class="n">Regression</span> <span class="o">=</span> <span class="n">LibSVMClassification</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">)</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">setKernelType</span><span class="p">(</span><span class="n">LibSVM</span><span class="o">.</span><span class="n">NormalRbf</span><span class="p">)</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">cp</span><span class="p">)</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otsvm</span><span class="o">.</span><span class="n">LibSVMClassification</span><span class="p">(</span><span class="n">dataIn</span><span class="p">,</span> <span class="n">dataOut</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setKernelType</span><span class="p">(</span><span class="n">otsvm</span><span class="o">.</span><span class="n">LibSVM</span><span class="o">.</span><span class="n">NormalRbf</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setTradeoffFactor</span><span class="p">(</span><span class="n">cp</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setKernelParameter</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
 
 <span class="c1"># compute the classification</span>
-<span class="n">Regression</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="nb">print</span> <span class="s2">&quot;#######################&quot;</span>
-<span class="nb">print</span> <span class="s2">&quot;Results with Samples I/O&quot;</span>
-<span class="nb">print</span> <span class="s2">&quot;Accuracy(p.c.)=&quot;</span><span class="p">,</span> <span class="n">Regression</span><span class="o">.</span><span class="n">getAccuracy</span><span class="p">()</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#######################&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Results with Samples I/O&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy(p.c.)=&quot;</span><span class="p">,</span> <span class="n">algo</span><span class="o">.</span><span class="n">getAccuracy</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
