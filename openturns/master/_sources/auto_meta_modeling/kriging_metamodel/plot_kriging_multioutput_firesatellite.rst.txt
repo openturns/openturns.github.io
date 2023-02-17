@@ -92,10 +92,11 @@ Generation of data
 ------------------
 We now generate the input and output training sets as 10 times the dimension of the input vector.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-50
+.. GENERATED FROM PYTHON SOURCE LINES 43-51
 
 .. code-block:: default
 
+    ot.RandomGenerator.SetSeed(0)
     experiment = ot.LHSExperiment(inputDistribution, 10 * m.dim)
     inputTrainingSet = experiment.generate()
     outputTrainingSet = model(inputTrainingSet)
@@ -112,22 +113,23 @@ We now generate the input and output training sets as 10 times the dimension of 
  .. code-block:: none
 
     Lower and upper bounds of inputTrainingSet:
-    [1.55043e+07,858.384,1348.18,12.1472,0.941856,-2.36658,2.56668,1.00003,0.13223] [2.03652e+07,1124.9,1450.72,18.4199,3.23979,2.93037,7.7944,2.93353,1.98141]
+    [1.48998e+07,884.904,1346.42,12.3163,0.967437,-1.85029,2.54609,0.93158,0.253772] [2.04726e+07,1126.11,1446.96,17.5554,3.48743,3.09689,7.43877,3.0465,1.71498]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-54
+.. GENERATED FROM PYTHON SOURCE LINES 52-55
 
 Creation of metamodel
 ---------------------
 We choose to use a constant trend.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-58
+.. GENERATED FROM PYTHON SOURCE LINES 57-60
 
 .. code-block:: default
 
-    basis = ot.ConstantBasisFactory(m.dim).build()
+    linear_basis = ot.LinearBasisFactory(m.dim).build()
+    basis = ot.Basis([ot.AggregatedFunction([linear_basis.build(k)] * 3) for k in range(linear_basis.getSize())])
 
 
 
@@ -136,11 +138,11 @@ We choose to use a constant trend.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 We would like to have separate covariance models for the three outputs. To do so, we use the `TensorizedCovarianceModel`. For the purpose of illustration, we consider `MaternModel` for the first and third outputs, and `SquaredExponential` for the second output.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-68
+.. GENERATED FROM PYTHON SOURCE LINES 64-70
 
 .. code-block:: default
 
@@ -157,7 +159,7 @@ We would like to have separate covariance models for the three outputs. To do so
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 The scaling of the data is really important when dealing with Kriging,
 especially considering the domain definition of the input variables (the
@@ -165,7 +167,7 @@ altitude varies in order of 1e7 whereas the drag coefficient is around 1).
 We thus define appropriate bounds for the training algorithm based on the
 domain definition of each variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-81
+.. GENERATED FROM PYTHON SOURCE LINES 78-83
 
 .. code-block:: default
 
@@ -181,17 +183,21 @@ domain definition of each variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
+.. GENERATED FROM PYTHON SOURCE LINES 84-85
 
 We can now define the scaled version of Kriging model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-87
+.. GENERATED FROM PYTHON SOURCE LINES 85-92
 
 .. code-block:: default
 
-    covarianceModel.setScale(inputTrainingSet.getMax())
+    optimal_scale = [1e+07, 1126.11, 1446.96, 17.5554, 3.48743, 3.09689, 7.43877, 3.0465, 1.71498]
+    covarianceModel.setScale(optimal_scale)
+    covarianceModel.setAmplitude([0.542174, 1.0, 1.0])
+
     algo = ot.KrigingAlgorithm(inputTrainingSet, outputTrainingSet, covarianceModel, basis)
     algo.setOptimizationBounds(scaleOptimizationBounds)
+    algo.setOptimizeParameters(False)
 
 
 
@@ -199,12 +205,11 @@ We can now define the scaled version of Kriging model.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 88-89
+.. GENERATED FROM PYTHON SOURCE LINES 93-94
 
 We run the algorithm and get the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-93
+.. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 .. code-block:: default
 
@@ -219,16 +224,17 @@ We run the algorithm and get the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-97
+.. GENERATED FROM PYTHON SOURCE LINES 99-102
 
 Validation of metamodel
 -----------------------
 To validate the metamodel, we create a validation set of size equal to 50 times the input vector dimension to evaluate the functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-104
+.. GENERATED FROM PYTHON SOURCE LINES 104-110
 
 .. code-block:: default
 
+    ot.RandomGenerator.SetSeed(1)
     experimentTest = ot.LHSExperiment(inputDistribution, 50 * m.dim)
     inputTestSet = experimentTest.generate()
     outputTestSet = model(inputTestSet)
@@ -241,11 +247,11 @@ To validate the metamodel, we create a validation set of size equal to 50 times 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-106
+.. GENERATED FROM PYTHON SOURCE LINES 111-112
 
 Then, we use the `MetaModelValidation` class to validate the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-121
+.. GENERATED FROM PYTHON SOURCE LINES 112-127
 
 .. code-block:: default
 
@@ -298,7 +304,7 @@ Then, we use the `MetaModelValidation` class to validate the metamodel.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.724 seconds)
+   **Total running time of the script:** ( 0 minutes  0.380 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_multioutput_firesatellite.py:
