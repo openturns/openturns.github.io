@@ -1,4 +1,4 @@
 var classTBB =
 [
-    [ "IsAvailable", "classTBB.html#a9c256e8ac0c870f78b83e6f347ac6e9c", null ]
+    [ "SetThreadsNumber", "classTBB.html#a6c15498dc03533234e630e056a5fc494", null ]
 ];

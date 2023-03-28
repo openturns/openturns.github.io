@@ -5,7 +5,7 @@ var classOrthogonalUniVariatePolynomialFactory =
     [ "__repr__", "classOrthogonalUniVariatePolynomialFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "build", "classOrthogonalUniVariatePolynomialFactory.html#a5e7fe60e822fcfb02688f222d911840e", null ],
     [ "buildCoefficients", "classOrthogonalUniVariatePolynomialFactory.html#a6f880d10c9b97edea4e490606c8273d5", null ],
-    [ "buildRecurrenceCoefficientsCollection", "classOrthogonalUniVariatePolynomialFactory.html#a1618a9c9f9572d95fe311a308f90cf2f", null ],
+    [ "buildRecurrenceCoefficientsCollection", "classOrthogonalUniVariatePolynomialFactory.html#a2f26f66474498bb943924ae76a25894d", null ],
     [ "clone", "classOrthogonalUniVariatePolynomialFactory.html#a360ffbf39117550948e58672d34ecb06", null ],
     [ "getMeasure", "classOrthogonalUniVariatePolynomialFactory.html#a385364e120d99793484d71d23b11bfde", null ],
     [ "getNodesAndWeights", "classOrthogonalUniVariatePolynomialFactory.html#a71be0e3c911a194aa140c4a8e8d0d9e4", null ],
@@ -17,5 +17,5 @@ var classOrthogonalUniVariatePolynomialFactory =
     [ "coefficientsCache_", "classOrthogonalUniVariatePolynomialFactory.html#ab6066fba4c037b70ce4a15ff4d2def8f", null ],
     [ "measure_", "classOrthogonalUniVariatePolynomialFactory.html#a5cdcc6699927f4a9bcdb557b69126023", null ],
     [ "polynomialsCache_", "classOrthogonalUniVariatePolynomialFactory.html#ad31ce84a81b2394705b6acd5bdc047cc", null ],
-    [ "recurrenceCoefficientsCache_", "classOrthogonalUniVariatePolynomialFactory.html#ab8a96f7a7828c33349148e8d24575b13", null ]
+    [ "recurrenceCoefficientsCache_", "classOrthogonalUniVariatePolynomialFactory.html#a566a416e6c5e243d8a6326edb0cbb28e", null ]
 ];

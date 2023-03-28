@@ -1,6 +1,6 @@
 var classUnionEvent =
 [
-    [ "UnionEvent", "classUnionEvent.html#aea08bc5d5df3f2e1ec2e6b41fd481bef", null ],
+    [ "UnionEvent", "classUnionEvent.html#a604c5e41bb936b4e62fce59b27d4c687", null ],
     [ "UnionEvent", "classUnionEvent.html#ad342330b6ad26e087d078e2ce955667d", null ],
     [ "__repr__", "classUnionEvent.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clone", "classUnionEvent.html#abb9bac98025ec07200f3588275a564df", null ],

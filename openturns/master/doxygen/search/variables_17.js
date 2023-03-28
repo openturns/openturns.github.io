@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y_5f_5853',['y_',['../classApproximationAlgorithmImplementation.html#af8965f5d6572a5f0ee1be647e5197aac',1,'ApproximationAlgorithmImplementation']]]
+  ['y_5f_6121',['y_',['../classApproximationAlgorithmImplementation.html#af8965f5d6572a5f0ee1be647e5197aac',1,'ApproximationAlgorithmImplementation']]]
 ];

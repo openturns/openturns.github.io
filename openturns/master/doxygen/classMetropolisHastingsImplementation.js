@@ -1,6 +1,7 @@
 var classMetropolisHastingsImplementation =
 [
     [ "MetropolisHastingsImplementation", "classMetropolisHastingsImplementation.html#a1a0e165e825a5420f52fbf62485a0806", null ],
+    [ "MetropolisHastingsImplementation", "classMetropolisHastingsImplementation.html#af05416f739a8df352acaf0c68b465592", null ],
     [ "MetropolisHastingsImplementation", "classMetropolisHastingsImplementation.html#a0c09acb7698ab5a41d4abdd8f59f0d65", null ],
     [ "MetropolisHastingsImplementation", "classMetropolisHastingsImplementation.html#a4e70dc2f78a03b0282575b9a3be5167f", null ],
     [ "__repr__", "classMetropolisHastingsImplementation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],

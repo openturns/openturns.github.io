@@ -28,6 +28,8 @@ var classGraphImplementation =
     [ "setAxes", "classGraphImplementation.html#ad8ebe6b80b090a7f7618a748188bc8a7", null ],
     [ "setGrid", "classGraphImplementation.html#ac0d0a97b652f13503402adc9b20cb306", null ],
     [ "setGridColor", "classGraphImplementation.html#ab48135d054adcbe376ba009a1b68e32b", null ],
+    [ "setIntegerXTick", "classGraphImplementation.html#af8cd3df9f5bd4c65b55b2d34d4b280c2", null ],
+    [ "setIntegerYTick", "classGraphImplementation.html#a52fafb93f72e371d517013812a3cac96", null ],
     [ "setLegendPosition", "classGraphImplementation.html#ad33ce2e5a8f68a4a3f5ba1f0715d8d66", null ],
     [ "setLogScale", "classGraphImplementation.html#a74447bba18c1bbbd27866008e96e5d2e", null ],
     [ "setTickLocation", "classGraphImplementation.html#aea25b44e577244a952a204a08fdfd7c5", null ],

@@ -1,7 +1,7 @@
 var classMethodOfMomentsFactory =
 [
     [ "MethodOfMomentsFactory", "classMethodOfMomentsFactory.html#a4fc877a9914b74e290cc7ebb476286de", null ],
-    [ "MethodOfMomentsFactory", "classMethodOfMomentsFactory.html#ab3550f521aadab73b4f23bb8b13eee08", null ],
+    [ "MethodOfMomentsFactory", "classMethodOfMomentsFactory.html#a8bc0b04f0950be63b5647f7e66c7cbc3", null ],
     [ "__repr__", "classMethodOfMomentsFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "__str__", "classMethodOfMomentsFactory.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
     [ "build", "classMethodOfMomentsFactory.html#a95493143bffab6a94c2e6c0fd7700f15", null ],
@@ -10,7 +10,7 @@ var classMethodOfMomentsFactory =
     [ "build", "classMethodOfMomentsFactory.html#aebd4202ff9b7e5ca9614e306af85f31a", null ],
     [ "build", "classMethodOfMomentsFactory.html#a739e2965f2a901099fc10d499d6cd867", null ],
     [ "build", "classMethodOfMomentsFactory.html#abbd5badfc86d1eac715f76cb118435ee", null ],
-    [ "buildParameter", "classMethodOfMomentsFactory.html#a535fd4decb7f86e52fc4c86711a284b1", null ],
+    [ "buildFromMoments", "classMethodOfMomentsFactory.html#a81078dbe69b743ad1efb525a86be4487", null ],
     [ "clone", "classMethodOfMomentsFactory.html#a5b209d05f270f16389d944aaa2a80bc2", null ],
     [ "load", "classMethodOfMomentsFactory.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "save", "classMethodOfMomentsFactory.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],

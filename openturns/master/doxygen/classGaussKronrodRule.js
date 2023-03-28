@@ -10,5 +10,7 @@ var classGaussKronrodRule =
     [ "getOtherKronrodWeights", "classGaussKronrodRule.html#a2b1815cdc13bd8c2ab348471f8f2ea7a", null ],
     [ "getPair", "classGaussKronrodRule.html#a4458b6ce23a6237f3ccd516401fdbb2e", null ],
     [ "getZeroGaussWeight", "classGaussKronrodRule.html#a99921aa8d281a01f59baa8a3fa0026a5", null ],
-    [ "getZeroKronrodWeight", "classGaussKronrodRule.html#a8795ea032a7b32894e0188cd3ee1de6f", null ]
+    [ "getZeroKronrodWeight", "classGaussKronrodRule.html#a8795ea032a7b32894e0188cd3ee1de6f", null ],
+    [ "load", "classGaussKronrodRule.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classGaussKronrodRule.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

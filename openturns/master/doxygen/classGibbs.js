@@ -1,5 +1,6 @@
 var classGibbs =
 [
+    [ "UpdatingMethod", "classGibbs.html#af2775be43dc2ac85ed4ffaaf31343cb9", null ],
     [ "Gibbs", "classGibbs.html#acb5375c2528d073af46c643de66ec1a2", null ],
     [ "Gibbs", "classGibbs.html#a3e091de2a1059544765199fbc60f93f2", null ],
     [ "__repr__", "classGibbs.html#a2f79a10bf6877659bc35902a8456f9f1", null ],

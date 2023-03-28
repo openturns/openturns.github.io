@@ -3,7 +3,7 @@ var classCollection =
     [ "Collection", "classCollection.html#a7160dc666b399b3c5bcaecf14770219a", null ],
     [ "Collection", "classCollection.html#a7900eb1fb482b90e36bafa77f8f941f2", null ],
     [ "Collection", "classCollection.html#adb399e4a5f0a53e3b96d9f937fddc8e4", null ],
-    [ "Collection", "classCollection.html#aa96f9c5add718968c21f2837f8c4ec4f", null ],
+    [ "Collection", "classCollection.html#af6b8ad628fc7fef55ea9916d6ff34690", null ],
     [ "__repr__", "classCollection.html#a73846b7e99884dca972f7a9ad6ac6a28", null ],
     [ "add", "classCollection.html#ab251d794acf8cfebcf2f0c1ae89dd7da", null ],
     [ "add", "classCollection.html#a990059f3ca8b6c2f411c5321d14a8157", null ],

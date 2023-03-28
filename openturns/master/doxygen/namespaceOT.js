@@ -12,5 +12,18 @@ var namespaceOT =
     [ "SpaceFillingMinDist", "classOT_1_1SpaceFillingMinDist.html", "classOT_1_1SpaceFillingMinDist" ],
     [ "SpaceFillingPhiP", "classOT_1_1SpaceFillingPhiP.html", "classOT_1_1SpaceFillingPhiP" ],
     [ "TemperatureProfile", "classOT_1_1TemperatureProfile.html", "classOT_1_1TemperatureProfile" ],
-    [ "TemperatureProfileImplementation", "classOT_1_1TemperatureProfileImplementation.html", "classOT_1_1TemperatureProfileImplementation" ]
+    [ "TemperatureProfileImplementation", "classOT_1_1TemperatureProfileImplementation.html", "classOT_1_1TemperatureProfileImplementation" ],
+    [ "Bool", "namespaceOT.html#a76a8b016e5ad61faf9062cc387df5016", null ],
+    [ "Complex", "namespaceOT.html#a1f36d3e5a898e4a48cc87157d73871d3", null ],
+    [ "FileName", "namespaceOT.html#ae5eb3477f65ba049fcd99e56c5f6c93e", null ],
+    [ "Id", "namespaceOT.html#a9757b765d64e3ac6e15bdb2e1e3dd428", null ],
+    [ "LibraryHandle", "namespaceOT.html#acea37ce25d69cf55828ed2b567f23588", null ],
+    [ "LibrarySymbol", "namespaceOT.html#a9099ffd25ebb8d5b5fd055f6c175020a", null ],
+    [ "LogFunctionPointer", "namespaceOT.html#ad16d6d569dd46ff7839b97bc1f1968cd", null ],
+    [ "Scalar", "namespaceOT.html#a508fc58b5dc3c81865305f6498457063", null ],
+    [ "Signed64BitsInteger", "namespaceOT.html#a2c1a17a8ab72577f73cee0e7fdca8b19", null ],
+    [ "SignedInteger", "namespaceOT.html#a5c51eb27e3b7a560b37e9b88939e6cd6", null ],
+    [ "String", "namespaceOT.html#afbeda3fd1bdc8c37d01bdf9f5c8274ff", null ],
+    [ "Unsigned64BitsInteger", "namespaceOT.html#a8f305b1522dc9d136ad04b7c3034bc79", null ],
+    [ "UnsignedInteger", "namespaceOT.html#a05f9f0b7f67f8dc96cfd3e3786b57299", null ]
 ];

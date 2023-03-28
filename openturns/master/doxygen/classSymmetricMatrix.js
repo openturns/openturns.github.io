@@ -11,6 +11,7 @@ var classSymmetricMatrix =
     [ "computeEigenValues", "classSymmetricMatrix.html#aeea55f66d5e53042e36fa60183e0546a", null ],
     [ "computeLargestEigenValueModule", "classSymmetricMatrix.html#ab2b8a34b1c78bfadf9c60136d6a36afc", null ],
     [ "computeLogAbsoluteDeterminant", "classSymmetricMatrix.html#aacc6c08d9058a42575ff4e8b671764c0", null ],
+    [ "computeSumElements", "classSymmetricMatrix.html#a97751f5eeccb4f90fc2c39acb831bb2e", null ],
     [ "getColumn", "classSymmetricMatrix.html#a95bef997f873802168af1e593165a9ea", null ],
     [ "getRow", "classSymmetricMatrix.html#a2ad10f57d5c493352451e9af8072ee2c", null ],
     [ "isDiagonal", "classSymmetricMatrix.html#a393320398b62893ea356c2476a20168d", null ],

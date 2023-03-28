@@ -1,6 +1,7 @@
 var classFunctionalChaosResult =
 [
     [ "FunctionalChaosResult", "classFunctionalChaosResult.html#a197574bba6dbde6af91a1c0f33e98e91", null ],
+    [ "FunctionalChaosResult", "classFunctionalChaosResult.html#afb02b22a859171c9ce93ac780020c26f", null ],
     [ "FunctionalChaosResult", "classFunctionalChaosResult.html#ae7418bdb03fa3d91ea9b979d81cb7a68", null ],
     [ "__repr__", "classFunctionalChaosResult.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clone", "classFunctionalChaosResult.html#aa50df2d4242698609d3607660acc2c2b", null ],

@@ -15,6 +15,6 @@ var classOptimizationProblem =
     [ "getLevelValue", "classOptimizationProblem.html#a1624bda7433907ad896d39e0c3cf2d1b", null ],
     [ "getObjective", "classOptimizationProblem.html#ac9b702bb501e54689d3ea4463b2c8ae0", null ],
     [ "getResidualFunction", "classOptimizationProblem.html#a1e3bb5018f761f3d3bcada07ed4459c3", null ],
-    [ "setMinimization", "classOptimizationProblem.html#ac0c8d19eb862f7a411b330788c21afa6", null ],
+    [ "setMinimization", "classOptimizationProblem.html#aa0dde87a7335e1607c5eb2089ec13718", null ],
     [ "setVariablesType", "classOptimizationProblem.html#af4ca77b6854e519733b190bcbf818a4f", null ]
 ];

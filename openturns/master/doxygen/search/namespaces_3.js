@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kfactorfunctions_3524',['KFactorFunctions',['../namespaceKFactorFunctions.html',1,'']]]
+  ['gammafunctions_3681',['GammaFunctions',['../namespaceGammaFunctions.html',1,'']]]
 ];

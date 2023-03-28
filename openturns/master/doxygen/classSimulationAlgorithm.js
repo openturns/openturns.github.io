@@ -1,7 +1,7 @@
 var classSimulationAlgorithm =
 [
-    [ "ProgressCallback", "classSimulationAlgorithm.html#a5aa7b27228d2512371420fda60e11a93", null ],
-    [ "StopCallback", "classSimulationAlgorithm.html#a54ab963914ae52ca49d9ada8b2c74404", null ],
+    [ "ProgressCallback", "classSimulationAlgorithm.html#a0a523ed4755081b5383b1eba1ca54ab1", null ],
+    [ "StopCallback", "classSimulationAlgorithm.html#a8148683b37956cd9de6d852b4e5decf8", null ],
     [ "SimulationAlgorithm", "classSimulationAlgorithm.html#a305e05ac9c212169a7270ed9bcec29dc", null ],
     [ "__repr__", "classSimulationAlgorithm.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clone", "classSimulationAlgorithm.html#a61634520d857b4b8b8a01e3f9dc0b4c7", null ],

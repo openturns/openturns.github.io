@@ -5,7 +5,6 @@ var classIndices =
     [ "Indices", "classIndices.html#a2c8a9c9da505717bb6cda1f4f47eca8e", null ],
     [ "Indices", "classIndices.html#a872843d10540a79c6a47f3b3420c4a83", null ],
     [ "Indices", "classIndices.html#a74e47c56643a20edcf5035dc67260a18", null ],
-    [ "~Indices", "classIndices.html#af1391205a9d02868f7c0c9da85b9412e", null ],
     [ "check", "classIndices.html#a66e8577b715106df396fad52aee11b88", null ],
     [ "complement", "classIndices.html#afbee565b958131634c2fc9ddeb8a9565", null ],
     [ "fill", "classIndices.html#a3983d7f4013f38adf19751b96ecbca74", null ],

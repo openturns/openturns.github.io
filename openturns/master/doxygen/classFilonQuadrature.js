@@ -10,5 +10,7 @@ var classFilonQuadrature =
     [ "getOmega", "classFilonQuadrature.html#a9bc3446baac3890b1f23c3313a892ed0", null ],
     [ "integrate", "classFilonQuadrature.html#aa37be8bac27c49b30619bfd36957a119", null ],
     [ "integrate", "classFilonQuadrature.html#ad0df8233d96f845e8c65c9fdec3e5c2e", null ],
-    [ "integrate", "classFilonQuadrature.html#a8fb6d7f0bb3b275e031dfdc12a55c9d6", null ]
+    [ "integrate", "classFilonQuadrature.html#a8fb6d7f0bb3b275e031dfdc12a55c9d6", null ],
+    [ "load", "classFilonQuadrature.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classFilonQuadrature.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

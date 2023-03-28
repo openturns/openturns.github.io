@@ -8,7 +8,8 @@ var classMixtureClassifier =
     [ "clone", "classMixtureClassifier.html#a1f807e4c556edf88b5edb6c5f21e1f1b", null ],
     [ "getDimension", "classMixtureClassifier.html#afcd611f8ebb78cf572c01618b06f4f22", null ],
     [ "getMixture", "classMixtureClassifier.html#aaecb3180c3861383a97eb2ecb24db5e4", null ],
-    [ "grade", "classMixtureClassifier.html#a4cf9cca4f3429899ce64718b7a54155d", null ],
+    [ "grade", "classMixtureClassifier.html#a75bc380f70fc86bffc000bc5e42b3e91", null ],
+    [ "grade", "classMixtureClassifier.html#abc5dd2008f0ab7acba475be1b4e437d8", null ],
     [ "load", "classMixtureClassifier.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "save", "classMixtureClassifier.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
     [ "mixture_", "classMixtureClassifier.html#ad8355530adb7fe062e63e14e77add0cc", null ]

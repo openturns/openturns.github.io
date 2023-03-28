@@ -10,5 +10,7 @@ var classGaussKronrod =
     [ "getRule", "classGaussKronrod.html#aaded8ec8bac2b4e75a7db6f36d5bc969", null ],
     [ "integrate", "classGaussKronrod.html#aa37be8bac27c49b30619bfd36957a119", null ],
     [ "integrate", "classGaussKronrod.html#ad0df8233d96f845e8c65c9fdec3e5c2e", null ],
-    [ "integrate", "classGaussKronrod.html#a8fb6d7f0bb3b275e031dfdc12a55c9d6", null ]
+    [ "integrate", "classGaussKronrod.html#a8fb6d7f0bb3b275e031dfdc12a55c9d6", null ],
+    [ "load", "classGaussKronrod.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classGaussKronrod.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

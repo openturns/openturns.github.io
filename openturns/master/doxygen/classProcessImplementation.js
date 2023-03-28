@@ -23,5 +23,5 @@ var classProcessImplementation =
     [ "setOutputDimension", "classProcessImplementation.html#adf09f14321eef9d63992d3da79ca753c", null ],
     [ "description_", "classProcessImplementation.html#a1fe114c28e44041af871c2683aa3bb61", null ],
     [ "mesh_", "classProcessImplementation.html#ae7bc998ed94d50504ef3f564a855ed06", null ],
-    [ "ouputDimension_", "classProcessImplementation.html#ab2409b1040f9787b7a5a6c99f7725df9", null ]
+    [ "outputDimension_", "classProcessImplementation.html#a438a22cdc06cecd7e0e9cd88a8ce900e", null ]
 ];

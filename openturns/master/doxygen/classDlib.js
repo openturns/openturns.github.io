@@ -7,7 +7,7 @@ var classDlib =
     [ "checkProblem", "classDlib.html#a46ef0ca57c481c9da71eb0921381cd33", null ],
     [ "clone", "classDlib.html#a709e22658ec87e408d19b4c6a113da6e", null ],
     [ "getAlgorithmName", "classDlib.html#af18c307ebcbfeeb6cec5cee555dd102c", null ],
-    [ "IsAvailable", "classDlib.html#a9c256e8ac0c870f78b83e6f347ac6e9c", null ],
+    [ "GetAlgorithmNames", "classDlib.html#ae650423bc19a03df37d44d106e832363", null ],
     [ "load", "classDlib.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "run", "classDlib.html#ad1717410afd0be936c6213a63c8005fb", null ],
     [ "save", "classDlib.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]

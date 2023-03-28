@@ -1,6 +1,6 @@
 var classOptimizationProblemImplementation =
 [
-    [ "VariableType", "classOptimizationProblemImplementation.html#ac62972ff1b21a037e56530cde67309ab", null ],
+    [ "BoolCollection", "classOptimizationProblemImplementation.html#a818f096f1d7207f050f44b73c78555ef", null ],
     [ "OptimizationProblemImplementation", "classOptimizationProblemImplementation.html#ac3783a49e2906efca0b63858decff9e4", null ],
     [ "OptimizationProblemImplementation", "classOptimizationProblemImplementation.html#af2cc162f626f8939a50b1b6bb4c94822", null ],
     [ "OptimizationProblemImplementation", "classOptimizationProblemImplementation.html#ae7b5b1337f679f248a4d4b55f8f76d07", null ],
@@ -16,6 +16,6 @@ var classOptimizationProblemImplementation =
     [ "getResidualFunction", "classOptimizationProblemImplementation.html#a1e3bb5018f761f3d3bcada07ed4459c3", null ],
     [ "load", "classOptimizationProblemImplementation.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "save", "classOptimizationProblemImplementation.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
-    [ "setMinimization", "classOptimizationProblemImplementation.html#ac0c8d19eb862f7a411b330788c21afa6", null ],
+    [ "setMinimization", "classOptimizationProblemImplementation.html#aa0dde87a7335e1607c5eb2089ec13718", null ],
     [ "setVariablesType", "classOptimizationProblemImplementation.html#af4ca77b6854e519733b190bcbf818a4f", null ]
 ];

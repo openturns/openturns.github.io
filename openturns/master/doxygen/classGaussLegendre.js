@@ -10,5 +10,7 @@ var classGaussLegendre =
     [ "getWeights", "classGaussLegendre.html#a2408460f30f069aa51157417aff6d9f4", null ],
     [ "integrate", "classGaussLegendre.html#aa37be8bac27c49b30619bfd36957a119", null ],
     [ "integrate", "classGaussLegendre.html#ad0df8233d96f845e8c65c9fdec3e5c2e", null ],
-    [ "integrate", "classGaussLegendre.html#a8fb6d7f0bb3b275e031dfdc12a55c9d6", null ]
+    [ "integrate", "classGaussLegendre.html#a8fb6d7f0bb3b275e031dfdc12a55c9d6", null ],
+    [ "load", "classGaussLegendre.html#ab3a6c17d466d7948a2085758549690d2", null ],
+    [ "save", "classGaussLegendre.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
 ];

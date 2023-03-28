@@ -57,6 +57,7 @@ var classDistribution =
     [ "drawSurvivalFunction", "classDistribution.html#a43b4ee73dc0ae041eb66abb763e71cf4", null ],
     [ "getCDFEpsilon", "classDistribution.html#a19ee492037a17b98c16bc04bae0fcd8f", null ],
     [ "getCenteredMoment", "classDistribution.html#aec4f2a2944562b3dee4c41b9841ac366", null ],
+    [ "getCentralMoment", "classDistribution.html#a6f1643931a41ba377b5659df4e500d66", null ],
     [ "getCholesky", "classDistribution.html#a10caf914a8d41bca593daed878731c44", null ],
     [ "getCopula", "classDistribution.html#a47db7df977a9c7fa3c0f1fa30cbac032", null ],
     [ "getCorrelation", "classDistribution.html#a28398dc3366ed50ef74126df542b40b2", null ],

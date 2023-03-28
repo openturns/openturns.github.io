@@ -1,7 +1,7 @@
 var classKarhunenLoeveResultImplementation =
 [
     [ "KarhunenLoeveResultImplementation", "classKarhunenLoeveResultImplementation.html#ab76a2bf33f85d4273f4b0f3c6e0e2f38", null ],
-    [ "KarhunenLoeveResultImplementation", "classKarhunenLoeveResultImplementation.html#af38d8080c6d6079498b8851e1f3490ca", null ],
+    [ "KarhunenLoeveResultImplementation", "classKarhunenLoeveResultImplementation.html#af1a0be79987edfe42a1ba3b33e8f64d5", null ],
     [ "__repr__", "classKarhunenLoeveResultImplementation.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clone", "classKarhunenLoeveResultImplementation.html#a25ac96b2a138a8eca0b1eb4a4315d59e", null ],
     [ "drawEigenvalues", "classKarhunenLoeveResultImplementation.html#a133d2a0ed491d25ca777c99e63ee11d1", null ],
@@ -11,6 +11,7 @@ var classKarhunenLoeveResultImplementation =
     [ "getModes", "classKarhunenLoeveResultImplementation.html#a38093a6b641547ee0f109a4f5b912cb3", null ],
     [ "getProjectionMatrix", "classKarhunenLoeveResultImplementation.html#a5cbc58d68f2fa8e32f96992b2a257ba4", null ],
     [ "getScaledModes", "classKarhunenLoeveResultImplementation.html#aa227523ddd2f47eff13645ff673075bb", null ],
+    [ "getSelectionRatio", "classKarhunenLoeveResultImplementation.html#a70052f40f0baa69ebfd09d6ac88e107b", null ],
     [ "getThreshold", "classKarhunenLoeveResultImplementation.html#aff593f85a7738742bda9afb3286c32ec", null ],
     [ "lift", "classKarhunenLoeveResultImplementation.html#a3c79e33527310f69b1ef8af2ed974fbc", null ],
     [ "load", "classKarhunenLoeveResultImplementation.html#ab3a6c17d466d7948a2085758549690d2", null ],
@@ -21,5 +22,6 @@ var classKarhunenLoeveResultImplementation =
     [ "modes_", "classKarhunenLoeveResultImplementation.html#a6911765b29a869636ed962193e0e6042", null ],
     [ "modesAsProcessSample_", "classKarhunenLoeveResultImplementation.html#ad984f2c5eca79d20db7fc15810a59842", null ],
     [ "projection_", "classKarhunenLoeveResultImplementation.html#ab2fa8236a0fab7b79c1277b04c034940", null ],
+    [ "selectionRatio_", "classKarhunenLoeveResultImplementation.html#a56c8446db4b384de1f7e9b89853dadd8", null ],
     [ "threshold_", "classKarhunenLoeveResultImplementation.html#aa1d44f3c8e73cab59856a0562388d1e2", null ]
 ];

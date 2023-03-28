@@ -1,6 +1,7 @@
 var classLinearModelStepwiseAlgorithm =
 [
     [ "LinearModelStepwiseAlgorithm", "classLinearModelStepwiseAlgorithm.html#abceea8064d88cd39c14774902cbefdac", null ],
+    [ "LinearModelStepwiseAlgorithm", "classLinearModelStepwiseAlgorithm.html#a3541b8afb933929c14869750fcb209a7", null ],
     [ "LinearModelStepwiseAlgorithm", "classLinearModelStepwiseAlgorithm.html#a8ef118a679d8f068f43aab3561629fa7", null ],
     [ "__repr__", "classLinearModelStepwiseAlgorithm.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clone", "classLinearModelStepwiseAlgorithm.html#ad47719fa8d4982c41e5831849da51e5a", null ],

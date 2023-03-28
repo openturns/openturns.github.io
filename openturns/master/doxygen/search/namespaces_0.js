@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['betafunctions_3519',['BetaFunctions',['../namespaceBetaFunctions.html',1,'']]]
+  ['betafunctions_3676',['BetaFunctions',['../namespaceBetaFunctions.html',1,'']]]
 ];

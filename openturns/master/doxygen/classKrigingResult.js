@@ -17,7 +17,6 @@ var classKrigingResult =
     [ "getConditionalMean", "classKrigingResult.html#ac9d62a4ed0892f3b0e4d6f404cb437f3", null ],
     [ "getCovarianceCoefficients", "classKrigingResult.html#ad34f6aa7c89843075e4e861df77a41b9", null ],
     [ "getCovarianceModel", "classKrigingResult.html#a25d3a7b67b49d45e38e31b2c1f86cf61", null ],
-    [ "getInputSample", "classKrigingResult.html#a36f92bff15dc29a327ef0ea3db31339e", null ],
     [ "getTrendCoefficients", "classKrigingResult.html#a3f9ca37ee3dccddd85cabe24148331d2", null ],
     [ "load", "classKrigingResult.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "operator()", "classKrigingResult.html#ae3e4511c368a5cee0a309a155fceb8fa", null ],

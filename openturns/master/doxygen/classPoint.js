@@ -4,6 +4,7 @@ var classPoint =
     [ "Point", "classPoint.html#a2afd6f2f74a1a1f126aac568e2a009a8", null ],
     [ "Point", "classPoint.html#a6fc82ee999baffe409f75308cd43c7e1", null ],
     [ "Point", "classPoint.html#a4c3cdcc6035f82f62ca0a408f3c54c15", null ],
+    [ "Point", "classPoint.html#a62ec765e4840f4cd112cfbb9e88088a1", null ],
     [ "__repr__", "classPoint.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clean", "classPoint.html#a39ff8c0e020a756d9a2b76382fe04366", null ],
     [ "clone", "classPoint.html#aca0b21da1468d06dcf663b7e03434cd3", null ],

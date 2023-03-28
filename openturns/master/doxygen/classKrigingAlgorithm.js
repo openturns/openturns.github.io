@@ -6,7 +6,6 @@ var classKrigingAlgorithm =
     [ "__repr__", "classKrigingAlgorithm.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clone", "classKrigingAlgorithm.html#afa5fb82546dbfea31b08016c96367310", null ],
     [ "computeGamma", "classKrigingAlgorithm.html#a2ef03abf497148f46cf767c936841a5f", null ],
-    [ "getInputSample", "classKrigingAlgorithm.html#a0d86bf1e3890cda0eeae2735f5295911", null ],
     [ "getOptimizationAlgorithm", "classKrigingAlgorithm.html#a56704ae371d90176477db94a68a54616", null ],
     [ "getOptimizeParameters", "classKrigingAlgorithm.html#a0b99229b781026de0584a19493d680b4", null ],
     [ "getReducedLogLikelihoodFunction", "classKrigingAlgorithm.html#a3c60e03edc6d4e33623eaf07b2648ac1", null ],

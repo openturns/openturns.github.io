@@ -8,7 +8,6 @@ var classCeres =
     [ "clone", "classCeres.html#abc8504c9ef5565c7a8c89841b965c252", null ],
     [ "GetAlgorithmNames", "classCeres.html#ae650423bc19a03df37d44d106e832363", null ],
     [ "Initialize", "classCeres.html#a98b1050f09da390896f964fb7a892391", null ],
-    [ "IsAvailable", "classCeres.html#a6aeb4ce739f94c1997e1fa70f3024c22", null ],
     [ "load", "classCeres.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "run", "classCeres.html#ad1717410afd0be936c6213a63c8005fb", null ],
     [ "save", "classCeres.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]

@@ -13,7 +13,7 @@ var classTriangularMatrix =
     [ "operator()", "classTriangularMatrix.html#a3417c03d6eb55262510c187e516547f6", null ],
     [ "operator*", "classTriangularMatrix.html#a2e482b5d26e41c3ec85dd5030265e610", null ],
     [ "operator*", "classTriangularMatrix.html#af235dcfc8df302a051b416e69d6038b4", null ],
-    [ "operator*", "classTriangularMatrix.html#a4bda2111109327e9980df4edc0c58cc7", null ],
+    [ "operator*", "classTriangularMatrix.html#ab41ba2455fcfbf898b12e684f58148b9", null ],
     [ "operator*", "classTriangularMatrix.html#afe8b4986e4d3eb1ff80eb428b7eeb00b", null ],
     [ "operator*", "classTriangularMatrix.html#aaacfa4c5f041eb4a207b39373ab2c676", null ],
     [ "operator*", "classTriangularMatrix.html#a5b1d740538dfb6190b0c598195458e4c", null ],

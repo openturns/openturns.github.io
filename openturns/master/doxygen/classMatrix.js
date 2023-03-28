@@ -10,10 +10,13 @@ var classMatrix =
     [ "__repr__", "classMatrix.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "clean", "classMatrix.html#a652d6c050e1eac8d59a0d99f2425255d", null ],
     [ "computeGram", "classMatrix.html#a972efa88c75622f0261aff79d15f5f05", null ],
+    [ "computeHadamardProduct", "classMatrix.html#a56ef2387c0c3361d3a8c51477fe40ce8", null ],
     [ "computeQR", "classMatrix.html#a1efc0c564e358f4b458f237e25eb9131", null ],
     [ "computeSingularValues", "classMatrix.html#adb46f1e0733220d0db703bfb557f5edb", null ],
+    [ "computeSumElements", "classMatrix.html#ab128c1b2f7935ffd12f2060d9b4651db", null ],
     [ "data", "classMatrix.html#a5ef0414c2b262760b321d52eaf5af014", null ],
     [ "getColumn", "classMatrix.html#a95bef997f873802168af1e593165a9ea", null ],
+    [ "getDiagonal", "classMatrix.html#a64c4359f94944e33bbb43a278968d8e5", null ],
     [ "getNbColumns", "classMatrix.html#a20b7435c1503985e8a1cf2ddd154147e", null ],
     [ "getNbRows", "classMatrix.html#ad3060da2765edc19fda35bd84d294f84", null ],
     [ "getRow", "classMatrix.html#a2ad10f57d5c493352451e9af8072ee2c", null ],
@@ -29,7 +32,9 @@ var classMatrix =
     [ "operator/", "classMatrix.html#afdaf0d93999a219b6fece4826fcc3cc4", null ],
     [ "operator==", "classMatrix.html#aca889e4fa39001c782e73a417b5e3135", null ],
     [ "reshape", "classMatrix.html#a4f97b5d444a98fa3dbd03d6fcd0a79c9", null ],
+    [ "setDiagonal", "classMatrix.html#ab218ff93ad7983bbfaf92331d7ebfd7b", null ],
     [ "solveLinearSystem", "classMatrix.html#a3e93f482aafef322ba2691f97f385c55", null ],
+    [ "squareElements", "classMatrix.html#a7b54bcefb96cc449abede57ce61ee9ea", null ],
     [ "transpose", "classMatrix.html#aee9e473b3b0abdf930057ea31a9a2aac", null ],
     [ "operator*", "classMatrix.html#aa05445d036620488240fac067ebf527e", null ]
 ];

@@ -16,5 +16,6 @@ var classHyperbolicAnisotropicEnumerateFunction =
     [ "qNorm", "classHyperbolicAnisotropicEnumerateFunction.html#a0df5c9ed88fad8558e51c7f961d9b83b", null ],
     [ "save", "classHyperbolicAnisotropicEnumerateFunction.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
     [ "setQ", "classHyperbolicAnisotropicEnumerateFunction.html#ab42dcb60b03dfe12de8d7e19be7abc8e", null ],
+    [ "setUpperBound", "classHyperbolicAnisotropicEnumerateFunction.html#a6cb7aa12942887010fecb2e56d2203a9", null ],
     [ "setWeight", "classHyperbolicAnisotropicEnumerateFunction.html#a2a547256d78a54e921f37cc67bd17034", null ]
 ];

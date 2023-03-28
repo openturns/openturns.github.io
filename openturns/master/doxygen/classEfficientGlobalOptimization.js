@@ -1,7 +1,7 @@
 var classEfficientGlobalOptimization =
 [
     [ "EfficientGlobalOptimization", "classEfficientGlobalOptimization.html#ae2488db8024f4bbe971e24c687720579", null ],
-    [ "EfficientGlobalOptimization", "classEfficientGlobalOptimization.html#a076698849c0cff9945184b180ffbbd44", null ],
+    [ "EfficientGlobalOptimization", "classEfficientGlobalOptimization.html#a55bff3cece7217019be6a667b9173a0d", null ],
     [ "__repr__", "classEfficientGlobalOptimization.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "checkProblem", "classEfficientGlobalOptimization.html#a46ef0ca57c481c9da71eb0921381cd33", null ],
     [ "clone", "classEfficientGlobalOptimization.html#ae360b802ca638a423fa6f933b38ed3e1", null ],
@@ -16,5 +16,6 @@ var classEfficientGlobalOptimization =
     [ "setAEITradeoff", "classEfficientGlobalOptimization.html#a2d3f74ed3e5bdf365a8e10841fcb25e0", null ],
     [ "setCorrelationLengthFactor", "classEfficientGlobalOptimization.html#ae5e731a43c7597b64456d8d0b2bd76d2", null ],
     [ "setImprovementFactor", "classEfficientGlobalOptimization.html#a2e769d69d0715c61ca89a12d078cc389", null ],
+    [ "setMetamodelNoise", "classEfficientGlobalOptimization.html#a850232f88915c4d7786f0b84dac8011f", null ],
     [ "setNoiseModel", "classEfficientGlobalOptimization.html#a8b723652bb5093194128b48187ec9791", null ]
 ];

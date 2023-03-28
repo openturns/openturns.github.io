@@ -1,6 +1,7 @@
 var classIsotropicCovarianceModel =
 [
-    [ "IsotropicCovarianceModel", "classIsotropicCovarianceModel.html#a17cfe6f98e9a6fd7ea32c9837465450a", null ],
+    [ "IsotropicCovarianceModel", "classIsotropicCovarianceModel.html#aab3ab6d9adee1f9927742f586ae471c5", null ],
+    [ "IsotropicCovarianceModel", "classIsotropicCovarianceModel.html#ab8e148447c911ddb68b595bcff963d78", null ],
     [ "__repr__", "classIsotropicCovarianceModel.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
     [ "__str__", "classIsotropicCovarianceModel.html#a1ec35c2ca7fea5635115e1c772c28085", null ],
     [ "clone", "classIsotropicCovarianceModel.html#ac90cdf1f5d5c84a412c6d0a0790f3761", null ],

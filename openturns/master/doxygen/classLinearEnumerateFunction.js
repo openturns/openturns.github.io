@@ -10,5 +10,6 @@ var classLinearEnumerateFunction =
     [ "inverse", "classLinearEnumerateFunction.html#a326181d015fe4a2cc1e22a8286ca75bf", null ],
     [ "load", "classLinearEnumerateFunction.html#ab3a6c17d466d7948a2085758549690d2", null ],
     [ "operator()", "classLinearEnumerateFunction.html#ad4c3098fa9a534aa7eafce241e0f9505", null ],
-    [ "save", "classLinearEnumerateFunction.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ]
+    [ "save", "classLinearEnumerateFunction.html#a2289fe84c2f8aa4e9bfbc6e9aeaf8634", null ],
+    [ "setUpperBound", "classLinearEnumerateFunction.html#a6cb7aa12942887010fecb2e56d2203a9", null ]
 ];
