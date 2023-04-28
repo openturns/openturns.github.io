@@ -135,11 +135,11 @@ Can have dimension 0 to specify no observations.</p>
 </dd>
 <dt><strong>outputObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The sample of output observations.</p>
 </dd>
-<dt><strong>candidate</strong><span class="classifier">sequence of float</span></dt><dd><p>The mean of the gaussian prior distribution of the parameter.</p>
+<dt><strong>parameterMean</strong><span class="classifier">sequence of float</span></dt><dd><p>The mean of the Gaussian prior distribution of the parameter.</p>
 </dd>
-<dt><strong>parameterCovariance</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The covariance matrix of the gaussian prior distribution of the parameter.</p>
+<dt><strong>parameterCovariance</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The covariance matrix of the Gaussian prior distribution of the parameter.</p>
 </dd>
-<dt><strong>errorCovariance</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The covariance matrix of the gaussian distribution of the observations error.</p>
+<dt><strong>errorCovariance</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The covariance matrix of the Gaussian distribution of the observations error.</p>
 </dd>
 </dl>
 </dd>
@@ -151,28 +151,39 @@ Can have dimension 0 to specify no observations.</p>
 </dl>
 </div>
 <p class="rubric">Notes</p>
-<p>GaussianNonLinearCalibration is the minimum variance estimator of the parameter of a given model
-under the assumption that this parameter is dispersed according to a known
-covariance matrix. 
+<p>GaussianNonLinearCalibration implements the Maximum A Posteriori (MAP) estimator for a nonlinear model
+under the Bayesian hypothesis that the prior and the observation errors have Gaussian distributions. 
 This algorithm is also known as <em>3DVAR</em>.</p>
 <p>The given observation error covariance can be either <em>local</em>,
-ie the same matrix applies for each observation and is of dimension the output
-dimension of the model, or <em>global</em>, ie the matrix describes the full set of
+i.e. the same matrix applies for each observation and is of dimension the output
+dimension of the model, or <em>global</em>, i.e. the matrix describes the full set of
 observation errors, in which case its dimension is the product of the output
 dimension of the model and the number of observations.</p>
-<p>The prior distribution of the parameter is a <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>.</p>
-<p>The posterior distribution of the parameter is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>. 
-By default, the posterior distribution is evaluated based on a linear approximation 
-of the model at the optimum. 
-This corresponds to using the <a class="reference internal" href="openturns.GaussianLinearCalibration.html#openturns.GaussianLinearCalibration" title="openturns.GaussianLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code></a> at the optimum,
-and is named <em>Laplace approximation</em> in the bayesian context.
-However, if the key <cite>GaussianNonLinearCalibration-BootstrapSize</cite> in the <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>
+<p>The prior distribution of the parameter is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>.</p>
+<p>The posterior distribution of the parameter is also <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>.</p>
+<p>Depending on the value of the <cite>GaussianNonLinearCalibration-BootstrapSize</cite> key 
+in the <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>, the parameters are estimated differently.</p>
+<ul class="simple">
+<li><p>If <cite>GaussianNonLinearCalibration-BootstrapSize</cite>
 is set to a nonzero positive integer, then a bootstrap resampling of the observations
 is performed and the posterior distribution is based on a <a class="reference internal" href="openturns.KernelSmoothing.html#openturns.KernelSmoothing" title="openturns.KernelSmoothing"><code class="xref py py-class docutils literal notranslate"><span class="pre">KernelSmoothing</span></code></a>
-of the sample of boostrap optimum parameters.</p>
+of the sample of boostrap optimum parameters.</p></li>
+<li><p>If <cite>GaussianNonLinearCalibration-BootstrapSize</cite>
+is set to zero, then the posterior distribution is
+evaluated based on a linear approximation of the model at the optimum. 
+This corresponds to using <a class="reference internal" href="openturns.GaussianLinearCalibration.html#openturns.GaussianLinearCalibration" title="openturns.GaussianLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code></a> at the optimum,
+and is named <em>Laplace approximation</em> in the Bayesian context.</p></li>
+</ul>
+<p>The default value of <cite>GaussianNonLinearCalibration-BootstrapSize</cite> is nonzero, 
+meaning that a bootstrap is used by default.
+This can be costly in some practical use cases, because it requires
+several runs of the optimization algorithm.
+In this case, please set the bootstrap size to zero.</p>
 <p>The resulting error distribution is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>
-with a zero mean and with a covariance matrix equal to the
-<cite>errorCovariance</cite> input argument.</p>
+with a mean estimated from the sample mean of the residuals and with a
+covariance matrix equal to the <cite>errorCovariance</cite> input argument.</p>
+<p>Please read read <a class="reference internal" href="../../theory/data_analysis/gaussian_calibration.html#gaussian-calibration"><span class="std std-ref">Gaussian calibration</span></a> for more details
+on Gaussian calibration.</p>
 <p class="rubric">Examples</p>
 <p>Calibrate a nonlinear model using 3DVAR:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
@@ -187,10 +198,10 @@ with a zero mean and with a covariance matrix equal to the
 <span class="gp">&gt;&gt;&gt; </span><span class="n">modelX</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">p_ref</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">modelX</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">+=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">candidate</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameterMean</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">priorCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">errorCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianNonLinearCalibration</span><span class="p">(</span><span class="n">modelX</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">priorCovariance</span><span class="p">,</span> <span class="n">errorCovariance</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianNonLinearCalibration</span><span class="p">(</span><span class="n">modelX</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">parameterMean</span><span class="p">,</span> <span class="n">priorCovariance</span><span class="p">,</span> <span class="n">errorCovariance</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">())</span>
 <span class="go">[2.705...,1.212...,0.499...]</span>
@@ -202,38 +213,38 @@ with a zero mean and with a covariance matrix equal to the
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getBootstrapSize" title="openturns.GaussianNonLinearCalibration.getBootstrapSize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getBootstrapSize</span></code></a>()</p></td>
 <td><p>Accessor to the bootstrap size used to sample the posterior distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getCandidate" title="openturns.GaussianNonLinearCalibration.getCandidate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCandidate</span></code></a>()</p></td>
-<td><p>Accessor to the parameter candidate.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getClassName" title="openturns.GaussianNonLinearCalibration.getClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getClassName</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getClassName" title="openturns.GaussianNonLinearCalibration.getClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getClassName</span></code></a>()</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getErrorCovariance" title="openturns.GaussianNonLinearCalibration.getErrorCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getErrorCovariance</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getErrorCovariance" title="openturns.GaussianNonLinearCalibration.getErrorCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getErrorCovariance</span></code></a>()</p></td>
 <td><p>Accessor to the observation error covariance.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getGlobalErrorCovariance" title="openturns.GaussianNonLinearCalibration.getGlobalErrorCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getGlobalErrorCovariance</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getGlobalErrorCovariance" title="openturns.GaussianNonLinearCalibration.getGlobalErrorCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getGlobalErrorCovariance</span></code></a>()</p></td>
 <td><p>Accessor to the flag for a global observation error covariance.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getId" title="openturns.GaussianNonLinearCalibration.getId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getId</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getId" title="openturns.GaussianNonLinearCalibration.getId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getId</span></code></a>()</p></td>
 <td><p>Accessor to the object's id.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getInputObservations" title="openturns.GaussianNonLinearCalibration.getInputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getInputObservations</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getInputObservations" title="openturns.GaussianNonLinearCalibration.getInputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getInputObservations</span></code></a>()</p></td>
 <td><p>Accessor to the input data to be fitted.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getModel" title="openturns.GaussianNonLinearCalibration.getModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getModel</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getModel" title="openturns.GaussianNonLinearCalibration.getModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getModel</span></code></a>()</p></td>
 <td><p>Accessor to the model to be fitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getName" title="openturns.GaussianNonLinearCalibration.getName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getName</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getName" title="openturns.GaussianNonLinearCalibration.getName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getName</span></code></a>()</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getOptimizationAlgorithm" title="openturns.GaussianNonLinearCalibration.getOptimizationAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOptimizationAlgorithm</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getOptimizationAlgorithm" title="openturns.GaussianNonLinearCalibration.getOptimizationAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOptimizationAlgorithm</span></code></a>()</p></td>
 <td><p>Accessor to the optimization algorithm used for the computation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getOutputObservations" title="openturns.GaussianNonLinearCalibration.getOutputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOutputObservations</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getOutputObservations" title="openturns.GaussianNonLinearCalibration.getOutputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOutputObservations</span></code></a>()</p></td>
 <td><p>Accessor to the output data to be fitted.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getParameterCovariance" title="openturns.GaussianNonLinearCalibration.getParameterCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterCovariance</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getParameterCovariance" title="openturns.GaussianNonLinearCalibration.getParameterCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterCovariance</span></code></a>()</p></td>
 <td><p>Accessor to the parameter prior covariance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getParameterMean" title="openturns.GaussianNonLinearCalibration.getParameterMean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterMean</span></code></a>()</p></td>
+<td><p>Accessor to the parameter <cite>parameterMean</cite>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.getParameterPrior" title="openturns.GaussianNonLinearCalibration.getParameterPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterPrior</span></code></a>()</p></td>
 <td><p>Accessor to the parameter prior distribution.</p></td>
@@ -276,6 +287,13 @@ with a zero mean and with a covariance matrix equal to the
 </tr>
 </tbody>
 </table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>getCandidate</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.GaussianNonLinearCalibration.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.GaussianNonLinearCalibration.__init__" title="Permalink to this definition">¶</a></dt>
@@ -292,20 +310,6 @@ with a zero mean and with a covariance matrix equal to the
 means that no bootstrap has been done but a linear approximation has
 been used to get the posterior distribution, using the <a class="reference internal" href="openturns.GaussianLinearCalibration.html#openturns.GaussianLinearCalibration" title="openturns.GaussianLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code></a>
 algorithm at the maximum a posteriori estimate.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="openturns.GaussianNonLinearCalibration.getCandidate">
-<span class="sig-name descname"><span class="pre">getCandidate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.GaussianNonLinearCalibration.getCandidate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the parameter candidate.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>candidate</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Parameter candidate.</p>
 </dd>
 </dl>
 </dd>
@@ -446,6 +450,20 @@ algorithm at the maximum a posteriori estimate.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>prior</strong><span class="classifier"><a class="reference internal" href="openturns.CovarianceMatrix.html#openturns.CovarianceMatrix" title="openturns.CovarianceMatrix"><code class="xref py py-class docutils literal notranslate"><span class="pre">CovarianceMatrix</span></code></a></span></dt><dd><p>Parameter prior covariance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.GaussianNonLinearCalibration.getParameterMean">
+<span class="sig-name descname"><span class="pre">getParameterMean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.GaussianNonLinearCalibration.getParameterMean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the parameter <cite>parameterMean</cite>.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parameterMean</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Parameter <cite>parameterMean</cite>.</p>
 </dd>
 </dl>
 </dd>
@@ -638,15 +656,15 @@ algorithm at the maximum a posteriori estimate.</p>
 
 <section id="examples-using-the-class">
 <h2>Examples using the class<a class="headerlink" href="#examples-using-the-class" title="Permalink to this heading">¶</a></h2>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Calibration of the deflection of a tube"><img alt="" src="../../_images/sphx_glr_plot_calibration_deflection_tube_thumb.png" />
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="In this example, we calibrate the deflection of a tube as described in the use cases &lt;use-case-..."><img alt="" src="../../_images/sphx_glr_plot_calibration_deflection_tube_thumb.png" />
 <p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_deflection_tube.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-deflection-tube-py"><span class="std std-ref">Calibration of the deflection of a tube</span></a></p>
   <div class="sphx-glr-thumbnail-title">Calibration of the deflection of a tube</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calibration of the Chaboche mechanical model"><img alt="" src="../../_images/sphx_glr_plot_calibration_chaboche_thumb.png" />
-<p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_chaboche.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-chaboche-py"><span class="std std-ref">Calibration of the Chaboche mechanical model</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Calibration of the Chaboche mechanical model</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calibration of the flooding model"><img alt="" src="../../_images/sphx_glr_plot_calibration_flooding_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="In this example we are interested in the calibration of the flooding model &lt;use-case-flood-mode..."><img alt="" src="../../_images/sphx_glr_plot_calibration_flooding_thumb.png" />
 <p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_flooding.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-flooding-py"><span class="std std-ref">Calibration of the flooding model</span></a></p>
   <div class="sphx-glr-thumbnail-title">Calibration of the flooding model</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="In this example we present calibration methods on the Chaboche model. A detailed explanation of..."><img alt="" src="../../_images/sphx_glr_plot_calibration_chaboche_thumb.png" />
+<p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_chaboche.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-chaboche-py"><span class="std std-ref">Calibration of the Chaboche mechanical model</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Calibration of the Chaboche mechanical model</div>
 </div></div></section>
 </section>
 

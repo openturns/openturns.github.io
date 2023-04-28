@@ -126,8 +126,8 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LinearLeastSquaresCalibration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LinearLeastSquaresCalibration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Linear least squares calibration algorithm.</p>
 <dl>
-<dt>Available constructors:</dt><dd><p>LinearLeastSquaresCalibration(<em>model, inputObservations, outputObservations, candidate, methodName</em>)</p>
-<p>LinearLeastSquaresCalibration(<em>modelObservations, gradientObservations, outputObservations, candidate, methodName</em>)</p>
+<dt>Available constructors:</dt><dd><p>LinearLeastSquaresCalibration(<em>model, inputObservations, outputObservations, startingPoint, methodName</em>)</p>
+<p>LinearLeastSquaresCalibration(<em>modelObservations, gradientObservations, outputObservations, startingPoint, methodName</em>)</p>
 </dd>
 </dl>
 <dl class="field-list">
@@ -140,7 +140,8 @@ Can have dimension 0 to specify no observations.</p>
 </dd>
 <dt><strong>outputObservations</strong><span class="classifier">2-d sequence of float</span></dt><dd><p>The sample of output observations.</p>
 </dd>
-<dt><strong>candidate</strong><span class="classifier">sequence of float</span></dt><dd><p>The reference value of the parameter.</p>
+<dt><strong>startingPoint</strong><span class="classifier">sequence of float</span></dt><dd><p>The reference value of the parameter, where the linearization
+of the parametric model is evaluated.</p>
 </dd>
 <dt><strong>methodName</strong><span class="classifier">str</span></dt><dd><p>The name of the least-squares method to use for the calibration.
 By default, equal to <em>QR</em>. Possible values are <em>SVD</em>, <em>QR</em>, <em>Cholesky</em>.</p>
@@ -161,7 +162,7 @@ By default, equal to <em>QR</em>. Possible values are <em>SVD</em>, <em>QR</em>,
 <p class="rubric">Notes</p>
 <p>LinearLeastSquaresCalibration is the minimum variance estimator of the parameter of a given model under the assumption that this parameter acts linearly in the model.</p>
 <p>The prior distribution of the parameter is a noninformative prior
-emulated using a flat <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a> centered on the candidate and with a variance equal to SpecFunc.MaxScalar.</p>
+emulated using a flat <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a> centered on the <cite>startingPoint</cite> and with a variance equal to SpecFunc.MaxScalar.</p>
 <p>The posterior distribution of the parameter is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a> and reflects the 
 variability of the optimum parameter depending on the observation sample. 
 The associated covariance matrix may be regularized depending on the value of the 
@@ -174,9 +175,10 @@ then all singular values of the covariance matrix are increased by <img class="m
 <p>The resulting distribution of the output error is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a> with a zero mean
 and a diagonal covariance matrix computed from the residuals.
 The residuals are computed based on the linearization of the model,
-where the Jacobian matrix is evaluated at the candidate point.
+where the Jacobian matrix is evaluated at the <cite>startingPoint</cite>.
 The diagonal of the covariance matrix of the output error
 is constant and is estimated with the unbiased variance estimator.</p>
+<p>Please read <a class="reference internal" href="../../theory/data_analysis/code_calibration.html#code-calibration"><span class="std std-ref">Code calibration</span></a> for more details.</p>
 <p class="rubric">Examples</p>
 <p>Calibrate a nonlinear model using linear least-squares:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
@@ -191,9 +193,9 @@ is constant and is estimated with the unbiased variance estimator.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">modelX</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">p_ref</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">modelX</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">+=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">candidate</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">startingPoint</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;SVD&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearLeastSquaresCalibration</span><span class="p">(</span><span class="n">modelX</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearLeastSquaresCalibration</span><span class="p">(</span><span class="n">modelX</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">startingPoint</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">())</span>
 <span class="go">[8.24019,0.0768046,0.992957]</span>
@@ -202,44 +204,44 @@ is constant and is estimated with the unbiased variance estimator.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getCandidate" title="openturns.LinearLeastSquaresCalibration.getCandidate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCandidate</span></code></a>()</p></td>
-<td><p>Accessor to the parameter candidate.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getClassName" title="openturns.LinearLeastSquaresCalibration.getClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getClassName</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getClassName" title="openturns.LinearLeastSquaresCalibration.getClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getClassName</span></code></a>()</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getGradientObservations" title="openturns.LinearLeastSquaresCalibration.getGradientObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getGradientObservations</span></code></a>()</p></td>
-<td><p>Accessor to the model gradient at the candidate.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getGradientObservations" title="openturns.LinearLeastSquaresCalibration.getGradientObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getGradientObservations</span></code></a>()</p></td>
+<td><p>Accessor to the model gradient at the startingPoint.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getId" title="openturns.LinearLeastSquaresCalibration.getId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getId</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getId" title="openturns.LinearLeastSquaresCalibration.getId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getId</span></code></a>()</p></td>
 <td><p>Accessor to the object's id.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getInputObservations" title="openturns.LinearLeastSquaresCalibration.getInputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getInputObservations</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getInputObservations" title="openturns.LinearLeastSquaresCalibration.getInputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getInputObservations</span></code></a>()</p></td>
 <td><p>Accessor to the input data to be fitted.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getMethodName" title="openturns.LinearLeastSquaresCalibration.getMethodName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMethodName</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getMethodName" title="openturns.LinearLeastSquaresCalibration.getMethodName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMethodName</span></code></a>()</p></td>
 <td><p>Accessor to the name of least-squares method used for the resolution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getModel" title="openturns.LinearLeastSquaresCalibration.getModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getModel</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getModel" title="openturns.LinearLeastSquaresCalibration.getModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getModel</span></code></a>()</p></td>
 <td><p>Accessor to the model to be fitted.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getModelObservations" title="openturns.LinearLeastSquaresCalibration.getModelObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getModelObservations</span></code></a>()</p></td>
-<td><p>Accessor to the model evaluation at the candidate.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getModelObservations" title="openturns.LinearLeastSquaresCalibration.getModelObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getModelObservations</span></code></a>()</p></td>
+<td><p>Accessor to the model evaluation at the <cite>startingPoint</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getName" title="openturns.LinearLeastSquaresCalibration.getName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getName</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getName" title="openturns.LinearLeastSquaresCalibration.getName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getName</span></code></a>()</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getOutputObservations" title="openturns.LinearLeastSquaresCalibration.getOutputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOutputObservations</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getOutputObservations" title="openturns.LinearLeastSquaresCalibration.getOutputObservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOutputObservations</span></code></a>()</p></td>
 <td><p>Accessor to the output data to be fitted.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getParameterPrior" title="openturns.LinearLeastSquaresCalibration.getParameterPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterPrior</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getParameterPrior" title="openturns.LinearLeastSquaresCalibration.getParameterPrior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getParameterPrior</span></code></a>()</p></td>
 <td><p>Accessor to the parameter prior distribution.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getResult" title="openturns.LinearLeastSquaresCalibration.getResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResult</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getResult" title="openturns.LinearLeastSquaresCalibration.getResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResult</span></code></a>()</p></td>
 <td><p>Get the result structure.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getShadowedId" title="openturns.LinearLeastSquaresCalibration.getShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShadowedId</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getShadowedId" title="openturns.LinearLeastSquaresCalibration.getShadowedId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getShadowedId</span></code></a>()</p></td>
 <td><p>Accessor to the object's shadowed id.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getStartingPoint" title="openturns.LinearLeastSquaresCalibration.getStartingPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStartingPoint</span></code></a>()</p></td>
+<td><p>Accessor to the parameter startingPoint.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.LinearLeastSquaresCalibration.getVisibility" title="openturns.LinearLeastSquaresCalibration.getVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getVisibility</span></code></a>()</p></td>
 <td><p>Accessor to the object's visibility state.</p></td>
@@ -267,24 +269,17 @@ is constant and is estimated with the unbiased variance estimator.</p>
 </tr>
 </tbody>
 </table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>getCandidate</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.LinearLeastSquaresCalibration.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LinearLeastSquaresCalibration.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="openturns.LinearLeastSquaresCalibration.getCandidate">
-<span class="sig-name descname"><span class="pre">getCandidate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LinearLeastSquaresCalibration.getCandidate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the parameter candidate.</p>
-<dl class="field-list">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>candidate</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Parameter candidate.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.LinearLeastSquaresCalibration.getClassName">
@@ -303,11 +298,11 @@ is constant and is estimated with the unbiased variance estimator.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.LinearLeastSquaresCalibration.getGradientObservations">
 <span class="sig-name descname"><span class="pre">getGradientObservations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LinearLeastSquaresCalibration.getGradientObservations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the model gradient at the candidate.</p>
+<dd><p>Accessor to the model gradient at the startingPoint.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>gradientObservation</strong><span class="classifier"><a class="reference internal" href="openturns.Matrix.html#openturns.Matrix" title="openturns.Matrix"><code class="xref py py-class docutils literal notranslate"><span class="pre">Matrix</span></code></a></span></dt><dd><p>Gradient of the model at the candidate point.</p>
+<dt><strong>gradientObservation</strong><span class="classifier"><a class="reference internal" href="openturns.Matrix.html#openturns.Matrix" title="openturns.Matrix"><code class="xref py py-class docutils literal notranslate"><span class="pre">Matrix</span></code></a></span></dt><dd><p>Gradient of the model at the startingPoint point.</p>
 </dd>
 </dl>
 </dd>
@@ -373,11 +368,11 @@ is constant and is estimated with the unbiased variance estimator.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.LinearLeastSquaresCalibration.getModelObservations">
 <span class="sig-name descname"><span class="pre">getModelObservations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LinearLeastSquaresCalibration.getModelObservations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the model evaluation at the candidate.</p>
+<dd><p>Accessor to the model evaluation at the <cite>startingPoint</cite>.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>modelObservation</strong><span class="classifier"><a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></span></dt><dd><p>Evaluation of the model at the candidate point.</p>
+<dt><strong>modelObservation</strong><span class="classifier"><a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></span></dt><dd><p>Evaluation of the model at the <cite>startingPoint</cite>.</p>
 </dd>
 </dl>
 </dd>
@@ -450,6 +445,20 @@ is constant and is estimated with the unbiased variance estimator.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>id</strong><span class="classifier">int</span></dt><dd><p>Internal unique identifier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.LinearLeastSquaresCalibration.getStartingPoint">
+<span class="sig-name descname"><span class="pre">getStartingPoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LinearLeastSquaresCalibration.getStartingPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the parameter startingPoint.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>startingPoint</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>Parameter startingPoint.</p>
 </dd>
 </dl>
 </dd>
@@ -570,15 +579,15 @@ structure containing all the results.</p>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Calibration without observed inputs"><img alt="" src="../../_images/sphx_glr_plot_calibration_withoutobservedinputs_thumb.png" />
 <p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_withoutobservedinputs.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-withoutobservedinputs-py"><span class="std std-ref">Calibration without observed inputs</span></a></p>
   <div class="sphx-glr-thumbnail-title">Calibration without observed inputs</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calibration of the logistic model"><img alt="" src="../../_images/sphx_glr_plot_calibration_logistic_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="We present a calibration study of the logistic growth model defined use-case-logistic. The data..."><img alt="" src="../../_images/sphx_glr_plot_calibration_logistic_thumb.png" />
 <p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_logistic.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-logistic-py"><span class="std std-ref">Calibration of the logistic model</span></a></p>
   <div class="sphx-glr-thumbnail-title">Calibration of the logistic model</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calibration of the Chaboche mechanical model"><img alt="" src="../../_images/sphx_glr_plot_calibration_chaboche_thumb.png" />
-<p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_chaboche.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-chaboche-py"><span class="std std-ref">Calibration of the Chaboche mechanical model</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Calibration of the Chaboche mechanical model</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Calibration of the flooding model"><img alt="" src="../../_images/sphx_glr_plot_calibration_flooding_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="In this example we are interested in the calibration of the flooding model &lt;use-case-flood-mode..."><img alt="" src="../../_images/sphx_glr_plot_calibration_flooding_thumb.png" />
 <p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_flooding.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-flooding-py"><span class="std std-ref">Calibration of the flooding model</span></a></p>
   <div class="sphx-glr-thumbnail-title">Calibration of the flooding model</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="In this example we present calibration methods on the Chaboche model. A detailed explanation of..."><img alt="" src="../../_images/sphx_glr_plot_calibration_chaboche_thumb.png" />
+<p><a class="reference internal" href="../../auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_chaboche.html#sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-chaboche-py"><span class="std std-ref">Calibration of the Chaboche mechanical model</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Calibration of the Chaboche mechanical model</div>
 </div></div></section>
 </section>
 

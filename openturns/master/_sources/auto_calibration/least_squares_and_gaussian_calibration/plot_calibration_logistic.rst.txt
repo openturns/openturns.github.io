@@ -21,24 +21,45 @@
 Calibration of the logistic model
 =================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-8
-
 We present a calibration study of the logistic growth model defined :ref:`here <use-case-logistic>`.
-In this example, we calibrate the parameters of a model which predicts the dynamics of the size of a population. This shows how you can calibrate a model which predicts a time dependent output. You need to view the output time series as a vector.
+The data set that we use is the U.S. population from 1790 to 2000.
+One of the specific properties of this study is that the observations
+that we use are real world observations.
+Hence when we calibrate the model on the data, there is a discrepancy that will
+be seen.
+In this example, we calibrate the parameters of a model which predicts
+the dynamics of the size of a population.
+This shows how we can calibrate a model which predicts a time
+dependent output.
+The output of the model is a time series representing the evolution of the
+population.
+This requires a transpose of the sample, so that we can benefit from
+the visualization methods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-12
+Variables
+---------
+
+In the particular situation where we want to calibrate this model, the
+following list presents which variables are observed input variables,
+input calibrated variables and observed output variables.
+
+- :math:`t`: Input. Observed.
+- :math:`z_0`, :math:`a`, :math:`c`: Inputs. Calibrated.
+- :math:`z`: Output. Observed.
+
+.. GENERATED FROM PYTHON SOURCE LINES 33-35
 
 Analysis of the data
 --------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-23
+.. GENERATED FROM PYTHON SOURCE LINES 37-46
 
 .. code-block:: default
 
     from openturns.usecases import logistic_model
     import openturns as ot
     import numpy as np
-    import openturns.viewer as viewer
+    import openturns.viewer as otv
     from matplotlib import pylab as plt
 
     ot.Log.Show(ot.Log.NONE)
@@ -51,41 +72,70 @@ Analysis of the data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 We load the logistic model from the usecases module :
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-27
+.. GENERATED FROM PYTHON SOURCE LINES 48-52
 
 .. code-block:: default
 
     lm = logistic_model.LogisticModel()
+    print("Inputs:", lm.model.getInputDescription())
+    print("Outputs: ", lm.model.getOutputDescription())
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Inputs: [t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,a,c]#24
+    Outputs:  [z0,z1,z2,z3,z4,z5,z6,z7,z8,z9,z10,z11,z12,z13,z14,z15,z16,z17,z18,z19,z20,z21]#22
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
 
-The data is based on 22 dates from 1790 to 2000. The observation points are stored in the `data` field :
+.. GENERATED FROM PYTHON SOURCE LINES 53-57
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
+We see that there are 24 inputs.
+The first 22 inputs are the timestamps and the last two inputs are the
+a and c parameters to calibrate.
+The 22 outputs are the population of the U.S. in millions.
+
+.. GENERATED FROM PYTHON SOURCE LINES 59-61
+
+The data is based on 22 dates from 1790 to 2000. The observation points are
+stored in the `data` field :
+
+.. GENERATED FROM PYTHON SOURCE LINES 61-64
 
 .. code-block:: default
 
     observedSample = lm.data
+    print(observedSample[:5])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+        [ Time            U.S. Population ]
+    0 : [ 1790               3.9          ]
+    1 : [ 1800               5.3          ]
+    2 : [ 1810               7.2          ]
+    3 : [ 1820               9.6          ]
+    4 : [ 1830              13            ]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-35
+
+.. GENERATED FROM PYTHON SOURCE LINES 65-68
 
 .. code-block:: default
 
@@ -105,7 +155,7 @@ The data is based on 22 dates from 1790 to 2000. The observation points are stor
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-39
+.. GENERATED FROM PYTHON SOURCE LINES 69-72
 
 .. code-block:: default
 
@@ -120,7 +170,7 @@ The data is based on 22 dates from 1790 to 2000. The observation points are stor
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <TABLE><TR><TD></TD><TH>v0</TH></TR>
+    <TABLE><TR><TD></TD><TH>Time</TH></TR>
     <TR><TH>0</TH><TD>1790</TD></TR>
     <TR><TH>1</TH><TD>1800</TD></TR>
     <TR><TH>2</TH><TD>1810</TD></TR>
@@ -131,7 +181,7 @@ The data is based on 22 dates from 1790 to 2000. The observation points are stor
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-43
+.. GENERATED FROM PYTHON SOURCE LINES 73-76
 
 .. code-block:: default
 
@@ -146,7 +196,7 @@ The data is based on 22 dates from 1790 to 2000. The observation points are stor
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <TABLE><TR><TD></TD><TH>v1</TH></TR>
+    <TABLE><TR><TD></TD><TH>U.S. Population</TH></TR>
     <TR><TH>0</TH><TD>3.9</TD></TR>
     <TR><TH>1</TH><TD>5.3</TD></TR>
     <TR><TH>2</TH><TD>7.2</TD></TR>
@@ -157,15 +207,24 @@ The data is based on 22 dates from 1790 to 2000. The observation points are stor
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-50
+.. GENERATED FROM PYTHON SOURCE LINES 77-92
 
 .. code-block:: default
 
+    palette = ot.Drawable.BuildDefaultPalette(1)
     graph = ot.Graph("", "Time (years)", "Population (Millions)", True, "topleft")
     cloud = ot.Cloud(timeObservations, populationObservations)
     cloud.setLegend("Observations")
+    cloud.setPointStyle(
+        ot.ResourceMap.GetAsString("CalibrationResult-ObservationPointStyle")
+    )
     graph.add(cloud)
-    view = viewer.View(graph)
+    curve = ot.Curve(timeObservations, populationObservations)
+    curve.setLegend("")
+    curve.setLineStyle(ot.ResourceMap.GetAsString("CalibrationResult-ObservationLineStyle"))
+    graph.add(curve)
+    graph.setColors([palette[0]] * 2)
+    view = otv.View(graph)
 
 
 
@@ -179,43 +238,51 @@ The data is based on 22 dates from 1790 to 2000. The observation points are stor
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 93-95
 
-We consider the times and populations as dimension 22 vectors. The `logisticModel` function takes a dimension 24 vector as input and returns a dimension 22 vector. The first 22 components of the input vector contains the dates and the remaining 2 components are :math:`a` and :math:`b`.
+We see that there is a very smooth growth of the U.S. population.
+This is a good candidate for model calibration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-71
+.. GENERATED FROM PYTHON SOURCE LINES 97-102
 
-.. code-block:: default
+We consider the times and populations as dimension 22 vectors.
+The `logisticModel` function takes a dimension 24 vector as input and
+returns a dimension 22 vector.
+The first 22 components of the input vector contains the dates and the
+remaining 2 components are :math:`a` and :math:`b`.
 
-    nbdates = 22
+.. GENERATED FROM PYTHON SOURCE LINES 104-105
 
+Print the number of dates:
 
-    def logisticModel(X):
-        t = [X[i] for i in range(nbdates)]
-        a = X[22]
-        c = X[23]
-        t0 = 1790.0
-        y0 = 3.9e6
-        b = np.exp(c)
-        y = [0.0] * nbdates
-        for i in range(nbdates):
-            y[i] = a * y0 / (b * y0 + (a - b * y0) * np.exp(-a * (t[i] - t0)))
-        z = [yi / 1.0e6 for yi in y]  # Convert into millions
-        return z
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
+.. GENERATED FROM PYTHON SOURCE LINES 105-107
 
 .. code-block:: default
 
-    logisticModelPy = ot.PythonFunction(24, nbdates, logisticModel)
+    print(lm.data.getSize())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    22
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 108-109
+
+Get the physical model to calibrate.
+
+.. GENERATED FROM PYTHON SOURCE LINES 109-111
+
+.. code-block:: default
+
+    logisticModelPy = lm.model
 
 
 
@@ -224,13 +291,16 @@ We consider the times and populations as dimension 22 vectors. The `logisticMode
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-78
+.. GENERATED FROM PYTHON SOURCE LINES 112-118
 
 The reference values of the parameters.
 
 Because :math:`b` is so small with respect to :math:`a`, we use the logarithm.
+In other words, we calibrate :math:`c = \log(b)` instead of calibrating
+:math:`b`.
+This makes the calibration much easier.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-82
+.. GENERATED FROM PYTHON SOURCE LINES 120-122
 
 .. code-block:: default
 
@@ -249,7 +319,7 @@ Because :math:`b` is so small with respect to :math:`a`, we use the logarithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-87
+.. GENERATED FROM PYTHON SOURCE LINES 123-127
 
 .. code-block:: default
 
@@ -264,65 +334,161 @@ Because :math:`b` is so small with respect to :math:`a`, we use the logarithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-90
+.. GENERATED FROM PYTHON SOURCE LINES 128-156
+
+In the physical model, the inputs and parameters are ordered as
+presented in the next table.
+Notice that there are no parameters in the physical model.
+
++-------+----------------+
+| Index | Input variable |
++=======+================+
+| 0     | t1             |
++-------+----------------+
+| 1     | t2             |
++-------+----------------+
+| ...   | ...            |
++-------+----------------+
+| 21    | t22            |
++-------+----------------+
+| 22    | a              |
++-------+----------------+
+| 23    | c              |
++-------+----------------+
+
++-------+-----------+
+| Index | Parameter |
++=======+===========+
+| ∅     | ∅         |
++-------+-----------+
+
+**Table 1.** Indices and names of the inputs and parameters of the physical model.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 156-159
+
+.. code-block:: default
+
+    print("Physical Model Inputs:", lm.model.getInputDescription())
+    print("Physical Model Parameters:", lm.model.getParameterDescription())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Physical Model Inputs: [t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,a,c]#24
+    Physical Model Parameters: []
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 160-187
+
+In order to perform calibration, we have to define a parametric model,
+with observed inputs and parameters to calibrate.
+In order to do this, we create a :class:`~openturns.ParametricFunction` where the parameters
+are `a` and `c` which have the indices 22 and 23 in the physical model.
+
++-------+----------------+
+| Index | Input variable |
++=======+================+
+| 0     | t1             |
++-------+----------------+
+| 1     | t2             |
++-------+----------------+
+| ...   | ...            |
++-------+----------------+
+| 21    | t22            |
++-------+----------------+
+
++-------+-----------+
+| Index | Parameter |
++=======+===========+
+| 0     | a         |
++-------+-----------+
+| 1     | c         |
++-------+-----------+
+
+**Table 2.** Indices and names of the inputs and parameters of the parametric model.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 189-193
 
 .. code-block:: default
 
     logisticParametric = ot.ParametricFunction(logisticModelPy, [22, 23], thetaPrior)
+    print("Parametric Model Inputs:", logisticParametric.getInputDescription())
+    print("Parametric Model Parameters:", logisticParametric.getParameterDescription())
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Parametric Model Inputs: [t0,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21]#22
+    Parametric Model Parameters: [a,c]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-92
+
+.. GENERATED FROM PYTHON SOURCE LINES 194-195
 
 Check that we can evaluate the parametric function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-97
+.. GENERATED FROM PYTHON SOURCE LINES 197-200
 
 .. code-block:: default
 
     populationPredicted = logisticParametric(timeObservations.asPoint())
-    populationPredicted
+    print(populationPredicted[:5])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ .. code-block:: none
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[3.9,5.29757,7.17769,9.69198,13.0277,17.4068,23.0769,30.2887,39.2561,50.0977,62.7691,77.0063,92.311,108.001,123.322,137.59,150.3,161.184,170.193,177.442,183.144,187.55]#22</p>
-    </div>
-    <br />
-    <br />
+    [3.9,5.29757,7.17769,9.69198,13.0277]
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-111
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 201-219
 
 .. code-block:: default
 
-    graph = ot.Graph("", "Time (years)", "Population (Millions)", True, "topleft")
+    graph = ot.Graph(
+        "Before calibration", "Time (years)", "Population (Millions)", True, "topleft"
+    )
     # Observations
     cloud = ot.Cloud(timeObservations, populationObservations)
     cloud.setLegend("Observations")
-    cloud.setColor("blue")
+    cloud.setPointStyle(
+        ot.ResourceMap.GetAsString("CalibrationResult-ObservationPointStyle")
+    )
     graph.add(cloud)
     # Predictions
     cloud = ot.Cloud(timeObservations.asPoint(), populationPredicted)
     cloud.setLegend("Predictions")
-    cloud.setColor("green")
+    cloud.setPointStyle(ot.ResourceMap.GetAsString("CalibrationResult-PriorPointStyle"))
     graph.add(cloud)
-    view = viewer.View(graph)
+    graph.setColors(ot.Drawable.BuildDefaultPalette(2))
+    view = otv.View(graph)
 
 
 
 
 .. image-sg:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_002.png
-   :alt: plot calibration logistic
+   :alt: Before calibration
    :srcset: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_002.png
    :class: sphx-glr-single-img
 
@@ -330,82 +496,68 @@ Check that we can evaluate the parametric function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-113
+.. GENERATED FROM PYTHON SOURCE LINES 220-221
 
-We see that the fit is not good: the observations continue to grow after 1950, while the growth of the prediction seem to fade.
+We see that the fit is not good: the observations continue to grow after 1950, while the growth of the prediction seems to fade.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-117
+.. GENERATED FROM PYTHON SOURCE LINES 223-225
 
 Calibration with linear least squares
 -------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-122
+.. GENERATED FROM PYTHON SOURCE LINES 227-231
+
+The calibration algorithm takes input and output samples as arguments.
+In this case, we choose to consider one single observation in dimension 22.
+In order to perform calibration, we create a `Sample` of input times which has
+one observation in dimension 22.
+
+.. GENERATED FROM PYTHON SOURCE LINES 233-236
 
 .. code-block:: default
 
-    timeObservationsVector = ot.Sample([[timeObservations[i, 0] for i in range(nbobs)]])
-    timeObservationsVector[0:10]
+    timeObservationsSample = ot.Sample([timeObservations.asPoint()])
+    print(timeObservationsSample[0, 0:5])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ .. code-block:: none
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <TABLE><TR><TD></TD><TH>v0</TH><TH>v1</TH><TH>v2</TH><TH>v3</TH><TH>v4</TH><TH>v5</TH><TH>v6</TH><TH>v7</TH><TH>v8</TH><TH>v9</TH><TH>v10</TH><TH>v11</TH><TH>v12</TH><TH>v13</TH><TH>v14</TH><TH>v15</TH><TH>v16</TH><TH>v17</TH><TH>v18</TH><TH>v19</TH><TH>v20</TH><TH>v21</TH></TR>
-    <TR><TH>0</TH><TD>1790</TD><TD>1800</TD><TD>1810</TD><TD>1820</TD><TD>1830</TD><TD>1840</TD><TD>1850</TD><TD>1860</TD><TD>1870</TD><TD>1880</TD><TD>1890</TD><TD>1900</TD><TD>1910</TD><TD>1920</TD><TD>1930</TD><TD>1940</TD><TD>1950</TD><TD>1960</TD><TD>1970</TD><TD>1980</TD><TD>1990</TD><TD>2000</TD></TR>
-    </TABLE>
-    </div>
-    <br />
-    <br />
-
-.. GENERATED FROM PYTHON SOURCE LINES 123-128
-
-.. code-block:: default
-
-    populationObservationsVector = ot.Sample(
-        [[populationObservations[i, 0] for i in range(nbobs)]]
-    )
-    populationObservationsVector[0:10]
+    [1790,1800,1810,1820,1830]
 
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 237-239
 
+Similarly, we create a `Sample` of output populations which has
+one observation in dimension 22.
 
-.. raw:: html
-
-    <div class="output_subarea output_html rendered_html output_result">
-    <TABLE><TR><TD></TD><TH>v0</TH><TH>v1</TH><TH>v2</TH><TH>v3</TH><TH>v4</TH><TH>v5</TH><TH>v6</TH><TH>v7</TH><TH>v8</TH><TH>v9</TH><TH>v10</TH><TH>v11</TH><TH>v12</TH><TH>v13</TH><TH>v14</TH><TH>v15</TH><TH>v16</TH><TH>v17</TH><TH>v18</TH><TH>v19</TH><TH>v20</TH><TH>v21</TH></TR>
-    <TR><TH>0</TH><TD>3.9</TD><TD>5.3</TD><TD>7.2</TD><TD>9.6</TD><TD>13</TD><TD>17</TD><TD>23</TD><TD>31</TD><TD>39</TD><TD>50</TD><TD>62</TD><TD>76</TD><TD>92</TD><TD>106</TD><TD>123</TD><TD>132</TD><TD>151</TD><TD>179</TD><TD>203</TD><TD>221</TD><TD>250</TD><TD>281</TD></TR>
-    </TABLE>
-    </div>
-    <br />
-    <br />
-
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
-
-The reference values of the parameters.
-
-.. GENERATED FROM PYTHON SOURCE LINES 132-137
+.. GENERATED FROM PYTHON SOURCE LINES 241-244
 
 .. code-block:: default
 
-    a = 0.03134
-    c = -22.58
-    thetaPrior = [a, c]
+    populationObservationsSample = ot.Sample([populationObservations.asPoint()])
+    print(populationObservationsSample[0, 0:5])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    [3.9,5.3,7.2,9.6,13]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-140
+.. GENERATED FROM PYTHON SOURCE LINES 245-247
 
 .. code-block:: default
 
@@ -418,141 +570,128 @@ The reference values of the parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-142
+.. GENERATED FROM PYTHON SOURCE LINES 248-249
 
 Check that we can evaluate the parametric function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-147
+.. GENERATED FROM PYTHON SOURCE LINES 251-254
 
 .. code-block:: default
 
-    populationPredicted = logisticParametric(timeObservationsVector)
-    populationPredicted[0:10]
+    populationPredicted = logisticParametric(timeObservationsSample)
+    print(populationPredicted[0, 0:5])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ .. code-block:: none
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <TABLE><TR><TD></TD><TH>y0</TH><TH>y1</TH><TH>y2</TH><TH>y3</TH><TH>y4</TH><TH>y5</TH><TH>y6</TH><TH>y7</TH><TH>y8</TH><TH>y9</TH><TH>y10</TH><TH>y11</TH><TH>y12</TH><TH>y13</TH><TH>y14</TH><TH>y15</TH><TH>y16</TH><TH>y17</TH><TH>y18</TH><TH>y19</TH><TH>y20</TH><TH>y21</TH></TR>
-    <TR><TH>0</TH><TD>3.9</TD><TD>5.297571</TD><TD>7.177694</TD><TD>9.691977</TD><TD>13.02769</TD><TD>17.40682</TD><TD>23.07691</TD><TD>30.2887</TD><TD>39.25606</TD><TD>50.09767</TD><TD>62.76907</TD><TD>77.0063</TD><TD>92.31103</TD><TD>108.0009</TD><TD>123.3223</TD><TD>137.5899</TD><TD>150.3003</TD><TD>161.1843</TD><TD>170.193</TD><TD>177.4422</TD><TD>183.1443</TD><TD>187.5496</TD></TR>
-    </TABLE>
-    </div>
-    <br />
-    <br />
+    [3.9,5.29757,7.17769,9.69198,13.0277]
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-150
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 255-257
 
 Calibration
 ------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-156
+.. GENERATED FROM PYTHON SOURCE LINES 259-261
+
+We are now able to perform the calibration, using linear least squares
+using the :class:`~openturns.LinearLeastSquaresCalibration` class.
+
+.. GENERATED FROM PYTHON SOURCE LINES 263-272
 
 .. code-block:: default
 
     algo = ot.LinearLeastSquaresCalibration(
-        logisticParametric, timeObservationsVector, populationObservationsVector, thetaPrior
+        logisticParametric, timeObservationsSample, populationObservationsSample, thetaPrior
     )
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
-
-.. code-block:: default
-
     algo.run()
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 160-162
-
-.. code-block:: default
-
     calibrationResult = algo.getResult()
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 163-166
-
-.. code-block:: default
-
     thetaMAP = calibrationResult.getParameterMAP()
-    thetaMAP
+    print("theta After = ", thetaMAP)
+    print("theta Before = ", thetaPrior)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ .. code-block:: none
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[0.0265958,-23.1714]</p>
-    </div>
-    <br />
-    <br />
+    theta After =  [0.0265958,-23.1714]
+    theta Before =  [0.03134, -22.58]
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-170
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 273-275
+
+Compared to the value of the parameters before calibration, we can see that the
+parameters were significantly updated.
+
+.. GENERATED FROM PYTHON SOURCE LINES 277-279
+
+In order to see if the optimum parameters are sensitive to the
+observation errors, we compute 95% confidence intervals.
+
+.. GENERATED FROM PYTHON SOURCE LINES 281-284
 
 .. code-block:: default
 
     thetaPosterior = calibrationResult.getParameterPosterior()
-    thetaPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0]
+    print(thetaPosterior.computeBilateralConfidenceIntervalWithMarginalProbability(0.95)[0])
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ .. code-block:: none
 
-    <div class="output_subarea output_html rendered_html output_result">
-    <p>[0.0246465, 0.028545]<br>
-    [-23.3182, -23.0247]</p>
-    </div>
-    <br />
-    <br />
+    [0.0246465, 0.028545]
+    [-23.3182, -23.0247]
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-172
 
-transpose samples to interpret several observations instead of several input/outputs as it is a field model
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-187
+
+.. GENERATED FROM PYTHON SOURCE LINES 285-288
+
+The 95% confidence intervals of the optimum are relatively narrow:
+this means that the optimum is not very sensitive to the observation errors.
+In this case, the parameters are accurately estimated.
+
+.. GENERATED FROM PYTHON SOURCE LINES 290-295
+
+In this example, we have considered a single observation in dimension 22.
+In this case, the parametric model has has 22 outputs, which
+create a large number of plots.
+Transpose samples to interpret the data as a Sample in dimension 1
+with 22 observations.
+
+.. GENERATED FROM PYTHON SOURCE LINES 297-310
 
 .. code-block:: default
 
     if calibrationResult.getInputObservations().getSize() == 1:
-        calibrationResult.setInputObservations(
-            [timeObservations[i] for i in range(nbdates)]
+        calibrationResult.setInputObservations(timeObservations)
+        calibrationResult.setOutputObservations(populationObservations)
+        outputPriorMeanDimension22 = calibrationResult.getOutputAtPriorMean()
+        outputAtPriorDimension1 = ot.Sample.BuildFromPoint(outputPriorMeanDimension22[0])
+        outputPosteriorMeanDimension22 = calibrationResult.getOutputAtPosteriorMean()
+        outputPosteriorMeanDimension1 = ot.Sample.BuildFromPoint(
+            outputPosteriorMeanDimension22[0]
         )
-        calibrationResult.setOutputObservations(
-            [populationObservations[i] for i in range(nbdates)]
+        calibrationResult.setOutputAtPriorAndPosteriorMean(
+            outputAtPriorDimension1, outputPosteriorMeanDimension1
         )
-        outputAtPrior = [
-            [calibrationResult.getOutputAtPriorMean()[0, i]] for i in range(nbdates)
-        ]
-        outputAtPosterior = [
-            [calibrationResult.getOutputAtPosteriorMean()[0, i]] for i in range(nbdates)
-        ]
-        calibrationResult.setOutputAtPriorAndPosteriorMean(outputAtPrior, outputAtPosterior)
 
 
 
@@ -561,12 +700,40 @@ transpose samples to interpret several observations instead of several input/out
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-191
+.. GENERATED FROM PYTHON SOURCE LINES 311-313
+
+Increase the default number of points in the plots.
+This produces smoother spiky distributions.
+
+.. GENERATED FROM PYTHON SOURCE LINES 315-317
 
 .. code-block:: default
 
+    ot.ResourceMap.SetAsUnsignedInteger("Distribution-DefaultPointNumber", 300)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 318-322
+
+The next plot presents the U.S. population depending on the time.
+We see that the calibrated model fits to the data more
+than the uncalibrated model, especially on the second part
+of the time interval.
+
+.. GENERATED FROM PYTHON SOURCE LINES 322-328
+
+.. code-block:: default
+
+
+    # sphinx_gallery_thumbnail_number = 3
     graph = calibrationResult.drawObservationsVsInputs()
-    view = viewer.View(graph)
+    graph.setLegendPosition("topleft")
+    view = otv.View(graph)
 
 
 
@@ -580,12 +747,29 @@ transpose samples to interpret several observations instead of several input/out
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-195
+.. GENERATED FROM PYTHON SOURCE LINES 329-343
+
+As a metamodel, we can compare the predicted U.S. population
+depending on the observed U.S. population.
+We see that the model fits to the data accurately for
+a population up to 150 million people, but diverges when the population
+gets larger.
+On the other hand, the calibrated model under-predicts the
+population for the [0,150] population interval, and
+over-predicts for the [150,300] interval, balancing the errors
+so that the model globally fits.
+The "S" shape of the graph after calibration reveals that
+the calibrated model has a structure with residuals that do
+not follow a normal distribution (otherwise the calibrated
+cloud would be spread over and under the diagonal).
+In other words, the model and the data do not fit very well.
+
+.. GENERATED FROM PYTHON SOURCE LINES 345-348
 
 .. code-block:: default
 
-    graph = calibrationResult.drawObservationsVsInputs()
-    view = viewer.View(graph)
+    graph = calibrationResult.drawObservationsVsPredictions()
+    view = otv.View(graph)
 
 
 
@@ -599,18 +783,29 @@ transpose samples to interpret several observations instead of several input/out
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-199
+.. GENERATED FROM PYTHON SOURCE LINES 349-357
+
+The residuals analysis shows that some residuals were very
+large before calibration.
+After calibration, most residuals are in the [-20,20] interval,
+which explains why the calibrated model fits the data better.
+We notice that the distribution of the
+calibrated residuals is relatively close to a normal distribution.
+This may show that the least squares model is appropriate in
+this case with respect to this criterion.
+
+.. GENERATED FROM PYTHON SOURCE LINES 359-362
 
 .. code-block:: default
 
-    graph = calibrationResult.drawObservationsVsPredictions()
-    view = viewer.View(graph)
+    graph = calibrationResult.drawResiduals()
+    view = otv.View(graph)
 
 
 
 
 .. image-sg:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_005.png
-   :alt: plot calibration logistic
+   :alt: Residual analysis
    :srcset: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_005.png
    :class: sphx-glr-single-img
 
@@ -618,39 +813,31 @@ transpose samples to interpret several observations instead of several input/out
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-203
+.. GENERATED FROM PYTHON SOURCE LINES 363-366
 
-.. code-block:: default
+The next plot shows that there is a significant improvement
+after the calibration: the initial point is very different
+from the distribution of the optimum parameter.
 
-    graph = calibrationResult.drawResiduals()
-    view = viewer.View(graph)
-
-
-
-
-.. image-sg:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_006.png
-   :alt: , Residual analysis
-   :srcset: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_006.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 204-208
+.. GENERATED FROM PYTHON SOURCE LINES 368-377
 
 .. code-block:: default
 
     graph = calibrationResult.drawParameterDistributions()
-    view = viewer.View(graph)
+    view = otv.View(
+        graph,
+        figure_kw={"figsize": (8.0, 4.0)},
+        legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
+    )
+    plt.subplots_adjust(right=0.8)
 
-    plt.show()
+    otv.View.ShowAll()
 
 
 
-.. image-sg:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_007.png
+.. image-sg:: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_006.png
    :alt: plot calibration logistic
-   :srcset: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_007.png
+   :srcset: /auto_calibration/least_squares_and_gaussian_calibration/images/sphx_glr_plot_calibration_logistic_006.png
    :class: sphx-glr-single-img
 
 
@@ -660,7 +847,7 @@ transpose samples to interpret several observations instead of several input/out
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.858 seconds)
+   **Total running time of the script:** ( 0 minutes  0.760 seconds)
 
 
 .. _sphx_glr_download_auto_calibration_least_squares_and_gaussian_calibration_plot_calibration_logistic.py:
