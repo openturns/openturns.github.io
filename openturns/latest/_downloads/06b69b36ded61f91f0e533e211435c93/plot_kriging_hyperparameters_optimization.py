@@ -15,8 +15,15 @@ Kriging :configure the optimization solver
 #
 # The covariance model has two types of parameters.
 #
-# * The amplitude parameter :math:`\sigma^2` is estimated from the data. If the output dimension is equal to one, this parameter is estimated using the analytic variance estimator which maximizes the likelihood. Otherwise, if output dimension is greater than one or analytical sigma disabled, this parameter is estimated from numerical optimization.
-# * The other parameters :math:`{\bf \theta}\in\mathbb{R}^d` where :math:`d` is the spatial dimension of the covariance model. Often, the parameter :math:`{\bf \theta}` is a scale parameter. This step involves an optimization algorithm.
+# * The amplitude parameter :math:`\sigma^2` is estimated from the data.
+#   If the output dimension is equal to one, this parameter is estimated using
+#   the analytic variance estimator which maximizes the likelihood.
+#   Otherwise, if output dimension is greater than one or analytical sigma disabled,
+#   this parameter is estimated from numerical optimization.
+# * The other parameters :math:`{\bf \theta}\in\mathbb{R}^d` where :math:`d` is
+#   the spatial dimension of the covariance model.
+#   Often, the parameter :math:`{\bf \theta}` is a scale parameter.
+#   This step involves an optimization algorithm.
 #
 # All these parameters are estimated with the `GeneralLinearModelAlgorithm` class.
 #
@@ -24,10 +31,13 @@ Kriging :configure the optimization solver
 # Moreover, the maximization of likelihood may be associated with difficulties e.g. many local maximums or even the non convergence of the optimization algorithm.
 # In this case, it might be useful to fine tune the optimization algorithm so that the convergence of the optimization algorithm is, hopefully, improved.
 #
-# Furthermore, there are several situations in which the optimization can be initialized or completely bypassed. Suppose for example that we have already created an initial kriging metamodel with :math:`N` points and we want to add a single new point.
+# Furthermore, there are several situations in which the optimization can be initialized or completely bypassed.
+# Suppose for example that we have already created an initial kriging metamodel with :math:`N` points and we want to add a single new point.
 #
-# * It might be interesting to initialize the optimization algorithm with the optimum found for the previous kriging metamodel: this may reduce the number of iterations required to maximize the likelihood.
-# * We may as well completely bypass the optimization step: if the previous covariance model was correctly estimated, the update of the parameters may or may not significantly improve the estimates.
+# * It might be interesting to initialize the optimization algorithm with the optimum found for the previous kriging metamodel:
+#   this may reduce the number of iterations required to maximize the likelihood.
+# * We may as well completely bypass the optimization step: if the previous covariance model was correctly estimated,
+#   the update of the parameters may or may not significantly improve the estimates.
 #
 # This is why the goal of this example is to see how to configure the optimization of the hyperparameters of a kriging metamodel.
 
@@ -79,7 +89,8 @@ myDistribution = ot.ComposedDistribution([E, F, L, II], myCopula)
 # --------------------------------
 
 # %%
-# We consider a simple Monte-Carlo sampling as a design of experiments. This is why we generate an input sample using the `getSample` method of the distribution. Then we evaluate the output using the `model` function.
+# We consider a simple Monte-Carlo sampling as a design of experiments. This is why we generate an input sample using the `getSample` method of the distribution.
+# Then we evaluate the output using the `model` function.
 
 # %%
 sampleSize_train = 10
@@ -91,7 +102,10 @@ Y_train = model(X_train)
 # --------------------
 
 # %%
-# In order to create the kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class. Then we use a squared exponential covariance model. Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel, taking the training sample, the covariance model and the trend basis as input arguments.
+# In order to create the kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class.
+# Then we use a squared exponential covariance model.
+# Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel,
+# taking the training sample, the covariance model and the trend basis as input arguments.
 
 # %%
 dimension = myDistribution.getDimension()
@@ -150,7 +164,8 @@ solverImplementation = solver.getImplementation()
 solverImplementation.getClassName()
 
 # %%
-# The `getOptimizationBounds` method returns the bounds. The dimension of these bounds correspond to the spatial dimension of the covariance model. In the metamodeling context, this correspond to the input dimension of the model.
+# The `getOptimizationBounds` method returns the bounds. The dimension of these bounds correspond to the spatial dimension of the covariance model.
+# In the metamodeling context, this correspond to the input dimension of the model.
 
 # %%
 bounds = algo.getOptimizationBounds()
@@ -179,7 +194,8 @@ print(isOptimize)
 # ------------------------------------------------
 
 # %%
-# The starting point of the optimization is based on the parameters of the covariance model. In the following example, we configure the parameters of the covariance model to the arbitrary values `[12.,34.,56.,78.]`.
+# The starting point of the optimization is based on the parameters of the covariance model.
+# In the following example, we configure the parameters of the covariance model to the arbitrary values `[12.,34.,56.,78.]`.
 
 # %%
 covarianceModel = ot.SquaredExponential([12.0, 34.0, 56.0, 78.0], [1.0])
@@ -209,7 +225,8 @@ print(basic_covariance_model)
 # --------------------------
 
 # %%
-# It is sometimes useful to completely disable the optimization of the parameters. In order to see the effect of this, we first initialize the parameters of the covariance model with the arbitrary values `[12.,34.,56.,78.]`.
+# It is sometimes useful to completely disable the optimization of the parameters.
+# In order to see the effect of this, we first initialize the parameters of the covariance model with the arbitrary values `[12.,34.,56.,78.]`.
 
 # %%
 covarianceModel = ot.SquaredExponential([12.0, 34.0, 56.0, 78.0], [91.0])

@@ -8,9 +8,16 @@ Over-fitting and model selection
 # Introduction
 # ------------
 #
-# In this notebook, we present the problem of over-fitting a model to data. We consider noisy observations of the sine function. We estimate the coefficients of the univariate polynomial based on linear least squares and show that, when the degree of the polynomial becomes too large, the overall prediction quality decreases.
+# In this notebook, we present the problem of over-fitting a model to data.
+# We consider noisy observations of the sine function.
+# We estimate the coefficients of the univariate polynomial based on linear
+# least squares and show that, when the degree of the polynomial becomes too
+# large, the overall prediction quality decreases.
 #
-# This shows why and how model selection can come into play in order to select the degree of the polynomial: there is is a trade-off between fitting the data and preserving the quality of future predictions. In this example, we use cross validation as a model selection method.
+# This shows why and how model selection can come into play in order to select
+# the degree of the polynomial: there is is a trade-off between fitting the
+# data and preserving the quality of future predictions.
+# In this example, we use cross validation as a model selection method.
 
 # %%
 # References
@@ -77,7 +84,8 @@ noise = ot.Normal(0, 0.1)
 noiseSample = noise.getSample(n_train)
 
 # %%
-# The following computes the observation as the sum of the function value and of the noise. The couple (`x_train`,`y_train`) is the training set: it is used to compute the coefficients of the polynomial model.
+# The following computes the observation as the sum of the function value and of the noise.
+# The couple (`x_train`,`y_train`) is the training set: it is used to compute the coefficients of the polynomial model.
 
 # %%
 y_train = g(x_train) + noiseSample
@@ -280,9 +288,13 @@ _ = ot.viewer.View(
 )
 
 # %%
-# When the polynomial degree is low, the fit is satisfying. The polynomial is close to the observations, although there is still some residual error.
+# When the polynomial degree is low, the fit is satisfying.
+# The polynomial is close to the observations, although there is still some residual error.
 #
-# However, when the polynomial degree is high, it produces large oscillations which significantly deviate from the true function. This is *overfitting*. This is a pity, given the fact that the polynomial *exactly* interpolates the observations: the residuals are zeroed.
+# However, when the polynomial degree is high, it produces large oscillations
+# which significantly deviate from the true function.
+# This is *overfitting*. This is a pity, given the fact that the polynomial
+# *exactly* interpolates the observations: the residuals are zeroed.
 #
 # If the locations of the x abscissas could be changed, then the oscillations could be made smaller.
 # This is the method used in gaussian quadrature, where the nodes of interpolation are made closer on the left and right bounds.
@@ -336,7 +348,9 @@ ypredicted_test = responseSurface(basis(x_test))
 residuals = y_test.asPoint() - ypredicted_test.asPoint()
 
 # %%
-# The `normSquare` method computes the square of the Euclidian norm (i.e. the 2-norm). We divide this by the test sample size (so as to compare the error for different sample sizes) and compute the square root of the result (so that the result has the same unit as y).
+# The `normSquare` method computes the square of the Euclidian norm (i.e. the 2-norm).
+# We divide this by the test sample size (so as to compare the error for different sample sizes)
+# and compute the square root of the result (so that the result has the same unit as y).
 
 # %%
 RMSE = sqrt([residuals.normSquare() / n_test])[0]
@@ -381,9 +395,14 @@ graph.add(cloud)
 view = otv.View(graph)
 
 # %%
-# We see that the RMSE on the train set continuously decreases, reaching zero when the polynomial degree is so that the number of coefficients is equal to the train dataset sample size. In this extreme situation, the least squares solution is equivalent to solving a linear system of equations: this leads to a zero residual.
+# We see that the RMSE on the train set continuously decreases, reaching zero
+# when the polynomial degree is so that the number of coefficients is equal to
+# the train dataset sample size. In this extreme situation, the least squares
+# solution is equivalent to solving a linear system of equations: this leads to a zero residual.
 #
-# On the test set however, the RMSE decreases, reaches a flat region, then increases dramatically when the degree is equal to 9. Hence, limiting the polynomial degree limits overfitting.
+# On the test set however, the RMSE decreases, reaches a flat region,
+# then increases dramatically when the degree is equal to 9.
+# Hence, limiting the polynomial degree limits overfitting.
 
 # %%
 # Increasing the training set

@@ -40,6 +40,7 @@ inputDistribution = m.distributionX
 # We now generate the input and output training sets as 10 times the dimension of the input vector.
 
 # %%
+ot.RandomGenerator.SetSeed(0)
 experiment = ot.LHSExperiment(inputDistribution, 10 * m.dim)
 inputTrainingSet = experiment.generate()
 outputTrainingSet = model(inputTrainingSet)
@@ -53,10 +54,18 @@ print(inputTrainingSet.getMin(), inputTrainingSet.getMax())
 # We choose to use a constant trend.
 
 # %%
-basis = ot.ConstantBasisFactory(m.dim).build()
+linear_basis = ot.LinearBasisFactory(m.dim).build()
+basis = ot.Basis(
+    [
+        ot.AggregatedFunction([linear_basis.build(k)] * 3)
+        for k in range(linear_basis.getSize())
+    ]
+)
 
 # %%
-# We would like to have separate covariance models for the three outputs. To do so, we use the `TensorizedCovarianceModel`. For the purpose of illustration, we consider `MaternModel` for the first and third outputs, and `SquaredExponential` for the second output.
+# We would like to have separate covariance models for the three outputs.
+# To do so, we use the `TensorizedCovarianceModel`.
+# For the purpose of illustration, we consider `MaternModel` for the first and third outputs, and `SquaredExponential` for the second output.
 
 # %%
 myCov1 = ot.MaternModel([1.0] * m.dim, 2.5)
@@ -66,7 +75,11 @@ myCov3 = ot.MaternModel([1.0] * m.dim, 2.5)
 covarianceModel = ot.TensorizedCovarianceModel([myCov1, myCov2, myCov3])
 
 # %%
-# The scaling of the data is really important when dealing with Kriging, especially considering the domain definition of the input variables (the altitude varies in order of 1e7 whereas the drag coefficient is around 1). We thus define appropriate bounds for the training algorithm based on the domain definition of each variable.
+# The scaling of the data is really important when dealing with Kriging,
+# especially considering the domain definition of the input variables (the
+# altitude varies in order of 1e7 whereas the drag coefficient is around 1).
+# We thus define appropriate bounds for the training algorithm based on the
+# domain definition of each variable.
 
 # %%
 scaleOptimizationBounds = ot.Interval(
@@ -76,10 +89,23 @@ scaleOptimizationBounds = ot.Interval(
 
 # %%
 # We can now define the scaled version of Kriging model.
-covarianceModel.setScale(inputTrainingSet.getMax())
+optimal_scale = [
+    1e07,
+    1126.11,
+    1446.96,
+    17.5554,
+    3.48743,
+    3.09689,
+    7.43877,
+    3.0465,
+    1.71498,
+]
+covarianceModel.setScale(optimal_scale)
+covarianceModel.setAmplitude([0.542174, 1.0, 1.0])
+
 algo = ot.KrigingAlgorithm(inputTrainingSet, outputTrainingSet, covarianceModel, basis)
 algo.setOptimizationBounds(scaleOptimizationBounds)
-
+algo.setOptimizeParameters(False)
 # %%
 # We run the algorithm and get the metamodel.
 algo.run()
@@ -92,6 +118,7 @@ krigingMetamodel = result.getMetaModel()
 # To validate the metamodel, we create a validation set of size equal to 50 times the input vector dimension to evaluate the functions.
 
 # %%
+ot.RandomGenerator.SetSeed(1)
 experimentTest = ot.LHSExperiment(inputDistribution, 50 * m.dim)
 inputTestSet = experimentTest.generate()
 outputTestSet = model(inputTestSet)

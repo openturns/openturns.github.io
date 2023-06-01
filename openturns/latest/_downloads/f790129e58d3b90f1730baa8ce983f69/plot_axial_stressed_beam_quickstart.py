@@ -4,7 +4,10 @@ Estimate a probability with Monte-Carlo on axial stressed beam: a quick start gu
 """
 # %%
 #
-# The goal of this example is to show a simple practical example of probability estimation in a reliability study with the `ProbabilitySimulationAlgorithm` class. The `ThresholdEvent` is used to define the event. We use the Monte-Carlo method thanks to the `MonteCarloExperiment` class to estimate this probability and its confidence interval.
+# The goal of this example is to show a simple practical example of
+# probability estimation in a reliability study with the `ProbabilitySimulationAlgorithm` class.
+# The `ThresholdEvent` is used to define the event. We use the Monte-Carlo
+# method thanks to the `MonteCarloExperiment` class to estimate this probability and its confidence interval.
 # We use the :ref:`axial stressed beam <use-case-stressed-beam>` model as an illustrative example.
 
 
@@ -25,7 +28,7 @@ ot.Log.Show(ot.Log.NONE)
 sm = stressed_beam.AxialStressedBeam()
 
 # %%
-# The limit state function is defined as a symbolic function in the `model` parameter of the `AxialStressedBeam` data class :
+# The limit state function is defined as a symbolic function in the `model` parameter of the `AxialStressedBeam` data class:
 limitStateFunction = sm.model
 
 # %%
@@ -41,7 +44,7 @@ print("G(x)=", limitStateFunction(x))
 # -------------------
 
 # %%
-# We load the first marginal, a univariate `LogNormal` distribution, parameterized by its mean and standard deviation :
+# We load the first marginal, a univariate `LogNormal` distribution, parameterized by its mean and standard deviation:
 R = sm.distribution_R
 
 # %%
@@ -50,7 +53,7 @@ graph = R.drawPDF()
 view = viewer.View(graph)
 
 # %%
-# Our second marginal is a `Normal` univariate distribution :
+# Our second marginal is a `Normal` univariate distribution:
 F = sm.distribution_F
 
 # %%
@@ -59,7 +62,10 @@ graph = F.drawPDF()
 view = viewer.View(graph)
 
 # %%
-# In order to create the input distribution, we use the `ComposedDistribution` class which associates the distribution marginals and a copula. If no copula is supplied to the constructor, it selects the independent copula as default. That is implemented in the data class :
+# In order to create the input distribution, we use the `ComposedDistribution` class which associates
+# the distribution marginals and a copula.
+# If no copula is supplied to the constructor, it selects the independent copula as default.
+# That is implemented in the data class:
 
 # %%
 myDistribution = sm.distribution
@@ -87,7 +93,7 @@ outputRandomVector = ot.CompositeRandomVector(limitStateFunction, inputRandomVec
 D = 0.02
 
 # %%
-G = R - F / (D**2 / 4 * np.pi)
+G = R - F / (D ** 2 / 4 * np.pi)
 
 # %%
 G.computeCDF(0.0)
@@ -119,7 +125,8 @@ view = viewer.View(graph)
 myEvent = ot.ThresholdEvent(outputRandomVector, ot.Less(), 0.0)
 
 # %%
-# The `ProbabilitySimulationAlgorithm` is the main tool to estimate a probability. It is based on a specific design of experiments: in this example, we use the simplest of all, the `MonteCarloExperiment`.
+# The `ProbabilitySimulationAlgorithm` is the main tool to estimate a probability.
+# It is based on a specific design of experiments: in this example, we use the simplest of all, the `MonteCarloExperiment`.
 
 # %%
 maximumCoV = 0.05  # Coefficient of variation
@@ -132,13 +139,15 @@ algoMC.setBlockSize(1)
 algoMC.setMaximumCoefficientOfVariation(maximumCoV)
 
 # %%
-# In order to gather statistics about the algorithm, we get the initial number of function calls (this is not mandatory, but will prove to be convenient later in the study).
+# In order to gather statistics about the algorithm, we get the initial number of function calls
+# (this is not mandatory, but will prove to be convenient later in the study).
 
 # %%
 initialNumberOfCall = limitStateFunction.getEvaluationCallsNumber()
 
 # %%
-# Now comes the costly part: the `run` method performs the required simulations. The algorithm stops when the coefficient of variation of the probability estimate becomes lower than 0.5.
+# Now comes the costly part: the `run` method performs the required simulations.
+# The algorithm stops when the coefficient of variation of the probability estimate becomes lower than 0.5.
 
 # %%
 algoMC.run()
@@ -157,7 +166,9 @@ print("Pf = ", probability)
 print("CV =", result.getCoefficientOfVariation())
 
 # %%
-# The `drawProbabilityConvergence` method plots the probability estimate depending on the number of function evaluations. The order of convergence is :math:`O \left( 1/N^2 \right)` with :math:`N` being the number of function evaluations. This is why we use a logarithmic scale for the X axis of the graphics.
+# The `drawProbabilityConvergence` method plots the probability estimate depending on the number of function evaluations.
+# The order of convergence is :math:`O \left( 1/N^2 \right)` with :math:`N` being the number of function evaluations.
+# This is why we use a logarithmic scale for the X axis of the graphics.
 
 # %%
 graph = algoMC.drawProbabilityConvergence()
@@ -167,7 +178,8 @@ view = viewer.View(graph)
 # %%
 # We see that the 95% confidence interval becomes smaller and smaller and stabilizes at the end of the simulation.
 #
-# In order to compute the confidence interval, we use the `getConfidenceLength` method, which returns the length of the interval. In order to compute the bounds of the interval, we divide this length by 2.
+# In order to compute the confidence interval, we use the `getConfidenceLength` method, which returns the length of the interval.
+# In order to compute the bounds of the interval, we divide this length by 2.
 
 # %%
 alpha = 0.05
@@ -200,7 +212,8 @@ print(
 #
 #
 # for any :math:`r,s\in\mathbb{R}`,
-# where :math:`f_S` is the probability distribution function of the random variable :math:`S` and :math:`f_R` is the probability distribution function of the random variable :math:`R`.
+# where :math:`f_S` is the probability distribution function of the random
+# variable :math:`S` and :math:`f_R` is the probability distribution function of the random variable :math:`R`.
 # Therefore,
 #
 # .. math::

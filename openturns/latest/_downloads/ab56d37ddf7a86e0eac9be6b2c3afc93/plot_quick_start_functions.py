@@ -6,7 +6,8 @@ Defining Python and symbolic functions: a quick start introduction to functions
 # Abstract
 # --------
 #
-# In this example, we show how to define Python and symbolic functions. Such functions can be evaluated by the library and used, for example, to propagate uncertainties. We focus on functions which have a vector input and a vector output.
+# In this example, we show how to define Python and symbolic functions.
+# Such functions can be evaluated by the library and used, for example, to propagate uncertainties. We focus on functions which have a vector input and a vector output.
 
 # %%
 # Introduction
@@ -107,7 +108,8 @@ myfunction = ot.PythonFunction(3, 2, mySimulator)
 myfunction([1.0, 2.0, 3.0])
 
 # %%
-# However, the newly created `myfunction` has services that the basic Python function did not have. For example, we can create a `CompositeRandomVector` on top of it, by associating it to the input random vector.
+# However, the newly created `myfunction` has services that the basic Python function did not have.
+# For example, we can create a `CompositeRandomVector` on top of it, by associating it to the input random vector.
 
 # %%
 outputVect = ot.CompositeRandomVector(myfunction, inputRandomVector)
@@ -129,7 +131,9 @@ print(empiricalSd)
 # What types for x and for y ?
 # ----------------------------
 #
-# Not all types are possible for the inputs and outputs of the `mySimulator` function. The following table present some of the available types. All in all, any type which can be converted to or from a "vector" can be managed by the `PythonFunction` class.
+# Not all types are possible for the inputs and outputs of the `mySimulator` function.
+# The following table present some of the available types.
+# All in all, any type which can be converted to or from a "vector" can be managed by the `PythonFunction` class.
 #
 #  ====================  =======  ========
 #  Type                  Input X  Output Y
@@ -145,8 +149,11 @@ print(empiricalSd)
 # The vectorized Python function
 # ------------------------------
 #
-# The `PythonFunction` class has a `func_sample` option which vectorizes the computation so that all the output values in the sample are computed from a single function call, without any `for` loop. To make this possible, the input and output is then a `Sample` instead of a `Point`. This often boosts performance (but not always).
-#
+# The `PythonFunction` class has a `func_sample` option which vectorizes the
+# computation so that all the output values in the sample are computed from a
+# single function call, without any `for` loop.
+# To make this possible, the input and output is then a `Sample` instead of a `Point`.
+# This often boosts performance (but not always).
 
 # %%
 # The calling sequence of a vectorized Python function is:

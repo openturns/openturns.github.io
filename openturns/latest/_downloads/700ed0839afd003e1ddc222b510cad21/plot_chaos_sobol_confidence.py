@@ -10,7 +10,7 @@ Compute Sobol' indices confidence intervals
 # so we can fallback to bootstrap.
 #
 # Bootstraping the polynomial chaos is presented in [marelli2018]_ as "full bootstraping"
-# and refered to as bootstrap-PCE or bPCE.
+# and referred to as bootstrap-PCE or bPCE.
 # Full bPCE can be CPU time consuming in some cases, e.g. when the dimension of the input
 # random vector is large or when the training sample size is large.
 # In the fast bPCE method, the sparse polynomial basis identified by the LARS algorithm
@@ -117,7 +117,7 @@ Y_test = g(X_test)
 
 
 # %%
-# The MetaModelValidation class allows to validate the metamodel on a test sample.
+# The MetaModelValidation class allows one to validate the metamodel on a test sample.
 # Plot the observed versus the predicted outputs.
 val = ot.MetaModelValidation(X_test, Y_test, metamodel)
 graph = val.drawValidation()
@@ -129,8 +129,8 @@ _ = otv.View(graph)
 # %%
 # Retrieve Sobol' sensitivity measures associated to the polynomial chaos decomposition of the model.
 chaosSI = ot.FunctionalChaosSobolIndices(result)
-fo_indices = ot.Point([chaosSI.getSobolIndex(i) for i in range(dim_input)])
-to_indices = ot.Point([chaosSI.getSobolTotalIndex(i) for i in range(dim_input)])
+fo_indices = [chaosSI.getSobolIndex(i) for i in range(dim_input)]
+to_indices = [chaosSI.getSobolTotalIndex(i) for i in range(dim_input)]
 input_names = g.getInputDescription()
 graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(input_names, fo_indices, to_indices)
 _ = otv.View(graph)

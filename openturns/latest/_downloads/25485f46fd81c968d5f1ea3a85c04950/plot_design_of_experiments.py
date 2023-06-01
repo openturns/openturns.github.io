@@ -75,7 +75,8 @@ fig = otv.PlotDesign(sample, bounds)
 fig.set_size_inches(10, 10)
 
 # %%
-# We see that each column or row exactly contains one single point. This shows that a LHS design of experimens has good 1D projection properties, and, hence, is a good candidate for a space filling design.
+# We see that each column or row exactly contains one single point.
+# This shows that a LHS design of experiments has good 1D projection properties, and, hence, is a good candidate for a space filling design.
 
 # %%
 # Optimized LHS
@@ -117,7 +118,7 @@ bounds = distribution.getRange()
 sequence = ot.SobolSequence(dim)
 
 # %%
-samplesize = 2**5  # Sobol' sequences are in base 2
+samplesize = 2 ** 5  # Sobol' sequences are in base 2
 experiment = ot.LowDiscrepancyExperiment(sequence, distribution, samplesize, False)
 sample = experiment.generate()
 
@@ -125,12 +126,14 @@ sample = experiment.generate()
 samplesize
 
 # %%
-subdivisions = [2**2, 2**1]
+subdivisions = [2 ** 2, 2 ** 1]
 fig = otv.PlotDesign(sample, bounds, subdivisions)
 fig.set_size_inches(6, 6)
 
 # %%
-# We have elementary intervals in 2 dimensions, each having a volume equal to 1/8. Since there are 32 points, the Sobol' sequence is so that each elementary interval contains exactly 32/8 = 4 points. Notice that each elementary interval is closed on the left (or bottom) and open on the right (or top).
+# We have elementary intervals in 2 dimensions, each having a volume equal to 1/8.
+# Since there are 32 points, the Sobol' sequence is so that each elementary interval contains exactly 32/8 = 4 points.
+# Notice that each elementary interval is closed on the left (or bottom) and open on the right (or top).
 
 # %%
 # Halton low discrepancy sequence
@@ -146,7 +149,7 @@ sequence = ot.HaltonSequence(dim)
 
 # %%
 # Halton sequence uses prime numbers 2 and 3 in two dimensions.
-samplesize = 2**2 * 3**2
+samplesize = 2 ** 2 * 3 ** 2
 experiment = ot.LowDiscrepancyExperiment(sequence, distribution, samplesize, False)
 sample = experiment.generate()
 
@@ -154,9 +157,11 @@ sample = experiment.generate()
 samplesize
 
 # %%
-subdivisions = [2**2, 3]
+subdivisions = [2 ** 2, 3]
 fig = otv.PlotDesign(sample, bounds, subdivisions)
 fig.set_size_inches(6, 6)
 
 # %%
-# We have elementary intervals in 2 dimensions, each having a volume equal to 1/12. Since there are 36 points, the Halton sequence is so that each elementary interval contains exactly 36/12 = 3 points. Notice that each elementary interval is closed on the left (or bottom) and open on the right (or top).
+# We have elementary intervals in 2 dimensions, each having a volume equal to 1/12.
+# Since there are 36 points, the Halton sequence is so that each elementary interval contains exactly 36/12 = 3 points.
+# Notice that each elementary interval is closed on the left (or bottom) and open on the right (or top).

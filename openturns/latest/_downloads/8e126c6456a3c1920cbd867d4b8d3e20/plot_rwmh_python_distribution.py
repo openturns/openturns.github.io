@@ -3,11 +3,13 @@ Posterior sampling using a PythonDistribution
 =============================================
 """
 # %%
-# In this example we are going to show how to do Bayesian inference using the :class:`~openturns.RandomWalkMetropolisHastings` algorithm in a statistical model defined through a :class:`~openturns.PythonDistribution`.
+# In this example we are going to show how to do Bayesian inference using the :class:`~openturns.RandomWalkMetropolisHastings` algorithm
+# in a statistical model defined through a :class:`~openturns.PythonDistribution`.
 #
 # This method is illustrated on a simple lifetime study test-case, which involves censored data, as described hereafter.
 #
-# In the following, we assume that the lifetime :math:`T_i` of an industrial component follows the Weibull distribution :math:`\mathcal W(\alpha, \beta)`, with CDF  given by :math:`F(t|\alpha,\beta)= 1 - e^{-\left( \frac{t}{\beta} \right)^\alpha}`.
+# In the following, we assume that the lifetime :math:`T_i` of an industrial component follows the Weibull distribution :math:`\mathcal W(\alpha, \beta)`,
+# with CDF given by :math:`F(t|\alpha,\beta)= 1 - e^{-\left( \frac{t}{\beta} \right)^\alpha}`.
 #
 # Our goal is to estimate the model parameters :math:`\alpha, \beta` based on
 # a dataset of recorded failures :math:`(t_1, \ldots, t_n),` some of which
@@ -26,14 +28,16 @@ Posterior sampling using a PythonDistribution
 # .. math::
 #   \mathcal L(t_i | f_i=0, \alpha, \beta) = e^{-\left( \frac{t_i}{\beta} \right)^\alpha}.
 #
-# Furthermore, assume that the prior information available on :math:`\alpha, \beta` is represented by independent prior laws, whose respective densities are denoted by :math:`\pi(\alpha)` and :math:`\pi(\beta).`
+# Furthermore, assume that the prior information available on :math:`\alpha, \beta` is represented by independent prior laws,
+# whose respective densities are denoted by :math:`\pi(\alpha)` and :math:`\pi(\beta).`
 #
 # The posterior distribution of :math:`(\alpha, \beta)` represents the update of the prior information on :math:`(\alpha, \beta)` given the dataset.
 # Its PDF is known up to a multiplicative constant:
 #
 #
 # .. math::
-#   \pi(\alpha, \beta | (t_1, f_1), \ldots, (t_n, f_n) ) \propto \pi(\alpha)\pi(\beta) \left(\frac{\alpha}{\beta}\right)^{\sum_i f_i} \left(\prod_{f_i = 1} \frac{t_i}{\beta}\right)^{\alpha-1} \exp\left[-\sum_{i=1}^n\left(\frac{t_i}{\beta}\right)^\alpha\right].
+#   \pi(\alpha, \beta | (t_1, f_1), \ldots, (t_n, f_n) ) \propto \pi(\alpha)\pi(\beta) \left(\frac{\alpha}{\beta}\right)^{\sum_i f_i}
+#   \left(\prod_{f_i = 1} \frac{t_i}{\beta}\right)^{\alpha-1} \exp\left[-\sum_{i=1}^n\left(\frac{t_i}{\beta}\right)^\alpha\right].
 #
 # The :class:`~openturns.RandomWalkMetropolisHastings` class can be used to sample from the posterior distribution. It relies on the following objects:
 #
@@ -162,13 +166,14 @@ prior.setDescription(["beta", "alpha"])
 initialState = [a_beta / b_beta, 0.5 * (alpha_max - alpha_min)]
 
 # %%
-# For our random walk proposal distributions, we choose normal steps, with standard deviation equal to roughly :math:`10\%` of the prior range (for the uniform prior) or standard deviation (for the normal prior).
+# For our random walk proposal distributions, we choose normal steps, with standard deviation equal to roughly :math:`10\%` of the prior range (for the uniform prior)
+# or standard deviation (for the normal prior).
 #
 
 # %%
 
 proposal = []
-proposal.append(ot.Normal(0.0, 0.1 * np.sqrt(a_beta / b_beta**2)))
+proposal.append(ot.Normal(0.0, 0.1 * np.sqrt(a_beta / b_beta ** 2)))
 proposal.append(ot.Normal(0.0, 0.1 * (alpha_max - alpha_min)))
 proposal = ot.ComposedDistribution(proposal)
 

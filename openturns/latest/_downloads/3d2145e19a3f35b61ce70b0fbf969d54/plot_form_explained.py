@@ -19,7 +19,7 @@ import numpy as np
 # Position of the problem
 # -----------------------
 #
-# We consider a bivariate random vector :math:`X = (X_1, X_2)` with the following independent marginals :
+# We consider a bivariate random vector :math:`X = (X_1, X_2)` with the following independent marginals:
 #
 # - an exponential distribution with parameter :math:`\lambda=1`, :math:`X_1 \sim \mathcal{E}(1.0)` ;
 # - a standard unit gaussian :math:`X_2 \sim \mathcal{N}(0,1)`.
@@ -34,7 +34,7 @@ distX = ot.ComposedDistribution([distX1, distX2])
 
 
 # %%
-# We can draw the bidimensional PDF of the distribution `distX` over :math:`[0,-10] \times [10,10]` :
+# We can draw the bidimensional PDF of the distribution `distX` over :math:`[0,-10] \times [10,10]`:
 ot.ResourceMap.SetAsUnsignedInteger("Contour-DefaultLevelsNumber", 8)
 graphPDF = distX.drawPDF([0, -10], [10, 10])
 graphPDF.setTitle(r"2D-PDF of the input variables $(X_1, X_2)$")
@@ -45,7 +45,8 @@ view = otv.View(graphPDF)
 
 
 # %%
-# We consider the model :math:`f : (x_1, x_2) \mapsto x_1 x_2` which maps the random input vector :math:`X` to the output variable :math:`Y=f(X) \in \mathbb{R}`. We also draw the isolines of the model `f`.
+# We consider the model :math:`f : (x_1, x_2) \mapsto x_1 x_2` which maps the random input vector :math:`X` to the output variable :math:`Y=f(X) \in \mathbb{R}`.
+# We also draw the isolines of the model `f`.
 #
 f = ot.SymbolicFunction(["x1", "x2"], ["x1 * x2"])
 graphModel = f.draw([0.0, -10.0], [10.0, 10.0])
@@ -56,7 +57,8 @@ view = otv.View(graphModel)
 
 
 # %%
-# We want to estimate the probability :math:`P_f` of the output variable to be greater than a prescribed threshold :math:`s=10` : this is the failure event. This probability is simply expressed as an integral :
+# We want to estimate the probability :math:`P_f` of the output variable to be greater than a prescribed threshold :math:`s=10` : this is the failure event.
+# This probability is simply expressed as an integral:
 #
 # .. math::
 #
@@ -110,7 +112,9 @@ graphPDF.setLegendPosition("bottomright")
 view = otv.View(graphPDF)
 
 # %%
-# From the previous figure we observe that in the failure domain the PDF takes small (and even very small) values. Consequently the probability of the failure, the integral :math:`P_f` is also expected to be small. The FORM/SORM methods estimate this kind of integral.
+# From the previous figure we observe that in the failure domain the PDF takes small (and even very small) values.
+# Consequently the probability of the failure, the integral :math:`P_f` is also expected to be small.
+# The FORM/SORM methods estimate this kind of integral.
 #
 
 # %%
@@ -280,7 +284,7 @@ print("Design point in standard space : ", designPointStandardSpace)
 
 
 # %%
-# We can get the Hasofer index with the `getHasoferReliabilityIndex` method which is the distance of the design point to the origin :
+# We can get the Hasofer index with the `getHasoferReliabilityIndex` method which is the distance of the design point to the origin:
 betaHL = result.getHasoferReliabilityIndex()
 print("Hasofer index : ", betaHL)
 
@@ -386,7 +390,9 @@ print("value of the hessian of the failure boundary at u0 = ", d2u0[0, 0, 0])
 #
 x = np.linspace(1.1, 5.0, 100)
 parabola = (
-    failureBoundaryStandardSpace(u0)[0] + du0[0, 0] * (x - u0) + 0.5 * d2u0[0, 0, 0] * (x - u0) ** 2
+    failureBoundaryStandardSpace(u0)[0]
+    + du0[0, 0] * (x - u0)
+    + 0.5 * d2u0[0, 0, 0] * (x - u0) ** 2
 )
 curveParabola = ot.Curve(x, parabola, r"$\mathcal{P}_{u_0}$ (SORM)")
 curveParabola.setLineStyle("dashed")
@@ -404,7 +410,7 @@ view = otv.View(graphStandardSpace)
 #
 #    \kappa(x_0) = \frac{g''(x_0)}{(1+[g'(x_0)]^2)^{3/2}}.
 #
-# For the oscilating parabola of concern we use the gradient and hessian previously computed :
+# For the oscillating parabola of concern we use the gradient and hessian previously computed :
 #
 curvature = (d2u0[0, 0, 0]) / (1 + (du0[0, 0]) ** 2) ** (3 / 2)
 print("Curvature (analytic formula) = ", curvature)
@@ -426,7 +432,8 @@ print("Curvature (estimated) = ", resultSORM.getSortedCurvatures()[1])
 
 
 # %%
-# Once the curvature is obtained there are several ways of approximating the failure probability :math:`P_f`. OpenTURNS implements the Breitung, Hohenbichler and Tvedt estimates.
+# Once the curvature is obtained there are several ways of approximating the failure probability :math:`P_f`.
+# The library implements the Breitung, Hohenbichler and Tvedt estimates.
 #
 # For instance, the Breitung approximation gives
 #
@@ -451,3 +458,7 @@ print("Probability of failure (SORM Tvedt) Pf = ", pfTvedt)
 # %%
 # Display all figures
 otv.View.ShowAll()
+
+# %%
+# Reset default settings
+ot.ResourceMap.Reload()

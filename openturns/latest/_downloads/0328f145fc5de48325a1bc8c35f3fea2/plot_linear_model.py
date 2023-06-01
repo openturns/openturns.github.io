@@ -73,7 +73,8 @@ analysis = ot.LinearModelAnalysis(result)
 print(analysis)
 
 # %%
-# The results seem to indicate that the linear hypothesis can be accepted. Indeed, the `R-Squared` value is nearly `1`. Furthermore, the adjusted value, which takes into account the data set size and the number of hyperparameters, is similar to `R-Squared`.
+# The results seem to indicate that the linear hypothesis can be accepted. Indeed, the `R-Squared` value is nearly `1`.
+# Furthermore, the adjusted value, which takes into account the data set size and the number of hyperparameters, is similar to `R-Squared`.
 #
 # We can also notice that the `Fisher-Snedecor` and `Student` p-values detailed above are lower than 1%. This ensures an acceptable quality of the linear model.
 
@@ -108,7 +109,7 @@ view = viewer.View(graph)
 # %%
 # In this case, the two distributions are very close: there is no obvious outlier.
 #
-# Cook's distance measures the impact of every invidual data point on the linear regression, and can be plotted as follows:
+# Cook's distance measures the impact of every individual data point on the linear regression, and can be plotted as follows:
 
 # %%
 graph = analysis.drawCookDistance()

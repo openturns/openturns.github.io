@@ -195,7 +195,8 @@ linkFunction = ot.ParametricFunction(fullModel, [0], [np.nan])
 print(linkFunction)
 
 # %%
-# Define the value of the reference values of the :math:`\vect\theta` parameter. In the Bayesian framework, this is called the mean of the *prior* Gaussian distribution. In the data assimilation framework, this is called the *background*.
+# Define the value of the reference values of the :math:`\vect\theta` parameter.
+# In the Bayesian framework, this is called the mean of the *prior* Gaussian distribution. In the data assimilation framework, this is called the *background*.
 
 # %%
 KsInitial = 20.0
@@ -214,9 +215,9 @@ sigmaZm = 1.0
 
 # %%
 parameterPriorCovariance = ot.CovarianceMatrix(paramDim)
-parameterPriorCovariance[0, 0] = sigmaKs**2
-parameterPriorCovariance[1, 1] = sigmaZv**2
-parameterPriorCovariance[2, 2] = sigmaZm**2
+parameterPriorCovariance[0, 0] = sigmaKs ** 2
+parameterPriorCovariance[1, 1] = sigmaZv ** 2
+parameterPriorCovariance[2, 2] = sigmaZm ** 2
 
 # %%
 # Define the prior distribution :math:`\pi(\vect\theta)` of the parameter :math:`\vect\theta`
@@ -228,7 +229,9 @@ prior.setDescription(["Ks", "Zv", "Zm"])
 # %%
 # Define the distribution of observations :math:`\vect{y} | \vect{z}` conditional on model predictions.
 #
-# Note that its parameter dimension is the one of :math:`\vect{z}`, so the model must be adjusted accordingly. In other words, the input argument of the `setParameter` method of the conditional distribution must be equal to the dimension of the output of the `model`. Hence, we do not have to set the actual parameters: only the type of distribution is used.
+# Note that its parameter dimension is the one of :math:`\vect{z}`, so the model must be adjusted accordingly.
+# In other words, the input argument of the `setParameter` method of the conditional distribution must be equal to the dimension of the output of the `model`.
+# Hence, we do not have to set the actual parameters: only the type of distribution is used.
 
 # %%
 conditional = ot.Normal()
@@ -253,13 +256,6 @@ mh_coll = [
 for mh in mh_coll:
     mh.setLikelihood(conditional, Hobs, linkFunction, Qobs)
 sampler = ot.Gibbs(mh_coll)
-
-# %%
-# Tuning of the Gibbs algorithm.
-
-# %%
-sampler.setThinning(1)
-sampler.setBurnIn(200)
 
 # %%
 # Generate a sample from the posterior distribution of :math:`\vect \theta`.

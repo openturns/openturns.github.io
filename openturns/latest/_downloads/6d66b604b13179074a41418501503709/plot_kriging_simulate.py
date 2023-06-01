@@ -41,7 +41,10 @@ Kriging : generate trajectories from a metamodel
 # Creation of the metamodel
 # -------------------------
 #
-# We begin by defining the function `g` as a symbolic function. Then we define the `x_train` variable which contains the inputs of the design of experiments of the training step. Then we compute the `y_train` corresponding outputs. The variable `n_train` is the size of the training design of experiments.
+# We begin by defining the function `g` as a symbolic function.
+# Then we define the `x_train` variable which contains the inputs of the design of experiments of the training step.
+# Then we compute the `y_train` corresponding outputs.
+# The variable `n_train` is the size of the training design of experiments.
 
 # %%
 import openturns as ot
@@ -60,7 +63,9 @@ n_train = len(x_train)
 n_train
 
 # %%
-# In order to compare the function and its metamodel, we use a test (i.e. validation) design of experiments made of a regular grid of 100 points from 0 to 12. Then we convert this grid into a `Sample` and we compute the outputs of the function on this sample.
+# In order to compare the function and its metamodel, we use a test (i.e. validation) design of experiments
+# made of a regular grid of 100 points from 0 to 12.
+# Then we convert this grid into a `Sample` and we compute the outputs of the function on this sample.
 
 # %%
 xmin = 0.0
@@ -117,7 +122,8 @@ krigingResult = algo.getResult()
 krigingResult
 
 # %%
-# We observe that the `scale` and `amplitude` hyper-parameters have been optimized by the `run` method. Then we get the metamodel with `getMetaModel` and evaluate the outputs of the metamodel on the test design of experiments.
+# We observe that the `scale` and `amplitude` hyper-parameters have been optimized by the `run` method.
+# Then we get the metamodel with `getMetaModel` and evaluate the outputs of the metamodel on the test design of experiments.
 
 # %%
 krigeageMM = krigingResult.getMetaModel()
@@ -151,7 +157,11 @@ view = viewer.View(graph)
 # Simulate new trajectories
 # -------------------------
 #
-# In order to generate new trajectories of the conditioned gaussian process, we couild technically use the `KrigingRandomVector` class, because it provides the `getSample` method that we need. However, the `KrigingRandomVector` class was more specifically designed to create a `RandomVector` so that it can feed, for example, a function which has a field as input argument.
+# In order to generate new trajectories of the conditioned gaussian process,
+# we could technically use the `KrigingRandomVector` class, because it provides
+# the `getSample` method that we need.
+# However, the `KrigingRandomVector` class was more specifically designed to
+# create a `RandomVector` so that it can feed, for example, a function which has a field as input argument.
 #
 # This is why we use the `ConditionedGaussianProcess`, which provides a `Process`.
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Create a polynomial chaos for the Ishigami function: a quick start guide to polynomial chaos &#8212; OpenTURNS 1.20 documentation</title>
+    <title>Create a polynomial chaos for the Ishigami function: a quick start guide to polynomial chaos &#8212; OpenTURNS 1.21rc1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -65,7 +65,7 @@
         <li class="right" >
           <a href="plot_functional_chaos.html" title="Create a polynomial chaos metamodel"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
@@ -82,6 +82,7 @@
 <li><a class="reference internal" href="#define-the-model">Define the model</a></li>
 <li><a class="reference internal" href="#draw-the-function">Draw the function</a></li>
 <li><a class="reference internal" href="#create-the-polynomial-chaos-model">Create the polynomial chaos model</a></li>
+<li><a class="reference internal" href="#compute-mean-and-variance">Compute mean and variance</a></li>
 <li><a class="reference internal" href="#compute-and-print-sobol-indices">Compute and print Sobol’ indices</a></li>
 <li><a class="reference internal" href="#computing-the-accuracy">Computing the accuracy</a></li>
 </ul>
@@ -126,19 +127,21 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-ishigami-py"><span class="std std-ref">here</span></a>
+<p><a class="reference internal" href="#sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-ishigami-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="create-a-polynomial-chaos-for-the-ishigami-function-a-quick-start-guide-to-polynomial-chaos">
 <span id="sphx-glr-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-ishigami-py"></span><h1>Create a polynomial chaos for the Ishigami function: a quick start guide to polynomial chaos<a class="headerlink" href="#create-a-polynomial-chaos-for-the-ishigami-function-a-quick-start-guide-to-polynomial-chaos" title="Permalink to this heading">¶</a></h1>
-<p>In this example, we create a polynomial chaos for the <a class="reference internal" href="../../usecases/use_case_ishigami.html#use-case-ishigami"><span class="std std-ref">Ishigami function</span></a>. We create a sparse polynomial with maximum total degree equal to 8.</p>
+<p>In this example, we create a polynomial chaos for the
+<a class="reference internal" href="../../usecases/use_case_ishigami.html#use-case-ishigami"><span class="std std-ref">Ishigami function</span></a>.
+We create a sparse polynomial with maximum total degree equal to 8
+using the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosAlgorithm.html#openturns.FunctionalChaosAlgorithm" title="openturns.FunctionalChaosAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm</span></code></a> class.</p>
 <section id="define-the-model">
 <h2>Define the model<a class="headerlink" href="#define-the-model" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">ishigami_function</span>
 <span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
+<span class="kn">import</span> <span class="nn">math</span>
 
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 <span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -148,7 +151,7 @@ to download the full example code</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">im</span> <span class="o">=</span> <span class="n">ishigami_function</span><span class="o">.</span><span class="n">IshigamiModel</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The <cite>IshigamiModel</cite> data class contains the input distribution <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc4OS4zMzcwMTRwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgODkuMzM3MDE0IDExLjk1NTE2OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzEtNDknIGQ9J00yLjUwMjYxNS01LjA3Njk2MUMyLjUwMjYxNS01LjI5MjE1NCAyLjQ4NjY3NS01LjMwMDEyNSAyLjI3MTQ4Mi01LjMwMDEyNUMxLjk0NDcwNy00Ljk4MTMyIDEuNTIyMjkxLTQuNzkwMDM3IC43NjUxMzEtNC43OTAwMzdWLTQuNTI3MDI0Qy45ODAzMjQtNC41MjcwMjQgMS40MTA3MS00LjUyNzAyNCAxLjg3Mjk3Ni00Ljc0MjIxN1YtLjY1MzU0OUMxLjg3Mjk3Ni0uMzU4NjU1IDEuODQ5MDY2LS4yNjMwMTQgMS4wOTE5MDUtLjI2MzAxNEguODEyOTUxVjBDMS4xMzk3MjYtLjAyMzkxIDEuODI1MTU2LS4wMjM5MSAyLjE4MzgxMS0uMDIzOTFTMy4yMzU4NjYtLjAyMzkxIDMuNTYyNjQgMFYtLjI2MzAxNEgzLjI4MzY4NkMyLjUyNjUyNi0uMjYzMDE0IDIuNTAyNjE1LS4zNTg2NTUgMi41MDI2MTUtLjY1MzU0OVYtNS4wNzY5NjFaJy8+CjxwYXRoIGlkPSdnMS01MCcgZD0nTTIuMjQ3NTcyLTEuNjI1OTAzQzIuMzc1MDkzLTEuNzQ1NDU1IDIuNzA5ODM4LTIuMDA4NDY4IDIuODM3MzYtMi4xMjAwNUMzLjMzMTUwNy0yLjU3NDM0NiAzLjgwMTc0My0zLjAxMjcwMiAzLjgwMTc0My0zLjczNzk4M0MzLjgwMTc0My00LjY4NjQyNiAzLjAwNDczMi01LjMwMDEyNSAyLjAwODQ2OC01LjMwMDEyNUMxLjA1MjA1NS01LjMwMDEyNSAuNDIyNDE2LTQuNTc0ODQ0IC40MjI0MTYtMy44NjU1MDRDLjQyMjQxNi0zLjQ3NDk2OSAuNzMzMjUtMy40MTkxNzggLjg0NDgzMi0zLjQxOTE3OEMxLjAxMjIwNC0zLjQxOTE3OCAxLjI1OTI3OC0zLjUzODczIDEuMjU5Mjc4LTMuODQxNTk0QzEuMjU5Mjc4LTQuMjU2MDQgLjg2MDc3Mi00LjI1NjA0IC43NjUxMzEtNC4yNTYwNEMuOTk2MjY0LTQuODM3ODU4IDEuNTMwMjYyLTUuMDM3MTExIDEuOTIwNzk3LTUuMDM3MTExQzIuNjYyMDE3LTUuMDM3MTExIDMuMDQ0NTgzLTQuNDA3NDcyIDMuMDQ0NTgzLTMuNzM3OTgzQzMuMDQ0NTgzLTIuOTA5MDkxIDIuNDYyNzY1LTIuMzAzMzYyIDEuNTIyMjkxLTEuMzM4OTc5TC41MTgwNTctLjMwMjg2NEMuNDIyNDE2LS4yMTUxOTMgLjQyMjQxNi0uMTk5MjUzIC40MjI0MTYgMEgzLjU3MDYxTDMuODAxNzQzLTEuNDI2NjVIMy41NTQ2N0MzLjUzMDc2LTEuMjY3MjQ4IDMuNDY2OTk5LS44Njg3NDIgMy4zNzEzNTctLjcxNzMxQzMuMzIzNTM3LS42NTM1NDkgMi43MTc4MDgtLjY1MzU0OSAyLjU5MDI4Ni0uNjUzNTQ5SDEuMTcxNjA2TDIuMjQ3NTcyLTEuNjI1OTAzWicvPgo8cGF0aCBpZD0nZzEtNTEnIGQ9J00yLjAxNjQzOC0yLjY2MjAxN0MyLjY0NjA3Ny0yLjY2MjAxNyAzLjA0NDU4My0yLjE5OTc1MSAzLjA0NDU4My0xLjM2Mjg4OUMzLjA0NDU4My0uMzY2NjI1IDIuNDc4NzA1LS4wNzE3MzEgMi4wNTYyODktLjA3MTczMUMxLjYxNzkzMy0uMDcxNzMxIDEuMDIwMTc0LS4yMzExMzMgLjc0MTIyLS42NTM1NDlDMS4wMjgxNDQtLjY1MzU0OSAxLjIyNzM5Ny0uODM2ODYyIDEuMjI3Mzk3LTEuMDk5ODc1QzEuMjI3Mzk3LTEuMzU0OTE5IDEuMDQ0MDg1LTEuNTM4MjMyIC43ODkwNDEtMS41MzgyMzJDLjU3Mzg0OC0xLjUzODIzMiAuMzUwNjg1LTEuNDAyNzQgLjM1MDY4NS0xLjA4MzkzNUMuMzUwNjg1LS4zMjY3NzUgMS4xNjM2MzYgLjE2NzM3MiAyLjA3MjIyOSAuMTY3MzcyQzMuMTMyMjU0IC4xNjczNzIgMy44NzM0NzQtLjU2NTg3OCAzLjg3MzQ3NC0xLjM2Mjg4OUMzLjg3MzQ3NC0yLjAyNDQwOCAzLjM0NzQ0Ny0yLjYzMDEzNyAyLjUzNDQ5Ni0yLjgwNTQ3OUMzLjE2NDEzNC0zLjAyODY0MyAzLjYzNDM3MS0zLjU3MDYxIDMuNjM0MzcxLTQuMjA4MjE5UzIuOTE3MDYxLTUuMzAwMTI1IDIuMDg4MTY5LTUuMzAwMTI1QzEuMjM1MzY3LTUuMzAwMTI1IC41ODk3ODgtNC44Mzc4NTggLjU4OTc4OC00LjIzMjEzQy41ODk3ODgtMy45MzcyMzUgLjc4OTA0MS0zLjgwOTcxNCAuOTk2MjY0LTMuODA5NzE0QzEuMjQzMzM3LTMuODA5NzE0IDEuNDAyNzQtMy45ODUwNTYgMS40MDI3NC00LjIxNjE4OUMxLjQwMjc0LTQuNTExMDgzIDEuMTQ3Njk2LTQuNjIyNjY1IC45NzIzNTQtNC42MzA2MzVDMS4zMDcwOTgtNS4wNjg5OTEgMS45MjA3OTctNS4wOTI5MDIgMi4wNjQyNTktNS4wOTI5MDJDMi4yNzE0ODItNS4wOTI5MDIgMi44NzcyMS01LjAyOTE0MSAyLjg3NzIxLTQuMjA4MjE5QzIuODc3MjEtMy42NTAzMTEgMi42NDYwNzctMy4zMTU1NjcgMi41MzQ0OTYtMy4xODgwNDVDMi4yOTUzOTItMi45NDA5NzEgMi4xMTIwOC0yLjkyNTAzMSAxLjYyNTkwMy0yLjg5MzE1MUMxLjQ3NDQ3MS0yLjg4NTE4MSAxLjQxMDcxLTIuODc3MjEgMS40MTA3MS0yLjc3MzU5OUMxLjQxMDcxLTIuNjYyMDE3IDEuNDgyNDQxLTIuNjYyMDE3IDEuNjE3OTMzLTIuNjYyMDE3SDIuMDE2NDM4WicvPgo8cGF0aCBpZD0nZzItNDAnIGQ9J00zLjg4NTQzIDIuOTA1MTA2QzMuODg1NDMgMi44NjkyNCAzLjg4NTQzIDIuODQ1MzMgMy42ODIxOTIgMi42NDIwOTJDMi40ODY2NzUgMS40MzQ2MiAxLjgxNzE4Ni0uNTM3OTgzIDEuODE3MTg2LTIuOTc2ODM3QzEuODE3MTg2LTUuMjk2MTM5IDIuMzc5MDc4LTcuMjkyNjUzIDMuNzY1ODc4LTguNzAzMzYyQzMuODg1NDMtOC44MTA5NTkgMy44ODU0My04LjgzNDg2OSAzLjg4NTQzLTguODcwNzM1QzMuODg1NDMtOC45NDI0NjYgMy44MjU2NTQtOC45NjYzNzYgMy43Nzc4MzMtOC45NjYzNzZDMy42MjI0MTYtOC45NjYzNzYgMi42NDIwOTItOC4xMDU2MDQgMi4wNTYyODktNi45MzM5OThDMS40NDY1NzUtNS43MjY1MjYgMS4xNzE2MDYtNC40NDczMjMgMS4xNzE2MDYtMi45NzY4MzdDMS4xNzE2MDYtMS45MTI4MjcgMS4zMzg5NzktLjQ5MDE2MiAxLjk2MDY0OCAuNzg5MDQxQzIuNjY2MDAyIDIuMjIzNjYxIDMuNjQ2MzI2IDMuMDAwNzQ3IDMuNzc3ODMzIDMuMDAwNzQ3QzMuODI1NjU0IDMuMDAwNzQ3IDMuODg1NDMgMi45NzY4MzcgMy44ODU0MyAyLjkwNTEwNlonLz4KPHBhdGggaWQ9J2cyLTQxJyBkPSdNMy4zNzEzNTctMi45NzY4MzdDMy4zNzEzNTctMy44ODU0MyAzLjI1MTgwNi01LjM2Nzg3IDIuNTgyMzE2LTYuNzU0NjdDMS44NzY5NjEtOC4xODkyOSAuODk2NjM4LTguOTY2Mzc2IC43NjUxMzEtOC45NjYzNzZDLjcxNzMxLTguOTY2Mzc2IC42NTc1MzQtOC45NDI0NjYgLjY1NzUzNC04Ljg3MDczNUMuNjU3NTM0LTguODM0ODY5IC42NTc1MzQtOC44MTA5NTkgLjg2MDc3Mi04LjYwNzcyMUMyLjA1NjI4OS03LjQwMDI0OSAyLjcyNTc3OC01LjQyNzY0NiAyLjcyNTc3OC0yLjk4ODc5MkMyLjcyNTc3OC0uNjY5NDg5IDIuMTYzODg1IDEuMzI3MDI0IC43NzcwODYgMi43Mzc3MzNDLjY1NzUzNCAyLjg0NTMzIC42NTc1MzQgMi44NjkyNCAuNjU3NTM0IDIuOTA1MTA2Qy42NTc1MzQgMi45NzY4MzcgLjcxNzMxIDMuMDAwNzQ3IC43NjUxMzEgMy4wMDA3NDdDLjkyMDU0OCAzLjAwMDc0NyAxLjkwMDg3MiAyLjEzOTk3NSAyLjQ4NjY3NSAuOTY4MzY5QzMuMDk2Mzg5LS4yNTEwNTkgMy4zNzEzNTctMS41NDIyMTcgMy4zNzEzNTctMi45NzY4MzdaJy8+CjxwYXRoIGlkPSdnMi02MScgZD0nTTguMDY5NzM4LTMuODczNDc0QzguMjM3MTExLTMuODczNDc0IDguNDUyMzA0LTMuODczNDc0IDguNDUyMzA0LTQuMDg4NjY3QzguNDUyMzA0LTQuMzE1ODE2IDguMjQ5MDY2LTQuMzE1ODE2IDguMDY5NzM4LTQuMzE1ODE2SDEuMDI4MTQ0Qy44NjA3NzItNC4zMTU4MTYgLjY0NTU3OS00LjMxNTgxNiAuNjQ1NTc5LTQuMTAwNjIzQy42NDU1NzktMy44NzM0NzQgLjg0ODgxNy0zLjg3MzQ3NCAxLjAyODE0NC0zLjg3MzQ3NEg4LjA2OTczOFpNOC4wNjk3MzgtMS42NDk4MTNDOC4yMzcxMTEtMS42NDk4MTMgOC40NTIzMDQtMS42NDk4MTMgOC40NTIzMDQtMS44NjUwMDZDOC40NTIzMDQtMi4wOTIxNTQgOC4yNDkwNjYtMi4wOTIxNTQgOC4wNjk3MzgtMi4wOTIxNTRIMS4wMjgxNDRDLjg2MDc3Mi0yLjA5MjE1NCAuNjQ1NTc5LTIuMDkyMTU0IC42NDU1NzktMS44NzY5NjFDLjY0NTU3OS0xLjY0OTgxMyAuODQ4ODE3LTEuNjQ5ODEzIDEuMDI4MTQ0LTEuNjQ5ODEzSDguMDY5NzM4WicvPgo8cGF0aCBpZD0nZzAtNTknIGQ9J00yLjMzMTI1OCAuMDQ3ODIxQzIuMzMxMjU4LS42NDU1NzkgMi4xMDQxMS0xLjE1OTY1MSAxLjYxMzk0OC0xLjE1OTY1MUMxLjIzMTM4Mi0xLjE1OTY1MSAxLjA0MDEtLjg0ODgxNyAxLjA0MDEtLjU4NTgwM1MxLjIxOTQyNyAwIDEuNjI1OTAzIDBDMS43ODEzMiAwIDEuOTEyODI3LS4wNDc4MjEgMi4wMjA0MjMtLjE1NTQxN0MyLjA0NDMzNC0uMTc5MzI4IDIuMDU2Mjg5LS4xNzkzMjggMi4wNjgyNDQtLjE3OTMyOEMyLjA5MjE1NC0uMTc5MzI4IDIuMDkyMTU0LS4wMTE5NTUgMi4wOTIxNTQgLjA0NzgyMUMyLjA5MjE1NCAuNDQyMzQxIDIuMDIwNDIzIDEuMjE5NDI3IDEuMzI3MDI0IDEuOTk2NTEzQzEuMTk1NTE3IDIuMTM5OTc1IDEuMTk1NTE3IDIuMTYzODg1IDEuMTk1NTE3IDIuMTg3Nzk2QzEuMTk1NTE3IDIuMjQ3NTcyIDEuMjU1MjkzIDIuMzA3MzQ3IDEuMzE1MDY4IDIuMzA3MzQ3QzEuNDEwNzEgMi4zMDczNDcgMi4zMzEyNTggMS40MjI2NjUgMi4zMzEyNTggLjA0NzgyMVonLz4KPHBhdGggaWQ9J2cwLTg4JyBkPSdNNS42Nzg3MDUtNC44NTM3OThMNC41NTQ5MTktNy40NzE5OEM0LjcxMDMzNi03Ljc1ODkwNCA1LjA2ODk5MS03LjgwNjcyNSA1LjIxMjQ1My03LjgxODY4QzUuMjg0MTg0LTcuODE4NjggNS40MTU2OTEtNy44MzA2MzUgNS40MTU2OTEtOC4wMzM4NzNDNS40MTU2OTEtOC4xNjUzOCA1LjMwODA5NS04LjE2NTM4IDUuMjM2MzY0LTguMTY1MzhDNS4wMzMxMjYtOC4xNjUzOCA0Ljc5NDAyMi04LjE0MTQ2OSA0LjU5MDc4NS04LjE0MTQ2OUgzLjg5NzM4NUMzLjE2ODEyLTguMTQxNDY5IDIuNjQyMDkyLTguMTY1MzggMi42MzAxMzctOC4xNjUzOEMyLjUzNDQ5Ni04LjE2NTM4IDIuNDE0OTQ0LTguMTY1MzggMi40MTQ5NDQtNy45MzgyMzJDMi40MTQ5NDQtNy44MTg2OCAyLjUyMjU0LTcuODE4NjggMi42Nzc5NTgtNy44MTg2OEMzLjM3MTM1Ny03LjgxODY4IDMuNDE5MTc4LTcuNjk5MTI4IDMuNTM4NzMtNy40MTIyMDRMNC45NjEzOTUtNC4wODg2NjdMMi4zNjcxMjMtMS4zMTUwNjhDMS45MzY3MzctLjg0ODgxNyAxLjQyMjY2NS0uMzk0NTIxIC41Mzc5ODMtLjM0NjdDLjM5NDUyMS0uMzM0NzQ1IC4yOTg4NzktLjMzNDc0NSAuMjk4ODc5LS4xMTk1NTJDLjI5ODg3OS0uMDgzNjg2IC4zMTA4MzQgMCAuNDQyMzQxIDBDLjYwOTcxNCAwIC43ODkwNDEtLjAyMzkxIC45NTY0MTMtLjAyMzkxSDEuNTE4MzA2QzEuOTAwODcyLS4wMjM5MSAyLjMxOTMwMyAwIDIuNjg5OTEzIDBDMi43NzM1OTkgMCAyLjkxNzA2MSAwIDIuOTE3MDYxLS4yMTUxOTNDMi45MTcwNjEtLjMzNDc0NSAyLjgzMzM3NS0uMzQ2NyAyLjc2MTY0NC0uMzQ2N0MyLjUyMjU0LS4zNzA2MSAyLjM2NzEyMy0uNTAyMTE3IDIuMzY3MTIzLS42OTM0QzIuMzY3MTIzLS44OTY2MzggMi41MTA1ODUtMS4wNDAxIDIuODU3Mjg1LTEuMzk4NzU1TDMuOTIxMjk1LTIuNTU4NDA2QzQuMTg0MzA5LTIuODMzMzc1IDQuODE3OTMzLTMuNTI2Nzc1IDUuMDgwOTQ2LTMuNzg5Nzg4TDYuMzM2MjM5LS44NDg4MTdDNi4zNDgxOTQtLjgyNDkwNyA2LjM5NjAxNS0uNzA1MzU1IDYuMzk2MDE1LS42OTM0QzYuMzk2MDE1LS41ODU4MDMgNi4xMzMwMDEtLjM3MDYxIDUuNzUwNDM2LS4zNDY3QzUuNjc4NzA1LS4zNDY3IDUuNTQ3MTk4LS4zMzQ3NDUgNS41NDcxOTgtLjExOTU1MkM1LjU0NzE5OCAwIDUuNjY2NzUgMCA1LjcyNjUyNiAwQzUuOTI5NzYzIDAgNi4xNjg4NjctLjAyMzkxIDYuMzcyMTA1LS4wMjM5MUg3LjY4NzE3M0M3LjkwMjM2Ni0uMDIzOTEgOC4xMjk1MTQgMCA4LjMzMjc1MiAwQzguNDE2NDM4IDAgOC41NDc5NDUgMCA4LjU0Nzk0NS0uMjI3MTQ4QzguNTQ3OTQ1LS4zNDY3IDguNDI4Mzk0LS4zNDY3IDguMzIwNzk3LS4zNDY3QzcuNjAzNDg3LS4zNTg2NTUgNy41Nzk1NzctLjQxODQzMSA3LjM3NjMzOS0uODYwNzcyTDUuNzk4MjU3LTQuNTY2ODc0TDcuMzE2NTYzLTYuMTkyNzc3QzcuNDM2MTE1LTYuMzEyMzI5IDcuNzExMDgzLTYuNjExMjA4IDcuODE4NjgtNi43MzA3NkM4LjMzMjc1Mi03LjI2ODc0MiA4LjgxMDk1OS03Ljc1ODkwNCA5Ljc3OTMyOC03LjgxODY4QzkuODk4ODc5LTcuODMwNjM1IDEwLjAxODQzMS03LjgzMDYzNSAxMC4wMTg0MzEtOC4wMzM4NzNDMTAuMDE4NDMxLTguMTY1MzggOS45MTA4MzQtOC4xNjUzOCA5Ljg2MzAxNC04LjE2NTM4QzkuNjk1NjQxLTguMTY1MzggOS41MTYzMTQtOC4xNDE0NjkgOS4zNDg5NDEtOC4xNDE0NjlIOC43OTkwMDRDOC40MTY0MzgtOC4xNDE0NjkgNy45OTgwMDctOC4xNjUzOCA3LjYyNzM5Ny04LjE2NTM4QzcuNTQzNzExLTguMTY1MzggNy40MDAyNDktOC4xNjUzOCA3LjQwMDI0OS03Ljk1MDE4N0M3LjQwMDI0OS03LjgzMDYzNSA3LjQ4MzkzNS03LjgxODY4IDcuNTU1NjY2LTcuODE4NjhDNy43NDY5NDktNy43OTQ3NyA3Ljk1MDE4Ny03LjY5OTEyOCA3Ljk1MDE4Ny03LjQ3MTk4TDcuOTM4MjMyLTcuNDQ4MDdDNy45MjYyNzYtNy4zNjQzODQgNy45MDIzNjYtNy4yNDQ4MzIgNy43NzA4NTktNy4xMDEzN0w1LjY3ODcwNS00Ljg1Mzc5OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04OCcvPgo8dXNlIHg9JzEzLjk3NTkzNycgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTYxJy8+Cjx1c2UgeD0nMjYuNDAxNDE4JyB5PScwJyB4bGluazpocmVmPScjZzItNDAnLz4KPHVzZSB4PSczMC45NTM3NDQnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04OCcvPgo8dXNlIHg9JzQwLjY2ODk3MScgeT0nMS43OTMyNjMnIHhsaW5rOmhyZWY9JyNnMS00OScvPgo8dXNlIHg9JzQ1LjQwMTI4NicgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTU5Jy8+Cjx1c2UgeD0nNTAuNjQ1NDQ1JyB5PScwJyB4bGluazpocmVmPScjZzAtODgnLz4KPHVzZSB4PSc2MC4zNjA2NzInIHk9JzEuNzkzMjYzJyB4bGluazpocmVmPScjZzEtNTAnLz4KPHVzZSB4PSc2NS4wOTI5ODcnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC01OScvPgo8dXNlIHg9JzcwLjMzNzE0NicgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTg4Jy8+Cjx1c2UgeD0nODAuMDUyMzczJyB5PScxLjc5MzI2MycgeGxpbms6aHJlZj0nI2cxLTUxJy8+Cjx1c2UgeD0nODQuNzg0Njg4JyB5PScwJyB4bGluazpocmVmPScjZzItNDEnLz4KPC9nPgo8L3N2Zz4=" alt="X=(X_1, X_2, X_3)"/> in <cite>im.distributionX</cite> and the Ishigami function in <cite>im.model</cite>.
+<p>The <cite>IshigamiModel</cite> data class contains the input distribution <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMC4zIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzkwLjkzNTg4cHQnIGhlaWdodD0nMTEuOTU1MTY4cHQnIHZpZXdCb3g9JzAgLTguOTY2Mzc2IDkwLjkzNTg4IDExLjk1NTE2OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzItNDknIGQ9J00yLjUwMjYxNS01LjA3Njk2MUMyLjUwMjYxNS01LjI5MjE1NCAyLjQ4NjY3NS01LjMwMDEyNSAyLjI3MTQ4Mi01LjMwMDEyNUMxLjk0NDcwNy00Ljk4MTMyIDEuNTIyMjkxLTQuNzkwMDM3IC43NjUxMzEtNC43OTAwMzdWLTQuNTI3MDI0Qy45ODAzMjQtNC41MjcwMjQgMS40MTA3MS00LjUyNzAyNCAxLjg3Mjk3Ni00Ljc0MjIxN1YtLjY1MzU0OUMxLjg3Mjk3Ni0uMzU4NjU1IDEuODQ5MDY2LS4yNjMwMTQgMS4wOTE5MDUtLjI2MzAxNEguODEyOTUxVjBDMS4xMzk3MjYtLjAyMzkxIDEuODI1MTU2LS4wMjM5MSAyLjE4MzgxMS0uMDIzOTFTMy4yMzU4NjYtLjAyMzkxIDMuNTYyNjQgMFYtLjI2MzAxNEgzLjI4MzY4NkMyLjUyNjUyNi0uMjYzMDE0IDIuNTAyNjE1LS4zNTg2NTUgMi41MDI2MTUtLjY1MzU0OVYtNS4wNzY5NjFaJy8+CjxwYXRoIGlkPSdnMi01MCcgZD0nTTIuMjQ3NTcyLTEuNjI1OTAzQzIuMzc1MDkzLTEuNzQ1NDU1IDIuNzA5ODM4LTIuMDA4NDY4IDIuODM3MzYtMi4xMjAwNUMzLjMzMTUwNy0yLjU3NDM0NiAzLjgwMTc0My0zLjAxMjcwMiAzLjgwMTc0My0zLjczNzk4M0MzLjgwMTc0My00LjY4NjQyNiAzLjAwNDczMi01LjMwMDEyNSAyLjAwODQ2OC01LjMwMDEyNUMxLjA1MjA1NS01LjMwMDEyNSAuNDIyNDE2LTQuNTc0ODQ0IC40MjI0MTYtMy44NjU1MDRDLjQyMjQxNi0zLjQ3NDk2OSAuNzMzMjUtMy40MTkxNzggLjg0NDgzMi0zLjQxOTE3OEMxLjAxMjIwNC0zLjQxOTE3OCAxLjI1OTI3OC0zLjUzODczIDEuMjU5Mjc4LTMuODQxNTk0QzEuMjU5Mjc4LTQuMjU2MDQgLjg2MDc3Mi00LjI1NjA0IC43NjUxMzEtNC4yNTYwNEMuOTk2MjY0LTQuODM3ODU4IDEuNTMwMjYyLTUuMDM3MTExIDEuOTIwNzk3LTUuMDM3MTExQzIuNjYyMDE3LTUuMDM3MTExIDMuMDQ0NTgzLTQuNDA3NDcyIDMuMDQ0NTgzLTMuNzM3OTgzQzMuMDQ0NTgzLTIuOTA5MDkxIDIuNDYyNzY1LTIuMzAzMzYyIDEuNTIyMjkxLTEuMzM4OTc5TC41MTgwNTctLjMwMjg2NEMuNDIyNDE2LS4yMTUxOTMgLjQyMjQxNi0uMTk5MjUzIC40MjI0MTYgMEgzLjU3MDYxTDMuODAxNzQzLTEuNDI2NjVIMy41NTQ2N0MzLjUzMDc2LTEuMjY3MjQ4IDMuNDY2OTk5LS44Njg3NDIgMy4zNzEzNTctLjcxNzMxQzMuMzIzNTM3LS42NTM1NDkgMi43MTc4MDgtLjY1MzU0OSAyLjU5MDI4Ni0uNjUzNTQ5SDEuMTcxNjA2TDIuMjQ3NTcyLTEuNjI1OTAzWicvPgo8cGF0aCBpZD0nZzItNTEnIGQ9J00yLjAxNjQzOC0yLjY2MjAxN0MyLjY0NjA3Ny0yLjY2MjAxNyAzLjA0NDU4My0yLjE5OTc1MSAzLjA0NDU4My0xLjM2Mjg4OUMzLjA0NDU4My0uMzY2NjI1IDIuNDc4NzA1LS4wNzE3MzEgMi4wNTYyODktLjA3MTczMUMxLjYxNzkzMy0uMDcxNzMxIDEuMDIwMTc0LS4yMzExMzMgLjc0MTIyLS42NTM1NDlDMS4wMjgxNDQtLjY1MzU0OSAxLjIyNzM5Ny0uODM2ODYyIDEuMjI3Mzk3LTEuMDk5ODc1QzEuMjI3Mzk3LTEuMzU0OTE5IDEuMDQ0MDg1LTEuNTM4MjMyIC43ODkwNDEtMS41MzgyMzJDLjU3Mzg0OC0xLjUzODIzMiAuMzUwNjg1LTEuNDAyNzQgLjM1MDY4NS0xLjA4MzkzNUMuMzUwNjg1LS4zMjY3NzUgMS4xNjM2MzYgLjE2NzM3MiAyLjA3MjIyOSAuMTY3MzcyQzMuMTMyMjU0IC4xNjczNzIgMy44NzM0NzQtLjU2NTg3OCAzLjg3MzQ3NC0xLjM2Mjg4OUMzLjg3MzQ3NC0yLjAyNDQwOCAzLjM0NzQ0Ny0yLjYzMDEzNyAyLjUzNDQ5Ni0yLjgwNTQ3OUMzLjE2NDEzNC0zLjAyODY0MyAzLjYzNDM3MS0zLjU3MDYxIDMuNjM0MzcxLTQuMjA4MjE5UzIuOTE3MDYxLTUuMzAwMTI1IDIuMDg4MTY5LTUuMzAwMTI1QzEuMjM1MzY3LTUuMzAwMTI1IC41ODk3ODgtNC44Mzc4NTggLjU4OTc4OC00LjIzMjEzQy41ODk3ODgtMy45MzcyMzUgLjc4OTA0MS0zLjgwOTcxNCAuOTk2MjY0LTMuODA5NzE0QzEuMjQzMzM3LTMuODA5NzE0IDEuNDAyNzQtMy45ODUwNTYgMS40MDI3NC00LjIxNjE4OUMxLjQwMjc0LTQuNTExMDgzIDEuMTQ3Njk2LTQuNjIyNjY1IC45NzIzNTQtNC42MzA2MzVDMS4zMDcwOTgtNS4wNjg5OTEgMS45MjA3OTctNS4wOTI5MDIgMi4wNjQyNTktNS4wOTI5MDJDMi4yNzE0ODItNS4wOTI5MDIgMi44NzcyMS01LjAyOTE0MSAyLjg3NzIxLTQuMjA4MjE5QzIuODc3MjEtMy42NTAzMTEgMi42NDYwNzctMy4zMTU1NjcgMi41MzQ0OTYtMy4xODgwNDVDMi4yOTUzOTItMi45NDA5NzEgMi4xMTIwOC0yLjkyNTAzMSAxLjYyNTkwMy0yLjg5MzE1MUMxLjQ3NDQ3MS0yLjg4NTE4MSAxLjQxMDcxLTIuODc3MjEgMS40MTA3MS0yLjc3MzU5OUMxLjQxMDcxLTIuNjYyMDE3IDEuNDgyNDQxLTIuNjYyMDE3IDEuNjE3OTMzLTIuNjYyMDE3SDIuMDE2NDM4WicvPgo8cGF0aCBpZD0nZzEtNTknIGQ9J00yLjMzMTI1OCAuMDQ3ODIxQzIuMzMxMjU4LS42NDU1NzkgMi4xMDQxMS0xLjE1OTY1MSAxLjYxMzk0OC0xLjE1OTY1MUMxLjIzMTM4Mi0xLjE1OTY1MSAxLjA0MDEtLjg0ODgxNyAxLjA0MDEtLjU4NTgwM1MxLjIxOTQyNyAwIDEuNjI1OTAzIDBDMS43ODEzMiAwIDEuOTEyODI3LS4wNDc4MjEgMi4wMjA0MjMtLjE1NTQxN0MyLjA0NDMzNC0uMTc5MzI4IDIuMDU2Mjg5LS4xNzkzMjggMi4wNjgyNDQtLjE3OTMyOEMyLjA5MjE1NC0uMTc5MzI4IDIuMDkyMTU0LS4wMTE5NTUgMi4wOTIxNTQgLjA0NzgyMUMyLjA5MjE1NCAuNDQyMzQxIDIuMDIwNDIzIDEuMjE5NDI3IDEuMzI3MDI0IDEuOTk2NTEzQzEuMTk1NTE3IDIuMTM5OTc1IDEuMTk1NTE3IDIuMTYzODg1IDEuMTk1NTE3IDIuMTg3Nzk2QzEuMTk1NTE3IDIuMjQ3NTcyIDEuMjU1MjkzIDIuMzA3MzQ3IDEuMzE1MDY4IDIuMzA3MzQ3QzEuNDEwNzEgMi4zMDczNDcgMi4zMzEyNTggMS40MjI2NjUgMi4zMzEyNTggLjA0NzgyMVonLz4KPHBhdGggaWQ9J2cxLTg4JyBkPSdNNS42Nzg3MDUtNC44NTM3OThMNC41NTQ5MTktNy40NzE5OEM0LjcxMDMzNi03Ljc1ODkwNCA1LjA2ODk5MS03LjgwNjcyNSA1LjIxMjQ1My03LjgxODY4QzUuMjg0MTg0LTcuODE4NjggNS40MTU2OTEtNy44MzA2MzUgNS40MTU2OTEtOC4wMzM4NzNDNS40MTU2OTEtOC4xNjUzOCA1LjMwODA5NS04LjE2NTM4IDUuMjM2MzY0LTguMTY1MzhDNS4wMzMxMjYtOC4xNjUzOCA0Ljc5NDAyMi04LjE0MTQ2OSA0LjU5MDc4NS04LjE0MTQ2OUgzLjg5NzM4NUMzLjE2ODEyLTguMTQxNDY5IDIuNjQyMDkyLTguMTY1MzggMi42MzAxMzctOC4xNjUzOEMyLjUzNDQ5Ni04LjE2NTM4IDIuNDE0OTQ0LTguMTY1MzggMi40MTQ5NDQtNy45MzgyMzJDMi40MTQ5NDQtNy44MTg2OCAyLjUyMjU0LTcuODE4NjggMi42Nzc5NTgtNy44MTg2OEMzLjM3MTM1Ny03LjgxODY4IDMuNDE5MTc4LTcuNjk5MTI4IDMuNTM4NzMtNy40MTIyMDRMNC45NjEzOTUtNC4wODg2NjdMMi4zNjcxMjMtMS4zMTUwNjhDMS45MzY3MzctLjg0ODgxNyAxLjQyMjY2NS0uMzk0NTIxIC41Mzc5ODMtLjM0NjdDLjM5NDUyMS0uMzM0NzQ1IC4yOTg4NzktLjMzNDc0NSAuMjk4ODc5LS4xMTk1NTJDLjI5ODg3OS0uMDgzNjg2IC4zMTA4MzQgMCAuNDQyMzQxIDBDLjYwOTcxNCAwIC43ODkwNDEtLjAyMzkxIC45NTY0MTMtLjAyMzkxSDEuNTE4MzA2QzEuOTAwODcyLS4wMjM5MSAyLjMxOTMwMyAwIDIuNjg5OTEzIDBDMi43NzM1OTkgMCAyLjkxNzA2MSAwIDIuOTE3MDYxLS4yMTUxOTNDMi45MTcwNjEtLjMzNDc0NSAyLjgzMzM3NS0uMzQ2NyAyLjc2MTY0NC0uMzQ2N0MyLjUyMjU0LS4zNzA2MSAyLjM2NzEyMy0uNTAyMTE3IDIuMzY3MTIzLS42OTM0QzIuMzY3MTIzLS44OTY2MzggMi41MTA1ODUtMS4wNDAxIDIuODU3Mjg1LTEuMzk4NzU1TDMuOTIxMjk1LTIuNTU4NDA2QzQuMTg0MzA5LTIuODMzMzc1IDQuODE3OTMzLTMuNTI2Nzc1IDUuMDgwOTQ2LTMuNzg5Nzg4TDYuMzM2MjM5LS44NDg4MTdDNi4zNDgxOTQtLjgyNDkwNyA2LjM5NjAxNS0uNzA1MzU1IDYuMzk2MDE1LS42OTM0QzYuMzk2MDE1LS41ODU4MDMgNi4xMzMwMDEtLjM3MDYxIDUuNzUwNDM2LS4zNDY3QzUuNjc4NzA1LS4zNDY3IDUuNTQ3MTk4LS4zMzQ3NDUgNS41NDcxOTgtLjExOTU1MkM1LjU0NzE5OCAwIDUuNjY2NzUgMCA1LjcyNjUyNiAwQzUuOTI5NzYzIDAgNi4xNjg4NjctLjAyMzkxIDYuMzcyMTA1LS4wMjM5MUg3LjY4NzE3M0M3LjkwMjM2Ni0uMDIzOTEgOC4xMjk1MTQgMCA4LjMzMjc1MiAwQzguNDE2NDM4IDAgOC41NDc5NDUgMCA4LjU0Nzk0NS0uMjI3MTQ4QzguNTQ3OTQ1LS4zNDY3IDguNDI4Mzk0LS4zNDY3IDguMzIwNzk3LS4zNDY3QzcuNjAzNDg3LS4zNTg2NTUgNy41Nzk1NzctLjQxODQzMSA3LjM3NjMzOS0uODYwNzcyTDUuNzk4MjU3LTQuNTY2ODc0TDcuMzE2NTYzLTYuMTkyNzc3QzcuNDM2MTE1LTYuMzEyMzI5IDcuNzExMDgzLTYuNjExMjA4IDcuODE4NjgtNi43MzA3NkM4LjMzMjc1Mi03LjI2ODc0MiA4LjgxMDk1OS03Ljc1ODkwNCA5Ljc3OTMyOC03LjgxODY4QzkuODk4ODc5LTcuODMwNjM1IDEwLjAxODQzMS03LjgzMDYzNSAxMC4wMTg0MzEtOC4wMzM4NzNDMTAuMDE4NDMxLTguMTY1MzggOS45MTA4MzQtOC4xNjUzOCA5Ljg2MzAxNC04LjE2NTM4QzkuNjk1NjQxLTguMTY1MzggOS41MTYzMTQtOC4xNDE0NjkgOS4zNDg5NDEtOC4xNDE0NjlIOC43OTkwMDRDOC40MTY0MzgtOC4xNDE0NjkgNy45OTgwMDctOC4xNjUzOCA3LjYyNzM5Ny04LjE2NTM4QzcuNTQzNzExLTguMTY1MzggNy40MDAyNDktOC4xNjUzOCA3LjQwMDI0OS03Ljk1MDE4N0M3LjQwMDI0OS03LjgzMDYzNSA3LjQ4MzkzNS03LjgxODY4IDcuNTU1NjY2LTcuODE4NjhDNy43NDY5NDktNy43OTQ3NyA3Ljk1MDE4Ny03LjY5OTEyOCA3Ljk1MDE4Ny03LjQ3MTk4TDcuOTM4MjMyLTcuNDQ4MDdDNy45MjYyNzYtNy4zNjQzODQgNy45MDIzNjYtNy4yNDQ4MzIgNy43NzA4NTktNy4xMDEzN0w1LjY3ODcwNS00Ljg1Mzc5OFonLz4KPHBhdGggaWQ9J2czLTQwJyBkPSdNMy44ODU0MyAyLjkwNTEwNkMzLjg4NTQzIDIuODY5MjQgMy44ODU0MyAyLjg0NTMzIDMuNjgyMTkyIDIuNjQyMDkyQzIuNDg2Njc1IDEuNDM0NjIgMS44MTcxODYtLjUzNzk4MyAxLjgxNzE4Ni0yLjk3NjgzN0MxLjgxNzE4Ni01LjI5NjEzOSAyLjM3OTA3OC03LjI5MjY1MyAzLjc2NTg3OC04LjcwMzM2MkMzLjg4NTQzLTguODEwOTU5IDMuODg1NDMtOC44MzQ4NjkgMy44ODU0My04Ljg3MDczNUMzLjg4NTQzLTguOTQyNDY2IDMuODI1NjU0LTguOTY2Mzc2IDMuNzc3ODMzLTguOTY2Mzc2QzMuNjIyNDE2LTguOTY2Mzc2IDIuNjQyMDkyLTguMTA1NjA0IDIuMDU2Mjg5LTYuOTMzOTk4QzEuNDQ2NTc1LTUuNzI2NTI2IDEuMTcxNjA2LTQuNDQ3MzIzIDEuMTcxNjA2LTIuOTc2ODM3QzEuMTcxNjA2LTEuOTEyODI3IDEuMzM4OTc5LS40OTAxNjIgMS45NjA2NDggLjc4OTA0MUMyLjY2NjAwMiAyLjIyMzY2MSAzLjY0NjMyNiAzLjAwMDc0NyAzLjc3NzgzMyAzLjAwMDc0N0MzLjgyNTY1NCAzLjAwMDc0NyAzLjg4NTQzIDIuOTc2ODM3IDMuODg1NDMgMi45MDUxMDZaJy8+CjxwYXRoIGlkPSdnMy00MScgZD0nTTMuMzcxMzU3LTIuOTc2ODM3QzMuMzcxMzU3LTMuODg1NDMgMy4yNTE4MDYtNS4zNjc4NyAyLjU4MjMxNi02Ljc1NDY3QzEuODc2OTYxLTguMTg5MjkgLjg5NjYzOC04Ljk2NjM3NiAuNzY1MTMxLTguOTY2Mzc2Qy43MTczMS04Ljk2NjM3NiAuNjU3NTM0LTguOTQyNDY2IC42NTc1MzQtOC44NzA3MzVDLjY1NzUzNC04LjgzNDg2OSAuNjU3NTM0LTguODEwOTU5IC44NjA3NzItOC42MDc3MjFDMi4wNTYyODktNy40MDAyNDkgMi43MjU3NzgtNS40Mjc2NDYgMi43MjU3NzgtMi45ODg3OTJDMi43MjU3NzgtLjY2OTQ4OSAyLjE2Mzg4NSAxLjMyNzAyNCAuNzc3MDg2IDIuNzM3NzMzQy42NTc1MzQgMi44NDUzMyAuNjU3NTM0IDIuODY5MjQgLjY1NzUzNCAyLjkwNTEwNkMuNjU3NTM0IDIuOTc2ODM3IC43MTczMSAzLjAwMDc0NyAuNzY1MTMxIDMuMDAwNzQ3Qy45MjA1NDggMy4wMDA3NDcgMS45MDA4NzIgMi4xMzk5NzUgMi40ODY2NzUgLjk2ODM2OUMzLjA5NjM4OS0uMjUxMDU5IDMuMzcxMzU3LTEuNTQyMjE3IDMuMzcxMzU3LTIuOTc2ODM3WicvPgo8cGF0aCBpZD0nZzMtNjEnIGQ9J004LjA2OTczOC0zLjg3MzQ3NEM4LjIzNzExMS0zLjg3MzQ3NCA4LjQ1MjMwNC0zLjg3MzQ3NCA4LjQ1MjMwNC00LjA4ODY2N0M4LjQ1MjMwNC00LjMxNTgxNiA4LjI0OTA2Ni00LjMxNTgxNiA4LjA2OTczOC00LjMxNTgxNkgxLjAyODE0NEMuODYwNzcyLTQuMzE1ODE2IC42NDU1NzktNC4zMTU4MTYgLjY0NTU3OS00LjEwMDYyM0MuNjQ1NTc5LTMuODczNDc0IC44NDg4MTctMy44NzM0NzQgMS4wMjgxNDQtMy44NzM0NzRIOC4wNjk3MzhaTTguMDY5NzM4LTEuNjQ5ODEzQzguMjM3MTExLTEuNjQ5ODEzIDguNDUyMzA0LTEuNjQ5ODEzIDguNDUyMzA0LTEuODY1MDA2QzguNDUyMzA0LTIuMDkyMTU0IDguMjQ5MDY2LTIuMDkyMTU0IDguMDY5NzM4LTIuMDkyMTU0SDEuMDI4MTQ0Qy44NjA3NzItMi4wOTIxNTQgLjY0NTU3OS0yLjA5MjE1NCAuNjQ1NTc5LTEuODc2OTYxQy42NDU1NzktMS42NDk4MTMgLjg0ODgxNy0xLjY0OTgxMyAxLjAyODE0NC0xLjY0OTgxM0g4LjA2OTczOFonLz4KPHBhdGggaWQ9J2cwLTg4JyBkPSdNNi45NTc5MDgtNC43MjIyOTFMOC41MzU5OS02LjI3NjQ2M0w5LjI3NzIxLTcuMDI5NjM5QzkuNzU1NDE3LTcuNDgzOTM1IDkuODk4ODc5LTcuNjI3Mzk3IDExLjE0MjIxNy03LjYzOTM1MkMxMS4zNjkzNjUtNy42MzkzNTIgMTEuMzkzMjc1LTcuOTUwMTg3IDExLjM5MzI3NS03Ljk4NjA1MkMxMS4zOTMyNzUtOC4wNTc3ODMgMTEuMzQ1NDU1LTguMjAxMjQ1IDExLjE1NDE3Mi04LjIwMTI0NUMxMC43MzU3NDEtOC4yMDEyNDUgMTAuMjgxNDQ1LTguMTY1MzggOS44NTEwNTktOC4xNjUzOEM5LjUwNDM1OS04LjE2NTM4IDguNjQzNTg3LTguMjAxMjQ1IDguMjk2ODg3LTguMjAxMjQ1QzguMjAxMjQ1LTguMjAxMjQ1IDcuOTYyMTQyLTguMjAxMjQ1IDcuOTYyMTQyLTcuODY2NTAxQzcuOTYyMTQyLTcuNjUxMzA4IDguMTUzNDI1LTcuNjM5MzUyIDguMjYxMDIxLTcuNjM5MzUyQzguNjE5Njc2LTcuNjI3Mzk3IDguOTMwNTExLTcuNTMxNzU2IDguOTc4MzMxLTcuNTE5ODAxTDYuNjk0ODk0LTUuMjYwMjc0TDUuNTk1MDE5LTcuNTY3NjIxQzUuNzE0NTctNy41OTE1MzIgNi4wODUxODEtNy42MzkzNTIgNi4yODg0MTgtNy42MzkzNTJDNi40MTk5MjUtNy42MzkzNTIgNi42MzUxMTgtNy42MzkzNTIgNi42MzUxMTgtNy45NzQwOTdDNi42MzUxMTgtOC4xNDE0NjkgNi41Mjc1MjItOC4yMDEyNDUgNi4zNzIxMDUtOC4yMDEyNDVDNS45NjU2MjktOC4yMDEyNDUgNC45NjEzOTUtOC4xNjUzOCA0LjU1NDkxOS04LjE2NTM4QzQuMjc5OTUtOC4xNjUzOCA0LjAwNDk4MS04LjE3NzMzNSAzLjczMDAxMi04LjE3NzMzNVMzLjE2ODEyLTguMjAxMjQ1IDIuODkzMTUxLTguMjAxMjQ1QzIuNzg1NTU0LTguMjAxMjQ1IDIuNTU4NDA2LTguMjAxMjQ1IDIuNTU4NDA2LTcuODY2NTAxQzIuNTU4NDA2LTcuNjM5MzUyIDIuNzEzODIzLTcuNjM5MzUyIDMuMDQ4NTY4LTcuNjM5MzUyQzMuMjE1OTQtNy42MzkzNTIgMy4zNDc0NDctNy42MzkzNTIgMy41MTQ4MTktNy42MjczOTdDMy42ODIxOTItNy42MDM0ODcgMy42OTQxNDctNy41OTE1MzIgMy43NjU4NzgtNy40NDgwN0w1LjQxNTY5MS0zLjk5MzAyNkwyLjQxNDk0NC0xLjAyODE0NEMyLjE5OTc1MS0uODI0OTA3IDEuOTQ4NjkyLS41NzM4NDggLjg4NDY4Mi0uNTYxODkzQy42Njk0ODktLjU2MTg5MyAuNDY2MjUyLS41NjE4OTMgLjQ2NjI1Mi0uMjE1MTkzQy40NjYyNTItLjEzMTUwNyAuNTI2MDI3IDAgLjcwNTM1NSAwQy45OTIyNzkgMCAxLjcyMTU0NC0uMDM1ODY2IDIuMDA4NDY4LS4wMzU4NjZDMi4zNTUxNjgtLjAzNTg2NiAzLjIxNTk0IDAgMy41NjI2NCAwQzMuNjU4MjgxIDAgMy44OTczODUgMCAzLjg5NzM4NS0uMzQ2N0MzLjg5NzM4NS0uNTYxODkzIDMuNjgyMTkyLS41NjE4OTMgMy41ODY1NS0uNTYxODkzQzMuMzQ3NDQ3LS41NjE4OTMgMy4xMDgzNDQtLjU5Nzc1OCAyLjg4MTE5Ni0uNjgxNDQ1TDUuNjY2NzUtMy40NTUwNDRMNy4wMTc2ODQtLjYzMzYyNEM3LjAwNTcyOS0uNjMzNjI0IDYuNjExMjA4LS41NjE4OTMgNi4zMjQyODQtLjU2MTg5M0M2LjIwNDczMi0uNTYxODkzIDUuOTc3NTg0LS41NjE4OTMgNS45Nzc1ODQtLjIxNTE5M0M1Ljk3NzU4NC0uMTc5MzI4IDUuOTg5NTM5IDAgNi4yNDA1OTggMEM2LjY0NzA3MyAwIDcuNjYzMjYzLS4wMzU4NjYgOC4wNjk3MzgtLjAzNTg2NkM4LjM0NDcwNy0uMDM1ODY2IDguNjE5Njc2LS4wMjM5MSA4Ljg5NDY0NS0uMDIzOTFTOS40NTY1MzggMCA5LjczMTUwNyAwQzkuODI3MTQ4IDAgMTAuMDY2MjUyIDAgMTAuMDY2MjUyLS4zNDY3QzEwLjA2NjI1Mi0uNTYxODkzIDkuODc0OTY5LS41NjE4OTMgOS41ODgwNDUtLjU2MTg5M0M5LjQyMDY3Mi0uNTYxODkzIDkuMzAxMTIxLS41NjE4OTMgOS4xMjE3OTMtLjU3Mzg0OEM4Ljk0MjQ2Ni0uNTk3NzU4IDguOTMwNTExLS42MDk3MTQgOC44NDY4MjQtLjc2NTEzMUw2Ljk1NzkwOC00LjcyMjI5MVonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04OCcvPgo8dXNlIHg9JzE1LjU3NDgwNCcgeT0nMCcgeGxpbms6aHJlZj0nI2czLTYxJy8+Cjx1c2UgeD0nMjguMDAwMjg1JyB5PScwJyB4bGluazpocmVmPScjZzMtNDAnLz4KPHVzZSB4PSczMi41NTI2MScgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTg4Jy8+Cjx1c2UgeD0nNDIuMjY3ODM4JyB5PScxLjc5MzI2MycgeGxpbms6aHJlZj0nI2cyLTQ5Jy8+Cjx1c2UgeD0nNDcuMDAwMTUyJyB5PScwJyB4bGluazpocmVmPScjZzEtNTknLz4KPHVzZSB4PSc1Mi4yNDQzMTEnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS04OCcvPgo8dXNlIHg9JzYxLjk1OTUzOScgeT0nMS43OTMyNjMnIHhsaW5rOmhyZWY9JyNnMi01MCcvPgo8dXNlIHg9JzY2LjY5MTg1MycgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTU5Jy8+Cjx1c2UgeD0nNzEuOTM2MDEyJyB5PScwJyB4bGluazpocmVmPScjZzEtODgnLz4KPHVzZSB4PSc4MS42NTEyNCcgeT0nMS43OTMyNjMnIHhsaW5rOmhyZWY9JyNnMi01MScvPgo8dXNlIHg9Jzg2LjM4MzU1NCcgeT0nMCcgeGxpbms6aHJlZj0nI2czLTQxJy8+CjwvZz4KPC9zdmc+" alt="\vect{X}=(X_1, X_2, X_3)"/> in <cite>im.distributionX</cite> and the Ishigami function in <cite>im.model</cite>.
 We also have access to the input variable names with</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_names</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
 </pre></div>
@@ -157,40 +160,49 @@ We also have access to the input variable names with</p>
 <section id="draw-the-function">
 <h2>Draw the function<a class="headerlink" href="#draw-the-function" title="Permalink to this heading">¶</a></h2>
 <p>Create a training sample</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">inputSample</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">inputSample</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)</span>
 <span class="n">outputSample</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotXvsY</span><span class="p">(</span><span class="n">sampleX</span><span class="p">,</span> <span class="n">sampleY</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
-    <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
-
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotXvsY</span><span class="p">(</span><span class="n">sampleX</span><span class="p">,</span> <span class="n">sampleY</span><span class="p">):</span>
     <span class="n">dimX</span> <span class="o">=</span> <span class="n">sampleX</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-    <span class="n">inputdescr</span> <span class="o">=</span> <span class="n">sampleX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimX</span><span class="p">):</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dimX</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">inputdescr</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">sampleX</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">sampleY</span><span class="p">)</span>
-        <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
-        <span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
-    <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">dimY</span> <span class="o">=</span> <span class="n">sampleY</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+    <span class="n">descriptionX</span> <span class="o">=</span> <span class="n">sampleX</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+    <span class="n">descriptionY</span> <span class="o">=</span> <span class="n">sampleY</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GridLayout</span><span class="p">(</span><span class="n">dimY</span><span class="p">,</span> <span class="n">dimX</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimY</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimX</span><span class="p">):</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">descriptionX</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">descriptionY</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">sampleX</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">sampleY</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="n">descriptionY</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">dimY</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="n">descriptionX</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">grid</span><span class="o">.</span><span class="n">setGraph</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">grid</span>
 
 
-<span class="n">plotXvsY</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">plotXvsY</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)})</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_chaos_ishigami_001.png" srcset="../../_images/sphx_glr_plot_chaos_ishigami_001.png" alt="plot chaos ishigami" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">outputSample</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_chaos_ishigami_002.png" srcset="../../_images/sphx_glr_plot_chaos_ishigami_002.png" alt="y0 PDF" class = "sphx-glr-single-img"/><p>We see that the distribution of the output has two modes.</p>
+<img src="../../_images/sphx_glr_plot_chaos_ishigami_002.png" srcset="../../_images/sphx_glr_plot_chaos_ishigami_002.png" alt="y PDF" class = "sphx-glr-single-img"/><p>We see that the distribution of the output has two modes.</p>
 </section>
 <section id="create-the-polynomial-chaos-model">
 <h2>Create the polynomial chaos model<a class="headerlink" href="#create-the-polynomial-chaos-model" title="Permalink to this heading">¶</a></h2>
 <p>Create a training sample</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">inputTrain</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">inputTrain</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)</span>
 <span class="n">outputTrain</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputTrain</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -199,22 +211,206 @@ We also have access to the input variable names with</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosalgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Since the input distribution is known in our particular case, we instead create the multivariate basis from the distribution.</p>
+<p>Since the input distribution is known in our particular case, we instead create
+the multivariate basis from the distribution.
+We define the orthogonal basis used to expand the function.
+We see that each input has the uniform distribution, which corresponds to the
+Legendre polynomials.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">([</span><span class="n">im</span><span class="o">.</span><span class="n">X1</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">X2</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">X3</span><span class="p">])</span>
-<span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
+<span class="n">multivariateBasis</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<ul>
+  <li>dimension: 3</li>
+  <li>enumerate function: class=LinearEnumerateFunction dimension=3</li>
+</ul>
+
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Name</th>
+    <th>Distribution</th>
+    <th>Univariate polynomial</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>X1</td>
+    <td>Uniform</td>
+    <td>LegendreFactory</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>X2</td>
+    <td>Uniform</td>
+    <td>LegendreFactory</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>X3</td>
+    <td>Uniform</td>
+    <td>LegendreFactory</td>
+  </tr>
+</table>
+
+</div>
+<br />
+<br /><p>Then we create the sparse polynomial chaos expansion using regression and
+the LARS selection model method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
 <span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span><span class="n">selectionAlgorithm</span><span class="p">)</span>
 <span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">enumfunc</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
-<span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
-<span class="n">chaosalgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+<span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
+<span class="n">basisSize</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getBasisSizeFromTotalDegree</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+<span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">basisSize</span><span class="p">)</span>
+<span class="n">chaosAlgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
     <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosalgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">chaosalgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-<span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+<p>The coefficients of the polynomial expansion can then be estimated
+using the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosAlgorithm.html#openturns.FunctionalChaosAlgorithm.run" title="openturns.FunctionalChaosAlgorithm.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosAlgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosAlgorithm.html#openturns.FunctionalChaosAlgorithm.getResult" title="openturns.FunctionalChaosAlgorithm.getResult"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getResult()</span></code></a> method returns the
+result.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosResult</span> <span class="o">=</span> <span class="n">chaosAlgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The polynomial chaos result provides a pretty-print.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosResult</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<ul>
+  <li>input dimension: 3</li>
+  <li>output dimension: 1</li>
+  <li>distribution dimension: 3</li>
+  <li>transformation: 3 -> 3</li>
+  <li>inverse transformation: 3 -> 3</li>
+  <li>orthogonal basis dimension: 3</li>
+  <li>indices size: 21</li>
+  <li>relative errors: [9.08703e-06]</li>
+  <li>residuals: [0.00577149]</li>
+</ul>
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Multi-index</th>
+    <th>Coeff.</th>
+  </tr>
+  <tr>
+    <th>0</th>
+    <td>[0,0,0]</td>
+    <td>3.517248</td>
+  </tr>
+  <tr>
+    <th>1</th>
+    <td>[1,0,0]</td>
+    <td>1.622862</td>
+  </tr>
+  <tr>
+    <th>2</th>
+    <td>[0,0,1]</td>
+    <td>0.0009628309</td>
+  </tr>
+  <tr>
+    <th>3</th>
+    <td>[0,2,0]</td>
+    <td>-0.5898958</td>
+  </tr>
+  <tr>
+    <th>4</th>
+    <td>[3,0,0]</td>
+    <td>-1.288589</td>
+  </tr>
+  <tr>
+    <th>5</th>
+    <td>[1,0,2]</td>
+    <td>1.36247</td>
+  </tr>
+  <tr>
+    <th>6</th>
+    <td>[0,4,0]</td>
+    <td>-1.939777</td>
+  </tr>
+  <tr>
+    <th>7</th>
+    <td>[0,3,1]</td>
+    <td>0.0006953569</td>
+  </tr>
+  <tr>
+    <th>8</th>
+    <td>[5,0,0]</td>
+    <td>0.1883195</td>
+  </tr>
+  <tr>
+    <th>9</th>
+    <td>[3,0,2]</td>
+    <td>-1.081184</td>
+  </tr>
+  <tr>
+    <th>10</th>
+    <td>[1,0,4]</td>
+    <td>0.4106924</td>
+  </tr>
+  <tr>
+    <th>11</th>
+    <td>[0,6,0]</td>
+    <td>1.358584</td>
+  </tr>
+  <tr>
+    <th>12</th>
+    <td>[0,0,6]</td>
+    <td>-0.002370007</td>
+  </tr>
+  <tr>
+    <th>13</th>
+    <td>[5,0,2]</td>
+    <td>0.1602851</td>
+  </tr>
+  <tr>
+    <th>14</th>
+    <td>[3,0,4]</td>
+    <td>-0.319932</td>
+  </tr>
+  <tr>
+    <th>15</th>
+    <td>[1,4,2]</td>
+    <td>-0.02412582</td>
+  </tr>
+  <tr>
+    <th>16</th>
+    <td>[0,1,6]</td>
+    <td>-0.0001260937</td>
+  </tr>
+  <tr>
+    <th>17</th>
+    <td>[3,0,5]</td>
+    <td>0.02958038</td>
+  </tr>
+  <tr>
+    <th>18</th>
+    <td>[1,0,7]</td>
+    <td>-0.01846124</td>
+  </tr>
+  <tr>
+    <th>19</th>
+    <td>[0,8,0]</td>
+    <td>-0.3556474</td>
+  </tr>
+  <tr>
+    <th>20</th>
+    <td>[0,3,5]</td>
+    <td>-0.01987799</td>
+  </tr>
+</table>
+
+</div>
+<br />
+<br /><p>Get the metamodel.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metamodel</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>In order to validate the metamodel, we generate a test sample.</p>
@@ -232,99 +428,155 @@ We also have access to the input variable names with</p>
 <p>The Q2 is very close to 1: the metamodel is excellent.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Q2=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Q2</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_chaos_ishigami_003.png" srcset="../../_images/sphx_glr_plot_chaos_ishigami_003.png" alt="Q2=99.95%" class = "sphx-glr-single-img"/><p>The metamodel has a good predictivity, since the points are almost on the first diagonal.</p>
 </section>
+<section id="compute-mean-and-variance">
+<h2>Compute mean and variance<a class="headerlink" href="#compute-mean-and-variance" title="Permalink to this heading">¶</a></h2>
+<p>The mean and variance of a polynomial chaos expansion are computed
+using the coefficients of the expansion.
+This can be done using <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosRandomVector.html#openturns.FunctionalChaosRandomVector" title="openturns.FunctionalChaosRandomVector"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalChaosRandomVector</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">randomVector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosRandomVector</span><span class="p">(</span><span class="n">chaosResult</span><span class="p">)</span>
+<span class="n">mean</span> <span class="o">=</span> <span class="n">randomVector</span><span class="o">.</span><span class="n">getMean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean=&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+<span class="n">covarianceMatrix</span> <span class="o">=</span> <span class="n">randomVector</span><span class="o">.</span><span class="n">getCovariance</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Covariance=&quot;</span><span class="p">,</span> <span class="n">covarianceMatrix</span><span class="p">)</span>
+<span class="n">outputDimension</span> <span class="o">=</span> <span class="n">outputTrain</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">stdDev</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">outputDimension</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">outputDimension</span><span class="p">):</span>
+    <span class="n">stdDev</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">covarianceMatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard deviation=&quot;</span><span class="p">,</span> <span class="n">stdDev</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Mean= [3.51725]
+Covariance= [[ 13.7368 ]]
+Standard deviation= [3.70631]
+</pre></div>
+</div>
+</section>
 <section id="compute-and-print-sobol-indices">
 <h2>Compute and print Sobol’ indices<a class="headerlink" href="#compute-and-print-sobol-indices" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosSI</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">chaosSI</span><span class="p">)</span>
+<p>By default, printing the object will print the Sobol’ indices
+and the multi-indices ordered by decreasing part of variance.
+If a multi-index has a part of variance which is lower
+than some threshold, it is not printed.
+This threshold can be customized using the
+<cite>FunctionalChaosSobolIndices-VariancePartThreshold</cite> key of the
+<a class="reference internal" href="../../user_manual/_generated/openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chaosSI</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosSobolIndices</span><span class="p">(</span><span class="n">chaosResult</span><span class="p">)</span>
+<span class="n">chaosSI</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> input dimension: 3
- output dimension: 1
- basis size: 21
- mean: [3.51725]
- std-dev: [3.70631]
-------------------------------------------------------------
-Index   | Multi-indice                  | Part of variance
-------------------------------------------------------------
-      6 | [0,4,0]                       | 0.273917
-      1 | [1,0,0]                       | 0.191725
-      5 | [1,0,2]                       | 0.135136
-     11 | [0,6,0]                       | 0.134366
-      4 | [3,0,0]                       | 0.120877
-      9 | [3,0,2]                       | 0.0850971
-      3 | [0,2,0]                       | 0.0253318
-     10 | [1,0,4]                       | 0.0122786
-------------------------------------------------------------
+<div class="output_subarea output_html rendered_html output_result">
+<ul>
+  <li>input dimension: 3</li>
+  <li>output dimension: 1</li>
+  <li>basis size: 21</li>
+  <li>mean: [3.51725]</li>
+  <li>std-dev: [3.70631]</li>
+</ul>
+<table>
+  <tr>
+    <th>Input</th>
+    <th>Variable</th>
+    <th>Sobol' index</th>
+    <th>Total index</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>X1</td>
+    <td>0.315184</td>
+    <td>0.557148</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>X2</td>
+    <td>0.442823</td>
+    <td>0.442894</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>X3</td>
+    <td>0.000000</td>
+    <td>0.241993</td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Multi-index</th>
+    <th>Part of variance</th>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>[0,4,0]</td>
+    <td>0.273917</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>[1,0,0]</td>
+    <td>0.191725</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>[1,0,2]</td>
+    <td>0.135136</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>[0,6,0]</td>
+    <td>0.134366</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>[3,0,0]</td>
+    <td>0.120877</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>[3,0,2]</td>
+    <td>0.085097</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>[0,2,0]</td>
+    <td>0.025332</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>[1,0,4]</td>
+    <td>0.012279</td>
+  </tr>
+</table>
 
-
-------------------------------------------------------------
-Component | Sobol index            | Sobol total index
-------------------------------------------------------------
-        0 | 0.315184               | 0.557148
-        1 | 0.442823               | 0.442894
-        2 | 4.76385e-07            | 0.241993
-------------------------------------------------------------
-</pre></div>
 </div>
-<p>We notice the a coefficient with marginal degree equal to 6 has a significant impact on the output variance. Hence, we cannot get a satisfactory polynomial chaos with total degree less that 6.</p>
-<p>Draw Sobol’ indices</p>
+<br />
+<br /><p>We notice the a coefficient with marginal degree equal to 6 has a significant impact on the output variance. Hence, we cannot get a satisfactory polynomial chaos with total degree less that 6.</p>
+<p>Draw Sobol’ indices.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dim_input</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
 <span class="n">first_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim_input</span><span class="p">)]</span>
 <span class="n">total_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">chaosSI</span><span class="o">.</span><span class="n">getSobolTotalIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim_input</span><span class="p">)]</span>
 <span class="n">input_names</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getInputDescription</span><span class="p">()</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SobolIndicesAlgorithm</span><span class="o">.</span><span class="n">DrawSobolIndices</span><span class="p">(</span><span class="n">input_names</span><span class="p">,</span> <span class="n">first_order</span><span class="p">,</span> <span class="n">total_order</span><span class="p">)</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_chaos_ishigami_004.png" srcset="../../_images/sphx_glr_plot_chaos_ishigami_004.png" alt="Sobol' indices" class = "sphx-glr-single-img"/><p>The variable which has the largest impact on the output is, taking interactions into account, X1.</p>
-<p>We see that X1 has interactions with other variables, since the first order indice is less than the total order indice.</p>
-<p>At first order, X3 has no interactions with other variables since its first order indice is close to zero.</p>
+<img src="../../_images/sphx_glr_plot_chaos_ishigami_004.png" srcset="../../_images/sphx_glr_plot_chaos_ishigami_004.png" alt="Sobol' indices" class = "sphx-glr-single-img"/><p>The variable which has the largest impact on the output is, taking
+interactions into account, X1.
+We see that X1 has interactions with other variables, since the first
+order indice is less than the total order indice.
+At first order, X3 has no interactions with other variables since its
+first order indice is close to zero.</p>
 </section>
 <section id="computing-the-accuracy">
 <h2>Computing the accuracy<a class="headerlink" href="#computing-the-accuracy" title="Permalink to this heading">¶</a></h2>
-<p>The interesting point with the Ishigami function is that the exact Sobol’ indices are known. We can use that property in order to compute the absolute error on the Sobol’ indices for the polynomial chaos.</p>
-<p>The following function computes the exact mean, variance and Sobol’ indices for this function.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ishigamiSA</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Exact sensitivity indices of the Ishigami function for given a and b.&quot;&quot;&quot;</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">4</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">8</span> <span class="o">/</span> <span class="mi">18</span>
-    <span class="n">S1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">4</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">8</span> <span class="o">/</span> <span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span>
-    <span class="n">S2</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span>
-    <span class="n">S3</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">S13</span> <span class="o">=</span> <span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">8</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">9</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mi">25</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span>
-    <span class="n">exact</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;expectation&quot;</span><span class="p">:</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;variance&quot;</span><span class="p">:</span> <span class="n">var</span><span class="p">,</span>
-        <span class="s2">&quot;S1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">4</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mf">8.0</span> <span class="o">/</span> <span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span><span class="p">,</span>
-        <span class="s2">&quot;S2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span><span class="p">,</span>
-        <span class="s2">&quot;S3&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;S12&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;S23&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;S13&quot;</span><span class="p">:</span> <span class="n">S13</span><span class="p">,</span>
-        <span class="s2">&quot;S123&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;ST1&quot;</span><span class="p">:</span> <span class="n">S1</span> <span class="o">+</span> <span class="n">S13</span><span class="p">,</span>
-        <span class="s2">&quot;ST2&quot;</span><span class="p">:</span> <span class="n">S2</span><span class="p">,</span>
-        <span class="s2">&quot;ST3&quot;</span><span class="p">:</span> <span class="n">S3</span> <span class="o">+</span> <span class="n">S13</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">exact</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mf">7.0</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="n">exact</span> <span class="o">=</span> <span class="n">ishigamiSA</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-<span class="n">exact</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;expectation&#39;: 3.5, &#39;variance&#39;: 13.844587940719254, &#39;S1&#39;: 0.31390519114781146, &#39;S2&#39;: 0.4424111447900409, &#39;S3&#39;: 0, &#39;S12&#39;: 0, &#39;S23&#39;: 0, &#39;S13&#39;: 0.2436836640621477, &#39;S123&#39;: 0, &#39;ST1&#39;: 0.5575888552099592, &#39;ST2&#39;: 0.4424111447900409, &#39;ST3&#39;: 0.2436836640621477}
-</pre></div>
-</div>
+<p>The interesting point with the Ishigami function is that the exact Sobol’ indices are known.
+We can use that property in order to compute the absolute error on the Sobol’ indices for the polynomial chaos.</p>
 <p>To make the comparisons simpler, we gather the results into a list.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">S_exact</span> <span class="o">=</span> <span class="p">[</span><span class="n">exact</span><span class="p">[</span><span class="s2">&quot;S1&quot;</span><span class="p">],</span> <span class="n">exact</span><span class="p">[</span><span class="s2">&quot;S2&quot;</span><span class="p">],</span> <span class="n">exact</span><span class="p">[</span><span class="s2">&quot;S3&quot;</span><span class="p">]]</span>
-<span class="n">ST_exact</span> <span class="o">=</span> <span class="p">[</span><span class="n">exact</span><span class="p">[</span><span class="s2">&quot;ST1&quot;</span><span class="p">],</span> <span class="n">exact</span><span class="p">[</span><span class="s2">&quot;ST2&quot;</span><span class="p">],</span> <span class="n">exact</span><span class="p">[</span><span class="s2">&quot;ST3&quot;</span><span class="p">]]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">S_exact</span> <span class="o">=</span> <span class="p">[</span><span class="n">im</span><span class="o">.</span><span class="n">S1</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">S2</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">S3</span><span class="p">]</span>
+<span class="n">ST_exact</span> <span class="o">=</span> <span class="p">[</span><span class="n">im</span><span class="o">.</span><span class="n">ST1</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">ST2</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">ST3</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Then we perform a loop over the input dimension and compute the absolute error on the Sobol’ indices.</p>
@@ -335,8 +587,6 @@ Component | Sobol index            | Sobol total index
         <span class="s2">&quot;X</span><span class="si">%d</span><span class="s2">, Abs.Err. on S=</span><span class="si">%.1e</span><span class="s2">, Abs.Err. on ST=</span><span class="si">%.1e</span><span class="s2">&quot;</span>
         <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">absoluteErrorS</span><span class="p">,</span> <span class="n">absoluteErrorST</span><span class="p">)</span>
     <span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>X1, Abs.Err. on S=1.3e-03, Abs.Err. on ST=4.4e-04
@@ -345,7 +595,39 @@ X3, Abs.Err. on S=4.8e-07, Abs.Err. on ST=1.7e-03
 </pre></div>
 </div>
 <p>We see that the indices are correctly estimated with a low accuracy even if we have use only 100 function evaluations. This shows the good performance of the polynomial chaos in this case.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.416 seconds)</p>
+<p>We can compute the part of the variance of the output explained by each multi-index.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">partOfVariance</span> <span class="o">=</span> <span class="n">chaosSI</span><span class="o">.</span><span class="n">getPartOfVariance</span><span class="p">()</span>
+<span class="n">chaosResult</span> <span class="o">=</span> <span class="n">chaosSI</span><span class="o">.</span><span class="n">getFunctionalChaosResult</span><span class="p">()</span>
+<span class="n">orthogonalBasis</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getOrthogonalBasis</span><span class="p">()</span>
+<span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">orthogonalBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getIndices</span><span class="p">()</span>
+<span class="n">basisSize</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Index, global index, multi-index, coefficient&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">basisSize</span><span class="p">):</span>
+    <span class="n">globalIndex</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">multiIndex</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="p">(</span><span class="n">globalIndex</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">partOfVariance</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1.0e-3</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">globalIndex</span><span class="p">,</span> <span class="n">multiIndex</span><span class="p">,</span> <span class="n">partOfVariance</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Index, global index, multi-index, coefficient
+1, 1, [1,0,0], 0.1917
+3, 7, [0,2,0], 0.0253
+4, 10, [3,0,0], 0.1209
+5, 15, [1,0,2], 0.1351
+6, 30, [0,4,0], 0.2739
+8, 35, [5,0,0], 0.0026
+9, 40, [3,0,2], 0.0851
+10, 49, [1,0,4], 0.0123
+11, 77, [0,6,0], 0.1344
+13, 89, [5,0,2], 0.0019
+14, 98, [3,0,4], 0.0075
+19, 156, [0,8,0], 0.0092
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">view</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-ishigami-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/b5b388a4bd0d7f16d5f7321b11cbfdb8/plot_chaos_ishigami.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_chaos_ishigami.py</span></code></a></p>
@@ -376,7 +658,7 @@ X3, Abs.Err. on S=4.8e-07, Abs.Err. on ST=1.7e-03
         <li class="right" >
           <a href="plot_functional_chaos.html" title="Create a polynomial chaos metamodel"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21rc1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
@@ -385,8 +667,8 @@ X3, Abs.Err. on S=4.8e-07, Abs.Err. on ST=1.7e-03
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 09, 2022.
+        &#169; Copyright 2005-2023 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jun 01, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
   </body>

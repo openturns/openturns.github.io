@@ -5,7 +5,9 @@ Compare covariance models
 # %%
 # The main goal of this example is to briefly review the most important covariance models and compare them in terms of regularity.
 #
-# We first show how to define a covariance model, a temporal grid and a gaussian process. We first consider the squared exponential covariance model and show how the trajectories are sensitive to its parameters. We show how to define a trend. In the final section, we compare the trajectories from exponential and Matérn covariance models.
+# We first show how to define a covariance model, a temporal grid and a gaussian process.
+# We first consider the squared exponential covariance model and show how the trajectories are sensitive to its parameters.
+# We show how to define a trend. In the final section, we compare the trajectories from exponential and Matérn covariance models.
 
 # %%
 # References
@@ -17,7 +19,7 @@ Compare covariance models
 # The anisotropic squared exponential model
 # -----------------------------------------
 #
-# The `SquaredExponential` class allows one to define covariance models :
+# The :class:`~openturns.SquaredExponential` class allows one to define covariance models:
 #
 # * :math:`\sigma\in\mathbb{R}` is the amplitude parameter,
 # * :math:`\boldsymbol{\theta}\in\mathbb{R}^d` is the scale.
@@ -42,7 +44,8 @@ myModel = ot.SquaredExponential(scale, amplitude)
 # Gaussian processes
 # ------------------
 #
-# In order to create a `GaussianProcess`, we must have
+# In order to create a :class:`~openturns.GaussianProcess`, we must have:
+#
 # * a covariance model,
 # * a grid.
 #
@@ -158,7 +161,7 @@ view = viewer.View(graph)
 #   In other words, when :math:`\nu` increases, then the trajectories are more and more regular.
 #   The particular case :math:`\nu=1/2` is the exponential model.
 #   The most commonly used values are :math:`\nu=3/2` and :math:`\nu=5/2`, which produce trajectories that are, in terms of regularity, in between the squared exponential and the exponential models.
-# * `ExponentialModel`. The associated process is continus, but not differentiable.
+# * `ExponentialModel`. The associated process is continuous, but not differentiable.
 #
 
 # %%

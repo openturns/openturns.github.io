@@ -9,7 +9,7 @@ Time variant system reliability problem
 #
 # We consider the following limit state function, defined as the difference between a degrading resistance :math:`r(t) = R - bt`  and a time-varying load :math:`S(t)`:
 #
-# ..math:
+# .. math:
 #   \begin{align*}
 #   g(t)= r(t) - S(t) = R - bt - S(t) \quad \forall t \in [0,T]
 #   \end{align*}
@@ -20,14 +20,15 @@ Time variant system reliability problem
 #    g(t) \leq 0
 #
 #
-# which means that the resistance at :math:`t` is less thant the stress at :math:`t`.
+# which means that the resistance at :math:`t` is less than the stress at :math:`t`.
 #
 #
 # We propose the following probabilistic model:
 #
 # - :math:`R` is the initial resistance, and :math:`R \sim \mathcal{N}(\mu_R, \sigma_R)`;
 # - :math:`b` is the deterioration rate of the resistance; it is deterministic;
-# - :math:`S(\omega,t)` is the time-varying stress, which is modeled by a stationary Gaussian process of mean value :math:`\mu_S`, standard deviation :math:`\sigma_S` and a squared exponential covariance model :math:`C(s,t)`.
+# - :math:`S(\omega,t)` is the time-varying stress, which is modeled by a stationary Gaussian process of mean value :math:`\mu_S`,
+#   standard deviation :math:`\sigma_S` and a squared exponential covariance model :math:`C(s,t)`.
 #
 #
 # The outcrossing rate from the safe to the failure domain at instant :math:`t` is defined by:
@@ -59,10 +60,10 @@ Time variant system reliability problem
 # We define the bivariate random vector :math:`Y_t = (bt + S_t, b(t+\Delta t) + S_{t+\Delta t})`.
 # Here, :math:`Y_t` is a bivariate Normal random vector:
 #
-# - whith mean :math:`[bt, b(t+\delta t)]` and
-# - whith covariance matrix :math:`\Sigma` defined by:
+# - with mean :math:`[bt, b(t+\delta t)]` and
+# - with covariance matrix :math:`\Sigma` defined by:
 #
-# ..math::
+# .. math::
 #   \begin{align*}
 #   \Sigma = \left(
 #   \begin{array}{cc}
@@ -89,7 +90,8 @@ def buildNormal(b, t, mu_S, covariance, delta_t=1e-5):
 
 
 # %%
-# This function creates the trivariate random vector :math:`(R, Y_t^1, Y_t^2)` where :math:`R` is independent from :math:`(Y_t^1, Y_t^2)`. We need to create this random vector because both events  :math:`\mathcal{E}_t^1` and :math:`\mathcal{E}_t^2` must be defined from the same random vector!
+# This function creates the trivariate random vector :math:`(R, Y_t^1, Y_t^2)` where :math:`R` is independent from :math:`(Y_t^1, Y_t^2)`.
+# We need to create this random vector because both events  :math:`\mathcal{E}_t^1` and :math:`\mathcal{E}_t^2` must be defined from the same random vector!
 
 # %%
 def buildCrossing(b, t, mu_S, covariance, R, delta_t=1e-5):
@@ -163,7 +165,8 @@ def computeCrossingProbability_FORM(b, t, mu_S, covariance, R, delta_t):
 
 # %%
 # First, fix some parameters: :math:`(\mu_R, \sigma_R, \mu_S, \sigma_S, \Delta t, T, b)` and the covariance model which is the Squared Exponential model.
-# Be careful to the parameter  :math:`\Delta t` which is of great importance: if it is too small, the simulation methods have problems to converge because the correlation rate is too high between the instants :math:`t` and :math:`t+\Delta t`.
+# Be careful to the parameter  :math:`\Delta t` which is of great importance: if it is too small, the simulation methods have problems to converge
+# because the correlation rate is too high between the instants :math:`t` and :math:`t+\Delta t`.
 # We advice to take :math:`\Delta t \simeq 10^{-1}`.
 #
 
@@ -205,12 +208,12 @@ values_FORM = list()
 for tick in times:
     values_MC.append(
         computeCrossingProbability_MonteCarlo(
-            b, tick[0], mu_S, covariance, R, delta_t, 2**12, 2**3, 1e-2
+            b, tick[0], mu_S, covariance, R, delta_t, 2 ** 12, 2 ** 3, 1e-2
         )
     )
     values_QMC.append(
         computeCrossingProbability_QMC(
-            b, tick[0], mu_S, covariance, R, delta_t, 2**12, 2**3, 1e-2
+            b, tick[0], mu_S, covariance, R, delta_t, 2 ** 12, 2 ** 3, 1e-2
         )
     )
     values_FORM.append(

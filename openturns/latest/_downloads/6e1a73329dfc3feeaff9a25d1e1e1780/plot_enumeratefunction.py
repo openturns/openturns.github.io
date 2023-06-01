@@ -17,7 +17,7 @@ import math as m
 # The simplest way to generate the multi-indices is to enumerate the terms of increasing length.
 # In other words, we enumerate the multi-indices with length equal to 0, then 1, 2, 3, etc.
 # This is called "graded reverse-lexicographic ordering" in [sullivan2015]_.
-# This is named the linear enumeration rule in the library; let us instanciate it in the 2-dimensional case.
+# This is named the linear enumeration rule in the library; let us instantiate it in the 2-dimensional case.
 dim = 2
 enum_func = ot.LinearEnumerateFunction(dim)
 
@@ -121,7 +121,7 @@ def draw_qnorm(q):
     def qnorm(x):
         norm = 0.0
         for xi in x:
-            norm += xi**q
+            norm += xi ** q
         norm = norm ** (1.0 / q)
         return [norm]
 
@@ -205,3 +205,7 @@ otv.View.ShowAll()
 #
 # In practice, we often test several values of the parameter q, in the [0.5, 0.9] range,
 # for example :math:`q \in \{0.5, 0.6, 0.7, 0.8, 0.9\}`.
+
+# %%
+# Reset default settings
+ot.ResourceMap.Reload()

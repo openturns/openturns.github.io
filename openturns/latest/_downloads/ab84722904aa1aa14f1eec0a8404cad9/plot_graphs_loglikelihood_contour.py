@@ -47,14 +47,19 @@ view = viewer.View(graph)
 
 
 # %%
-# The following function computes the log-likelihood of a `TruncatedNormal` which mean and standard deviations are given as input arguments. The lower and upper bounds of the distribution are computed as minimum and maximum of the sample.
+# The following function computes the log-likelihood of a `TruncatedNormal`
+# which mean and standard deviations are given as input arguments.
+# The lower and upper bounds of the distribution are computed as minimum and maximum of the sample.
 
 # %%
 # Define the log-likelihood function
 # ----------------------------------
 
 # %%
-# The following function evaluates the log-likelihood function given a point :math:`X=(\mu,\sigma`). In order to evaluate the likelihood on the sample, we use a trick: we evaluate the `computeMean` method on the log-PDF sample, then multiply by the sample size. This is much faster than using a `for` loop.
+# The following function evaluates the log-likelihood function given a point :math:`X=(\mu,\sigma`).
+# In order to evaluate the likelihood on the sample, we use a trick: we evaluate
+# the `computeMean` method on the log-PDF sample, then multiply by the sample size.
+# This is much faster than using a `for` loop.
 
 # %%
 def logLikelihood(X):
@@ -80,10 +85,12 @@ def logLikelihood(X):
 # --------------------
 
 # %%
-# In this section, we use the `draw` method which is available for any `Function` which has 1 or 2 input arguments. In our case, the log-likelihood function has two inputs: :math:`x_0=\mu` and :math:`x_1=\sigma`.
+# In this section, we use the `draw` method which is available for any `Function` which has 1 or 2 input arguments.
+# In our case, the log-likelihood function has two inputs: :math:`x_0=\mu` and :math:`x_1=\sigma`.
 
 # %%
-# Draw the log-likelihood function with the `draw` method: this is much faster than using a `for` loop.  In order to print LaTeX X and Y labels, we use the `"r"` character in front of the string containing the LaTeX command.
+# Draw the log-likelihood function with the `draw` method: this is much faster than using a `for` loop.
+# In order to print LaTeX X and Y labels, we use the `"r"` character in front of the string containing the LaTeX command.
 
 # %%
 logLikelihoodFunction = ot.PythonFunction(2, 1, logLikelihood)
@@ -97,7 +104,8 @@ view = viewer.View(graphBasic)
 # --------------------------------
 
 # %%
-# The level values are computed from the quantiles of the data, so that the contours are equally spaced. We can configure the number of levels by setting the `Contour-DefaultLevelsNumber` key in the `ResourceMap`.
+# The level values are computed from the quantiles of the data, so that the contours are equally spaced.
+# We can configure the number of levels by setting the `Contour-DefaultLevelsNumber` key in the `ResourceMap`.
 
 # %%
 ot.ResourceMap.SetAsUnsignedInteger("Contour-DefaultLevelsNumber", 5)
@@ -156,9 +164,16 @@ view = viewer.View(graphFineTune)
 # -----------------------
 
 # %%
-# The previous contour plot is fine, but lacks of colors. It is not obvious that the colors make the plot clearer given that the values in the contour plot are so different: some adjacent contours have close levels, while others are very different. Anyway, it is obviously nicer to get a colored graphics.
+# The previous contour plot is fine, but lacks of colors.
+# It is not obvious that the colors make the plot clearer given that the values
+# in the contour plot are so different: some adjacent contours have close
+# levels, while others are very different.
+# Anyway, it is obviously nicer to get a colored graphics.
 #
-# The following script first creates a palette of colors with the `BuildDefaultPalette` class. Before doing so, we configure the `Drawable-DefaultPalettePhase` `ResourceMap` key so that the number of generated colors corresponds to the number of levels. Then we create the `drawables` list, where each item is a single contour with its own level and color.
+# The following script first creates a palette of colors with the `BuildDefaultPalette` class.
+# Before doing so, we configure the `Drawable-DefaultPalettePhase` `ResourceMap` key so
+# that the number of generated colors corresponds to the number of levels.
+# Then we create the `drawables` list, where each item is a single contour with its own level and color.
 
 # %%
 # Take the first contour as the only one with multiple levels
@@ -182,3 +197,7 @@ graphFineTune.setLegendPosition("")  # Remove the legend
 graphFineTune.setColors(palette)  # Add colors
 view = viewer.View(graphFineTune)
 plt.show()
+
+# %%
+# Reset default settings
+ot.ResourceMap.Reload()

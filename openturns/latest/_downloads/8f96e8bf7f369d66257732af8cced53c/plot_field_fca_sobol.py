@@ -79,7 +79,7 @@ y = f(x)
 
 # %%
 # Run the field-vector algorithm that performs KL-decomposition of the inputs
-# and chaos learning between the KL coefficients and the ouput vectors
+# and chaos learning between the KL coefficients and the output vectors
 algo = otexp.FieldToPointFunctionalChaosAlgorithm(x, y)
 # 1. KL parameters
 algo.setCenteredSample(False)  # our input sample is not centered (default)
@@ -196,3 +196,7 @@ graph = sensitivity.draw()
 view = View(graph)
 
 View.ShowAll()
+
+# %%
+# Reset default settings
+ot.ResourceMap.Reload()

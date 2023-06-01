@@ -4,12 +4,15 @@ Estimate a conditional quantile
 """
 # sphinx_gallery_thumbnail_number = 8
 # %%
-# From a multivariate data sample, we estimate a distribution with kernel smoothing. Here we present a bivariate distribution  :math:`X= (X_1, X_2)`. We use the `computeConditionalQuantile` method to estimate the 90% quantile :math:`Q_1` of the conditional variable :math:`X_2|X_1` :
+# From a multivariate data sample, we estimate a distribution with kernel smoothing.
+# Here we present a bivariate distribution :math:`X= (X_1, X_2)`.
+# We use the `computeConditionalQuantile` method to estimate the 90% quantile :math:`Q_1` of the conditional variable :math:`X_2|X_1` :
 #
 # .. math::
 #    Q_2 : x_1 \mapsto q_{0.9}(X_2|X_1=x_1)
 #
-# We then draw the curve :math:`Q_2 : x_1 \mapsto Q_2(x_1)`. We first start with independent normals then we consider dependent marginals with a Clayton copula.
+# We then draw the curve :math:`Q_2 : x_1 \mapsto Q_2(x_1)`.
+# We first start with independent normals then we consider dependent marginals with a Clayton copula.
 #
 
 # %%
@@ -108,14 +111,14 @@ graph.setColors(["red", "blue"])
 view = viewer.View(graph)
 
 # %%
-# In this case the :math:`Q_2` quantile is constant because of the independance of the marginals.
+# In this case the :math:`Q_2` quantile is constant because of the independence of the marginals.
 #
 
 # %%
-# Dependance through a Clayton copula
+# Dependence through a Clayton copula
 # -----------------------------------
 #
-# We now define a Clayton copula to model the dependance between our marginals.
+# We now define a Clayton copula to model the dependence between our marginals.
 # The Clayton copula is a bivariate asymmmetric Archimedean copula, exhibiting greater dependence
 # in the negative tail than in the positive.
 #

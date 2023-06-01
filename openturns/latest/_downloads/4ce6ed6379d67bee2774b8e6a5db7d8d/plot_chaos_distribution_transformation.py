@@ -22,7 +22,11 @@ Apply a transform or inverse transform on your polynomial chaos
 #    \xi = T(X).
 #
 #
-# Let :math:`F_X` be the Cumulative Distribution Function (CDF) associated with the random variable :math:`X` and let :math:`F_\xi` be the CDF associated with the random variable :math:`\xi`. Therefore, :math:`F_\xi` is the CDF associated with the orthogonal polynomials involved in the polynomial chaos expansion. In this case, the transform is:
+# Let :math:`F_X` be the Cumulative Distribution Function (CDF) associated with
+# the random variable :math:`X` and let :math:`F_\xi` be the CDF associated
+# with the random variable :math:`\xi`. Therefore, :math:`F_\xi` is the CDF
+# associated with the orthogonal polynomials involved in the polynomial chaos expansion.
+# In this case, the transform is:
 #
 # .. math::
 #    \xi = F_\xi^{-1} \left( F_X(X) \right),
@@ -53,7 +57,9 @@ Apply a transform or inverse transform on your polynomial chaos
 import openturns as ot
 
 # %%
-# In the first step, we define the LogNormal distribution. Its parameters - mean and standard deviation - have been selected so that there is no ambiguity with the standard Normal distribution. This parametrization can be used thanks to the `ParametrizedDistribution` class.
+# In the first step, we define the LogNormal distribution.
+# Its parameters - mean and standard deviation - have been selected so that there is no ambiguity with the standard Normal distribution.
+# This parametrization can be used thanks to the `ParametrizedDistribution` class.
 
 # %%
 Xparam = ot.LogNormalMuSigma(3.0e4, 9.0e3, 15.0e3)  # in N
@@ -105,5 +111,7 @@ Tinverse(sampleZ)
 # ----------
 #
 # The `DistributionTransformation` class is rarely used directly because the polynomial chaos classes perform the transformation automatically.
-# However, understanding how this transform is done clarifies why the coefficients of the chaos expansion cannot be related to the input random variable :math:`X`: the expansion is based on the standard variables :math:`\xi`.
-# Hence, the absolute values of the corresponding coefficients have no straightforward interpretation, even though squaring them yields the part of the global variance associated with each coefficient.
+# However, understanding how this transform is done clarifies why the coefficients of the chaos expansion cannot be related to the input random variable :math:`X`:
+# the expansion is based on the standard variables :math:`\xi`.
+# Hence, the absolute values of the corresponding coefficients have no straightforward interpretation,
+# even though squaring them yields the part of the global variance associated with each coefficient.

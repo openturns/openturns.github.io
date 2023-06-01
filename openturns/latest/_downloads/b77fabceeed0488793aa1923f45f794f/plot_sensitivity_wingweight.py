@@ -40,7 +40,7 @@ m = WingWeightModel()
 #
 # Let's have a look on 2D cross cuts of the wing weight function.
 # For each 2D cross cut, the other variables are fixed to the input distribution mean values.
-# This graph allows to have a first idea of the variations of the function in pair of dimensions.
+# This graph allows one to have a first idea of the variations of the function in pair of dimensions.
 # The colors of each contour plot are comparable. The number of contour levels are related to the amount of variation of the function in the corresponding coordinates.
 fig = plt.figure(figsize=(12, 12))
 lowerBound = m.distributionX.getRange().getLowerBound()
@@ -78,7 +78,9 @@ for i in range(m.dim):
         index = 1 + i * m.dim + j
 
         ax = fig.add_subplot(m.dim, m.dim, index)
-        ax.pcolormesh(meshX, meshY, meshZ, cmap="hsv", vmin=176., vmax=363., shading='auto')
+        ax.pcolormesh(
+            meshX, meshY, meshZ, cmap="hsv", vmin=176.0, vmax=363.0, shading="auto"
+        )
         ax.set_xticks([])
         ax.set_yticks([])
 
@@ -355,7 +357,7 @@ print(result.getRelativeErrors())
 # The relative errors are low : this indicates that the PCE model has good accuracy.
 # Then, we exploit the surrogate model to compute the Sobol' indices.
 sensitivityAnalysis = ot.FunctionalChaosSobolIndices(result)
-print(sensitivityAnalysis.summary())
+print(sensitivityAnalysis)
 firstOrder = [sensitivityAnalysis.getSobolIndex(i) for i in range(m.dim)]
 totalOrder = [sensitivityAnalysis.getSobolTotalIndex(i) for i in range(m.dim)]
 graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(inputNames, firstOrder, totalOrder)
@@ -364,10 +366,12 @@ view = otv.View(graph)
 
 # %%
 #
-# The Sobol' indices confirm the previous analyses, in terms of ranking of the most influent variables. We also see that five variables have a quasi null total Sobol' indices, that indicates almost no influence on the wing weight.
+# The Sobol' indices confirm the previous analyses, in terms of ranking of the most influent variables.
+# We also see that five variables have a quasi null total Sobol' indices, that indicates almost no influence on the wing weight.
 # There is no discrepancy between first order and total Sobol' indices, that indicates no or very low interaction between the variables in the variance of the output.
 # As the most important variables act only through decoupled first degree contributions, the hypothesis of a linear dependence between the input variables and the weight is legitimate.
-# This explains why both squared SRC and Taylor give the exact same results even if the first one is based on a :math:`\mathcal{L}^2` linear approximation and the second one is based on a linear expansion around the mean value of the input variables.
+# This explains why both squared SRC and Taylor give the exact same results even if the first one is based on a :math:`\mathcal{L}^2` linear approximation
+# and the second one is based on a linear expansion around the mean value of the input variables.
 
 
 # %%
@@ -442,5 +446,6 @@ graph4 = globHSIC.drawPValuesPermutation()
 view4 = otv.View(graph4)
 
 # %%
-#
-# The HSIC indices go in the same way as the other estimators in terms the most influent variables. The variables :math:`W_{fw}, q, l, W_p` seem to be independent to the output as the corresponding p-values are high. We can also see that the asymptotic p-values and p-values estimated by permutation are quite similar.
+# The HSIC indices go in the same way as the other estimators in terms the most influent variables.
+# The variables :math:`W_{fw}, q, l, W_p` seem to be independent to the output as the corresponding p-values are high.
+# We can also see that the asymptotic p-values and p-values estimated by permutation are quite similar.

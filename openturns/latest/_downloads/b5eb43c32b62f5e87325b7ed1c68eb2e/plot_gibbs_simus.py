@@ -207,7 +207,7 @@ initial_state = ot.Point(initial_state)
 # distribution of all uncertain parameters, including the vector of
 # continuous intensities :math:`\vect{Y},` seen here as a latent variable.
 # Indeed, adding :math:`\vect{Y}` to the vector of sampled variables yields a
-# posterior density which is available in closed form, up to an unkown
+# posterior density which is available in closed form, up to an unknown
 # multiplicative factor
 #
 # .. math::
@@ -222,7 +222,7 @@ initial_state = ot.Point(initial_state)
 #        {\bf 1}_{\left[\vect{Y}^{obs}-\frac{\delta}{2}; \vect{Y}^{obs}+\frac{\delta}{2}\right[}(\vect{Y}).
 #        \end{array}
 #
-# This allows to perform the following Metropolis within Gibbs sampling
+# This allows one to perform the following Metropolis within Gibbs sampling
 # scheme, wherein the pre-defined blocks of variables
 # :math:`(\vect{Y},\vect{\theta},\tau)` are updated in turn, according to their
 # conditional posterior density, or to a Markov kernel targeting it, as
@@ -231,7 +231,10 @@ initial_state = ot.Point(initial_state)
 # 2.2.1. Updating :math:`\vect{Y}`
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# :math:`\pi(\vect{Y}|\vect{\theta},\tau,\vect{Y}^{obs})\propto\prod_{i=1}^{n}\mathcal N(Y_{i}|\vect{X}_{i} \vect{\theta}, \tau^{-1}+q_{i}^{-1}) {\bf 1}_{\left[Y_{i}^{obs}-\frac{\delta}{2}; Y_{i}^{obs}+\frac{\delta}{2}\right[}(Y_{i})`,
+# .. math::
+#    \pi(\vect{Y}|\vect{\theta},\tau,\vect{Y}^{obs})\propto\prod_{i=1}^{n}\mathcal N(Y_{i}|\vect{X}_{i} \vect{\theta}, \tau^{-1}+q_{i}^{-1}) {\bf 1}_{\left[Y_{i}^{obs}-\frac{\delta}{2};
+#    Y_{i}^{obs}+\frac{\delta}{2}\right[}(Y_{i})
+#
 # hence the latent variables :math:`Y_i` are updated by simply simulating
 # independent univariate truncated normals.
 #
@@ -301,7 +304,8 @@ def py_link_function_y(x):
 #
 # .. math::
 #
-#     \vect{\mu}_n =  (\mat{\Sigma}_0^{-1} + \mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \mat{X})^{-1}(\mat{\Sigma}_0^{-1} \vect{\mu}_0 + \mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \vect{Y})\\
+#     \vect{\mu}_n = (\mat{\Sigma}_0^{-1} + \mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \mat{X})^{-1}(\mat{\Sigma}_0^{-1} \vect{\mu}_0
+#     + \mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \vect{Y})\\
 #     \mat{\Sigma}_n = \tau^{-1}(\mat{\Sigma}_0^{-1} + \mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \mat{X})^{-1}.
 #
 # By having all hyperparameters go to :math:`0,` we obtain the following
@@ -462,7 +466,8 @@ proposal_tau = ot.Normal(0.0, 1e-1)
 #
 # .. math::
 #
-#     \arg\max_{\vect{\theta}} \pi(\vect{\theta}|\vect{Y}^{obs},\vect{Y}=\vect{Y}^{obs},\tau) = (\mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \mat{X})^{-1}(\mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \vect{Y}):= \vect{\mu}_n(\tau).
+#     \arg\max_{\vect{\theta}} \pi(\vect{\theta}|\vect{Y}^{obs},\vect{Y}=\vect{Y}^{obs},\tau)
+#     = (\mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \mat{X})^{-1}(\mat{X}^\top (\mat{I}_n + \tau \mat{Q}^{-1})^{-1} \vect{Y}):= \vect{\mu}_n(\tau).
 #
 # If this point does not respect the constraints, then we simply project
 # each component unto the constrained space.

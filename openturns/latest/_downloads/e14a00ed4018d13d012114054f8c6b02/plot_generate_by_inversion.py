@@ -103,7 +103,10 @@ ot.Log.Show(ot.Log.NONE)
 
 
 # %%
-# The following function defines the quantile function of the `WeibullMin` distribution. (Of course, we could use the `computeQuantile` method of the `WeibullMin` class as well. This would create a simpler, but less interesting example: this is a trade off that we accept in order to better understand the algorithm.)
+# The following function defines the quantile function of the `WeibullMin` distribution.
+# (Of course, we could use the `computeQuantile` method of the `WeibullMin` class as well.
+# This would create a simpler, but less interesting example: this is a trade off
+# that we accept in order to better understand the algorithm.)
 
 # %%
 def weibullQ(argument):
@@ -217,4 +220,5 @@ view = viewer.View(graph)
 plt.show()
 
 # %%
-# This graphics must be read from the U axis on the left to the blue curve (representing the CDF), and down to the X axis. We see that the horizontal lines on the U axis follow the uniform distribution. On the other hand, the vertical lines (on the X axis) follow the Weibull distribution.
+# This graphics must be read from the U axis on the left to the blue curve (representing the CDF), and down to the X axis.
+# We see that the horizontal lines on the U axis follow the uniform distribution. On the other hand, the vertical lines (on the X axis) follow the Weibull distribution.

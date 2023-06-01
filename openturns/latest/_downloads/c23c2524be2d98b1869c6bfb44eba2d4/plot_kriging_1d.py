@@ -6,7 +6,11 @@ Kriging : quick-start
 # Abstract
 # --------
 #
-# In this example, we create a kriging metamodel for a function which has scalar real inputs and outputs. We show how to create the learning and the validation samples. We show how to create the kriging metamodel by choosing a trend and a covariance model. Finally, we compute the predicted kriging confidence interval using the conditional variance.
+# In this example, we create a kriging metamodel for a function which has
+# scalar real inputs and outputs.
+# We show how to create the learning and the validation samples.
+# We show how to create the kriging metamodel by choosing a trend and a covariance model.
+# Finally, we compute the predicted kriging confidence interval using the conditional variance.
 
 # %%
 # Introduction
@@ -45,7 +49,9 @@ Kriging : quick-start
 # Creation of the metamodel
 # -------------------------
 #
-# We begin by defining the function `g` as a symbolic function. Then we define the `x_train` variable which contains the inputs of the design of experiments of the training step. Then we compute the `y_train` corresponding outputs. The variable `n_train` is the size of the training design of experiments.
+# We begin by defining the function `g` as a symbolic function.
+# Then we define the `x_train` variable which contains the inputs of the design of experiments of the training step.
+# Then we compute the `y_train` corresponding outputs. The variable `n_train` is the size of the training design of experiments.
 
 # %%
 import openturns as ot
@@ -64,7 +70,8 @@ n_train = x_train.getSize()
 n_train
 
 # %%
-# In order to compare the function and its metamodel, we use a test (i.e. validation) design of experiments made of a regular grid of 100 points from 0 to 12. Then we convert this grid into a `Sample` and we compute the outputs of the function on this sample.
+# In order to compare the function and its metamodel, we use a test (i.e. validation) design of experiments made of a regular grid of 100 points from 0 to 12.
+# Then we convert this grid into a `Sample` and we compute the outputs of the function on this sample.
 
 # %%
 xmin = 0.0
@@ -123,7 +130,8 @@ result = algo.getResult()
 print(result)
 
 # %%
-# We observe that the `scale` and `amplitude` hyper-parameters have been optimized by the `run` method. Then we get the metamodel with `getMetaModel` and evaluate the outputs of the metamodel on the test design of experiments.
+# We observe that the `scale` and `amplitude` hyper-parameters have been optimized by the `run` method.
+# Then we get the metamodel with `getMetaModel` and evaluate the outputs of the metamodel on the test design of experiments.
 
 # %%
 krigeageMM = result.getMetaModel()
@@ -156,8 +164,10 @@ view = viewer.View(graph)
 # %%
 # We see that the kriging metamodel is interpolating. This is what is meant by *conditioning* a gaussian process.
 #
-# We see that, when the sine function has a strong curvature between two points which are separated by a large distance (e.g. between :math:`x=4` and :math:`x=6`), then the kriging metamodel is not close to the function :math:`g`.
-# However, when the training points are close (e.g. between :math:`x=11` and :math:`x=11.5`) or when the function is nearly linear (e.g. between :math:`x=8` and :math:`x=11`), then the kriging metamodel is quite accurate.
+# We see that, when the sine function has a strong curvature between two points which are separated by a large distance (e.g. between :math:`x=4` and :math:`x=6`),
+# then the kriging metamodel is not close to the function :math:`g`.
+# However, when the training points are close (e.g. between :math:`x=11` and :math:`x=11.5`) or when the function is nearly linear (e.g. between :math:`x=8` and :math:`x=11`),
+# then the kriging metamodel is quite accurate.
 
 # %%
 # Compute confidence bounds
@@ -295,7 +305,11 @@ graph.setLegendPosition("topright")
 view = viewer.View(graph)
 
 # %%
-# We see that the confidence intervals are small in the regions where two consecutive training points are close to each other (e.g. between :math:`x=11` and :math:`x=11.5`) and large when the two points are not (e.g. between :math:`x=8.` and :math:`x=11`) or when the curvature of the function is large (between :math:`x=4` and :math:`x=6`).
+# We see that the confidence intervals are small in the regions where two
+# consecutive training points are close to each other
+# (e.g. between :math:`x=11` and :math:`x=11.5`) and large when the two points
+# are not (e.g. between :math:`x=8.` and :math:`x=11`) or when the curvature
+# of the function is large (between :math:`x=4` and :math:`x=6`).
 
 plt.show()
 

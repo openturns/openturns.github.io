@@ -6,7 +6,10 @@ A quick start guide to the `Point` and `Sample` classes
 # Abstract
 # --------
 #
-# In this example, we present the `Point` and `Sample` classes, two fundamental objects in the library. We present the principles behind these classes and the way to create and use these objects. We show how to extract a row or a column with the slicing operator. We show how these objects interacts with Python variables and with the `numpy` module.
+# In this example, we present the :class:`~openturns.Point` and :class:`~openturns.Sample` classes, two fundamental objects in the library.
+# We present the principles behind these classes and the way to create and use these objects.
+# We show how to extract a row or a column with the slicing operator.
+# We show how these objects interacts with Python variables and with the `numpy` module.
 
 # %%
 # Introduction
@@ -43,7 +46,8 @@ p = ot.Point(3)
 p
 
 # %%
-# The following statement returns the value of the second component (with index 1). Python beginners should remember that Python indices start at zero.
+# The following statement returns the value of the second component (with index 1).
+# Python beginners should remember that Python indices start at zero.
 
 # %%
 p[1]
@@ -70,7 +74,7 @@ p.getDimension()
 #
 # A `Sample` can be seen as an array of with :math:`N` rows and :math:`D` columns.
 #
-# *Remark.* The `ProcessSample` class can be used to manage a sample of stochastic processes.
+# *Remark.* The :class:`~openturns.ProcessSample` class can be used to manage a sample of stochastic processes.
 
 # %%
 # The script below creates a `Sample` with size :math:`N=5` and dimension :math:`D=3`.
@@ -93,10 +97,21 @@ data[3, 2] = 32
 data
 
 # %%
+# Notice that the rendering is different when we use the `print` statement.
+
+# %%
+print(data)
+
+# %%
+# We can customize the format used to print the floating point numbers
+# with the `Sample-PrintFormat` key of the :class:`~openturns.ResourceMap`.
+
+# %%
 # Get a row or a column of a `Sample`
 # -----------------------------------
 #
-# As with `numpy` arrays, we can extract a row or a column with the `:` slicing operator. As a reminder for Python beginners, *slicing* is the fact of extracting a part of an array with one single statement; this avoids `for` loops and improves performance and readability.
+# As with `numpy` arrays, we can extract a row or a column with the `:` slicing operator.
+# As a reminder for Python beginners, *slicing* is the fact of extracting a part of an array with one single statement; this avoids `for` loops and improves performance and readability.
 
 # %%
 row = data[3, :]
@@ -204,7 +219,8 @@ sample
 # Interactions with Numpy
 # -----------------------
 #
-# The Python classes defined in Python modules are unknown to OpenTURNS and hence cannot be used by the library. This is why it is useful to know how to convert to and from more basic Python variable types, especially Numpy arrays.
+# The Python classes defined in Python modules are unknown to OpenTURNS and hence cannot be used by the library.
+# This is why it is useful to know how to convert to and from more basic Python variable types, especially Numpy arrays.
 
 # %%
 # The following statement creates a `Sample` and converts it into a bidimensional Numpy `array`.
@@ -262,10 +278,13 @@ sample = ot.Sample([u[i: i + 5] for i in range(len(u) // 5)])
 sample
 
 # %%
-# If we do not set the optional `size` parameter, the library cannot solve the case and an InvalidArgumentException is generated.
+# If we do not set the optional `size` parameter, the library cannot solve the
+# case and an `InvalidArgumentException` is generated.
+# More precisely, the code::
 #
-
-# %%
-# Generates an expected exception
-# TypeError: InvalidArgumentException : Invalid array dimension: 1
-# sample = ot.Sample (u)
+#     sample = ot.Sample(u)
+#
+# produces the exception::
+#
+#     TypeError: InvalidArgumentException : Invalid array dimension: 1
+#

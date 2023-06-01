@@ -42,7 +42,8 @@ dimension = 1
 # .. math::
 #    \hat{Y}(x) = m(x) + Z(x)
 #
-# where :math:`m(.)` is the trend and :math:`Z(.)` is a gaussian process with zero-mean and its covariance matrix is :math:`C_{\theta}(s,t)`. The trend is deterministic and the gaussian process is probabilistc but they both contribute to the metamodel.
+# where :math:`m(.)` is the trend and :math:`Z(.)` is a gaussian process with zero-mean and its covariance matrix is :math:`C_{\theta}(s,t)`.
+# The trend is deterministic and the gaussian process is probabilistc but they both contribute to the metamodel.
 # A special feature of the kriging is the interpolation property : the metamodel is exact at the
 # trainig data.
 covarianceModel = ot.SquaredExponential([1.0], [1.0])
@@ -95,7 +96,8 @@ view = otv.View(graph)
 
 # %%
 # A common pre-processing step is to apply a transform on the input data before performing the kriging.
-# To do so we write a linear transform of our input data : we make it unit centered at its mean. Then we fix the mean and the standard deviation to their values with the `ParametricFunction`. We build the inverse transform as well.
+# To do so we write a linear transform of our input data : we make it unit centered at its mean.
+# Then we fix the mean and the standard deviation to their values with the `ParametricFunction`. We build the inverse transform as well.
 #
 # We first compute the mean and standard deviation of the input data :
 mean = Xtrain.computeMean()[0]
@@ -148,7 +150,7 @@ view = otv.View(graph)
 # %%
 # We can retrieve the calibrated trend coefficient :
 c0 = result.getTrendCoefficients()
-print("The trend is the curve m(x) = %.6e" % c0[0][0])
+print("The trend is the curve m(x) = %.6e" % c0[0])
 
 # %%
 # We also pay attention to the trained covariance model and observe the values
@@ -162,7 +164,7 @@ print("Amplitude parameter : %.3e" % sigma)
 # %%
 # We build the trend from the coefficient :
 constantTrend = ot.SymbolicFunction(["a", "x"], ["a"])
-myTrend = ot.ParametricFunction(constantTrend, [0], [c0[0][0]])
+myTrend = ot.ParametricFunction(constantTrend, [0], [c0[0]])
 
 
 # %%
@@ -251,7 +253,7 @@ view = otv.View(graph)
 # %%
 # We can retrieve the calibrated trend coefficients with `getTrendCoefficients` :
 c0 = result.getTrendCoefficients()
-print("Trend is the curve m(X) = %.6e X + %.6e" % (c0[0][1], c0[0][0]))
+print("Trend is the curve m(X) = %.6e X + %.6e" % (c0[1], c0[0]))
 
 
 # %%
@@ -267,7 +269,7 @@ print("Amplitude parameter : %.3e" % sigma)
 # %%
 # We draw the linear trend that we are interested in.
 linearTrend = ot.SymbolicFunction(["a", "b", "x"], ["a*x+b"])
-myTrend = ot.ParametricFunction(linearTrend, [0, 1], [c0[0][1], c0[0][0]])
+myTrend = ot.ParametricFunction(linearTrend, [0, 1], [c0[1], c0[0]])
 y_test = myTrend(myTransform(x_test))
 curve = ot.Curve(x_test, y_test)
 curve.setLineStyle("dotdash")
@@ -300,7 +302,8 @@ view = otv.View(graph)
 # The trend obtained is decreasing on the interval of study : that is the general trend we observe
 # from the exact model. It is still nowhere close to the exact model but as in the constant case the
 # gaussian part will do the job of building a correct (visually at least) metamodel.
-# We note that the values of the amplitude and the scale parameters are similar to the previous constant case. As it can be seen on the previous figure the metamodel is interpolating (see the last data point).
+# We note that the values of the amplitude and the scale parameters are similar to the previous constant case.
+# As it can be seen on the previous figure the metamodel is interpolating (see the last data point).
 
 
 # %%
@@ -335,10 +338,7 @@ view = otv.View(graph)
 # %%
 #  We can retrieve the calibrated trend coefficients with `getTrendCoefficients` :
 c0 = result.getTrendCoefficients()
-print(
-    "Trend is the curve m(X) = %.6e X**2 + %.6e X + %.6e"
-    % (c0[0][2], c0[0][1], c0[0][0])
-)
+print("Trend is the curve m(X) = %.6e X**2 + %.6e X + %.6e" % (c0[2], c0[1], c0[0]))
 
 
 # %%
@@ -353,9 +353,7 @@ print("Amplitude parameter : %.3e" % sigma)
 # %%
 # The quadratic linear trend obtained is :
 quadraticTrend = ot.SymbolicFunction(["a", "b", "c", "x"], ["a*x^2 + b*x + c"])
-myTrend = ot.ParametricFunction(
-    quadraticTrend, [0, 1, 2], [c0[0][2], c0[0][1], c0[0][0]]
-)
+myTrend = ot.ParametricFunction(quadraticTrend, [0, 1, 2], [c0[2], c0[1], c0[0]])
 
 
 # %%

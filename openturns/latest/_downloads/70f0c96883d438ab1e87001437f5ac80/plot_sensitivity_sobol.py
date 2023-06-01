@@ -13,7 +13,8 @@ Estimate Sobol' indices for the Ishigami function by a sampling method: a quick 
 #
 # In this example we are going to quantify the correlation between the input variables and the output variable of a model thanks to Sobol indices.
 #
-# Sobol indices are designed to evaluate the importance of a single variable or a specific set of variables. Here the Sobol indices are estimated by sampling from the distributions of the input variables and propagating uncertainty through a function.
+# Sobol indices are designed to evaluate the importance of a single variable or a specific set of variables.
+# Here the Sobol indices are estimated by sampling from the distributions of the input variables and propagating uncertainty through a function.
 #
 # In theory, Sobol indices range from 0 to 1; the closer an index value is to 1, the better the associated input variable explains the function output.
 #
@@ -23,15 +24,18 @@ Estimate Sobol' indices for the Ishigami function by a sampling method: a quick 
 #
 # * First order indices evaluate the importance of one input variable at a time.
 #
-# * Total indices give the relative importance of one input variable and all its interactions with other variables. Alternatively, they can be viewed as measuring how much wriggle room remains to the output when all but one input variables are fixed.
+# * Total indices give the relative importance of one input variable and all its interactions with other variables.
+#   Alternatively, they can be viewed as measuring how much wriggle room remains to the output when all but one input variables are fixed.
 #
-# * In general, we are only interested in first order and total Sobol' indices. There are situations, however, where we want to estimate interactions. Second order indices evaluate the importance of every pair of input variables. The number of second order indices is:
+# * In general, we are only interested in first order and total Sobol' indices.
+#   There are situations, however, where we want to estimate interactions.
+#   Second order indices evaluate the importance of every pair of input variables. The number of second order indices is:
 #
 # .. math::
 #    \binom{d}{2} = \frac{d \times \left( d-1\right)}{2}.
 #
-#
-# In practice, when the number of input variables is not small (say, when :math:`d>5`), then the number of second order indices is too large to be easily analyzed. In these situations, we limit the analysis to the first order and total Sobol' indices.
+# In practice, when the number of input variables is not small (say, when :math:`d>5`), then the number of second order indices is too large to be easily analyzed.
+# In these situations, we limit the analysis to the first order and total Sobol' indices.
 
 # %%
 # Define the model
@@ -94,7 +98,8 @@ view = viewer.View(graph)
 # ---------------------------
 
 # %%
-# We first create a design of experiments with the `SobolIndicesExperiment`. Since we are not interested in second order indices for the moment, we use the default value of the third argument (we will come back to this topic later).
+# We first create a design of experiments with the `SobolIndicesExperiment`.
+# Since we are not interested in second order indices for the moment, we use the default value of the third argument (we will come back to this topic later).
 
 # %%
 size = 1000
@@ -136,10 +141,17 @@ graph = sensitivityAnalysis.draw()
 view = viewer.View(graph)
 
 # %%
-# - We see that the variable :math:`X_1`, with a total Sobol' index close to 0.6, is the most significant variable, taking into account both its direct effect and its interactions with other variables. Its first order index is close to 0.3, which implies that its interactions alone produce almost 30% (0.6 - 0.3) of the total variance.
-# - The variable :math:`X_2` has the highest first order index: approximately 0.4. However, it has little interaction with other variables since its total order indice is close to its first order index.
-# - The variable :math:`X_3` has a first order index close to zero. However, it has an impact to the total variance thanks to its interactions with :math:`X_1`.
-# - We see that the variability of the estimates is quite high even with a relatively large sample size. Moreover, since the exact first order Sobol' index for :math:`X_3` is zero, its estimate has a 50% chance of being nonpositive.
+# - We see that the variable :math:`X_1`, with a total Sobol' index close
+#   to 0.6, is the most significant variable, taking into account both its direct
+#   effect and its interactions with other variables.
+#   Its first order index is close to 0.3, which implies that its interactions
+#   alone produce almost 30% (0.6 - 0.3) of the total variance.
+# - The variable :math:`X_2` has the highest first order index: approximately 0.4.
+#   However, it has little interaction with other variables since its total order indice is close to its first order index.
+# - The variable :math:`X_3` has a first order index close to zero.
+#   However, it has an impact to the total variance thanks to its interactions with :math:`X_1`.
+# - We see that the variability of the estimates is quite high even with a relatively large sample size.
+#   Moreover, since the exact first order Sobol' index for :math:`X_3` is zero, its estimate has a 50% chance of being nonpositive.
 
 # %%
 # Estimate the second order indices

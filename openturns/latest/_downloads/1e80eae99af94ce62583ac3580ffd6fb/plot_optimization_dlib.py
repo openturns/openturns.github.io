@@ -25,7 +25,8 @@ for algo in ot.Dlib.GetAlgorithmNames():
 # Solving an unconstrained problem with conjugate gradient algorithm
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# The following example will demonstrate the use of dlib conjugate gradient algorithm to find the minimum of `Rosenbrock function <https://en.wikipedia.org/wiki/Rosenbrock_function>`_. The optimal point can be computed analytically, and its value is [1.0, 1.0].
+# The following example will demonstrate the use of dlib conjugate gradient algorithm to find the minimum of `Rosenbrock function <https://en.wikipedia.org/wiki/Rosenbrock_function>`_.
+# The optimal point can be computed analytically, and its value is [1.0, 1.0].
 
 # %%
 # Define the problem based on Rosebrock function
@@ -128,7 +129,8 @@ view = viewer.View(graph)
 #
 # In least squares problem, the user provides the residual function to minimize. Here the underlying OptimizationProblem is defined as a LeastSquaresProblem.
 #
-# dlib least squares algorithms use the same stop criteria as CG, BFGS/LBFGS and Newton algorithms. However, optimization will stop earlier if no significant improvement can be achieved during the process.
+# dlib least squares algorithms use the same stop criteria as CG, BFGS/LBFGS and Newton algorithms.
+# However, optimization will stop earlier if no significant improvement can be achieved during the process.
 
 # %%
 # Define residual function

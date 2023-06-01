@@ -135,7 +135,7 @@ view = otv.View(graph)
 def draw_validation(experiment):
     projectionStrategy = ot.IntegrationStrategy(experiment)
     algo = ot.FunctionalChaosAlgorithm(
-        g, distribution, adaptiveStrategy, projectionStrategy
+        X, Y, distribution, adaptiveStrategy, projectionStrategy
     )
     algo.run()
     result = algo.getResult()
@@ -169,7 +169,7 @@ otv.View.ShowAll()
 # %%
 # Conclusion
 # ----------
-# With the Gauss product rule the coefficients are particularily well computed
+# With the Gauss product rule the coefficients are particularly well computed
 # since the Q2 coefficient is excellent, even with the relatively limited amount
 # of simulation (256 points).
 # On the other hand the LHS and low-discrepancy experiments require many more

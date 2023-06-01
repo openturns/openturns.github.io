@@ -38,7 +38,8 @@ graph = n.drawPDF()
 type(graph)
 
 # %%
-# The `Graph` class provides several methods to configure the legends, the title and the colors. Since a graphics  can contain several sub-graphics, the `setColors` takes a list of colors as inputs argument: each item of the list corresponds to the sub-graphics.
+# The `Graph` class provides several methods to configure the legends, the title and the colors.
+# Since a graphics  can contain several sub-graphics, the `setColors` takes a list of colors as inputs argument: each item of the list corresponds to the sub-graphics.
 
 # %%
 graph.setXTitle("N")
@@ -109,7 +110,8 @@ graph.add(cloud)
 view = viewer.View(graph)
 
 # %%
-# We sometimes want to customize the graphics by choosing the type of point (square, triangle, circle, etc...), of line (continuous, dashed, etc...) or another parameter. We can know the list of possible values with the corresponding `getValid` method.
+# We sometimes want to customize the graphics by choosing the type of point (square, triangle, circle, etc...), of line (continuous, dashed, etc...) or another parameter.
+# We can know the list of possible values with the corresponding `getValid` method.
 #
 # For example, the following function returns the possible values of the `PointStyle` parameter.
 
@@ -183,7 +185,8 @@ view = viewer.View(graph)
 # Create colored curves
 # ---------------------
 #
-# In some situations, we want to create curves with different colors. In this case, the following function generates a color corresponding to the `indexCurve` integer in a ensemble of `maximumNumberOfCurves` curves.
+# In some situations, we want to create curves with different colors.
+# In this case, the following function generates a color corresponding to the `indexCurve` integer in a ensemble of `maximumNumberOfCurves` curves.
 
 # %%
 def createHSVColor(indexCurve, maximumNumberOfCurves):
@@ -225,7 +228,10 @@ myCDF = n.drawCDF()
 # %%
 
 # %%
-# We create a figure with the `figure` function from Matplotlib, then we add two graphics with the `add_subplot` function. We use the `viewer.View` function to create the required Matplotlib object. Since we are not interested by the output of the `View` function, we use the dummy variable `_` as output. The title is finally configured with `suptitle`.
+# We create a figure with the `figure` function from Matplotlib, then we add two graphics with the `add_subplot` function.
+# We use the `viewer.View` function to create the required Matplotlib object.
+# Since we are not interested by the output of the `View` function, we use the dummy variable `_` as output.
+# The title is finally configured with `suptitle`.
 
 # %%
 fig = pl.figure(figsize=(12, 4))

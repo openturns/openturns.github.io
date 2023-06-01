@@ -82,7 +82,7 @@ view = viewer.View(graph_modes_X)
 # %%
 # Input database generation
 print("Sample the input process")
-size = 1000
+size = 500
 sample_X = process_X.getSample(size)
 
 
@@ -234,3 +234,7 @@ graph_sample_Y.setXTitle(r"$t$")
 graph_sample_Y.setYTitle(r"$Y$")
 view = viewer.View(graph_sample_Y)
 plt.show()
+
+# %%
+# Reset default settings
+ot.ResourceMap.Reload()
