@@ -18,18 +18,23 @@
 .. _sphx_glr_auto_meta_modeling_polynomial_chaos_metamodel_plot_chaos_cv.py:
 
 
-Chaos cross-validation
-----------------------
+Polynomial chaos expansion cross-validation
+===========================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-30
+.. GENERATED FROM PYTHON SOURCE LINES 7-34
+
+Introduction
+------------
 
 In this example, we show how to perform the cross-validation of the
 :ref:`Ishigami model<use-case-ishigami>` using polynomial chaos expansion.
 More precisely, we use the methods suggested in [muller2016]_, chapter 5, page 257.
 We make the assumption that a dataset is given and we create a metamodel using this data.
 Once done, we want to assess the quality of the metamodel using the data we have.
+Another example of this method is presented in
+:doc:`/auto_numerical_methods/general_methods/plot_pce_design`.
 
-We compare several methods:
+In this example, we compare two methods:
 
 - split the data into two subsets, one for training and one for testing,
 - use k-fold validation.
@@ -43,11 +48,10 @@ The K-Fold validation is performed by the `compute_Q2_score_by_kfold` function b
 It uses the K-Fold method with :math:`k = 5`.
 The code uses the :class:`~openturns.KFoldSplitter` class, which computes the appropriate indices.
 Similar results can be obtained with :class:`~openturns.LeaveOneOutSplitter` at a higher cost.
-
 This cross-validation method is used here to see which polynomial degree
 leads to an accurate metamodel of the Ishigami test function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-37
+.. GENERATED FROM PYTHON SOURCE LINES 36-40
 
 .. code-block:: default
 
@@ -62,10 +66,21 @@ leads to an accurate metamodel of the Ishigami test function.
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 41-43
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-84
+Define helper functions
+-----------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 45-47
+
+The next function creates a polynomial chaos expansion from
+a training data set and a total degree.
+
+.. GENERATED FROM PYTHON SOURCE LINES 49-97
 
 .. code-block:: default
+
+
 
     def compute_sparse_least_squares_chaos(
         inputTrain, outputTrain, basis, totalDegree, distribution
@@ -102,14 +117,14 @@ leads to an accurate metamodel of the Ishigami test function.
         projectionStrategy = ot.LeastSquaresStrategy(
             inputTrain, outputTrain, selectionAlgorithm
         )
-        enumfunc = basis.getEnumerateFunction()
-        P = enumfunc.getStrataCumulatedCardinal(totalDegree)
-        adaptiveStrategy = ot.FixedStrategy(basis, P)
-        chaosalgo = ot.FunctionalChaosAlgorithm(
+        enumerateFunction = basis.getEnumerateFunction()
+        basisSize = enumerateFunction.getBasisSizeFromTotalDegree(totalDegree)
+        adaptiveStrategy = ot.FixedStrategy(basis, basisSize)
+        chaosAlgo = ot.FunctionalChaosAlgorithm(
             inputTrain, outputTrain, distribution, adaptiveStrategy, projectionStrategy
         )
-        chaosalgo.run()
-        result = chaosalgo.getResult()
+        chaosAlgo.run()
+        result = chaosAlgo.getResult()
         return result
 
 
@@ -120,11 +135,14 @@ leads to an accurate metamodel of the Ishigami test function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-121
+.. GENERATED FROM PYTHON SOURCE LINES 98-100
+
+The next function computes the Q2 score by splitting the data set
+into a training set and a test set.
+
+.. GENERATED FROM PYTHON SOURCE LINES 102-136
 
 .. code-block:: default
-
-
 
     def compute_Q2_score_by_splitting(
         X, Y, basis, totalDegree, distribution, split_fraction=0.75
@@ -167,11 +185,13 @@ leads to an accurate metamodel of the Ishigami test function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-158
+.. GENERATED FROM PYTHON SOURCE LINES 137-138
+
+The next function computes the Q2 score by K-Fold.
+
+.. GENERATED FROM PYTHON SOURCE LINES 140-174
 
 .. code-block:: default
-
-
 
     def compute_Q2_score_by_kfold(X, Y, basis, totalDegree, distribution, n_folds=5):
         """
@@ -214,11 +234,16 @@ leads to an accurate metamodel of the Ishigami test function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-160
+.. GENERATED FROM PYTHON SOURCE LINES 175-177
+
+Define the training data set
+----------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 179-180
 
 We start by generating the input and output sample. We use a sample size equal to 1000.
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-171
+.. GENERATED FROM PYTHON SOURCE LINES 182-191
 
 .. code-block:: default
 
@@ -257,7 +282,7 @@ We start by generating the input and output sample. We use a sample size equal t
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-178
+.. GENERATED FROM PYTHON SOURCE LINES 192-198
 
 .. code-block:: default
 
@@ -293,13 +318,13 @@ We start by generating the input and output sample. We use a sample size equal t
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-182
+.. GENERATED FROM PYTHON SOURCE LINES 199-202
 
 We compute a polynomial chaos decomposition with a total degree equal to 5.
 In order to reduce the number of coefficients, the `compute_sparse_least_squares_chaos`
 function creates a sparse chaos using regression and the LARS method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-192
+.. GENERATED FROM PYTHON SOURCE LINES 204-212
 
 .. code-block:: default
 
@@ -402,11 +427,11 @@ function creates a sparse chaos using regression and the LARS method.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-194
+.. GENERATED FROM PYTHON SOURCE LINES 213-214
 
 Get the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-198
+.. GENERATED FROM PYTHON SOURCE LINES 216-218
 
 .. code-block:: default
 
@@ -419,12 +444,17 @@ Get the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-201
+.. GENERATED FROM PYTHON SOURCE LINES 219-221
+
+Validate the metamodel from a test set
+--------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 223-225
 
 In order to validate our polynomial chaos, we generate an extra pair of
 input / output samples and use the :class:`~openturns.MetaModelValidation` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-211
+.. GENERATED FROM PYTHON SOURCE LINES 225-235
 
 .. code-block:: default
 
@@ -450,7 +480,7 @@ input / output samples and use the :class:`~openturns.MetaModelValidation` class
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-230
+.. GENERATED FROM PYTHON SOURCE LINES 236-254
 
 The plot shows that the score is relatively high and might be satisfactory for some purposes.
 There are however several issues with the previous procedure:
@@ -471,11 +501,16 @@ There are however several issues with the previous procedure:
 The K-Fold validation aims at solving some of these issues, so that all the
 available data is used in order to estimate the :math:`Q^2` score.
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-233
+.. GENERATED FROM PYTHON SOURCE LINES 256-258
+
+Compute the Q2 score from a test set
+------------------------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 260-261
 
 In the following script, we compute the :math:`Q^2` score associated with each polynomial degree from 1 to 10.
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-245
+.. GENERATED FROM PYTHON SOURCE LINES 261-273
 
 .. code-block:: default
 
@@ -512,7 +547,7 @@ In the following script, we compute the :math:`Q^2` score associated with each p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-251
+.. GENERATED FROM PYTHON SOURCE LINES 274-279
 
 .. code-block:: default
 
@@ -533,15 +568,20 @@ In the following script, we compute the :math:`Q^2` score associated with each p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-257
+.. GENERATED FROM PYTHON SOURCE LINES 280-282
 
 We see that the polynomial degree may be increased up to degree 7,
 after which the :math:`Q^2` score does not increase much.
 
+.. GENERATED FROM PYTHON SOURCE LINES 284-289
+
+Compute the Q2 score from K-Fold cross-validation
+-------------------------------------------------
+
 One limitation of the previous method is that the estimate of the :math:`Q^2` may be sensitive to the particular split of the dataset.
 The following script uses 5-Fold cross validation to estimate the :math:`Q^2` score.
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-267
+.. GENERATED FROM PYTHON SOURCE LINES 291-299
 
 .. code-block:: default
 
@@ -574,7 +614,7 @@ The following script uses 5-Fold cross validation to estimate the :math:`Q^2` sc
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-273
+.. GENERATED FROM PYTHON SOURCE LINES 300-305
 
 .. code-block:: default
 
@@ -595,9 +635,14 @@ The following script uses 5-Fold cross validation to estimate the :math:`Q^2` sc
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 274-287
+.. GENERATED FROM PYTHON SOURCE LINES 306-307
 
 The conclusion is similar to the previous method.
+
+.. GENERATED FROM PYTHON SOURCE LINES 309-323
+
+Conclusion
+----------
 
 When we select the best polynomial degree which maximizes the :math:`Q^2` score,
 the danger is that the validation set is used both for computing the :math:`Q^2` and to maximize it:
@@ -611,7 +656,7 @@ In [muller2016]_, chapter 5, page 269, the authors advocate the split of the dat
 When selecting the best parameters, the validation set is used.
 When estimating the :math:`Q^2` score with the best parameters, the test set is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 289-290
+.. GENERATED FROM PYTHON SOURCE LINES 325-326
 
 .. code-block:: default
 
@@ -626,7 +671,7 @@ When estimating the :math:`Q^2` score with the best parameters, the test set is 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.476 seconds)
+   **Total running time of the script:** ( 0 minutes  11.665 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_polynomial_chaos_metamodel_plot_chaos_cv.py:
