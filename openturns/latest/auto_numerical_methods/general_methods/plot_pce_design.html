@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Compute leave-one-out error of a polynomial chaos expansion &#8212; OpenTURNS 1.21 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Compute confidence intervals of a regression model from data" href="plot_regression_interval.html" />
+    <link rel="prev" title="Iterated Functions System" href="plot_ifs.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_regression_interval.html" title="Compute confidence intervals of a regression model from data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_ifs.html" title="Iterated Functions System"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Numerical methods</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">General methods</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Compute leave-one-out error of a polynomial chaos expansion</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Compute leave-one-out error of a polynomial chaos expansion</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#the-design-matrix">The design matrix</a></li>
+<li><a class="reference internal" href="#the-leave-one-out-error">The leave-one-out error</a></li>
+<li><a class="reference internal" href="#the-analytical-leave-one-out-error">The analytical leave-one-out error</a></li>
+<li><a class="reference internal" href="#create-the-polynomial-chaos-model">Create the polynomial chaos model</a></li>
+<li><a class="reference internal" href="#the-designproxy">The DesignProxy</a></li>
+<li><a class="reference internal" href="#compute-the-raw-leave-one-out-error">Compute the raw leave-one-out error</a></li>
+<li><a class="reference internal" href="#compute-the-analytical-leave-one-out-error">Compute the analytical leave-one-out error</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_ifs.html"
+                          title="previous chapter">Iterated Functions System</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_regression_interval.html"
+                          title="next chapter">Compute confidence intervals of a regression model from data</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_numerical_methods/general_methods/plot_pce_design.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-numerical-methods-general-methods-plot-pce-design-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="compute-leave-one-out-error-of-a-polynomial-chaos-expansion">
+<span id="sphx-glr-auto-numerical-methods-general-methods-plot-pce-design-py"></span><h1>Compute leave-one-out error of a polynomial chaos expansion<a class="headerlink" href="#compute-leave-one-out-error-of-a-polynomial-chaos-expansion" title="Permalink to this heading">¶</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>In this example, we compute the design matrix of a polynomial chaos
+expansion using the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a> class.
+Then we compute the analytical leave-one-out error using the
+diagonal of the projection matrix.
+To do this, we use equations from <a class="reference internal" href="../../bibliography.html#blatman2009" id="id1"><span>[blatman2009]</span></a> page 85
+(see also <a class="reference internal" href="../../bibliography.html#blatman2011" id="id2"><span>[blatman2011]</span></a>).
+In this advanced example, we use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a>
+and <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.QRMethod.html#openturns.QRMethod" title="openturns.QRMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">QRMethod</span></code></a> low level classes.
+A naive implementation of this method is presented in
+<a class="reference internal" href="../../auto_meta_modeling/polynomial_chaos_metamodel/plot_chaos_cv.html"><span class="doc">Polynomial chaos expansion cross-validation</span></a>
+using K-Fold cross-validation.</p>
+</section>
+<section id="the-design-matrix">
+<h2>The design matrix<a class="headerlink" href="#the-design-matrix" title="Permalink to this heading">¶</a></h2>
+<p>In this section, we analyze why the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a>
+is linked to the classical linear least squares regression problem.
+Let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAIBAMAAADdFhi7AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdJ2LGM9IMmD73fO/r+mGTbZDAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAP0lEQVQI12NgVHY2TWBgqMg0YFzAwCBgzcAUwMDAcJaBVQFIzWDgL2BgYP/AIMfBwMD8gOEsMwMDkwFDrggDAP0FCNj5FTHGAAAACnRFWHREZXB0aAAAAAAAJyPhDAAAAABJRU5ErkJggg==" alt="n" style="vertical-align: 0px"/> be the number of observations and <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAIBAMAAAACWGKkAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAi50Yz0h0MmD76d3zv6/wjZZjAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAATklEQVQI12NgVDQUCU5zZWCoiBRgW8aQzcCQIMPAeIBBhYGB4R4DiwLDJiBjBgNnAPN3Bgb2Dwz1DIwLGoCYQZqBV0GAgUmA4RkDxzMGAOaYDdS9xl8QAAAACnRFWHREZXB0aAAAAAAAJyPhDAAAAABJRU5ErkJggg==" alt="m" style="vertical-align: 0px"/> be the number of coefficients
+of the linear model.
+Let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAAAPBAMAAABuJT6CAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/3UjPGPt0izKd6WBCl4VcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABM0lEQVQoz2NgwAvYGRgKEDyhz4ImAcjSa6/pOnkysB98ac7AvIHdAMiwXikAkmBJYGDvRDFIIIFb0oCLP0CSgcG6mAHIOMKgAJLgX8DAMANNJUPCaYYQhlQGBrYEBiAjjx2sMn4DA8N+sPVVJi4TYCqjGM4wNDAwFFszABnqnAYg+RVAXA9SweVXgDBzHkMqX/YDdgPmDQyp7Apsr0ASKUC8H6RyIZI77RIYHNizGJgZGAwYHFgFeI6CJHqAeD7QBewOcJVuHnewBBn3VyCRAcR8C+Aqs80TsKjk+gAkfgExzxUXF5iPRE9iUckGtJTxAsjMAwh3srEUYKpkAgZ/xAYQC+HOBM7VWKzf/4CB8zaYNRmu0oAhfQ6GQsb7hsJZUBdDw3PuZbWALRYC+FIONI6wAwAEzEWqbZSDjQAAAAp0RVh0RGVwdGgAAAAAAVAk0ZoAAAAASUVORK5CYII=" alt="D \in \mathbb{R}^{n \times m}" style="vertical-align: -1px"/> be the design matrix, i.e.
+the matrix that produces the predictions of the linear regression model from
+the coefficients:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD0AAAARBAMAAACcIrmXAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGN2/Mp2Lz+l0r2DzSPvzuB+pAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA/ElEQVQoz2NgYBASYEAFXOetFusiuCYGaPIM6gwMchNgHFYGMXT5bwwMnA8YcALeLwwMLH9xy7MB9TL+hHIYKwoZhCagyLMrAPX/ZOAu0lrNwMDh9Y1hfQADA3M5CCwAyfMBuZxfGNYnsH9mYNjF85fh/AUU/f5ALvsDzk8M7CBL7h9g/I9qfz4Q8yfwfGPg+whkrQ8AqkQBRUC8gkH+C8P9BiBLfwMz0L/I9p8CevEJg/wHhvgFQJfab/D/gqKd5TcDwwwHBo4PLOdnAl0qflwfNaxWfF5lngDyePGNdiD3AtAYBjyB9Y3hvAAeefa/zL/xSDOwlCs74JEGAL4wRTftV4GAAAAACnRFWHREZXB0aAD////9F5agwwAAAABJRU5ErkJggg==" alt="\hat{\vect{y}} = D \vect{a}"/></p>
+</div><p>where <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADsAAAAOBAMAAABjvHmeAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAYM/dr4u/dPP7GDJI6Z3Po2ubAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA00lEQVQY02NgQAexl3otzBm4nohnhzswYAIuBwVu9wRW/gOPGRqwSzMovGY4zKDIhSLNFWZsDpM+yvCOoYs9AVk6WAqhu5BBh6uBSRTIZVQ2cQQJszog7E5UYDDgceB7A+T6BzB9AwkvhtttZHkPbiT7Zwam7yCGKFxaO0sBLs3xlYHzF4jx1tgY5jSf53Dp9b8Zzl8AMeQQHmNiXgCX/sDw3sEAyGBGSLNHw03n/cDdX/4A5IgEmHQCg1YdPDB01c5eQvZ37bWmA5szMYMbGmooAAAOXTQ8PtJPmAAAAAp0RVh0RGVwdGgAAAAAAVAk0ZoAAAAASUVORK5CYII=" alt="\vect{a} \in \mathbb{R}^m" style="vertical-align: -1px"/> is the vector of coefficients,
+<img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADUAAAARBAMAAACP9fljAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGN2/Mp2LSHT7YK/P8+lXLbkOAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA4klEQVQY02NgYBASYEACeW/u6WowMEavMATxTAyQ5Rg3HGDZYcDGX7ADyGFlEEOTYzgQwlDEcBxJUMxIqQEmV8YQyjABIcWmJYDQ18VwnOvIAgb2ZgYOkIXZSPZZHWBQYDzGwCDBWcAUABRSgMvpaD6FshfUM3AWMDBwJcDljhgegFm0h6Ee5NpHSkowt2yPgMndYggCklwBCPt4mKChwfiRQRVEI+w7wJECM/QDy3cQ1QyXM2A42ArlZGd/QPZf3+M7BU6WG6CSrAbI4YIM+BZwOjDgADwMZrikGNhSG3BJAQCxOztzoVxfmwAAAAp0RVh0RGVwdGgAAAAABCBOJRUAAAAASUVORK5CYII=" alt="\hat{y} \in \mathbb{R}^n" style="vertical-align: -4px"/> is the
+vector of predictions.
+The linear least squares problem is:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAAAXBAMAAABDvDi1AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAi52vdN3PSDL7GL9g6fN9KhAlAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACoUlEQVRIx7WUTWgTURDH//vh5nUT82EV0dNK1R4UjC6iULWxiFI9GCmeFJJSqhgrXYT6QSnZaKFClVTrwWM8VHrblCIeuyDFFnroSerJnoookgS1iWkhvt2mNZum21jJwAtD5v9+vJmdGaA2xtcnUUN7hI5a4vuwCzU1eUu3uISzKon4dUt4Z0Kgv2eW5LeKrUTYMAxmfjP8tjDEl7aSRrIhwhXeDO/xAq12EpfO/kdxoioQV2wk8cKP8r/F6vF76NECtpKi+Rrg+hSbw7GG/SdCsUsXfV3oyTlCsfO6zd1OeuIBuDrbTlkeeCeCkUApng2wQcS97zi/IEGTHM8xDeQMb8gG/4KeyyqavcJSaXD74wyapVI8F3akoSlwB9hZeHRxGVqC4qmX3xhPstS7Bf4XhJ+lwffuLFKKpTiIpQ2iIHFheFTj4SZexV/85IHjXgueSVMvA3cGdYZq8iq1K0Y0Oi8WLLUnHQ8onjbjl2eJFeh6PPuU6RfrW3Y2rs1MkKY9Cy2H6Kwlt2aJZmRIVjdmnZekFYpnefopK+CJPK4wAwxL7rmSZ1fxbj/wUIWWxhF/sBQf0p0ZU7K6MTWFz3spkTO62KOKa8WhntjyBIPGFA+wr3GYUyKJIj6ug5+jXzJNUuekUvyEHs+ZEnNjkgiYsalDM93tIIXf1x0TXb2LH7pv9i7eNzx9euo7jByZQVr7pBNjxddzn8eb2s0+vN330VKcNwuhoWLt6cZ0vFoLjKijrWrZmA1jGG2yrDD9OyrPzDpTaLVWJGUbcx+9WTaGfJYsw28W54JUFZ7JIJWouDF7aCnLXs/n2Xxyt9k53ExVeCHrXK68MR1HfSfL1U3yN5XbS/v64OhppRo8uXFN/ceNeVe2pElANrthSIob8w+kktkBseKrkwAAAAp0RVh0RGVwdGgA//////mYwe8AAAAASUVORK5CYII=" alt="\operatorname{argmin}_{\vect{a} \in \mathbb{R}^m}
+\left\| D \vect{a} - \vect{y} \right\|_2^2."/></p>
+</div><p>The solution is given by the normal equations, i.e. the vector of coefficients
+is the solution of the following linear system of equations:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAAAVBAMAAAAutAQGAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGJ3PrzJ0879g6fuLSN1W3UPZAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABYklEQVQoz2NgIASWnHujzkAc4JzAd4CFSLU8DNwBbAzEgmgkNqOyi0IQFjUs9S0eb4H0OSSx9AQGiUpsBj5mYJBOYGAwQogwlQI98AGb2j8MDGwbGBhqESL5AUBiARalvF8ZGFj/MjAimbMFRDhgCwGgmYzfGA7vEYA74SuIFGDgtHviiaqW+QHQ3G8QtvBiAcZnDOxQ6/0PMP8AUhzGIAC2hlsB6N6vENml/gdYPjHwN4A5bP8YmL+hmht/AWj2BkjkOdRfYP/LwA/UrfHrAPsfBu6PqGrPAzH/Aag/vzPIf2DgdgD7QP4rw320wLADYi9YvHxiyH/AwAJUwfMBpEvf4QGKe0uAxm2FquX7ydB/ACw0eQED1wfW+jQFZGNZfzIwZAVAORw/Wf8D2UwmShcmMDBaWdxajOIErx8uzQfgacbc7jexaY2XgekLsWrPH2D/SKxa+wv9E4hVG2zXysAAAOJ6WiJf6yZBAAAACnRFWHREZXB0aAD////+jp/xeQAAAABJRU5ErkJggg==" alt="G \vect{a} = D^T \vect{y}"/></p>
+</div><p>where <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAAAPBAMAAABeqS+jAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGJ3PrzJ0879g6fuLSN1W3UPZAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABEklEQVQoz2NgwAcYGRgE4GxlF4UgJLlTi6ueP2NgVJnWyMARwNgAZgBBegKDRCWyEQ4GrG4NPPwX3BgYWiUYIAwGplIGBs4PqMoYDFQZ7jHYMjAwGzBAGAz5AUBiAVj+xLtnMGV3GJQYNjAwSLQyQBgMW0AqHEDEuYkI0zIZbDlNJzA2cASAGQxMX0FSIP/wOCDc1mnA8IDRhoGDgaEBzGBgXwBzkxzcbY9fL0IPGv4GGGsOXJlpowGGMgUGBo1fB4AsrXfvYF7wVUNXxg10EeM3EGsSIkCY+QTQlLEA3cYDDjY+hDK2oxi2ljAwTAZ7g60BpqyBwTAJXRmTidKFCQxI4Za1ovhCXLcD7vQAiQVsAAD7XUQ3Jsg0qwAAAAp0RVh0RGVwdGgAAAAAAVAk0ZoAAAAASUVORK5CYII=" alt="G \in \Rset^{n \times n}" style="vertical-align: -1px"/> is the <em>Gram</em> matrix:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAARBAMAAACr7HajAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGJ3PrzJ0879g6fuLSN1W3UPZAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABOklEQVQoz2NgwAuWnHujzkAk4JzAd4CFWMU8DNwBbAxEg2g0PqOyi0IQhir3Hy59FxgYzoHYLPUtHm8hwukJDBKVGIr5DBgYtzEwGIE5jxkYpBNADKZSoEc+YCjmP8DAkM3AUAvm/GFgYNsAYuQHAIkFGIrvA4XjLzCCTeH9ysDA+hfE2gIiHDAUnwZi+YTDewRAgQI0lfEbyBVfQVIgId6tyIrtgDg+AcJmfgA0GaSYHe4CVkOGZmMgMAHzNsFcCATcCkA3gwzlb8AavmAnWkM58cAwZAZ5kB+oS+PXAYy4+wAJBDA4Dw0dBm4HqONRAciZLAuQ3O8Fjp0FUGNAAOFmdqAZt6FOZiiB+x7ImrwA6kEEiJ/AwLYU5v6fDAxZAWB5JhOlCxMY0IKOZX2Lhw2M4/XDpfkASB4AxzdJly6Oe8oAAAAKdEVYdERlcHRoAP////qJ8jVgAAAAAElFTkSuQmCC" alt="G := D^T D."/></p>
+</div><p>The hat matrix is the projection matrix defined by:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKsAAAAaBAMAAAA6ULH6AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/dBj7YN3pz52LSDLi5wBxAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACHklEQVRIx7WVsUsjQRTG38bdZA0x2dVCgoKxsQtiJ1YpRM4DUUGuNcUVgiLxP7AUUdTWQi3kTvSKvfsHLpWEay4g2JrK4poVcnDNKb43uzOZ2Z1EcMkHSybv/fbb3W9esgCJtbYL/dD8cV9s80ltTxoHP96w1SNaLYWfmZpdN0TV0dmqSE9luEEO0i1TlO/w+O66Y4qtivTUYGf5KJWNmjZbgQy3K6tTo1EzY3pm5JCtxhjjzjYBGlLH4m75ksw3uIGNc3cav8l9gE8VWlSJuQDrM8CN3LkMwZ2tllS94ecXPID/cVssmeSYo2kv1AEWAMpy56OWL/PvD03IvMRch7CUf8ZF1iMGb8hvWk9yx9fxAUL6icFUY7Y5LFl/cZGmrbnFY73ya2tF6hSaGj5ASFcsOtR9S8Ky+Ox5si20Agb8itpJ1UHHc2247gQj/qwMXJPYnKbx2U3KxqfLb+KxHF6VdwY92VbwfD6eWbxR+VjKUjYPIQNfIh3b0fI8lCcWb1S/w/1ntsSIaeEd1VbwPBQc6724LaVZhDAECs44jnTUEATPQ3GC6EhStpM4M9u0WMdIU460obyjbpngeSi1IDraMinxfwCLzIgGDBnzLNpRBqzDB0bG0Ver2K5FB6zYdueCu7E9MM5nRr7FOsrPocNHJ7WLzIsujQ/J3gnVLvXLZLbj+rJVSmZr68vib/ydynja8l3SN/aStur0OuUVXYWrWwhEwAoAAAAKdEVYdERlcHRoAAAAAAAnI+EMAAAAAElFTkSuQmCC" alt="H := D \left(D^T D\right)^{-1} D^T."/></p>
+</div><p>The hat matrix puts a hat to the vector of observations to
+produce the vector of predictions of the linear model:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD8AAAARBAMAAACY12mqAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGN2/Mp2Lz+l0r2DzSPvzuB+pAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA2ElEQVQoz2NgYBASYEADaz5PkDq3Gs41MUBXwKTAwNAO57EyiKEr4A9gYPjGgAfcv8DA/QWfgngGBq4HMA5jRSGD0ARUBUVAZxTAZDi8vjGsB9rJYF4OBFVgBY9WrVqfAJPZxfOX4fwFFANY/oKdAZO5f4DxP6oNbB/AzoDJrA/g/ISqgL2BgUEJIaO/gRnsZ4Qb+BYwMDxFyNhv8Efzs/8GsDNgMuLH9R+gyHPpVzOu+LwBLnOBIX4B9vCCyLB9YzgvgFUeKsP+l/k3dgOgMizlyg7YFUBkADtKT3tGLePYAAAACnRFWHREZXB0aAD////9F5agwwAAAABJRU5ErkJggg==" alt="\hat{\vect{y}} = H \vect{y}"/></p>
+</div><p>To solve a linear least squares problem, we need to evaluate the
+design matrix <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAANBAMAAACEMClyAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/3UjPGPt0izKd6WBCl4VcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAYklEQVQI12NgYBD6LGgSwAAELAkM7J0gBv8CBoYZIEb8BgaG/SC5FUBcPwFIpADxfhCjB4jnA6W5vwIZGUDM9QFI/AJiNgcGBsYLQAaTAANDxAaQhgcMnLeBNON9Q+EsIA0Akv4U17SDNXwAAAAKdEVYdERlcHRoAAAAAAAnI+EMAAAAAElFTkSuQmCC" alt="D" style="vertical-align: 0px"/>, which is the primary goal of
+the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a> class.
+Let us present some examples of situations where the design matrix
+is required.</p>
+<ul class="simple">
+<li><p>When we use the QR decomposition, we actually do not need to evaluate it in
+our script: the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.QRMethod.html#openturns.QRMethod" title="openturns.QRMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">QRMethod</span></code></a> class knows how to compute the
+solution without evaluating the Gram matrix <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAQBAMAAACW+SCeAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/3UjPGPt0izKd6WBCl4VcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA2ElEQVQY02NggIKLS7wOMaABvgcsCxjRBbkYODZwIvGFPguaBDAw7ACxGfUNhV1BDJYEBvZOBoYlYBVuDAwVE4A0/wIGhhkMDDlgwV8MDJwNQDp+AwPD/gAGVZAY628GBu6vQMYKIK6fwP4BbB9QFftPICMFiPdPWNZVAKTZHIAqQYI9QDx/A8QlHAeAZsKMyIA6D2g2AxvQCK4PEEvBYD3UNSBjGC9ABUHmywIxkwADQwTUSAZFoKu6QcY8YOC8DRXj/sfAMBeogPG+oXAWLBhkPwuaAU0EAK/+MNYh6p4MAAAACnRFWHREZXB0aAAAAAAAJyPhDAAAAABJRU5ErkJggg==" alt="D^T D" style="vertical-align: 0px"/>.</p></li>
+<li><p>We may need the inverse Gram matrix
+<img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAAaBAMAAADmhQeIAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdEhgr+md+4vdzzIY879IvQQWAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABPklEQVQoz42TsU7DMBCG/6gJJG2iRJUQgoVsbG0lXqBDBF1A7AzkEcrCwpIJBhgYYWunwtaFEYU3SB+CpRtiYkJcgs++SKnaSGfpO3+2LxcHWPf4e1j/WDsbSHjbWOoyOaPn2wXDsCa1NB7hycz1KLaSJEkrydFLMtwgYrAHcqdjitPfZBkDnTE0+OcsvVOUE94E/hXgPsLAVDmtk/v/iTADdoF2CgP74gWrif4cyGMEMQzkQtouC7yjKCIUVUZBGBsppHV4pcgjd/YADQgyI+UfNFxTHMxVRoGTGqlP0fmmYaYSDN6wLrlfNPyoBIOUyuPa1Aabm8cgjyuolIAWHXJJDLLwsgX5ANaF3lqBbIGXwr78PHvRH5ZBNtOarLhrtas9XiFNJYxW/CQLSV6zZC5ddV/SRqlXx26jJPqNP4mpSBIV3tSgAAAACnRFWHREZXB0aAAAAAAGzkBEOQAAAABJRU5ErkJggg==" alt="\left(D^T D\right)^{-1}" style="vertical-align: -6px"/> sometimes, for example when we want to create
+a D-optimal design.</p></li>
+<li><p>Finally, when we want to compute the analytical leave-one-out error,
+we need to compute the diagonal of the  projection matrix <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAANBAMAAABSlfMXAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/dBj7YN3pz52LSDLi5wBxAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAZUlEQVQI12NgYBD67BCoJs7AwMDRwMAwC0gz8G9gYPgDYty/wMD+D8TYz8DAmABirAAqWwBiZAgKyh8A0nx/wcoYGHg+gJUxMHBNYGDoADHYBBgYskGM9wVgZQyM/ctZJT8XMAAA8OAWeIvNF8EAAAAKdEVYdERlcHRoAAAAAAAnI+EMAAAAAElFTkSuQmCC" alt="H" style="vertical-align: 0px"/>.</p></li>
+</ul>
+<p>For all these purposes, the <cite>DesignProxy</cite> is <em>the</em> tool.</p>
+</section>
+<section id="the-leave-one-out-error">
+<h2>The leave-one-out error<a class="headerlink" href="#the-leave-one-out-error" title="Permalink to this heading">¶</a></h2>
+<p>In this section, we show that the leave-one-error of a regression problem
+can be computed using an analytical formula which depends on the hat matrix
+<img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAANBAMAAABSlfMXAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/dBj7YN3pz52LSDLi5wBxAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAZUlEQVQI12NgYBD67BCoJs7AwMDRwMAwC0gz8G9gYPgDYty/wMD+D8TYz8DAmABirAAqWwBiZAgKyh8A0nx/wcoYGHg+gJUxMHBNYGDoADHYBBgYskGM9wVgZQyM/ctZJT8XMAAA8OAWeIvNF8EAAAAKdEVYdERlcHRoAAAAAAAnI+EMAAAAAElFTkSuQmCC" alt="H" style="vertical-align: 0px"/>.
+We consider the physical model:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAAATBAMAAAA5aq23AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMASHS/GPvdnWCvz/Myi+k+AKxlAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABMUlEQVQoz2NgwA7coXQBA06wAEo741TB3gBlMF3ApYQPznqAS4kunDUJl5IcOKuLgYFRmYHJAEXa864LQwDQFcteXFvLwMDKwODEKsAG9BnzKhCYAFTB84QllmEDA8NlhvUJWxkY+BkYGuQZWAVQXKrA8IfnAcid71ueA01xYGCYxSCPYk8/A0cAI8gfLP9BXG6gkh0MZShK6hg4F7AALWLg+AbiAt3C8oUhnQHZLcYMfBdAzl3M/J1BGKyE4QPPRxRTtBjuH2B4wsD42f8vyxsGhmNAoZs3P6Ao4bxUysBQxMBgtXDeqgMMDHfB8WGAFm6zGBhOwTkpQD82sB5AU7KJgYHNAcrmAUY5F4Mtahw/YAL6mAdmMjNQLe91BRQlTEY3QVQTlHsRd5LigdJARwAAQBBG/xqiua0AAAAKdEVYdERlcHRoAP////6On/F5AAAAAElFTkSuQmCC" alt="y = g(\vect{x})"/></p>
+</div><p>where <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAOBAMAAABtFQfxAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdM/d6WCLv/P7GJ1IMq+qQHN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA6klEQVQY02NgQAcpTi0Whgxc+wKrGLADrgcKvA8L2PgPPGRg7eZ1w6qAQWEvw2EGHQaGdLYFyDLpxoYwBccYdjNMYGDg3IWsNTkKYYIogw6rbgADUwFQQMgkzCgBSLM9QLihVIHBgEuNgUFmFlC8gOkzB9A0hsVwNxhZekOYrAfeMTCwMLB8XbIByAuDK9CtUoCwihgyBYD0+g9g7hZjY5gj32xE8Ve8AZiKRniTiRnJd0wF9Rt4QI5lRihgzFVAKDhf9T9hyQUgg7EApqCAQUsaoYBd6ZyTLnI4iLg3Hbhc+QBbJEBCEg0AAIgBPRhHKQ0AAAAACnRFWHREZXB0aAAAAAABUCTRmgAAAABJRU5ErkJggg==" alt="\vect{x} \in \Rset^{n_X}" style="vertical-align: -1px"/> is the input and <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAARBAMAAAC7jDh/AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMASHS/GPvdnWCvz/Myi+k+AKxlAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAvElEQVQY02NgQAP3Xu3LTmLABCwTFvBMMsAqzrCgBknA1yxNASYuixDmzXBAqNdgYGBUZmACGXcTyXyLBQwMTqwCbAVAbgJcPCv1OZBukGdgFWBg4LgAF19jsgDEmMUgDyTZn6WlweydWAQS38FQBiQ5ChDmc7EBncDyhSEdxEeYv4DpDsigDzwfQXxluLgBwxJ1kANvfkB2v97jXQLHTCeArDRA9i8M8DWwHsASfAxcDLbYhBl4rytgEwYAjXkyt/gWmygAAAAKdEVYdERlcHRoAAAAAAQgTiUVAAAAAElFTkSuQmCC" alt="y \in \Rset" style="vertical-align: -4px"/> is
+the output.
+Consider the problem of approximating the physical model <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAMBAMAAABCcoqQAAAAKlBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADmU0mKAAAADXRSTlMAGK+LMun7dGCdz7/z+qwmQAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAEtJREFUCNdjYGBUNhRgYHAVEDNgYAhn4HVg4LjA0MbAwBnAoMXAwL2BIZiBgX0B8xUGBgblygQgycC0AETyFDAwTGUoBbKqixUYGABabgpEH3HNBQAAAAp0RVh0RGVwdGgAAAAABCBOJRUAAAAASUVORK5CYII=" alt="g" style="vertical-align: -4px"/> by the
+linear model:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL0AAAAyBAMAAAD7H8cOAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGN2/Mp2LSHT7YK/P8+lXLbkOAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADHklEQVRYw+1XTWgTQRR+k79NtkkTWpUWKUawUPDQilVBRItgvWirhWJBkbRWK/QS25N4aDQYPdUeRNCLK5ZSwUN6KUpEq4KFWkh6Ensxgoq0B6ONlSq4vt3sTjKz6Z8yF8k7ZL+dN9/HzJv33mwA/sLIydHG83EQZi5/uA1S4vShD6aISP12mHE3CNSfJCnviED9oBR3noCSlWz95lFv66aq6k8hzUEN5kBz8puQDdQvmm3uQJMI/WrVlP23HrHReB7jxmWVtraxtTArAsVnTRjPSt7xbGGZFUWKMhstuyybb24Cp2JGIcS5y9VI8WvHGGaZTtjET7wg70EV+prmde5mi+q7jUAszyy0GEWPeNeN38Uzd3VmgW2j6CHvsqvxlfQZphTV00y6WRiA8c4ADOGGX8x1vcKKtSi9K6jc9mt6uqJOFcmJMMwqT9iGeeR4Dvum0V5rE1oC1SHt/j4DyeBbAL82lveitS7RnLOFvGlSizq+8GWY1RDLVAbAE+aW9xn8TY60djxf7n3EVQSsPcJMQegCbxymUKcVQnBcQxzzCQzwBZSBByBpZ09U7d1nLZAkzdBb4FG0iKBOCAsKEcechTaO7EzjZP37Q9Y7mDX+MG8CRxaXR1IjYYxNBEIaYpnkK9TmptII2xvgk35KL+3fod/QZ+LvpeGRMtAmu/ceikBWDrhARywz4/gB+vnm62TChQX0HqSFLYvkA8BBy/JP5+EQmXfZ5xDUuaAbdMQye3szwOXn+FVcQgeuefLpNCbfOUuhzuTx/ev9nb4+PI7KU7EA6IhjOq1dtgz3f4S+beXdF7m+X+NuxBR0m4hhlise6y3hw1XYzKxxTHBexx1u4BLZhb/DJmKYXthtje6g5jS3ZefT00cbKtMm6CjDdJ21NNtoTOeNGq89vH87LbOGYt1/BSYbBuPJh88epPevsj7m2sxIzg0j9UsirndZpfZLhL5zJ7Udpa/N/9AqjA86ckWMvteoKvegoD8AJmgRo18j9wjVjw53bE4kEmOi9PcrYuPzpk6oPklFD+fic1SIvhSvzBWA/Lh79dl/ANvq72Q5dOL/AAAACnRFWHREZXB0aAD////+jp/xeQAAAABJRU5ErkJggg==" alt="\hat{y} := \tilde{g}(\vect{x}) = \sum_{k = 1}^m a_k \psi_k(\vect{x})"/></p>
+</div><p>for any <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAOBAMAAABtFQfxAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdM/d6WCLv/P7GJ1IMq+qQHN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA6klEQVQY02NgQAcpTi0Whgxc+wKrGLADrgcKvA8L2PgPPGRg7eZ1w6qAQWEvw2EGHQaGdLYFyDLpxoYwBccYdjNMYGDg3IWsNTkKYYIogw6rbgADUwFQQMgkzCgBSLM9QLihVIHBgEuNgUFmFlC8gOkzB9A0hsVwNxhZekOYrAfeMTCwMLB8XbIByAuDK9CtUoCwihgyBYD0+g9g7hZjY5gj32xE8Ve8AZiKRniTiRnJd0wF9Rt4QI5lRihgzFVAKDhf9T9hyQUgg7EApqCAQUsaoYBd6ZyTLnI4iLg3Hbhc+QBbJEBCEg0AAIgBPRhHKQ0AAAAACnRFWHREZXB0aAAAAAABUCTRmgAAAABJRU5ErkJggg==" alt="\vect{x} \in \Rset^{n_X}" style="vertical-align: -1px"/> where <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAAUBAMAAADW/wrvAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGL9g6Z0ySHTd84v7r89QcTzUAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACTElEQVQ4y2NgYFQyYCAPFBNSwBIAphqQxbhdXnmubGAQvdwkgE3LFr8ls2YwMDB7EzCaPwFEMqIYzSDLx5DbxLDhO28Dg1VAygY0LYwXHrDdUGBgqBcgxmgOAXSj+VgT2CfwFTBwK2xkwDSa4UEYA4N8AjFGczNgGM2+gTWAB8g+imSrIMLoaphWMozmMOArsEtmYHiEJF6EMLqZsNFAX7E3MUgwHoPyaxIgRifZMXAyyG1g4KhBcjUnPKyVHxA2up6BQYKroJFhMZSfBzJJlvPlEUjKYTDnvYBQzPwAYvS8Oa4gD+NPtuweDAwG+QwbGAIZpyIHSJIchCX0gPsEkvI+AbDRzxRBdjB7MMA1SUzAMNpSEUjcAxodwPAY2WjeUtTkyDcTDOY7QALkegSI1jOAa+pwwHR2FBAvBibrDQwHUKLxwURsnlSFhjUfJ9D5LMCggmliw2K0PFDNN2YBbgbGBdYFSEZ352ExmTsAajTHNlA0FiA0IRsNzMXZvdDEN4ObYRsDh3JqAzwamRj4JAIwjYalEAWGh61grUBNjXeBQADZ6A3fWSdwQY0WiusWYGByhic+Dhet52yTzmIabQomW5zWFWTqXABphWpCdTUwFxtIwbIMBxBzVTaQWPQBtcI1IRvNGsAl0AQz2gyIpTjUCkgzGpjbgJoKIQGygCEBAtkY+AqkGB4DyzR+kLWgsq2WUZVEV9cjabI9nTCVYQYIcgZwMtQyhAKdybECvbQmFgBzDArggNIIw5gLqFTLCEOLXHJrLTygAdXxAE+glh6v6KuHAAAACnRFWHREZXB0aAAAAAAGzkBEOQAAAABJRU5ErkJggg==" alt="\{\psi_k : \Rset^{n_X} \rightarrow \Rset\}_{k = 1, \ldots, m}" style="vertical-align: -6px"/> are the basis functions and
+<img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADsAAAAOBAMAAABjvHmeAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAYM/dr4u/dPP7GDJI6Z3Po2ubAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA00lEQVQY02NgQAexl3otzBm4nohnhzswYAIuBwVu9wRW/gOPGRqwSzMovGY4zKDIhSLNFWZsDpM+yvCOoYs9AVk6WAqhu5BBh6uBSRTIZVQ2cQQJszog7E5UYDDgceB7A+T6BzB9AwkvhtttZHkPbiT7Zwam7yCGKFxaO0sBLs3xlYHzF4jx1tgY5jSf53Dp9b8Zzl8AMeQQHmNiXgCX/sDw3sEAyGBGSLNHw03n/cDdX/4A5IgEmHQCg1YdPDB01c5eQvZ37bWmA5szMYMbGmooAAAOXTQ8PtJPmAAAAAp0RVh0RGVwdGgAAAAAAVAk0ZoAAAAASUVORK5CYII=" alt="\vect{a} \in \Rset^m" style="vertical-align: -1px"/> is a vector of parameters.
+The mean squared error is (<a class="reference internal" href="../../bibliography.html#blatman2009" id="id3"><span>[blatman2009]</span></a> eq. 4.23 page 83):</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQYAAAAYBAMAAADqsE5QAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGK/zSOm/YJ3dz4t0+zKItOh8AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAED0lEQVRIx8WWT2gUVxzHvzO7m/0/O40YeikGZVPUYmLxUrDNluJBD7p66EFtm4hEWoTuqaWlpUtBbMDSCQXB/tH1Xw8tkrHYk/+WllrRgxFvKuyQkkD0YGrcQ2z19fd7M/MyM5s1hz34lp0/733m9z7z3m/eDPBcy/U+PO9iVDO9HYbYfMTpLEC8nLVGv+tsJDsfCb0X6TZNWlXuqks7aIp5caEhtTgfIKoetMwkh+7BEh2+tw+/912qTw7u6fvRovOMS/aEY/y28/bpphV2yKizGpBoiIGMuFXShhZ1IOIdMYfxJxs4soROgcdhlA7jJ5HrxVs2+nmOqOkgjdKO+07OjqRQDTMRh4Pq3iu0edAEDrfOUnHdJY8wRBlp6pEjE5QqOexwYZZqioiZ0KUDOFPJ483kXrmPOGjlsIM6TfAmI0oy0xPh1DM/KvmV449wAu51dP4xTQo52HelQ8GBwQ4azrqWsrwSdchW7JDDwkjJW4+L2k8y1ertUnjb48yQF1mvG0LInLTfBypFJMYAhxxSMGmK/Gfu06hDphIOqkgcldtj87KHZG0RB0mkxWE/sgexwzYT9SLdwS/UeT+Wc3WeE37tWVMeBB2OH4g4KBITsuqLpts0Ebqw+/wLfl1SuLOXVxA7xGyNxgFbxENyWDnO1TH6T5kv2Sjw2Qc/UzkhHV57lRymR6rTI56DIjHghham3M+G3Ldrd+ATjX/krqAgdtDLORR5Lj/kfNC5eor+uzlF8mZkLpaRg9Zwllc8B0Ua7u2tEu7iezN4XaKOp/AIffChK2v6EDsYT9nBALrK5JCjHzbRmM3ic/DTEs1J2l8+/q4/F4qMuz1YDXeA19P/kyNUvucJQnLCJ1bnn0iAI69XDtixlRxo1YoPyGczS6sXPbllrEFLPtQ0BvNNx3dQpCZHehTf/NuaDweg1zwiZaWE3ZoPuFgnh4TMU3b4SwJdQ9jlOQTygUJ9RYEeB3PSJWXAlIXCXKvDCBK2VzcKiIEWh2GssLEKBXpQS+ygvUETaCJXy9IczrSsUT0/UBLI9V06KBLb5Q1DF7w0GFbwumu47LgEjRn6/+O6GQWl0dO0u8zJwZf17i/3YrKxZ+UZytYUxVl7lTTPh98Xb9P74iil+Q3Ld1AkDsF4XVg4I+ZIMBta5PULX0MSfzfmkWmIDZCRPajNe9Pg1YPncGyx1ikz9sh3UCTuBZG0Gb5kDaLEmILavbu571jd7SFatsxjas72F1+PjHR7L3LNxqgYR/agdg7TNLV/UrqZS34/eCRFDb6vh4NYqpwrRwmOPPxsh2T9ynVabM4t/Q3jkVQ+W2jIloJYbv+viBLnFqB2DnAC22d/yynGCIx0mzQLxffP0h19DP7R6TetXNa+/R+o1Tf26hBpjAAAAAp0RVh0RGVwdGgAAAAAACcj4QwAAAAASUVORK5CYII=" alt="\operatorname{MSE}\left(\tilde{g}\right)
+= \mathbb{E}_{\vect{X}}\left[\left(g\left(\vect{X}\right) - \tilde{g}\left(\vect{X}\right) \right)^2 \right]"/></p>
+</div><p>The leave-one-out error is an estimator of the mean squared error.
+Let:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANMAAAAXBAMAAABjUGdIAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAi937dGDPMp1I8+mvvxhkVxmfAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACsUlEQVRIx82WQWgTURCG/6S7m8Ykm1AFDxJZktCDotRzQVepoojYiogHaVOhDUHUqOhNzEFQVMpqFTxUIigiKBihVi9iDhUpCi6I8SCmUaQUiqRWivUgcd6myWa3uxsxPTjwXt7OmzdfZt7MJsB/I634KiHnaJJmk7951BC6sph2/DJFNovpZkmiCk8WgaKDybfKR+FfCZ+6KwuXzFBcyMF2FaZf7iliq4WXK/urX+BGxVu0/CNmMvJV0+FPMZRHdUC9QuiXX8bZet2asQfrYnAFlXHw9z2PAZ4G+IFz6ZuPJOPxYGpx4S4yFCQH1EZ4JUGB2xBPLu4ZV3ENSSDsYunP0HQKGRnCgiNKjDuiWtMtwJQJhfgFXEQH0DLENCXyuAt7ae60QQUogbfhdar2DxCUA6cxUmGEI7Eq6iqSfKIbgqp7fEsjaoPiZBzalKLisJcuyt1UiKqDSVuvHtV2SGI/xbJZ93iExkfjcRbujvU97SFoqROsIdzhJ2391U3N0JXT7+p9Jeu88kZHPaSxgSVrkIlmnKFTqjC3ooPyS3LdGhXGcekOOIWtvVrgX2p31R59VlnlsZJtBVn3iPM0/TT48I5SvcM3P5MGKx/Rpq2yeNFLDtey9WdN01NDJQrGUuJHWdCzFJDx3vdpnVeabdjpZZPiciRSLYuJ80bTPIXlJvw205FLbOqTGqH4OZPioF7sgtvwNvOxYIIy/FpQdXdVKlKNTqa9qiPpaGABtwwat47iVhsyGGQ32ocTA2YnVC+ZQjk0k6ppzhSXDO/v0nfxqbEm1SpKxbGd5vbht3ROwAIVGBwZS+iaYSqN4VTdoOd88vVgynhwsa92P7+nnHyXs+pUC5RZ5AbPqH9b/JXHJlG2UrJFLXHENXhuJBm7De7uMqO0DrbZUpb33xD7Ff4DYle5QZegiPwAAAAKdEVYdERlcHRoAP/////5mMHvAAAAAElFTkSuQmCC" alt="\cD = \{\vect{x}^{(1)}, \ldots, \vect{x}^{(n)} \in \Rset^{n_X}\}"/></p>
+</div><p>be independent observations of the input random vector <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAANBAMAAABWYCMqAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMA6fvzz0gy3b+vYBidi3QixNnZAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAYElEQVQI12NgYBD6/5nB/5MpAwMD238BBvYGBhDw/8rgCWYwxH9hgQgxsP+vgDAYuIAKoUD/N5TBaf8TyprO9AnC4Cng+X8BzDrOwPDfACwE1Dj/H5CRrP+dgUX/vykDAAZ6F/4sRlTjAAAACnRFWHREZXB0aAAAAAAAJyPhDAAAAABJRU5ErkJggg==" alt="\vect{X}" style="vertical-align: 0px"/> and
+let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKYAAAAWBAMAAAC4bPoxAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGL9g6Z0ySHTd8/uvz4tEt/QKAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACR0lEQVQ4y7WVP2jUUBzHv7lrLjkveRcKBze0NnXTQTIU/IOFgh0sOERBUHEI1dFiFkG5oY8s7SSn4nCb4KKbg1oHkYKLixoUPHSQOLgdckXwVt/LSy6X3CU9QX8Q3p9888nv/d73JcB/DRnNNnYLBTx2/4Z5DtsraBQKeDSmQEmHLNGaqKygZOQLzbApULBQQtiMLUaEcqYa5MoJla4cX0wryOrXtScUjTde/KYlfrvuiIHmcGbFzGVqDqm7bzOKOR3XPQQDjeKkfY3xlL0RZtXgTLRzmUxwG92MgjF12VHaugtifucV+j3GlPwi5gU8jRUHD3doxFQC2a6x/vNw/aPMElv7Qyj5VmGCbvmzJRTkvjHMU7V0d/kq8BExc8GB4kE1VYpTrx1CJ/JumfCYoC19g1D0krWvL6OK+QBqa5jnJtCsuVUb4Zr0yTaiO3ggBEIhxUWdq355FhnnmBau4BfbpzOAtYmai60woYnMstLHjhAIRTkY5rk+L3qzPnkZmonixCJr3/FsCUtdyrGn5jMqF0QKea3TifZIu5ku1+wn4DJrH+FS8WE7YMkpC5XtpJ7+3ZT0LN8jA9Ieq1ZhLBhVOzXRTph3NlJ3BpGX+pVBMrlhjF913HBTT3oxswS9mXpd7M9er59MtljFWs7Ixcbk/YfM4Rf+VFePdCv3Xk1iQh49xFmLhuPzmcnoHI1HxJyxak4x8zReTPkVFuedMhsfHZlVMyo+9kvBlEyFV1F9DPKD7sP8eXHav8VSiCq7//Cnxr/zfwCYuohtqZ4T8AAAAAp0RVh0RGVwdGgAAAAABVdJFYMAAAAASUVORK5CYII=" alt="\{y^{(1)}, \ldots, y^{(n)} \in \Rset^{n_X}\}" style="vertical-align: -5px"/> be the corresponding
+observations of the output of the physical model:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGkAAAAYBAMAAAAL0s5tAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMASHS/GPvdnWCvz/Myi+k+AKxlAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABr0lEQVQ4y6VUTUsCQRh+XGfXr9QFIejkmlAQGB46SYEYXYKwn+Ah8LqnuoWHunsLosIKgoSoS9BxoXtJSeFNutTByCjqUtTsh7M6jlH0HmZn3/d5Zt7PAf4hOlAI/BXky9KF6GJwggOVO4ZZa50SkvxlDhTrWK6AhoqUkBXhQYGSo9hCOFfGuZC1AQ5Emo5iCcSrQRGyFsGD9pgCEQPzIlK4AB404SimARkYEbGCLLMMdOkoRoFhK9x+kTuxu6CoCk8SUjoIrACVXjzZrtMKRQ1AOni4OQIDhWrIyaqiS6regkczsZkqlUNzd5Gdq1F3KPMax4VTMFBERykOWUW9qGGB8+3OuidOd008rd2DgRRa903LIOiJNtZhs0C+ui0m6wzLQpavSQ+0PYT/radbdJBXFLtVLC5vGo/0k6de7nvf3e6zsoH20LPwLqkS/rAz73nJf5KWa6GZR6PRFk/I9rjZTAqtcmZ3p2q4BqvKvvSAKQxUrCv79GM0tJJsDGCFtJ7uZUK7N4gZMWcVk7ajvIGc0J6+1cSsZMoe4r75YVP5k/j55yT2q/crwf1TF74B0hpmtQcp4MgAAAAKdEVYdERlcHRoAAAAAAAnI+EMAAAAAElFTkSuQmCC" alt="y^{(j)} = g\left(\vect{x}^{(j)}\right)"/></p>
+</div><p>for <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAAAQBAMAAAB6jEWIAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAMvsYdGC/z4vzr+lInd0zCBRFAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAtElEQVQoz2NgYGAQYkAB0QcYcAITFJ7seTxK0QA/VZSGJBBU6tvcUQOkWAVKQLz0ciCowq6UMUaDwQ9IczBMIWQqC8cEhusgBvNngg5gW8BQC9YzgaBSpgCGj2AtCYTcyiDPwLIhAEhzOqCZGsDAWMwAwuIGYIKBoRvohAaglL0Bikqr+l0HeDQYGHgUGQ4JgAigmhsMPEtAqiKxhDULEhvJ0ipilRoJKmNR6oBNF3ubAJFKAcw+KJEcN0EXAAAACnRFWHREZXB0aAAAAAAEIE4lFQAAAABJRU5ErkJggg==" alt="j = 1, ..., n" style="vertical-align: -4px"/>.
+Let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAARBAMAAACLACleAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGM/p3XQyr4udYPNIv/vElxQ+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA4klEQVQY02NgQAfNRpu9XRkYpy+9yIAJGAsU2EovcPAfKMUuyaAwjeEIgw6KaK+LK0zyBMNMhgfIki0LETqjGHS41BYwMCorMogEAAU5ChB23lJgcGDUYGBgTv/BUD8BKCgCt9PJzxLKXs79h2H/ASBjBVxS7aICzKrzGxj/g+jJLi4wB9VMhUnWT2D9AqJXIrzCxCIA5fgv4P0BolkQkqxtMHPvL8j/BqJZL8AkLzAoRkIlhTb5P0D2Z7DtpgMp96D+OsAwvwA5hJABxw+G/QIMOADTH95fuOQY2JR8E3DJAQCcTjzyEh0tCAAAAAp0RVh0RGVwdGgAAAAABCBOJRUAAAAASUVORK5CYII=" alt="\vect{y} \in \Rset^n" style="vertical-align: -4px"/> be the vector of observations:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ4AAAAXBAMAAAAIFOtYAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGM/p3XQyr4udYPNIv/vElxQ+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAACGklEQVQ4y72VvUscQRjGn11v9/a83XORCLEQT1OkE9OmWkHEFMFthCtycByBQEBMExGb2xSCQopNYSkegghWh/+A14idOS1sk+pIYZEihEMOzDuz6u6MNwNpHJiZ/fjNs/N+zQJP1woYC/BJR8RsyPPLofX57ZZe7xuWZzGu+6DPRoOrHmFR/20YHdiz8Hw1MZFMF2yI0EWo4JI9OSHTsyK13ibGN6o+Ktxu+6eSK/MxX2N6dkett4aonw+xwjfqBEq3NPmU85keArXeHNzAbCPHjTBjFTaEjJ5R1ukV4hIwCtB3i20VVkkmj+xtwdUE7Qpme/8jzoDPwKQSW0gmK8Thr5oTqvWWydTRiMKCfTgzX5KseDGFZ+IaCtRpB9UkLOZgKQ6YD+Erpc760EODufJymtpL9qgFI7zGG7zjCwfnJgcs7jKXdjPy8Oaw2MeJ4EoKwrD7G9dwKJWNwemXAOAmPqdeSrP+e8u4FViXgpUv0wJdk4BiqteIrT+iLVTWxWYh0OpJQOo/LDW9HgT/UTwm/Vys1ZOAjN6P5upfkX3F/Lua+rTuP+4CALy/c/0UZffxklTJO1SM6430/pxicl7L9EgCgK0713eBNvakEqizYTfzQE7pUAao8u6b08OJdMRR4b6m00yrJwJ2WuRm37uRcDqiyl4m7yzpPbsXgOyha0+/rcnBO8DWDvR6AoCv+h+H/b9/rnRH/wDr43P11vcrzAAAAAp0RVh0RGVwdGgA//////mYwe8AAAAASUVORK5CYII=" alt="\vect{y} = (y^{(1)}, \ldots, y^{(n)})^T."/></p>
+</div><p>Consider the following set of inputs, let aside the <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAQBAMAAAA2ZkhwAAAAJFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADHJj5lAAAAC3RSTlMAMvsYdGC/z4vzr34R4bIAAAAJcEhZcwAADsQAAA7EAZUrDhsAAABCSURBVAjXY2BgYBBiAAETBjQQkgAkWAVKgCQHwxSQCPNmEMkyAUSygWQZOB1ApLUBiIwE66oCYiNBZSDJ3ibAwAAAAVMGWsoIyesAAAAKdEVYdERlcHRoAAAAAAQgTiUVAAAAAElFTkSuQmCC" alt="j" style="vertical-align: -4px"/>-th input:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUgAAAAYBAMAAABqw3lDAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAi937dGDPMp1I8+mvvxhkVxmfAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADT0lEQVRIx92XT2jTUBzHf8marHFtLCIKoiMwEUEc3cnDDsZZBkNFZOhJ7BRWEf9VRA8TMYcdPIgUt4OHSQdeBedB582ByBwW7UEmIswoYwzm2JwM50Hm7738adIk7wUvRR+85iW/7+/zvn3/2gD8SyVpX0WYYOoMtQtSPJJotWa1OpgBoNEGF0KkENDcdVvzISlbSo4DM3EIVIOFr5FyY35Y0nRaXIglRU3yY+2hWnWbaTOQIrrRRYAbADMMvIfUPOaHLVqX48CFOFLUDOjuQ8FuClOQyARSym5rM+UfYOCRhBDHpA+GydtLrkkWBKXzr46YRCOMEmjb+o+dkCpawdbD0FwNpOTd1iTl32TgkYQQx6QPNgnC7IRrkgVBaeZXSieaRBZA6r9l3H+siSbcqVReg/neWdve0uu22ilfZOCRhBAKQ5M+WDuoaf1bpVB5y4OgVNHkEtFIaPIqlHWQ10Rn7YyD2sc1Occ2iRBnJH0wTG4puiM5xzaZNJqohpjsgaOY15m2pxuyoEwwTH7AlQwwwsATUtY2OeqHYXKTvXE4EJTKpRPXiEaisHdY2xL2xlE0dw+FmsyB9HIr2QGRBUmKPccnO4o+WA7gnmWSB0GpCHMZopGWyf15rJ/AnpakATI1u8+bso10fubpptNWEPrCyd17ju3KYDBZOwJl27mTfNseyWiItx+isUw+wroXp516xDUzTGfqEkwXsFygj59j3QGXtYeQIKe6oocfPlV5ZUMWegjEKcPWxUk2xt1IBMTbj6Uhnaur+PETBLpzxEFQg8dkN9GOwYtTqG/F5pdwfAu0rC4YIHwdrJ3sNsxJ3l1zFgHx9mNpUriUBRzONPv3mpoEdZ37B2BpOfJ3iJ8cJSUmRZz3Lk7eE/IhrXD5eS0qEiM5Skqme6MOqdCB9KxJsnEuptfgAZMuVz8bSjU0xE+OlNKNk4cr/UEpbhxPOYhr+PfSd3XcF6+v5Zn1zEIxgLpu1id7Q/U1ICXnpLS/cyrk+/iPIHJOTp97U6g5UDosjVvxPl0YeXY2iBrK1Cf7QkNFTw2RStmYy6Q35Djj3HuKHj8UIv2/TOb/Cs+3H+ebJuKaLDfQJP3TG6eI1ca9IQ7ocZXdpYa9xeKL2B/eDPKBm9zKfgAAAAp0RVh0RGVwdGgAAAAAACcj4QwAAAAASUVORK5CYII=" alt="\cD^{(-j)} := \left\{\vect{x}^{(1)}, \ldots, \vect{x}^{(j - 1)}, \vect{x}^{(j + 1)}, \ldots, \vect{x}^{(n)}\right\}"/></p>
+</div><p>for <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAATBAMAAACU67UeAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAMvsYdGC/z4vzr92d6UgMNVdRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABJ0lEQVQoz2NgwABmqQw4AV8AVuE7DHhAbAOYEkIV/QiSeYDLms9gygRDi8x7XFqYPyJz2nZvgdvCj0sLA7KW7mAkQQJaQhJAJMcCZKuxaPFp7qiDamEVKAGJWMM9+AGrFsY4DQZvIP0VZDzDFJBQBEzurQNWLSwcExiOg8ISJM0MDrezu3eDvc+6zQC7w9gWMNSAIroUpH8CSCQGJsUzAbsWpgCwP26BtYO9zw0P7M/YtcgzsFwAJpd/IDanA9itCcjByB/AwFjMAMLiBmCCgaEX6LQGaCDbG2DEi1X9rQd8GsDQU2R4JAAigGpPMPAtMYBqicQS+2B7kVzlgBqVVTiSBFYtoIg2ElRG0/IFw2Qk3aCIZm8TQNPi6YBHS6wD1pQXhz9XAgBkp1Czx+c6FAAAAAp0RVh0RGVwdGgAAAAABVdJFYMAAAAASUVORK5CYII=" alt="j \in \{1, ..., n\}" style="vertical-align: -5px"/>.
+Let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGIAAAAVBAMAAABPrCZEAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGM/p3XQyr4udYPNIv/vElxQ+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABYElEQVQ4y2NgIBdMgNIO7HiVMYbAWJwCcLEJ+HSwBsNYsgjBi3gtSYYxWqF0+wGGCGQFHMbaJlsCGCSrYgXQdJRBFYgWMOSimCnOxJAey9Dwhz0ATYcjA2d5efkERt4ABhZ0HUycCTwOTAfACpB1QABzAoMQJAB6XVxhOngaOCfwofvjGpQGShwHM1oWIuxgXcB0YFEWhJ8NNExZkUEkIBSq4wg0EDgKEK7KXQR0qVADmMtV18bAnP6DoX4CE1TBTAYGBRAtAvcHi8pjtBhazv2HYf8B1gOQmDdj4AEHygqEz3OF0OPk/AbG/wwMjWC2ZwCDBJgx2cUF5nP2kwFoOuonsH7BiNqVSKGr4Igm6b+A9weGDhYkHRFJaJL3F+R/w0xxF2A6eBmYRNG8LrTJ/wFmioPGB6vxbR023+eocgcY5hdgyQjQOMcCOH4w7BcgKfMx/eH9RVp2ZVPyTSBJAwDeAkv8VKg8JAAAAAp0RVh0RGVwdGgAAAAABCBOJRUAAAAASUVORK5CYII=" alt="\vect{y}^{(-j)} \in \Rset^{n - 1}" style="vertical-align: -4px"/> be the vector of
+observations, let aside the <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAQBAMAAAA2ZkhwAAAAJFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADHJj5lAAAAC3RSTlMAMvsYdGC/z4vzr34R4bIAAAAJcEhZcwAADsQAAA7EAZUrDhsAAABCSURBVAjXY2BgYBBiAAETBjQQkgAkWAVKgCQHwxSQCPNmEMkyAUSygWQZOB1ApLUBiIwE66oCYiNBZSDJ3ibAwAAAAVMGWsoIyesAAAAKdEVYdERlcHRoAAAAAAQgTiUVAAAAAElFTkSuQmCC" alt="j" style="vertical-align: -4px"/>-th observation:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAToAAAAXBAMAAABpKZ4zAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAGM/p3XQyr4udYPNIv/vElxQ+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADeElEQVRIx9VXTUhUURT+3sw488b5cRAFW4SjQbaQsI2LVk+IyEX4oKQWCoMFLSKUQMdF5LgwFVo8IQkX0iMQodXQso2zMNrpGCTtciUuXBhESAh17n3/b+67k6vownv3zjvn+8537z33Z4D/oRh2raUiHNLo1DDVhELjDeUuUkEoElarCUWavy2P+OyN5arzveB4KIYYuYLRAVyQUbsULXeCLCtuqwmF5Wh5vMMttycXPZc9IVCpIzmAXCGa2kfxIMBCUFZaTTShsB0tjwoOoduGBbterOF+CGN1RdUZdUslWt0CRzvqfCwEVZ+56iQUqq683thjHmzkkweuYca2d07hSQhT5O9UiVEn69HqZjjaUedjIej8PVedhCJVUttq08yDzYOquYYhpMvlsqHkdCeB3XQyeZUoMGpo0eqGQGjOwtT5WAha+KKUn/aVC3IKctxGP/NgAxwzfNRWiZfQHoTE4VOnFGXqGNoZu/ZAUAy6YyehIMc1HHAP6kWm5hr27ToPfApC7ATK0cxWkZXsB/sczcvjAAtBKaalTkpBjv2tl03mMQ10e4ZRu972Fohdbtq7hI7No5KqR6sb5Wi+Op+/8LMQNKtZ6uQU5KgpV9gqwluoV+fZMr7Ugw49ZjusOavALdTrj3WMW59jYtrsOFrqMY4OriVuoHbasNRFU3gxuIczC/FHp5gzWqxJNgaR5X373Eulj7WqUPRjDGOMc4ipO/O1BFEQ2tWrewaMpZ2EjKTwxeAebfb3zcwZtmqY5z+GdXQFYZTHrdkTHEOl3FYi9ipzF3miGPYmrctvUDtWPRliCi+G5ZF39uzdqvI7OpuytHpSRcJKy1PsntPQsNcFY2QcdTStP6JRCp3EGTOtybk/4NU5DeESiuHkHUbM3GmDs5d3tCq6CwlDSq18p6Q5l6GhhGK46r6Zkz8lsGssRSe9nTHZ0/jgJHnWAIw0YKLQ+ARiAA+dRvv7kQOJOkpodXbOl4hH9Bz6niN2eVhsTMxIA3Yo73dKvqcSigEsOY0a3shuhBPste7fM8N7KD+NBWd7pAG66Pd66Fi0riWn2JLc2tjhd52uWlJ1cTNfEqoTG0TqgjGSzpEQO8v9kqUr3WeKuYqcOoavYg1ig2j0gzHcK2qy93ZJupo2sLTapOPqsi5WJzaI1AVjvPzr/0PJf/AfzBmvP7Lg2Nk/QC93AAAACnRFWHREZXB0aAD/////+ZjB7wAAAABJRU5ErkJggg==" alt="\vect{y}^{(-j)} = (y^{(1)}, \ldots, y^{(j - 1)}, y^{(j + 1)}, \ldots, y^{(n)})^T"/></p>
+</div><p>for <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAATBAMAAACU67UeAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAMvsYdGC/z4vzr92d6UgMNVdRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABJ0lEQVQoz2NgwABmqQw4AV8AVuE7DHhAbAOYEkIV/QiSeYDLms9gygRDi8x7XFqYPyJz2nZvgdvCj0sLA7KW7mAkQQJaQhJAJMcCZKuxaPFp7qiDamEVKAGJWMM9+AGrFsY4DQZvIP0VZDzDFJBQBEzurQNWLSwcExiOg8ISJM0MDrezu3eDvc+6zQC7w9gWMNSAIroUpH8CSCQGJsUzAbsWpgCwP26BtYO9zw0P7M/YtcgzsFwAJpd/IDanA9itCcjByB/AwFjMAMLiBmCCgaEX6LQGaCDbG2DEi1X9rQd8GsDQU2R4JAAigGpPMPAtMYBqicQS+2B7kVzlgBqVVTiSBFYtoIg2ElRG0/IFw2Qk3aCIZm8TQNPi6YBHS6wD1pQXhz9XAgBkp1Czx+c6FAAAAAp0RVh0RGVwdGgAAAAABVdJFYMAAAAASUVORK5CYII=" alt="j \in \{1, ..., n\}" style="vertical-align: -5px"/>.
+Let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAVBAMAAADRFiHkAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr+kyi0gYYL/7dJ3P891HdGyQAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAt0lEQVQY02NgwAE2QOkHjFAGdwJMig0ql4FQ3QahvKBcxwCGJQwMjIomBsIQAZYsAQYLBoYw9laGZwzcgoKCG9g4FjDwQSSfQXUxGTDkQFjNUBFOBoZAoH0ibgmroCJxYEuMEjIdeKAiuxkYDjAwaDHwG3AFQFyuzMC6gIH9A0MlA4MbWOT1AoYUoAcUGGRQ/cjRwKCCKsJ1gOUzWkCIrJ6AHjaMB9BFeBeg8jcxLEJTsWKJAKoAACRkHxd9tRyQAAAACnRFWHREZXB0aAAAAAAEIE4lFQAAAABJRU5ErkJggg==" alt="\tilde{g}^{(-j)}" style="vertical-align: -4px"/> the metamodel built on the data set <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAXBAMAAAAPevcIAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdEhgr+md+4vdzzIY879IvQQWAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABrUlEQVQ4y52UP0gCURzHv+ff8zS9mmrqhgiadGhPSiJocHNpeVNrLkJbBI0NF0guoYK4hINDUFPaEJTQn6FBWmxpKkgUynCw352nvXspVA9+7737fO/73rt3v/eA/5SpYY9Zre6yvcBjU3FGB5KnOugFGOewYccTte6hdvv92itnseMValYBOdP7OAB2LWFPwzRnseNL6iXhLFTYfEPHel+SL6I45yx2rKiQdZwirEJ5xxE8sViMBYIqfJzFjqU8FEZbNlsGUqT1i7uMms3CY38T3gg9xSkyeLE0LzDHWQTcQogmQJHiGZOWtjD45ECxhGtVwHVUjF1/oMhCsbRNIN9fykkHcSbgBMLGaG2qupC0/s/egEM1e4sTLTQ0AadNi9wEgpQE+6Z2qOLKGjh8H+iJOG0uzEcTzoxKvziTPkWWwB19fkiFKzrKkosEOyKrm5u8hLOCqPhLVL1FKl1RaMHH4NxJLf+YwLFNVe0xlxSHahoJMLpIFBq2xAVLupGWYy1yB42qgCktsTbGQpLSCrZFfEPhG2/xH2fLIjaOmJP95aIwDzJ3Xfyi0HXxBQa+aK4NNbokAAAACnRFWHREZXB0aAAAAAAGzkBEOQAAAABJRU5ErkJggg==" alt="\left(\cD^{(-j)}, \vect{y}^{(-j)}\right)" style="vertical-align: -6px"/>.
+The leave-one-out error is:</p>
+<div class="math">
+<p><img src="data:image/png;base64,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" alt="\widehat{\operatorname{MSE}}_{LOO}\left(\tilde{g}\right)
+= \frac{1}{n} \sum_{j = 1}^n \left(g\left(\vect{x}^{(j)}\right) - \tilde{g}^{(-j)}\left(\vect{x}^{(j)}\right)\right)^2"/></p>
+</div><p>The leave-one-out error is sometimes referred to as <em>predicted residual sum of
+squares</em> (PRESS) or <em>jacknife error</em>.
+In the next section, we show how this estimator can be computed analytically,
+using the hat matrix.</p>
+</section>
+<section id="the-analytical-leave-one-out-error">
+<h2>The analytical leave-one-out error<a class="headerlink" href="#the-analytical-leave-one-out-error" title="Permalink to this heading">¶</a></h2>
+<p>One limitation of the previous equation is that we must train
+<img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAIBAMAAADdFhi7AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAdJ2LGM9IMmD73fO/r+mGTbZDAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAP0lEQVQI12NgVHY2TWBgqMg0YFzAwCBgzcAUwMDAcJaBVQFIzWDgL2BgYP/AIMfBwMD8gOEsMwMDkwFDrggDAP0FCNj5FTHGAAAACnRFWHREZXB0aAAAAAAAJyPhDAAAAABJRU5ErkJggg==" alt="n" style="vertical-align: 0px"/> different surrogate models, which can be long in some situations.
+To overcome this limitation, we can use the following equations.
+Let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAPBAMAAACB51W8AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr+l0SJ2/ixj7YN3P8zL7692YAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABL0lEQVQoz2NgwAsaGDjgbEal/0oGyJLsSme1bxswtEqZNTDkMbSBGM8NQRIs/9GMaeRheGjGUPCF0YCB7UUCkMG6gZeBISwAqJA1HU0hD+sDlg08DgwMZ4AGbeBZ0MvA0PkLqNB+BlhFe/ZuA6hClgLWAE4GBo60BwysAbwNZgwM3F+BCuU3gB23qwFuIvMCHoc1r4AuzGPgcehlOFXAwPMNqPD8AZCCQoTVz9YwcDP0FDAkMLABGY4MoQ4MjH+ACvcHAOU5NsAUcp+eFIARUiw/gQr/g+zkKoCb+KwHS5jmi/xn+wpisGrv3g31DKOrAaZC1rn/lRaAGFwBCDce2IHFSK7/EM8ybEAoNH+DRSE8ZsxgCtkYeJoxfYOIa2g4MivlHuHbNhFfWoHGDFYAABFMV6DcPFShAAAACnRFWHREZXB0aAAAAAABUCTRmgAAAABJRU5ErkJggg==" alt="\boldsymbol{\Psi} \in \Rset^{n \times m}" style="vertical-align: -1px"/> design matrix (<a class="reference internal" href="../../bibliography.html#blatman2009" id="id4"><span>[blatman2009]</span></a> eq. 4.32 page 85):</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHUAAAAYBAMAAAA2QK8LAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr+l0SJ2/ixj7YN3P8zL7692YAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB/0lEQVQ4y71UQUjbUBj+2ibNa5tUD4UdN3oWyWDIYAUdQq8LFMaOYWPUW3PwUHCHoGwgIvMoghAPQ09aNnYTLJTdxtZDDzuG4d1eKq4T4/+SPJu01ekOPkjel+/P9+d/3//ygHscMpDD5J0kqbkQvOK397iLfCecmcnvaRvl22sfhbOiQykgZSHh0FOi6BX16yoVIGEI4KL+GHkTzM8medd+bUWAjAA5G/YboAG0gJcGaeXqeO1TAZYiWkyDNYESsNon7ezmeK0lwDcB0i6wAYlcPqFEPdI+bPxDu3XlgA6pwR3DxBzUU9L+bI4RzptMX3UDfEFX6fPuoYUmZAMqPWrk9Tlpjwyyfc33Mv2dD6qJ6Z2UrTk+mz+j7pjqX20DT+Ski3nikgakP6T1yAGoTuyz2XxXgWz7rNSld5HsLxtQ1ipgfC05yl8reOlerA+ilU3SBizXAh+70TDXyttekXK/w3p2MabVnBUoActrBg5ijib5YrK8YkWzZ/Yr0fViwt0jo32WkVeqWTMkM5LautpXv/E6vl7kdEtxQ5Z69GLBs5bdQZh6JPbzA3S+xLXsbauOkP3KC3o+9SMSPhnAX/X2zPGQW5SSBWxptP3PBrB6PPnBiEezVKEUsJlRbevGf1aJ9MsaDrL2zedMBI9s+IRz63Pj0zBR/o+zTgzaAZcpdoLn0elo+QAAAAp0RVh0RGVwdGgAAAAAACcj4QwAAAAASUVORK5CYII=" alt="\boldsymbol{\Psi}_{ik} = \psi_k\left(\vect{x}^{(j)}\right)"/></p>
+</div><p>for <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAAAQBAMAAAB6jEWIAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAMvsYdGC/z4vzr+lInd0zCBRFAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAtElEQVQoz2NgYGAQYkAB0QcYcAITFJ7seTxK0QA/VZSGJBBU6tvcUQOkWAVKQLz0ciCowq6UMUaDwQ9IczBMIWQqC8cEhusgBvNngg5gW8BQC9YzgaBSpgCGj2AtCYTcyiDPwLIhAEhzOqCZGsDAWMwAwuIGYIKBoRvohAaglL0Bikqr+l0HeDQYGHgUGQ4JgAigmhsMPEtAqiKxhDULEhvJ0ipilRoJKmNR6oBNF3ubAJFKAcw+KJEcN0EXAAAACnRFWHREZXB0aAAAAAAEIE4lFQAAAABJRU5ErkJggg==" alt="j = 1, ..., n" style="vertical-align: -4px"/> and <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFkAAAARBAMAAABELh2dAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMASN0YYPuvz+mLnXTzvzKi8MdSAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA1ElEQVQoz2Ng1DdgIAG4ogt4COBRnY7GfyWPT3UnugA/PtUfSVHN8oFxFkHVsybPLLTeDhRnUxAUBfJ5y0EgAbtqPsdIhh0buBUYGDgSHawJmc3NeYBhDgNXAVBOhQh38yYwVDEwLWBg8BdTIKya1YEhkMH+AQNDEsMRRkLuZnjPwPeBYQYLKLgPcqOZ7cDAV8wAws8NwAQDwwwGTgWGW5wMDIcZdm1AUWxW3ybAGMnAwBjHIPoARExgYFjJwLaBwW0DrlhAtm4DwaRGmuoN2DWSphoAPH0ul89Onm0AAAAKdEVYdERlcHRoAAAAAAQgTiUVAAAAAElFTkSuQmCC" alt="k = 1, ..., m" style="vertical-align: -4px"/>.
+The matrix <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANBAMAAABr8kJMAAAALVBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAOrOgAAAADnRSTlMAr+l0SJ2/ixj7YN3P8zD7jUsAAAAJcEhZcwAADsQAAA7EAZUrDhsAAABVSURBVAjXY2BgVHqnZMAABCzvQGRYAJBmTWfofAWk7WYwcD8F0nIbGHieAelzBxgY3wDpfQEMLC+B9LsGBoY8kXdsT4EaWee+U1oAMoELJAo3D2o+AO6QHGtyr7PNAAAACnRFWHREZXB0aAAAAAAAJyPhDAAAAABJRU5ErkJggg==" alt="\boldsymbol{\Psi}" style="vertical-align: 0px"/> is mathematically equal to the
+<img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAANBAMAAACEMClyAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/3UjPGPt0izKd6WBCl4VcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAYklEQVQI12NgYBD6LGgSwAAELAkM7J0gBv8CBoYZIEb8BgaG/SC5FUBcPwFIpADxfhCjB4jnA6W5vwIZGUDM9QFI/AJiNgcGBsYLQAaTAANDxAaQhgcMnLeBNON9Q+EsIA0Akv4U17SDNXwAAAAKdEVYdERlcHRoAAAAAAAnI+EMAAAAAElFTkSuQmCC" alt="D" style="vertical-align: 0px"/> matrix presented earlier in the present document.
+Let <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAAAPBAMAAAC4gOTnAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/dBj7YN3pz52LSDLi5wBxAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABHElEQVQoz2NgwA8CGFhhTKHPDoFq4khyPDMXzdBwYIgWdw5gsGMIhjAYGDgaGBhmoRgSyMXw0JnhwF9GBwbmpwYQBgMD/wYGhj/o6ri4H/A2cF1gYFjFwABhMNy/wMD+DyzPerijBaaO9wD3BjagkPEDBjCDgWE/AwNjAljdiVKEeSwFXBeqngNdZ8cAZjAwrAA6cQHY/QIIex9XMXAwRB1gMGBghjAYGDIEBeVBNEME3H0cKzI3oIcQ31+wE4GgBuGPx1EYIcnzAexEINjZ0QHzB+NtB3R1XBMYGDrArGqkcFnQiq6ODej6bDCLA0mdzyt0de8LwE4EAhYDmDpmBq4QNI8w9i9nlfxcgBx+LDON1vI1J+JOHLD4wAIAU5dLjWJYHSkAAAAKdEVYdERlcHRoAAAAAAFQJNGaAAAAAElFTkSuQmCC" alt="H \in \Rset^{n \times n}" style="vertical-align: -1px"/> be the projection matrix:</p>
+<div class="math">
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAAAXBAMAAAD0AcCSAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAr/O/dBj7YN3pz52LSDLi5wBxAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACCElEQVQ4y51VTUgbURD+tskmMVETvYgHSU+9FXvWgh7Fi/HiWQolgoVuzz00x0ILsSBIvGhBaKkHFwWv5hg8BYReNycPvbgSEpuk7Xbe25/sPLP+5IMkM/O9mXnz9nsb4MH4Uvt8/HiKIV73jKSRqmpBOBdew6k78M43RpFoxIPwRXgNp+7AVt+8DIU1g60KqMnm4uqzKV5ieq+z7SaZ9Kk4lUWyazLgOrrbhFECqRKwq27Ist3fhPgac6R9iJBzANyiCFlq/odVysyLYidVt+WJSRmZl8BzhJxlQKHcTdSR/MeK6W8Ny463C27LtRvKWHkNXWzWd3AFKJTEGY2+zocsm5at/RZWkY6hRxn5Es7fFPoOskIyjJL4TsF9XuzohWWnu8KiLaeblHHkrQicJ1UolMTGxEReMJj7QfgqrPy+Zad6ZIy3aNtdyiibniR8Z8SEQgmM/5XHxp/lumVnW+Jh0WGMtSnD8eYInFQOCiXla8tjY4hdW/aC6RXDwowT6/mU78hinBJzk/w+qjI7ne3swBsTmVdOJRC878gxOSVkSS02wc8M+NByRSI1kwxP4jnyASgUCcaQxxZxA4ohmTPNZ+tQqF8FaOVv+nTTQMTd/BS6gOw2XjFP4GfjvpfGchSxhMcjEUUcDFFMqw6O60+HKIZSRBNjmGLvB4cvhqnV/0PhyA0K/gctK9OMJkJARgAAAAp0RVh0RGVwdGgAAAAAACcj4QwAAAAASUVORK5CYII=" alt="H = \boldsymbol{\Psi} \left(\boldsymbol{\Psi}^T \boldsymbol{\Psi}\right) \boldsymbol{\Psi}^T."/></p>
+</div><p>It can be proved that  (<a class="reference internal" href="../../bibliography.html#blatman2009" id="id5"><span>[blatman2009]</span></a> eq. 4.33 page 85):</p>
+<div class="math">
+<p><img src="data:image/png;base64,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" alt="\widehat{\operatorname{MSE}}_{LOO}\left(\tilde{g}\right)
+= \frac{1}{n} \sum_{j = 1}^n \left(\frac{g\left(\vect{x}^{(j)}\right) - \tilde{g}\left(\vect{x}^{(j)}\right)}{1 - h_{jj}}\right)^2"/></p>
+</div><p>where <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAATBAMAAADYAbjmAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMASN0YYPuvz+mLMnSd87/dC9arAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA40lEQVQoz2Ng1DdgwAQz2m/oaoMYrlgkGZgTCriyHwAZ6ThkGQpOARmdqMLzlLRhspJAxi8U2UnOCL1bGBhYAncWICQ5ExD2PgGKswUyaCJkjeD2qqv2AGmOAwy3GRiYwIiBwRMuW/UYZCT/AobPCL0nlJRgrko8DfYuZwNC1gfhI3YmA5B3mSZs4ExkACIGqPEQWe5ZBSDv8ls5TN7GAERAwP0AJvuAoXgPA8NlBrbdDAavQQjJvzv6rgssegr1HkMXGCHCChUEgBEOwKgAQrgAzwEQwiXJsQCIcMkynQYhLAAA8Dk7CJ0ns1UAAAAKdEVYdERlcHRoAAAAAAbOQEQ5AAAAAElFTkSuQmCC" alt="h_{jj} \in \Rset" style="vertical-align: -6px"/> is the diagonal of the hat matrix
+for <img class="math" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAATBAMAAACU67UeAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAMvsYdGC/z4vzr92d6UgMNVdRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABJ0lEQVQoz2NgwABmqQw4AV8AVuE7DHhAbAOYEkIV/QiSeYDLms9gygRDi8x7XFqYPyJz2nZvgdvCj0sLA7KW7mAkQQJaQhJAJMcCZKuxaPFp7qiDamEVKAGJWMM9+AGrFsY4DQZvIP0VZDzDFJBQBEzurQNWLSwcExiOg8ISJM0MDrezu3eDvc+6zQC7w9gWMNSAIroUpH8CSCQGJsUzAbsWpgCwP26BtYO9zw0P7M/YtcgzsFwAJpd/IDanA9itCcjByB/AwFjMAMLiBmCCgaEX6LQGaCDbG2DEi1X9rQd8GsDQU2R4JAAigGpPMPAtMYBqicQS+2B7kVzlgBqVVTiSBFYtoIg2ElRG0/IFw2Qk3aCIZm8TQNPi6YBHS6wD1pQXhz9XAgBkp1Czx+c6FAAAAAp0RVh0RGVwdGgAAAAABVdJFYMAAAAASUVORK5CYII=" alt="j \in \{1, ..., n\}" style="vertical-align: -5px"/>.
+The goal of this example is to show how to implement the previous equation
+using the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a> class.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">ishigami_function</span>
+</pre></div>
+</div>
+</section>
+<section id="create-the-polynomial-chaos-model">
+<h2>Create the polynomial chaos model<a class="headerlink" href="#create-the-polynomial-chaos-model" title="Permalink to this heading">¶</a></h2>
+<p>We load the Ishigami model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">im</span> <span class="o">=</span> <span class="n">ishigami_function</span><span class="o">.</span><span class="n">IshigamiModel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Create a training sample.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nTrain</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">xTrain</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">nTrain</span><span class="p">)</span>
+<span class="n">yTrain</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">xTrain</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create the chaos.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ComputeSparseLeastSquaresFunctionalChaos</span><span class="p">(</span>
+    <span class="n">inputTrain</span><span class="p">,</span>
+    <span class="n">outputTrain</span><span class="p">,</span>
+    <span class="n">multivariateBasis</span><span class="p">,</span>
+    <span class="n">basisSize</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="p">,</span>
+    <span class="n">sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">sparse</span><span class="p">:</span>
+        <span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PenalizedLeastSquaresAlgorithmFactory</span><span class="p">()</span>
+    <span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span>
+        <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">selectionAlgorithm</span>
+    <span class="p">)</span>
+    <span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">basisSize</span><span class="p">)</span>
+    <span class="n">chaosAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+        <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
+    <span class="p">)</span>
+    <span class="n">chaosAlgorithm</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">chaosResult</span> <span class="o">=</span> <span class="n">chaosAlgorithm</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">chaosResult</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">([</span><span class="n">im</span><span class="o">.</span><span class="n">X1</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">X2</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">X3</span><span class="p">])</span>
+<span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
+<span class="n">basisSize</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getBasisSizeFromTotalDegree</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Basis size = &quot;</span><span class="p">,</span> <span class="n">basisSize</span><span class="p">)</span>
+
+<span class="n">sparse</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># For full PCE and comparison with analytical LOO error</span>
+<span class="n">chaosResult</span> <span class="o">=</span> <span class="n">ComputeSparseLeastSquaresFunctionalChaos</span><span class="p">(</span>
+    <span class="n">xTrain</span><span class="p">,</span>
+    <span class="n">yTrain</span><span class="p">,</span>
+    <span class="n">multivariateBasis</span><span class="p">,</span>
+    <span class="n">basisSize</span><span class="p">,</span>
+    <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span>
+    <span class="n">sparse</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Basis size =  56
+</pre></div>
+</div>
+</section>
+<section id="the-designproxy">
+<h2>The DesignProxy<a class="headerlink" href="#the-designproxy" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a> class provides methods used to create the objects necessary to solve
+the least squares problem.
+More precisely, it provides the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy.computeDesign" title="openturns.DesignProxy.computeDesign"><code class="xref py py-meth docutils literal notranslate"><span class="pre">computeDesign()</span></code></a>
+method that we need to evaluate the design matrix.
+In many cases we do not need that matrix, but the Gram matrix (or its inverse).
+The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a> class is needed by a least squares solver,
+e.g. <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.QRMethod.html#openturns.QRMethod" title="openturns.QRMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">QRMethod</span></code></a> that knows how to actually compute the coefficients.</p>
+<p>Another class is the <a class="reference internal" href="../../user_manual/_generated/openturns.Basis.html#openturns.Basis" title="openturns.Basis"><code class="xref py py-class docutils literal notranslate"><span class="pre">Basis</span></code></a> class which manages a set of
+functions as the functional basis for the decomposition.
+This basis is required by the constructor of the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.DesignProxy.html#openturns.DesignProxy" title="openturns.DesignProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignProxy</span></code></a> because it defines
+the columns of the matrix.</p>
+<p>In order to create that basis, we use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosResult.html#openturns.FunctionalChaosResult.getReducedBasis" title="openturns.FunctionalChaosResult.getReducedBasis"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getReducedBasis()</span></code></a> method,
+because the model selection (such as <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LARS.html#openturns.LARS" title="openturns.LARS"><code class="xref py py-class docutils literal notranslate"><span class="pre">LARS</span></code></a> for example)
+may have selected functions which best predict the output.
+This may reduce the number of coefficients to estimate and
+improve their accuracy.
+This is important here, because it defines the number of
+columns in the design matrix.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reducedBasis</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getReducedBasis</span><span class="p">()</span>  <span class="c1"># As a result of the model selection</span>
+<span class="n">transformation</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">chaosResult</span><span class="o">.</span><span class="n">getTransformation</span><span class="p">()</span>
+<span class="p">)</span>  <span class="c1"># As a result of the input distribution</span>
+<span class="n">zTrain</span> <span class="o">=</span> <span class="n">transformation</span><span class="p">(</span>
+    <span class="n">xTrain</span>
+<span class="p">)</span>  <span class="c1"># Map from the physical input into the transformed input</span>
+</pre></div>
+</div>
+<p>We can now create the design.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">designProxy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DesignProxy</span><span class="p">(</span><span class="n">zTrain</span><span class="p">,</span> <span class="n">reducedBasis</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To actually evaluate the design matrix, we
+can specify the columns that we need to evaluate.
+This can be useful when we perform model selection, because
+not all columns are always needed.
+This can lead to CPU and memory savings.
+In our case, we evaluate all the columns, which corresponds
+to evaluate all the functions in the basis.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reducedBasisSize</span> <span class="o">=</span> <span class="n">reducedBasis</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reduced basis size = &quot;</span><span class="p">,</span> <span class="n">reducedBasisSize</span><span class="p">)</span>
+<span class="n">allIndices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">reducedBasisSize</span><span class="p">)</span>
+<span class="n">designMatrix</span> <span class="o">=</span> <span class="n">designProxy</span><span class="o">.</span><span class="n">computeDesign</span><span class="p">(</span><span class="n">allIndices</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Design matrix : &quot;</span><span class="p">,</span> <span class="n">designMatrix</span><span class="o">.</span><span class="n">getNbRows</span><span class="p">(),</span> <span class="s2">&quot; x &quot;</span><span class="p">,</span> <span class="n">designMatrix</span><span class="o">.</span><span class="n">getNbColumns</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Reduced basis size =  56
+Design matrix :  100  x  56
+</pre></div>
+</div>
+<p>Solve the least squares problem.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lsqMethod</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">QRMethod</span><span class="p">(</span><span class="n">designProxy</span><span class="p">,</span> <span class="n">allIndices</span><span class="p">)</span>
+<span class="n">betaHat</span> <span class="o">=</span> <span class="n">lsqMethod</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">yTrain</span><span class="o">.</span><span class="n">asPoint</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Compute the inverse of the Gram matrix.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inverseGram</span> <span class="o">=</span> <span class="n">lsqMethod</span><span class="o">.</span><span class="n">getGramInverse</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inverse Gram : &quot;</span><span class="p">,</span> <span class="n">inverseGram</span><span class="o">.</span><span class="n">getNbRows</span><span class="p">(),</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">inverseGram</span><span class="o">.</span><span class="n">getNbColumns</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Inverse Gram :  56 x 56
+</pre></div>
+</div>
+</section>
+<section id="compute-the-raw-leave-one-out-error">
+<h2>Compute the raw leave-one-out error<a class="headerlink" href="#compute-the-raw-leave-one-out-error" title="Permalink to this heading">¶</a></h2>
+<p>In this section, we show how to compute the raw leave-one-out
+error using the naive formula.
+To do this, we could use implement the :class:~openturns.KFoldSplitter` class
+with <cite>K = N</cite>.
+Since this would complicate the script and obscure its purpose,
+we implement the leave-one-out method naively.</p>
+<p>Compute leave-one-out error</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">predictionsLOO</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">nTrain</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">residuals</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">nTrain</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTrain</span><span class="p">):</span>
+    <span class="n">indicesLOO</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nTrain</span><span class="p">))</span>
+    <span class="n">indicesLOO</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+    <span class="n">xTrainLOO</span> <span class="o">=</span> <span class="n">xTrain</span><span class="p">[</span><span class="n">indicesLOO</span><span class="p">]</span>
+    <span class="n">yTrainLOO</span> <span class="o">=</span> <span class="n">yTrain</span><span class="p">[</span><span class="n">indicesLOO</span><span class="p">]</span>
+    <span class="n">xj</span> <span class="o">=</span> <span class="n">xTrain</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="n">yj</span> <span class="o">=</span> <span class="n">yTrain</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+    <span class="n">chaosResultLOO</span> <span class="o">=</span> <span class="n">ComputeSparseLeastSquaresFunctionalChaos</span><span class="p">(</span>
+        <span class="n">xTrainLOO</span><span class="p">,</span>
+        <span class="n">yTrainLOO</span><span class="p">,</span>
+        <span class="n">multivariateBasis</span><span class="p">,</span>
+        <span class="n">basisSize</span><span class="p">,</span>
+        <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span>
+        <span class="n">sparse</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">metamodelLOO</span> <span class="o">=</span> <span class="n">chaosResultLOO</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="n">predictionsLOO</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">metamodelLOO</span><span class="p">(</span><span class="n">xj</span><span class="p">)</span>
+    <span class="n">residuals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">yj</span> <span class="o">-</span> <span class="n">predictionsLOO</span><span class="p">[</span><span class="n">j</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">mseLOO</span> <span class="o">=</span> <span class="n">residuals</span><span class="o">.</span><span class="n">normSquare</span><span class="p">()</span> <span class="o">/</span> <span class="n">nTrain</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mseLOO = &quot;</span><span class="p">,</span> <span class="n">mseLOO</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>mseLOO =  13.301256224386124
+</pre></div>
+</div>
+<p>For each point in the training sample, we plot the predicted leave-one-out
+output prediction depending on the observed output.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Leave-one-out validation&quot;</span><span class="p">,</span> <span class="s2">&quot;Observation&quot;</span><span class="p">,</span> <span class="s2">&quot;LOO prediction&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">yTrain</span><span class="p">,</span> <span class="n">predictionsLOO</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">yTrain</span><span class="p">,</span> <span class="n">yTrain</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Drawable</span><span class="p">()</span><span class="o">.</span><span class="n">BuildDefaultPalette</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_pce_design_001.png" srcset="../../_images/sphx_glr_plot_pce_design_001.png" alt="Leave-one-out validation" class = "sphx-glr-single-img"/><p>In the previous method, we must pay attention to the fact that
+the comparison that we are going to make is not necessarily
+valid if we use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LARS.html#openturns.LARS" title="openturns.LARS"><code class="xref py py-class docutils literal notranslate"><span class="pre">LARS</span></code></a> selection method,
+because this may lead to a different active basis for each leave-one-out
+sample.</p>
+<p>One limitation of the previous script is that it can be relatively
+long when the sample size increases or when the size of the
+functional basis increases.
+In the next section, we use the analytical formula: this can leads
+to significant time savings in some cases.</p>
+</section>
+<section id="compute-the-analytical-leave-one-out-error">
+<h2>Compute the analytical leave-one-out error<a class="headerlink" href="#compute-the-analytical-leave-one-out-error" title="Permalink to this heading">¶</a></h2>
+<p>Get the diagonal of the projection matrix.
+This is a <a class="reference internal" href="../../user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">diagonalH</span> <span class="o">=</span> <span class="n">lsqMethod</span><span class="o">.</span><span class="n">getHDiag</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;diagonalH : &quot;</span><span class="p">,</span> <span class="n">diagonalH</span><span class="o">.</span><span class="n">getDimension</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>diagonalH :  100
+</pre></div>
+</div>
+<p>Compute the metamodel predictions.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metamodel</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+<span class="n">yHat</span> <span class="o">=</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">xTrain</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Compute the residuals.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">residuals</span> <span class="o">=</span> <span class="n">yTrain</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span> <span class="o">-</span> <span class="n">yHat</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Compute the analytical leave-one-out error:
+perform elementwise division and exponentiation</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">diagonalH</span><span class="p">))</span>
+<span class="n">squaredDelta</span> <span class="o">=</span> <span class="n">delta</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">leaveOneOutMSE</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">BuildFromPoint</span><span class="p">(</span><span class="n">squaredDelta</span><span class="p">)</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MSE LOO = &quot;</span><span class="p">,</span> <span class="n">leaveOneOutMSE</span><span class="p">)</span>
+<span class="n">relativeLOOError</span> <span class="o">=</span> <span class="n">leaveOneOutMSE</span> <span class="o">/</span> <span class="n">yTrain</span><span class="o">.</span><span class="n">computeVariance</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">q2LeaveOneOut</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">relativeLOOError</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Q2 LOO = &quot;</span><span class="p">,</span> <span class="n">q2LeaveOneOut</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>MSE LOO =  13.301256224386275
+Q2 LOO =  0.2685832177014015
+</pre></div>
+</div>
+<p>We see that the MSE leave-one-out error is equal to the naive LOO error.
+The numerical differences between the two values are the consequences
+of the rounding errors in the numerical evaluation of the hat matrix.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-numerical-methods-general-methods-plot-pce-design-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/d437f85ed2c5ef21165ba7dee3ea5f7d/plot_pce_design.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_pce_design.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/7f10d8b1dc751a7403ef9cafb22d12af/plot_pce_design.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_pce_design.ipynb</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_regression_interval.html" title="Compute confidence intervals of a regression model from data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_ifs.html" title="Iterated Functions System"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Numerical methods</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >General methods</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Compute leave-one-out error of a polynomial chaos expansion</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2023 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jun 21, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

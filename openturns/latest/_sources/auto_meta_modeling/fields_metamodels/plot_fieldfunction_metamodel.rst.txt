@@ -25,14 +25,14 @@ Metamodel of a field function
 
 In this example we are going to create a metamodel of a field function following these steps:
 
-1. Creation of a field model over an 1-d mesh.
-2. Creation of a Gaussian process.
-3. Karhunen-Loeve decomposition of a process with known covariance function.
-4. Karhunen-Loeve decomposition of a process with known trajectories.
-5. Projection of fields.
-6. Functional chaos decomposition between the coefficients of the input and output processes.
-7. Build a metamodel of the whole field model.
-8. Validate the metamodel.
+1. create a field model over an 1-d mesh ;
+2. create a Gaussian process ;
+3. Karhunen-Loeve decomposition of a process with known covariance function ;
+4. Karhunen-Loeve decomposition of a process with known trajectories ;
+5. fields projection ;
+6. functional chaos decomposition between the coefficients of the input and output processes ;
+7. build a metamodel of the whole field model ;
+8. validate the metamodel.
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 20-26
@@ -54,11 +54,12 @@ In this example we are going to create a metamodel of a field function following
 
 .. GENERATED FROM PYTHON SOURCE LINES 27-28
 
-Input model
+Create the input model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-43
+.. GENERATED FROM PYTHON SOURCE LINES 28-44
 
 .. code-block:: default
+
 
     print("Create the input process")
     # Domain bound
@@ -88,11 +89,11 @@ Input model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
-for some pretty graphs
+The next function plots the Karhunen-Loève. modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-68
+.. GENERATED FROM PYTHON SOURCE LINES 46-69
 
 .. code-block:: default
 
@@ -126,15 +127,14 @@ for some pretty graphs
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 70-71
 
-Karhunen-Loeve decomposition of the input process
+Compute the decomposition of the input process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-82
+.. GENERATED FROM PYTHON SOURCE LINES 71-82
 
 .. code-block:: default
 
-    print("Compute the decomposition of the input process")
     threshold = 0.0001
     algo_X = ot.KarhunenLoeveP1Algorithm(mesh, process_X.getCovarianceModel(), threshold)
     algo_X.run()
@@ -155,27 +155,20 @@ Karhunen-Loeve decomposition of the input process
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Compute the decomposition of the input process
-
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 83-84
 
-Input database generation
+Sample the input process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-89
+.. GENERATED FROM PYTHON SOURCE LINES 84-88
 
 .. code-block:: default
 
     print("Sample the input process")
     size = 500
     sample_X = process_X.getSample(size)
-
 
 
 
@@ -190,13 +183,15 @@ Input database generation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-91
+.. GENERATED FROM PYTHON SOURCE LINES 89-90
 
-The field model: convolution over an 1-d mesh
+Create a class to perform the convolution over a 1-d mesh.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-117
+.. GENERATED FROM PYTHON SOURCE LINES 90-118
 
 .. code-block:: default
+
+
 
     class ConvolutionP1(ot.OpenTURNSPythonFieldFunction):
         def __init__(self, p, mesh):
@@ -231,15 +226,14 @@ The field model: convolution over an 1-d mesh
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-119
+.. GENERATED FROM PYTHON SOURCE LINES 119-120
 
-Dynamical model: convolution wrt kernel p
+Create the convolution function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+.. GENERATED FROM PYTHON SOURCE LINES 120-123
 
 .. code-block:: default
 
-    print("Create the convolution function")
     p = ot.SymbolicFunction("x", "exp(-(x/" + str(h) + ")^2)")
     myConvolution = ot.FieldFunction(ConvolutionP1(p, mesh))
 
@@ -247,48 +241,34 @@ Dynamical model: convolution wrt kernel p
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Create the convolution function
-
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 124-125
 
-Output database generation
+Sample the output process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-128
+.. GENERATED FROM PYTHON SOURCE LINES 125-127
 
 .. code-block:: default
 
-    print("Sample the output process")
     sample_Y = myConvolution(sample_X)
 
 
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Sample the output process
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 128-129
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+Compute the decomposition of the output process.
 
-Karhunen-Loeve decomposition of the output process
-
-.. GENERATED FROM PYTHON SOURCE LINES 130-139
+.. GENERATED FROM PYTHON SOURCE LINES 129-137
 
 .. code-block:: default
 
-    print("Compute the decomposition of the output process")
     algo_Y = ot.KarhunenLoeveSVDAlgorithm(sample_Y, threshold)
     algo_Y.run()
     result_Y = algo_Y.getResult()
@@ -306,20 +286,14 @@ Karhunen-Loeve decomposition of the output process
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Compute the decomposition of the output process
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 138-139
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-141
+Compare eigenvalues of X and Y.
 
-Compare eigenvalues of X and Y
-
-.. GENERATED FROM PYTHON SOURCE LINES 141-149
+.. GENERATED FROM PYTHON SOURCE LINES 139-147
 
 .. code-block:: default
 
@@ -343,11 +317,11 @@ Compare eigenvalues of X and Y
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-151
+.. GENERATED FROM PYTHON SOURCE LINES 148-149
 
-Polynomial chaos between KL coefficients
+Perform the polynomial chaos expansion between Karhunen-Loève coefficients.
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-205
+.. GENERATED FROM PYTHON SOURCE LINES 149-203
 
 .. code-block:: default
 
@@ -424,11 +398,11 @@ Polynomial chaos between KL coefficients
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-207
+.. GENERATED FROM PYTHON SOURCE LINES 204-205
 
-Meta_model validation
+Validate the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-223
+.. GENERATED FROM PYTHON SOURCE LINES 205-221
 
 .. code-block:: default
 
@@ -460,7 +434,7 @@ Meta_model validation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-230
+.. GENERATED FROM PYTHON SOURCE LINES 222-228
 
 .. code-block:: default
 
@@ -482,7 +456,7 @@ Meta_model validation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 231-238
+.. GENERATED FROM PYTHON SOURCE LINES 229-236
 
 .. code-block:: default
 
@@ -505,11 +479,11 @@ Meta_model validation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 239-240
+.. GENERATED FROM PYTHON SOURCE LINES 237-238
 
 Reset default settings
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-241
+.. GENERATED FROM PYTHON SOURCE LINES 238-239
 
 .. code-block:: default
 
@@ -524,7 +498,7 @@ Reset default settings
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  19.237 seconds)
+   **Total running time of the script:** ( 0 minutes  20.266 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_fields_metamodels_plot_fieldfunction_metamodel.py:

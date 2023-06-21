@@ -18,24 +18,30 @@
 .. _sphx_glr_auto_data_analysis_distribution_fitting_plot_estimate_gev_venice.py:
 
 
-Estimate a GEV on the Venice sea levels data
+Estimate a GEV on the Venice sea-levels data
 ============================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-13
+.. GENERATED FROM PYTHON SOURCE LINES 6-23
 
-In this example we are going to estimate the parameters of a generalized extreme value distribution
-on the Venice sea levels data from [coles2001]_ with different methods:
+In this example, we illustrate various techniques of extreme value modeling applied
+to the annual maximum sea-levels recorded in Venice over the period 1931-1981.
+Readers should refer to [coles2001]_ to get more details.
 
-- the maximum likelihood estimation
-- the profile likelihood estimation
-- the estimation of return level from both maximum likelihood and profile likelihood
-- the R maxima estimator (see [coles2001]_ paragraph 3.5.3)
+We illustrate techniques to:
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
+- estimate a stationary GEV, using the :math:`r`-largest annual sea-levels for :math:`r\geq 1`,
 
-Load the Venice dataset of 10 highest sea levels per year
+using:
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-24
+- the log-likelihood function,
+- the profile log-likelihood function.
+
+First, we load the 10 largest annual sea-levels in Venice. We start by looking at them
+through time. Note that for the year 1935, only the largest 6 observations are available.
+For simplicity of the example, we removed that year from the data but it could be
+used for all the analyses beased on the largest :math:`r` annual sea-levels for :math:`r \leq 6`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 23-30
 
 .. code-block:: default
 
@@ -45,10 +51,37 @@ Load the Venice dataset of 10 highest sea levels per year
     from openturns.usecases import coles
 
     data = coles.Coles().venice
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
+
+The column :math:`i` contains the largest :math:`i` annual sea-levels.
+
+.. GENERATED FROM PYTHON SOURCE LINES 32-40
+
+.. code-block:: default
+
     print(data[:5])
+    graph = ot.Graph("Annual maximum sea-levels in Venice", "year", "level (cm)", True, "")
+    for r in range(10):
+        cloud = ot.Cloud(data[:, [0, 1 + r]])
+        graph.add(cloud)
+    graph.setIntegerXTick(True)
+    view = otv.View(graph)
 
 
 
+
+.. image-sg:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_001.png
+   :alt: Annual maximum sea-levels in Venice
+   :srcset: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
@@ -65,38 +98,16 @@ Load the Venice dataset of 10 highest sea levels per year
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 41-47
 
-Plot the 10 largest sea levels per year
+**Stationary GEV modeling from the annual maximum sea-levels**
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-33
+We first assume that the dependence through time is negligible, so we first model the data as
+independent observations over the observation period. We estimate the parameters of the
+GEV distribution by maximizing the log-likelihood of the data.
+We select the first column of the data.
 
-.. code-block:: default
-
-    graph = ot.Graph("Venice sea level", "year", "Sea level (cm)", True, "")
-    for r in range(10):
-        cloud = ot.Cloud(data[:, [0, 1 + r]])
-        graph.add(cloud)
-    graph.setIntegerXTick(True)
-    view = otv.View(graph)
-
-
-
-
-.. image-sg:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_001.png
-   :alt: Venice sea level
-   :srcset: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_001.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
-
-First work on the first column after the year column to retain only one max value per year
-
-.. GENERATED FROM PYTHON SOURCE LINES 35-37
+.. GENERATED FROM PYTHON SOURCE LINES 47-49
 
 .. code-block:: default
 
@@ -109,17 +120,17 @@ First work on the first column after the year column to retain only one max valu
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-40
+.. GENERATED FROM PYTHON SOURCE LINES 50-52
 
 Estimate the parameters of the GEV by maximizing the log-likehood
 and compute the parameter distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-43
+.. GENERATED FROM PYTHON SOURCE LINES 52-55
 
 .. code-block:: default
 
     factory = ot.GeneralizedExtremeValueFactory()
-    result1 = factory.buildMethodOfLikelihoodMaximizationEstimator(sample)
+    result_LL_max = factory.buildMethodOfLikelihoodMaximizationEstimator(sample)
 
 
 
@@ -128,18 +139,19 @@ and compute the parameter distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
-Print the estimated parameter values
+We get the fitted GEV and its parameters of :math:`(\hat{\mu}, \hat{\sigma}, \hat{\xi})`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-50
+.. GENERATED FROM PYTHON SOURCE LINES 57-63
 
 .. code-block:: default
 
-    estimate = result1.getDistribution()
-    desc = estimate.getParameterDescription()
-    p = estimate.getParameter()
-    print(", ".join([f"{param}: {value:.3f}" for param, value in zip(desc, p)]))
+    fitted_GEV = result_LL_max.getDistribution()
+    desc = fitted_GEV.getParameterDescription()
+    param = fitted_GEV.getParameter()
+    print(", ".join([f"{p}: {value:.3f}" for p, value in zip(desc, param)]))
+    print("Max log-likelihood (one max): ", result_LL_max.getLogLikelihood())
 
 
 
@@ -149,20 +161,23 @@ Print the estimated parameter values
 
  .. code-block:: none
 
-    mu: 111.088, sigma: 17.338, xi: -0.077
+    mu: 111.090, sigma: 17.340, xi: -0.077
+    Max log-likelihood (one max):  -218.85953988220427
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 64-66
 
-Inspect the estimated Gaussian parameter distribution
+We get the asymptotic distribution of the estimator :math:`(\hat{\mu}, \hat{\sigma}, \hat{\xi})`.
+In that case, the asymptotic distribution is normal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-55
+.. GENERATED FROM PYTHON SOURCE LINES 66-70
 
 .. code-block:: default
 
-    parameterEstimate = result1.getParameterDistribution()
+    parameterEstimate = result_LL_max.getParameterDistribution()
+    print("Asymptotic distribution of the estimator : ")
     print(parameterEstimate)
 
 
@@ -173,23 +188,24 @@ Inspect the estimated Gaussian parameter distribution
 
  .. code-block:: none
 
-    Normal(mu = [111.088,17.3382,-0.0769988], sigma = [2.90896,1.79594,0.0793248], R = [[  1         0.450296 -0.488199 ]
-     [  0.450296  1        -0.438803 ]
-     [ -0.488199 -0.438803  1        ]])
+    Asymptotic distribution of the estimator : 
+    Normal(mu = [111.09,17.3401,-0.0770338], sigma = [2.90936,1.79642,0.0793379], R = [[  1         0.4502   -0.488149 ]
+     [  0.4502    1        -0.438925 ]
+     [ -0.488149 -0.438925  1        ]])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
-Inspect the covariance matrix
+We get the covariance matrix  and the standard deviation of :math:`(\hat{\mu}, \hat{\sigma}, \hat{\xi})`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-60
+.. GENERATED FROM PYTHON SOURCE LINES 72-75
 
 .. code-block:: default
 
-    V = parameterEstimate.getCovariance()
-    print(V)
+    print("Cov matrix = ", parameterEstimate.getCovariance())
+    print("Standard dev = ", parameterEstimate.getStandardDeviation())
 
 
 
@@ -199,47 +215,25 @@ Inspect the covariance matrix
 
  .. code-block:: none
 
-    [[  8.46207     2.35249    -0.112653   ]
-     [  2.35249     3.22539    -0.0625129  ]
-     [ -0.112653   -0.0625129   0.00629243 ]]
+    Cov matrix =  [[  8.46436     2.35294    -0.112676   ]
+     [  2.35294     3.22713    -0.0625576  ]
+     [ -0.112676   -0.0625576   0.00629451 ]]
+    Standard dev =  [2.90936,1.79642,0.0793379]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 76-77
 
-Inspect the standard deviation
+We get the marginal confidence intervals of order 0.95.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-65
-
-.. code-block:: default
-
-    stddev = parameterEstimate.getStandardDeviation()
-    print(stddev)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    [2.90896,1.79594,0.0793248]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
-
-Extract parameters confidence intervals
-
-.. GENERATED FROM PYTHON SOURCE LINES 67-71
+.. GENERATED FROM PYTHON SOURCE LINES 77-82
 
 .. code-block:: default
 
+    order = 0.95
     for i in range(3):
-        ci = parameterEstimate.getMarginal(i).computeBilateralConfidenceInterval(0.95)
+        ci = parameterEstimate.getMarginal(i).computeBilateralConfidenceInterval(order)
         print(desc[i] + ":", ci)
 
 
@@ -250,22 +244,27 @@ Extract parameters confidence intervals
 
  .. code-block:: none
 
-    mu: [105.387, 116.789]
-    sigma: [13.8182, 20.8582]
-    xi: [-0.232473, 0.078475]
+    mu: [105.387, 116.792]
+    sigma: [13.8192, 20.861]
+    xi: [-0.232533, 0.0784657]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-73
+.. GENERATED FROM PYTHON SOURCE LINES 83-89
 
-Validate the inference result thanks to some diagnostic plots
+At last, we can validate the inference result thanks the 4 usual diagnostic plots:
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-77
+- the probability-probability pot,
+- the quantile-quantile pot,
+- the return level plot,
+- the empirical distribution function.
+
+.. GENERATED FROM PYTHON SOURCE LINES 89-93
 
 .. code-block:: default
 
-    validation = otexp.GeneralizedExtremeValueValidation(result1, sample)
+    validation = otexp.GeneralizedExtremeValueValidation(result_LL_max, sample)
     graph = validation.drawDiagnosticPlot()
     view = otv.View(graph)
 
@@ -273,7 +272,7 @@ Validate the inference result thanks to some diagnostic plots
 
 
 .. image-sg:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_002.png
-   :alt: , Sample versus model PP-plot, Sample versus model QQ-plot, Return level, Density
+   :alt: , Sample versus model PP-plot, Sample versus model QQ-plot, Return level plot, Density
    :srcset: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_002.png
    :class: sphx-glr-single-img
 
@@ -281,33 +280,36 @@ Validate the inference result thanks to some diagnostic plots
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-79
+.. GENERATED FROM PYTHON SOURCE LINES 94-95
 
-Now estimate the parameters with the profile likelihood
+We can also use the profile log-likehood function rather than log-likehood function  to estimate the parameters of the GEV.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-81
-
-.. code-block:: default
-
-    result2 = factory.buildMethodOfProfileLikelihoodMaximizationEstimator(sample)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
-
-We can see the confidence interval of :math:`\xi` is a bit smaller with this method
-
-.. GENERATED FROM PYTHON SOURCE LINES 83-86
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 .. code-block:: default
 
-    result2.setConfidenceLevel(0.95)
-    print(result2.getParameterConfidenceInterval())
+    result_PLL_max = factory.buildMethodOfProfileLikelihoodMaximizationEstimator(sample)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 98-101
+
+The following graph allows one to get the profile log-likelihood plot.
+It also indicates the optimal value of :math:`\xi`, the maximum profile log-likelihood and
+the confidence interval for :math:`\xi` of order 0.95 (which is the default value).
+
+.. GENERATED FROM PYTHON SOURCE LINES 101-105
+
+.. code-block:: default
+
+    order = 0.95
+    result_PLL_max.setConfidenceLevel(order)
+    print(result_PLL_max.getParameterConfidenceInterval())
 
 
 
@@ -322,75 +324,24 @@ We can see the confidence interval of :math:`\xi` is a bit smaller with this met
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
-
-We can also plot the profile likelihood and the confidence interval
-
-.. GENERATED FROM PYTHON SOURCE LINES 88-90
-
-.. code-block:: default
-
-    view = otv.View(result2.drawProfileLikelihoodFunction())
-
-
-
-
-.. image-sg:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_003.png
-   :alt: profile likelihood
-   :srcset: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_003.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 91-92
-
-Estimate the 10 and 100 years return levels from the MLE estimator
-
-.. GENERATED FROM PYTHON SOURCE LINES 92-104
-
-.. code-block:: default
-
-    zm10 = factory.buildReturnLevelEstimator(result1, 10.0)
-    return_level10 = zm10.getMean()
-    print(f"10 years return level={return_level10}")
-    return_level_ci10 = zm10.computeBilateralConfidenceInterval(0.95)
-    print(f"CI={return_level_ci10}")
-
-    zm100 = factory.buildReturnLevelEstimator(result1, 100.0)
-    return_level100 = zm100.getMean()
-    print(f"100 years return level={return_level100}")
-    return_level_ci100 = zm100.computeBilateralConfidenceInterval(0.95)
-    print(f"CI={return_level_ci100}")
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    10 years return level=[146.912]
-    CI=[137.581, 156.243]
-    100 years return level=[178.251]
-    CI=[158.175, 198.326]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 105-106
-
-Now estimate the 10 years return level with profile likelihood
-
 .. GENERATED FROM PYTHON SOURCE LINES 106-110
 
+We can get the numerical values of the confidence interval: it appears to be a bit smaller
+with the interval obtained from the profile log-likelihood function than with the log-likelihood function.
+Note that if the order requested is too high, the confidence interval might not be calculated because
+one of its bound is out of the definition domain of the log-likelihood function.
+
+.. GENERATED FROM PYTHON SOURCE LINES 110-118
+
 .. code-block:: default
 
-    result_rl10_prof = factory.buildReturnLevelProfileLikelihoodEstimator(sample, 10.0)
-    zm = result_rl10_prof.getParameter()
-    print(f"10 years return level (profile)={zm}")
+    try:
+        print(
+            "Confidence interval for xi = ", result_PLL_max.getParameterConfidenceInterval()
+        )
+    except Exception as ex:
+        print(type(ex))
+        pass
 
 
 
@@ -400,63 +351,23 @@ Now estimate the 10 years return level with profile likelihood
 
  .. code-block:: none
 
-    10 years return level (profile)=147.69168889379483
+    Confidence interval for xi =  [-0.200118, 0.101776]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-112
+.. GENERATED FROM PYTHON SOURCE LINES 119-127
 
-We can see the confidence interval of :math:`z_m` is a bit smaller with this method
+**Stationary GEV modeling from the largest :math:`r` annual sea-levels**
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-116
+We still assume that the dependence through time is negligible.  We estimate the parameters of the
+GEV distribution by maximizing the log-likelihood of the data. Now, we want to model more of the
+observed extremes than the annual maxima: the additional information contained in the largest
+:math:`10` observations can be used to improve the estimation of the GEV model.
 
-.. code-block:: default
+Now, we drop the year column to keep only the maxima values.
 
-    result_rl10_prof.setConfidenceLevel(0.95)
-    return_level_ci10 = result_rl10_prof.getParameterConfidenceInterval()
-    print(f"CI={return_level_ci10}")
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    CI=[139.205, 160.937]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 117-118
-
-We can also plot the profile likelihood and the confidence interval
-
-.. GENERATED FROM PYTHON SOURCE LINES 118-120
-
-.. code-block:: default
-
-    view = otv.View(result_rl10_prof.drawProfileLikelihoodFunction())
-
-
-
-
-.. image-sg:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_004.png
-   :alt: profile likelihood
-   :srcset: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_gev_venice_004.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 121-122
-
-Now drop the year column to keep only the maxima values
-
-.. GENERATED FROM PYTHON SOURCE LINES 122-125
+.. GENERATED FROM PYTHON SOURCE LINES 127-130
 
 .. code-block:: default
 
@@ -481,19 +392,19 @@ Now drop the year column to keep only the maxima values
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-128
+.. GENERATED FROM PYTHON SOURCE LINES 131-133
 
-Estimate the parameters of the GEV from the r largest observations
-for different values of r
+We estimate the parameters from the largest :math:`r` annual sea-levels for :math:`r=1,5,10`.
+For each :math:`r` value, we get the estimated parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-137
+.. GENERATED FROM PYTHON SOURCE LINES 133-142
 
 .. code-block:: default
 
     factory = ot.GeneralizedExtremeValueFactory()
     r_candidate = [1, 5, 10]
     for r in r_candidate:
-        estimate = factory.buildRMaxima(sample_rmax, r)
+        estimate = factory.buildMethodOfLikelihoodMaximization(sample_rmax, r)
         desc = estimate.getParameterDescription()
         p = estimate.getParameter()
         pretty_p = ", ".join([f"{param}: {value:.3f}" for param, value in zip(desc, p)])
@@ -507,90 +418,14 @@ for different values of r
 
  .. code-block:: none
 
-    r= 1 mu: 111.099, sigma: 17.346, xi: -0.077
-    r= 5 mu: 118.702, sigma: 13.713, xi: -0.088
-    r=10 mu: 120.707, sigma: 12.815, xi: -0.113
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 138-139
-
-It is possible to retrieve the value of r which maximizes the likelihood
-
-.. GENERATED FROM PYTHON SOURCE LINES 139-142
-
-.. code-block:: default
-
-    best_r, llh = factory.buildBestRMaxima(sample_rmax, r_candidate)
-    print(best_r)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    1
+    r= 1 mu: 111.090, sigma: 17.340, xi: -0.077
+    r= 5 mu: 117.849, sigma: 13.423, xi: -0.087
+    r=10 mu: 116.868, sigma: 11.854, xi: -0.108
 
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 143-144
-
-We can also get the associated likelihood value
-
-.. GENERATED FROM PYTHON SOURCE LINES 144-147
-
-.. code-block:: default
-
-    for i in range(3):
-        print(f"r={r_candidate[i]} likelihood={llh[i]}")
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    r=1 likelihood=-218.85953117058833
-    r=5 likelihood=-717.7749932611638
-    r=10 likelihood=-1123.056052590468
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 148-149
-
-We can also get the associated parameter distribution
-
-.. GENERATED FROM PYTHON SOURCE LINES 149-152
-
-.. code-block:: default
-
-    result5 = factory.buildRMaximaEstimator(sample_rmax, 1)
-    print(result5.getParameterDistribution())
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Normal(mu = [111.099,17.3458,-0.0771419], sigma = [0.763625,0.769499,0.0384669], R = [[ 1        0.662866 0.143128 ]
-     [ 0.662866 1        0.763213 ]
-     [ 0.143128 0.763213 1        ]])
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 153-154
 
 .. code-block:: default
 
@@ -601,11 +436,6 @@ We can also get the associated parameter distribution
 
 
 
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** ( 0 minutes  5.136 seconds)
 
 
 .. _sphx_glr_download_auto_data_analysis_distribution_fitting_plot_estimate_gev_venice.py:
