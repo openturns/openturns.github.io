@@ -253,13 +253,14 @@ We keep on following our road map, by metamodeling the projection
 of the curves on the smaller-dimension space.
 We metamodel the Karhunen-Loeve coefficients using ordinary Kriging.
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-152
+.. GENERATED FROM PYTHON SOURCE LINES 140-153
 
 .. code-block:: default
 
-
     dim = inputSample.getDimension()  # only 1 input dimension
-    basis = ot.ConstantBasisFactory(dim).build()
+    univb = ot.ConstantBasisFactory(dim).build()  # univariate basis
+    coll = [ot.AggregatedFunction([univb.build(i)] * n_mode) for i in range(univb.getSize())]
+    basis = ot.Basis(coll)  # multivariate basis
     covarianceModel = ot.SquaredExponential(dim)
     covarianceModel = ot.TensorizedCovarianceModel([covarianceModel] * n_mode)
 
@@ -276,12 +277,12 @@ We metamodel the Karhunen-Loeve coefficients using ordinary Kriging.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-155
+.. GENERATED FROM PYTHON SOURCE LINES 154-156
 
 We have created all pieces for a "PointToField" metamodel. Let put these
 pieces together:
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-164
+.. GENERATED FROM PYTHON SOURCE LINES 156-165
 
 .. code-block:: default
 
@@ -301,17 +302,17 @@ pieces together:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-167
+.. GENERATED FROM PYTHON SOURCE LINES 166-168
 
 Validate the metamodel
 ++++++++++++++++++++++
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-172
+.. GENERATED FROM PYTHON SOURCE LINES 171-173
 
 We create a new Monte-Carlo design of experiment. On this design of
 experiment, the FMU is simulated as well as the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-177
+.. GENERATED FROM PYTHON SOURCE LINES 173-178
 
 .. code-block:: default
 
@@ -327,11 +328,11 @@ experiment, the FMU is simulated as well as the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-179
+.. GENERATED FROM PYTHON SOURCE LINES 179-180
 
 First, we have a visual check:
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-199
+.. GENERATED FROM PYTHON SOURCE LINES 180-200
 
 .. code-block:: default
 
@@ -367,11 +368,11 @@ First, we have a visual check:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-201
+.. GENERATED FROM PYTHON SOURCE LINES 201-202
 
 We validate the pertinence of Karhunen-Loeve decomposition:
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-206
+.. GENERATED FROM PYTHON SOURCE LINES 202-207
 
 .. code-block:: default
 
@@ -392,17 +393,17 @@ We validate the pertinence of Karhunen-Loeve decomposition:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 207-209
+.. GENERATED FROM PYTHON SOURCE LINES 208-210
 
 As the epidemiological model considers a population size of 700, the residual
 mean error on the field is acceptable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-213
+.. GENERATED FROM PYTHON SOURCE LINES 212-214
 
 We validate the Kriging (using the Karhunen-Loeve coefficients of the test
 sample):
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-223
+.. GENERATED FROM PYTHON SOURCE LINES 214-224
 
 .. code-block:: default
 
@@ -424,19 +425,19 @@ sample):
 
  .. code-block:: none
 
-    0.9999949316995637
+    0.9999949331018687
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-228
+.. GENERATED FROM PYTHON SOURCE LINES 225-229
 
 The predictivity factor is very close to 1, which is satisfying.
 Further statistical tests exist in
 `OpenTURNS <http://openturns.github.io/openturns/master/contents.html>`_ to
 assert the quality of the obtained metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 230-241
+.. GENERATED FROM PYTHON SOURCE LINES 231-242
 
 ----------------------
 
@@ -453,7 +454,7 @@ etc.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.201 seconds)
+   **Total running time of the script:** ( 0 minutes  1.600 seconds)
 
 
 .. _sphx_glr_download_auto_application_plot_metamodel.py:
