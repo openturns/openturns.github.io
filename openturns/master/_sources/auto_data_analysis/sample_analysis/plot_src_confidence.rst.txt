@@ -18,16 +18,21 @@
 .. _sphx_glr_auto_data_analysis_sample_analysis_plot_src_confidence.py:
 
 
-Compute SRC indices confidence intervals
-----------------------------------------
+Compute squared SRC indices confidence intervals
+------------------------------------------------
 
 .. GENERATED FROM PYTHON SOURCE LINES 7-10
 
-This example shows how to compute SRC indices confidence bounds with bootstrap.
-First, we compute SRC indices and draw them.
+This example shows how to compute squared SRC indices confidence bounds with bootstrap.
+First, we compute squared SRC indices and draw them.
 Then we compute bootstrap confidence bounds using the :class:`~openturns.BootstrapExperiment` class and draw them.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-16
+.. GENERATED FROM PYTHON SOURCE LINES 12-14
+
+Define the model
+~~~~~~~~~~~~~~~~
+
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: default
 
@@ -42,17 +47,17 @@ Then we compute bootstrap confidence bounds using the :class:`~openturns.Bootstr
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Load the flood model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-23
+.. GENERATED FROM PYTHON SOURCE LINES 22-27
 
 .. code-block:: default
 
-    flood = flood_model.FloodModel()
-    distribution = flood.distribution
-    g = flood.model
+    fm = flood_model.FloodModel()
+    distribution = fm.distribution
+    g = fm.model.getMarginal(1)
     dim = distribution.getDimension()
 
 
@@ -62,11 +67,114 @@ Load the flood model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
+
+See the distribution
+
+.. GENERATED FROM PYTHON SOURCE LINES 29-31
+
+.. code-block:: default
+
+    distribution
+
+
+
+
+
+
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    <ul>
+      <li>dimension: 8</li>
+      <li>copula: IndependentCopula</li>
+    </ul>
+
+    <table>
+      <tr>
+        <th>Index</th>
+        <th>Variable</th>
+        <th>Distribution</th>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td>Q (m3/s)</td>
+        <td>TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[)</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Ks</td>
+        <td>TruncatedDistribution(Normal(mu = 30, sigma = 7.5), bounds = [0, (87.3797) +inf[)</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Zv (m)</td>
+        <td>Uniform(a = 49, b = 51)</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Zm (m)</td>
+        <td>Uniform(a = 54, b = 56)</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>B (m)</td>
+        <td>Triangular(a = 295, m = 300, b = 305)</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>L (m)</td>
+        <td>Triangular(a = 4990, m = 5000, b = 5010)</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Zb (m)</td>
+        <td>Triangular(a = 55, m = 55.5, b = 56)</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Hd (m)</td>
+        <td>Uniform(a = 2, b = 4)</td>
+      </tr>
+    </table>
+
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
+
+See the model
+
+.. GENERATED FROM PYTHON SOURCE LINES 33-35
+
+.. code-block:: default
+
+    g.getOutputDescription()
+
+
+
+
+
+
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    <p>[S]</p>
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 36-38
+
+Estimate the squared SRC indices
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 We produce a pair of input and output sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-30
+.. GENERATED FROM PYTHON SOURCE LINES 41-46
 
 .. code-block:: default
 
@@ -82,11 +190,11 @@ We produce a pair of input and output sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
-Compute SRC indices from the generated design.
+Compute squared SRC indices from the generated design.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-35
+.. GENERATED FROM PYTHON SOURCE LINES 48-51
 
 .. code-block:: default
 
@@ -101,16 +209,16 @@ Compute SRC indices from the generated design.
 
  .. code-block:: none
 
-    [0.0129289,0.00545588,0.943028,0.000193272]
+    [0.32175,0.137302,0.15122,0.005747,0.00141732,0.000104678,0.0189879,0.138303]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
-Plot the SRC indices.
+Plot the squared SRC indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-44
+.. GENERATED FROM PYTHON SOURCE LINES 53-60
 
 .. code-block:: default
 
@@ -118,7 +226,7 @@ Plot the SRC indices.
     graph = ot.SobolIndicesAlgorithm.DrawCorrelationCoefficients(
         importance_factors, input_names, "Importance factors"
     )
-    graph.setYTitle("Importance factors")
+    graph.setYTitle("Squared SRC")
     _ = otv.View(graph)
 
 
@@ -133,16 +241,21 @@ Plot the SRC indices.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-47
+.. GENERATED FROM PYTHON SOURCE LINES 61-63
+
+Compute confidence intervals
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. GENERATED FROM PYTHON SOURCE LINES 65-67
 
 We now compute bootstrap confidence intervals for the importance factors.
 This is done with the :class:`~openturns.BootstrapExperiment` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
 Create SRC bootstrap sample
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-58
+.. GENERATED FROM PYTHON SOURCE LINES 70-78
 
 .. code-block:: default
 
@@ -161,11 +274,11 @@ Create SRC bootstrap sample
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Compute bootstrap quantiles
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-67
+.. GENERATED FROM PYTHON SOURCE LINES 80-87
 
 .. code-block:: default
 
@@ -184,15 +297,19 @@ Compute bootstrap quantiles
 
  .. code-block:: none
 
-    [0.0090078, 0.0180504]
-    [0.00292053, 0.012593]
-    [0.891574, 1.00615]
-    [4.51853e-05, 0.000459976]
+    [0.230359, 0.40736]
+    [0.072598, 0.255676]
+    [0.0938578, 0.221143]
+    [0.00165483, 0.0153625]
+    [5.263e-06, 0.00847213]
+    [1.78931e-07, 0.00297661]
+    [0.0095922, 0.0301949]
+    [0.0873361, 0.225831]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-109
+.. GENERATED FROM PYTHON SOURCE LINES 88-129
 
 .. code-block:: default
 
@@ -226,7 +343,7 @@ Compute bootstrap quantiles
             importance_factors, input_names, "Importance factors"
         )
         graph.setColors([palette[0], "black"])
-        graph.setYTitle("Importance factors")
+        graph.setYTitle("Squared SRC")
 
         # Add confidence bounds
         for i in range(dim):
@@ -244,11 +361,15 @@ Compute bootstrap quantiles
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+.. GENERATED FROM PYTHON SOURCE LINES 130-131
+
+sphinx_gallery_thumbnail_number = 2
+
+.. GENERATED FROM PYTHON SOURCE LINES 133-134
 
 Plot the SRC indices mean and confidence intervals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-116
+.. GENERATED FROM PYTHON SOURCE LINES 134-139
 
 .. code-block:: default
 
@@ -269,7 +390,7 @@ Plot the SRC indices mean and confidence intervals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-138
+.. GENERATED FROM PYTHON SOURCE LINES 140-161
 
 We see that the variable :math:`Q` must be significant, because the lower
 bound of the confidence interval does not cross the X axis.
@@ -283,7 +404,7 @@ taking into account the confidence bounds (which are very small in this case).
 Hence, the variable :math:`Z_m` could be replaced by a constant without
 reducing the variance of the output much.
 
-The variables :math:`K_s` and :math:`Z_v` are somewhat in-between these two
+The variables :math:`K_s`, :math:`Z_v` and :math:`H_d` are somewhat in-between these two
 extreme situations. We cannot state that one of them is of greater importance
 than the other, because the confidence bounds are of comparable magnitude.
 Looking only at the importance factors, we may wrongly conclude that
@@ -293,7 +414,7 @@ importance factor for :math:`Z_v` is strictly greater than the estimate for
 this conclusion has no foundation, since confidence limits are comparable.
 In order to distinguish between the impact of these two variables, a larger sample size is needed.
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-141
+.. GENERATED FROM PYTHON SOURCE LINES 163-164
 
 .. code-block:: default
 
