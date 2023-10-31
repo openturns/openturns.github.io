@@ -148,8 +148,33 @@ squares problem is ill-posed:</p>
 </div><p>The sparse least squares approaches may be employed instead. Eventually a sparse
 PC representation is obtained, that is an approximation which only contains a
 small number of active basis functions.</p>
-<p>This class is not usable as is because it has sense only whithin the
-<a class="reference internal" href="openturns.FunctionalChaosAlgorithm.html#openturns.FunctionalChaosAlgorithm" title="openturns.FunctionalChaosAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm</span></code></a>.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">ishigami_function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">im</span> <span class="o">=</span> <span class="n">ishigami_function</span><span class="o">.</span><span class="n">IshigamiModel</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create the orthogonal basis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomialCollection</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">LegendreFactory</span><span class="p">()]</span> <span class="o">*</span> <span class="n">im</span><span class="o">.</span><span class="n">dim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearEnumerateFunction</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">productBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span><span class="n">polynomialCollection</span><span class="p">,</span> <span class="n">enumerateFunction</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># experimental design</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">samplingSize</span> <span class="o">=</span> <span class="mi">75</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LowDiscrepancyExperiment</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">SobolSequence</span><span class="p">(),</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">samplingSize</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate sample</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># iso transfo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xToU</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DistributionTransformation</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="p">,</span> <span class="n">productBasis</span><span class="o">.</span><span class="n">getMeasure</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">xToU</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># build basis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">degree</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">basisSize</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">basis</span> <span class="o">=</span> <span class="p">[</span><span class="n">productBasis</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">basisSize</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># run algorithm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">factory</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">BasisSequenceFactory</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">LARS</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">factory</span><span class="o">.</span><span class="n">setVerbose</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seq</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">basis</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">basisSize</span><span class="p">)))</span>
+</pre></div>
+</div>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
