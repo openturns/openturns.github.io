@@ -117,9 +117,14 @@ to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="fit-a-distribution-from-an-input-sample">
 <span id="sphx-glr-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-build-distribution-py"></span><h1>Fit a distribution from an input sample<a class="headerlink" href="#fit-a-distribution-from-an-input-sample" title="Permalink to this heading">¶</a></h1>
-<p>In this example we show how to use the <cite>BuildDistribution</cite> function to fit a distribution to an input sample.
-This function is used by the <cite>FunctionalChaosAlgorithm</cite> class when we want to create a polynomial chaos metamodel and we have a design of experiments which have been computed beforehand.
-In this case, we have to identify the distributions which best fit to the input sample in order to define the input probabilistic model.
+<p>In this example we show how to use the
+<a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelAlgorithm.html#openturns.MetaModelAlgorithm.BuildDistribution" title="openturns.MetaModelAlgorithm.BuildDistribution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BuildDistribution()</span></code></a> function to fit a distribution to an
+input sample.
+This function is used by the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosAlgorithm.html#openturns.FunctionalChaosAlgorithm" title="openturns.FunctionalChaosAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm</span></code></a>
+class when we want to create a polynomial chaos metamodel and we have a
+design of experiments which have been computed beforehand.
+In this case, we have to identify the distributions which best fit to the
+input sample in order to define the input probabilistic model.
 This is, in turn, used by in the polynomial chaos to create the orthogonal basis.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 
@@ -142,13 +147,65 @@ This is, in turn, used by in the polynomial chaos to create the orthogonal basis
 </pre></div>
 </div>
 <p>Create a functional chaos model.
-First, we need to fit a distribution on the input sample. We can do this automatically with the Lilliefors test.</p>
+The algorithm used by <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelAlgorithm.html#openturns.MetaModelAlgorithm.BuildDistribution" title="openturns.MetaModelAlgorithm.BuildDistribution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BuildDistribution()</span></code></a>
+fits a distribution on the input sample.
+This is done with the Lilliefors test.
+Please read <a class="reference internal" href="../../theory/data_analysis/kolmogorov_test.html#kolmogorov-smirnov-test"><span class="std std-ref">Kolmogorov-Smirnov fitting test</span></a> for more details on this topic.</p>
+<p>The Lilliefors test is based on sampling the distribution of the
+Kolmogorov-Smirnov statistics.
+The sample size corresponding to this algorithm is configured
+by the <cite>“FittingTest-LillieforsMaximumSamplingSize”</cite> <a class="reference internal" href="../../user_manual/_generated/openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>
+key.
+In order to get satisfactory results, the default value of this
+key is relatively large.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">GetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;FittingTest-LillieforsMaximumSamplingSize&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>100000
+</pre></div>
+</div>
+<p>In order to speed this example up, let us reduce this value.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;FittingTest-LillieforsMaximumSamplingSize&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Then we fit the distribution.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="o">.</span><span class="n">BuildDistribution</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Let us explore the distribution with its fitted parameters.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+ComposedDistribution
+<ul>
+  <li>name=ComposedDistribution</li>
+  <li>dimension: 2</li>
+  <li>description=[X0,X1]
+  <li>copula: IndependentCopula(dimension = 2)</li>
+</ul>
+
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Variable</th>
+    <th>Distribution</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>X0</td>
+    <td>Normal(mu = -0.0268588, sigma = 0.985838)</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>X1</td>
+    <td>Normal(mu = 0.00246667, sigma = 1.00015)</td>
+  </tr>
+</table>
+
+</div>
+<br />
+<br /><p>We can also analyse its properties in more detail.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span>
     <span class="n">marginal</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">marginalname</span> <span class="o">=</span> <span class="n">marginal</span><span class="o">.</span><span class="n">getImplementation</span><span class="p">()</span><span class="o">.</span><span class="n">getClassName</span><span class="p">()</span>
@@ -161,18 +218,30 @@ Marginal # 1 : Normal
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<p>IndependentCopula(dimension = 2)</p>
+IndependentCopula
+<ul>
+  <li>name=IndependentCopula</li>
+  <li>dimension=2</li>
+  <li>weight=1</li>
+  <li>range=[0, 1]
+[0, 1]</li>
+  <li>description=[X0,X1]</li>
+  <li>isParallel=true</li>
+  <li>isCopula=true</li>
+</ul>
+
 </div>
 <br />
-<br /><p>The previous call to <cite>BuildDistribution</cite> is what is done internally by the following constructor of <cite>FunctionalChaosAlgorithm</cite>.</p>
+<br /><p>The previous call to <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelAlgorithm.html#openturns.MetaModelAlgorithm.BuildDistribution" title="openturns.MetaModelAlgorithm.BuildDistribution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BuildDistribution()</span></code></a> is what is done internally by the
+following constructor of <cite>FunctionalChaosAlgorithm</cite>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Reset default settings</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">Reload</span><span class="p">()</span>
+<p>The previous constructor is the main topic of the example
+<a class="reference internal" href="plot_functional_chaos.html"><span class="doc">Create a polynomial chaos metamodel from a data set</span></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">Reload</span><span class="p">()</span>  <span class="c1"># reset default settings</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.070 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-build-distribution-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/32e677f64fc66b916d228519d2033682/plot_chaos_build_distribution.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_chaos_build_distribution.py</span></code></a></p>
