@@ -29,5 +29,5 @@ graph.add(cloud)
 
 graph.setTitle('Monte Carlo simulation (Pf=0.048, N=1000)')
 graph.setLegends(['domain Df', 'simulations'])
-graph.setLegendPosition('topright')
+graph.setLegendPosition('upper right')
 View(graph)

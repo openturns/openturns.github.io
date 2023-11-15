@@ -97,7 +97,9 @@ fm = flood_model.FloodModel()
 # %%
 # We define the model :math:`g` which has 4 inputs and one output H.
 #
-# The nonlinear least squares does not take into account for bounds in the parameters. Therefore, we ensure that the output is computed whatever the inputs. The model fails into two situations:
+# The nonlinear least squares does not take into account for bounds in the parameters.
+# Therefore, we ensure that the output is computed whatever the inputs.
+# The model fails into two situations:
 #
 # * if :math:`K_s<0`,
 # * if :math:`Z_v-Z_m<0`.
@@ -186,6 +188,7 @@ view = viewer.View(graph)
 # to the parameters of the distribution of the corresponding observation:
 # here :math:`\vect z=(\mu, \sigma)` with :math:`\mu = G(Q, K_s, Z_v, Z_m)`
 # and :math:`\sigma = 0.5`.
+
 
 # %%
 def fullModelPy(X):
@@ -326,7 +329,7 @@ def plot_bayesian_prior_vs_posterior_pdf(prior, posterior):
         if parameter_index > 0:
             graph.setYTitle("")
         graph.setColors(palette)
-        graph.setLegendPosition("topright")
+        graph.setLegendPosition("upper right")
         grid.setGraph(0, parameter_index, graph)
     grid.setTitle("Bayesian calibration")
     return grid

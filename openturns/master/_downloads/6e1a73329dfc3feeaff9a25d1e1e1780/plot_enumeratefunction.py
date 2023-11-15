@@ -71,7 +71,7 @@ def draw_stratas(enum_func):
         graph.add(cloud)
     graph.setIntegerXTick(True)
     graph.setIntegerYTick(True)
-    graph.setLegendPosition("topright")
+    graph.setLegendPosition("upper right")
     return graph
 
 
@@ -86,9 +86,7 @@ view = otv.View(graph, axes_kw={"aspect": "equal"})
 # for several dimension values.
 # We observe the exponential increase of the number of terms with the dimension
 # :math:`d` (curse of dimensionality).
-graph = ot.Graph(
-    "Linear enumeration", "Total degree", "Number of coefficients", True
-)
+graph = ot.Graph("Linear enumeration", "Total degree", "Number of coefficients", True)
 degree_maximum = 10
 list_of_dimensions = [1, 5, 10, 15, 20]
 point_styles = ["bullet", "circle", "fdiamond", "fsquare", "triangleup"]
@@ -102,7 +100,7 @@ for i in range(len(list_of_dimensions)):
     cloud.setPointStyle(point_styles[i])
     cloud.setLegend(f"dim.={dimension}")
     graph.add(cloud)
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 graph.setIntegerXTick(True)
 graph.setLogScale(ot.GraphImplementation.LOGY)
 view = otv.View(graph, figure_kw={"figsize": (5, 4)})
@@ -117,7 +115,7 @@ def draw_qnorm(q):
     def qnorm(x):
         norm = 0.0
         for xi in x:
-            norm += xi ** q
+            norm += xi**q
         norm = norm ** (1.0 / q)
         return [norm]
 
@@ -185,7 +183,7 @@ for i in range(len(q_list)):
     cloud.setPointStyle(point_styles[i])
     cloud.setLegend(f"$q={q}$")
     graph.add(cloud)
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 graph.setIntegerXTick(True)
 graph.setLogScale(ot.GraphImplementation.LOGY)
 view = otv.View(graph, figure_kw={"figsize": (5, 4)})

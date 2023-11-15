@@ -198,7 +198,7 @@ cloud.setPointStyle(
 )
 graph.add(cloud)
 #
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 view = otv.View(graph)
 
 # %%
@@ -379,7 +379,7 @@ ot.ResourceMap.SetAsUnsignedInteger("Distribution-DefaultPointNumber", 300)
 
 # %%
 graph = calibrationResult.drawObservationsVsInputs()
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 view = otv.View(graph)
 
 # %%
@@ -404,7 +404,7 @@ print(observationError)
 
 # sphinx_gallery_thumbnail_number = 5
 graph = calibrationResult.drawResiduals()
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 view = otv.View(graph)
 
 # %%
@@ -485,7 +485,7 @@ sigmaH = 0.5  # (m^2)
 # %%
 # Define the covariance matrix of the output Y of the model.
 errorCovariance = ot.CovarianceMatrix(1)
-errorCovariance[0, 0] = sigmaH ** 2
+errorCovariance[0, 0] = sigmaH**2
 
 # %%
 # Define the covariance matrix of the parameters :math:`\theta` to calibrate.
@@ -494,9 +494,9 @@ sigmaZv = 1.0
 sigmaZm = 1.0
 #
 sigma = ot.CovarianceMatrix(3)
-sigma[0, 0] = sigmaKs ** 2
-sigma[1, 1] = sigmaZv ** 2
-sigma[2, 2] = sigmaZm ** 2
+sigma[0, 0] = sigmaKs**2
+sigma[1, 1] = sigmaZv**2
+sigma[2, 2] = sigmaZm**2
 print(sigma)
 
 # %%
@@ -522,7 +522,7 @@ print(thetaMAP)
 
 # %%
 graph = calibrationResult.drawObservationsVsInputs()
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 view = otv.View(graph)
 
 # %%
@@ -538,7 +538,7 @@ view = otv.View(graph)
 
 # %%
 graph = calibrationResult.drawResiduals()
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 view = otv.View(graph)
 
 # %%
@@ -622,7 +622,7 @@ print(thetaMAP)
 
 # %%
 graph = calibrationResult.drawObservationsVsInputs()
-graph.setLegendPosition("topleft")
+graph.setLegendPosition("upper left")
 view = otv.View(graph)
 
 # %%

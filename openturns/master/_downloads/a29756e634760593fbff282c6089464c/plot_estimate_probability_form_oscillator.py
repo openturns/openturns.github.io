@@ -187,7 +187,6 @@ my_labels = {
 }
 for i in range(distribution.getDimension()):
     for j in range(i):
-
         crossCutIndices = []
         crossCutReferencePoint = []
         for k in range(distribution.getDimension()):
@@ -274,7 +273,8 @@ for i in range(distribution.getDimension()):
             )
 
 # %%
-# As it can be seen, the curvature of the limit state function near the design point is significant. In that way, FORM provides poor estimate since it linearly approximates the limit state function.
+# As it can be seen, the curvature of the limit state function near the design point is significant.
+# In that way, FORM provides poor estimate since it linearly approximates the limit state function.
 # Thus, SORM can be used in order to refine this probability estimation by approximating the limit state function with a quadratic model.
 
 # %%
@@ -331,7 +331,6 @@ my_labels = {
 
 for i in range(distribution.getDimension()):
     for j in range(i):
-
         crossCutIndices = []
         crossCutReferencePoint = []
         for k in range(distribution.getDimension()):
