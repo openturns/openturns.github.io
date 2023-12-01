@@ -99,7 +99,7 @@ Generate the observations
 
 .. GENERATED FROM PYTHON SOURCE LINES 80-88
 
-.. code-block:: default
+.. code-block:: Python
 
     import pylab as pl
     from openturns.usecases import flood_model
@@ -122,7 +122,7 @@ A basic implementation of the probabilistic model is available in the usecases m
 
 .. GENERATED FROM PYTHON SOURCE LINES 90-92
 
-.. code-block:: default
+.. code-block:: Python
 
     fm = flood_model.FloodModel()
 
@@ -146,7 +146,7 @@ In these cases, we return an infinite number.
 
 .. GENERATED FROM PYTHON SOURCE LINES 103-117
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -171,7 +171,7 @@ In these cases, we return an infinite number.
 
 .. GENERATED FROM PYTHON SOURCE LINES 118-122
 
-.. code-block:: default
+.. code-block:: Python
 
     g = ot.PythonFunction(4, 1, functionFlooding)
     g = ot.MemoizeFunction(g)
@@ -190,7 +190,7 @@ We load the input distribution for :math:`Q`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 124-126
 
-.. code-block:: default
+.. code-block:: Python
 
     Q = fm.Q
 
@@ -207,7 +207,7 @@ Set the parameters to be calibrated.
 
 .. GENERATED FROM PYTHON SOURCE LINES 130-137
 
-.. code-block:: default
+.. code-block:: Python
 
     K_s = ot.Dirac(30.0)
     Z_v = ot.Dirac(50.0)
@@ -229,7 +229,7 @@ We create the joint input distribution.
 
 .. GENERATED FROM PYTHON SOURCE LINES 141-143
 
-.. code-block:: default
+.. code-block:: Python
 
     inputRandomVector = ot.ComposedDistribution([Q, K_s, Z_v, Z_m])
 
@@ -246,7 +246,7 @@ Create a Monte-Carlo sample of the output :math:`H`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 147-151
 
-.. code-block:: default
+.. code-block:: Python
 
     nbobs = 20
     inputSample = inputRandomVector.getSample(nbobs)
@@ -265,7 +265,7 @@ Generate the observation noise and add it to the output of the model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 155-161
 
-.. code-block:: default
+.. code-block:: Python
 
     sigmaObservationNoiseH = 0.1  # (m)
     noiseH = ot.Normal(0.0, sigmaObservationNoiseH)
@@ -286,7 +286,7 @@ Plot the Y observations versus the X observations.
 
 .. GENERATED FROM PYTHON SOURCE LINES 165-167
 
-.. code-block:: default
+.. code-block:: Python
 
     Qobs = inputSample[:, 0]
 
@@ -299,7 +299,7 @@ Plot the Y observations versus the X observations.
 
 .. GENERATED FROM PYTHON SOURCE LINES 168-174
 
-.. code-block:: default
+.. code-block:: Python
 
     graph = ot.Graph("Observations", "Q (m3/s)", "H (m)", True)
     cloud = ot.Cloud(Qobs, Hobs)
@@ -334,7 +334,7 @@ and :math:`\sigma = 0.5`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 186-197
 
-.. code-block:: default
+.. code-block:: Python
 
     def fullModelPy(X):
         Q, K_s, Z_v, Z_m = X
@@ -367,7 +367,7 @@ In the Bayesian framework, this is called the mean of the *prior* Gaussian distr
 
 .. GENERATED FROM PYTHON SOURCE LINES 202-208
 
-.. code-block:: default
+.. code-block:: Python
 
     KsInitial = 20.0
     ZvInitial = 49.0
@@ -388,7 +388,7 @@ Define the covariance matrix of the parameters :math:`\vect\theta` to calibrate.
 
 .. GENERATED FROM PYTHON SOURCE LINES 212-216
 
-.. code-block:: default
+.. code-block:: Python
 
     sigmaKs = 5.0
     sigmaZv = 1.0
@@ -403,7 +403,7 @@ Define the covariance matrix of the parameters :math:`\vect\theta` to calibrate.
 
 .. GENERATED FROM PYTHON SOURCE LINES 217-222
 
-.. code-block:: default
+.. code-block:: Python
 
     parameterPriorCovariance = ot.CovarianceMatrix(paramDim)
     parameterPriorCovariance[0, 0] = sigmaKs ** 2
@@ -423,7 +423,7 @@ Define the prior distribution :math:`\pi(\vect\theta)` of the parameter :math:`\
 
 .. GENERATED FROM PYTHON SOURCE LINES 226-229
 
-.. code-block:: default
+.. code-block:: Python
 
     prior = ot.Normal(parameterPriorMean, parameterPriorCovariance)
     prior.setDescription(["Ks", "Zv", "Zm"])
@@ -445,7 +445,7 @@ Hence, we do not have to set the actual parameters: only the type of distributio
 
 .. GENERATED FROM PYTHON SOURCE LINES 237-239
 
-.. code-block:: default
+.. code-block:: Python
 
     conditional = ot.Normal()
 
@@ -464,7 +464,7 @@ but with different supports.
 
 .. GENERATED FROM PYTHON SOURCE LINES 245-247
 
-.. code-block:: default
+.. code-block:: Python
 
     proposal = [ot.Uniform(-5.0, 5.0), ot.Uniform(-1.0, 1.0), ot.Uniform(-1.0, 1.0)]
 
@@ -482,7 +482,7 @@ Build a Gibbs sampler
 
 .. GENERATED FROM PYTHON SOURCE LINES 250-260
 
-.. code-block:: default
+.. code-block:: Python
 
 
     initialState = parameterPriorMean
@@ -507,7 +507,7 @@ Generate a sample from the posterior distribution of :math:`\vect \theta`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 264-267
 
-.. code-block:: default
+.. code-block:: Python
 
     sampleSize = 1000
     sample = sampler.getSample(sampleSize)
@@ -525,7 +525,7 @@ Look at the acceptance rates of the random walk Metropolis-Hastings samplers.
 
 .. GENERATED FROM PYTHON SOURCE LINES 269-272
 
-.. code-block:: default
+.. code-block:: Python
 
 
     [mh.getAcceptanceRate() for mh in sampler.getMetropolisHastingsCollection()]
@@ -549,7 +549,7 @@ Build the distribution of the posterior by kernel smoothing.
 
 .. GENERATED FROM PYTHON SOURCE LINES 274-278
 
-.. code-block:: default
+.. code-block:: Python
 
 
     kernel = ot.KernelSmoothing()
@@ -568,7 +568,7 @@ Display prior vs posterior for each parameter.
 
 .. GENERATED FROM PYTHON SOURCE LINES 280-293
 
-.. code-block:: default
+.. code-block:: Python
 
 
     fig = pl.figure(figsize=(12, 4))
@@ -602,13 +602,10 @@ Display prior vs posterior for each parameter.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_bayesian_calibration_flooding.ipynb <plot_bayesian_calibration_flooding.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_bayesian_calibration_flooding.py <plot_bayesian_calibration_flooding.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_bayesian_calibration_flooding.ipynb <plot_bayesian_calibration_flooding.ipynb>`
