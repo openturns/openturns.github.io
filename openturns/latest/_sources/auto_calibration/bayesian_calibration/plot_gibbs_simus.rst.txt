@@ -111,7 +111,7 @@ discretized values :math:`Y_i^{obs} \in \delta \times \mathbb N`, where
 
 .. GENERATED FROM PYTHON SOURCE LINES 91-101
 
-.. code-block:: default
+.. code-block:: Python
 
     import openturns as ot
     from openturns.viewer import View
@@ -136,7 +136,7 @@ Build the design matrix :math:`\mat{X}`
 
 .. GENERATED FROM PYTHON SOURCE LINES 103-106
 
-.. code-block:: default
+.. code-block:: Python
 
     X = ot.Sample([[1.0]] * n)
     X.stack(ot.Normal(0.0, 10.0).getSample(n))
@@ -155,7 +155,7 @@ its diagonal coefficients from an :class:`~openturns.Exponential` distribution.
 
 .. GENERATED FROM PYTHON SOURCE LINES 109-111
 
-.. code-block:: default
+.. code-block:: Python
 
     Q = np.ones((n, 1)) + ot.Exponential().getSample(n)
 
@@ -172,7 +172,7 @@ Choose values for the parameters :math:`\vect{\theta}` and :math:`\tau`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 113-117
 
-.. code-block:: default
+.. code-block:: Python
 
     theta_true = np.array([[0.0], [1.0]])
     p = len(theta_true)
@@ -191,7 +191,7 @@ First sample uncensored, and then censored observation data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 119-125
 
-.. code-block:: default
+.. code-block:: Python
 
     mean_true = np.dot(X, theta_true).ravel()
     std_true = np.sqrt(1.0 / tau_true + 1.0 / Q).ravel()
@@ -210,11 +210,11 @@ First sample uncensored, and then censored observation data.
 
 Plot the simulated dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-142
+.. GENERATED FROM PYTHON SOURCE LINES 127-141
 
-.. code-block:: default
+.. code-block:: Python
 
-    graph = ot.Graph("Simulated data", "$X_1$", "$Y$", True, "topleft", 16)
+    graph = ot.Graph("Simulated data", "$X_1$", "$Y$", True, "upper left", 16)
     cloud_obs = ot.Cloud(X[:, 1].asPoint(), Yobs_sim)
     cloud_obs.setPointStyle("bullet")
     cloud_sim = ot.Cloud(X[:, 1].asPoint(), Y_sim)
@@ -225,7 +225,6 @@ Plot the simulated dataset.
     graph.add(cloud_sim)
     graph.add(cloud_obs)
     graph.setLegends(["Trend", "$Y^{sim}$", "$Y^{obs}$"])
-    graph.setColors(ot.Drawable.BuildDefaultPalette(3))
     _ = View(graph)
 
 
@@ -241,7 +240,7 @@ Plot the simulated dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-187
+.. GENERATED FROM PYTHON SOURCE LINES 142-186
 
 2. Bayesian Inference
 ---------------------
@@ -288,9 +287,9 @@ following. As discussed above, there is no simple way to obtain the
 posterior distribution, justifying the use of Monte-Carlo Markov chain
 techniques, as described hereafter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-202
+.. GENERATED FROM PYTHON SOURCE LINES 186-201
 
-.. code-block:: default
+.. code-block:: Python
 
 
     lower = (Yobs_sim.ravel() - delta).tolist()
@@ -314,7 +313,7 @@ techniques, as described hereafter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-241
+.. GENERATED FROM PYTHON SOURCE LINES 202-240
 
 2.2. Posterior sampling
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -355,13 +354,13 @@ hence the latent variables :math:`Y_i` are updated by simply simulating
 independent univariate truncated normals.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 243-244
+.. GENERATED FROM PYTHON SOURCE LINES 242-243
 
 Step 1 : Create associated :class:`~openturns.RandomVector`
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-252
+.. GENERATED FROM PYTHON SOURCE LINES 243-251
 
-.. code-block:: default
+.. code-block:: Python
 
     marginals_trunc = [
         ot.TruncatedNormal(Yobs_sim[i], 1.0, lower[i], upper[i]) for i in range(len(X))
@@ -378,13 +377,13 @@ Step 1 : Create associated :class:`~openturns.RandomVector`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-254
+.. GENERATED FROM PYTHON SOURCE LINES 252-253
 
 Step 2 : Link function, giving the parameters of the univariate truncated normals in function of the chain's current state
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-283
+.. GENERATED FROM PYTHON SOURCE LINES 253-282
 
-.. code-block:: default
+.. code-block:: Python
 
 
     gen_params = np.array(trunc_cond_Y.getParameter())
@@ -422,7 +421,7 @@ Step 2 : Link function, giving the parameters of the univariate truncated normal
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-321
+.. GENERATED FROM PYTHON SOURCE LINES 283-320
 
 2.2.2. Updating :math:`\vect{\theta}`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -462,13 +461,13 @@ simplified form:
 Explicit simulation from a box-constrained multivariate normal can be
 done with a simple rejection sampling scheme:
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-324
+.. GENERATED FROM PYTHON SOURCE LINES 322-323
 
 Step 1 : Create associated :class:`~openturns.RandomVector`
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-374
+.. GENERATED FROM PYTHON SOURCE LINES 323-373
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -527,13 +526,13 @@ Step 1 : Create associated :class:`~openturns.RandomVector`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 375-376
+.. GENERATED FROM PYTHON SOURCE LINES 374-375
 
 Step 2 : Link function, giving the parameters of the box-constrained normal in function of :math:`\tau` and :math:`\vect{Y}` values
 
-.. GENERATED FROM PYTHON SOURCE LINES 376-399
+.. GENERATED FROM PYTHON SOURCE LINES 375-398
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -565,7 +564,7 @@ Step 2 : Link function, giving the parameters of the box-constrained normal in f
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 400-415
+.. GENERATED FROM PYTHON SOURCE LINES 399-414
 
 2.2.3. Updating :math:`\tau`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -583,13 +582,13 @@ Step 2 : Link function, giving the parameters of the box-constrained normal in f
 Hence, :math:`\tau` can be updated using the Random-walk
 Metropolis-Hastings algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 418-419
+.. GENERATED FROM PYTHON SOURCE LINES 417-418
 
 Step 1 : compute tau's conditional posterior density, up to a multiplicative factor
 
-.. GENERATED FROM PYTHON SOURCE LINES 419-435
+.. GENERATED FROM PYTHON SOURCE LINES 418-434
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -614,13 +613,13 @@ Step 1 : compute tau's conditional posterior density, up to a multiplicative fac
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 436-437
+.. GENERATED FROM PYTHON SOURCE LINES 435-436
 
 Step 2 : define the proposal distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 437-440
+.. GENERATED FROM PYTHON SOURCE LINES 436-439
 
-.. code-block:: default
+.. code-block:: Python
 
 
     proposal_tau = ot.Normal(0.0, 1e-1)
@@ -632,7 +631,7 @@ Step 2 : define the proposal distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 441-483
+.. GENERATED FROM PYTHON SOURCE LINES 440-482
 
 2.3. Initialization
 ~~~~~~~~~~~~~~~~~~~
@@ -677,9 +676,9 @@ Hence the following 1D problem remains to be solved:
 The optimal value of :math:`\vect{\theta}` is then given by:
 :math:`\widehat{\vect{\theta}} = \vect{\mu}_n(\widehat\tau).`
 
-.. GENERATED FROM PYTHON SOURCE LINES 483-503
+.. GENERATED FROM PYTHON SOURCE LINES 482-502
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -708,13 +707,13 @@ The optimal value of :math:`\vect{\theta}` is then given by:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 504-505
+.. GENERATED FROM PYTHON SOURCE LINES 503-504
 
 1D optimization
 
-.. GENERATED FROM PYTHON SOURCE LINES 505-523
+.. GENERATED FROM PYTHON SOURCE LINES 504-522
 
-.. code-block:: default
+.. code-block:: Python
 
     def func(X):
         return [-log_cond_tau_post(X[0])]
@@ -747,13 +746,13 @@ The optimal value of :math:`\vect{\theta}` is then given by:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 524-525
+.. GENERATED FROM PYTHON SOURCE LINES 523-524
 
 Final step : create a :class:`~openturns.MetropolisHastings` object for each block
 
-.. GENERATED FROM PYTHON SOURCE LINES 525-546
+.. GENERATED FROM PYTHON SOURCE LINES 524-545
 
-.. code-block:: default
+.. code-block:: Python
 
 
     initialState = x
@@ -783,13 +782,13 @@ Final step : create a :class:`~openturns.MetropolisHastings` object for each blo
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 547-548
+.. GENERATED FROM PYTHON SOURCE LINES 546-547
 
 Launch Algorithm
 
-.. GENERATED FROM PYTHON SOURCE LINES 548-558
+.. GENERATED FROM PYTHON SOURCE LINES 547-557
 
-.. code-block:: default
+.. code-block:: Python
 
     sampleSize = 1000
 
@@ -814,13 +813,13 @@ Launch Algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 559-560
+.. GENERATED FROM PYTHON SOURCE LINES 558-559
 
 Plot posterior distribution marginals
 
-.. GENERATED FROM PYTHON SOURCE LINES 560-587
+.. GENERATED FROM PYTHON SOURCE LINES 559-586
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # extract interest parameters
@@ -861,13 +860,13 @@ Plot posterior distribution marginals
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 588-589
+.. GENERATED FROM PYTHON SOURCE LINES 587-588
 
 Draw pairplots of the posterior sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 589-612
+.. GENERATED FROM PYTHON SOURCE LINES 588-611
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # sphinx_gallery_thumbnail_number = 3
@@ -911,13 +910,10 @@ Draw pairplots of the posterior sample.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_gibbs_simus.ipynb <plot_gibbs_simus.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_gibbs_simus.py <plot_gibbs_simus.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_gibbs_simus.ipynb <plot_gibbs_simus.ipynb>`

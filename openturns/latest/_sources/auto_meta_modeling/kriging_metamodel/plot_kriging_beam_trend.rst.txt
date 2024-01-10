@@ -18,28 +18,31 @@
 .. _sphx_glr_auto_meta_modeling_kriging_metamodel_plot_kriging_beam_trend.py:
 
 
-Choose the trend basis of a kriging metamodel
-=============================================
+Kriging: choose a polynomial trend on the beam model
+====================================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-14
+.. GENERATED FROM PYTHON SOURCE LINES 6-17
 
 The goal of this example is to show how to configure the trend in a Kriging metamodel.
-This is why this example focuses on the three available trends:
+This example focuses on three polynomial trends:
 
-* `ConstantBasisFactory`,
-* `LinearBasisFactory`,
-* `QuadraticBasisFactory`.
+* :class:`~openturns.ConstantBasisFactory`,
+* :class:`~openturns.LinearBasisFactory`,
+* :class:`~openturns.QuadraticBasisFactory`.
+
+In the :doc:`/auto_meta_modeling/kriging_metamodel/plot_kriging_chose_trend` example,
+we give another example of this procedure.
 
 For this purpose, we use the :ref:`cantilever beam <use-case-cantilever-beam>` example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-18
+.. GENERATED FROM PYTHON SOURCE LINES 19-21
 
 Definition of the model
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-27
+.. GENERATED FROM PYTHON SOURCE LINES 23-30
 
-.. code-block:: default
+.. code-block:: Python
 
     from openturns.usecases import cantilever_beam
     import openturns as ot
@@ -55,13 +58,13 @@ Definition of the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 We load the use case :
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
+.. GENERATED FROM PYTHON SOURCE LINES 32-34
 
-.. code-block:: default
+.. code-block:: Python
 
     cb = cantilever_beam.CantileverBeam()
 
@@ -72,13 +75,13 @@ We load the use case :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 We define the function which evaluates the output depending on the inputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-38
 
-.. code-block:: default
+.. code-block:: Python
 
     model = cb.model
 
@@ -89,13 +92,13 @@ We define the function which evaluates the output depending on the inputs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Then we define the distribution of the input random vector.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-40
+.. GENERATED FROM PYTHON SOURCE LINES 40-43
 
-.. code-block:: default
+.. code-block:: Python
 
     dimension = cb.dim  # number of inputs
     myDistribution = cb.distribution
@@ -107,20 +110,20 @@ Then we define the distribution of the input random vector.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-43
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 Create the design of experiments
 --------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-48
+.. GENERATED FROM PYTHON SOURCE LINES 48-51
 
 We consider a simple Monte-Carlo sampling as a design of experiments.
-This is why we generate an input sample using the `getSample` method of the distribution.
+This is why we generate an input sample using the :meth:`~openturns.Distribution.getSample` method of the distribution.
 Then we evaluate the output using the `model` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-54
+.. GENERATED FROM PYTHON SOURCE LINES 53-57
 
-.. code-block:: default
+.. code-block:: Python
 
     sampleSize_train = 10
     X_train = myDistribution.getSample(sampleSize_train)
@@ -133,21 +136,21 @@ Then we evaluate the output using the `model` function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-57
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
 
 Create the metamodel
 --------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-63
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 In order to create the Kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class.
 Then we use a squared exponential covariance kernel.
 The `SquaredExponential` kernel has one amplitude coefficient and 4 scale coefficients.
 This is because this covariance kernel is anisotropic : each of the 4 input variables is associated with its own scale coefficient.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-68
+.. GENERATED FROM PYTHON SOURCE LINES 68-71
 
-.. code-block:: default
+.. code-block:: Python
 
     basis = ot.ConstantBasisFactory(dimension).build()
     covarianceModel = ot.SquaredExponential(dimension)
@@ -159,14 +162,14 @@ This is because this covariance kernel is anisotropic : each of the 4 input vari
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
+.. GENERATED FROM PYTHON SOURCE LINES 72-74
 
 Typically, the optimization algorithm is quite good at setting sensible optimization bounds.
 In this case, however, the range of the input domain is extreme.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-76
+.. GENERATED FROM PYTHON SOURCE LINES 76-79
 
-.. code-block:: default
+.. code-block:: Python
 
     print("Lower and upper bounds of X_train:")
     print(X_train.getMin(), X_train.getMax())
@@ -185,14 +188,14 @@ In this case, however, the range of the input domain is extreme.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-79
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
 
 We need to manually define sensible optimization bounds.
 Note that since the amplitude parameter is computed analytically (this is possible when the output dimension is 1), we only need to set bounds on the scale parameter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-85
+.. GENERATED FROM PYTHON SOURCE LINES 84-88
 
-.. code-block:: default
+.. code-block:: Python
 
     scaleOptimizationBounds = ot.Interval(
         [1.0, 1.0, 1.0, 1.0e-10], [1.0e11, 1.0e3, 1.0e1, 1.0e-5]
@@ -205,16 +208,16 @@ Note that since the amplitude parameter is computed analytically (this is possib
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-90
+.. GENERATED FROM PYTHON SOURCE LINES 89-93
 
 Finally, we use the `KrigingAlgorithm` class to create the Kriging metamodel.
 It requires a training sample, a covariance kernel and a trend basis as input arguments.
 We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
 We must not forget to actually set the optimization bounds defined above.
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-96
+.. GENERATED FROM PYTHON SOURCE LINES 95-99
 
-.. code-block:: default
+.. code-block:: Python
 
     covarianceModel.setScale(X_train.getMax())
     algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
@@ -227,13 +230,13 @@ We must not forget to actually set the optimization bounds defined above.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 100-101
 
 Run the algorithm and get the result.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-104
+.. GENERATED FROM PYTHON SOURCE LINES 103-107
 
-.. code-block:: default
+.. code-block:: Python
 
     algo.run()
     result = algo.getResult()
@@ -246,13 +249,13 @@ Run the algorithm and get the result.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-106
+.. GENERATED FROM PYTHON SOURCE LINES 108-109
 
 The `getTrendCoefficients` method returns the coefficients of the trend.
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-110
+.. GENERATED FROM PYTHON SOURCE LINES 111-113
 
-.. code-block:: default
+.. code-block:: Python
 
     print(result.getTrendCoefficients())
 
@@ -269,13 +272,13 @@ The `getTrendCoefficients` method returns the coefficients of the trend.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-112
+.. GENERATED FROM PYTHON SOURCE LINES 114-115
 
 The constant trend always has only one coefficient (if there is one single output).
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-116
+.. GENERATED FROM PYTHON SOURCE LINES 117-119
 
-.. code-block:: default
+.. code-block:: Python
 
     print(result.getCovarianceModel())
 
@@ -292,14 +295,14 @@ The constant trend always has only one coefficient (if there is one single outpu
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-119
+.. GENERATED FROM PYTHON SOURCE LINES 120-122
 
 Setting the trend
 -----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-130
+.. GENERATED FROM PYTHON SOURCE LINES 124-133
 
-.. code-block:: default
+.. code-block:: Python
 
     covarianceModel.setScale(X_train.getMax())
     basis = ot.LinearBasisFactory(dimension).build()
@@ -318,12 +321,12 @@ Setting the trend
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>[-8.81529e-25,-1.00576e-13,-2.65632e-22,-2.22154e-24,-1.3279e-31]</p>
+    class=Point name=Unnamed dimension=5 values=[-8.81529e-25,-1.00576e-13,-2.65632e-22,-2.22154e-24,-1.3279e-31]
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-144
+.. GENERATED FROM PYTHON SOURCE LINES 134-147
 
 The number of coefficients in the linear and quadratic trends depends on the number of inputs, which is
 equal to
@@ -339,9 +342,9 @@ We observe that the number of coefficients in the trend is 5, which corresponds 
 * 1 coefficient for the constant part,
 * dim=4 coefficients for the linear part.
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-157
+.. GENERATED FROM PYTHON SOURCE LINES 149-160
 
-.. code-block:: default
+.. code-block:: Python
 
     covarianceModel.setScale(X_train.getMax())
     basis = ot.QuadraticBasisFactory(dimension).build()
@@ -371,7 +374,7 @@ We observe that the number of coefficients in the trend is 5, which corresponds 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-171
+.. GENERATED FROM PYTHON SOURCE LINES 161-174
 
 This time, the trend has 15 coefficients:
 
@@ -387,18 +390,18 @@ This is because the number of coefficients in the quadratic part has
 
 coefficients, associated with the symmetric matrix of the quadratic function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-175
+.. GENERATED FROM PYTHON SOURCE LINES 176-178
 
 Validate the metamodel
 ----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-178
+.. GENERATED FROM PYTHON SOURCE LINES 180-181
 
 We finally want to validate the Kriging metamodel. This is why we generate a validation sample with size 100 and we evaluate the output of the model on this sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-185
+.. GENERATED FROM PYTHON SOURCE LINES 183-188
 
-.. code-block:: default
+.. code-block:: Python
 
     sampleSize_test = 100
     X_test = myDistribution.getSample(sampleSize_test)
@@ -412,9 +415,9 @@ We finally want to validate the Kriging metamodel. This is why we generate a val
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-196
+.. GENERATED FROM PYTHON SOURCE LINES 189-199
 
-.. code-block:: default
+.. code-block:: Python
 
     def drawMetaModelValidation(X_test, Y_test, krigingMetamodel, title):
         val = ot.MetaModelValidation(X_test, Y_test, krigingMetamodel)
@@ -422,7 +425,7 @@ We finally want to validate the Kriging metamodel. This is why we generate a val
         graph = val.drawValidation().getGraph(0, 0)
         graph.setLegends([""])
         graph.setLegends(["%s, Q2 = %.2f%%" % (title, 100 * Q2), ""])
-        graph.setLegendPosition("topleft")
+        graph.setLegendPosition("upper left")
         return graph
 
 
@@ -433,9 +436,9 @@ We finally want to validate the Kriging metamodel. This is why we generate a val
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-211
+.. GENERATED FROM PYTHON SOURCE LINES 200-214
 
-.. code-block:: default
+.. code-block:: Python
 
     grid = ot.GridLayout(1, 3)
     grid.setTitle("Different trends")
@@ -463,7 +466,7 @@ We finally want to validate the Kriging metamodel. This is why we generate a val
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-224
+.. GENERATED FROM PYTHON SOURCE LINES 215-227
 
 We observe that the three trends perform very well in this case.
 With more coefficients, the Kriging metamodel is more flexibile and can adjust better to the training sample.
@@ -485,13 +488,10 @@ In this case, a quadratic trend is not advisable because it can interpolate all 
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_kriging_beam_trend.ipynb <plot_kriging_beam_trend.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_kriging_beam_trend.py <plot_kriging_beam_trend.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_kriging_beam_trend.ipynb <plot_kriging_beam_trend.ipynb>`

@@ -38,7 +38,7 @@ Define the model
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-27
 
-.. code-block:: default
+.. code-block:: Python
 
     import numpy as np
     from openturns.usecases import stressed_beam
@@ -61,7 +61,7 @@ We load the model from the usecases module :
 
 .. GENERATED FROM PYTHON SOURCE LINES 29-31
 
-.. code-block:: default
+.. code-block:: Python
 
     sm = stressed_beam.AxialStressedBeam()
 
@@ -78,7 +78,7 @@ The limit state function is defined in the `model` field of the data class :
 
 .. GENERATED FROM PYTHON SOURCE LINES 33-35
 
-.. code-block:: default
+.. code-block:: Python
 
     limitStateFunction = sm.model
 
@@ -96,7 +96,7 @@ We get the first marginal and draw it :
 
 .. GENERATED FROM PYTHON SOURCE LINES 38-42
 
-.. code-block:: default
+.. code-block:: Python
 
     R_dist = sm.distribution_R
     graph = R_dist.drawPDF()
@@ -120,7 +120,7 @@ We get the second marginal and draw it :
 
 .. GENERATED FROM PYTHON SOURCE LINES 46-50
 
-.. code-block:: default
+.. code-block:: Python
 
     F_dist = sm.distribution_F
     graph = F_dist.drawPDF()
@@ -144,7 +144,7 @@ These independent marginals define the joint distribution of the input parameter
 
 .. GENERATED FROM PYTHON SOURCE LINES 52-55
 
-.. code-block:: default
+.. code-block:: Python
 
     myDistribution = sm.distribution
 
@@ -162,7 +162,7 @@ We create a `RandomVector` from the `Distribution`, then a composite random vect
 
 .. GENERATED FROM PYTHON SOURCE LINES 59-63
 
-.. code-block:: default
+.. code-block:: Python
 
     inputRandomVector = ot.RandomVector(myDistribution)
     outputRandomVector = ot.CompositeRandomVector(limitStateFunction, inputRandomVector)
@@ -182,7 +182,7 @@ Using Monte Carlo simulations
 
 .. GENERATED FROM PYTHON SOURCE LINES 68-77
 
-.. code-block:: default
+.. code-block:: Python
 
     cv = 0.05
     NbSim = 100000
@@ -206,7 +206,7 @@ For statistics about the algorithm
 
 .. GENERATED FROM PYTHON SOURCE LINES 79-81
 
-.. code-block:: default
+.. code-block:: Python
 
     initialNumberOfCall = limitStateFunction.getEvaluationCallsNumber()
 
@@ -223,7 +223,7 @@ Perform the analysis.
 
 .. GENERATED FROM PYTHON SOURCE LINES 85-87
 
-.. code-block:: default
+.. code-block:: Python
 
     algoMC.run()
 
@@ -236,7 +236,7 @@ Perform the analysis.
 
 .. GENERATED FROM PYTHON SOURCE LINES 88-97
 
-.. code-block:: default
+.. code-block:: Python
 
     result = algoMC.getResult()
     probabilityMonteCarlo = result.getProbabilityEstimate()
@@ -255,16 +255,16 @@ Perform the analysis.
 
  .. code-block:: none
 
-    Number of calls to the limit state = 13931
-    Pf =  0.027923336443902068
-    CV = 0.04998911613048065
+    Number of calls to the limit state = 13962
+    Pf =  0.02786133791720385
+    CV = 0.049990710244531354
 
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 98-102
 
-.. code-block:: default
+.. code-block:: Python
 
     graph = algoMC.drawProbabilityConvergence()
     graph.setLogScale(ot.GraphImplementation.LOGX)
@@ -284,16 +284,123 @@ Perform the analysis.
 
 .. GENERATED FROM PYTHON SOURCE LINES 103-105
 
+Using LHS simulation
+--------------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 105-112
+
+.. code-block:: Python
+
+    experiment = ot.LHSExperiment()
+    experiment.setAlwaysShuffle(True)
+    algo = ot.ProbabilitySimulationAlgorithm(myEvent, experiment)
+    algo.setMaximumOuterSampling(NbSim)
+    algo.setBlockSize(1)
+    algo.setMaximumCoefficientOfVariation(cv)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 113-114
+
+For statistics about the algorithm
+
+.. GENERATED FROM PYTHON SOURCE LINES 114-116
+
+.. code-block:: Python
+
+    initialNumberOfCall = limitStateFunction.getEvaluationCallsNumber()
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 117-118
+
+Perform the analysis.
+
+.. GENERATED FROM PYTHON SOURCE LINES 120-122
+
+.. code-block:: Python
+
+    algo.run()
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 123-133
+
+.. code-block:: Python
+
+    resultLHS = algo.getResult()
+
+    numberOfFunctionEvaluationsLHS = (
+        limitStateFunction.getEvaluationCallsNumber() - initialNumberOfCall
+    )
+    probabilityLHS = result.getProbabilityEstimate()
+    print("Number of calls to the limit state =", numberOfFunctionEvaluationsLHS)
+    print("Pf = ", probabilityLHS)
+    print("CV =", result.getCoefficientOfVariation())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Number of calls to the limit state = 13262
+    Pf =  0.02786133791720385
+    CV = 0.049990710244531354
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 134-139
+
+.. code-block:: Python
+
+    graph = algo.drawProbabilityConvergence()
+    graph.setLogScale(ot.GraphImplementation.LOGX)
+    view = viewer.View(graph)
+
+
+
+
+
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_004.png
+   :alt: ProbabilitySimulationAlgorithm convergence graph at level 0.95
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_004.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 140-142
+
 Using FORM analysis
 -------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-108
+.. GENERATED FROM PYTHON SOURCE LINES 144-145
 
 We create a NearestPoint algorithm
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-117
+.. GENERATED FROM PYTHON SOURCE LINES 145-154
 
-.. code-block:: default
+.. code-block:: Python
 
     myCobyla = ot.Cobyla()
     # Resolution options:
@@ -311,13 +418,13 @@ We create a NearestPoint algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-119
+.. GENERATED FROM PYTHON SOURCE LINES 155-156
 
 For statistics about the algorithm
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-121
+.. GENERATED FROM PYTHON SOURCE LINES 156-158
 
-.. code-block:: default
+.. code-block:: Python
 
     initialNumberOfCall = limitStateFunction.getEvaluationCallsNumber()
 
@@ -328,13 +435,13 @@ For statistics about the algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-123
+.. GENERATED FROM PYTHON SOURCE LINES 159-160
 
 We create a FORM algorithm. The first parameter is a NearestPointAlgorithm. The second parameter is an event. The third parameter is a starting point for the design point research.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-127
+.. GENERATED FROM PYTHON SOURCE LINES 162-164
 
-.. code-block:: default
+.. code-block:: Python
 
     algoFORM = ot.FORM(myCobyla, myEvent, myDistribution.getMean())
 
@@ -345,13 +452,13 @@ We create a FORM algorithm. The first parameter is a NearestPointAlgorithm. The 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 165-166
 
 Perform the analysis.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-133
+.. GENERATED FROM PYTHON SOURCE LINES 168-170
 
-.. code-block:: default
+.. code-block:: Python
 
     algoFORM.run()
 
@@ -362,9 +469,9 @@ Perform the analysis.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-142
+.. GENERATED FROM PYTHON SOURCE LINES 171-179
 
-.. code-block:: default
+.. code-block:: Python
 
     resultFORM = algoFORM.getResult()
     numberOfFunctionEvaluationsFORM = (
@@ -388,9 +495,9 @@ Perform the analysis.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-146
+.. GENERATED FROM PYTHON SOURCE LINES 180-183
 
-.. code-block:: default
+.. code-block:: Python
 
     graph = resultFORM.drawImportanceFactors()
     view = viewer.View(graph)
@@ -398,27 +505,27 @@ Perform the analysis.
 
 
 
-.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_004.png
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_005.png
    :alt: Importance Factors from Design Point - Unnamed
-   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_004.png
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_005.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-149
+.. GENERATED FROM PYTHON SOURCE LINES 184-186
 
 Using Directional sampling
 --------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-152
+.. GENERATED FROM PYTHON SOURCE LINES 188-189
 
 Resolution options:
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-160
+.. GENERATED FROM PYTHON SOURCE LINES 189-197
 
-.. code-block:: default
+.. code-block:: Python
 
     cv = 0.05
     NbSim = 10000
@@ -435,13 +542,13 @@ Resolution options:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-162
+.. GENERATED FROM PYTHON SOURCE LINES 198-199
 
 For statistics about the algorithm
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-164
+.. GENERATED FROM PYTHON SOURCE LINES 199-201
 
-.. code-block:: default
+.. code-block:: Python
 
     initialNumberOfCall = limitStateFunction.getEvaluationCallsNumber()
 
@@ -452,13 +559,13 @@ For statistics about the algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-166
+.. GENERATED FROM PYTHON SOURCE LINES 202-203
 
 Perform the analysis.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-170
+.. GENERATED FROM PYTHON SOURCE LINES 205-207
 
-.. code-block:: default
+.. code-block:: Python
 
     algoDS.run()
 
@@ -469,9 +576,9 @@ Perform the analysis.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-183
+.. GENERATED FROM PYTHON SOURCE LINES 208-220
 
-.. code-block:: default
+.. code-block:: Python
 
     result = algoDS.getResult()
     probabilityDirectionalSampling = result.getProbabilityEstimate()
@@ -493,16 +600,16 @@ Perform the analysis.
 
  .. code-block:: none
 
-    Number of calls to the limit state = 9050
-    Pf =  0.029665915864919325
-    CV = 0.04998871289144034
+    Number of calls to the limit state = 9559
+    Pf =  0.02774169842680728
+    CV = 0.049896413802453236
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-188
+.. GENERATED FROM PYTHON SOURCE LINES 221-225
 
-.. code-block:: default
+.. code-block:: Python
 
     graph = algoDS.drawProbabilityConvergence()
     graph.setLogScale(ot.GraphImplementation.LOGX)
@@ -511,27 +618,27 @@ Perform the analysis.
 
 
 
-.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_005.png
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_006.png
    :alt: DirectionalSampling convergence graph at level 0.95
-   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_005.png
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_axial_stressed_beam_006.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-191
+.. GENERATED FROM PYTHON SOURCE LINES 226-228
 
 Using importance sampling with FORM design point: FORM-IS
 ---------------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-194
+.. GENERATED FROM PYTHON SOURCE LINES 230-231
 
 The `getStandardSpaceDesignPoint` method returns the design point in the U-space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-199
+.. GENERATED FROM PYTHON SOURCE LINES 233-236
 
-.. code-block:: default
+.. code-block:: Python
 
     standardSpaceDesignPoint = resultFORM.getStandardSpaceDesignPoint()
     standardSpaceDesignPoint
@@ -544,19 +651,19 @@ The `getStandardSpaceDesignPoint` method returns the design point in the U-space
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>[-1.59355,0.999463]</p>
+    class=Point name=Standard Space Design Point dimension=2 values=[-1.59355,0.999463]
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-202
+.. GENERATED FROM PYTHON SOURCE LINES 237-239
 
 The key point is to define the importance distribution in the U-space.
 To define it, we use a multivariate standard Gaussian and configure it so that the center is equal to the design point in the U-space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-207
+.. GENERATED FROM PYTHON SOURCE LINES 241-244
 
-.. code-block:: default
+.. code-block:: Python
 
     dimension = myDistribution.getDimension()
     dimension
@@ -574,12 +681,12 @@ To define it, we use a multivariate standard Gaussian and configure it so that t
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-212
+.. GENERATED FROM PYTHON SOURCE LINES 245-249
 
-.. code-block:: default
+.. code-block:: Python
 
     myImportance = ot.Normal(dimension)
-    myImportance.setMean(standardSpaceDesignPoint)
+    myImportance.setMu(standardSpaceDesignPoint)
     myImportance
 
 
@@ -590,19 +697,29 @@ To define it, we use a multivariate standard Gaussian and configure it so that t
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>Normal(mu = [-1.59355,0.999463], sigma = [1,1], R = [[ 1 0 ]<br>
-     [ 0 1 ]])</p>
+    Normal
+    <ul>
+      <li>name=Normal</li>
+      <li>dimension=2</li>
+      <li>weight=1</li>
+      <li>range=]-inf (-9.24418), (6.05708) +inf[
+    ]-inf (-6.65117), (8.65009) +inf[</li>
+      <li>description=[X0,X1]</li>
+      <li>isParallel=true</li>
+      <li>isCopula=false</li>
+    </ul>
+
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-214
+.. GENERATED FROM PYTHON SOURCE LINES 250-251
 
 Create the design of experiment corresponding to importance sampling. This generates a `WeightedExperiment` with weights corresponding to the importance distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-218
+.. GENERATED FROM PYTHON SOURCE LINES 253-255
 
-.. code-block:: default
+.. code-block:: Python
 
     experiment = ot.ImportanceSamplingExperiment(myImportance)
 
@@ -613,13 +730,13 @@ Create the design of experiment corresponding to importance sampling. This gener
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-220
+.. GENERATED FROM PYTHON SOURCE LINES 256-257
 
 Create the standard event corresponding to the event. This transforms the original problem into the U-space, with Gaussian independent marginals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-224
+.. GENERATED FROM PYTHON SOURCE LINES 259-261
 
-.. code-block:: default
+.. code-block:: Python
 
     standardEvent = ot.StandardEvent(myEvent)
 
@@ -630,13 +747,13 @@ Create the standard event corresponding to the event. This transforms the origin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-226
+.. GENERATED FROM PYTHON SOURCE LINES 262-263
 
 We then create the simulation algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-232
+.. GENERATED FROM PYTHON SOURCE LINES 265-269
 
-.. code-block:: default
+.. code-block:: Python
 
     algo = ot.ProbabilitySimulationAlgorithm(standardEvent, experiment)
     algo.setMaximumCoefficientOfVariation(cv)
@@ -649,13 +766,13 @@ We then create the simulation algorithm.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-234
+.. GENERATED FROM PYTHON SOURCE LINES 270-271
 
 For statistics about the algorithm
 
-.. GENERATED FROM PYTHON SOURCE LINES 234-236
+.. GENERATED FROM PYTHON SOURCE LINES 271-273
 
-.. code-block:: default
+.. code-block:: Python
 
     initialNumberOfCall = limitStateFunction.getEvaluationCallsNumber()
 
@@ -666,9 +783,9 @@ For statistics about the algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-239
+.. GENERATED FROM PYTHON SOURCE LINES 274-276
 
-.. code-block:: default
+.. code-block:: Python
 
     algo.run()
 
@@ -679,13 +796,13 @@ For statistics about the algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-241
+.. GENERATED FROM PYTHON SOURCE LINES 277-278
 
 retrieve results
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-250
+.. GENERATED FROM PYTHON SOURCE LINES 278-287
 
-.. code-block:: default
+.. code-block:: Python
 
     result = algo.getResult()
     probabilityFORMIS = result.getProbabilityEstimate()
@@ -704,29 +821,29 @@ retrieve results
 
  .. code-block:: none
 
-    Number of calls to the limit state = 824
-    Pf =  0.03192438900613578
-    CV = 0.0499854933665548
+    Number of calls to the limit state = 940
+    Pf =  0.02909138091879204
+    CV = 0.049976509617815086
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-253
+.. GENERATED FROM PYTHON SOURCE LINES 288-290
 
 Conclusion
 ----------
 
-.. GENERATED FROM PYTHON SOURCE LINES 255-256
+.. GENERATED FROM PYTHON SOURCE LINES 292-293
 
 We now compare the different methods in terms of accuracy and speed.
 
-.. GENERATED FROM PYTHON SOURCE LINES 261-262
+.. GENERATED FROM PYTHON SOURCE LINES 298-299
 
 The following function computes the number of correct base-10 digits in the computed result compared to the exact result.
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-269
+.. GENERATED FROM PYTHON SOURCE LINES 302-307
 
-.. code-block:: default
+.. code-block:: Python
 
     def computeLogRelativeError(exact, computed):
         logRelativeError = -np.log10(abs(exact - computed) / abs(exact))
@@ -740,13 +857,13 @@ The following function computes the number of correct base-10 digits in the comp
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-271
+.. GENERATED FROM PYTHON SOURCE LINES 308-309
 
 The following function prints the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-286
+.. GENERATED FROM PYTHON SOURCE LINES 312-325
 
-.. code-block:: default
+.. code-block:: Python
 
     def printMethodSummary(name, computedProbability, numberOfFunctionEvaluations):
         print("---")
@@ -768,13 +885,14 @@ The following function prints the results.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-298
+.. GENERATED FROM PYTHON SOURCE LINES 326-338
 
-.. code-block:: default
+.. code-block:: Python
 
     printMethodSummary(
         "Monte-Carlo", probabilityMonteCarlo, numberOfFunctionEvaluationsMonteCarlo
     )
+    printMethodSummary("LHS", probabilityLHS, numberOfFunctionEvaluationsLHS)
     printMethodSummary("FORM", probabilityFORM, numberOfFunctionEvaluationsFORM)
     printMethodSummary(
         "DirectionalSampling",
@@ -793,10 +911,16 @@ The following function prints the results.
 
     ---
     Monte-Carlo :
-    Number of calls to the limit state = 13931
-    Pf =  0.027923336443902068
-    Number of correct digits=1.360
-    Performance=9.76e-05 (correct digits/evaluation)
+    Number of calls to the limit state = 13962
+    Pf =  0.02786133791720385
+    Number of correct digits=1.339
+    Performance=9.59e-05 (correct digits/evaluation)
+    ---
+    LHS :
+    Number of calls to the limit state = 13262
+    Pf =  0.02786133791720385
+    Number of correct digits=1.339
+    Performance=1.01e-04 (correct digits/evaluation)
     ---
     FORM :
     Number of calls to the limit state = 98
@@ -805,21 +929,21 @@ The following function prints the results.
     Performance=1.60e-02 (correct digits/evaluation)
     ---
     DirectionalSampling :
-    Number of calls to the limit state = 9050
-    Pf =  0.029665915864919325
-    Number of correct digits=1.795
-    Performance=1.98e-04 (correct digits/evaluation)
+    Number of calls to the limit state = 9559
+    Pf =  0.02774169842680728
+    Number of correct digits=1.302
+    Performance=1.36e-04 (correct digits/evaluation)
     ---
     FORM-IS :
-    Number of calls to the limit state = 824
-    Pf =  0.03192438900613578
-    Number of correct digits=1.030
-    Performance=1.25e-03 (correct digits/evaluation)
+    Number of calls to the limit state = 940
+    Pf =  0.02909138091879204
+    Number of correct digits=2.437
+    Performance=2.59e-03 (correct digits/evaluation)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-313
+.. GENERATED FROM PYTHON SOURCE LINES 339-353
 
 We see that all three methods produce the correct probability, but not with the same accuracy.
 In this case, we have found the correct order of magnitude of the probability, i.e. between one and two correct digits.
@@ -843,13 +967,10 @@ There is, however, a significant difference in computational performance (measur
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_axial_stressed_beam.ipynb <plot_axial_stressed_beam.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_axial_stressed_beam.py <plot_axial_stressed_beam.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_axial_stressed_beam.ipynb <plot_axial_stressed_beam.ipynb>`

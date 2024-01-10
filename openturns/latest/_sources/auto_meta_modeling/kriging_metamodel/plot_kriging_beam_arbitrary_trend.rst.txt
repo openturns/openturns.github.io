@@ -18,15 +18,18 @@
 .. _sphx_glr_auto_meta_modeling_kriging_metamodel_plot_kriging_beam_arbitrary_trend.py:
 
 
-Configuring an arbitrary trend in Kriging
-=========================================
+Kriging: choose an arbitrary trend
+==================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-16
+.. GENERATED FROM PYTHON SOURCE LINES 6-19
 
 The goal of this example is to show how to configure an arbitrary trend in a Kriging metamodel.
+In the :doc:`/auto_meta_modeling/kriging_metamodel/plot_kriging_chose_trend`
+and :doc:`/auto_meta_modeling/kriging_metamodel/plot_kriging_beam_trend` examples,
+we show how to configure a polynomial trend.
 
 In general, any collection of multivariate functions can be used as the
-`basis` argument of a `KrigingAlgorithm`.
+`basis` argument of a :class:`~openturns.KrigingAlgorithm`.
 In practice, it might not be convenient to create a multivariate basis and
 this is why we sometimes create it by tensorization of univariate functions.
 In this example, we first use Legendre polynomials as our univariate functions,
@@ -34,14 +37,14 @@ then we create an orthogonal polynomial basis corresponding to the input margina
 
 For this purpose, we use the :ref:`cantilever beam <use-case-cantilever-beam>` example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-20
+.. GENERATED FROM PYTHON SOURCE LINES 21-23
 
 Definition of the model
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-28
+.. GENERATED FROM PYTHON SOURCE LINES 25-31
 
-.. code-block:: default
+.. code-block:: Python
 
     from openturns.usecases import cantilever_beam
     import openturns as ot
@@ -56,13 +59,13 @@ Definition of the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-30
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 We load the cantilever beam use case
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-32
+.. GENERATED FROM PYTHON SOURCE LINES 33-35
 
-.. code-block:: default
+.. code-block:: Python
 
     cb = cantilever_beam.CantileverBeam()
 
@@ -73,13 +76,13 @@ We load the cantilever beam use case
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 We load the function (model) which evaluates the output Y depending on the inputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-36
+.. GENERATED FROM PYTHON SOURCE LINES 37-39
 
-.. code-block:: default
+.. code-block:: Python
 
     model = cb.model
 
@@ -90,13 +93,13 @@ We load the function (model) which evaluates the output Y depending on the input
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Then we define the distribution of the input random vector.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-41
+.. GENERATED FROM PYTHON SOURCE LINES 41-44
 
-.. code-block:: default
+.. code-block:: Python
 
     dimension = cb.dim  # number of inputs
     myDistribution = cb.distribution
@@ -108,20 +111,20 @@ Then we define the distribution of the input random vector.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-44
+.. GENERATED FROM PYTHON SOURCE LINES 45-47
 
 Create the design of experiments
 --------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-49
+.. GENERATED FROM PYTHON SOURCE LINES 49-52
 
 We consider a simple Monte-Carlo sampling as a design of experiments.
 This is why we generate an input sample using the `getSample` method of the distribution.
 Then we evaluate the output using the `model` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-55
+.. GENERATED FROM PYTHON SOURCE LINES 54-58
 
-.. code-block:: default
+.. code-block:: Python
 
     sampleSize_train = 20
     X_train = myDistribution.getSample(sampleSize_train)
@@ -134,7 +137,7 @@ Then we evaluate the output using the `model` function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-62
+.. GENERATED FROM PYTHON SOURCE LINES 59-65
 
 Create the Legendre basis
 -------------------------
@@ -143,9 +146,9 @@ We first create a Legendre basis of univariate polynomials. In order to convert 
 
 The `LegendreFactory` class creates Legendre polynomials.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-66
+.. GENERATED FROM PYTHON SOURCE LINES 67-69
 
-.. code-block:: default
+.. code-block:: Python
 
     univariateFactory = ot.LegendreFactory()
 
@@ -156,13 +159,13 @@ The `LegendreFactory` class creates Legendre polynomials.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 70-71
 
 This factory corresponds to the `Uniform` distribution in the [-1,1] interval.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-72
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
-.. code-block:: default
+.. code-block:: Python
 
     univariateFactory.getMeasure()
 
@@ -174,18 +177,29 @@ This factory corresponds to the `Uniform` distribution in the [-1,1] interval.
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>Uniform(a = -1, b = 1)</p>
+    Uniform
+    <ul>
+      <li>name=Uniform</li>
+      <li>dimension=1</li>
+      <li>weight=1</li>
+      <li>range=[-1, 1]</li>
+      <li>description=[X0]</li>
+      <li>isParallel=true</li>
+      <li>isCopula=false</li>
+    </ul>
+
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-74
-
-This interval does not correspond to the interval on which the input marginals are defined (we will come back to this topic later), but this will, anyway, create a consistent trend for the kriging.
-
 .. GENERATED FROM PYTHON SOURCE LINES 76-78
 
-.. code-block:: default
+This interval does not correspond to the interval on which the input marginals are defined (we will come back to this topic later),
+but this will, anyway, create a consistent trend for the kriging.
+
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
+
+.. code-block:: Python
 
     polyColl = [univariateFactory] * dimension
 
@@ -196,9 +210,9 @@ This interval does not correspond to the interval on which the input marginals a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-82
+.. GENERATED FROM PYTHON SOURCE LINES 83-86
 
-.. code-block:: default
+.. code-block:: Python
 
     enumerateFunction = ot.LinearEnumerateFunction(dimension)
     productBasis = ot.OrthogonalProductPolynomialFactory(polyColl, enumerateFunction)
@@ -210,9 +224,9 @@ This interval does not correspond to the interval on which the input marginals a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-90
+.. GENERATED FROM PYTHON SOURCE LINES 87-94
 
-.. code-block:: default
+.. code-block:: Python
 
     functions = []
     numberOfTrendCoefficients = 12
@@ -235,19 +249,19 @@ This interval does not correspond to the interval on which the input marginals a
     1.73205 * x2
     1.73205 * x3
     -1.11803 + 3.3541 * x0^2
-    (1.73205 * x0) * (1.73205 * x1)
-    (1.73205 * x0) * (1.73205 * x2)
-    (1.73205 * x0) * (1.73205 * x3)
+    1.73205 * x0 * 1.73205 * x1
+    1.73205 * x0 * 1.73205 * x2
+    1.73205 * x0 * 1.73205 * x3
     -1.11803 + 3.3541 * x1^2
-    (1.73205 * x1) * (1.73205 * x2)
-    (1.73205 * x1) * (1.73205 * x3)
+    1.73205 * x1 * 1.73205 * x2
+    1.73205 * x1 * 1.73205 * x3
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-93
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
-.. code-block:: default
+.. code-block:: Python
 
     basis = ot.Basis(functions)
 
@@ -258,12 +272,12 @@ This interval does not correspond to the interval on which the input marginals a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-96
+.. GENERATED FROM PYTHON SOURCE LINES 98-100
 
 Create the metamodel
 --------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-103
+.. GENERATED FROM PYTHON SOURCE LINES 102-107
 
 In order to create the kriging metamodel, we first select a constant trend
 with the `ConstantBasisFactory` class.
@@ -271,9 +285,9 @@ Then we use a squared exponential covariance model.
 Finally, we use the `KrigingAlgorithm` class to create the kriging metamodel,
 taking the training sample, the covariance model and the trend basis as input arguments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-107
+.. GENERATED FROM PYTHON SOURCE LINES 109-111
 
-.. code-block:: default
+.. code-block:: Python
 
     covarianceModel = ot.SquaredExponential([1.0] * dimension, [1.0])
 
@@ -284,9 +298,9 @@ taking the training sample, the covariance model and the trend basis as input ar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-113
+.. GENERATED FROM PYTHON SOURCE LINES 112-117
 
-.. code-block:: default
+.. code-block:: Python
 
     algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
     algo.run()
@@ -300,13 +314,13 @@ taking the training sample, the covariance model and the trend basis as input ar
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-115
+.. GENERATED FROM PYTHON SOURCE LINES 118-119
 
 The `getTrendCoefficients` method returns the coefficients of the trend.
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-119
+.. GENERATED FROM PYTHON SOURCE LINES 121-123
 
-.. code-block:: default
+.. code-block:: Python
 
     result.getTrendCoefficients()
 
@@ -318,18 +332,18 @@ The `getTrendCoefficients` method returns the coefficients of the trend.
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50]#12</p>
+    class=Point name=Unnamed dimension=12 values=[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50]
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-121
+.. GENERATED FROM PYTHON SOURCE LINES 124-125
 
 We see that the number of coefficients in the trend corresponds to the number of functions in the basis.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-125
+.. GENERATED FROM PYTHON SOURCE LINES 127-129
 
-.. code-block:: default
+.. code-block:: Python
 
     result.getCovarianceModel()
 
@@ -346,17 +360,17 @@ We see that the number of coefficients in the trend corresponds to the number of
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-128
+.. GENERATED FROM PYTHON SOURCE LINES 130-132
 
 The `SquaredExponential` model has one amplitude coefficient and 4 scale coefficients.
 This is because this covariance model is anisotropic : each of the 4 input variables is associated with its own scale coefficient.
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-132
+.. GENERATED FROM PYTHON SOURCE LINES 134-136
 
 Create an orthogonal multivariate polynomial factory
 ----------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-141
+.. GENERATED FROM PYTHON SOURCE LINES 138-145
 
 In order to create a Legendre basis which better corresponds to the input marginals, we could consider the orthogonal basis which would be associated to uniform marginals.
 To compute the bounds of these uniform distributions, we may consider the 1% and 99% quantiles of each marginal.
@@ -366,9 +380,9 @@ This corresponds to the method we would use in the polynomial chaos.
 
 We first create the polynomial basis which corresponds to the inputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-145
+.. GENERATED FROM PYTHON SOURCE LINES 147-149
 
-.. code-block:: default
+.. code-block:: Python
 
     multivariateBasis = ot.OrthogonalProductPolynomialFactory([cb.E, cb.F, cb.L, cb.II])
 
@@ -379,13 +393,13 @@ We first create the polynomial basis which corresponds to the inputs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-147
+.. GENERATED FROM PYTHON SOURCE LINES 150-151
 
 Then we create the multivariate basis which has maximum degree equal to 2.
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-154
+.. GENERATED FROM PYTHON SOURCE LINES 153-158
 
-.. code-block:: default
+.. code-block:: Python
 
     totalDegree = 2
     enumerateFunction = multivariateBasis.getEnumerateFunction()
@@ -405,9 +419,9 @@ Then we create the multivariate basis which has maximum degree equal to 2.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-161
+.. GENERATED FROM PYTHON SOURCE LINES 159-165
 
-.. code-block:: default
+.. code-block:: Python
 
     functions = []
     for i in range(numberOfTrendCoefficients):
@@ -429,22 +443,22 @@ Then we create the multivariate basis which has maximum degree equal to 2.
     1.73205 * x2
     1.73205 * x3
     -1.11803 + 3.3541 * x0^2
-    (1.73205 * x0) * (1.73205 * x1)
-    (1.73205 * x0) * (1.73205 * x2)
-    (1.73205 * x0) * (1.73205 * x3)
+    1.73205 * x0 * 1.73205 * x1
+    1.73205 * x0 * 1.73205 * x2
+    1.73205 * x0 * 1.73205 * x3
     -1.11803 + 3.3541 * x1^2
-    (1.73205 * x1) * (1.73205 * x2)
-    (1.73205 * x1) * (1.73205 * x3)
+    1.73205 * x1 * 1.73205 * x2
+    1.73205 * x1 * 1.73205 * x3
     -1.11803 + 3.3541 * x2^2
-    (1.73205 * x2) * (1.73205 * x3)
+    1.73205 * x2 * 1.73205 * x3
     -1.11803 + 3.3541 * x3^2
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-164
+.. GENERATED FROM PYTHON SOURCE LINES 166-168
 
-.. code-block:: default
+.. code-block:: Python
 
     basis = ot.Basis(functions)
 
@@ -455,9 +469,9 @@ Then we create the multivariate basis which has maximum degree equal to 2.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-170
+.. GENERATED FROM PYTHON SOURCE LINES 169-174
 
-.. code-block:: default
+.. code-block:: Python
 
     algo = ot.KrigingAlgorithm(X_train, Y_train, covarianceModel, basis)
     algo.run()
@@ -471,13 +485,13 @@ Then we create the multivariate basis which has maximum degree equal to 2.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-172
+.. GENERATED FROM PYTHON SOURCE LINES 175-176
 
 The `getTrendCoefficients` method returns the coefficients of the trend.
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-176
+.. GENERATED FROM PYTHON SOURCE LINES 178-180
 
-.. code-block:: default
+.. code-block:: Python
 
     result.getTrendCoefficients()
 
@@ -489,12 +503,12 @@ The `getTrendCoefficients` method returns the coefficients of the trend.
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50,1.39896e-44,7.63508e-52,-7.60276e-46]#15</p>
+    class=Point name=Unnamed dimension=15 values=[6.80011e-46,8.00088e-35,3.49721e-43,2.99508e-45,1.7335e-52,1.05339e-23,4.11637e-32,3.52382e-34,2.03902e-41,2.02866e-40,1.54017e-42,8.91627e-50,1.39896e-44,7.63508e-52,-7.60276e-46]
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-188
+.. GENERATED FROM PYTHON SOURCE LINES 181-192
 
 Conclusion
 ----------
@@ -515,13 +529,10 @@ or any other univariate factory.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_kriging_beam_arbitrary_trend.ipynb <plot_kriging_beam_arbitrary_trend.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_kriging_beam_arbitrary_trend.py <plot_kriging_beam_arbitrary_trend.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_kriging_beam_arbitrary_trend.ipynb <plot_kriging_beam_arbitrary_trend.ipynb>`

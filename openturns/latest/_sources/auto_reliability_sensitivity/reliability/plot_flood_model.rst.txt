@@ -21,18 +21,19 @@
 Estimate a flooding probability
 ===============================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-7
+.. GENERATED FROM PYTHON SOURCE LINES 6-8
 
-In this example, we estimate the probability that the output of a function exceeds a given threshold with the FORM method. We consider the :ref:`flooding model <use-case-flood-model>`.
+In this example, we estimate the probability that the output of a function exceeds a given threshold with the FORM method.
+We consider the :ref:`flooding model <use-case-flood-model>`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-12
+.. GENERATED FROM PYTHON SOURCE LINES 11-13
 
 Define the model
 ----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-21
+.. GENERATED FROM PYTHON SOURCE LINES 15-22
 
-.. code-block:: default
+.. code-block:: Python
 
     from openturns.usecases import flood_model
     import openturns as ot
@@ -48,32 +49,17 @@ Define the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 We load the flooding model from the usecases module :
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-25
+.. GENERATED FROM PYTHON SOURCE LINES 24-28
 
-.. code-block:: default
+.. code-block:: Python
 
     fm = flood_model.FloodModel()
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
-
-We load the joint probability distribution of the input parameters.
-
-.. GENERATED FROM PYTHON SOURCE LINES 27-29
-
-.. code-block:: default
-
     distribution = fm.distribution
+    model = fm.model.getMarginal(1)
 
 
 
@@ -82,35 +68,145 @@ We load the joint probability distribution of the input parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 29-30
 
-We create the model.
+See the input distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-35
+.. GENERATED FROM PYTHON SOURCE LINES 30-32
 
-.. code-block:: default
+.. code-block:: Python
 
-    model = fm.model
-
-
+    distribution
 
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-38
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    ComposedDistribution
+    <ul>
+      <li>name=ComposedDistribution</li>
+      <li>dimension: 8</li>
+      <li>description=[Q (m3/s),Ks,Zv (m),Zm (m),B (m),L (m),Zb (m),Hd (m)]
+      <li>copula: IndependentCopula(dimension = 8)</li>
+    </ul>
+
+    <table>
+      <tr>
+        <th>Index</th>
+        <th>Variable</th>
+        <th>Distribution</th>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td>Q (m3/s)</td>
+        <td>TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[)</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Ks</td>
+        <td>TruncatedDistribution(Normal(mu = 30, sigma = 7.5), bounds = [0, (87.3797) +inf[)</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Zv (m)</td>
+        <td>Uniform(a = 49, b = 51)</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Zm (m)</td>
+        <td>Uniform(a = 54, b = 56)</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>B (m)</td>
+        <td>Triangular(a = 295, m = 300, b = 305)</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>L (m)</td>
+        <td>Triangular(a = 4990, m = 5000, b = 5010)</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Zb (m)</td>
+        <td>Triangular(a = 55, m = 55.5, b = 56)</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Hd (m)</td>
+        <td>Uniform(a = 2, b = 4)</td>
+      </tr>
+    </table>
+
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
+
+See the model
+
+.. GENERATED FROM PYTHON SOURCE LINES 34-36
+
+.. code-block:: Python
+
+    model.getOutputDescription()
+
+
+
+
+
+
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    [S]
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
+
+Draw the distribution of a sample of the output.
+
+.. GENERATED FROM PYTHON SOURCE LINES 38-44
+
+.. code-block:: Python
+
+    sampleSize = 1000
+    inputSample = distribution.getSample(sampleSize)
+    outputSample = model(inputSample)
+    graph = ot.HistogramFactory().build(outputSample).drawPDF()
+    _ = viewer.View(graph)
+
+
+
+
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_flood_model_001.png
+   :alt: S PDF
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_flood_model_001.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 45-47
 
 Define the event
 ----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Then we create the event whose probability we want to estimate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-48
+.. GENERATED FROM PYTHON SOURCE LINES 52-57
 
-.. code-block:: default
+.. code-block:: Python
 
     vect = ot.RandomVector(distribution)
     G = ot.CompositeRandomVector(model, vect)
@@ -124,18 +220,18 @@ Then we create the event whose probability we want to estimate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-51
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
 
 Estimate the probability with FORM
 ----------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Define a solver.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-63
+.. GENERATED FROM PYTHON SOURCE LINES 65-72
 
-.. code-block:: default
+.. code-block:: Python
 
     optimAlgo = ot.Cobyla()
     optimAlgo.setMaximumEvaluationNumber(1000)
@@ -151,13 +247,13 @@ Define a solver.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Run FORM.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-73
+.. GENERATED FROM PYTHON SOURCE LINES 76-82
 
-.. code-block:: default
+.. code-block:: Python
 
     startingPoint = distribution.getMean()
     algo = ot.FORM(optimAlgo, event, startingPoint)
@@ -172,13 +268,13 @@ Run FORM.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-75
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
 
 Retrieve results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-81
+.. GENERATED FROM PYTHON SOURCE LINES 86-90
 
-.. code-block:: default
+.. code-block:: Python
 
     result = algo.getResult()
     probability = result.getEventProbability()
@@ -192,18 +288,18 @@ Retrieve results.
 
  .. code-block:: none
 
-    Pf= 1.1322019024606214e-06
+    Pf= 0.0006501344567730391
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 Importance factors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-88
+.. GENERATED FROM PYTHON SOURCE LINES 94-97
 
-.. code-block:: default
+.. code-block:: Python
 
     graph = result.drawImportanceFactors()
     view = viewer.View(graph)
@@ -211,9 +307,9 @@ Importance factors.
 
 
 
-.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_flood_model_001.png
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_flood_model_002.png
    :alt: Importance Factors from Design Point - overflow
-   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_flood_model_001.png
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_flood_model_002.png
    :class: sphx-glr-single-img
 
 
@@ -227,13 +323,10 @@ Importance factors.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_flood_model.ipynb <plot_flood_model.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_flood_model.py <plot_flood_model.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_flood_model.ipynb <plot_flood_model.ipynb>`

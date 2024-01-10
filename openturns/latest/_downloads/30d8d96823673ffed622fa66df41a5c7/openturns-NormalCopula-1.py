@@ -1,4 +1,5 @@
 import openturns as ot
+import openturns.experimental as otexp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 if ot.NormalCopula().__class__.__name__ == 'EmpiricalBernsteinCopula':
@@ -14,8 +15,10 @@ elif ot.NormalCopula().__class__.__name__ == 'NormalCopula':
     R[1, 0] = 0.8
     copula = ot.NormalCopula(R)
 elif ot.NormalCopula().__class__.__name__ == 'SklarCopula':
-    student = ot.Student(3.0, [1.0]*2, [3.0]*2, ot.CorrelationMatrix(2))
+    student = ot.Student(3.0, [1.0] * 2, [3.0] * 2, ot.CorrelationMatrix(2))
     copula =  ot.SklarCopula(student)
+elif ot.NormalCopula().__class__.__name__ == 'StudentCopula':
+    copula = otexp.StudentCopula(3.0, ot.CorrelationMatrix(2))
 else:
     copula = ot.NormalCopula()
 if copula.getDimension() == 1:

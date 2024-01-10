@@ -4,7 +4,8 @@ Estimate a flooding probability
 """
 # %%
 #
-# In this example, we estimate the probability that the output of a function exceeds a given threshold with the FORM method. We consider the :ref:`flooding model <use-case-flood-model>`.
+# In this example, we estimate the probability that the output of a function exceeds a given threshold with the FORM method.
+# We consider the :ref:`flooding model <use-case-flood-model>`.
 
 # %%
 # Define the model
@@ -21,16 +22,24 @@ ot.Log.Show(ot.Log.NONE)
 # %%
 # We load the flooding model from the usecases module :
 fm = flood_model.FloodModel()
-
-# %%
-# We load the joint probability distribution of the input parameters.
 distribution = fm.distribution
+model = fm.model.getMarginal(1)
 
 # %%
-# We create the model.
+# See the input distribution
+distribution
 
 # %%
-model = fm.model
+# See the model
+model.getOutputDescription()
+
+# %%
+# Draw the distribution of a sample of the output.
+sampleSize = 1000
+inputSample = distribution.getSample(sampleSize)
+outputSample = model(inputSample)
+graph = ot.HistogramFactory().build(outputSample).drawPDF()
+_ = viewer.View(graph)
 
 # %%
 # Define the event

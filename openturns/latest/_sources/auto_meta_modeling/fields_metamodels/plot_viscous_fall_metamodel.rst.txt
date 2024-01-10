@@ -37,7 +37,7 @@ Define the model
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-26
 
-.. code-block:: default
+.. code-block:: Python
 
     import openturns as ot
     import numpy as np
@@ -59,7 +59,7 @@ We first define the time grid associated with the model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 30-35
 
-.. code-block:: default
+.. code-block:: Python
 
     tmin = 0.0  # Minimum time
     tmax = 12.0  # Maximum time
@@ -75,7 +75,7 @@ We first define the time grid associated with the model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 36-38
 
-.. code-block:: default
+.. code-block:: Python
 
     vertices = mesh.getVertices()
 
@@ -92,7 +92,7 @@ Creation of the input distribution.
 
 .. GENERATED FROM PYTHON SOURCE LINES 42-48
 
-.. code-block:: default
+.. code-block:: Python
 
     distZ0 = ot.Uniform(100.0, 150.0)
     distV0 = ot.Normal(55.0, 10.0)
@@ -109,7 +109,7 @@ Creation of the input distribution.
 
 .. GENERATED FROM PYTHON SOURCE LINES 49-53
 
-.. code-block:: default
+.. code-block:: Python
 
     dimension = distribution.getDimension()
     dimension
@@ -135,9 +135,9 @@ In order to compute all altitudes with a vectorized evaluation, we first convert
 the vertices into a Numpy `array` and use the Numpy functions`exp` and `maximum`:
 this increases the evaluation performance of the script.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-74
+.. GENERATED FROM PYTHON SOURCE LINES 61-75
 
-.. code-block:: default
+.. code-block:: Python
 
     def AltiFunc(X):
         g = 9.81
@@ -160,15 +160,15 @@ this increases the evaluation performance of the script.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-78
+.. GENERATED FROM PYTHON SOURCE LINES 76-79
 
 In order to create a `Function` from this Python function, we use the `PythonPointToFieldFunction` class.
 Since the altitude is the only output field, the third argument `outputDimension` is equal to `1`.
 If we had computed the speed as an extra output field, we would have set `2` instead.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-83
+.. GENERATED FROM PYTHON SOURCE LINES 81-84
 
-.. code-block:: default
+.. code-block:: Python
 
     outputDimension = 1
     alti = ot.PythonPointToFieldFunction(dimension, mesh, outputDimension, AltiFunc)
@@ -180,13 +180,13 @@ If we had computed the speed as an extra output field, we would have set `2` ins
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-85
+.. GENERATED FROM PYTHON SOURCE LINES 85-86
 
 Compute a training sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-92
+.. GENERATED FROM PYTHON SOURCE LINES 88-93
 
-.. code-block:: default
+.. code-block:: Python
 
     size = 2000
     ot.RandomGenerator.SetSeed(0)
@@ -200,14 +200,14 @@ Compute a training sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-95
+.. GENERATED FROM PYTHON SOURCE LINES 94-96
 
 Compute the KL decomposition of the output
 ------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-102
+.. GENERATED FROM PYTHON SOURCE LINES 98-103
 
-.. code-block:: default
+.. code-block:: Python
 
     algo = ot.KarhunenLoeveSVDAlgorithm(outputSample, 1.0e-6)
     algo.run()
@@ -221,9 +221,9 @@ Compute the KL decomposition of the output
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-109
+.. GENERATED FROM PYTHON SOURCE LINES 104-110
 
-.. code-block:: default
+.. code-block:: Python
 
     graph = scaledModes.drawMarginal(0)
     graph.setTitle("KL modes")
@@ -243,13 +243,13 @@ Compute the KL decomposition of the output
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+.. GENERATED FROM PYTHON SOURCE LINES 111-112
 
 We create the `postProcessingKL` function which takes coefficients of the K.-L. modes as inputs and returns the trajectories.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-115
+.. GENERATED FROM PYTHON SOURCE LINES 114-116
 
-.. code-block:: default
+.. code-block:: Python
 
     karhunenLoeveLiftingFunction = ot.KarhunenLoeveLifting(KLResult)
 
@@ -260,13 +260,13 @@ We create the `postProcessingKL` function which takes coefficients of the K.-L. 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-117
+.. GENERATED FROM PYTHON SOURCE LINES 117-118
 
 The `project` method computes the projection of the output sample (i.e. the trajectories) onto the K.-L. modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-121
+.. GENERATED FROM PYTHON SOURCE LINES 120-122
 
-.. code-block:: default
+.. code-block:: Python
 
     outputSampleChaos = KLResult.project(outputSample)
 
@@ -277,13 +277,13 @@ The `project` method computes the projection of the output sample (i.e. the traj
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-123
+.. GENERATED FROM PYTHON SOURCE LINES 123-124
 
 We limit the sampling size of the Lilliefors selection in order to reduce the computational burden.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-127
+.. GENERATED FROM PYTHON SOURCE LINES 126-128
 
-.. code-block:: default
+.. code-block:: Python
 
     ot.ResourceMap.SetAsUnsignedInteger("FittingTest-LillieforsMaximumSamplingSize", 1)
 
@@ -294,13 +294,13 @@ We limit the sampling size of the Lilliefors selection in order to reduce the co
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 We create a polynomial chaos metamodel which takes the input sample and returns the K.-L. modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-135
+.. GENERATED FROM PYTHON SOURCE LINES 132-136
 
-.. code-block:: default
+.. code-block:: Python
 
     algo = ot.FunctionalChaosAlgorithm(inputSample, outputSampleChaos)
     algo.run()
@@ -313,14 +313,14 @@ We create a polynomial chaos metamodel which takes the input sample and returns 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-138
+.. GENERATED FROM PYTHON SOURCE LINES 137-139
 
 The final metamodel is a composition of the KL lifting function and the polynomial chaos metamodel.
 In order to combine these two functions, we use the `PointToFieldConnection` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-142
+.. GENERATED FROM PYTHON SOURCE LINES 141-143
 
-.. code-block:: default
+.. code-block:: Python
 
     metaModel = ot.PointToFieldConnection(karhunenLoeveLiftingFunction, chaosMetamodel)
 
@@ -331,18 +331,18 @@ In order to combine these two functions, we use the `PointToFieldConnection` cla
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-145
+.. GENERATED FROM PYTHON SOURCE LINES 144-146
 
 Validate the metamodel
 ----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-148
+.. GENERATED FROM PYTHON SOURCE LINES 148-149
 
 Create a validation sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-154
+.. GENERATED FROM PYTHON SOURCE LINES 151-155
 
-.. code-block:: default
+.. code-block:: Python
 
     size = 10
     validationInputSample = distribution.getSample(size)
@@ -355,9 +355,9 @@ Create a validation sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-166
+.. GENERATED FROM PYTHON SOURCE LINES 156-167
 
-.. code-block:: default
+.. code-block:: Python
 
     graph = validationOutputSample.drawMarginal(0)
     graph.setColors(["red"])
@@ -382,7 +382,7 @@ Create a validation sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-172
+.. GENERATED FROM PYTHON SOURCE LINES 168-173
 
 We see that the blue trajectories (i.e. the metamodel) are close to the red
 trajectories (i.e. the validation sample).
@@ -390,13 +390,13 @@ This shows that the metamodel is quite accurate.
 However, we observe that the trajectory singularity that occurs when the object
 touches the ground (i.e. when :math:`z` is equal to zero), makes the metamodel less accurate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-175
+.. GENERATED FROM PYTHON SOURCE LINES 175-176
 
 Reset ResourceMap
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-176
+.. GENERATED FROM PYTHON SOURCE LINES 176-177
 
-.. code-block:: default
+.. code-block:: Python
 
     ot.ResourceMap.Reload()
 
@@ -413,13 +413,10 @@ Reset ResourceMap
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_viscous_fall_metamodel.ipynb <plot_viscous_fall_metamodel.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_viscous_fall_metamodel.py <plot_viscous_fall_metamodel.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_viscous_fall_metamodel.ipynb <plot_viscous_fall_metamodel.ipynb>`

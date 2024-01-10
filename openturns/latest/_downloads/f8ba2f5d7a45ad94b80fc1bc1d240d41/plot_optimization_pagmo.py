@@ -32,7 +32,7 @@ pop0 = ot.ComposedDistribution([ot.Uniform(0.0, 1.0)] * 2).getSample(100)
 # %%
 # We create the algorithm that should evolve over 10 generations
 algo = ot.Pagmo(zdt1, "nsga2", pop0)
-algo.setGenerationNumber(10)
+algo.setMaximumIterationNumber(10)
 
 # %%
 # Benefit from parallel evaluations if the function allows it
@@ -50,7 +50,7 @@ len(fronts)
 
 # %%
 # We show the Pareto front
-graph = ot.Graph("Pareto front", "y1", "y2", True, "topright")
+graph = ot.Graph("Pareto front", "y1", "y2", True, "upper right")
 front = algo.getResult().getFinalValues().select(fronts[0]).sortAccordingToAComponent(0)
 data = ot.Sample(2 * front.getSize() - 1, 2)
 for i in range(front.getSize()):
@@ -70,12 +70,11 @@ _ = View(graph)
 fronts = []
 for gen in range(5):
     algo = ot.Pagmo(zdt1, "nsga2", pop0)
-    algo.setGenerationNumber(gen)
+    algo.setMaximumIterationNumber(gen)
     algo.run()
     front0 = algo.getResult().getParetoFrontsIndices()[0]
     fronts.append(algo.getResult().getFinalValues().select(front0))
-graph = ot.Graph("Successive fronts", "y1", "y2", True, "topright")
-palette = ot.Drawable.BuildDefaultPalette(len(fronts))
+graph = ot.Graph("Successive fronts", "y1", "y2", True, "upper right")
 for k in range(len(fronts)):
     front = fronts[k].sortAccordingToAComponent(0)
     print(front)
@@ -86,7 +85,6 @@ for k in range(len(fronts)):
             data[2 * i + 1, 0] = front[i + 1, 0]
             data[2 * i + 1, 1] = front[i, 1]
     curve = ot.Curve(data)
-    curve.setColor(palette[k])
     curve.setLegend(f"generation {k}")
     graph.add(curve)
 graph.setGrid(True)

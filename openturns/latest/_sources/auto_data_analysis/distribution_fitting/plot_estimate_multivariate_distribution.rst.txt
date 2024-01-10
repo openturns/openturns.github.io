@@ -34,7 +34,7 @@ While the estimation of marginals is quite straightforward, the estimation of th
 
 .. GENERATED FROM PYTHON SOURCE LINES 16-22
 
-.. code-block:: default
+.. code-block:: Python
 
     import openturns as ot
     import math as m
@@ -55,7 +55,7 @@ generate some multivariate data to estimate, with correlation
 
 .. GENERATED FROM PYTHON SOURCE LINES 24-36
 
-.. code-block:: default
+.. code-block:: Python
 
     cop1 = ot.AliMikhailHaqCopula(0.6)
     cop2 = ot.ClaytonCopula(2.5)
@@ -82,7 +82,7 @@ estimate marginals
 
 .. GENERATED FROM PYTHON SOURCE LINES 38-52
 
-.. code-block:: default
+.. code-block:: Python
 
     dimension = sample.getDimension()
     marginalFactories = []
@@ -115,9 +115,9 @@ estimate marginals
 
 Find connected components of a graph defined from its adjacency matrix
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-81
+.. GENERATED FROM PYTHON SOURCE LINES 57-82
 
-.. code-block:: default
+.. code-block:: Python
 
     def find_neighbours(head, covariance, to_visit, visited):
         visited[head] = 1
@@ -151,16 +151,16 @@ Find connected components of a graph defined from its adjacency matrix
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-86
+.. GENERATED FROM PYTHON SOURCE LINES 83-87
 
 Estimate the copula
 -------------------
 
 First find the dependent components : we compute the `Spearman` correlation
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-91
+.. GENERATED FROM PYTHON SOURCE LINES 89-92
 
-.. code-block:: default
+.. code-block:: Python
 
     C = sample.computeSpearmanCorrelation()
     print(C)
@@ -181,13 +181,13 @@ First find the dependent components : we compute the `Spearman` correlation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-93
+.. GENERATED FROM PYTHON SOURCE LINES 93-94
 
 We filter and consider only significantly non-zero correlations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-101
+.. GENERATED FROM PYTHON SOURCE LINES 96-102
 
-.. code-block:: default
+.. code-block:: Python
 
     epsilon = 2.0 / m.sqrt(sample.getSize())
     for j in range(dimension):
@@ -211,7 +211,7 @@ We filter and consider only significantly non-zero correlations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-110
+.. GENERATED FROM PYTHON SOURCE LINES 103-111
 
 Note that we can apply the `HypothesisTest.Spearman` test. As the null hypothesis of the test is the `independence`, we must take the complementary of the binary measure as follow:
 
@@ -222,13 +222,13 @@ Note that we can apply the `HypothesisTest.Spearman` test. As the null hypothesi
 >>>           M[i, j] = 1 - ot.HypothesisTest.Spearman(sample[:,i], sample[:,j]).getBinaryQualityMeasure()
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-113
+.. GENERATED FROM PYTHON SOURCE LINES 113-114
 
 Now we find the independent blocs:
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-118
+.. GENERATED FROM PYTHON SOURCE LINES 116-119
 
-.. code-block:: default
+.. code-block:: Python
 
     blocs = connected_components(C)
     blocs
@@ -246,15 +246,15 @@ Now we find the independent blocs:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-122
+.. GENERATED FROM PYTHON SOURCE LINES 120-123
 
-For each dependent block, we estimate the most accurate non parameteric copula.
+For each dependent block, we estimate the most accurate parameteric copula.
 
 To do this, we first need to transform the sample in such a way as to keep the copula intact but make all marginal samples follow the uniform distribution on [0,1].
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-129
+.. GENERATED FROM PYTHON SOURCE LINES 125-130
 
-.. code-block:: default
+.. code-block:: Python
 
     copula_sample = ot.Sample(sample.getSize(), sample.getDimension())
     copula_sample.setDescription(sample.getDescription())
@@ -268,9 +268,9 @@ To do this, we first need to transform the sample in such a way as to keep the c
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-143
+.. GENERATED FROM PYTHON SOURCE LINES 131-144
 
-.. code-block:: default
+.. code-block:: Python
 
     copulaFactories = []
     for factory in ot.DistributionFactory.GetContinuousMultiVariateFactories():
@@ -298,13 +298,13 @@ To do this, we first need to transform the sample in such a way as to keep the c
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-145
+.. GENERATED FROM PYTHON SOURCE LINES 145-146
 
 Finally we assemble the copula
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-149
+.. GENERATED FROM PYTHON SOURCE LINES 148-150
 
-.. code-block:: default
+.. code-block:: Python
 
     estimated_copula_perm = ot.ComposedCopula(estimated_copulas)
 
@@ -315,13 +315,13 @@ Finally we assemble the copula
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-151
+.. GENERATED FROM PYTHON SOURCE LINES 151-152
 
 Take care of the order of each bloc vs the order of original components !
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-162
+.. GENERATED FROM PYTHON SOURCE LINES 154-163
 
-.. code-block:: default
+.. code-block:: Python
 
     permutation = []
     for bloc in blocs:
@@ -340,18 +340,31 @@ Take care of the order of each bloc vs the order of original components !
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>MarginalDistribution(distribution=ComposedCopula(AliMikhailHaqCopula(theta = 0.612473), ClaytonCopula(theta = 2.47924)), indices=[0,2,3,1])</p>
+    MarginalDistribution
+    <ul>
+      <li>name=MarginalDistribution</li>
+      <li>dimension=4</li>
+      <li>weight=1</li>
+      <li>range=[0, 1]
+    [0, 1]
+    [0, 1]
+    [0, 1]</li>
+      <li>description=[X0,X2,X3,X1]</li>
+      <li>isParallel=true</li>
+      <li>isCopula=true</li>
+    </ul>
+
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-164
+.. GENERATED FROM PYTHON SOURCE LINES 164-165
 
 We build joint distribution from marginal distributions and dependency structure:
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-168
+.. GENERATED FROM PYTHON SOURCE LINES 167-169
 
-.. code-block:: default
+.. code-block:: Python
 
     estimated_distribution = ot.ComposedDistribution(estimated_marginals, estimated_copula)
     estimated_distribution
@@ -363,9 +376,12 @@ We build joint distribution from marginal distributions and dependency structure
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
+    ComposedDistribution
     <ul>
+      <li>name=ComposedDistribution</li>
       <li>dimension: 4</li>
-      <li>copula: MarginalDistribution</li>
+      <li>description=[X0,X2,X3,X1]
+      <li>copula: MarginalDistribution(distribution=ComposedCopula(AliMikhailHaqCopula(theta = 0.612473), ClaytonCopula(theta = 2.47924)), indices=[0,2,3,1])</li>
     </ul>
 
     <table>
@@ -403,7 +419,7 @@ We build joint distribution from marginal distributions and dependency structure
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.898 seconds)
+   **Total running time of the script:** (0 minutes 4.848 seconds)
 
 
 .. _sphx_glr_download_auto_data_analysis_distribution_fitting_plot_estimate_multivariate_distribution.py:
@@ -412,13 +428,10 @@ We build joint distribution from marginal distributions and dependency structure
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: plot_estimate_multivariate_distribution.ipynb <plot_estimate_multivariate_distribution.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_estimate_multivariate_distribution.py <plot_estimate_multivariate_distribution.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: plot_estimate_multivariate_distribution.ipynb <plot_estimate_multivariate_distribution.ipynb>`
