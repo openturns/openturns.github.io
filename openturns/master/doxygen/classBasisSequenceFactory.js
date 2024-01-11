@@ -1,9 +1,0 @@
-var classBasisSequenceFactory =
-[
-    [ "BasisSequenceFactory", "classBasisSequenceFactory.html#ada58bd7e54d3baecb5d11def6fad5148", null ],
-    [ "BasisSequenceFactory", "classBasisSequenceFactory.html#a912f1abefe2bd4eb4209c6022d6aa2d8", null ],
-    [ "__repr__", "classBasisSequenceFactory.html#a2f79a10bf6877659bc35902a8456f9f1", null ],
-    [ "build", "classBasisSequenceFactory.html#aaa831bea7ce15d439626d5ab9aa313cf", null ],
-    [ "setMaximumRelativeConvergence", "classBasisSequenceFactory.html#a75c241791a6263d6189414daaf16ddc8", null ],
-    [ "setVerbose", "classBasisSequenceFactory.html#ab95c74d421111964e8783bebf0705637", null ]
-];
