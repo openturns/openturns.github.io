@@ -1,6 +1,8 @@
 Welcome to otwrapy's documentation!
 ===================================
 
+.. currentmodule:: otwrapy
+
 .. include:: ../README.rst
 
 
