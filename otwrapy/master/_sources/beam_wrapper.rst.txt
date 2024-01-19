@@ -17,3 +17,4 @@ Beam wrapper
    .. automethod:: _create_input_file
    .. automethod:: _call()
    .. automethod:: _parse_output
+

@@ -44,4 +44,5 @@ In which case, `model` will be your parallelized :py:class:`openturns.Function` 
 machine (`n_cpus=-1`). For further information, refer to the :doc:`api`.
 
 
-Or you can simply consider this as a cookbook and take what you consider useful. In which case, I suggest reading the  :doc:`examples` section
+Or you can simply consider this as a cookbook and take what you consider useful.
+In which case, I suggest reading the :doc:`examples` section
