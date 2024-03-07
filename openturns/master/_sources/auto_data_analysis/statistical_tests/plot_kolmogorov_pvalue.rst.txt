@@ -96,11 +96,11 @@ We generate a sample from a standard gaussian distribution.
  .. code-block:: none
 
 
-    0.8487394657394757
+    0.11838520906363026
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-42
+.. GENERATED FROM PYTHON SOURCE LINES 38-41
 
 .. code-block:: Python
 
@@ -111,25 +111,24 @@ We generate a sample from a standard gaussian distribution.
 
 
 
-
 .. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
 
-    0.179679242488139
+    0.35801196788259626
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Compute exact Kolmogorov PDF.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Create a function which returns the CDF given the KS distance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-55
+.. GENERATED FROM PYTHON SOURCE LINES 49-54
 
 .. code-block:: Python
 
@@ -145,7 +144,7 @@ Create a function which returns the CDF given the KS distance.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-59
+.. GENERATED FROM PYTHON SOURCE LINES 55-58
 
 .. code-block:: Python
 
@@ -159,11 +158,11 @@ Create a function which returns the CDF given the KS distance.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Create a function which returns the KS PDF given the KS distance: use the `gradient` method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 63-67
 
 .. code-block:: Python
 
@@ -178,15 +177,14 @@ Create a function which returns the KS PDF given the KS distance: use the `gradi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-84
+.. GENERATED FROM PYTHON SOURCE LINES 68-82
 
 .. code-block:: Python
 
-    def dKolmogorov(x, samplesize):
+    def dKolmogorov(x):
         """
         Compute Kolmogorov PDF for given x.
         x : a Sample, the points where the PDF must be evaluated
-        samplesize : the size of the sample
         Reference
         Numerical Derivatives in Scilab, Michael Baudin, May 2009
         """
@@ -204,7 +202,7 @@ Create a function which returns the KS PDF given the KS distance: use the `gradi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-94
+.. GENERATED FROM PYTHON SOURCE LINES 83-92
 
 .. code-block:: Python
 
@@ -224,13 +222,13 @@ Create a function which returns the KS PDF given the KS distance: use the `gradi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-100
+.. GENERATED FROM PYTHON SOURCE LINES 93-98
 
 .. code-block:: Python
 
     n = 1000  # Number of points in the plot
     s = linearSample(0.001, 0.999, n)
-    y = dKolmogorov(s, samplesize)
+    y = dKolmogorov(s)
 
 
 
@@ -240,37 +238,11 @@ Create a function which returns the KS PDF given the KS distance: use the `gradi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-116
-
-.. code-block:: Python
-
-    def drawInTheBounds(vLow, vUp, n_test):
-        """
-        Draw the area within the bounds.
-        """
-        palette = ot.Drawable.BuildDefaultPalette(2)
-        myPaletteColor = palette[1]
-        polyData = [[vLow[i], vLow[i + 1], vUp[i + 1], vUp[i]] for i in range(n_test - 1)]
-        polygonList = [
-            ot.Polygon(polyData[i], myPaletteColor, myPaletteColor)
-            for i in range(n_test - 1)
-        ]
-        boundsPoly = ot.PolygonArray(polygonList)
-        return boundsPoly
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 117-118
+.. GENERATED FROM PYTHON SOURCE LINES 99-100
 
 Create a regular grid starting from the observed KS statistics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-123
+.. GENERATED FROM PYTHON SOURCE LINES 102-105
 
 .. code-block:: Python
 
@@ -284,29 +256,29 @@ Create a regular grid starting from the observed KS statistics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-125
+.. GENERATED FROM PYTHON SOURCE LINES 106-107
 
-Compute the bounds to fill: the lower vertical bound is zero and the upper vertical bound is the KS PDF.
+Compute the bounds to fill: the lower vertical bound is 0 and the upper vertical bound is the KS PDF.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-130
-
-.. code-block:: Python
-
-    vLow = [[x[i, 0], 0.0] for i in range(nplot)]
-    vUp = [[x[i, 0], pKolmogorov.gradient(x[i])[0, 0]] for i in range(nplot)]
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 131-153
+.. GENERATED FROM PYTHON SOURCE LINES 109-112
 
 .. code-block:: Python
 
-    boundsPoly = drawInTheBounds(vLow, vUp, nplot)
+    vLow = [0.0] * nplot
+    vUp = [pKolmogorov.gradient(x[i])[0, 0] for i in range(nplot)]
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 113-135
+
+.. code-block:: Python
+
+    boundsPoly = ot.Polygon.FillBetween(x.asPoint(), vLow, vUp)
     boundsPoly.setLegend("pvalue = %.4f" % (pvalue))
     curve = ot.Curve(s, y)
     curve.setLegend("Exact distribution")
@@ -340,7 +312,7 @@ Compute the bounds to fill: the lower vertical bound is zero and the upper verti
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-156
+.. GENERATED FROM PYTHON SOURCE LINES 136-138
 
 We observe that the p-value is the area of the curve which corresponds to
 the KS distances greater than the observed KS statistics.
