@@ -223,9 +223,26 @@ Evaluate the probability with the NAIS technique
 
 .. GENERATED FROM PYTHON SOURCE LINES 112-113
 
+In order to get all the inputs and outputs that realize the event, you have to mention it now:
+
+.. GENERATED FROM PYTHON SOURCE LINES 115-117
+
+.. code-block:: Python
+
+    algo.setKeepSample(True)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 118-119
+
 Now you can run the algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-121
+.. GENERATED FROM PYTHON SOURCE LINES 121-127
 
 .. code-block:: Python
 
@@ -243,17 +260,17 @@ Now you can run the algorithm.
 
  .. code-block:: none
 
-    Proba NAIS =  6.314449267438352e-06
-    Current coefficient of variation =  0.0989854932132196
+    Proba NAIS =  6.661035505127872e-06
+    Current coefficient of variation =  0.12246590447781529
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-123
+.. GENERATED FROM PYTHON SOURCE LINES 128-129
 
 The length of the confidence interval of level :math:`95\%` is:
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-128
+.. GENERATED FROM PYTHON SOURCE LINES 131-134
 
 .. code-block:: Python
 
@@ -268,16 +285,16 @@ The length of the confidence interval of level :math:`95\%` is:
 
  .. code-block:: none
 
-    Confidence length (0.95) =  2.4501073682952326e-06
+    Confidence length (0.95) =  3.197680213341736e-06
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+.. GENERATED FROM PYTHON SOURCE LINES 135-136
 
 which enables to build the confidence interval:
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-140
+.. GENERATED FROM PYTHON SOURCE LINES 138-146
 
 .. code-block:: Python
 
@@ -297,76 +314,50 @@ which enables to build the confidence interval:
 
  .. code-block:: none
 
-    Confidence interval (0.95) = [ 5.089395583290736e-06 ,  7.539502951585969e-06 ]
+    Confidence interval (0.95) = [ 5.062195398457004e-06 ,  8.25987561179874e-06 ]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-147
+.. GENERATED FROM PYTHON SOURCE LINES 147-148
+
+You can also get the successive thresholds used by the algorithm:
+
+.. GENERATED FROM PYTHON SOURCE LINES 150-153
+
+.. code-block:: Python
+
+    levels = algo.getThresholdPerStep()
+    print("Levels of g = ", levels)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Levels of g =  [3.36521,2.17948,0.396951,0]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 154-156
 
 Draw the NAIS samples used by the algorithm
--------------------------------------------
+---------------------------------------------
 
-The following manipulations are possible only if you have created a :class:`~openturns.MemoizeFunction` that enables to store all the inputs and outputs of the function :math:`g`.
-
-Get all the inputs and outputs where :math:`g` were evaluated:
-
-.. GENERATED FROM PYTHON SOURCE LINES 149-154
-
-.. code-block:: Python
-
-    inputNAIS = g.getInputHistory()
-    outputNAIS = g.getOutputHistory()
-    nTotal = inputNAIS.getSize()
-    print("Number of evaluations of g = ", nTotal)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Number of evaluations of g =  4000
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 155-156
-
-Within each step of the algorithm, a sample of size :math:`N` is created, where:
-
-.. GENERATED FROM PYTHON SOURCE LINES 158-161
-
-.. code-block:: Python
-
-    N = algo.getMaximumOuterSampling() * algo.getBlockSize()
-    print("Size of each subset = ", N)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Size of each subset =  1000
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 162-163
+.. GENERATED FROM PYTHON SOURCE LINES 158-159
 
 You can get the number :math:`N_s` of steps with:
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-168
+.. GENERATED FROM PYTHON SOURCE LINES 159-162
 
 .. code-block:: Python
 
-    Ns = int(nTotal / N)
-    print("Number of steps = ", Ns)
+    Ns = algo.getStepsNumber()
+    print("Number of steps= ", Ns)
 
 
 
@@ -376,62 +367,45 @@ You can get the number :math:`N_s` of steps with:
 
  .. code-block:: none
 
-    Number of steps =  4
+    Number of steps=  4
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 163-164
+
+Get all the inputs where :math:`g` was evaluated at each step
+
+.. GENERATED FROM PYTHON SOURCE LINES 164-168
+
+.. code-block:: Python
+
+    list_subSamples = list()
+    for step in range(Ns):
+        list_subSamples.append(algo.getInputSample(step))
+
+
+
+
 
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 169-170
 
-Now, we can split the initial sample into NAIS samples of size :math:`N_s`:
-
-.. GENERATED FROM PYTHON SOURCE LINES 172-178
-
-.. code-block:: Python
-
-    listNAISSamples = list()
-    listOutputNAISSamples = list()
-    for i in range(Ns):
-        listNAISSamples.append(inputNAIS[i * N: i * N + N])
-        listOutputNAISSamples.append(outputNAIS[i * N: i * N + N])
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 179-180
-
-And get all the levels defining the intermediate and final thresholds given by the empirical quantiles of each NAIS output sample:
-
-.. GENERATED FROM PYTHON SOURCE LINES 182-187
-
-.. code-block:: Python
-
-    levels = []
-    for i in range(Ns - 1):
-        levels.append(listOutputNAISSamples[i].computeQuantile(quantileLevel)[0])
-    levels.append(threshold)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 188-189
-
 The following graph draws each NAIS sample and the frontier :math:`g(x_1, x_2) = l_i` where :math:`l_i` is the threshold at the step :math:`i`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-194
+.. GENERATED FROM PYTHON SOURCE LINES 172-180
 
 .. code-block:: Python
 
-    graph = ot.Graph("NAIS samples", "x1", "x2", True, "lower left")
+    graph = ot.Graph()
+    graph.setAxes(True)
     graph.setGrid(True)
+    graph.setTitle("NAIS sampling: samples")
+    graph.setXTitle(r"$x_1$")
+    graph.setYTitle(r"$x_2$")
+    graph.setLegendPosition("lower left")
 
 
 
@@ -440,19 +414,19 @@ The following graph draws each NAIS sample and the frontier :math:`g(x_1, x_2) =
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-196
+.. GENERATED FROM PYTHON SOURCE LINES 181-182
 
 Add all the NAIS samples:
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-204
+.. GENERATED FROM PYTHON SOURCE LINES 184-190
 
 .. code-block:: Python
 
     for i in range(Ns):
-        cloud = ot.Cloud(listNAISSamples[i])
+        cloud = ot.Cloud(list_subSamples[i])
+        # cloud.setPointStyle("dot")
         graph.add(cloud)
-    col = ot.Drawable().BuildDefaultPalette(Ns)
-    graph.setColors(col)
+    col = graph.getColors()
 
 
 
@@ -461,16 +435,16 @@ Add all the NAIS samples:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-206
+.. GENERATED FROM PYTHON SOURCE LINES 191-192
 
 Add the frontiers :math:`g(x_1, x_2) = l_i` where :math:`l_i` is the threshold at the step :math:`i`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-221
+.. GENERATED FROM PYTHON SOURCE LINES 194-204
 
 .. code-block:: Python
 
-    gIsoLines = g.draw([-8] * 2, [8] * 2, [128] * 2)
-    dr = gIsoLines.getDrawable(2)
+    gIsoLines = g.draw([-5] * 2, [5] * 2, [128] * 2)
+    dr = gIsoLines.getDrawable(0)
     for i, lv in enumerate(levels):
         dr.setLevels([lv])
         dr.setLineStyle("solid")
@@ -479,14 +453,24 @@ Add the frontiers :math:`g(x_1, x_2) = l_i` where :math:`l_i` is the threshold a
         dr.setColor(col[i])
         graph.add(dr)
 
-    # sphinx_gallery_thumbnail_number = 2
-    view = View(graph)
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 205-207
+
+.. code-block:: Python
+
+    _ = View(graph)
 
 
 
 
 .. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_nais_002.png
-   :alt: NAIS samples
+   :alt: NAIS sampling: samples
    :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_nais_002.png
    :class: sphx-glr-single-img
 
@@ -494,18 +478,19 @@ Add the frontiers :math:`g(x_1, x_2) = l_i` where :math:`l_i` is the threshold a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-226
+.. GENERATED FROM PYTHON SOURCE LINES 208-212
 
 Draw the frontiers only
 -----------------------
 
-The following graph enables to understand the progression of the algorithm from the mean value of the initial distribution to the limit state function:
+The following graph enables to understand the progression of the algorithm:
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-240
+.. GENERATED FROM PYTHON SOURCE LINES 214-233
 
 .. code-block:: Python
 
-    graph = ot.Graph("NAIS thresholds", "x1", "x2", True, "lower left")
+    graph = ot.Graph()
+    graph.setAxes(True)
     graph.setGrid(True)
     dr = gIsoLines.getDrawable(0)
     for i, lv in enumerate(levels):
@@ -516,18 +501,92 @@ The following graph enables to understand the progression of the algorithm from 
         graph.add(dr)
 
     graph.setColors(col)
-    view = View(graph)
+    graph.setLegendPosition("lower left")
+    graph.setTitle("NAIS sampling: thresholds")
+    graph.setXTitle(r"$x_1$")
+    graph.setYTitle(r"$x_2$")
+
+    _ = View(graph)
+
 
 
 
 .. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_nais_003.png
-   :alt: NAIS thresholds
+   :alt: NAIS sampling: thresholds
    :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_nais_003.png
    :class: sphx-glr-single-img
 
 
 
 
+
+.. GENERATED FROM PYTHON SOURCE LINES 234-237
+
+Get all the input and output points that realized the event
+-----------------------------------------------------------
+The following lines are possible only if you have mentioned that you wanted to keep samples with the method *algo.setKeepSample(True)*
+
+.. GENERATED FROM PYTHON SOURCE LINES 239-245
+
+.. code-block:: Python
+
+    select = ot.NAIS.EVENT1  # points that realize the event
+    step = Ns - 1  # get the working sample from last iteration
+    inputEventSample = algo.getInputSample(step, select)
+    outputEventSample = algo.getOutputSample(step, select)
+    print("Number of event realizations = ", inputEventSample.getSize())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Number of event realizations =  423
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 246-247
+
+Draw them! They are all in the event space.
+
+.. GENERATED FROM PYTHON SOURCE LINES 249-263
+
+.. code-block:: Python
+
+    graph = ot.Graph()
+    graph.setAxes(True)
+    graph.setGrid(True)
+    cloud = ot.Cloud(inputEventSample)
+    cloud.setPointStyle("bullet")
+    graph.add(cloud)
+    gIsoLines = g.draw([-5] * 2, [5] * 2, [1000] * 2)
+    dr = gIsoLines.getDrawable(0)
+    dr.setLevels([0.0])
+    dr.setColor("red")
+    graph.add(dr)
+    _ = View(graph)
+
+    View.ShowAll()
+
+
+
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_nais_004.png
+   :alt: plot nais
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_nais_004.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** (0 minutes 2.826 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_nais.py:
