@@ -1,28 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Kriging: configure the optimization solver &#8212; OpenTURNS 1.23dev documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/js/mysearchtools.js"></script>
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=890937b7" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=8c445dbb"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -135,10 +133,10 @@
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="kriging-configure-the-optimization-solver">
-<span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-kriging-hyperparameters-optimization-py"></span><h1>Kriging: configure the optimization solver<a class="headerlink" href="#kriging-configure-the-optimization-solver" title="Permalink to this heading">¶</a></h1>
+<span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-kriging-hyperparameters-optimization-py"></span><h1>Kriging: configure the optimization solver<a class="headerlink" href="#kriging-configure-the-optimization-solver" title="Link to this heading">¶</a></h1>
 <p>The goal of this example is to show how to fine-tune the optimization solver used to estimate the hyperparameters of the covariance model of the kriging metamodel.</p>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>In a kriging metamodel, there are various types of parameters which are estimated from the data.</p>
 <ul class="simple">
 <li><p>The parameters <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMi4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzcuMjcxMjgycHQnIGhlaWdodD0nMTAuNjI2Nzk4cHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDcuMjcxMjgyIDEwLjYyNjc5OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtMTInIGQ9J002Ljc2NjYyNS02Ljk1NzkwOEM2Ljc2NjYyNS03LjY3NTIxOCA2LjE1NjkxMi04LjQyODM5NCA1LjA2ODk5MS04LjQyODM5NEMzLjUyNjc3NS04LjQyODM5NCAyLjU0NjQ1MS02LjUzOTQ3NyAyLjIzNTYxNi01LjI5NjEzOUwuMzQ2NyAyLjE5OTc1MUMuMzIyNzkgMi4yOTUzOTIgLjM5NDUyMSAyLjMxOTMwMyAuNDU0Mjk2IDIuMzE5MzAzQy41Mzc5ODMgMi4zMTkzMDMgLjU5Nzc1OCAyLjMwNzM0NyAuNjA5NzE0IDIuMjQ3NTcyTDEuNDQ2NTc1LTEuMDk5ODc1QzEuNTY2MTI3LS40MzAzODYgMi4yMjM2NjEgLjExOTU1MiAyLjkyOTAxNiAuMTE5NTUyQzQuNjM4NjA1IC4xMTk1NTIgNi4yNTI1NTMtMS4yMTk0MjcgNi4yNTI1NTMtMy4wMDA3NDdDNi4yNTI1NTMtMy40NTUwNDQgNi4xNDQ5NTYtMy45MDkzNCA1Ljg5Mzg5OC00LjI5MTkwNUM1Ljc1MDQzNi00LjUxOTA1NCA1LjU3MTEwOC00LjY4NjQyNiA1LjM3OTgyNi00LjgyOTg4OEM2LjI0MDU5OC01LjI4NDE4NCA2Ljc2NjYyNS02LjAxMzQ1IDYuNzY2NjI1LTYuOTU3OTA4Wk00LjY4NjQyNi00Ljg0MTg0M0M0LjQ5NTE0My00Ljc3MDExMiA0LjMwMzg2MS00Ljc0NjIwMiA0LjA3NjcxMi00Ljc0NjIwMkMzLjkwOTM0LTQuNzQ2MjAyIDMuNzUzOTIzLTQuNzM0MjQ3IDMuNTM4NzMtNC44MDU5NzhDMy42NTgyODEtNC44ODk2NjQgMy44Mzc2MDktNC45MTM1NzQgNC4wODg2NjctNC45MTM1NzRDNC4zMDM4NjEtNC45MTM1NzQgNC41MTkwNTQtNC44ODk2NjQgNC42ODY0MjYtNC44NDE4NDNaTTYuMTQ0OTU2LTcuMDY1NTA0QzYuMTQ0OTU2LTYuNDA3OTcgNS44MjIxNjctNS40NTE1NTcgNS4wNDUwODEtNS4wMDkyMTVDNC44MTc5MzMtNS4wOTI5MDIgNC41MDcwOTgtNS4xNTI2NzcgNC4yNDQwODUtNS4xNTI2NzdDMy45OTMwMjYtNS4xNTI2NzcgMy4yNzU3MTYtNS4xNzY1ODggMy4yNzU3MTYtNC43OTQwMjJDMy4yNzU3MTYtNC40NzEyMzMgMy45MzMyNS00LjUwNzA5OCA0LjEzNjQ4OC00LjUwNzA5OEM0LjQ0NzMyMy00LjUwNzA5OCA0LjcyMjI5MS00LjU3ODgyOSA1LjAwOTIxNS00LjY2MjUxNkM1LjM5MTc4MS00LjM1MTY4MSA1LjU1OTE1My0zLjk0NTIwNSA1LjU1OTE1My0zLjM0NzQ0N0M1LjU1OTE1My0yLjY1NDA0NyA1LjM2Nzg3LTIuMDkyMTU0IDUuMTQwNzIyLTEuNTc4MDgyQzQuNzQ2MjAyLS42OTM0IDMuODEzNjk5LS4xMTk1NTIgMi45ODg3OTItLjExOTU1MkMyLjExNjA2NS0uMTE5NTUyIDEuNjYxNzY4LS44MTI5NTEgMS42NjE3NjgtMS42MjU5MDNDMS42NjE3NjgtMS43MzM0OTkgMS42NjE3NjgtMS44ODg5MTcgMS43MDk1ODktMi4wNjgyNDRMMi40ODY2NzUtNS4yMTI0NTNDMi44ODExOTYtNi43Nzg1OCAzLjg4NTQzLTguMTg5MjkgNS4wNDUwODEtOC4xODkyOUM1LjkwNTg1My04LjE4OTI5IDYuMTQ0OTU2LTcuNTkxNTMyIDYuMTQ0OTU2LTcuMDY1NTA0WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTEyJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MyAtLT4=" alt="{\bf \beta}" style="vertical-align: -3px"/> associated with the deterministic trend. These parameters are computed based on linear least squares.</p></li>
@@ -171,7 +169,7 @@ the update of the parameters may or may not significantly improve the estimates.
 <p>This is why the goal of this example is to see how to configure the optimization of the hyperparameters of a kriging metamodel.</p>
 </section>
 <section id="definition-of-the-model">
-<h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this heading">¶</a></h2>
+<h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Link to this heading">¶</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
@@ -207,7 +205,7 @@ the update of the parameters may or may not significantly improve the estimates.
 </div>
 </section>
 <section id="create-the-design-of-experiments">
-<h2>Create the design of experiments<a class="headerlink" href="#create-the-design-of-experiments" title="Permalink to this heading">¶</a></h2>
+<h2>Create the design of experiments<a class="headerlink" href="#create-the-design-of-experiments" title="Link to this heading">¶</a></h2>
 <p>We consider a simple Monte-Carlo sampling as a design of experiments.
 This is why we generate an input sample using the <cite>getSample</cite> method of the distribution.
 Then we evaluate the output using the <cite>model</cite> function.</p>
@@ -218,7 +216,7 @@ Then we evaluate the output using the <cite>model</cite> function.</p>
 </div>
 </section>
 <section id="create-the-metamodel">
-<h2>Create the metamodel<a class="headerlink" href="#create-the-metamodel" title="Permalink to this heading">¶</a></h2>
+<h2>Create the metamodel<a class="headerlink" href="#create-the-metamodel" title="Link to this heading">¶</a></h2>
 <p>In order to create the kriging metamodel, we first select a constant trend with the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.ConstantBasisFactory.html#openturns.ConstantBasisFactory" title="openturns.ConstantBasisFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantBasisFactory</span></code></a> class.
 Then we use a squared exponential covariance model.
 Finally, we use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.KrigingAlgorithm.html#openturns.KrigingAlgorithm" title="openturns.KrigingAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code></a> class to create the kriging metamodel,
@@ -276,7 +274,7 @@ class=Point name=Unnamed dimension=1 values=[36.4745]
 </div>
 </section>
 <section id="get-the-optimizer-algorithm">
-<h2>Get the optimizer algorithm<a class="headerlink" href="#get-the-optimizer-algorithm" title="Permalink to this heading">¶</a></h2>
+<h2>Get the optimizer algorithm<a class="headerlink" href="#get-the-optimizer-algorithm" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.KrigingAlgorithm.html#openturns.KrigingAlgorithm.getOptimizationAlgorithm" title="openturns.KrigingAlgorithm.getOptimizationAlgorithm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getOptimizationAlgorithm()</span></code></a> method
 returns the optimization algorithm used to optimize the
 <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMi4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzUuNzgwMzQxcHQnIGhlaWdodD0nOC4zMDIxOTFwdCcgdmlld0JveD0nMCAtOC4zMDIxOTEgNS43ODAzNDEgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTE4JyBkPSdNNS4yOTYxMzktNi4wMTM0NUM1LjI5NjEzOS03LjIzMjg3NyA0LjkxMzU3NC04LjQxNjQzOCAzLjkzMzI1LTguNDE2NDM4QzIuMjU5NTI3LTguNDE2NDM4IC40NzgyMDctNC45MTM1NzQgLjQ3ODIwNy0yLjI4MzQzN0MuNDc4MjA3LTEuNzMzNDk5IC41OTc3NTggLjExOTU1MiAxLjg1MzA1MSAuMTE5NTUyQzMuNDc4OTU0IC4xMTk1NTIgNS4yOTYxMzktMy4yOTk2MjYgNS4yOTYxMzktNi4wMTM0NVpNMS42NzM3MjQtNC4zMjc3NzFDMS44NTMwNTEtNS4wMzMxMjYgMi4xMDQxMS02LjAzNzM2IDIuNTgyMzE2LTYuODg2MTc3QzIuOTc2ODM3LTcuNjAzNDg3IDMuMzk1MjY4LTguMTc3MzM1IDMuOTIxMjk1LTguMTc3MzM1QzQuMzE1ODE2LTguMTc3MzM1IDQuNTc4ODI5LTcuODQyNTkgNC41Nzg4MjktNi42OTQ4OTRDNC41Nzg4MjktNi4yNjQ1MDggNC41NDI5NjQtNS42NjY3NSA0LjE5NjI2NC00LjMyNzc3MUgxLjY3MzcyNFpNNC4xMTI1NzgtMy45NjkxMTZDMy44MTM2OTktMi43OTc1MDkgMy41NjI2NC0yLjA0NDMzNCAzLjEzMjI1NC0xLjI5MTE1OEMyLjc4NTU1NC0uNjgxNDQ1IDIuMzY3MTIzLS4xMTk1NTIgMS44NjUwMDYtLjExOTU1MkMxLjQ5NDM5Ni0uMTE5NTUyIDEuMTk1NTE3LS40MDY0NzYgMS4xOTU1MTctMS41OTAwMzdDMS4xOTU1MTctMi4zNjcxMjMgMS4zODY4LTMuMTgwMDc1IDEuNTc4MDgyLTMuOTY5MTE2SDQuMTEyNTc4WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTE4Jy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MCAtLT4=" alt="{\bf \theta}" style="vertical-align: 0px"/> parameters of the
@@ -332,7 +330,7 @@ In the metamodeling context, this correspond to the input dimension of the model
 </div>
 </section>
 <section id="configure-the-starting-point-of-the-optimization">
-<h2>Configure the starting point of the optimization<a class="headerlink" href="#configure-the-starting-point-of-the-optimization" title="Permalink to this heading">¶</a></h2>
+<h2>Configure the starting point of the optimization<a class="headerlink" href="#configure-the-starting-point-of-the-optimization" title="Link to this heading">¶</a></h2>
 <p>The starting point of the optimization is based on the parameters of the covariance model.
 In the following example, we configure the parameters of the covariance model to
 the arbitrary values <cite>[12.0, 34.0, 56.0, 78.0]</cite>.</p>
@@ -363,7 +361,7 @@ the arbitrary values <cite>[12.0, 34.0, 56.0, 78.0]</cite>.</p>
 <p>We observe that this does not change much the values of the parameters in this case.</p>
 </section>
 <section id="disabling-the-optimization">
-<h2>Disabling the optimization<a class="headerlink" href="#disabling-the-optimization" title="Permalink to this heading">¶</a></h2>
+<h2>Disabling the optimization<a class="headerlink" href="#disabling-the-optimization" title="Link to this heading">¶</a></h2>
 <p>It is sometimes useful to completely disable the optimization of the parameters.
 In order to see the effect of this, we first initialize the parameters of
 the covariance model with the arbitrary values <cite>[12.0, 34.0, 56.0, 78.0]</cite>.</p>
@@ -400,7 +398,7 @@ class=Point name=Unnamed dimension=1 values=[15.6988]
 <br />
 <br /></section>
 <section id="reuse-the-parameters-from-a-previous-optimization">
-<h2>Reuse the parameters from a previous optimization<a class="headerlink" href="#reuse-the-parameters-from-a-previous-optimization" title="Permalink to this heading">¶</a></h2>
+<h2>Reuse the parameters from a previous optimization<a class="headerlink" href="#reuse-the-parameters-from-a-previous-optimization" title="Link to this heading">¶</a></h2>
 <p>In this example, we show how to reuse the optimized parameters of a previous kriging and configure a new one.
 Furthermore, we disable the optimization so that the parameters of the covariance model are not updated.
 This make the process of adding a new point very fast:
@@ -478,7 +476,7 @@ At this point, we may reuse the previous covariance model so that the optimizati
 This will reduce the cost of the optimization.</p>
 </section>
 <section id="configure-the-local-optimization-solver">
-<h2>Configure the local optimization solver<a class="headerlink" href="#configure-the-local-optimization-solver" title="Permalink to this heading">¶</a></h2>
+<h2>Configure the local optimization solver<a class="headerlink" href="#configure-the-local-optimization-solver" title="Link to this heading">¶</a></h2>
 <p>The following example shows how to set the local optimization solver.
 We choose the SLSQP algorithm from NLOPT.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">problem</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">getProblem</span><span class="p">()</span>
@@ -511,7 +509,7 @@ Change in the parameter #5 = 0.0
 </div>
 </section>
 <section id="configure-the-global-optimization-solver">
-<h2>Configure the global optimization solver<a class="headerlink" href="#configure-the-global-optimization-solver" title="Permalink to this heading">¶</a></h2>
+<h2>Configure the global optimization solver<a class="headerlink" href="#configure-the-global-optimization-solver" title="Link to this heading">¶</a></h2>
 <p>The following example checks the robustness of the optimization of the
 kriging algorithm with respect to the optimization of the likelihood
 function in the covariance model parameters estimation.
@@ -631,9 +629,9 @@ Change in the parameter #5 = 0.0
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+    &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
       Last updated on Jan 01, 2022.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
