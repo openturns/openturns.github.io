@@ -24,8 +24,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Define a connection function with a field output" href="plot_viscous_fall_field_function_connection.html" />
-    <link rel="prev" title="Vertex value function" href="plot_vertexvalue_function.html" />
+    <link rel="next" title="Logistic growth model" href="plot_logistic_growth_model.html" />
+    <link rel="prev" title="Define a connection function with a field output" href="plot_viscous_fall_field_function_connection.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -58,10 +58,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_viscous_fall_field_function_connection.html" title="Define a connection function with a field output"
+          <a href="plot_logistic_growth_model.html" title="Logistic growth model"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_vertexvalue_function.html" title="Vertex value function"
+          <a href="plot_viscous_fall_field_function_connection.html" title="Define a connection function with a field output"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -86,13 +86,13 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_vertexvalue_function.html"
-                          title="previous chapter">Vertex value function</a></p>
+    <p class="topless"><a href="plot_viscous_fall_field_function_connection.html"
+                          title="previous chapter">Define a connection function with a field output</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plot_viscous_fall_field_function_connection.html"
-                          title="next chapter">Define a connection function with a field output</a></p>
+    <p class="topless"><a href="plot_logistic_growth_model.html"
+                          title="next chapter">Logistic growth model</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -127,79 +127,22 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="define-a-function-with-a-field-output-the-viscous-free-fall-example">
 <span id="sphx-glr-auto-functional-modeling-field-functions-plot-viscous-fall-field-function-py"></span><h1>Define a function with a field output: the viscous free fall example<a class="headerlink" href="#define-a-function-with-a-field-output-the-viscous-free-fall-example" title="Link to this heading">¶</a></h1>
 <p>In this example, we define a function which has a vector input and a field output.
-This is why we use the <cite>PythonPointToFieldFunction</cite> class to create the associated function and propagate the uncertainties through it.</p>
+This is why we use the <a class="reference internal" href="../../user_manual/_generated/openturns.PythonPointToFieldFunction.html#openturns.PythonPointToFieldFunction" title="openturns.PythonPointToFieldFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonPointToFieldFunction</span></code></a> class to create the associated function and propagate the uncertainties through it.</p>
 <p>We consider a viscous free fall as explained <a class="reference internal" href="../../usecases/use_case_viscous_fall.html#use-case-viscous-fall"><span class="std std-ref">here</span></a>.</p>
 <section id="define-the-model">
 <h2>Define the model<a class="headerlink" href="#define-the-model" title="Link to this heading">¶</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
 <span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">viscous_free_fall</span>
 
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We first define the time grid associated with the model.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">tmin</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Minimum time</span>
-<span class="n">tmax</span> <span class="o">=</span> <span class="mf">12.0</span>  <span class="c1"># Maximum time</span>
-<span class="n">gridsize</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Number of time steps</span>
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntervalMesher</span><span class="p">([</span><span class="n">gridsize</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">tmin</span><span class="p">,</span> <span class="n">tmax</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>The <cite>getVertices</cite> method returns the time values in this mesh.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vertices</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
-<span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
-</pre></div>
-</div>
-<div class="output_subarea output_html rendered_html output_result">
-<table>
-  <tr><td></td><th>v0</th></tr>
-  <tr><th>0</th><td>0</td></tr>
-  <tr><th>1</th><td>0.1212121</td></tr>
-  <tr><th>2</th><td>0.2424242</td></tr>
-  <tr><th>3</th><td>0.3636364</td></tr>
-  <tr><th>4</th><td>0.4848485</td></tr>
-</table>
-</div>
-<br />
-<br /><p>Creation of the input distribution.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">distZ0</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
-<span class="n">distV0</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">55.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
-<span class="n">distM</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">)</span>
-<span class="n">distC</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span>
-<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span><span class="p">([</span><span class="n">distZ0</span><span class="p">,</span> <span class="n">distV0</span><span class="p">,</span> <span class="n">distM</span><span class="p">,</span> <span class="n">distC</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-<span class="n">dimension</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>4
-</pre></div>
-</div>
-<p>Then we define the Python function which computes the altitude at each time value.
-In order to compute all altitudes with a vectorized evaluation, we first
-convert the vertices into a <cite>numpy</cite> <cite>array</cite> and use the <cite>numpy</cite> function
-<cite>exp</cite> and <cite>maximum</cite>: this increases the evaluation performance of the script.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">AltiFunc</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-    <span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>
-    <span class="n">z0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">v0</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-    <span class="n">tau</span> <span class="o">=</span> <span class="n">m</span> <span class="o">/</span> <span class="n">c</span>
-    <span class="n">vinf</span> <span class="o">=</span> <span class="o">-</span><span class="n">m</span> <span class="o">*</span> <span class="n">g</span> <span class="o">/</span> <span class="n">c</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z0</span> <span class="o">+</span> <span class="n">vinf</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">v0</span> <span class="o">-</span> <span class="n">vinf</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">t</span> <span class="o">/</span> <span class="n">tau</span><span class="p">))</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[[</span><span class="n">zeta</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">zeta</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>In order to create a <cite>Function</cite> from this Python function, we use the <cite>PythonPointToFieldFunction</cite> class.
-Since the altitude is the only output field, the third argument <cite>outputDimension</cite> is equal to <cite>1</cite>.
-If we had computed the speed as an extra output field, we would have set <cite>2</cite> instead.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">outputDimension</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">alti</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonPointToFieldFunction</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">outputDimension</span><span class="p">,</span> <span class="n">AltiFunc</span><span class="p">)</span>
+<p>Load the viscous free fall example.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vff</span> <span class="o">=</span> <span class="n">viscous_free_fall</span><span class="o">.</span><span class="n">ViscousFreeFall</span><span class="p">()</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">vff</span><span class="o">.</span><span class="n">distribution</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">vff</span><span class="o">.</span><span class="n">model</span>
 </pre></div>
 </div>
 </section>
@@ -208,7 +151,7 @@ If we had computed the speed as an extra output field, we would have set <cite>2
 <p>In order to sample trajectories, we use the <cite>getSample</cite> method of the input distribution and apply the field function.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">inputSample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
-<span class="n">outputSample</span> <span class="o">=</span> <span class="n">alti</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span><span class="p">(</span><span class="s2">&quot;Drawable-DefaultPalettePhase&quot;</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
@@ -256,10 +199,10 @@ Moreover, at the final time <img class="math" src="data:image/svg+xml;base64,PD9
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_viscous_fall_field_function_connection.html" title="Define a connection function with a field output"
+          <a href="plot_logistic_growth_model.html" title="Logistic growth model"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_vertexvalue_function.html" title="Vertex value function"
+          <a href="plot_viscous_fall_field_function_connection.html" title="Define a connection function with a field output"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
