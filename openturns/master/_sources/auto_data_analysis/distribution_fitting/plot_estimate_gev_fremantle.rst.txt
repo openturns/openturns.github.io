@@ -274,7 +274,7 @@ Now, we use the profile log-likehood function rather than log-likehood function 
 
 .. code-block:: Python
 
-    result_PLL = factory.buildMethodOfProfileLikelihoodMaximizationEstimator(sample)
+    result_PLL = factory.buildMethodOfXiProfileLikelihoodEstimator(sample)
 
 
 
@@ -526,15 +526,16 @@ We suppose that :math:`\mu` is linear in time, and that the other parameters rem
     \end{align*}
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-211
+.. GENERATED FROM PYTHON SOURCE LINES 205-212
 
 .. code-block:: Python
 
     constant = ot.SymbolicFunction(["t"], ["1.0"])
-    basis_lin = ot.Basis([constant, ot.SymbolicFunction(["t"], ["t"])])
-    basis_cst = ot.Basis([constant])
+    basis = ot.Basis([constant, ot.SymbolicFunction(["t"], ["t"])])
     # basis for mu, sigma, xi
-    basis_coll = [basis_lin, basis_cst, basis_cst]
+    muIndices = [0, 1]  # linear
+    sigmaIndices = [0]  # stationary
+    xiIndices = [0]  # stationary
 
 
 
@@ -543,7 +544,7 @@ We suppose that :math:`\mu` is linear in time, and that the other parameters rem
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-214
+.. GENERATED FROM PYTHON SOURCE LINES 213-215
 
 .. code-block:: Python
 
@@ -556,7 +557,7 @@ We suppose that :math:`\mu` is linear in time, and that the other parameters rem
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-228
+.. GENERATED FROM PYTHON SOURCE LINES 216-229
 
 We can now estimate the list of coefficients :math:`\vect{\beta} = (\beta_1, \beta_2, \beta_3, \beta_4)`
 using the log-likelihood of the data.
@@ -572,29 +573,22 @@ We can see that:
   since the associated log-likelihood are much smaller than those obtained with normalized data.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-248
+.. GENERATED FROM PYTHON SOURCE LINES 229-242
 
 .. code-block:: Python
 
-    initiPoint_list = list()
-    initiPoint_list.append("Gumbel")
-    initiPoint_list.append("Static")
-    normMethod_list = list()
-    normMethod_list.append("MinMax")
-    normMethod_list.append("CenterReduce")
-    normMethod_list.append("None")
-
-    print("Linear mu(t) model: ")
-    for normMeth in normMethod_list:
-        for initPoint in initiPoint_list:
-            print("normMeth, initPoint = ", normMeth, initPoint)
+    print("Linear mu(t) model:")
+    for normMeth in ["MinMax", "CenterReduce", "None"]:
+        for initPoint in ["Gumbel", "Static"]:
+            print(f"normMeth = {normMeth}, initPoint = {initPoint}")
             # The ot.Function() is the identity function.
             result = factory.buildTimeVarying(
-                sample, timeStamps, basis_coll, ot.Function(), initPoint, normMeth
+                sample, timeStamps, basis, muIndices, sigmaIndices, xiIndices,
+                ot.Function(), ot.Function(), ot.Function(), initPoint, normMeth
             )
             beta = result.getOptimalParameter()
-            print("beta1, beta2, beta3, beta4 = ", beta)
-            print("Max log-likelihood =  ", result.getLogLikelihood())
+            print(f"beta = {beta}")
+            print(f"Max log-likelihood = {result.getLogLikelihood()}")
 
 
 
@@ -604,43 +598,44 @@ We can see that:
 
  .. code-block:: none
 
-    Linear mu(t) model: 
-    normMeth, initPoint =  MinMax Gumbel
-    beta1, beta2, beta3, beta4 =  [1.3821,0.187126,0.124302,-0.124882]
-    Max log-likelihood =   49.912792759600805
-    normMeth, initPoint =  MinMax Static
-    beta1, beta2, beta3, beta4 =  [1.38227,0.186899,0.124343,-0.125475]
-    Max log-likelihood =   49.91281020707175
-    normMeth, initPoint =  CenterReduce Gumbel
-    beta1, beta2, beta3, beta4 =  [1.48016,0.0541552,0.124306,-0.124888]
-    Max log-likelihood =   49.91279529325528
-    normMeth, initPoint =  CenterReduce Static
-    beta1, beta2, beta3, beta4 =  [1.48022,0.0541103,0.124358,-0.125708]
-    Max log-likelihood =   49.912796771958874
-    normMeth, initPoint =  None Gumbel
-    beta1, beta2, beta3, beta4 =  [1.47155,1.67803e-05,0.211226,0.0876902]
-    Max log-likelihood =   26.490076768443522
-    normMeth, initPoint =  None Static
-    beta1, beta2, beta3, beta4 =  [1.4823,1.34614e-09,0.141241,-0.217051]
-    Max log-likelihood =   43.566619143025775
+    Linear mu(t) model:
+    normMeth = MinMax, initPoint = Gumbel
+    beta = [1.3821,0.187126,0.124302,-0.124882]
+    Max log-likelihood = 49.912792759600805
+    normMeth = MinMax, initPoint = Static
+    beta = [1.38227,0.186899,0.124343,-0.125475]
+    Max log-likelihood = 49.91281020707175
+    normMeth = CenterReduce, initPoint = Gumbel
+    beta = [1.48016,0.0541552,0.124306,-0.124888]
+    Max log-likelihood = 49.91279529325528
+    normMeth = CenterReduce, initPoint = Static
+    beta = [1.48022,0.0541103,0.124358,-0.125708]
+    Max log-likelihood = 49.912796771958874
+    normMeth = None, initPoint = Gumbel
+    beta = [1.47155,1.67803e-05,0.211226,0.0876902]
+    Max log-likelihood = 26.490076768443522
+    normMeth = None, initPoint = Static
+    beta = [1.4823,1.34614e-09,0.141241,-0.217051]
+    Max log-likelihood = 43.566619143025775
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-251
+.. GENERATED FROM PYTHON SOURCE LINES 243-245
 
 According to the previous results, we choose the *MinMax* normalization method and the *Gumbel* initial point.
 This initial point is cheaper than the *Static* one as it requires no optimization computation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-260
+.. GENERATED FROM PYTHON SOURCE LINES 245-255
 
 .. code-block:: Python
 
     result_NonStatLL = factory.buildTimeVarying(
-        sample, timeStamps, basis_coll, ot.Function(), "Gumbel", "MinMax"
+        sample, timeStamps, basis, muIndices, sigmaIndices, xiIndices,
+        ot.Function(), ot.Function(), ot.Function(), "Gumbel", "MinMax"
     )
     beta = result_NonStatLL.getOptimalParameter()
-    print("beta1, beta2, beta3, beta_4 = ", beta)
+    print(f"beta = {beta}")
     print(f"mu(t) = {beta[0]:.4f} + {beta[1]:.4f} * tau")
     print(f"sigma = {beta[2]:.4f}")
     print(f"xi = {beta[3]:.4f}")
@@ -653,7 +648,7 @@ This initial point is cheaper than the *Static* one as it requires no optimizati
 
  .. code-block:: none
 
-    beta1, beta2, beta3, beta_4 =  [1.3821,0.187126,0.124302,-0.124882]
+    beta = [1.3821,0.187126,0.124302,-0.124882]
     mu(t) = 1.3821 + 0.1871 * tau
     sigma = 0.1243
     xi = -0.1249
@@ -661,11 +656,11 @@ This initial point is cheaper than the *Static* one as it requires no optimizati
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 261-262
+.. GENERATED FROM PYTHON SOURCE LINES 256-257
 
 You can get the expression of the normalizing function :math:`t \mapsto \tau(t)`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 262-267
+.. GENERATED FROM PYTHON SOURCE LINES 257-262
 
 .. code-block:: Python
 
@@ -689,11 +684,11 @@ You can get the expression of the normalizing function :math:`t \mapsto \tau(t)`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-269
+.. GENERATED FROM PYTHON SOURCE LINES 263-264
 
 You can get the function :math:`t \mapsto \vect{\theta}(t)` where :math:`\vect{\theta}(t) = (\mu(t), \sigma(t), \xi(t))`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 269-271
+.. GENERATED FROM PYTHON SOURCE LINES 264-266
 
 .. code-block:: Python
 
@@ -706,12 +701,12 @@ You can get the function :math:`t \mapsto \vect{\theta}(t)` where :math:`\vect{\
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 272-274
+.. GENERATED FROM PYTHON SOURCE LINES 267-269
 
 We get the asymptotic distribution of :math:`\vect{\beta}` to compute some confidence intervals of
 the estimates, for example of order :math:`p = 0.95`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 274-293
+.. GENERATED FROM PYTHON SOURCE LINES 269-288
 
 .. code-block:: Python
 
@@ -742,20 +737,20 @@ the estimates, for example of order :math:`p = 0.95`.
 
  .. code-block:: none
 
-    Conf interval for beta_1 = [1.3261092985981993; 1.438089659327579]
-    Conf interval for beta_2 = [0.0935804898192306; 0.28067203910544003]
-    Conf interval for beta_3 = [0.10188267494639183; 0.14672045944641826]
-    Conf interval for beta_4 = [-0.2928434503124805; 0.043078855520741144]
+    Conf interval for beta_1 = [1.3760619004522263; 1.3881370574735519]
+    Conf interval for beta_2 = [0.17703896126886012; 0.19721356765581052]
+    Conf interval for beta_3 = [0.12188407872826672; 0.1267190556645434]
+    Conf interval for beta_4 = [-0.142994007106013; -0.10677058768572634]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-296
+.. GENERATED FROM PYTHON SOURCE LINES 289-291
 
 In order to compare different modelings, we get the optimal log-likelihood of the data for both stationary
 and non stationary models. The difference is significant enough to be in favor of the non stationary model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-300
+.. GENERATED FROM PYTHON SOURCE LINES 291-295
 
 .. code-block:: Python
 
@@ -778,7 +773,7 @@ and non stationary models. The difference is significant enough to be in favor o
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 301-320
+.. GENERATED FROM PYTHON SOURCE LINES 296-315
 
 In order to draw some diagnostic plots similar to those drawn in the stationary case, we refer to the
 following result: if :math:`Z_t` is a non stationary GEV model parametrized by :math:`(\mu(t), \sigma(t), \xi(t))`,
@@ -795,12 +790,12 @@ As a result, we can validate the inference result thanks the 4 usual diagnostic 
 - the probability-probability pot,
 - the quantile-quantile pot,
 - the return level plot,
-- the data histogram and the desnity of the fitted model.
+- the data histogram and the density of the fitted model.
 
 using the transformed data compared to the Gumbel model. We can see that the adequation is better
 than with the stationary model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 320-323
+.. GENERATED FROM PYTHON SOURCE LINES 315-318
 
 .. code-block:: Python
 
@@ -819,7 +814,7 @@ than with the stationary model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-342
+.. GENERATED FROM PYTHON SOURCE LINES 319-337
 
 We can draw the mean function  :math:`t \mapsto \Expect{\mbox{GEV}(t)}`. Be careful, it is not the function
 :math:`t \mapsto \mu(t)`. As a matter of fact, the mean is defined for :math:`\xi <1` only and in that case,
@@ -840,7 +835,7 @@ order :math:`p` of the GEV distribution at time :math:`t`.
 Here, :math:`\mu(t)` is a linear function and the other parameters are constant, so the mean and the quantile
 functions are also linear functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 342-371
+.. GENERATED FROM PYTHON SOURCE LINES 337-366
 
 .. code-block:: Python
 
@@ -885,7 +880,7 @@ functions are also linear functions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 372-383
+.. GENERATED FROM PYTHON SOURCE LINES 367-378
 
 At last, we can test the validity of the stationary model :math:`\mathcal{M}_0`
 relative to the model with time varying parameters  :math:`\mathcal{M}_1`. The
@@ -899,7 +894,7 @@ The Type I error :math:`\alpha` is taken equal to 0.05.
 This test confirms that the dependence through time is not negligible: it means that the linear :math:`\mu(t)`
 component explains a large variation in the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 383-395
+.. GENERATED FROM PYTHON SOURCE LINES 378-390
 
 .. code-block:: Python
 
@@ -928,14 +923,14 @@ component explains a large variation in the data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-400
+.. GENERATED FROM PYTHON SOURCE LINES 391-395
 
 We detail the statistics of the Likelihood Ratio test: the deviance statistics :math:`\mathcal{D}_p` follows
 a :math:`\chi^2_1` distribution.
 The model :math:`\mathcal{M}_0` is rejected if the deviance statistics estimated on the data is greater than
 the threshold :math:`c_{\alpha}` or if the p-value is less than the Type I error  :math:`\alpha = 0.05`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 400-404
+.. GENERATED FROM PYTHON SOURCE LINES 395-399
 
 .. code-block:: Python
 
@@ -958,7 +953,7 @@ the threshold :math:`c_{\alpha}` or if the p-value is less than the Type I error
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-434
+.. GENERATED FROM PYTHON SOURCE LINES 400-429
 
 We can perform the same study with a quadratic model for :math:`\mu(t)` or a linear model for
 :math:`\mu(t)` and :math:`\sigma(t)`:
@@ -990,20 +985,20 @@ for :math:`\mu(t)` and :math:`\sigma(t)`: the optimal log-likelihood for each mo
 we obtained with a linear model for :math:`\mu(t)` only. It means that these both models do not bring significant
 improvements with respect to model tested before.
 
-.. GENERATED FROM PYTHON SOURCE LINES 434-469
+.. GENERATED FROM PYTHON SOURCE LINES 429-464
 
 .. code-block:: Python
 
-    basis_quad = ot.Basis(
+    basis = ot.Basis(
         [constant, ot.SymbolicFunction(["t"], ["t"]), ot.SymbolicFunction(["t"], ["t^2"])]
     )
-    basis_coll_2 = [basis_quad, basis_cst, basis_cst]
-    basis_coll_3 = [basis_lin, basis_lin, basis_cst]
     result_NonStatLL_2 = factory.buildTimeVarying(
-        sample, timeStamps, basis_coll_2, ot.Function(), "Gumbel", "MinMax"
+        sample, timeStamps, basis, [0, 1, 2], [0], [0],
+        ot.Function(), ot.Function(), ot.Function(), "Gumbel", "MinMax"
     )
     result_NonStatLL_3 = factory.buildTimeVarying(
-        sample, timeStamps, basis_coll_3, ot.Function(), "Gumbel", "MinMax"
+        sample, timeStamps, basis, [0, 1], [0, 1], [0],
+        ot.Function(), ot.Function(), ot.Function(), "Gumbel", "MinMax"
     )
     print("Max log-likelihood = ")
     print("Non stationary quadratic mu(t) model = ", result_NonStatLL_2.getLogLikelihood())
@@ -1046,7 +1041,7 @@ improvements with respect to model tested before.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 470-471
+.. GENERATED FROM PYTHON SOURCE LINES 465-466
 
 .. code-block:: Python
 
@@ -1061,7 +1056,7 @@ improvements with respect to model tested before.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.883 seconds)
+   **Total running time of the script:** (0 minutes 2.549 seconds)
 
 
 .. _sphx_glr_download_auto_data_analysis_distribution_fitting_plot_estimate_gev_fremantle.py:
