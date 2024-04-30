@@ -24,8 +24,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Manipulate a time series" href="plot_timeseries_manipulation.html" />
-    <link rel="prev" title="Create a custom covariance model" href="plot_userdefined_covariance_model.html" />
+    <link rel="next" title="Draw fields" href="plot_process_manipulation.html" />
+    <link rel="prev" title="Sample trajectories from a Gaussian Process with correlated outputs" href="plot_kronecker_covmodel.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -58,10 +58,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_timeseries_manipulation.html" title="Manipulate a time series"
+          <a href="plot_process_manipulation.html" title="Draw fields"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_userdefined_covariance_model.html" title="Create a custom covariance model"
+          <a href="plot_kronecker_covmodel.html" title="Sample trajectories from a Gaussian Process with correlated outputs"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -75,13 +75,13 @@
         <div class="sphinxsidebarwrapper">
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_userdefined_covariance_model.html"
-                          title="previous chapter">Create a custom covariance model</a></p>
+    <p class="topless"><a href="plot_kronecker_covmodel.html"
+                          title="previous chapter">Sample trajectories from a Gaussian Process with correlated outputs</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plot_timeseries_manipulation.html"
-                          title="next chapter">Manipulate a time series</a></p>
+    <p class="topless"><a href="plot_process_manipulation.html"
+                          title="next chapter">Draw fields</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -137,15 +137,47 @@ that:</p>
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Define a generic function to plot matrices</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotMatrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">texts</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic procedure for displaying a matrix with or without text overlay and color bar&quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">texts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">getNbColumns</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">getNbRows</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">x_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">extent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">matrix</span><span class="o">.</span><span class="n">getNbColumns</span><span class="p">()</span>
+        <span class="n">y_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">extent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">matrix</span><span class="o">.</span><span class="n">getNbRows</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">getNbColumns</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">getNbRows</span><span class="p">()):</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">j</span> <span class="k">if</span> <span class="n">origin</span> <span class="o">==</span> <span class="s1">&#39;lower&#39;</span> <span class="k">else</span> <span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">getNbRows</span><span class="p">()</span> <span class="o">-</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">i</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">x_step</span> <span class="o">+</span> <span class="n">extent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_step</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">j</span> <span class="o">*</span> <span class="n">y_step</span> <span class="o">+</span> <span class="n">extent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">y_step</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Define the origin</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">origin</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Dirac</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Define the transition matrix</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">transition</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquareMatrix</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">transition</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquareMatrix</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]])</span>
 </pre></div>
 </div>
-<p>Define an 1-d mesh</p>
+<p>Visualize the transition matrix</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_001.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_001.png" alt="plot discrete markov chain process" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage object at 0x7f20ebf1dd60&gt;
+</pre></div>
+</div>
+<p>Invert axes and add texts</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plotMatrix</span><span class="p">(</span><span class="n">transition</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">texts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_002.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_002.png" alt="plot discrete markov chain process" class = "sphx-glr-single-img"/><p>Define an 1-d mesh</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">tgrid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -157,7 +189,7 @@ that:</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_001.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_001.png" alt="Discrete Markov chain" class = "sphx-glr-single-img"/><p>Get several realizations</p>
+<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_003.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_003.png" alt="Discrete Markov chain" class = "sphx-glr-single-img"/><p>Get several realizations</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">process</span><span class="o">.</span><span class="n">setTimeGrid</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
 <span class="n">reals</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">reals</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -165,14 +197,14 @@ that:</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_002.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_002.png" alt="Discrete Markov chain, 3 realizations" class = "sphx-glr-single-img"/><p>Markov chain future 10 steps</p>
+<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_004.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_004.png" alt="Discrete Markov chain, 3 realizations" class = "sphx-glr-single-img"/><p>Markov chain future 10 steps</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">future</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">getFuture</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Markov chain future 10 steps&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_003.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_003.png" alt="Markov chain future 10 steps" class = "sphx-glr-single-img"/><p>Markov chain 3 different futures</p>
+<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_005.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_005.png" alt="Markov chain future 10 steps" class = "sphx-glr-single-img"/><p>Markov chain 3 different futures</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">futures</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">getFuture</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">futures</span><span class="o">.</span><span class="n">drawMarginal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Three Markov chain futures, 10 steps&quot;</span><span class="p">)</span>
@@ -180,7 +212,7 @@ that:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_004.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_004.png" alt="Three Markov chain futures, 10 steps" class = "sphx-glr-single-img"/><div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-probabilistic-modeling-stochastic-processes-plot-discrete-markov-chain-process-py">
+<img src="../../_images/sphx_glr_plot_discrete_markov_chain_process_006.png" srcset="../../_images/sphx_glr_plot_discrete_markov_chain_process_006.png" alt="Three Markov chain futures, 10 steps" class = "sphx-glr-single-img"/><div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-probabilistic-modeling-stochastic-processes-plot-discrete-markov-chain-process-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/320bae5d5d8dfc1e2650b24ef1bf72f0/plot_discrete_markov_chain_process.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_discrete_markov_chain_process.ipynb</span></code></a></p>
 </div>
@@ -204,10 +236,10 @@ that:</p>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_timeseries_manipulation.html" title="Manipulate a time series"
+          <a href="plot_process_manipulation.html" title="Draw fields"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_userdefined_covariance_model.html" title="Create a custom covariance model"
+          <a href="plot_kronecker_covmodel.html" title="Sample trajectories from a Gaussian Process with correlated outputs"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>

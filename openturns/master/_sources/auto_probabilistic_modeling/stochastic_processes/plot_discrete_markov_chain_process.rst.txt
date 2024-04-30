@@ -45,7 +45,7 @@ The transition matrix of the process :math:`\mathcal{M} = (m_{i,j})` can be defi
 The library proposes to model it through the object *DiscreteMarkovChain* defined thanks to the origin :math:`X_{t_0}`
 (which can be either deterministic or uncertain), the transition matrix :math:`\mathcal{M}` and the time grid.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-35
+.. GENERATED FROM PYTHON SOURCE LINES 29-36
 
 .. code-block:: Python
 
@@ -62,11 +62,44 @@ The library proposes to model it through the object *DiscreteMarkovChain* define
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
+
+Define a generic function to plot matrices
+
+.. GENERATED FROM PYTHON SOURCE LINES 38-55
+
+.. code-block:: Python
+
+    def plotMatrix(matrix, texts=False, origin=None, colorbar=False, extent=None, **kwargs):
+        """Generic procedure for displaying a matrix with or without text overlay and color bar"""
+        res = plt.matshow(matrix, origin=origin, extent=extent, **kwargs)
+        if texts:
+            if extent is None:
+                extent = (-0.5, matrix.getNbColumns() - 0.5, -0.5, matrix.getNbRows() - 0.5)
+            x_step = (extent[1] - extent[0]) / matrix.getNbColumns()
+            y_step = (extent[3] - extent[2]) / matrix.getNbRows()
+            for i in range(matrix.getNbColumns()):
+                for j in range(matrix.getNbRows()):
+                    c = round(matrix[j if origin == 'lower' else (matrix.getNbRows() - j - 1), i], 2)
+                    plt.text(i * x_step + extent[0] + x_step / 2, j * y_step + extent[2] + y_step / 2,
+                             str(c), va='center', ha='center')
+        if colorbar:
+            plt.colorbar(res)
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Define the origin
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-39
+.. GENERATED FROM PYTHON SOURCE LINES 57-59
 
 .. code-block:: Python
 
@@ -79,15 +112,18 @@ Define the origin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Define the transition matrix
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-43
+.. GENERATED FROM PYTHON SOURCE LINES 61-66
 
 .. code-block:: Python
 
-    transition = ot.SquareMatrix([[0.1, 0.3, 0.6], [0.7, 0.1, 0.2], [0.5, 0.3, 0.2]])
+    transition = ot.SquareMatrix([[0.1, 0.3, 0.5, 0.1],
+                                 [0.6, 0.1, 0.2, 0.1],
+                                 [0.4, 0.3, 0.1, 0.2],
+                                 [0.2, 0.0, 0.1, 0.7]])
 
 
 
@@ -96,11 +132,61 @@ Define the transition matrix
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
+
+Visualize the transition matrix
+
+.. GENERATED FROM PYTHON SOURCE LINES 68-70
+
+.. code-block:: Python
+
+    plt.matshow(transition)
+
+
+
+
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_001.png
+   :alt: plot discrete markov chain process
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_001.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    <matplotlib.image.AxesImage object at 0x7f20ebf1dd60>
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
+
+Invert axes and add texts
+
+.. GENERATED FROM PYTHON SOURCE LINES 72-74
+
+.. code-block:: Python
+
+    plotMatrix(transition, cmap="gray", texts=True, origin="lower", colorbar=True, alpha=0.5, vmin=0, vmax=1)
+
+
+
+
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_002.png
+   :alt: plot discrete markov chain process
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 75-76
 
 Define an 1-d mesh
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-47
+.. GENERATED FROM PYTHON SOURCE LINES 76-78
 
 .. code-block:: Python
 
@@ -113,11 +199,11 @@ Define an 1-d mesh
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Markov chain definition and realization
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-55
+.. GENERATED FROM PYTHON SOURCE LINES 80-86
 
 .. code-block:: Python
 
@@ -130,20 +216,20 @@ Markov chain definition and realization
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_001.png
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_003.png
    :alt: Discrete Markov chain
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_001.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_003.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+.. GENERATED FROM PYTHON SOURCE LINES 87-88
 
 Get several realizations
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-63
+.. GENERATED FROM PYTHON SOURCE LINES 88-94
 
 .. code-block:: Python
 
@@ -156,20 +242,20 @@ Get several realizations
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_002.png
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_004.png
    :alt: Discrete Markov chain, 3 realizations
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_002.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_004.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
 
 Markov chain future 10 steps
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-70
+.. GENERATED FROM PYTHON SOURCE LINES 96-101
 
 .. code-block:: Python
 
@@ -181,20 +267,20 @@ Markov chain future 10 steps
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_003.png
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_005.png
    :alt: Markov chain future 10 steps
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_003.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_005.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 102-103
 
 Markov chain 3 different futures
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-77
+.. GENERATED FROM PYTHON SOURCE LINES 103-108
 
 .. code-block:: Python
 
@@ -206,9 +292,9 @@ Markov chain 3 different futures
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_004.png
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_006.png
    :alt: Three Markov chain futures, 10 steps
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_004.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_discrete_markov_chain_process_006.png
    :class: sphx-glr-single-img
 
 
