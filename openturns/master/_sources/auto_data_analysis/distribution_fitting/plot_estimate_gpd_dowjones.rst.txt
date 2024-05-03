@@ -111,11 +111,16 @@ We apply that transformation:
 
 The resulting time series appears to be reasonably close to stationarity.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-54
+.. GENERATED FROM PYTHON SOURCE LINES 45-59
 
 .. code-block:: Python
 
-    transfDataDJ = ot.Sample([[m.log(dataDowJones[i, 0]) - m.log(dataDowJones[i - 1, 0])] for i in range(1, size)])
+    transfDataDJ = ot.Sample(
+        [
+            [m.log(dataDowJones[i, 0]) - m.log(dataDowJones[i - 1, 0])]
+            for i in range(1, size)
+        ]
+    )
     curve = ot.Curve(days[:-1], transfDataDJ)
     graph = ot.Graph(
         "Log-daily returns of the Dow Jones Index", "Day index", "Index", True, ""
@@ -136,7 +141,7 @@ The resulting time series appears to be reasonably close to stationarity.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-60
+.. GENERATED FROM PYTHON SOURCE LINES 60-65
 
 For convenience of presentation, we rescale the data:
 
@@ -144,7 +149,7 @@ For convenience of presentation, we rescale the data:
    \tilde{X}_i \rightarrow 100\tilde{X}_i.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-63
+.. GENERATED FROM PYTHON SOURCE LINES 65-68
 
 .. code-block:: Python
 
@@ -158,7 +163,7 @@ For convenience of presentation, we rescale the data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-70
+.. GENERATED FROM PYTHON SOURCE LINES 69-75
 
 In order to select a threshold upon which the GPD model will be fitted, we draw
 the mean residual life plot with approximate :math:`95\%` confidence interval.
@@ -167,7 +172,7 @@ The curve is initially linear and shows significant curvature for
 reasonably linear when judged to confidence intervals. Hence, we
 choose the threshold :math:`u=2`. There are 37 exceedances of :math:`u`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-75
+.. GENERATED FROM PYTHON SOURCE LINES 75-80
 
 .. code-block:: Python
 
@@ -188,7 +193,7 @@ choose the threshold :math:`u=2`. There are 37 exceedances of :math:`u`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-83
+.. GENERATED FROM PYTHON SOURCE LINES 81-88
 
 **Stationary GPD modeling assuming independence in data**
 
@@ -198,7 +203,7 @@ independent observations over the observation period.
 We estimate the parameters of the GPD distribution modeling the excesses
 above :math:`u=2` by maximizing the log-likelihood of the excesses.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-85
+.. GENERATED FROM PYTHON SOURCE LINES 88-90
 
 .. code-block:: Python
 
@@ -211,11 +216,11 @@ above :math:`u=2` by maximizing the log-likelihood of the excesses.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 We get the fitted GPD and the estimated parameters :math:`(\hat{\sigma}, \hat{\xi})`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-93
+.. GENERATED FROM PYTHON SOURCE LINES 92-98
 
 .. code-block:: Python
 
@@ -239,7 +244,7 @@ We get the fitted GPD and the estimated parameters :math:`(\hat{\sigma}, \hat{\x
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-101
+.. GENERATED FROM PYTHON SOURCE LINES 99-106
 
 We get the asymptotic distribution of the estimator :math:`(\hat{\sigma}, \hat{\xi})`.
 The threshold :math:`u` has not been estimated to ensure the regularity
@@ -249,7 +254,7 @@ the chosen threshold.
 In that case, the asymptotic distribution of :math:`(\hat{\sigma}, \hat{\xi})`
 is normal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-105
+.. GENERATED FROM PYTHON SOURCE LINES 106-110
 
 .. code-block:: Python
 
@@ -272,12 +277,12 @@ is normal.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-108
+.. GENERATED FROM PYTHON SOURCE LINES 111-113
 
 We get the covariance matrix and the standard deviation of
 :math:`(\hat{\sigma}, \hat{\xi}, u)` where :math:`u` is deterministic.
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-111
+.. GENERATED FROM PYTHON SOURCE LINES 113-116
 
 .. code-block:: Python
 
@@ -301,12 +306,12 @@ We get the covariance matrix and the standard deviation of
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-114
+.. GENERATED FROM PYTHON SOURCE LINES 117-119
 
 We get the marginal confidence intervals of order 0.95 of
 :math:`(\hat{\sigma}, \hat{\xi})`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-119
+.. GENERATED FROM PYTHON SOURCE LINES 119-124
 
 .. code-block:: Python
 
@@ -329,7 +334,7 @@ We get the marginal confidence intervals of order 0.95 of
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-132
+.. GENERATED FROM PYTHON SOURCE LINES 125-137
 
 At last, we can check the quality of the inference thanks to the 4 usual
 diagnostic plots:
@@ -344,7 +349,7 @@ even if the other plots appear to be reasonable. This is due to the fact that
 the excesses can not be considered as independent: the transformed series
 :math:`\tilde{X}_i` has a rich structure of temporal dependence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-136
+.. GENERATED FROM PYTHON SOURCE LINES 137-141
 
 .. code-block:: Python
 
@@ -364,7 +369,7 @@ the excesses can not be considered as independent: the transformed series
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-155
+.. GENERATED FROM PYTHON SOURCE LINES 142-160
 
 **Stationary GPD modeling taking into account the dependence in data**
 
@@ -385,7 +390,7 @@ cluster maximum series.
 We denote by :math:`n_c` the number of clusters and
 by :math:`n_u` the number of exceedances above :math:`u`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-165
+.. GENERATED FROM PYTHON SOURCE LINES 160-172
 
 .. code-block:: Python
 
@@ -396,7 +401,9 @@ by :math:`n_u` the number of exceedances above :math:`u`.
     nu = sum([1 if scalTransfDataDJ[i, 0] > u else 0 for i in range(size)])
     print(f"nc={nc} nu={u} theta={nc / nu:.3f}")
     graph = clusters.draw(u)
-    graph.setTitle('Threshold exceedances and clusters by transformed Dow Jones Index series')
+    graph.setTitle(
+        "Threshold exceedances and clusters by transformed Dow Jones Index series"
+    )
     view = otv.View(graph)
 
 
@@ -417,19 +424,22 @@ by :math:`n_u` the number of exceedances above :math:`u`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-168
+.. GENERATED FROM PYTHON SOURCE LINES 173-175
 
 We estimate a stationary GPD on the clusters maxima which are independent
 with the :math:`95\%` confidence interval of each parameter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-173
+.. GENERATED FROM PYTHON SOURCE LINES 175-183
 
 .. code-block:: Python
 
     result_LL = factory.buildMethodOfLikelihoodMaximizationEstimator(peaks, u)
     sigma, xi, _ = result_LL.getParameterDistribution().getMean()
     sigma_stddev, xi_stddev, _ = result_LL.getParameterDistribution().getStandardDeviation()
-    print(f"u={u} r={r} nc={nc} sigma={sigma:.2f} ({sigma_stddev:.2f}) xi={xi:.2f} ({xi_stddev:.2f})", end=" ")
+    print(
+        f"u={u} r={r} nc={nc} sigma={sigma:.2f} ({sigma_stddev:.2f}) xi={xi:.2f} ({xi_stddev:.2f})",
+        end=" ",
+    )
 
 
 
@@ -443,7 +453,7 @@ with the :math:`95\%` confidence interval of each parameter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-181
+.. GENERATED FROM PYTHON SOURCE LINES 184-191
 
 We evaluate the :math:`T=100`-year return level which corresponds to the
 :math:`m`-observation return level, where :math:`m = T*n_y` with :math:`n_y`
@@ -453,7 +463,7 @@ the number of observations per year. Here, we have daily observations, hence
 estimated by the ratio between the number of clusters and the number
 of exceedances of :math:`u`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-187
+.. GENERATED FROM PYTHON SOURCE LINES 191-197
 
 .. code-block:: Python
 
@@ -476,7 +486,7 @@ of exceedances of :math:`u`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-193
+.. GENERATED FROM PYTHON SOURCE LINES 198-203
 
 We plot the return level for the new fitted model that takes into account
 dependence between excesses.
@@ -484,7 +494,7 @@ We can see the fitted model works well. However, the large return level confiden
 obtained for extreme return levels makes it difficult to make reliable
 predictions with any degree of certainty.
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-199
+.. GENERATED FROM PYTHON SOURCE LINES 203-209
 
 .. code-block:: Python
 
@@ -506,11 +516,11 @@ predictions with any degree of certainty.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-201
+.. GENERATED FROM PYTHON SOURCE LINES 210-211
 
 We plot the whole series of validation graphs of the new fitted model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-203
+.. GENERATED FROM PYTHON SOURCE LINES 211-213
 
 .. code-block:: Python
 
@@ -528,7 +538,7 @@ We plot the whole series of validation graphs of the new fitted model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-205
+.. GENERATED FROM PYTHON SOURCE LINES 214-215
 
 .. code-block:: Python
 
