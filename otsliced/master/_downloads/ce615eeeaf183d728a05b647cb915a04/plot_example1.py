@@ -6,6 +6,7 @@ Example on 2-d data
 # %%
 import openturns as ot
 import otsliced
+import matplotlib.pyplot as plt
 
 # %%
 # Create 2-d data X and 1-d feature Y
@@ -17,6 +18,30 @@ f = ot.SymbolicFunction(["x1", "x2"], ["4*(x1+2*x2)+2"])
 Y = f(X) + ot.Normal(0.0, 0.2).getSample(N)
 
 # %%
+# Plot data
+plt.scatter(X.getMarginal(0), X.getMarginal(1), c=Y)
+plt.xlabel('x1')
+plt.ylabel('x2')
+plt.axis('square')
+plt.title("2D colored Dataset")
+plt.close()
+
+# %%
 # Run the SIR algorithm
 algo = otsliced.SlicedInverseRegression(X, Y)
+algo.run()
 transformation = algo.getResult().getTransformation()
+
+# %%
+# Show SIR direction
+plt.scatter(X.getMarginal(0), X.getMarginal(1), c=Y)
+plt.xlabel('x1')
+plt.ylabel('x2')
+plt.axis('square')
+plt.title("First direction of SIR")
+dir_sir = algo.getResult().getDirections()
+plt.plot([-dir_sir[0, 0] * 30, dir_sir[0, 0] * 30], [-dir_sir[1, 0] * 30, dir_sir[1, 0] * 30], c='red')
+plt.close()
+
+# %%
+plt.show()
