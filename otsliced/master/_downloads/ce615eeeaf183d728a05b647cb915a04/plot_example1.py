@@ -24,7 +24,6 @@ plt.xlabel('x1')
 plt.ylabel('x2')
 plt.axis('square')
 plt.title("2D colored Dataset")
-plt.close()
 
 # %%
 # Run the SIR algorithm
@@ -41,7 +40,6 @@ plt.axis('square')
 plt.title("First direction of SIR")
 dir_sir = algo.getResult().getDirections()
 plt.plot([-dir_sir[0, 0] * 30, dir_sir[0, 0] * 30], [-dir_sir[1, 0] * 30, dir_sir[1, 0] * 30], c='red')
-plt.close()
 
 # %%
 plt.show()
