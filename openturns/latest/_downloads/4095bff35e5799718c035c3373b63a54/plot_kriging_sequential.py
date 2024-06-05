@@ -14,7 +14,7 @@ Sequentially adding new points to a kriging
 import openturns as ot
 from openturns.viewer import View
 import numpy as np
-import openturns.viewer as viewer
+from openturns import viewer
 
 ot.Log.Show(ot.Log.NONE)
 
@@ -76,24 +76,6 @@ def linearSample(xmin, xmax, npoints):
 
 
 # %%
-def plot_kriging_bounds(vLow, vUp, n_test):
-    """
-    From two lists containing the lower and upper bounds of the region,
-    create a PolygonArray.
-    """
-    palette = ot.Drawable.BuildDefaultPalette(2)
-    myPaletteColor = palette[1]
-    polyData = [[vLow[i], vLow[i + 1], vUp[i + 1], vUp[i]] for i in range(n_test - 1)]
-    polygonList = [
-        ot.Polygon(polyData[i], myPaletteColor, myPaletteColor)
-        for i in range(n_test - 1)
-    ]
-    boundsPoly = ot.PolygonArray(polygonList)
-    boundsPoly.setLegend("95% bounds")
-    return boundsPoly
-
-
-# %%
 # The following `sqrt` function will be used later to compute the standard deviation from the variance.
 
 # %%
@@ -130,15 +112,12 @@ def plotMyBasicKriging(krigResult, xMin, xMax, X, Y, level=0.95):
     dataUpper = [
         yKrig[i, 0] + quantileAlpha * conditionalSigma[i, 0] for i in range(nbpoints)
     ]
-    # Coordinates of the vertices of the Polygons
-    vLow = [[xGrid[i, 0], dataLower[i]] for i in range(nbpoints)]
-    vUp = [[xGrid[i, 0], dataUpper[i]] for i in range(nbpoints)]
     # Compute the Polygon graphics
-    boundsPoly = plot_kriging_bounds(vLow, vUp, nbpoints)
+    boundsPoly = ot.Polygon.FillBetween(xGrid.asPoint(), dataLower, dataUpper)
     boundsPoly.setLegend("95% bounds")
     # Validate the kriging metamodel
-    mmv = ot.MetaModelValidation(xGrid, yFunction, meta)
-    Q2 = mmv.computePredictivityFactor()[0]
+    mmv = ot.MetaModelValidation(yFunction, meta(xGrid))
+    R2 = mmv.computeR2Score()[0]
     # Plot the function
     graphFonction = ot.Curve(xGrid, yFunction)
     graphFonction.setLineStyle("dashed")
@@ -159,7 +138,7 @@ def plotMyBasicKriging(krigResult, xMin, xMax, X, Y, level=0.95):
     graph.setLegendPosition("lower right")
     graph.setAxes(True)
     graph.setGrid(True)
-    graph.setTitle("Size = %d, Q2=%.2f%%" % (samplesize, 100 * Q2))
+    graph.setTitle("Size = %d, R2=%.2f%%" % (samplesize, 100 * R2))
     graph.setXTitle("X")
     graph.setYTitle("Y")
     return graph

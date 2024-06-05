@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_reliability_sensitivity_reliability_plot_form_explained.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -65,7 +65,7 @@ The support of the input vector is :math:`[0, +\infty[ \times \mathbb{R}`
 
     distX1 = ot.Exponential(1.0)
     distX2 = ot.Normal()
-    distX = ot.ComposedDistribution([distX1, distX2])
+    distX = ot.JointDistribution([distX1, distX2])
 
 
 
@@ -79,7 +79,7 @@ The support of the input vector is :math:`[0, +\infty[ \times \mathbb{R}`
 
 We can draw the bidimensional PDF of the distribution `distX` over :math:`[0,-10] \times [10,10]`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-47
+.. GENERATED FROM PYTHON SOURCE LINES 38-50
 
 .. code-block:: Python
 
@@ -89,6 +89,9 @@ We can draw the bidimensional PDF of the distribution `distX` over :math:`[0,-10
     graphPDF.setXTitle(r"$x_1$")
     graphPDF.setYTitle(r"$x_2$")
     graphPDF.setLegendPosition("lower right")
+    contours = graphPDF.getDrawable(0).getImplementation()
+    contours.setColorMapNorm("log")
+    graphPDF.setDrawable(contours, 0)
     view = otv.View(graphPDF)
 
 
@@ -104,13 +107,13 @@ We can draw the bidimensional PDF of the distribution `distX` over :math:`[0,-10
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-51
+.. GENERATED FROM PYTHON SOURCE LINES 51-54
 
 We consider the model :math:`f : (x_1, x_2) \mapsto x_1 x_2` which maps the random input vector :math:`X` to the output variable :math:`Y=f(X) \in \mathbb{R}`.
 We also draw the isolines of the model `f`.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-59
+.. GENERATED FROM PYTHON SOURCE LINES 54-62
 
 .. code-block:: Python
 
@@ -134,7 +137,7 @@ We also draw the isolines of the model `f`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-69
+.. GENERATED FROM PYTHON SOURCE LINES 63-72
 
 We want to estimate the probability :math:`P_f` of the output variable to be greater than a prescribed threshold :math:`s=10` : this is the failure event.
 This probability is simply expressed as an integral:
@@ -146,11 +149,11 @@ This probability is simply expressed as an integral:
 where :math:`\mathcal{D} = \{ (x_1, x_2) \in [0,+\infty[ \times \mathbb{R} / x_1 x_2 \geq s \}` is the failure domain.
 In the general case the probability density function :math:`f_{X_1,X_2}` and the domain of integration :math:`\mathcal{D}` are difficult to handle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 74-75
 
 We first define RandomVector objects and the failure event associated to the output random variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-78
+.. GENERATED FROM PYTHON SOURCE LINES 75-81
 
 .. code-block:: Python
 
@@ -167,7 +170,7 @@ We first define RandomVector objects and the failure event associated to the out
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-86
+.. GENERATED FROM PYTHON SOURCE LINES 82-89
 
 This event can easily be represented with a 1D curve as it is a branch of an hyperbole.
 If :math:`y =  x_1 x_2 = 10.0`, then the boundary of the domain of failure is the curve :
@@ -177,11 +180,11 @@ If :math:`y =  x_1 x_2 = 10.0`, then the boundary of the domain of failure is th
    h : x_1 \mapsto \frac{10.0}{x_1}
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-89
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 We shall represent this curve using a :class:`~openturns.Contour` object.
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-98
+.. GENERATED FROM PYTHON SOURCE LINES 92-103
 
 .. code-block:: Python
 
@@ -190,7 +193,9 @@ We shall represent this curve using a :class:`~openturns.Contour` object.
     yy = ot.Box([ny], ot.Interval([-10.0], [10.0])).generate()
     inputData = ot.Box([nx, ny], ot.Interval([0.0, -10.0], [10.0, 10.0])).generate()
     outputData = f(inputData)
-    mycontour = ot.Contour(xx, yy, outputData, [10.0], ["10.0"])
+    mycontour = ot.Contour(xx, yy, outputData)
+    mycontour.setLevels([10.0])
+    mycontour.setLabels(["10.0"])
     myGraph = ot.Graph("Representation of the failure domain", r"$X_1$", r"$X_2$", True, "")
     myGraph.add(mycontour)
 
@@ -201,13 +206,14 @@ We shall represent this curve using a :class:`~openturns.Contour` object.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-105
+.. GENERATED FROM PYTHON SOURCE LINES 104-111
 
 .. code-block:: Python
 
     texts = [r" Event : $\mathcal{D} = \{Y \geq 10.0\}$"]
     myText = ot.Text([[4.0, 4.0]], texts)
     myText.setTextSize(1)
+    myText.setColor("black")
     myGraph.add(myText)
     view = otv.View(myGraph)
 
@@ -223,12 +229,12 @@ We shall represent this curve using a :class:`~openturns.Contour` object.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-108
+.. GENERATED FROM PYTHON SOURCE LINES 112-114
 
 We can superimpose the event boundary with the 2D-PDF ot the input variables :
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-114
+.. GENERATED FROM PYTHON SOURCE LINES 114-120
 
 .. code-block:: Python
 
@@ -250,14 +256,14 @@ We can superimpose the event boundary with the 2D-PDF ot the input variables :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-119
+.. GENERATED FROM PYTHON SOURCE LINES 121-125
 
 From the previous figure we observe that in the failure domain the PDF takes small (and even very small) values.
 Consequently the probability of the failure, the integral :math:`P_f` is also expected to be small.
 The FORM/SORM methods estimate this kind of integral.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-137
+.. GENERATED FROM PYTHON SOURCE LINES 127-143
 
 The FORM approximation
 ----------------------
@@ -276,13 +282,13 @@ Variable transform
 ^^^^^^^^^^^^^^^^^^
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-142
+.. GENERATED FROM PYTHON SOURCE LINES 145-148
 
 OpenTURNS has several isoprobabilistic transforms and the FORM/SORM classes implement the Generalized
 Nataf and Rosenblatt transforms. In this case the `distX` distribution is not elliptical so the default method is the Rosenblatt transform.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-144
+.. GENERATED FROM PYTHON SOURCE LINES 148-150
 
 .. code-block:: Python
 
@@ -301,7 +307,7 @@ Nataf and Rosenblatt transforms. In this case the `distX` distribution is not el
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-153
+.. GENERATED FROM PYTHON SOURCE LINES 151-159
 
 We seek an isoprobabilistic transform :math:`T` such as
 
@@ -312,7 +318,7 @@ where each component of :math:`Z` is a standard unit gaussian.
 
 The isoprobabilistic transform and its inverse are methods of the distribution `distX` :
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-156
+.. GENERATED FROM PYTHON SOURCE LINES 159-162
 
 .. code-block:: Python
 
@@ -326,14 +332,14 @@ The isoprobabilistic transform and its inverse are methods of the distribution `
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-161
+.. GENERATED FROM PYTHON SOURCE LINES 163-167
 
 The main goal of this step is to work with a simpler probability density function of
 the input variables as they will be standard gaussian unit and uncorrelated. The domain of
 integration will still be complicated but will be handled with a well chosen approximate.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-168
+.. GENERATED FROM PYTHON SOURCE LINES 169-174
 
 We detail the Rosenblatt transform in this simple case.
 In this example we consider independent variables so the transform is simpler, we only have to
@@ -341,12 +347,12 @@ perform the transformation on each variable. For the second one is already a sta
 we transform the first variable only.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-172
+.. GENERATED FROM PYTHON SOURCE LINES 176-178
 
 We draw a realization of the random input vector. This point is said to be in the physical space.
 We shall focus on the first component.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-174
+.. GENERATED FROM PYTHON SOURCE LINES 178-180
 
 .. code-block:: Python
 
@@ -359,14 +365,14 @@ We shall focus on the first component.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-179
+.. GENERATED FROM PYTHON SOURCE LINES 181-185
 
 The first step of the Rosenblatt transform is to build a random variable :math:`u` with a uniform law in ]0,1[.
 This is done through an evaluation of the CDF of `distX1` at the given point in the physical space.
 Once again, please note that the second component is left unchanged.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-181
+.. GENERATED FROM PYTHON SOURCE LINES 185-187
 
 .. code-block:: Python
 
@@ -379,12 +385,12 @@ Once again, please note that the second component is left unchanged.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-184
+.. GENERATED FROM PYTHON SOURCE LINES 188-190
 
 The second step is to build a standard unit gaussian from a uniform variable. This is done by a
 simple call to the probit function. The point `zi` is said to be in the standard space.
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-186
+.. GENERATED FROM PYTHON SOURCE LINES 190-192
 
 .. code-block:: Python
 
@@ -397,11 +403,11 @@ simple call to the probit function. The point `zi` is said to be in the standard
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-188
+.. GENERATED FROM PYTHON SOURCE LINES 193-194
 
 The sought transform then maps a point in the physical space to the standard space :
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-191
+.. GENERATED FROM PYTHON SOURCE LINES 194-197
 
 .. code-block:: Python
 
@@ -416,17 +422,17 @@ The sought transform then maps a point in the physical space to the standard spa
 
  .. code-block:: none
 
-    [0.0423321,1.51134] -> [0.04144857740421459, 1.5113438501790912] -> [-1.7341179636821182, 1.5113438501790912]
+    [2.26644,0.238659] -> [0.8963195448413521, 0.23865882413767098] -> [1.2608555088124704, 0.23865882413767098]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-194
+.. GENERATED FROM PYTHON SOURCE LINES 198-200
 
 We also build the isoprobabilistic transform :math:`T_1` and its inverse :math:`T_1^{-1}` for the
 first marginal :
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-197
+.. GENERATED FROM PYTHON SOURCE LINES 200-203
 
 .. code-block:: Python
 
@@ -440,7 +446,7 @@ first marginal :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-204
+.. GENERATED FROM PYTHON SOURCE LINES 204-210
 
 We can check the result of our experiment against :
 
@@ -449,7 +455,7 @@ We can check the result of our experiment against :
 
 and observe the results are the same.
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-211
+.. GENERATED FROM PYTHON SOURCE LINES 210-217
 
 .. code-block:: Python
 
@@ -468,20 +474,20 @@ and observe the results are the same.
 
  .. code-block:: none
 
-    zi =  [-1.7341179636821182, 1.5113438501790912]
-    zi1D =  [-1.7341179636821182, 1.5113438501790912]
-    zi2D =  [-1.73412,1.51134]
+    zi =  [1.2608555088124704, 0.23865882413767098]
+    zi1D =  [1.2608555088124704, 0.23865882413767098]
+    zi2D =  [1.26086,0.238659]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-215
+.. GENERATED FROM PYTHON SOURCE LINES 218-221
 
 We can represent the boundary of the event in the standard space : that is a composition of the
 hyperbole :math:`h : x \mapsto 10/x` and the inverse transform :math:`T_1^{-1}` defined by
 :math:`inverseTransformX1`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-231
+.. GENERATED FROM PYTHON SOURCE LINES 221-237
 
 .. code-block:: Python
 
@@ -508,11 +514,11 @@ hyperbole :math:`h : x \mapsto 10/x` and the inverse transform :math:`T_1^{-1}` 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-233
+.. GENERATED FROM PYTHON SOURCE LINES 238-239
 
 We add the origin to the previous graph.
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-248
+.. GENERATED FROM PYTHON SOURCE LINES 239-255
 
 .. code-block:: Python
 
@@ -528,6 +534,7 @@ We add the origin to the previous graph.
     texts = [r"Event : $\mathcal{D} = \{Y \geq 10.0\}$"]
     myText = ot.Text([[3.0, 4.0]], texts)
     myText.setTextSize(1)
+    myText.setColor("black")
     graphStandardSpace.add(myText)
     view = otv.View(graphStandardSpace)
 
@@ -543,7 +550,7 @@ We add the origin to the previous graph.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-257
+.. GENERATED FROM PYTHON SOURCE LINES 256-264
 
 The design point
 ^^^^^^^^^^^^^^^^
@@ -554,11 +561,11 @@ Then the second step of the method is to find this point, *the design point*, th
 minimization problem under constraints.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-260
+.. GENERATED FROM PYTHON SOURCE LINES 266-267
 
 We configure the Cobyla solver that we use for the optimization :
 
-.. GENERATED FROM PYTHON SOURCE LINES 260-267
+.. GENERATED FROM PYTHON SOURCE LINES 267-274
 
 .. code-block:: Python
 
@@ -576,12 +583,12 @@ We configure the Cobyla solver that we use for the optimization :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-270
+.. GENERATED FROM PYTHON SOURCE LINES 275-277
 
 We build the FORM algorithm with its basic constructor. The starting point for the optimization
 algorithm is the mean of the input variables.
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-272
+.. GENERATED FROM PYTHON SOURCE LINES 277-279
 
 .. code-block:: Python
 
@@ -594,11 +601,11 @@ algorithm is the mean of the input variables.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-274
+.. GENERATED FROM PYTHON SOURCE LINES 280-281
 
 We are ready to run the algorithm and store the result :
 
-.. GENERATED FROM PYTHON SOURCE LINES 274-277
+.. GENERATED FROM PYTHON SOURCE LINES 281-284
 
 .. code-block:: Python
 
@@ -612,12 +619,12 @@ We are ready to run the algorithm and store the result :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 278-280
+.. GENERATED FROM PYTHON SOURCE LINES 285-287
 
 The design point can be retrieved in both physical and standard space with respectively the
 `getPhysicalSpaceDesignPoint` and `getStandardSpaceDesignPoint` methods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-286
+.. GENERATED FROM PYTHON SOURCE LINES 287-293
 
 .. code-block:: Python
 
@@ -641,11 +648,11 @@ The design point can be retrieved in both physical and standard space with respe
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-288
+.. GENERATED FROM PYTHON SOURCE LINES 294-295
 
 We can get the Hasofer index with the `getHasoferReliabilityIndex` method which is the distance of the design point to the origin:
 
-.. GENERATED FROM PYTHON SOURCE LINES 288-292
+.. GENERATED FROM PYTHON SOURCE LINES 295-299
 
 .. code-block:: Python
 
@@ -666,11 +673,11 @@ We can get the Hasofer index with the `getHasoferReliabilityIndex` method which 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-294
+.. GENERATED FROM PYTHON SOURCE LINES 300-301
 
 We visualize it on the previous graph.
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-311
+.. GENERATED FROM PYTHON SOURCE LINES 301-318
 
 .. code-block:: Python
 
@@ -703,7 +710,7 @@ We visualize it on the previous graph.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 312-323
+.. GENERATED FROM PYTHON SOURCE LINES 319-330
 
 Estimating the failure probability integral
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -717,7 +724,7 @@ hyperbole :math:`h:x \mapsto 10/x` and the inverse transform on the first variab
 the gradient (here the first derivative of a 1D function :math:`h(u_0)` ) at any given point with the
 getGradient method :
 
-.. GENERATED FROM PYTHON SOURCE LINES 325-332
+.. GENERATED FROM PYTHON SOURCE LINES 332-339
 
 .. code-block:: Python
 
@@ -743,7 +750,7 @@ getGradient method :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-339
+.. GENERATED FROM PYTHON SOURCE LINES 340-346
 
 In the standard space the equation of the tangent :math:`\Pi_{u_0}(x)` is given by
 
@@ -752,7 +759,7 @@ In the standard space the equation of the tangent :math:`\Pi_{u_0}(x)` is given 
    \Pi_{u_0}(x) = (h \circ T^{-1}) (u_0) + \frac{d}{dx} (h \circ T^{-1}) (u_0) (x-u_0)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 339-347
+.. GENERATED FROM PYTHON SOURCE LINES 346-354
 
 .. code-block:: Python
 
@@ -776,7 +783,7 @@ In the standard space the equation of the tangent :math:`\Pi_{u_0}(x)` is given 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 348-356
+.. GENERATED FROM PYTHON SOURCE LINES 355-363
 
 In the standard space the PDF of the input variables is rotationally invariant so
 
@@ -787,7 +794,7 @@ In the standard space the PDF of the input variables is rotationally invariant s
 where :math:`E(.)` is the survival function of the standard unit gaussian.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 356-359
+.. GENERATED FROM PYTHON SOURCE LINES 363-366
 
 .. code-block:: Python
 
@@ -807,11 +814,11 @@ where :math:`E(.)` is the survival function of the standard unit gaussian.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 360-361
+.. GENERATED FROM PYTHON SOURCE LINES 367-368
 
-This proability of failure is the one computed in the FORMResult and obtained with the `getEventProbability` method :
+This probability of failure is the one computed in the FORMResult and obtained with the `getEventProbability` method:
 
-.. GENERATED FROM PYTHON SOURCE LINES 361-365
+.. GENERATED FROM PYTHON SOURCE LINES 368-372
 
 .. code-block:: Python
 
@@ -832,7 +839,7 @@ This proability of failure is the one computed in the FORMResult and obtained wi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 366-374
+.. GENERATED FROM PYTHON SOURCE LINES 373-381
 
 The SORM approximation
 ----------------------
@@ -843,12 +850,12 @@ However, in the general case one has to manipulate the gradient and the hessian 
 standard space which is cumbersome.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 376-378
+.. GENERATED FROM PYTHON SOURCE LINES 383-385
 
 We need the value of the second derivative of the failure boundary function at the design point in
 the standard space :
 
-.. GENERATED FROM PYTHON SOURCE LINES 378-384
+.. GENERATED FROM PYTHON SOURCE LINES 385-391
 
 .. code-block:: Python
 
@@ -872,7 +879,7 @@ the standard space :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 385-391
+.. GENERATED FROM PYTHON SOURCE LINES 392-398
 
 In the standard space the equation of the osculating parabola :math:`\mathcal{P}_{u_0}(x)` at :math:`u_0` is given by
 
@@ -881,7 +888,7 @@ In the standard space the equation of the osculating parabola :math:`\mathcal{P}
    \mathcal{P}_{u_0}(x) = h \circ T^{-1} (u_0) + \frac{d}{dx} (h \circ T^{-1})(u_0) (x-u_0) + \frac{1}{2} \frac{d^2}{dx^2} (h \circ T^{-1})(u_0) (x-u_0)^2
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 391-404
+.. GENERATED FROM PYTHON SOURCE LINES 398-411
 
 .. code-block:: Python
 
@@ -910,7 +917,7 @@ In the standard space the equation of the osculating parabola :math:`\mathcal{P}
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-415
+.. GENERATED FROM PYTHON SOURCE LINES 412-422
 
 The next step is to estimate the principal curvatures of the osculating paraboloid.
 
@@ -923,7 +930,7 @@ For any regular function :math:`g` the curvature :math:`\kappa(x_0)` at the poin
 For the oscillating parabola of concern we use the gradient and hessian previously computed :
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-419
+.. GENERATED FROM PYTHON SOURCE LINES 422-426
 
 .. code-block:: Python
 
@@ -944,11 +951,11 @@ For the oscillating parabola of concern we use the gradient and hessian previous
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 420-421
+.. GENERATED FROM PYTHON SOURCE LINES 427-428
 
 We build the SORM algorithm and run it :
 
-.. GENERATED FROM PYTHON SOURCE LINES 421-424
+.. GENERATED FROM PYTHON SOURCE LINES 428-431
 
 .. code-block:: Python
 
@@ -962,11 +969,11 @@ We build the SORM algorithm and run it :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-426
+.. GENERATED FROM PYTHON SOURCE LINES 432-433
 
 The SORM result is obtained with the `getResult` method :
 
-.. GENERATED FROM PYTHON SOURCE LINES 426-428
+.. GENERATED FROM PYTHON SOURCE LINES 433-435
 
 .. code-block:: Python
 
@@ -979,12 +986,12 @@ The SORM result is obtained with the `getResult` method :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 429-431
+.. GENERATED FROM PYTHON SOURCE LINES 436-438
 
 The principal curvatures of the osculating paraboloid at the design point is obtained by the
 `getSortedCurvatures` method :
 
-.. GENERATED FROM PYTHON SOURCE LINES 431-434
+.. GENERATED FROM PYTHON SOURCE LINES 438-441
 
 .. code-block:: Python
 
@@ -1004,7 +1011,7 @@ The principal curvatures of the osculating paraboloid at the design point is obt
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 435-444
+.. GENERATED FROM PYTHON SOURCE LINES 442-451
 
 Once the curvature is obtained there are several ways of approximating the failure probability :math:`P_f`.
 The library implements the Breitung, Hohenbichler and Tvedt estimates.
@@ -1016,7 +1023,7 @@ For instance, the Breitung approximation gives
    P_f \approx E(\beta_{HL}) \frac{1}{\sqrt{1+\beta_{HL}\kappa}}
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 444-448
+.. GENERATED FROM PYTHON SOURCE LINES 451-455
 
 .. code-block:: Python
 
@@ -1037,11 +1044,11 @@ For instance, the Breitung approximation gives
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 449-450
+.. GENERATED FROM PYTHON SOURCE LINES 456-457
 
-We can compare with the different estimators implemented in OpenTURNS :
+We can compare with the different estimators:
 
-.. GENERATED FROM PYTHON SOURCE LINES 450-458
+.. GENERATED FROM PYTHON SOURCE LINES 457-465
 
 .. code-block:: Python
 
@@ -1068,11 +1075,11 @@ We can compare with the different estimators implemented in OpenTURNS :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 459-460
+.. GENERATED FROM PYTHON SOURCE LINES 466-467
 
 Display all figures
 
-.. GENERATED FROM PYTHON SOURCE LINES 460-462
+.. GENERATED FROM PYTHON SOURCE LINES 467-469
 
 .. code-block:: Python
 
@@ -1085,11 +1092,11 @@ Display all figures
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 463-464
+.. GENERATED FROM PYTHON SOURCE LINES 470-471
 
 Reset default settings
 
-.. GENERATED FROM PYTHON SOURCE LINES 464-465
+.. GENERATED FROM PYTHON SOURCE LINES 471-472
 
 .. code-block:: Python
 

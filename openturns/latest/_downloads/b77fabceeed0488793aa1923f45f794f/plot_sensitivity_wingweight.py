@@ -14,6 +14,7 @@ Example of sensitivity analyses on the wing weight model
 # - Spearman coefficients
 # - Taylor expansion importance factors
 # - Sobol' indices
+# - Rank-based estimation of Sobol' indices
 # - HSIC : Hilbert-Schmidt Independence Criterion
 #
 # We present the methods on the :ref:`WingWeight function<use-case-wingweight>` and use the same notations.
@@ -26,10 +27,10 @@ Example of sensitivity analyses on the wing weight model
 #
 #
 import openturns as ot
+import openturns.experimental as otexp
 import openturns.viewer as otv
 from openturns.usecases.wingweight_function import WingWeightModel
 from matplotlib import pylab as plt
-import numpy as np
 
 ot.Log.Show(ot.Log.NONE)
 m = WingWeightModel()
@@ -42,14 +43,15 @@ m = WingWeightModel()
 # For each 2D cross cut, the other variables are fixed to the input distribution mean values.
 # This graph allows one to have a first idea of the variations of the function in pair of dimensions.
 # The colors of each contour plot are comparable. The number of contour levels are related to the amount of variation of the function in the corresponding coordinates.
-fig = plt.figure(figsize=(12, 12))
+
+ot.ResourceMap.SetAsBool("Contour-DefaultIsFilled", True)
+ot.ResourceMap.SetAsUnsignedInteger("Contour-DefaultLevelsNumber", 50)
+
 lowerBound = m.distributionX.getRange().getLowerBound()
 upperBound = m.distributionX.getRange().getUpperBound()
 
-# Definition of number of meshes in x and y axes for the 2D cross cut plots
-nX = 20
-nY = 20
-for i in range(m.dim):
+grid = ot.GridLayout(m.dim - 1, m.dim - 1)
+for i in range(1, m.dim):
     for j in range(i):
         crossCutIndices = []
         crossCutReferencePoint = []
@@ -58,37 +60,48 @@ for i in range(m.dim):
                 crossCutIndices.append(k)
                 # Definition of the reference point
                 crossCutReferencePoint.append(m.distributionX.getMean()[k])
+
         # Definition of 2D cross cut function
         crossCutFunction = ot.ParametricFunction(
             m.model, crossCutIndices, crossCutReferencePoint
         )
         crossCutLowerBound = [lowerBound[j], lowerBound[i]]
         crossCutUpperBound = [upperBound[j], upperBound[i]]
-        # Definition of the mesh
-        inputData = ot.Box([nX, nY]).generate()
-        inputData *= ot.Point(crossCutUpperBound) - ot.Point(crossCutLowerBound)
-        inputData += ot.Point(crossCutLowerBound)
-        meshX = np.array(inputData)[:, 0].reshape(nX + 2, nY + 2)
-        meshY = np.array(inputData)[:, 1].reshape(nX + 2, nY + 2)
-        data = crossCutFunction(inputData)
-        meshZ = np.array(data).reshape(nX + 2, nY + 2)
-        levels = [(150 + 3 * i) for i in range(101)]
 
-        # Creation of the contour
-        index = 1 + i * m.dim + j
-
-        ax = fig.add_subplot(m.dim, m.dim, index)
-        ax.pcolormesh(
-            meshX, meshY, meshZ, cmap="hsv", vmin=176.0, vmax=363.0, shading="auto"
-        )
-        ax.set_xticks([])
-        ax.set_yticks([])
+        # Get and customize the contour plot
+        graph = crossCutFunction.draw(crossCutLowerBound, crossCutUpperBound)
+        graph.setTitle("")
+        contour = graph.getDrawable(0).getImplementation()
+        contour.setVmin(176.0)
+        contour.setVmax(363.0)
+        contour.setColorBarPosition("")  # suppress colorbar of each plot
+        contour.setColorMap("hsv")
+        graph.setDrawable(contour, 0)
+        graph.setXTitle("")
+        graph.setYTitle("")
+        graph.setTickLocation(ot.GraphImplementation.TICKNONE)
+        graph.setGrid(False)
 
         # Creation of axes title
         if j == 0:
-            ax.set_ylabel(m.distributionX.getDescription()[i])
+            graph.setYTitle(m.distributionX.getDescription()[i])
         if i == 9:
-            ax.set_xlabel(m.distributionX.getDescription()[j])
+            graph.setXTitle(m.distributionX.getDescription()[j])
+
+        grid.setGraph(i - 1, j, graph)
+
+# Get View object to manipulate the underlying figure
+v = otv.View(grid)
+fig = v.getFigure()
+fig.set_size_inches(12, 12)  # reduce the size
+
+# Setup a large colorbar
+axes = v.getAxes()
+colorbar = fig.colorbar(
+    v.getSubviews()[6][2].getContourSets()[0], ax=axes[:, -1], fraction=0.3
+)
+
+fig.subplots_adjust(top=1.0, bottom=0.0, left=0.0, right=1.0)
 
 # %%
 # We can see that the variables :math:`t_c, N_z, A, W_{dg}` seem to be influent on the wing weight whereas :math:`\Lambda, \ell, q, W_p, W_{fw}` have less influence on the function.
@@ -199,7 +212,7 @@ view = otv.View(graph)
 # We compute here the Pearson :math:`\rho` coefficients using the :class:`~openturns.CorrelationAnalysis`.
 
 # %%
-pearson_correlation = corr_analysis.computePearsonCorrelation()
+pearson_correlation = corr_analysis.computeLinearCorrelation()
 print(pearson_correlation)
 
 # %%
@@ -357,11 +370,29 @@ print(result.getRelativeErrors())
 # The relative errors are low : this indicates that the PCE model has good accuracy.
 # Then, we exploit the surrogate model to compute the Sobol' indices.
 sensitivityAnalysis = ot.FunctionalChaosSobolIndices(result)
-print(sensitivityAnalysis)
+sensitivityAnalysis
+
+# %%
 firstOrder = [sensitivityAnalysis.getSobolIndex(i) for i in range(m.dim)]
 totalOrder = [sensitivityAnalysis.getSobolTotalIndex(i) for i in range(m.dim)]
 graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(inputNames, firstOrder, totalOrder)
 graph.setTitle("Sobol indices by Polynomial Chaos Expansion - wing weight")
+view = otv.View(graph)
+
+
+# %%
+# Furthermore, first order Sobol' indices can also been estimated in a data-driven way using a rank-based sensitivity algorithm.
+# In such a way, the estimation of sensitivity indices does not involve any surrogate model.
+sizeRankSobol = 800
+inputDesignRankSobol = m.distributionX.getSample(sizeRankSobol)
+outputDesignankSobol = m.model(inputDesignRankSobol)
+myRankSobol = otexp.RankSobolSensitivityAlgorithm(
+    inputDesignRankSobol, outputDesignankSobol
+)
+indicesrankSobol = myRankSobol.getFirstOrderIndices()
+print("First order indices:", indicesrankSobol)
+graph = myRankSobol.draw()
+graph.setTitle("Sobol indices by rank-based estimation - wing weight")
 view = otv.View(graph)
 
 # %%
@@ -449,3 +480,7 @@ view4 = otv.View(graph4)
 # The HSIC indices go in the same way as the other estimators in terms the most influent variables.
 # The variables :math:`W_{fw}, q, l, W_p` seem to be independent to the output as the corresponding p-values are high.
 # We can also see that the asymptotic p-values and p-values estimated by permutation are quite similar.
+
+# %%
+# Reset default settings
+ot.ResourceMap.Reload()

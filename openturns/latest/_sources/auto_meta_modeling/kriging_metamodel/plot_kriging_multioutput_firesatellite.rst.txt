@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_multioutput_firesatellite.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -113,7 +113,7 @@ We now generate the input and output training sets as 10 times the dimension of 
  .. code-block:: none
 
     Lower and upper bounds of inputTrainingSet:
-    [1.48998e+07,884.904,1346.42,12.3163,0.967437,-1.85029,2.54609,0.93158,0.253772] [2.04726e+07,1126.11,1446.96,17.5554,3.48743,3.09689,7.43877,3.0465,1.71498]
+    [1.51682e+07,887.129,1348.53,12.4228,1.00107,0.269929,2.60879,0.972964,0.274082] [2.04071e+07,1122.44,1445.97,17.4763,3.19127,0.750975,7.3782,3.01005,1.69896]
 
 
 
@@ -179,8 +179,8 @@ domain definition of each variable.
 .. code-block:: Python
 
     scaleOptimizationBounds = ot.Interval(
-        [1.0, 1.0, 0.1, 0.01, 0.1, 0.1, 0.01, 0.01, 0.001, 0.01, 0.01, 0.01],
-        [1.0e7, 2.0e3, 2.0e3, 1e2, 10.0, 10.0, 10.0, 10.0, 10.0, 1e8, 1e4, 1e3],
+        [1.0e6, 1.0e3, 1.0e3, 1.0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+        [2.0e7, 2.0e3, 2.0e3, 1e2, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
     )
 
 
@@ -194,27 +194,13 @@ domain definition of each variable.
 
 We can now define the scaled version of Kriging model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-109
+.. GENERATED FROM PYTHON SOURCE LINES 92-96
 
 .. code-block:: Python
 
-    optimal_scale = [
-        1e07,
-        1126.11,
-        1446.96,
-        17.5554,
-        3.48743,
-        3.09689,
-        7.43877,
-        3.0465,
-        1.71498,
-    ]
-    covarianceModel.setScale(optimal_scale)
-    covarianceModel.setAmplitude([0.542174, 1.0, 1.0])
-
     algo = ot.KrigingAlgorithm(inputTrainingSet, outputTrainingSet, covarianceModel, basis)
     algo.setOptimizationBounds(scaleOptimizationBounds)
-    algo.setOptimizeParameters(False)
+    algo.setOptimizeParameters(True)
 
 
 
@@ -222,11 +208,12 @@ We can now define the scaled version of Kriging model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+
+.. GENERATED FROM PYTHON SOURCE LINES 97-98
 
 We run the algorithm and get the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-115
+.. GENERATED FROM PYTHON SOURCE LINES 98-102
 
 .. code-block:: Python
 
@@ -241,13 +228,13 @@ We run the algorithm and get the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-119
+.. GENERATED FROM PYTHON SOURCE LINES 103-106
 
 Validation of metamodel
 -----------------------
 To validate the metamodel, we create a validation set of size equal to 50 times the input vector dimension to evaluate the functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-127
+.. GENERATED FROM PYTHON SOURCE LINES 108-114
 
 .. code-block:: Python
 
@@ -264,24 +251,24 @@ To validate the metamodel, we create a validation set of size equal to 50 times 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 115-116
 
 Then, we use the `MetaModelValidation` class to validate the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-144
+.. GENERATED FROM PYTHON SOURCE LINES 116-131
 
 .. code-block:: Python
 
-    val = ot.MetaModelValidation(inputTestSet, outputTestSet, krigingMetamodel)
+    val = ot.MetaModelValidation(outputTestSet, krigingMetamodel(inputTestSet))
 
-    Q2 = val.computePredictivityFactor()
+    R2 = val.computeR2Score()
 
     label = ["Total torque", "Total power", "Solar array area"]
 
     for i in range(3):
         graph = val.drawValidation().getGraph(0, i)
         graph.setLegends([""])
-        graph.setLegends(["Q2 = %.2f%%" % (100 * Q2[i]), ""])
+        graph.setLegends(["R2 = %.2f%%" % (100 * R2[i]), ""])
         graph.setLegendPosition("upper left")
         graph.setXTitle("Exact function")
         graph.setYTitle("Metamodel prediction")
@@ -317,6 +304,11 @@ Then, we use the `MetaModelValidation` class to validate the metamodel.
 
 
 
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** (0 minutes 16.267 seconds)
 
 
 .. _sphx_glr_download_auto_meta_modeling_kriging_metamodel_plot_kriging_multioutput_firesatellite.py:

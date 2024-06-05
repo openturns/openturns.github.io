@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_auto_reliability_sensitivity_sensitivity_analysis_plot_sensitivity_wingweight.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -21,7 +21,7 @@
 Example of sensitivity analyses on the wing weight model
 =========================================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-19
+.. GENERATED FROM PYTHON SOURCE LINES 6-20
 
 This example is a brief overview of the use of the most usual sensitivity analysis techniques and how to call them:
 
@@ -33,11 +33,12 @@ This example is a brief overview of the use of the most usual sensitivity analys
 - Spearman coefficients
 - Taylor expansion importance factors
 - Sobol' indices
+- Rank-based estimation of Sobol' indices
 - HSIC : Hilbert-Schmidt Independence Criterion
 
 We present the methods on the :ref:`WingWeight function<use-case-wingweight>` and use the same notations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-28
+.. GENERATED FROM PYTHON SOURCE LINES 23-29
 
 Definition of the model
 -----------------------
@@ -46,15 +47,15 @@ We load the model from the usecases module.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-37
+.. GENERATED FROM PYTHON SOURCE LINES 29-38
 
 .. code-block:: Python
 
     import openturns as ot
+    import openturns.experimental as otexp
     import openturns.viewer as otv
     from openturns.usecases.wingweight_function import WingWeightModel
     from matplotlib import pylab as plt
-    import numpy as np
 
     ot.Log.Show(ot.Log.NONE)
     m = WingWeightModel()
@@ -66,7 +67,7 @@ We load the model from the usecases module.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-45
+.. GENERATED FROM PYTHON SOURCE LINES 39-46
 
 Cross cuts of the function
 --------------------------
@@ -76,18 +77,19 @@ For each 2D cross cut, the other variables are fixed to the input distribution m
 This graph allows one to have a first idea of the variations of the function in pair of dimensions.
 The colors of each contour plot are comparable. The number of contour levels are related to the amount of variation of the function in the corresponding coordinates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-93
+.. GENERATED FROM PYTHON SOURCE LINES 46-106
 
 .. code-block:: Python
 
-    fig = plt.figure(figsize=(12, 12))
+
+    ot.ResourceMap.SetAsBool("Contour-DefaultIsFilled", True)
+    ot.ResourceMap.SetAsUnsignedInteger("Contour-DefaultLevelsNumber", 50)
+
     lowerBound = m.distributionX.getRange().getLowerBound()
     upperBound = m.distributionX.getRange().getUpperBound()
 
-    # Definition of number of meshes in x and y axes for the 2D cross cut plots
-    nX = 20
-    nY = 20
-    for i in range(m.dim):
+    grid = ot.GridLayout(m.dim - 1, m.dim - 1)
+    for i in range(1, m.dim):
         for j in range(i):
             crossCutIndices = []
             crossCutReferencePoint = []
@@ -96,37 +98,48 @@ The colors of each contour plot are comparable. The number of contour levels are
                     crossCutIndices.append(k)
                     # Definition of the reference point
                     crossCutReferencePoint.append(m.distributionX.getMean()[k])
+
             # Definition of 2D cross cut function
             crossCutFunction = ot.ParametricFunction(
                 m.model, crossCutIndices, crossCutReferencePoint
             )
             crossCutLowerBound = [lowerBound[j], lowerBound[i]]
             crossCutUpperBound = [upperBound[j], upperBound[i]]
-            # Definition of the mesh
-            inputData = ot.Box([nX, nY]).generate()
-            inputData *= ot.Point(crossCutUpperBound) - ot.Point(crossCutLowerBound)
-            inputData += ot.Point(crossCutLowerBound)
-            meshX = np.array(inputData)[:, 0].reshape(nX + 2, nY + 2)
-            meshY = np.array(inputData)[:, 1].reshape(nX + 2, nY + 2)
-            data = crossCutFunction(inputData)
-            meshZ = np.array(data).reshape(nX + 2, nY + 2)
-            levels = [(150 + 3 * i) for i in range(101)]
 
-            # Creation of the contour
-            index = 1 + i * m.dim + j
-
-            ax = fig.add_subplot(m.dim, m.dim, index)
-            ax.pcolormesh(
-                meshX, meshY, meshZ, cmap="hsv", vmin=176.0, vmax=363.0, shading="auto"
-            )
-            ax.set_xticks([])
-            ax.set_yticks([])
+            # Get and customize the contour plot
+            graph = crossCutFunction.draw(crossCutLowerBound, crossCutUpperBound)
+            graph.setTitle("")
+            contour = graph.getDrawable(0).getImplementation()
+            contour.setVmin(176.0)
+            contour.setVmax(363.0)
+            contour.setColorBarPosition("")  # suppress colorbar of each plot
+            contour.setColorMap("hsv")
+            graph.setDrawable(contour, 0)
+            graph.setXTitle("")
+            graph.setYTitle("")
+            graph.setTickLocation(ot.GraphImplementation.TICKNONE)
+            graph.setGrid(False)
 
             # Creation of axes title
             if j == 0:
-                ax.set_ylabel(m.distributionX.getDescription()[i])
+                graph.setYTitle(m.distributionX.getDescription()[i])
             if i == 9:
-                ax.set_xlabel(m.distributionX.getDescription()[j])
+                graph.setXTitle(m.distributionX.getDescription()[j])
+
+            grid.setGraph(i - 1, j, graph)
+
+    # Get View object to manipulate the underlying figure
+    v = otv.View(grid)
+    fig = v.getFigure()
+    fig.set_size_inches(12, 12)  # reduce the size
+
+    # Setup a large colorbar
+    axes = v.getAxes()
+    colorbar = fig.colorbar(
+        v.getSubviews()[6][2].getContourSets()[0], ax=axes[:, -1], fraction=0.3
+    )
+
+    fig.subplots_adjust(top=1.0, bottom=0.0, left=0.0, right=1.0)
 
 
 
@@ -140,18 +153,18 @@ The colors of each contour plot are comparable. The number of contour levels are
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-95
+.. GENERATED FROM PYTHON SOURCE LINES 107-108
 
 We can see that the variables :math:`t_c, N_z, A, W_{dg}` seem to be influent on the wing weight whereas :math:`\Lambda, \ell, q, W_p, W_{fw}` have less influence on the function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-101
+.. GENERATED FROM PYTHON SOURCE LINES 110-114
 
 Data generation
 ---------------
 
 We create the input and output data for the estimation of the different sensitivity coefficients and we get the input variables description:
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-108
+.. GENERATED FROM PYTHON SOURCE LINES 114-121
 
 .. code-block:: Python
 
@@ -169,12 +182,12 @@ We create the input and output data for the estimation of the different sensitiv
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-111
+.. GENERATED FROM PYTHON SOURCE LINES 122-124
 
 Let's estimate the PCC, PRCC, SRC, SRRC, Pearson and Spearman coefficients, display and analyze them.
 We create a :class:`~openturns.CorrelationAnalysis` model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-114
+.. GENERATED FROM PYTHON SOURCE LINES 124-127
 
 .. code-block:: Python
 
@@ -188,13 +201,13 @@ We create a :class:`~openturns.CorrelationAnalysis` model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-118
+.. GENERATED FROM PYTHON SOURCE LINES 128-131
 
 PCC coefficients
 ----------------
 We compute here PCC coefficients using the :class:`~openturns.CorrelationAnalysis`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-123
+.. GENERATED FROM PYTHON SOURCE LINES 133-136
 
 .. code-block:: Python
 
@@ -209,12 +222,12 @@ We compute here PCC coefficients using the :class:`~openturns.CorrelationAnalysi
 
  .. code-block:: none
 
-    [0.940186,0.0882968,0.968989,0.0101513,0.115705,0.315289,-0.947166,0.981847,0.917402,0.44622]#10
+    [0.934554,0.0104727,0.962365,-0.0924538,0.102948,0.341098,-0.944522,0.979969,0.90616,0.351184]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-132
+.. GENERATED FROM PYTHON SOURCE LINES 140-145
 
 .. code-block:: Python
 
@@ -235,13 +248,13 @@ We compute here PCC coefficients using the :class:`~openturns.CorrelationAnalysi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-136
+.. GENERATED FROM PYTHON SOURCE LINES 146-149
 
 PRCC coefficients
 -----------------
 We compute here PRCC coefficients using the :class:`~openturns.CorrelationAnalysis`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-141
+.. GENERATED FROM PYTHON SOURCE LINES 151-154
 
 .. code-block:: Python
 
@@ -256,12 +269,12 @@ We compute here PRCC coefficients using the :class:`~openturns.CorrelationAnalys
 
  .. code-block:: none
 
-    [0.8486,0.0649984,0.913677,-0.0206522,0.0858264,0.179864,-0.862092,0.949614,0.816437,0.340957]#10
+    [0.86627,-0.0214398,0.921994,0.0255119,-0.0154478,0.173707,-0.887035,0.957783,0.825807,0.32514]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-147
+.. GENERATED FROM PYTHON SOURCE LINES 155-160
 
 .. code-block:: Python
 
@@ -282,13 +295,13 @@ We compute here PRCC coefficients using the :class:`~openturns.CorrelationAnalys
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-151
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 SRC coefficients
 -------------------
 We compute here SRC coefficients using the :class:`~openturns.CorrelationAnalysis`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-156
+.. GENERATED FROM PYTHON SOURCE LINES 166-169
 
 .. code-block:: Python
 
@@ -303,12 +316,12 @@ We compute here SRC coefficients using the :class:`~openturns.CorrelationAnalysi
 
  .. code-block:: none
 
-    [0.368479,0.0117622,0.519118,0.00135185,0.0153738,0.043904,-0.391804,0.692999,0.303627,0.0659533]#10
+    [0.346856,0.00137014,0.464381,-0.012191,0.0135906,0.047704,-0.377673,0.653557,0.28188,0.0491583]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-162
+.. GENERATED FROM PYTHON SOURCE LINES 170-175
 
 .. code-block:: Python
 
@@ -329,11 +342,11 @@ We compute here SRC coefficients using the :class:`~openturns.CorrelationAnalysi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-164
+.. GENERATED FROM PYTHON SOURCE LINES 176-177
 
 Normalized squared SRC coefficients (coefficients are made to sum to 1) :
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-169
+.. GENERATED FROM PYTHON SOURCE LINES 179-182
 
 .. code-block:: Python
 
@@ -348,16 +361,16 @@ Normalized squared SRC coefficients (coefficients are made to sum to 1) :
 
  .. code-block:: none
 
-    [0.119327,0.000121588,0.236833,1.60608e-06,0.000207717,0.00169402,0.134911,0.422061,0.0810197,0.00382282]#10
+    [0.121498,1.89582e-06,0.217781,0.000150088,0.000186529,0.00229815,0.144046,0.431357,0.0802415,0.00244041]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-171
+.. GENERATED FROM PYTHON SOURCE LINES 183-184
 
 And their associated graph:
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-178
+.. GENERATED FROM PYTHON SOURCE LINES 186-191
 
 .. code-block:: Python
 
@@ -378,13 +391,13 @@ And their associated graph:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-185
+.. GENERATED FROM PYTHON SOURCE LINES 195-198
 
 SRRC coefficients
 --------------------
 We compute here SRRC coefficients using the :class:`~openturns.CorrelationAnalysis`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-190
+.. GENERATED FROM PYTHON SOURCE LINES 200-203
 
 .. code-block:: Python
 
@@ -399,12 +412,12 @@ We compute here SRRC coefficients using the :class:`~openturns.CorrelationAnalys
 
  .. code-block:: none
 
-    [0.361267,0.0145646,0.501659,-0.00463828,0.0191614,0.0407509,-0.380531,0.683358,0.313877,0.0808765]#10
+    [0.335959,-0.00411943,0.458295,0.00491644,-0.00297807,0.0340243,-0.370397,0.649178,0.282764,0.0661544]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-196
+.. GENERATED FROM PYTHON SOURCE LINES 204-209
 
 .. code-block:: Python
 
@@ -425,17 +438,17 @@ We compute here SRRC coefficients using the :class:`~openturns.CorrelationAnalys
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-200
+.. GENERATED FROM PYTHON SOURCE LINES 210-213
 
 Pearson coefficients
 -----------------------
 We compute here the Pearson :math:`\rho` coefficients using the :class:`~openturns.CorrelationAnalysis`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-205
+.. GENERATED FROM PYTHON SOURCE LINES 215-218
 
 .. code-block:: Python
 
-    pearson_correlation = corr_analysis.computePearsonCorrelation()
+    pearson_correlation = corr_analysis.computeLinearCorrelation()
     print(pearson_correlation)
 
 
@@ -446,12 +459,12 @@ We compute here the Pearson :math:`\rho` coefficients using the :class:`~opentur
 
  .. code-block:: none
 
-    [0.235512,-0.0328824,0.419915,-0.0135446,-0.0692302,0.0434365,-0.379096,0.612647,0.335063,0.0419078]#10
+    [0.332935,0.0283844,0.487791,-0.0500682,0.00344846,0.00567923,-0.453345,0.595607,0.272408,0.0562576]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-212
+.. GENERATED FROM PYTHON SOURCE LINES 219-225
 
 .. code-block:: Python
 
@@ -473,13 +486,13 @@ We compute here the Pearson :math:`\rho` coefficients using the :class:`~opentur
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-216
+.. GENERATED FROM PYTHON SOURCE LINES 226-229
 
 Spearman coefficients
 -----------------------
 We compute here the Spearman :math:`\rho_s` coefficients using the :class:`~openturns.CorrelationAnalysis`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 218-221
+.. GENERATED FROM PYTHON SOURCE LINES 231-234
 
 .. code-block:: Python
 
@@ -494,12 +507,12 @@ We compute here the Spearman :math:`\rho_s` coefficients using the :class:`~open
 
  .. code-block:: none
 
-    [0.226962,-0.0274201,0.40528,-0.0187471,-0.0642766,0.0358186,-0.366801,0.605454,0.344385,0.0551515]#10
+    [0.32268,0.0244834,0.482812,-0.0305156,-0.0137379,-0.00473234,-0.44607,0.596487,0.271809,0.0719404]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-229
+.. GENERATED FROM PYTHON SOURCE LINES 235-242
 
 .. code-block:: Python
 
@@ -522,23 +535,23 @@ We compute here the Spearman :math:`\rho_s` coefficients using the :class:`~open
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 230-233
+.. GENERATED FROM PYTHON SOURCE LINES 243-246
 
 The different computed correlation estimators show that the variables :math:`S_w, A, N_z, t_c` seem to be the most correlated with the wing weight in absolute value.
 Pearson and Spearman coefficients do not reveal any linear nor monotonic correlation as no coefficients are equal to +/- 1.
 Coefficients about :math:`t_c` are negative revealing a negative correlation with the wing weight, that is consistent with the model expression.
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-240
+.. GENERATED FROM PYTHON SOURCE LINES 250-253
 
 Taylor expansion importance factors
 -----------------------------------
 We compute here the Taylor expansion importance factors using :class:`~openturns.TaylorExpansionMoments`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-245
+.. GENERATED FROM PYTHON SOURCE LINES 257-258
 
 We create a distribution-based RandomVector.
 
-.. GENERATED FROM PYTHON SOURCE LINES 245-247
+.. GENERATED FROM PYTHON SOURCE LINES 258-260
 
 .. code-block:: Python
 
@@ -551,11 +564,11 @@ We create a distribution-based RandomVector.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 248-249
+.. GENERATED FROM PYTHON SOURCE LINES 261-262
 
 We create a composite RandomVector Y from X and m.model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-251
+.. GENERATED FROM PYTHON SOURCE LINES 262-264
 
 .. code-block:: Python
 
@@ -568,11 +581,11 @@ We create a composite RandomVector Y from X and m.model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-253
+.. GENERATED FROM PYTHON SOURCE LINES 265-266
 
 We create a Taylor expansion method to approximate moments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 253-255
+.. GENERATED FROM PYTHON SOURCE LINES 266-268
 
 .. code-block:: Python
 
@@ -585,11 +598,11 @@ We create a Taylor expansion method to approximate moments.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-257
+.. GENERATED FROM PYTHON SOURCE LINES 269-270
 
 We get the importance factors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-259
+.. GENERATED FROM PYTHON SOURCE LINES 270-272
 
 .. code-block:: Python
 
@@ -608,11 +621,11 @@ We get the importance factors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 260-261
+.. GENERATED FROM PYTHON SOURCE LINES 273-274
 
 We draw the importance factors
 
-.. GENERATED FROM PYTHON SOURCE LINES 261-265
+.. GENERATED FROM PYTHON SOURCE LINES 274-278
 
 .. code-block:: Python
 
@@ -632,18 +645,18 @@ We draw the importance factors
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-268
+.. GENERATED FROM PYTHON SOURCE LINES 279-281
 
 The Taylor expansion importance factors is consistent with the previous estimators as :math:`S_w, A, N_z, t_c` seem to be the most influent variables.
 To analyze the relevance of the previous indices, a Sobol' analysis is now carried out.
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-274
+.. GENERATED FROM PYTHON SOURCE LINES 284-287
 
 Sobol' indices
 --------------
 We compute the Sobol' indices from both sampling approach and  Polynomial Chaos Expansion.
 
-.. GENERATED FROM PYTHON SOURCE LINES 276-283
+.. GENERATED FROM PYTHON SOURCE LINES 289-296
 
 .. code-block:: Python
 
@@ -667,15 +680,15 @@ We compute the Sobol' indices from both sampling approach and  Polynomial Chaos 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-285
+.. GENERATED FROM PYTHON SOURCE LINES 297-298
 
 We see that 12000 function evaluations are required to estimate the first order and total Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-288
+.. GENERATED FROM PYTHON SOURCE LINES 300-301
 
 Then, we evaluate the outputs corresponding to this design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-292
+.. GENERATED FROM PYTHON SOURCE LINES 303-305
 
 .. code-block:: Python
 
@@ -688,11 +701,11 @@ Then, we evaluate the outputs corresponding to this design of experiments.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-294
+.. GENERATED FROM PYTHON SOURCE LINES 306-307
 
 We estimate the Sobol' indices with the :class:`~openturns.SaltelliSensitivityAlgorithm`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-300
+.. GENERATED FROM PYTHON SOURCE LINES 309-313
 
 .. code-block:: Python
 
@@ -707,11 +720,11 @@ We estimate the Sobol' indices with the :class:`~openturns.SaltelliSensitivityAl
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 301-302
+.. GENERATED FROM PYTHON SOURCE LINES 314-315
 
 The `getFirstOrderIndices` and `getTotalOrderIndices` methods respectively return estimates of all first order and total Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 304-306
+.. GENERATED FROM PYTHON SOURCE LINES 317-319
 
 .. code-block:: Python
 
@@ -725,12 +738,12 @@ The `getFirstOrderIndices` and `getTotalOrderIndices` methods respectively retur
 
  .. code-block:: none
 
-    First order indices: [0.0895403,-0.0324985,0.224239,-0.0324775,-0.0326605,-0.0297425,0.111533,0.459428,0.0692415,-0.0257065]#10
+    First order indices: [0.129315,0.00380685,0.209507,0.0046623,0.00408488,0.00341787,0.156257,0.350255,0.08197,0.00719791]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 307-310
+.. GENERATED FROM PYTHON SOURCE LINES 320-323
 
 .. code-block:: Python
 
@@ -745,16 +758,16 @@ The `getFirstOrderIndices` and `getTotalOrderIndices` methods respectively retur
 
  .. code-block:: none
 
-    Total order indices: [0.132254,1.75663e-05,0.25098,0.000159035,0.000417434,0.000214447,0.144213,0.410061,0.101327,0.00225025]#10
+    Total order indices: [0.13956,-0.000147514,0.195328,0.00112719,0.000281449,0.00453793,0.123365,0.429118,0.0985793,0.0130993]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 311-312
+.. GENERATED FROM PYTHON SOURCE LINES 324-325
 
 The `draw` method produces the following graph. The vertical bars represent the 95% confidence intervals of the estimates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 314-318
+.. GENERATED FROM PYTHON SOURCE LINES 327-331
 
 .. code-block:: Python
 
@@ -774,11 +787,11 @@ The `draw` method produces the following graph. The vertical bars represent the 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 319-320
+.. GENERATED FROM PYTHON SOURCE LINES 332-333
 
 We see that several Sobol' indices are negative, that is inconsistent with the theory. Therefore, a larger number of samples is required to get consistent indices
 
-.. GENERATED FROM PYTHON SOURCE LINES 320-339
+.. GENERATED FROM PYTHON SOURCE LINES 333-352
 
 .. code-block:: Python
 
@@ -813,16 +826,16 @@ We see that several Sobol' indices are negative, that is inconsistent with the t
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 340-341
+.. GENERATED FROM PYTHON SOURCE LINES 353-354
 
 It improves the accuracy of the estimation but, for very low indices, Saltelli scheme is not accurate since several confidence intervals provide negative lower bounds.
 
-.. GENERATED FROM PYTHON SOURCE LINES 343-345
+.. GENERATED FROM PYTHON SOURCE LINES 356-358
 
 Now, we estimate the Sobol' indices using Polynomial Chaos Expansion.
 We create a Functional Chaos Expansion.
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-356
+.. GENERATED FROM PYTHON SOURCE LINES 358-369
 
 .. code-block:: Python
 
@@ -845,28 +858,155 @@ We create a Functional Chaos Expansion.
 
  .. code-block:: none
 
-    [0.000354133]
-    [3.92638e-08]
+    [0.000334975]
+    [3.83943e-08]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 357-359
+.. GENERATED FROM PYTHON SOURCE LINES 370-372
 
 The relative errors are low : this indicates that the PCE model has good accuracy.
 Then, we exploit the surrogate model to compute the Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 359-367
+.. GENERATED FROM PYTHON SOURCE LINES 372-375
 
 .. code-block:: Python
 
     sensitivityAnalysis = ot.FunctionalChaosSobolIndices(result)
-    print(sensitivityAnalysis)
+    sensitivityAnalysis
+
+
+
+
+
+
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    FunctionalChaosSobolIndices
+    <ul>
+      <li>input dimension: 10</li>
+      <li>output dimension: 1</li>
+      <li>basis size: 761</li>
+      <li>mean: [268.071]</li>
+      <li>std-dev: [48.0749]</li>
+    </ul>
+    <table>
+      <tr>
+        <th>Input</th>
+        <th>Variable</th>
+        <th>Sobol' index</th>
+        <th>Total index</th>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td>Sw</td>
+        <td>0.124541</td>
+        <td>0.127978</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Wfw</td>
+        <td>0.000004</td>
+        <td>0.000009</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>A</td>
+        <td>0.220015</td>
+        <td>0.225782</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Lambda</td>
+        <td>0.000489</td>
+        <td>0.000510</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>q</td>
+        <td>0.000090</td>
+        <td>0.000098</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>l</td>
+        <td>0.001798</td>
+        <td>0.001866</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>tc</td>
+        <td>0.141061</td>
+        <td>0.145193</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Nz</td>
+        <td>0.411555</td>
+        <td>0.419553</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Wdg</td>
+        <td>0.085062</td>
+        <td>0.087700</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>Wp</td>
+        <td>0.003369</td>
+        <td>0.003397</td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>Index</th>
+        <th>Multi-index</th>
+        <th>Part of variance</th>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>[0,0,0,0,0,0,0,1,0,0]#10</td>
+        <td>0.410244</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>[0,0,1,0,0,0,0,0,0,0]#10</td>
+        <td>0.219859</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>[0,0,0,0,0,0,1,0,0,0]#10</td>
+        <td>0.138496</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>[1,0,0,0,0,0,0,0,0,0]#10</td>
+        <td>0.124532</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>[0,0,0,0,0,0,0,0,1,0]#10</td>
+        <td>0.085008</td>
+      </tr>
+    </table>
+
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 376-383
+
+.. code-block:: Python
+
     firstOrder = [sensitivityAnalysis.getSobolIndex(i) for i in range(m.dim)]
     totalOrder = [sensitivityAnalysis.getSobolTotalIndex(i) for i in range(m.dim)]
     graph = ot.SobolIndicesAlgorithm.DrawSobolIndices(inputNames, firstOrder, totalOrder)
     graph.setTitle("Sobol indices by Polynomial Chaos Expansion - wing weight")
     view = otv.View(graph)
+
 
 
 
@@ -877,44 +1017,49 @@ Then, we exploit the surrogate model to compute the Sobol' indices.
    :class: sphx-glr-single-img
 
 
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 384-386
+
+Furthermore, first order Sobol' indices can also been estimated in a data-driven way using a rank-based sensitivity algorithm.
+In such a way, the estimation of sensitivity indices does not involve any surrogate model.
+
+.. GENERATED FROM PYTHON SOURCE LINES 386-398
+
+.. code-block:: Python
+
+    sizeRankSobol = 800
+    inputDesignRankSobol = m.distributionX.getSample(sizeRankSobol)
+    outputDesignankSobol = m.model(inputDesignRankSobol)
+    myRankSobol = otexp.RankSobolSensitivityAlgorithm(
+        inputDesignRankSobol, outputDesignankSobol
+    )
+    indicesrankSobol = myRankSobol.getFirstOrderIndices()
+    print("First order indices:", indicesrankSobol)
+    graph = myRankSobol.draw()
+    graph.setTitle("Sobol indices by rank-based estimation - wing weight")
+    view = otv.View(graph)
+
+
+
+
+.. image-sg:: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_013.png
+   :alt: Sobol indices by rank-based estimation - wing weight
+   :srcset: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_013.png
+   :class: sphx-glr-single-img
+
+
 .. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
-    FunctionalChaosSobolIndices
-    - input dimension=10
-    - output dimension=1
-    - basis size=761
-    - mean=[268.091]
-    - std-dev=[48.0753]
-
-    | Index | Multi-index   | Variance part |
-    |-------|---------------|---------------|
-    |     8 | [0,0,0,0,0,0,0,1,0,0]| 0.410346      |
-    |     3 | [0,0,1,0,0,0,0,0,0,0]| 0.220101      |
-    |     7 | [0,0,0,0,0,0,1,0,0,0]| 0.138523      |
-    |     1 | [1,0,0,0,0,0,0,0,0,0]| 0.124359      |
-    |     9 | [0,0,0,0,0,0,0,0,1,0]| 0.084929      |
-
-    | Input | Name          | Sobol' index  | Total index   |
-    |-------|---------------|---------------|---------------|
-    |     0 | Sw            | 0.124369      | 0.12777       |
-    |     1 | Wfw           | 2.86879e-06   | 8.73386e-06   |
-    |     2 | A             | 0.220239      | 0.225947      |
-    |     3 | Lambda        | 0.000476574   | 0.000497729   |
-    |     4 | q             | 9.03999e-05   | 9.95421e-05   |
-    |     5 | l             | 0.00180163    | 0.00186647    |
-    |     6 | tc            | 0.141095      | 0.145208      |
-    |     7 | Nz            | 0.411656      | 0.41965       |
-    |     8 | Wdg           | 0.0849832     | 0.0876488     |
-    |     9 | Wp            | 0.00331824    | 0.00334452    |
+    First order indices: [0.161955,0.0324797,0.228436,0.0726432,-0.00801005,-0.0498924,0.1633,0.299647,0.0310078,-0.0271989]#10
 
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 368-374
+.. GENERATED FROM PYTHON SOURCE LINES 399-405
 
 The Sobol' indices confirm the previous analyses, in terms of ranking of the most influent variables.
 We also see that five variables have a quasi null total Sobol' indices, that indicates almost no influence on the wing weight.
@@ -923,16 +1068,16 @@ As the most important variables act only through decoupled first degree contribu
 This explains why both squared SRC and Taylor give the exact same results even if the first one is based on a :math:`\mathcal{L}^2` linear approximation
 and the second one is based on a linear expansion around the mean value of the input variables.
 
-.. GENERATED FROM PYTHON SOURCE LINES 378-380
+.. GENERATED FROM PYTHON SOURCE LINES 409-411
 
 HSIC indices
 ------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 382-383
+.. GENERATED FROM PYTHON SOURCE LINES 413-414
 
 We then estimate the HSIC indices using a data-driven approach.
 
-.. GENERATED FROM PYTHON SOURCE LINES 383-389
+.. GENERATED FROM PYTHON SOURCE LINES 414-420
 
 .. code-block:: Python
 
@@ -949,7 +1094,7 @@ We then estimate the HSIC indices using a data-driven approach.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 390-396
+.. GENERATED FROM PYTHON SOURCE LINES 421-427
 
 .. code-block:: Python
 
@@ -966,11 +1111,11 @@ We then estimate the HSIC indices using a data-driven approach.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-398
+.. GENERATED FROM PYTHON SOURCE LINES 428-429
 
 We define a covariance kernel associated to the output variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 398-402
+.. GENERATED FROM PYTHON SOURCE LINES 429-433
 
 .. code-block:: Python
 
@@ -985,12 +1130,12 @@ We define a covariance kernel associated to the output variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 403-405
+.. GENERATED FROM PYTHON SOURCE LINES 434-436
 
 In this paragraph, we perform the analysis on the raw data: that is
 the global HSIC estimator.
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-407
+.. GENERATED FROM PYTHON SOURCE LINES 436-438
 
 .. code-block:: Python
 
@@ -1003,11 +1148,11 @@ the global HSIC estimator.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 408-409
+.. GENERATED FROM PYTHON SOURCE LINES 439-440
 
 We now build the HSIC estimator:
 
-.. GENERATED FROM PYTHON SOURCE LINES 409-413
+.. GENERATED FROM PYTHON SOURCE LINES 440-444
 
 .. code-block:: Python
 
@@ -1022,11 +1167,11 @@ We now build the HSIC estimator:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 414-415
+.. GENERATED FROM PYTHON SOURCE LINES 445-446
 
 We get the R2-HSIC indices:
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-419
+.. GENERATED FROM PYTHON SOURCE LINES 446-450
 
 .. code-block:: Python
 
@@ -1044,16 +1189,16 @@ We get the R2-HSIC indices:
 
 
      Global HSIC analysis
-    R2-HSIC Indices:  [0.102709,-0.00336782,0.148905,0.000299579,-0.00488949,0.00479322,0.0845911,0.34874,0.0601762,-0.00321501]#10
+    R2-HSIC Indices:  [0.0769851,-0.00448428,0.193184,-0.00490769,-0.00259878,0.00087629,0.0929111,0.35137,0.0367247,0.0147795]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 420-421
+.. GENERATED FROM PYTHON SOURCE LINES 451-452
 
 and the HSIC indices:
 
-.. GENERATED FROM PYTHON SOURCE LINES 421-424
+.. GENERATED FROM PYTHON SOURCE LINES 452-455
 
 .. code-block:: Python
 
@@ -1068,16 +1213,16 @@ and the HSIC indices:
 
  .. code-block:: none
 
-    HSIC Indices:  [0.00906902,-0.000293314,0.013635,2.72569e-05,-0.000444497,0.000436191,0.00777676,0.0309526,0.00545591,-0.000300297]#10
+    HSIC Indices:  [0.00707653,-0.000408212,0.0174873,-0.000446765,-0.000234775,7.91858e-05,0.00858646,0.0314256,0.00329501,0.00132732]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-426
+.. GENERATED FROM PYTHON SOURCE LINES 456-457
 
 The p-value by permutation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 426-429
+.. GENERATED FROM PYTHON SOURCE LINES 457-460
 
 .. code-block:: Python
 
@@ -1092,16 +1237,16 @@ The p-value by permutation.
 
  .. code-block:: none
 
-    p-value (permutation):  [0,0.712871,0,0.376238,0.841584,0.128713,0,0,0,0.712871]#10
+    p-value (permutation):  [0,0.752475,0,0.792079,0.564356,0.336634,0,0,0,0.029703]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-431
+.. GENERATED FROM PYTHON SOURCE LINES 461-462
 
 We have an asymptotic estimate of the value for this estimator.
 
-.. GENERATED FROM PYTHON SOURCE LINES 431-434
+.. GENERATED FROM PYTHON SOURCE LINES 462-465
 
 .. code-block:: Python
 
@@ -1116,16 +1261,16 @@ We have an asymptotic estimate of the value for this estimator.
 
  .. code-block:: none
 
-    p-value (asymptotic):  [3.02901e-12,0.680845,1.28369e-16,0.392815,0.82049,0.169798,1.63072e-09,6.32092e-35,4.2536e-07,0.675604]#10
+    p-value (asymptotic):  [7.51129e-09,0.784923,3.32161e-21,0.816713,0.613181,0.354752,2.75678e-10,5.49328e-35,0.000130914,0.0247993]#10
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 435-436
+.. GENERATED FROM PYTHON SOURCE LINES 466-467
 
 We vizualise the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 436-448
+.. GENERATED FROM PYTHON SOURCE LINES 467-479
 
 .. code-block:: Python
 
@@ -1149,46 +1294,62 @@ We vizualise the results.
 
     *
 
-      .. image-sg:: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_013.png
-         :alt: HSIC indices
-         :srcset: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_013.png
-         :class: sphx-glr-multi-img
-
-    *
-
       .. image-sg:: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_014.png
-         :alt: Asymptotic p-values
+         :alt: HSIC indices
          :srcset: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_014.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_015.png
-         :alt: R2-HSIC indices
+         :alt: Asymptotic p-values
          :srcset: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_015.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_016.png
-         :alt: p-values by permutation
+         :alt: R2-HSIC indices
          :srcset: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_016.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_017.png
+         :alt: p-values by permutation
+         :srcset: /auto_reliability_sensitivity/sensitivity_analysis/images/sphx_glr_plot_sensitivity_wingweight_017.png
          :class: sphx-glr-multi-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 449-452
+.. GENERATED FROM PYTHON SOURCE LINES 480-483
 
 The HSIC indices go in the same way as the other estimators in terms the most influent variables.
 The variables :math:`W_{fw}, q, l, W_p` seem to be independent to the output as the corresponding p-values are high.
 We can also see that the asymptotic p-values and p-values estimated by permutation are quite similar.
 
+.. GENERATED FROM PYTHON SOURCE LINES 485-486
+
+Reset default settings
+
+.. GENERATED FROM PYTHON SOURCE LINES 486-487
+
+.. code-block:: Python
+
+    ot.ResourceMap.Reload()
+
+
+
+
+
+
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.609 seconds)
+   **Total running time of the script:** (0 minutes 10.980 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_sensitivity_analysis_plot_sensitivity_wingweight.py:

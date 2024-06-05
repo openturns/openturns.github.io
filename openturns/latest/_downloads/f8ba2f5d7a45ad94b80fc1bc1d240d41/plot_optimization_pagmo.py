@@ -27,7 +27,7 @@ zdt1.setBounds(ot.Interval([0.0] * 2, [1.0] * 2))
 
 # %%
 # We create the first generation of points by sampling into the bounding box
-pop0 = ot.ComposedDistribution([ot.Uniform(0.0, 1.0)] * 2).getSample(100)
+pop0 = ot.JointDistribution([ot.Uniform(0.0, 1.0)] * 2).getSample(100)
 
 # %%
 # We create the algorithm that should evolve over 10 generations
@@ -59,7 +59,6 @@ for i in range(front.getSize()):
         data[2 * i + 1, 0] = front[i + 1, 0]
         data[2 * i + 1, 1] = front[i, 1]
 curve = ot.Curve(data)
-curve.setColor("blue")
 curve.setLegend(f"front {0}")
 graph.add(curve)
 graph.setGrid(True)
@@ -92,3 +91,5 @@ _ = View(graph)
 
 
 View.ShowAll()
+
+# %%

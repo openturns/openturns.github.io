@@ -11,35 +11,31 @@ Create a sparse chaos by integration
 # Polynomial chaos expansion
 # --------------------------
 #
-# Let :math:`g : \mathcal{X} \rightarrow \mathbb{R}` be a function
-# where :math:`\mathcal{X} \subseteq \mathbb{R}^p` is the domain of :math:`g`.
-# Let :math:`f` be a probability density function on :math:`\mathcal{X}`.
-# Let :math:`T` be the iso-probabilistic transformation from the physical
-# space :math:`\mathcal{X}` to the standard space :math:`\mathcal{\bar{X}}`:
+# Let :math:`g : \mathcal{D} \rightarrow \mathbb{R}` be a function
+# where :math:`\mathcal{D} \subseteq \mathbb{R}^p` is the domain of :math:`g`.
+# We consider :math:`\vect{X}` a random vector which
+# probability density function is denoted by :math:`f`.
+# We assume that :math:`g(\vect{X})` has a finite second order moment.
+# Let :math:`T` be an iso-probabilistic transformation such that :math:`\vect{Z} = T(\vect{X})`
+# follows a distribution uniquely defined by all its moments.
+# Let :math:`h` be the function defined by:
 #
 # .. math::
 #
-#   \xi = T(\boldsymbol{x}) \in \mathcal{\bar{X}}
+#   h = g \circ T^{-1}.
 #
-# for any :math:`\boldsymbol{x} \in \mathcal{X}`.
-# Let :math:`h` be the function defined by the equation :
-#
-# .. math::
-#
-#   h(\boldsymbol{\xi}) = \left(g \circ T^{-1}\right)(\boldsymbol{\xi})
-#
-# for any :math:`\boldsymbol{\xi} \in \mathcal{\bar{X}}`.
-# The polynomial chaos decomposition of :math:`h` is ([blatman2009]_ page 73) :
+# The polynomial chaos decomposition of :math:`h` with respect to the measure of
+# :math:`\vect{Z}` is (see [blatman2009]_ page 73) :
 #
 # .. math::
 #
-#   h(\boldsymbol{\xi}) = \sum_{\boldsymbol{\alpha} \in \mathbb{N}^p}
-#   a_{\boldsymbol{\alpha}} \psi_{\boldsymbol{\alpha}}(\boldsymbol{\xi}) + \epsilon
+#   h(\vect{z}) = \sum_{\vect{\alpha} \in \mathbb{N}^p}
+#   a_{\vect{\alpha}} \psi_{\vect{\alpha}}(\vect{z})
 #
-# where :math:`\boldsymbol{\alpha} = (\alpha_1, ..., \alpha_p) \in \mathbb{N}^p`
-# is a multiindex, :math:`a_{\boldsymbol{\alpha}} \in \mathbb{R}` is the
-# coefficient,  :math:`\psi_{\boldsymbol{\alpha}} : \mathcal{\bar{X}} \rightarrow \mathbb{R}`
-# is a multivariate polynomial and :math:`\epsilon` is a random variable.
+# where :math:`\vect{\alpha} = (\alpha_1, ..., \alpha_p) \in \mathbb{N}^p`
+# is a multiindex, :math:`a_{\vect{\alpha}} \in \mathbb{R}` is the
+# coefficient,  :math:`\psi_{\vect{\alpha}} : \mathcal{\bar{X}} \rightarrow \mathbb{R}`
+# is a multivariate polynomial.
 
 # %%
 #
@@ -56,28 +52,28 @@ Create a sparse chaos by integration
 #
 # .. math::
 #
-#   \mathcal{A}^{d} = \left\{ \boldsymbol{\alpha} \in \mathbb{N}^p
-#   \; | \; \|\boldsymbol{\alpha}\|_1 \leq d\right\}
+#   \mathcal{A}^{d} = \left\{ \vect{\alpha} \in \mathbb{N}^p
+#   \; | \; \|\vect{\alpha}\|_1 \leq d\right\}
 #
 # where
 #
 # .. math::
 #
-#   \|\boldsymbol{\alpha}\|_d = \alpha_1 + ... + \alpha_p
+#   \|\vect{\alpha}\|_d = \alpha_1 + ... + \alpha_p
 #
-# is the 1-norm of the multi-index :math:`\boldsymbol{\alpha}`.
+# is the 1-norm of the multi-index :math:`\vect{\alpha}`.
 # Therefore, the truncated polynomial chaos expansion is:
 #
 # .. math::
 #
-#   h(\boldsymbol{\xi}) = \sum_{\boldsymbol{\alpha} \in \mathcal{A}^{d}}
-#   a_{\boldsymbol{\alpha}} \psi_{\boldsymbol{\alpha}}(\boldsymbol{\xi}) + \epsilon.
+#   \widetilde{h}(\vect{z}) = \sum_{\vect{\alpha} \in \mathcal{A}^{d}}
+#   a_{\vect{\alpha}} \psi_{\vect{\alpha}}(\vect{z}).
 #
 # In order to ensure a low error, we may choose a large value of the
 # parameter :math:`P`. This, however, leads to a large number of
-# coefficients :math:`\boldsymbol{\alpha} \in \mathcal{A}^{d}` to
+# coefficients :math:`\vect{\alpha} \in \mathcal{A}^{d}` to
 # estimate. More precisely, the number of coefficients to estimate
-# is ([blatman2009]_ page 73) :
+# is (see [blatman2009]_ page 73) :
 #
 # .. math::
 #
@@ -90,37 +86,37 @@ Create a sparse chaos by integration
 #
 # Low-rank polynomial chaos expansion
 # -----------------------------------
-# For any :math:`\boldsymbol{\alpha} \in \mathbb{N}^p`, let
-# :math:`\|\boldsymbol{\alpha}\|_0` be the rank of the multiindex, that is,
+# For any :math:`\vect{\alpha} \in \mathbb{N}^p`, let
+# :math:`\|\vect{\alpha}\|_0` be the rank of the multiindex, that is,
 # the number of nonzero components:
 #
 # .. math::
 #
-#   \|\boldsymbol{\alpha}\|_0 = \sum_{i = 1}^p \boldsymbol{1}_{\alpha_i > 0}
+#   \|\vect{\alpha}\|_0 = \sum_{i = 1}^p \vect{1}_{\alpha_i > 0}
 #
-# where :math:`\boldsymbol{1}` is the indicator function.
+# where :math:`\vect{1}` is the indicator function.
 # The multiindex set of maximum total degree :math:`d \in \mathbb{N}`
 # and maximum rank :math:`j \in \mathbb{N}` is ([blatman2009]_ page 74):
 #
 # .. math::
 #
-#   \mathcal{A}^{d,j} = \left\{ \boldsymbol{\alpha} \in \mathbb{N}^p
-#   \; | \; \|\boldsymbol{\alpha}\|_1 \leq d, \;
-#   \; \|\boldsymbol{\alpha}\|_0 \leq j\right\}.
+#   \mathcal{A}^{d,j} = \left\{ \vect{\alpha} \in \mathbb{N}^p
+#   \; | \; \|\vect{\alpha}\|_1 \leq d, \;
+#   \; \|\vect{\alpha}\|_0 \leq j\right\}.
 #
 # Therefore, the rank-`j` polynomial chaos expansion is:
 #
 # .. math::
 #
-#   h(\boldsymbol{\xi}) = \sum_{\boldsymbol{\alpha} \in
-#   \mathcal{A}^{d,j}} a_{\boldsymbol{\alpha}}
-#   \psi_{\boldsymbol{\alpha}}(\boldsymbol{\xi}) + \epsilon.
+#   \widetilde{h}(\vect{z}) = \sum_{\vect{\alpha} \in
+#   \mathcal{A}^{d,j}} a_{\vect{\alpha}}
+#   \psi_{\vect{\alpha}}(\vect{z}).
 #
 # The rank is now a hyperparameter of the model: [blatman2009]_ suggests
 # to use :math:`j = 2, 3, 4`. An example of low-rank PCE for the G-Sobol'
 # function is given in [blatman2009]_ page 75.
 #
-# *Note.* It is currently not possible to create a low-rank PCE in OpenTURNS.
+# *Note.* It is currently not possible to create a low-rank PCE.
 
 # %%
 #
@@ -129,7 +125,7 @@ Create a sparse chaos by integration
 # If :math:`\textrm{card}\left(\mathcal{A}^{d}\right)` is large, many coefficients
 # may be poorly estimated, which may reduce the quality of the metamodel. We may
 # want to select a subset of the coefficients which best predict the output.
-# In other words, we may compute a subset
+# In other words, we may compute a subset:
 #
 # .. math::
 #
@@ -139,41 +135,40 @@ Create a sparse chaos by integration
 #
 # .. math::
 #
-#   h(\boldsymbol{\xi}) = \sum_{\boldsymbol{\alpha} \in \mathcal{A}}
-#   a_{\boldsymbol{\alpha}} \psi_{\boldsymbol{\alpha}}(\boldsymbol{\xi})
-#   + \epsilon.
+#   \widetilde{h}(\vect{z}) = \sum_{\vect{\alpha} \in \mathcal{A}}
+#   a_{\vect{\alpha}} \psi_{\vect{\alpha}}(\vect{z})
 #
 # An enumeration rule is a function from the set of integers :math:`k` to
-# the corresponding set of multiindices :math:`\boldsymbol{\alpha}`. More
+# the corresponding set of multiindices :math:`\vect{\alpha}`. More
 # precisely, let :math:`r : \mathbb{N} \rightarrow \mathbb{N}^p` be the
 # function such that :
 #
 # .. math::
 #
-#   r(k) = \boldsymbol{\alpha}
+#   r(k) = \vect{\alpha}
 #
 # for any :math:`k \geq 0`.
 # Let :math:`K \in \mathbb{N}` be a parameter representing the number of
 # coefficients considered in the selection. Given an enumeration rule for
-# the multiindices :math:`\boldsymbol{\alpha}`, at most :math:`K` multiindices
+# the multiindices :math:`\vect{\alpha}`, at most :math:`K` multiindices
 # will be considered. Let :math:`\mathcal{A}_K` be the corresponding multiindex set :
 #
 # .. math::
 #
-#   \mathcal{A}_K = \left\{ \boldsymbol{\alpha}
-#   \; | \; r^{-1}(\boldsymbol{\alpha}) = k \leq K \right\}.
+#   \mathcal{A}_K = \left\{ \vect{\alpha}
+#   \; | \; r^{-1}(\vect{\alpha}) = k \leq K \right\}.
 #
 #
 # Let :math:`\epsilon > 0` be a parameter representing the minimum relative
-# value of a significant coefficient :math:`a_{\boldsymbol{\alpha}}`.
+# value of a significant coefficient :math:`a_{\vect{\alpha}}`.
 # The :class:`~openturns.CleaningStrategy` uses the following criteria to select the coefficients :
 #
 # .. math::
 #
 #   \mathcal{A}_\epsilon =
 #   \left\{
-#   |a_{\boldsymbol{\alpha}}| \geq \epsilon \max_{ a_{\boldsymbol{\alpha}}
-#   \in \mathcal{A}_K } |a_{\boldsymbol{\alpha}}| \right\}
+#   |a_{\vect{\alpha}}| \geq \epsilon \max_{ a_{\vect{\alpha}}
+#   \in \mathcal{A}_K } |a_{\vect{\alpha}}| \right\}
 #
 # where :math:`\epsilon` is the significance factor, which by default is
 # :math:`\epsilon = 10^{-4}`. This rule selects only the coefficients which
@@ -191,8 +186,8 @@ Create a sparse chaos by integration
 #
 # .. math::
 #
-#   d := \textrm{max}_{\boldsymbol{\alpha} \in \mathcal{A}}
-#   \|\boldsymbol{\alpha}\|_1.
+#   d := \textrm{max}_{\vect{\alpha} \in \mathcal{A}}
+#   \|\vect{\alpha}\|_1.
 #
 # The index of sparsity of :math:`\mathcal{A}` is ([blatman2009]_  eq. 4.42 page 86) :
 #
@@ -265,17 +260,17 @@ def printCoefficientsTable(
 
 # %%
 #
-# The next function computes the polynomial chaos Q2 score using simple validation
+# The next function computes the polynomial chaos R2 score using simple validation
 # on a test sample generated by Monte-Carlo sampling. The actual computation
 # is performed by the :class:`~openturns.MetaModelValidation` class.
 
 
 # %%
-def compute_polynomial_chaos_Q2(
+def compute_polynomial_chaos_R2(
     polynomialchaos_result, g_function, input_distribution, n_valid=1000
 ):
     """
-    Compute the Q2 score of the polynomial chaos.
+    Compute the R2 score of the polynomial chaos.
 
 
     Parameters
@@ -287,20 +282,20 @@ def compute_polynomial_chaos_Q2(
     input_distribution : ot.Distribution
         The input distribution.
     n_valid : int
-        The number of simulations to compute the Q2 score.
+        The number of simulations to compute the R2 score.
 
     Returns
     -------
-    Q2 : float
-        The Q2 score
+    R2 : float
+        The R2 score
     """
     ot.RandomGenerator.SetSeed(1976)
     metamodel = polynomialchaos_result.getMetaModel()
     inputTest = input_distribution.getSample(n_valid)
     outputTest = g_function(inputTest)
-    val = ot.MetaModelValidation(inputTest, outputTest, metamodel)
-    Q2 = val.computePredictivityFactor()[0]
-    return Q2
+    val = ot.MetaModelValidation(outputTest, metamodel(inputTest))
+    R2 = val.computeR2Score()[0]
+    return R2
 
 
 # %%
@@ -329,20 +324,20 @@ def draw_polynomial_chaos_validation(
     input_distribution : ot.Distribution
         The input distribution.
     n_valid : int
-        The number of simulations to compute the Q2 score.
+        The number of simulations to compute the R2 score.
 
     Returns
     -------
-    Q2 : float
-        The Q2 score
+    R2 : float
+        The R2 score
     """
     metamodel = polynomialchaos_result.getMetaModel()
     inputTest = input_distribution.getSample(n_valid)
     outputTest = g_function(inputTest)
-    val = ot.MetaModelValidation(inputTest, outputTest, metamodel)
-    Q2 = val.computePredictivityFactor()[0]
+    val = ot.MetaModelValidation(outputTest, metamodel(inputTest))
+    R2 = val.computeR2Score()[0]
     graph = val.drawValidation()
-    graph.setTitle("Q2=%.2f%%" % (Q2 * 100))
+    graph.setTitle("R2=%.2f%%" % (R2 * 100))
     view = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
     return view
 
@@ -353,7 +348,7 @@ def draw_polynomial_chaos_validation(
 # Its three inputs are i.i.d. random variables that follow the uniform distribution on the
 # :math:`[-\pi, \pi]` interval. This is an interesting example for our
 # purpose because it is highly non linear, so that a high polynomial degree
-# will be required in order to produce a polynomial chaos expansion with Q2
+# will be required in order to produce a polynomial chaos expansion with R2
 # score sufficiently close to 1.
 
 # %%
@@ -477,14 +472,14 @@ printCoefficientsTable(result, threshold=1.0e-14)
 #
 # The `CleaningStrategy` has the following algorithm. On input, it considers
 # only the first `maximumConsideredTerms` coefficients
-# :math:`a_{\boldsymbol{\alpha}}`. On output it selects the `mostSignificant`
+# :math:`a_{\vect{\alpha}}`. On output it selects the `mostSignificant`
 # most significant coefficients. To do this, it uses the
 # `significanceFactor` parameter.
 #
 # The following function will help to create a sparse PCE using the
 # `CleaningStrategy`. It takes into account the number of considered coefficients
 # in the expansion, the number of significant coefficients to keep and the
-# relative factor and returns the Q2 score.
+# relative factor and returns the R2 score.
 
 
 # %%
@@ -513,8 +508,8 @@ def compute_cleaning_PCE(
 
     Returns
     -------
-    Q2 : float
-        The Q2 score
+    R2 : float
+        The R2 score
     """
     adaptiveStrategy = ot.CleaningStrategy(
         multivariateBasis,
@@ -527,11 +522,11 @@ def compute_cleaning_PCE(
     )
     chaosalgo.run()
     result = chaosalgo.getResult()
-    score_Q2 = compute_polynomial_chaos_Q2(result, im.model, im.distributionX)
+    score_R2 = compute_polynomial_chaos_R2(result, im.model, im.distributionX)
     if verbose:
-        print("Q2 = %.2f%%" % (100.0 * score_Q2))
+        print("R2 = %.2f%%" % (100.0 * score_R2))
         printCoefficientsTable(result)
-    return score_Q2
+    return score_R2
 
 
 # %%
@@ -543,7 +538,7 @@ def compute_cleaning_PCE(
 maximumConsideredTerms = 500
 mostSignificant = 5
 significanceFactor = 1.0e-10
-score_Q2 = compute_cleaning_PCE(
+score_R2 = compute_cleaning_PCE(
     maximumConsideredTerms, mostSignificant, significanceFactor, verbose=True
 )
 
@@ -562,7 +557,7 @@ score_Q2 = compute_cleaning_PCE(
 maximumConsideredTerms = 56
 mostSignificant = 10
 significanceFactor = 1.0e-10
-score_Q2 = compute_cleaning_PCE(
+score_R2 = compute_cleaning_PCE(
     maximumConsideredTerms, mostSignificant, significanceFactor, verbose=True
 )
 
@@ -591,14 +586,14 @@ best_score = 0.0
 best_parameters = []
 for it in iterator:
     maximumConsideredTerms, mostSignificant = it
-    score_Q2 = compute_cleaning_PCE(
+    score_R2 = compute_cleaning_PCE(
         maximumConsideredTerms, mostSignificant, significanceFactor
     )
-    if score_Q2 > best_score:
-        best_score = score_Q2
+    if score_R2 > best_score:
+        best_score = score_R2
         best_parameters = [maximumConsideredTerms, mostSignificant]
 
-print("Best Q2 = %.2f%%" % (100.0 * best_score))
+print("Best R2 = %.2f%%" % (100.0 * best_score))
 
 maximumConsideredTerms, mostSignificant = best_parameters
 print("Number of considered coefficients : ", maximumConsideredTerms)
@@ -608,11 +603,11 @@ print("Number of selected coefficients : ", mostSignificant)
 # %%
 #
 # We see that the best solution could be to select at most 16 significant
-# coefficients among the first 101 ones. Let us see the Q2 score and the
+# coefficients among the first 101 ones. Let us see the R2 score and the
 # coefficients in this situation.
 
 # %%
-score_Q2 = compute_cleaning_PCE(
+score_R2 = compute_cleaning_PCE(
     maximumConsideredTerms, mostSignificant, significanceFactor, verbose=True
 )
 
@@ -643,7 +638,7 @@ score_Q2 = compute_cleaning_PCE(
 # - `currentVectorIndex_` : the current value of the index in the full multiindex set, according to the enumeration rule.
 #
 # Each time the selection method is called, it is passed a
-# coefficient :math:`a_{\boldsymbol{\alpha}}` which is a new candidate to be
+# coefficient :math:`a_{\vect{\alpha}}` which is a new candidate to be
 # considered by the algorithm. The first time the method is evaluated, the
 # active multiindex set is empty, so that it must be filled with the first
 # coefficients in the multiindex set, according to the enumeration rule. The
@@ -747,4 +742,4 @@ score_Q2 = compute_cleaning_PCE(
 #
 # We see that the :class:`~openturns.CleaningStrategy` class performs correctly in
 # this particular case. We have seen how to select the hyperparameters which
-# produce the best Q2 score.
+# produce the best R2 score.

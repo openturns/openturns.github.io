@@ -21,7 +21,7 @@ Estimate Sobol indices on a field to point function
 # - Run the :class:`~openturns.experimental.FieldToPointFunctionalChaosAlgorithm` class
 # - Validate the Karhunen-Loeve decompositions of the inputs
 # - Validate the chaos metamodel between the KL coefficients and the outputs
-# - Retrieve the Sobol' indices from :class:`~openturns.FieldFunctionalChaosSobolIndices`
+# - Retrieve the Sobol' indices from :class:`openturns.experimental.FieldFunctionalChaosSobolIndices`
 #
 
 # %%
@@ -40,7 +40,7 @@ f2 = ot.SymbolicFunction(["t"], ["cos(t)^2"])
 coeff1_dist = ot.Normal([1.0] * 2, [0.6] * 2, ot.CorrelationMatrix(2))
 p1 = ot.FunctionalBasisProcess(coeff1_dist, ot.Basis([f1, f2]), tg)
 p2 = ot.GaussianProcess(ot.SquaredExponential([1.0], [T / 4.0]), tg)
-coeff3_dist = ot.ComposedDistribution([ot.Uniform(), ot.Normal()])
+coeff3_dist = ot.JointDistribution([ot.Uniform(), ot.Normal()])
 f1 = ot.SymbolicFunction(["t"], ["1", "0"])
 f2 = ot.SymbolicFunction(["t"], ["0", "1"])
 p3 = ot.FunctionalBasisProcess(coeff3_dist, ot.Basis([f1, f2]))
@@ -138,11 +138,9 @@ gnorm = normal.drawLogPDF(data.getMin(), data.getMax())
 bad = [l_pair[i][1] for i in range(index_bad + 1)]
 c = ot.Cloud(bad)
 c.setPointStyle("bullet")
-c.setColor("blue")
 graph.setDrawable(c, 1)
 dr = gnorm.getDrawable(0)
 dr.setLevels([beta])
-dr.setColor("red")
 dr.setLegend("99% level-set")
 graph.add(dr)
 _ = View(graph)
@@ -160,17 +158,17 @@ print(f"relative errors={result.getFCEResult().getRelativeErrors()}")
 modes = result.getModesSample()
 metamodel = result.getFCEResult().getMetaModel()
 output = result.getOutputSample()
-validation = ot.MetaModelValidation(modes, output, metamodel)
-q2 = validation.computePredictivityFactor()
-print(f"q2={q2}")
+validation = ot.MetaModelValidation(output, metamodel(modes))
+r2 = validation.computeR2Score()
+print(f"r2={r2}")
 graph = validation.drawValidation()
-graph.setTitle(f"Chaos validation - q2={q2}")
+graph.setTitle(f"Chaos validation - r2={r2}")
 _ = View(graph)
 
 # %%
 # Perform an evaluation on a new realization and ensure the output
 # is close to the evaluation with the reference function
-metamodel = result.getFieldToPointMetamodel()
+metamodel = result.getFieldToPointMetaModel()
 x0 = X.getRealization()
 y0 = f(x0)
 y0hat = metamodel(x0)

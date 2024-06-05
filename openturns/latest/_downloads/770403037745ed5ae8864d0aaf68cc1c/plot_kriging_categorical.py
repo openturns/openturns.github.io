@@ -33,7 +33,7 @@ dim = 2
 fun = ot.PythonFunction(dim, 1, illustrativeFunc)
 numberOfZLevels = 2  # Number of categorical levels for z
 # Input distribution
-dist = ot.ComposedDistribution(
+dist = ot.JointDistribution(
     [ot.Uniform(0, 1), ot.UserDefined(ot.Sample.BuildFromPoint(range(numberOfZLevels)))]
 )
 
@@ -65,7 +65,7 @@ boundsLV = ot.Interval(lowerBoundLV, upperBoundLV)
 initDistLV = ot.DistributionCollection()
 for i in range(len(lowerBoundLV)):
     initDistLV.add(ot.Uniform(lowerBoundLV[i], upperBoundLV[i]))
-initDistLV = ot.ComposedDistribution(initDistLV)
+initDistLV = ot.JointDistribution(initDistLV)
 
 # %%
 # As a reference, we consider a purely continuous kernel for independent Gaussian processes.
@@ -79,7 +79,7 @@ boundsInd = ot.Interval(lowerBoundInd, upperBoundInd)
 initDistInd = ot.DistributionCollection()
 for i in range(len(lowerBoundInd)):
     initDistInd.add(ot.Uniform(lowerBoundInd[i], upperBoundInd[i]))
-initDistInd = ot.ComposedDistribution(initDistInd)
+initDistInd = ot.JointDistribution(initDistInd)
 initSampleInd = initDistInd.getSample(10)
 optAlgInd = ot.MultiStart(ot.NLopt("LN_COBYLA"), initSampleInd)
 
@@ -246,7 +246,7 @@ fun = ot.PythonFunction(dim, 1, Goldstein)
 numberOfZLevels1 = 3  # Number of categorical levels for z1
 numberOfZLevels2 = 3  # Number of categorical levels for z2
 # Input distribution
-dist = ot.ComposedDistribution(
+dist = ot.JointDistribution(
     [
         ot.Uniform(0, 1),
         ot.Uniform(0, 1),
@@ -279,7 +279,7 @@ boundsLV = ot.Interval(lowerBoundLV, upperBoundLV)
 initDistLV = ot.DistributionCollection()
 for i in range(len(lowerBoundLV)):
     initDistLV.add(ot.Uniform(lowerBoundLV[i], upperBoundLV[i]))
-initDistLV = ot.ComposedDistribution(initDistLV)
+initDistLV = ot.JointDistribution(initDistLV)
 
 # %%
 # Alternatively, we consider a purely continuous kernel for independent Gaussian processes.
@@ -293,7 +293,7 @@ boundsInd = ot.Interval(lowerBoundInd, upperBoundInd)
 initDistInd = ot.DistributionCollection()
 for i in range(len(lowerBoundInd)):
     initDistInd.add(ot.Uniform(lowerBoundInd[i], upperBoundInd[i]))
-initDistInd = ot.ComposedDistribution(initDistInd)
+initDistInd = ot.JointDistribution(initDistInd)
 initSampleInd = initDistInd.getSample(10)
 optAlgInd = ot.MultiStart(ot.NLopt("LN_COBYLA"), initSampleInd)
 
@@ -331,7 +331,7 @@ for rep in range(5):
     yVal = fun(xVal)
     yVal = (yVal - yMin) / (yMin - yMax)
 
-    valLV = ot.MetaModelValidation(xVal, yVal, resLV.getMetaModel())
+    valLV = ot.MetaModelValidation(yVal, resLV.getMetaModel()(xVal))
     rmseLV = valLV.getResidualSample().computeStandardDeviation()[0]
     rmseLVList.append(rmseLV)
 
@@ -356,7 +356,7 @@ for rep in range(5):
             ind = np.where(np.all(np.array(xVal[:, 2:]) == [z1, z2], axis=1))[0]
             xValInd = xVal[ind][:, :2]
             yValInd = yVal[ind]
-            valInd = ot.MetaModelValidation(xValInd, yValInd, resInd.getMetaModel())
+            valInd = ot.MetaModelValidation(yValInd, resInd.getMetaModel()(xValInd))
             error.add(valInd.getResidualSample())
     rmseInd = error.computeStandardDeviation()[0]
     rmseIndList.append(rmseInd)

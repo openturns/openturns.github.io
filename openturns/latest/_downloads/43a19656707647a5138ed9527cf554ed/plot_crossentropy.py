@@ -152,7 +152,9 @@ xx = ot.Box([nx], ot.Interval([1.80e6], [4e6])).generate()
 yy = ot.Box([ny], ot.Interval([600.0], [950.0])).generate()
 inputData = ot.Box([nx, ny], ot.Interval([1.80e6, 600.0], [4e6, 950.0])).generate()
 outputData = g(inputData)
-mycontour = ot.Contour(xx, yy, outputData, [0.0], ["0.0"], True)
+mycontour = ot.Contour(xx, yy, outputData)
+mycontour.setLevels([0.0])
+mycontour.setLabels(["0.0"])
 mycontour.setLegend("Failure domain")
 graph.add(initialSamples)
 graph.add(auxiliarySamples)
@@ -188,7 +190,7 @@ ot.RandomGenerator.SetSeed(0)
 marginR = ot.LogNormalMuSigma().getDistribution()
 marginF = ot.Normal()
 auxiliaryMarginals = [marginR, marginF]
-auxiliaryDistribution = ot.ComposedDistribution(auxiliaryMarginals)
+auxiliaryDistribution = ot.JointDistribution(auxiliaryMarginals)
 # Definition of parameters to be optimized
 activeParameters = ot.Indices(5)
 activeParameters.fill()
@@ -235,7 +237,7 @@ ot.RandomGenerator.SetSeed(0)
 marginR = ot.LogNormalMuSigma(3e6, 3e5, 0.0).getDistribution()
 marginF = ot.Normal(750.0, 50.0)
 auxiliaryMarginals = [marginR, marginF]
-auxiliaryDistribution = ot.ComposedDistribution(auxiliaryMarginals)
+auxiliaryDistribution = ot.JointDistribution(auxiliaryMarginals)
 print("Parameters of initial distribution", auxiliaryDistribution.getParameter())
 
 # Definition of parameters to be optimized
@@ -286,7 +288,7 @@ marginR = ot.LogNormalMuSigma(3e6, 3e5, 0.0).getDistribution()
 marginF = ot.Normal(750.0, 50.0)
 auxiliaryMarginals = [marginR, marginF]
 copula = ot.NormalCopula()
-auxiliaryDistribution = ot.ComposedDistribution(auxiliaryMarginals, copula)
+auxiliaryDistribution = ot.JointDistribution(auxiliaryMarginals, copula)
 desc = auxiliaryDistribution.getParameterDescription()
 p = auxiliaryDistribution.getParameter()
 print(
