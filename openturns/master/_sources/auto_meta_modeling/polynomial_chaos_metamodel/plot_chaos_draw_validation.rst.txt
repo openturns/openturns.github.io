@@ -65,12 +65,13 @@ We load the Ishigami test function from the usecases module :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-28
+.. GENERATED FROM PYTHON SOURCE LINES 26-29
 
-The `IshigamiModel` data class contains the input distribution :math:`X=(X_1, X_2, X_3)` in `im.distributionX` and the Ishigami function in `im.model`.
+The model contains the input distribution :math:`X=(X_1, X_2, X_3)` in
+`im.distributionX` and the Ishigami function in `im.model`.
 We also have access to the input variable names with
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-30
+.. GENERATED FROM PYTHON SOURCE LINES 29-31
 
 .. code-block:: Python
 
@@ -83,7 +84,7 @@ We also have access to the input variable names with
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-35
+.. GENERATED FROM PYTHON SOURCE LINES 32-36
 
 .. code-block:: Python
 
@@ -98,16 +99,16 @@ We also have access to the input variable names with
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-38
+.. GENERATED FROM PYTHON SOURCE LINES 37-39
 
 Create the chaos
 ----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 We could use only the input and output training samples: in this case, the distribution of the input sample is computed by selecting the best distribution that fits the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-45
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 .. code-block:: Python
 
@@ -120,19 +121,19 @@ We could use only the input and output training samples: in this case, the distr
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Since the input distribution is known in our particular case, we instead create the multivariate basis from the distribution, that is three independent variables X1, X2 and X3.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-55
+.. GENERATED FROM PYTHON SOURCE LINES 50-56
 
 .. code-block:: Python
 
     multivariateBasis = ot.OrthogonalProductPolynomialFactory([im.X1, im.X2, im.X3])
     totalDegree = 8
     enumfunc = multivariateBasis.getEnumerateFunction()
-    P = enumfunc.getStrataCumulatedCardinal(totalDegree)
-    adaptiveStrategy = ot.FixedStrategy(multivariateBasis, P)
+    basisSize = enumfunc.getBasisSizeFromTotalDegree(totalDegree)
+    adaptiveStrategy = ot.FixedStrategy(multivariateBasis, basisSize)
 
 
 
@@ -141,7 +142,7 @@ Since the input distribution is known in our particular case, we instead create 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-61
+.. GENERATED FROM PYTHON SOURCE LINES 57-62
 
 .. code-block:: Python
 
@@ -157,7 +158,7 @@ Since the input distribution is known in our particular case, we instead create 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-66
+.. GENERATED FROM PYTHON SOURCE LINES 63-67
 
 .. code-block:: Python
 
@@ -172,7 +173,7 @@ Since the input distribution is known in our particular case, we instead create 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-71
+.. GENERATED FROM PYTHON SOURCE LINES 68-72
 
 .. code-block:: Python
 
@@ -187,26 +188,26 @@ Since the input distribution is known in our particular case, we instead create 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 Validation of the metamodel
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 In order to validate the metamodel, we generate a test sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-87
+.. GENERATED FROM PYTHON SOURCE LINES 80-88
 
 .. code-block:: Python
 
     n_valid = 1000
     inputTest = im.distributionX.getSample(n_valid)
     outputTest = im.model(inputTest)
-    prediction = metamodel(inputTest)
-    val = ot.MetaModelValidation(outputTest, prediction)
-    R2 = val.computeR2Score()[0]
-    R2
+    metamodelPredictions = metamodel(inputTest)
+    val = ot.MetaModelValidation(outputTest, metamodelPredictions)
+    r2Score = val.computeR2Score()[0]
+    r2Score
 
 
 
@@ -221,16 +222,16 @@ In order to validate the metamodel, we generate a test sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-89
+.. GENERATED FROM PYTHON SOURCE LINES 89-90
 
 The R2 is very close to 1: the metamodel is excellent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-96
+.. GENERATED FROM PYTHON SOURCE LINES 92-97
 
 .. code-block:: Python
 
     graph = val.drawValidation()
-    graph.setTitle("R2=%.2f%%" % (R2 * 100))
+    graph.setTitle("R2=%.2f%%" % (r2Score * 100))
     view = viewer.View(graph)
     plt.show()
 
@@ -246,7 +247,7 @@ The R2 is very close to 1: the metamodel is excellent.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 The metamodel has a good predictivity, since the points are almost on the first diagonal.
 

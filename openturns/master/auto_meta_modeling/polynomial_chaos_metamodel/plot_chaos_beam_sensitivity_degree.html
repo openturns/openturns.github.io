@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
@@ -19,13 +20,15 @@
     <script src="../../_static/documentation_options.js?v=f016e9fd"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=4ea706d9"></script>
     <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Create a sparse chaos by integration" href="plot_chaos_cleaning_strategy.html" />
-    <link rel="prev" title="Polynomial chaos expansion cross-validation" href="plot_chaos_cv.html" />
+    <link rel="prev" title="Plot enumeration rules" href="plot_enumeratefunction.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -61,7 +64,7 @@
           <a href="plot_chaos_cleaning_strategy.html" title="Create a sparse chaos by integration"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_chaos_cv.html" title="Polynomial chaos expansion cross-validation"
+          <a href="plot_enumeratefunction.html" title="Plot enumeration rules"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -88,8 +91,8 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_chaos_cv.html"
-                          title="previous chapter">Polynomial chaos expansion cross-validation</a></p>
+    <p class="topless"><a href="plot_enumeratefunction.html"
+                          title="previous chapter">Plot enumeration rules</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -207,8 +210,8 @@ and the family of orthogonal polynomials corresponding to each input variable.</
     <span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
     <span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span><span class="n">selectionAlgorithm</span><span class="p">)</span>
     <span class="n">enumfunc</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
-    <span class="n">P</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
-    <span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+    <span class="n">basisSize</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getBasisSizeFromTotalDegree</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+    <span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">basisSize</span><span class="p">)</span>
     <span class="n">chaosalgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
         <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">myDistribution</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
     <span class="p">)</span>
@@ -223,14 +226,14 @@ The sparsity rate is the complement of the ratio between the number of coefficie
 selected from LARS and the total number of coefficients in the full polynomial basis.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">computeSparsityRate</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">chaosResult</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the sparsity rate, assuming a FixedStrategy.&quot;&quot;&quot;</span>
-    <span class="c1"># Get P, the maximum possible number of coefficients</span>
+    <span class="c1"># Get basisSize, the number of candidate coefficients</span>
     <span class="n">enumfunc</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
-    <span class="n">P</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+    <span class="n">basisSize</span> <span class="o">=</span> <span class="n">enumfunc</span><span class="o">.</span><span class="n">getStrataCumulatedCardinal</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
     <span class="c1"># Get number of coefficients in the selection</span>
     <span class="n">indices</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getIndices</span><span class="p">()</span>
     <span class="n">nbcoeffs</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
     <span class="c1"># Compute rate</span>
-    <span class="n">sparsityRate</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">nbcoeffs</span> <span class="o">/</span> <span class="n">P</span>
+    <span class="n">sparsityRate</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">nbcoeffs</span> <span class="o">/</span> <span class="n">basisSize</span>
     <span class="k">return</span> <span class="n">sparsityRate</span>
 </pre></div>
 </div>
@@ -238,25 +241,27 @@ selected from LARS and the total number of coefficients in the full polynomial b
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">computeR2Chaos</span><span class="p">(</span><span class="n">chaosResult</span><span class="p">,</span> <span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the R2 of a chaos.&quot;&quot;&quot;</span>
     <span class="n">metamodel</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputTest</span><span class="p">,</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">inputTest</span><span class="p">))</span>
-    <span class="n">R2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">R2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">R2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># We are not lucky every day.</span>
-    <span class="k">return</span> <span class="n">R2</span>
+    <span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputTest</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
+    <span class="n">r2Score</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">r2Score</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">r2Score</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># We are not lucky every day.</span>
+    <span class="k">return</span> <span class="n">r2Score</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">printChaosStats</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">chaosResult</span><span class="p">,</span> <span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print statistics of a chaos.&quot;&quot;&quot;</span>
     <span class="n">sparsityRate</span> <span class="o">=</span> <span class="n">computeSparsityRate</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">chaosResult</span><span class="p">)</span>
-    <span class="n">R2</span> <span class="o">=</span> <span class="n">computeR2Chaos</span><span class="p">(</span><span class="n">chaosResult</span><span class="p">,</span> <span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">)</span>
+    <span class="n">r2Score</span> <span class="o">=</span> <span class="n">computeR2Chaos</span><span class="p">(</span><span class="n">chaosResult</span><span class="p">,</span> <span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">)</span>
     <span class="n">metamodel</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
-    <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputTest</span><span class="p">,</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">inputTest</span><span class="p">))</span>
+    <span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputTest</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span><span class="o">.</span><span class="n">getGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">legend1</span> <span class="o">=</span> <span class="s2">&quot;D=</span><span class="si">%d</span><span class="s2">, R2=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">totalDegree</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">R2</span><span class="p">)</span>
+    <span class="n">legend1</span> <span class="o">=</span> <span class="s2">&quot;D=</span><span class="si">%d</span><span class="s2">, R2=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">totalDegree</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">r2Score</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">legend1</span><span class="p">])</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
         <span class="s2">&quot;Degree=</span><span class="si">%d</span><span class="s2">, R2=</span><span class="si">%.2f%%</span><span class="s2">, Sparsity=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span>
-        <span class="o">%</span> <span class="p">(</span><span class="n">totalDegree</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">R2</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">sparsityRate</span><span class="p">)</span>
+        <span class="o">%</span> <span class="p">(</span><span class="n">totalDegree</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">r2Score</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">sparsityRate</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">graph</span>
 </pre></div>
@@ -281,7 +286,7 @@ selected from LARS and the total number of coefficients in the full polynomial b
 <span class="n">outputTrain</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputTrain</span><span class="p">)</span>
 <span class="n">inputTest</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
 <span class="n">outputTest</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">totalDegree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxDegree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
     <span class="n">chaosResult</span> <span class="o">=</span> <span class="n">ComputeSparseLeastSquaresChaos</span><span class="p">(</span>
         <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">myDistribution</span>
@@ -289,8 +294,8 @@ selected from LARS and the total number of coefficients in the full polynomial b
     <span class="n">graph</span> <span class="o">=</span> <span class="n">printChaosStats</span><span class="p">(</span>
         <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">chaosResult</span><span class="p">,</span> <span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span><span class="p">,</span> <span class="n">totalDegree</span>
     <span class="p">)</span>
-    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">)</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">])</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.add_subplot.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">])</span>
     <span class="n">pl</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Metamodel validation&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -316,7 +321,7 @@ We are going to see that this situation is actually easy to reproduce.</p>
 <span class="sd">    create a sparse least squares chaos and compute the R2</span>
 <span class="sd">    using n_valid points.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">R2sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
+    <span class="n">r2Sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">totalDegree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxDegree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Degree = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">totalDegree</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numberAttempts</span><span class="p">):</span>
@@ -327,15 +332,15 @@ We are going to see that this situation is actually easy to reproduce.</p>
             <span class="n">chaosResult</span> <span class="o">=</span> <span class="n">ComputeSparseLeastSquaresChaos</span><span class="p">(</span>
                 <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">myDistribution</span>
             <span class="p">)</span>
-            <span class="n">R2sample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">totalDegree</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">computeR2Chaos</span><span class="p">(</span>
+            <span class="n">r2Sample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">totalDegree</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">computeR2Chaos</span><span class="p">(</span>
                 <span class="n">chaosResult</span><span class="p">,</span> <span class="n">inputTest</span><span class="p">,</span> <span class="n">outputTest</span>
             <span class="p">)</span>
-    <span class="k">return</span> <span class="n">R2sample</span>
+    <span class="k">return</span> <span class="n">r2Sample</span>
 </pre></div>
 </div>
 <p>The following function uses a boxplot to see the distribution of the R2 coefficients.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotR2Boxplots</span><span class="p">(</span><span class="n">R2sample</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R2sample</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotR2Boxplots</span><span class="p">(</span><span class="n">r2Sample</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r2Sample</span><span class="p">)</span>
     <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">pl</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;N=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">N</span><span class="p">))</span>
@@ -349,8 +354,8 @@ We are going to see that this situation is actually easy to reproduce.</p>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># size of the train design</span>
-<span class="n">R2sample</span> <span class="o">=</span> <span class="n">computeSampleR2</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">n_valid</span><span class="p">,</span> <span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
-<span class="n">plotR2Boxplots</span><span class="p">(</span><span class="n">R2sample</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="n">r2Sample</span> <span class="o">=</span> <span class="n">computeSampleR2</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">n_valid</span><span class="p">,</span> <span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
+<span class="n">plotR2Boxplots</span><span class="p">(</span><span class="n">r2Sample</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_chaos_beam_sensitivity_degree_002.png" srcset="../../_images/sphx_glr_plot_chaos_beam_sensitivity_degree_002.png" alt="N=20" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Degree = 1
@@ -361,8 +366,8 @@ Degree = 4
 </div>
 <p>We see that when the size of the design of experiments is as small as 20, it is more appropriate to use a very low degree polynomial. Here 1 performs best and 4 is risky.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">30</span>  <span class="c1"># size of the train design</span>
-<span class="n">R2sample</span> <span class="o">=</span> <span class="n">computeSampleR2</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">n_valid</span><span class="p">,</span> <span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
-<span class="n">plotR2Boxplots</span><span class="p">(</span><span class="n">R2sample</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="n">r2Sample</span> <span class="o">=</span> <span class="n">computeSampleR2</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">n_valid</span><span class="p">,</span> <span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
+<span class="n">plotR2Boxplots</span><span class="p">(</span><span class="n">r2Sample</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_chaos_beam_sensitivity_degree_003.png" srcset="../../_images/sphx_glr_plot_chaos_beam_sensitivity_degree_003.png" alt="N=30" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Degree = 1
@@ -373,8 +378,8 @@ Degree = 4
 </div>
 <p>With a 30-point design set, a polynomial degree of 2 is usually advisable.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># size of the train design</span>
-<span class="n">R2sample</span> <span class="o">=</span> <span class="n">computeSampleR2</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">n_valid</span><span class="p">,</span> <span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
-<span class="n">plotR2Boxplots</span><span class="p">(</span><span class="n">R2sample</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="n">r2Sample</span> <span class="o">=</span> <span class="n">computeSampleR2</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">n_valid</span><span class="p">,</span> <span class="n">numberAttempts</span><span class="p">,</span> <span class="n">maxDegree</span><span class="p">)</span>
+<span class="n">plotR2Boxplots</span><span class="p">(</span><span class="n">r2Sample</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 
 <span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -404,7 +409,7 @@ could be derived from a metamodel calculated on such a small training sample.</p
 <li><p>“Metamodel-Based Sensitivity Analysis: Polynomial Chaos Expansions and Gaussian Processes”, Loïc Le Gratiet, Stefano Marelli, Bruno Sudret,
 Handbook of Uncertainty Quantification, 2017, Springer International Publishing.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.694 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.443 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-chaos-beam-sensitivity-degree-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/bfea7e736d44ac4ec92f9c0611072539/plot_chaos_beam_sensitivity_degree.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_chaos_beam_sensitivity_degree.ipynb</span></code></a></p>
@@ -433,7 +438,7 @@ Handbook of Uncertainty Quantification, 2017, Springer International Publishing.
           <a href="plot_chaos_cleaning_strategy.html" title="Create a sparse chaos by integration"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_chaos_cv.html" title="Polynomial chaos expansion cross-validation"
+          <a href="plot_enumeratefunction.html" title="Plot enumeration rules"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>

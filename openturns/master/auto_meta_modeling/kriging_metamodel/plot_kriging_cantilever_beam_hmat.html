@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
@@ -19,6 +20,8 @@
     <script src="../../_static/documentation_options.js?v=f016e9fd"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=4ea706d9"></script>
     <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
@@ -248,21 +251,23 @@ We must not forget to actually set the optimization bounds defined above.</p>
 <span class="n">Y_test</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <cite>MetaModelValidation</cite> classe makes the validation easy. To create it, we use the validation samples and the metamodel.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingMetamodel</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a> class is designed to validate the surrogate models.
+To create it, we use a validation sample and a metamodel.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">krigingMetamodel</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">Y_test</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <cite>computePredictivityFactor</cite> computes the Q2 factor.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">R2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">R2</span><span class="p">)</span>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation.computeR2Score" title="openturns.MetaModelValidation.computeR2Score"><code class="xref py py-meth docutils literal notranslate"><span class="pre">computeR2Score()</span></code></a> computes the R2 coefficient of determination.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">r2Score</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r2Score</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9526427539844872
 </pre></div>
 </div>
 <p>The residuals are the difference between the model and the metamodel.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">getResidualSample</span><span class="p">()</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">residualsSample</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">getResidualSample</span><span class="p">()</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">residualsSample</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Residuals (cm)&quot;</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Distribution of the residuals&quot;</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
@@ -273,7 +278,7 @@ We must not forget to actually set the optimization bounds defined above.</p>
 <p>The <cite>drawValidation</cite> method allows one to compare the observed outputs and the metamodel outputs.</p>
 <p>sphinx_gallery_thumbnail_number = 3</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;R2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">R2</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;R2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">r2Score</span><span class="p">))</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>

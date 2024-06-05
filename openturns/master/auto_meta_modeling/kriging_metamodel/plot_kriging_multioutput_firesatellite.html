@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
@@ -19,6 +20,8 @@
     <script src="../../_static/documentation_options.js?v=f016e9fd"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=4ea706d9"></script>
     <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
@@ -224,17 +227,18 @@ domain definition of each variable.</p>
 <span class="n">outputKriging</span> <span class="o">=</span> <span class="n">krigingMetamodel</span><span class="p">(</span><span class="n">inputTestSet</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then, we use the <cite>MetaModelValidation</cite> class to validate the metamodel.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputTestSet</span><span class="p">,</span> <span class="n">krigingMetamodel</span><span class="p">(</span><span class="n">inputTestSet</span><span class="p">))</span>
+<p>Then, we use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a> class to validate the metamodel.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">krigingMetamodel</span><span class="p">(</span><span class="n">inputTestSet</span><span class="p">)</span>
+<span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputTestSet</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
 
-<span class="n">R2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()</span>
+<span class="n">r2Score</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()</span>
 
 <span class="n">label</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Total torque&quot;</span><span class="p">,</span> <span class="s2">&quot;Total power&quot;</span><span class="p">,</span> <span class="s2">&quot;Solar array area&quot;</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span><span class="o">.</span><span class="n">getGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;R2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">R2</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;R2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">r2Score</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Exact function&quot;</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;Metamodel prediction&quot;</span><span class="p">)</span>
@@ -247,7 +251,7 @@ domain definition of each variable.</p>
 <li><img src="../../_images/sphx_glr_plot_kriging_multioutput_firesatellite_002.png" srcset="../../_images/sphx_glr_plot_kriging_multioutput_firesatellite_002.png" alt="Total power" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_kriging_multioutput_firesatellite_003.png" srcset="../../_images/sphx_glr_plot_kriging_multioutput_firesatellite_003.png" alt="Solar array area" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.994 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.253 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-multioutput-firesatellite-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9492e6989cca811023b45e563397ca04/plot_kriging_multioutput_firesatellite.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_kriging_multioutput_firesatellite.ipynb</span></code></a></p>
