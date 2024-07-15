@@ -1,8 +1,12 @@
 import openturns as ot
+import openturns.experimental as otexp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 ot.RandomGenerator.SetSeed(0)
-factory = ot.TriangularFactory()
+if hasattr(ot, "TriangularFactory"):
+    factory = ot.TriangularFactory()
+else:
+    factory = otexp.TriangularFactory()
 ref = factory.build()
 dimension = ref.getDimension()
 if dimension <= 2:

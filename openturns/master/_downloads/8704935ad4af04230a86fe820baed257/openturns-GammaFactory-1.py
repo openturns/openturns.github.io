@@ -1,8 +1,12 @@
 import openturns as ot
+import openturns.experimental as otexp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 ot.RandomGenerator.SetSeed(0)
-factory = ot.GammaFactory()
+if hasattr(ot, "GammaFactory"):
+    factory = ot.GammaFactory()
+else:
+    factory = otexp.GammaFactory()
 ref = factory.build()
 dimension = ref.getDimension()
 if dimension <= 2:

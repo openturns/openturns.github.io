@@ -2,41 +2,41 @@ import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 title = None
-if ot.InverseGamma().__class__.__name__ == 'Bernoulli':
+if "InverseGamma" == "Bernoulli":
     distribution = ot.Bernoulli(0.7)
-elif ot.InverseGamma().__class__.__name__ == 'Binomial':
+elif "InverseGamma" == "Binomial":
     distribution = ot.Binomial(5, 0.2)
-elif ot.InverseGamma().__class__.__name__ == 'Hypergeometric':
+elif "InverseGamma" == "Hypergeometric":
     distribution = ot.Hypergeometric(10, 4, 7)
-elif ot.InverseGamma().__class__.__name__ == 'CumulativeDistributionNetwork':
+elif "InverseGamma" == "CumulativeDistributionNetwork":
     coll = [ot.Normal(2),ot.Dirichlet([0.5, 1.0, 1.5])]
     distribution = ot.CumulativeDistributionNetwork(coll, ot.BipartiteGraph([[0,1], [0,1]]))
-elif ot.InverseGamma().__class__.__name__ == 'Histogram':
+elif "InverseGamma" == "Histogram":
     distribution = ot.Histogram([-1.0, 0.5, 1.0, 2.0], [0.45, 0.4, 0.15])
-elif ot.InverseGamma().__class__.__name__ == 'KernelMixture':
+elif "InverseGamma" == "KernelMixture":
     kernel = ot.Uniform()
     sample = ot.Normal().getSample(5)
     bandwidth = [1.0]
     distribution = ot.KernelMixture(kernel, bandwidth, sample)
-elif ot.InverseGamma().__class__.__name__ == 'MaximumDistribution':
+elif "InverseGamma" == "MaximumDistribution":
     coll = [ot.Uniform(2.5, 3.5), ot.LogUniform(1.0, 1.2), ot.Triangular(2.0, 3.0, 4.0)]
     distribution = ot.MaximumDistribution(coll)
-elif ot.InverseGamma().__class__.__name__ == 'Multinomial':
+elif "InverseGamma" == "Multinomial":
     distribution = ot.Multinomial(5, [0.2])
-elif ot.InverseGamma().__class__.__name__ == 'RandomMixture':
+elif "InverseGamma" == "RandomMixture":
     coll = [ot.Triangular(0.0, 1.0, 5.0), ot.Uniform(-2.0, 2.0)]
     weights = [0.8, 0.2]
     cst = 3.0
     distribution = ot.RandomMixture(coll, weights, cst)
-elif ot.InverseGamma().__class__.__name__ == 'SmoothedUniform':
+elif "InverseGamma" == "SmoothedUniform":
     distribution = ot.SmoothedUniform(-1.0, 10.0, 1.0)
-elif ot.InverseGamma().__class__.__name__ == 'TruncatedDistribution':
+elif "InverseGamma" == "TruncatedDistribution":
     distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
-elif ot.InverseGamma().__class__.__name__ == 'UserDefined':
+elif "InverseGamma" == "UserDefined":
     distribution = ot.UserDefined([[1.0], [2.0], [3.0]], [0.4, 0.5, 1.0])
-elif ot.InverseGamma().__class__.__name__ == 'ZipfMandelbrot':
+elif "InverseGamma" == "ZipfMandelbrot":
     distribution = ot.ZipfMandelbrot(10, 2.5, 0.3)
-elif ot.InverseGamma().__class__.__name__ == 'Normal':
+elif "InverseGamma" == "Normal":
     cov = ot.CovarianceMatrix([[1.0, -0.5], [-0.5, 1.0]])
     distribution = ot.Normal([0.0, 0.0], cov)
     title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
@@ -45,9 +45,9 @@ else:
 
 dimension = distribution.getDimension()
 if title is None:
-    title = str(distribution)[:100].split('\n')[0]
+    title = str(distribution)[:100].split("\n")[0]
 if dimension == 1:
-    distribution.setDescription(['$x$'])
+    distribution.setDescription(["$x$"])
     pdf_graph = distribution.drawPDF()
     cdf_graph = distribution.drawCDF()
     fig = plt.figure(figsize=(10, 4))
@@ -72,5 +72,5 @@ elif dimension == 2:
     grid.setGraph(0, 1, cdf_graph)
     grid.setTitle(title)
     fig = View(grid).getFigure()
-    fig.axes[0].set_title('PDF')
-    fig.axes[1].set_title('CDF')
+    fig.axes[0].set_title("PDF")
+    fig.axes[1].set_title("CDF")
