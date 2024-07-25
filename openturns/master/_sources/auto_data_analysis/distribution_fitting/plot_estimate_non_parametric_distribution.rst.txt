@@ -510,7 +510,7 @@ As expected the Silverman seriously overfit the data and the other rules are mor
 Boundary corrections
 --------------------
 
-We finish this example on an advanced feature of the kernel smoothing, the boundary corrections.
+We detail here an advanced feature of the kernel smoothing, the boundary corrections.
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 211-212
@@ -648,19 +648,99 @@ We compare the estimated PDFs :
 
 The boundary correction made has a remarkable impact on the quality of the estimate for the small values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-262
+.. GENERATED FROM PYTHON SOURCE LINES 261-267
+
+Log-transform treatment
+-----------------------
+
+We finish this example on another advanced feature of the kernel smoothing: the log-transform treatment.
+This treatment is highly suited to skewed distributions, which are all challenging for kernel smoothing.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 269-270
+
+We consider several distributions which have significant skewness:
+
+.. GENERATED FROM PYTHON SOURCE LINES 270-274
 
 .. code-block:: Python
 
+    distCollection = [ot.LogNormal(0.0, 2.5), ot.Beta(20000.5, 2.5, 0.0, 1.0), ot.Exponential(),
+                      ot.WeibullMax(1.0, 0.9, 0.0), ot.Mixture([ot.Normal(-1.0, 0.5), ot.Normal(1.0, 1.0)], [0.4, 0.6]),
+                      ot.Mixture([ot.LogNormal(-1.0, 1.0, -1.0), ot.LogNormal(1.0, 1.0, 1.0)], [0.2, 0.8])]
 
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 275-285
+
+For each distribution, we do the following steps:
+
+- we generate a sample of size 5000,
+- we fit a kernel smoothing distribution without the log-transform treatment,
+- we fit a kernel smoothing distribution with the log-transform treatment,
+- we plot the real distribution and both non parametric estimations.
+
+Other transformations could be used, but the Log-transform one is quite effective. If the skewness is moderate,
+there is almost no change wrt simple kernel smoothing. But if the skewness is large, the transformation performs
+very well. Note that, in addition, this transformation performs an automatic boundary correction.
+
+.. GENERATED FROM PYTHON SOURCE LINES 285-317
+
+.. code-block:: Python
+
+    grid = ot.GridLayout(2, 3)
+    ot.RandomGenerator.SetSeed(0)
+    for i, distribution in enumerate(distCollection):
+        sample = distribution.getSample(5000)
+
+        # We draw the real distribution
+        graph = distribution.drawPDF()
+        graph.setLegends([distribution.getClassName()])
+        # We choose the default kernel
+        kernel = ot.KernelSmoothing()
+
+        # We activate no particular treatment
+        fitted = kernel.build(sample)
+        curve = fitted.drawPDF()
+        curve.setLegends(["Fitted"])
+        graph.add(curve)
+
+        # We activate the log-transform treatment
+        kernel.setUseLogTransform(True)
+        fitted = kernel.build(sample)
+        curve = fitted.drawPDF()
+        curve.setLegends(["Fitted LogTransform"])
+        curve = curve.getDrawable(0)
+        curve.setLineStyle("dashed")
+
+        graph.add(curve)
+        graph.setColors(ot.Drawable.BuildDefaultPalette(3))
+        grid.setGraph(i // 3, i % 3, graph)
+
+    view = viewer.View(grid)
 
     plt.show()
 
 
 
+.. image-sg:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_non_parametric_distribution_006.png
+   :alt: plot estimate non parametric distribution
+   :srcset: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_estimate_non_parametric_distribution_006.png
+   :class: sphx-glr-single-img
 
 
 
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** (0 minutes 4.630 seconds)
 
 
 .. _sphx_glr_download_auto_data_analysis_distribution_fitting_plot_estimate_non_parametric_distribution.py:
@@ -676,3 +756,7 @@ The boundary correction made has a remarkable impact on the quality of the estim
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_estimate_non_parametric_distribution.py <plot_estimate_non_parametric_distribution.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_estimate_non_parametric_distribution.zip <plot_estimate_non_parametric_distribution.zip>`
