@@ -3,11 +3,11 @@ import numpy as np
 from matplotlib import pyplot as plt
 n_functions = 8
 function_factory = ot.KrawtchoukFactory()
-if function_factory.getClassName() == 'KrawtchoukFactory':
+if function_factory.getClassName() == "KrawtchoukFactory":
     function_factory = ot.KrawtchoukFactory(n_functions, .5)
 functions = [function_factory.build(i) for i in range(n_functions)]
 measure = function_factory.getMeasure()
-if hasattr(measure, 'getA') and hasattr(measure, 'getB'):
+if hasattr(measure, "getA") and hasattr(measure, "getB"):
     x_min = measure.getA()
     x_max = measure.getB()
 else:
@@ -20,9 +20,9 @@ ax = fig.add_subplot(111)
 for i in range(n_functions):
     plt.plot(meshed_support,
              [functions[i](x) for x in meshed_support], lw=1.5,
-             label='$\phi_{' + str(i) + '}(x)$')
-plt.xlabel('$x$')
-plt.ylabel('$\phi_i(x)$')
+             label=fr"$\phi_(x)$")
+plt.xlabel(r"$x$")
+plt.ylabel(r"$\phi_i(x)$")
 plt.xlim(x_min, x_max)
 plt.grid()
 box = ax.get_position()
