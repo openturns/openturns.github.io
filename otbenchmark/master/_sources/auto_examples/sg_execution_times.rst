@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:15.472** total execution time for 6 files **from auto_examples**:
+**00:24.333** total execution time for 6 files **from auto_examples**:
 
 .. container::
 
@@ -32,21 +32,21 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``plot_methodFactory.py``)
-     - 00:04.326
-     - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``plot_crosscut_distribution_3d.py``)
-     - 00:04.169
+     - 00:08.366
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_ConditionalDistribution_Demo.py` (``plot_ConditionalDistribution_Demo.py``)
-     - 00:02.640
+     - 00:04.619
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``plot_convergence_reliability_mc.py``)
-     - 00:02.170
+   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``plot_methodFactory.py``)
+     - 00:04.439
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``plot_crosscut_distribution_2d.py``)
-     - 00:01.741
+     - 00:03.997
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``plot_convergence_reliability_mc.py``)
+     - 00:02.174
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_CrossCutFunction_Demo.py` (``plot_CrossCutFunction_Demo.py``)
-     - 00:00.426
+     - 00:00.738
      - 0.0

@@ -12,23 +12,6 @@ Examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Draw cross-cuts of multidimensional functions">
-
-.. only:: html
-
-  .. image:: /auto_examples/images/thumb/sphx_glr_plot_CrossCutFunction_Demo_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_plot_CrossCutFunction_Demo.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Draw cross-cuts of multidimensional functions</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Cross-cuts of conditional distributions in 2-d">
 
 .. only:: html
@@ -41,6 +24,23 @@ Examples
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Cross-cuts of conditional distributions in 2-d</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Draw cross-cuts of multidimensional functions">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_CrossCutFunction_Demo_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_plot_CrossCutFunction_Demo.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Draw cross-cuts of multidimensional functions</div>
     </div>
 
 
@@ -122,12 +122,71 @@ Examples
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_CrossCutFunction_Demo
    /auto_examples/plot_crosscut_distribution_2d
+   /auto_examples/plot_CrossCutFunction_Demo
    /auto_examples/plot_crosscut_distribution_3d
    /auto_examples/plot_methodFactory
    /auto_examples/plot_ConditionalDistribution_Demo
    /auto_examples/plot_convergence_reliability_mc
+
+Sensitivity examples
+====================
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Print the sensitivity analysis problems">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_print_problems_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_print_problems.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Print the sensitivity analysis problems</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Convergence of estimators on Ishigami">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_convergence_ishigami_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_convergence_ishigami.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Convergence of estimators on Ishigami</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+   :includehidden:
+
+
+   /auto_examples/sensitivity_problems/index.rst
 
 
 .. only:: html

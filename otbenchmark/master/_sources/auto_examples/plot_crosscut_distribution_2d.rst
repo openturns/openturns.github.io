@@ -21,15 +21,12 @@
 Cross-cuts of conditional distributions in 2-d
 ==============================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-14
+.. GENERATED FROM PYTHON SOURCE LINES 7-10
 
 .. code-block:: Python
 
     import openturns as ot
-    import numpy as np
     import otbenchmark as otb
-    import openturns.viewer as otv
-    import pylab as pl
 
 
 
@@ -38,12 +35,11 @@ Cross-cuts of conditional distributions in 2-d
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
+.. GENERATED FROM PYTHON SOURCE LINES 11-12
 
 Create a Funky distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-24
+.. GENERATED FROM PYTHON SOURCE LINES 12-19
 
 .. code-block:: Python
 
@@ -61,12 +57,11 @@ Create a Funky distribution
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Create a Punk distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-31
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -81,8 +76,7 @@ Create a Punk distribution
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 32-35
+.. GENERATED FROM PYTHON SOURCE LINES 26-28
 
 .. code-block:: Python
 
@@ -95,8 +89,7 @@ Create a Punk distribution
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 36-38
+.. GENERATED FROM PYTHON SOURCE LINES 29-31
 
 .. code-block:: Python
 
@@ -109,12 +102,12 @@ Create a Punk distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-41
+.. GENERATED FROM PYTHON SOURCE LINES 32-34
 
 Plot cross-cuts of the distribution
 -----------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-46
+.. GENERATED FROM PYTHON SOURCE LINES 36-39
 
 .. code-block:: Python
 
@@ -139,7 +132,7 @@ Plot cross-cuts of the distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 .. code-block:: Python
 
@@ -159,7 +152,7 @@ Plot cross-cuts of the distribution
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.741 seconds)
+   **Total running time of the script:** (0 minutes 3.997 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_crosscut_distribution_2d.py:

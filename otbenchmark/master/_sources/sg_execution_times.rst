@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:15.472** total execution time for 6 files **from all galleries**:
+**01:09.335** total execution time for 8 files **from all galleries**:
 
 .. container::
 
@@ -32,21 +32,27 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``examples/plot_methodFactory.py``)
-     - 00:04.326
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_convergence_ishigami.py` (``examples/sensitivity_problems/plot_convergence_ishigami.py``)
+     - 00:44.837
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``examples/plot_crosscut_distribution_3d.py``)
-     - 00:04.169
+     - 00:08.366
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_ConditionalDistribution_Demo.py` (``examples/plot_ConditionalDistribution_Demo.py``)
-     - 00:02.640
+     - 00:04.619
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``examples/plot_convergence_reliability_mc.py``)
-     - 00:02.170
+   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``examples/plot_methodFactory.py``)
+     - 00:04.439
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``examples/plot_crosscut_distribution_2d.py``)
-     - 00:01.741
+     - 00:03.997
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``examples/plot_convergence_reliability_mc.py``)
+     - 00:02.174
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_CrossCutFunction_Demo.py` (``examples/plot_CrossCutFunction_Demo.py``)
-     - 00:00.426
+     - 00:00.738
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_print_problems.py` (``examples/sensitivity_problems/plot_print_problems.py``)
+     - 00:00.165
      - 0.0
