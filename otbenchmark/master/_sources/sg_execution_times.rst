@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:09.335** total execution time for 8 files **from all galleries**:
+**01:46.932** total execution time for 20 files **from all galleries**:
 
 .. container::
 
@@ -33,26 +33,62 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_convergence_ishigami.py` (``examples/sensitivity_problems/plot_convergence_ishigami.py``)
-     - 00:44.837
+     - 00:45.054
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_morris_sensitivity.py` (``examples/sensitivity_problems/plot_morris_sensitivity.py``)
+     - 00:16.944
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``examples/plot_crosscut_distribution_3d.py``)
-     - 00:08.366
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_ConditionalDistribution_Demo.py` (``examples/plot_ConditionalDistribution_Demo.py``)
-     - 00:04.619
+     - 00:07.724
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``examples/plot_methodFactory.py``)
-     - 00:04.439
+     - 00:07.465
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``examples/plot_crosscut_distribution_2d.py``)
-     - 00:03.997
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_nloscillator_sensitivity.py` (``examples/sensitivity_problems/plot_nloscillator_sensitivity.py``)
+     - 00:03.807
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borehole_sensitivity.py` (``examples/sensitivity_problems/plot_borehole_sensitivity.py``)
+     - 00:03.696
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_ConditionalDistribution_Demo.py` (``examples/plot_ConditionalDistribution_Demo.py``)
+     - 00:02.577
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_flood_sensitivity.py` (``examples/sensitivity_problems/plot_flood_sensitivity.py``)
+     - 00:02.451
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gsobol_sensitivity.py` (``examples/sensitivity_problems/plot_gsobol_sensitivity.py``)
+     - 00:02.334
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py` (``examples/sensitivity_problems/plot_dirichlet_sensitivity.py``)
+     - 00:02.273
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``examples/plot_convergence_reliability_mc.py``)
-     - 00:02.174
+     - 00:02.177
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``examples/plot_crosscut_distribution_2d.py``)
+     - 00:02.066
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_sum.py` (``examples/sensitivity_problems/plot_gaussian_sum.py``)
+     - 00:01.770
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_product_sensitivity.py` (``examples/sensitivity_problems/plot_gaussian_product_sensitivity.py``)
+     - 00:01.658
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_CrossCutFunction_Demo.py` (``examples/plot_CrossCutFunction_Demo.py``)
-     - 00:00.738
+     - 00:01.229
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py` (``examples/sensitivity_problems/plot_ishigami_sensitivity.py``)
+     - 00:01.187
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py` (``examples/sensitivity_problems/plot_borgonovo_sensitivity.py``)
+     - 00:01.145
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_oakleyohagan_sensitivity.py` (``examples/sensitivity_problems/plot_oakleyohagan_sensitivity.py``)
+     - 00:01.088
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_print_problems.py` (``examples/sensitivity_problems/plot_print_problems.py``)
-     - 00:00.165
+     - 00:00.252
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_benchmark_sensitivity_methods.py` (``examples/sensitivity_problems/plot_benchmark_sensitivity_methods.py``)
+     - 00:00.034
      - 0.0
