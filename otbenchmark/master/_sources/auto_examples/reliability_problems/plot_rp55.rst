@@ -195,13 +195,6 @@ Print the iso-values of the distribution
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/openturns/viewer.py:679: UserWarning: No contour levels were found within the data range.
-      contourset = self._ax[0].contour(X, Y, Z, **contour_kw)
-
 
 
 
@@ -238,7 +231,7 @@ Print the iso-values of the distribution
  .. code-block:: none
 
 
-    class=Graph name=Points X s.t. g(X) < 0.0 implementation=class=GraphImplementation name=Points X s.t. g(X) < 0.0 title=Points X s.t. g(X) < 0.0 xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=In implementation=class=Cloud name=In derived from class=DrawableImplementation name=In legend=In data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2781 dimension=2 data=[[-0.848351,-0.264959],[-0.877713,-0.201163],[-0.961768,-0.287787],...,[-0.74073,-0.264193],[-0.50414,0.40665],[-0.355391,0.176409]] color=lightsalmon3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1,class=Drawable name=Out implementation=class=Cloud name=Out derived from class=DrawableImplementation name=Out legend=Out data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2219 dimension=2 data=[[0.909046,0.978847],[-0.731956,-0.986851],[-0.46301,-0.368995],...,[0.804634,0.772896],[-0.500898,0.800467],[0.695522,0.571628]] color=darkseagreen3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]
+    class=Graph name=Points X s.t. g(X) < 0.0 implementation=class=GraphImplementation name=Points X s.t. g(X) < 0.0 title=Points X s.t. g(X) < 0.0 xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=In implementation=class=Cloud name=In derived from class=DrawableImplementation name=In legend=In data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2786 dimension=2 data=[[0.782682,0.347024],[0.475555,0.875775],[0.927966,-0.787187],...,[-0.433171,-0.895469],[0.631521,-0.889689],[0.987537,-0.918999]] color=lightsalmon3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1,class=Drawable name=Out implementation=class=Cloud name=Out derived from class=DrawableImplementation name=Out legend=Out data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2214 dimension=2 data=[[0.0230678,0.262145],[-0.631242,-0.723988],[-0.672408,-0.817885],...,[-0.15484,0.0909679],[-0.723212,0.242593],[-0.481728,-0.68306]] color=darkseagreen3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]
 
 
 
@@ -285,7 +278,7 @@ Print the iso-values of the distribution
  .. code-block:: none
 
 
-    class=Graph name=Limit state surface implementation=class=GraphImplementation name=Limit state surface title=Limit state surface xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition= legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Contour name=Unnamed x=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-0.99998],[-0.960765],[-0.92155],[-0.882335],[-0.84312],[-0.803905],[-0.764691],[-0.725476],[-0.686261],[-0.647046],[-0.607831],[-0.568616],[-0.529401],[-0.490186],[-0.450971],[-0.411756],[-0.372542],[-0.333327],[-0.294112],[-0.254897],[-0.215682],[-0.176467],[-0.137252],[-0.0980373],[-0.0588224],[-0.0196075],[0.0196075],[0.0588224],[0.0980373],[0.137252],[0.176467],[0.215682],[0.254897],[0.294112],[0.333327],[0.372542],[0.411756],[0.450971],[0.490186],[0.529401],[0.568616],[0.607831],[0.647046],[0.686261],[0.725476],[0.764691],[0.803905],[0.84312],[0.882335],[0.92155],[0.960765],[0.99998]] y=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-0.99998],[-0.960765],[-0.92155],[-0.882335],[-0.84312],[-0.803905],[-0.764691],[-0.725476],[-0.686261],[-0.647046],[-0.607831],[-0.568616],[-0.529401],[-0.490186],[-0.450971],[-0.411756],[-0.372542],[-0.333327],[-0.294112],[-0.254897],[-0.215682],[-0.176467],[-0.137252],[-0.0980373],[-0.0588224],[-0.0196075],[0.0196075],[0.0588224],[0.0980373],[0.137252],[0.176467],[0.215682],[0.254897],[0.294112],[0.333327],[0.372542],[0.411756],[0.450971],[0.490186],[0.529401],[0.568616],[0.607831],[0.647046],[0.686261],[0.725476],[0.764691],[0.803905],[0.84312],[0.882335],[0.92155],[0.960765],[0.99998]] levels=class=Point name=Unnamed dimension=1 values=[0] labels=[0.0] show labels=true isFilled=false colorBarPosition=right isVminUsed=false vmin=0 isVmaxUsed=false vmax=0 colorMap=hsv alpha=1 norm=linear extend=both hatches=[] derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2704 dimension=1 description=[gsys] data=[[0.2],[0.172272],[0.144564],...,[0.144564],[0.172272],[0.2]] color=#1f77b4 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=plus lineWidth=1,class=Drawable name=In implementation=class=Cloud name=In derived from class=DrawableImplementation name=In legend=In data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2781 dimension=2 data=[[-0.848351,-0.264959],[-0.877713,-0.201163],[-0.961768,-0.287787],...,[-0.74073,-0.264193],[-0.50414,0.40665],[-0.355391,0.176409]] color=lightsalmon3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1,class=Drawable name=Out implementation=class=Cloud name=Out derived from class=DrawableImplementation name=Out legend=Out data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2219 dimension=2 data=[[0.909046,0.978847],[-0.731956,-0.986851],[-0.46301,-0.368995],...,[0.804634,0.772896],[-0.500898,0.800467],[0.695522,0.571628]] color=darkseagreen3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]
+    class=Graph name=Limit state surface implementation=class=GraphImplementation name=Limit state surface title=Limit state surface xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition= legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Contour name=Unnamed x=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-0.99998],[-0.960765],[-0.92155],[-0.882335],[-0.84312],[-0.803905],[-0.764691],[-0.725476],[-0.686261],[-0.647046],[-0.607831],[-0.568616],[-0.529401],[-0.490186],[-0.450971],[-0.411756],[-0.372542],[-0.333327],[-0.294112],[-0.254897],[-0.215682],[-0.176467],[-0.137252],[-0.0980373],[-0.0588224],[-0.0196075],[0.0196075],[0.0588224],[0.0980373],[0.137252],[0.176467],[0.215682],[0.254897],[0.294112],[0.333327],[0.372542],[0.411756],[0.450971],[0.490186],[0.529401],[0.568616],[0.607831],[0.647046],[0.686261],[0.725476],[0.764691],[0.803905],[0.84312],[0.882335],[0.92155],[0.960765],[0.99998]] y=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-0.99998],[-0.960765],[-0.92155],[-0.882335],[-0.84312],[-0.803905],[-0.764691],[-0.725476],[-0.686261],[-0.647046],[-0.607831],[-0.568616],[-0.529401],[-0.490186],[-0.450971],[-0.411756],[-0.372542],[-0.333327],[-0.294112],[-0.254897],[-0.215682],[-0.176467],[-0.137252],[-0.0980373],[-0.0588224],[-0.0196075],[0.0196075],[0.0588224],[0.0980373],[0.137252],[0.176467],[0.215682],[0.254897],[0.294112],[0.333327],[0.372542],[0.411756],[0.450971],[0.490186],[0.529401],[0.568616],[0.607831],[0.647046],[0.686261],[0.725476],[0.764691],[0.803905],[0.84312],[0.882335],[0.92155],[0.960765],[0.99998]] levels=class=Point name=Unnamed dimension=1 values=[0] labels=[0.0] show labels=true isFilled=false colorBarPosition=right isVminUsed=false vmin=0 isVmaxUsed=false vmax=0 colorMap=hsv alpha=1 norm=linear extend=both hatches=[] derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2704 dimension=1 description=[gsys] data=[[0.2],[0.172272],[0.144564],...,[0.144564],[0.172272],[0.2]] color=#1f77b4 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=plus lineWidth=1,class=Drawable name=In implementation=class=Cloud name=In derived from class=DrawableImplementation name=In legend=In data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2786 dimension=2 data=[[0.782682,0.347024],[0.475555,0.875775],[0.927966,-0.787187],...,[-0.433171,-0.895469],[0.631521,-0.889689],[0.987537,-0.918999]] color=lightsalmon3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1,class=Drawable name=Out implementation=class=Cloud name=Out derived from class=DrawableImplementation name=Out legend=Out data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2214 dimension=2 data=[[0.0230678,0.262145],[-0.631242,-0.723988],[-0.672408,-0.817885],...,[-0.15484,0.0909679],[-0.723212,0.242593],[-0.481728,-0.68306]] color=darkseagreen3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]
 
 
 
@@ -374,8 +367,8 @@ Perform Monte-Carlo simulation
  .. code-block:: none
 
     Number of function calls = 43704
-    Failure Probability = 0.5690
-    95.0 % confidence interval :[0.5383,0.5997] 
+    Failure Probability = 0.5380
+    95.0 % confidence interval :[0.5071,0.5689] 
 
 
 
@@ -525,7 +518,7 @@ With Quasi-Monte-Carlo
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.980 seconds)
+   **Total running time of the script:** (0 minutes 1.928 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp55.py:

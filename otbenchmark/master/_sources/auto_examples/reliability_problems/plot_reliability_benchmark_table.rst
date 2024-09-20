@@ -259,12 +259,12 @@ Then the SORM algorithm.
 
  .. code-block:: none
 
-    computedProbability = 0.0024713325425069254
+    computedProbability = 0.003393741939862896
     exactProbability = 0.00286
-    absoluteError = 0.00038866745749307477
-    numberOfCorrectDigits = 0.8667878537605409
-    numberOfFunctionEvaluations = 40464
-    numberOfDigitsPerEvaluation = 2.1421210304481536e-05
+    absoluteError = 0.0005337419398628957
+    numberOfCorrectDigits = 0.72903470340884
+    numberOfFunctionEvaluations = 29466
+    numberOfDigitsPerEvaluation = 2.4741556485740856e-05
 
 
 
@@ -290,12 +290,12 @@ Then the SORM algorithm.
 
  .. code-block:: none
 
-    computedProbability = 0.0028248964077128105
+    computedProbability = 0.003483261581629281
     exactProbability = 0.00286
-    absoluteError = 3.510359228718965e-05
-    numberOfCorrectDigits = 1.911014471344841
-    numberOfFunctionEvaluations = 648
-    numberOfDigitsPerEvaluation = 0.0029490964063963593
+    absoluteError = 0.0006232615816292807
+    numberOfCorrectDigits = 0.6616956756909699
+    numberOfFunctionEvaluations = 526
+    numberOfDigitsPerEvaluation = 0.0012579765697546955
 
 
 
@@ -318,12 +318,12 @@ Then the SORM algorithm.
 
  .. code-block:: none
 
-    computedProbability = 0.002978031999999995
+    computedProbability = 0.0029240000000000013
     exactProbability = 0.00286
-    absoluteError = 0.00011803199999999492
-    numberOfCorrectDigits = 1.3843662670147572
+    absoluteError = 6.400000000000112e-05
+    numberOfCorrectDigits = 1.650186059145148
     numberOfFunctionEvaluations = 15000
-    numberOfDigitsPerEvaluation = 9.229108446765047e-05
+    numberOfDigitsPerEvaluation = 0.00011001240394300986
 
 
 
@@ -414,7 +414,7 @@ We create a list of problem names.
 
  .. code-block:: none
 
-      0%|          | 0/26 [00:00<?, ?it/s]      4%|▍         | 1/26 [00:01<00:43,  1.73s/it]      8%|▊         | 2/26 [00:02<00:22,  1.08it/s]     15%|█▌        | 4/26 [00:02<00:08,  2.61it/s]     23%|██▎       | 6/26 [00:02<00:04,  4.05it/s]     31%|███       | 8/26 [00:02<00:03,  5.73it/s]     38%|███▊      | 10/26 [00:02<00:02,  6.67it/s]     50%|█████     | 13/26 [00:02<00:01,  8.36it/s]     62%|██████▏   | 16/26 [00:03<00:00, 11.09it/s]     69%|██████▉   | 18/26 [00:03<00:00,  8.88it/s]     77%|███████▋  | 20/26 [00:05<00:02,  2.65it/s]     81%|████████  | 21/26 [00:05<00:01,  2.96it/s]     85%|████████▍ | 22/26 [00:06<00:01,  2.30it/s]     88%|████████▊ | 23/26 [00:06<00:01,  2.73it/s]    100%|██████████| 26/26 [00:06<00:00,  4.69it/s]    100%|██████████| 26/26 [00:06<00:00,  3.80it/s]
+      0%|          | 0/26 [00:00<?, ?it/s]      4%|▍         | 1/26 [00:02<01:04,  2.57s/it]      8%|▊         | 2/26 [00:03<00:33,  1.39s/it]     15%|█▌        | 4/26 [00:03<00:12,  1.76it/s]     23%|██▎       | 6/26 [00:03<00:07,  2.81it/s]     31%|███       | 8/26 [00:03<00:04,  4.06it/s]     38%|███▊      | 10/26 [00:03<00:03,  5.12it/s]     50%|█████     | 13/26 [00:04<00:01,  6.92it/s]     62%|██████▏   | 16/26 [00:04<00:01,  9.61it/s]     69%|██████▉   | 18/26 [00:04<00:00,  8.17it/s]     77%|███████▋  | 20/26 [00:06<00:02,  2.59it/s]     81%|████████  | 21/26 [00:06<00:01,  2.90it/s]     85%|████████▍ | 22/26 [00:07<00:01,  2.26it/s]     88%|████████▊ | 23/26 [00:07<00:01,  2.68it/s]    100%|██████████| 26/26 [00:08<00:00,  4.61it/s]    100%|██████████| 26/26 [00:08<00:00,  3.24it/s]
 
 
 .. raw:: html
@@ -452,45 +452,45 @@ We create a list of problem names.
           <td>7.897928e-04</td>
           <td>6.598878e-04</td>
           <td>7.838036e-04</td>
-          <td>0.0005</td>
-          <td>7.806413e-04</td>
-          <td>7.518000e-04</td>
+          <td>0.0009</td>
+          <td>7.664853e-04</td>
+          <td>8.666000e-04</td>
         </tr>
         <tr>
           <th>RP14</th>
           <td>7.728500e-04</td>
           <td>7.003011e-04</td>
           <td>6.995436e-04</td>
-          <td>0.0006</td>
-          <td>7.534825e-04</td>
-          <td>7.809000e-04</td>
+          <td>0.0007</td>
+          <td>7.601746e-04</td>
+          <td>7.072000e-04</td>
         </tr>
         <tr>
           <th>RP22</th>
           <td>4.207306e-03</td>
           <td>6.209672e-03</td>
           <td>4.390902e-03</td>
-          <td>0.0058</td>
-          <td>4.266280e-03</td>
-          <td>3.698000e-03</td>
+          <td>0.0036</td>
+          <td>4.304196e-03</td>
+          <td>4.865000e-03</td>
         </tr>
         <tr>
           <th>RP24</th>
           <td>2.860000e-03</td>
           <td>6.209245e-03</td>
           <td>6.209245e-03</td>
-          <td>0.0031</td>
-          <td>2.902719e-03</td>
-          <td>2.473524e-03</td>
+          <td>0.0030</td>
+          <td>2.831809e-03</td>
+          <td>3.027000e-03</td>
         </tr>
         <tr>
           <th>RP25</th>
           <td>4.148566e-05</td>
           <td>0.000000e+00</td>
           <td>0.000000e+00</td>
-          <td>0.0001</td>
+          <td>0.0000</td>
           <td>0.000000e+00</td>
-          <td>5.763075e-05</td>
+          <td>4.107000e-05</td>
         </tr>
         <tr>
           <th>RP28</th>
@@ -498,98 +498,98 @@ We create a list of problem names.
           <td>2.850470e-08</td>
           <td>0.000000e+00</td>
           <td>0.0000</td>
-          <td>1.647121e-07</td>
-          <td>1.557319e-07</td>
+          <td>1.775273e-07</td>
+          <td>1.499000e-07</td>
         </tr>
         <tr>
           <th>RP31</th>
           <td>3.226681e-03</td>
           <td>2.275013e-02</td>
           <td>2.275013e-02</td>
-          <td>0.0031</td>
-          <td>3.375656e-03</td>
-          <td>3.068000e-03</td>
+          <td>0.0024</td>
+          <td>3.232530e-03</td>
+          <td>3.660664e-03</td>
         </tr>
         <tr>
           <th>RP33</th>
           <td>2.570000e-03</td>
           <td>1.349898e-03</td>
           <td>1.349898e-03</td>
-          <td>0.0029</td>
-          <td>3.723239e-03</td>
-          <td>2.836161e-03</td>
+          <td>0.0028</td>
+          <td>2.334287e-03</td>
+          <td>2.638000e-03</td>
         </tr>
         <tr>
           <th>RP35</th>
           <td>3.478946e-03</td>
           <td>1.349898e-03</td>
           <td>2.134376e-03</td>
-          <td>0.0039</td>
-          <td>2.641014e-03</td>
-          <td>3.318000e-03</td>
+          <td>0.0044</td>
+          <td>2.678787e-03</td>
+          <td>3.698000e-03</td>
         </tr>
         <tr>
           <th>RP38</th>
           <td>8.100000e-03</td>
           <td>7.902212e-03</td>
           <td>8.029356e-03</td>
-          <td>0.0069</td>
-          <td>8.082279e-03</td>
-          <td>7.061000e-03</td>
+          <td>0.0079</td>
+          <td>8.101589e-03</td>
+          <td>8.541000e-03</td>
         </tr>
         <tr>
           <th>RP53</th>
           <td>3.130000e-02</td>
           <td>1.180398e-01</td>
           <td>2.986164e-02</td>
-          <td>0.0304</td>
-          <td>3.080323e-02</td>
-          <td>3.087000e-02</td>
+          <td>0.0315</td>
+          <td>3.185397e-02</td>
+          <td>3.084000e-02</td>
         </tr>
         <tr>
           <th>RP55</th>
           <td>5.600144e-01</td>
           <td>0.000000e+00</td>
           <td>0.000000e+00</td>
-          <td>0.5534</td>
+          <td>0.5546</td>
           <td>0.000000e+00</td>
-          <td>5.609000e-01</td>
+          <td>5.673000e-01</td>
         </tr>
         <tr>
           <th>RP54</th>
           <td>9.980000e-04</td>
           <td>5.555704e-02</td>
           <td>3.554811e-03</td>
-          <td>0.0015</td>
-          <td>1.082349e-03</td>
-          <td>9.754000e-04</td>
+          <td>0.0012</td>
+          <td>8.962894e-04</td>
+          <td>9.608000e-04</td>
         </tr>
         <tr>
           <th>RP57</th>
           <td>2.840000e-02</td>
           <td>0.000000e+00</td>
           <td>0.000000e+00</td>
-          <td>0.0275</td>
+          <td>0.0260</td>
           <td>0.000000e+00</td>
-          <td>2.575000e-02</td>
+          <td>2.892000e-02</td>
         </tr>
         <tr>
           <th>RP75</th>
           <td>9.819299e-03</td>
           <td>0.000000e+00</td>
           <td>0.000000e+00</td>
-          <td>0.0099</td>
+          <td>0.0102</td>
           <td>0.000000e+00</td>
-          <td>1.024000e-02</td>
+          <td>1.058000e-02</td>
         </tr>
         <tr>
           <th>RP89</th>
           <td>5.430000e-03</td>
           <td>2.008594e-09</td>
           <td>2.008594e-09</td>
-          <td>0.0067</td>
-          <td>6.510269e-04</td>
-          <td>5.733000e-03</td>
+          <td>0.0058</td>
+          <td>7.349624e-05</td>
+          <td>5.410000e-03</td>
         </tr>
         <tr>
           <th>RP107</th>
@@ -597,8 +597,8 @@ We create a list of problem names.
           <td>2.866516e-07</td>
           <td>2.866516e-07</td>
           <td>0.0000</td>
-          <td>2.863734e-07</td>
-          <td>2.323346e-07</td>
+          <td>2.791518e-07</td>
+          <td>2.464533e-07</td>
         </tr>
         <tr>
           <th>RP110</th>
@@ -606,8 +606,8 @@ We create a list of problem names.
           <td>3.167124e-05</td>
           <td>3.167124e-05</td>
           <td>0.0000</td>
-          <td>3.205721e-05</td>
-          <td>1.086823e-05</td>
+          <td>3.012417e-05</td>
+          <td>3.876000e-05</td>
         </tr>
         <tr>
           <th>RP111</th>
@@ -616,34 +616,34 @@ We create a list of problem names.
           <td>0.000000e+00</td>
           <td>0.0000</td>
           <td>0.000000e+00</td>
-          <td>8.424000e-07</td>
+          <td>6.762671e-07</td>
         </tr>
         <tr>
           <th>RP63</th>
           <td>3.790000e-04</td>
           <td>9.999966e-01</td>
           <td>0.000000e+00</td>
-          <td>0.0005</td>
+          <td>0.0006</td>
           <td>0.000000e+00</td>
-          <td>3.611000e-04</td>
+          <td>3.612000e-04</td>
         </tr>
         <tr>
           <th>RP91</th>
           <td>6.970000e-04</td>
           <td>6.994296e-04</td>
           <td>7.011592e-04</td>
-          <td>0.0008</td>
-          <td>7.141905e-04</td>
-          <td>7.791000e-04</td>
+          <td>0.0009</td>
+          <td>6.855230e-04</td>
+          <td>6.597000e-04</td>
         </tr>
         <tr>
           <th>RP60</th>
           <td>4.560000e-02</td>
           <td>4.483968e-02</td>
           <td>4.483968e-02</td>
-          <td>0.0474</td>
-          <td>4.451654e-02</td>
-          <td>4.596000e-02</td>
+          <td>0.0460</td>
+          <td>4.530779e-02</td>
+          <td>4.402000e-02</td>
         </tr>
         <tr>
           <th>RP77</th>
@@ -652,34 +652,34 @@ We create a list of problem names.
           <td>0.000000e+00</td>
           <td>0.0000</td>
           <td>0.000000e+00</td>
-          <td>2.099458e-07</td>
+          <td>2.798000e-07</td>
         </tr>
         <tr>
           <th>Four-branch serial system</th>
           <td>2.222795e-03</td>
           <td>0.000000e+00</td>
           <td>0.000000e+00</td>
-          <td>0.0024</td>
+          <td>0.0021</td>
           <td>0.000000e+00</td>
-          <td>1.951000e-03</td>
+          <td>1.890108e-03</td>
         </tr>
         <tr>
           <th>R-S</th>
           <td>7.864960e-02</td>
           <td>7.864960e-02</td>
           <td>7.864960e-02</td>
-          <td>0.0804</td>
-          <td>7.724220e-02</td>
-          <td>7.432000e-02</td>
+          <td>0.0758</td>
+          <td>7.801133e-02</td>
+          <td>7.475000e-02</td>
         </tr>
         <tr>
           <th>Axial stressed beam</th>
           <td>2.919819e-02</td>
           <td>2.998280e-02</td>
           <td>2.933256e-02</td>
-          <td>0.0300</td>
-          <td>2.929116e-02</td>
-          <td>3.035000e-02</td>
+          <td>0.0289</td>
+          <td>2.942578e-02</td>
+          <td>2.939000e-02</td>
         </tr>
       </tbody>
     </table>
@@ -812,63 +812,63 @@ Run several algorithms on all reliability benchmark problems: print statistics o
     <div class="output_subarea output_html rendered_html output_result">
     <style type="text/css">
     </style>
-    <table id="T_1d09c">
+    <table id="T_97eb0">
       <thead>
         <tr>
           <th class="blank level0" >&nbsp;</th>
-          <th id="T_1d09c_level0_col0" class="col_heading level0 col0" >Exact PF RP33</th>
-          <th id="T_1d09c_level0_col1" class="col_heading level0 col1" >Estimated PF</th>
-          <th id="T_1d09c_level0_col2" class="col_heading level0 col2" >Absolute Error</th>
-          <th id="T_1d09c_level0_col3" class="col_heading level0 col3" >Correct Digits</th>
-          <th id="T_1d09c_level0_col4" class="col_heading level0 col4" >Function Calls</th>
-          <th id="T_1d09c_level0_col5" class="col_heading level0 col5" >Digits / Evaluation</th>
+          <th id="T_97eb0_level0_col0" class="col_heading level0 col0" >Exact PF RP33</th>
+          <th id="T_97eb0_level0_col1" class="col_heading level0 col1" >Estimated PF</th>
+          <th id="T_97eb0_level0_col2" class="col_heading level0 col2" >Absolute Error</th>
+          <th id="T_97eb0_level0_col3" class="col_heading level0 col3" >Correct Digits</th>
+          <th id="T_97eb0_level0_col4" class="col_heading level0 col4" >Function Calls</th>
+          <th id="T_97eb0_level0_col5" class="col_heading level0 col5" >Digits / Evaluation</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <th id="T_1d09c_level0_row0" class="row_heading level0 row0" >Monte-Carlo</th>
-          <td id="T_1d09c_row0_col0" class="data row0 col0" >2.570e-03</td>
-          <td id="T_1d09c_row0_col1" class="data row0 col1" >2.200e-03</td>
-          <td id="T_1d09c_row0_col2" class="data row0 col2" >3.700e-04</td>
-          <td id="T_1d09c_row0_col3" class="data row0 col3" >0.8</td>
-          <td id="T_1d09c_row0_col4" class="data row0 col4" >10000</td>
-          <td id="T_1d09c_row0_col5" class="data row0 col5" >0.0</td>
+          <th id="T_97eb0_level0_row0" class="row_heading level0 row0" >Monte-Carlo</th>
+          <td id="T_97eb0_row0_col0" class="data row0 col0" >2.570e-03</td>
+          <td id="T_97eb0_row0_col1" class="data row0 col1" >2.600e-03</td>
+          <td id="T_97eb0_row0_col2" class="data row0 col2" >3.000e-05</td>
+          <td id="T_97eb0_row0_col3" class="data row0 col3" >1.9</td>
+          <td id="T_97eb0_row0_col4" class="data row0 col4" >10000</td>
+          <td id="T_97eb0_row0_col5" class="data row0 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_1d09c_level0_row1" class="row_heading level0 row1" >FORM</th>
-          <td id="T_1d09c_row1_col0" class="data row1 col0" >2.570e-03</td>
-          <td id="T_1d09c_row1_col1" class="data row1 col1" >1.350e-03</td>
-          <td id="T_1d09c_row1_col2" class="data row1 col2" >1.220e-03</td>
-          <td id="T_1d09c_row1_col3" class="data row1 col3" >0.3</td>
-          <td id="T_1d09c_row1_col4" class="data row1 col4" >26</td>
-          <td id="T_1d09c_row1_col5" class="data row1 col5" >0.0</td>
+          <th id="T_97eb0_level0_row1" class="row_heading level0 row1" >FORM</th>
+          <td id="T_97eb0_row1_col0" class="data row1 col0" >2.570e-03</td>
+          <td id="T_97eb0_row1_col1" class="data row1 col1" >1.350e-03</td>
+          <td id="T_97eb0_row1_col2" class="data row1 col2" >1.220e-03</td>
+          <td id="T_97eb0_row1_col3" class="data row1 col3" >0.3</td>
+          <td id="T_97eb0_row1_col4" class="data row1 col4" >26</td>
+          <td id="T_97eb0_row1_col5" class="data row1 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_1d09c_level0_row2" class="row_heading level0 row2" >SORM</th>
-          <td id="T_1d09c_row2_col0" class="data row2 col0" >2.570e-03</td>
-          <td id="T_1d09c_row2_col1" class="data row2 col1" >1.350e-03</td>
-          <td id="T_1d09c_row2_col2" class="data row2 col2" >1.220e-03</td>
-          <td id="T_1d09c_row2_col3" class="data row2 col3" >0.3</td>
-          <td id="T_1d09c_row2_col4" class="data row2 col4" >51</td>
-          <td id="T_1d09c_row2_col5" class="data row2 col5" >0.0</td>
+          <th id="T_97eb0_level0_row2" class="row_heading level0 row2" >SORM</th>
+          <td id="T_97eb0_row2_col0" class="data row2 col0" >2.570e-03</td>
+          <td id="T_97eb0_row2_col1" class="data row2 col1" >1.350e-03</td>
+          <td id="T_97eb0_row2_col2" class="data row2 col2" >1.220e-03</td>
+          <td id="T_97eb0_row2_col3" class="data row2 col3" >0.3</td>
+          <td id="T_97eb0_row2_col4" class="data row2 col4" >51</td>
+          <td id="T_97eb0_row2_col5" class="data row2 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_1d09c_level0_row3" class="row_heading level0 row3" >FORM-IS</th>
-          <td id="T_1d09c_row3_col0" class="data row3 col0" >2.570e-03</td>
-          <td id="T_1d09c_row3_col1" class="data row3 col1" >2.469e-03</td>
-          <td id="T_1d09c_row3_col2" class="data row3 col2" >1.012e-04</td>
-          <td id="T_1d09c_row3_col3" class="data row3 col3" >1.4</td>
-          <td id="T_1d09c_row3_col4" class="data row3 col4" >10026</td>
-          <td id="T_1d09c_row3_col5" class="data row3 col5" >0.0</td>
+          <th id="T_97eb0_level0_row3" class="row_heading level0 row3" >FORM-IS</th>
+          <td id="T_97eb0_row3_col0" class="data row3 col0" >2.570e-03</td>
+          <td id="T_97eb0_row3_col1" class="data row3 col1" >2.500e-03</td>
+          <td id="T_97eb0_row3_col2" class="data row3 col2" >6.996e-05</td>
+          <td id="T_97eb0_row3_col3" class="data row3 col3" >1.6</td>
+          <td id="T_97eb0_row3_col4" class="data row3 col4" >10026</td>
+          <td id="T_97eb0_row3_col5" class="data row3 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_1d09c_level0_row4" class="row_heading level0 row4" >SUBSET</th>
-          <td id="T_1d09c_row4_col0" class="data row4 col0" >2.570e-03</td>
-          <td id="T_1d09c_row4_col1" class="data row4 col1" >2.685e-03</td>
-          <td id="T_1d09c_row4_col2" class="data row4 col2" >1.150e-04</td>
-          <td id="T_1d09c_row4_col3" class="data row4 col3" >1.3</td>
-          <td id="T_1d09c_row4_col4" class="data row4 col4" >30000</td>
-          <td id="T_1d09c_row4_col5" class="data row4 col5" >0.0</td>
+          <th id="T_97eb0_level0_row4" class="row_heading level0 row4" >SUBSET</th>
+          <td id="T_97eb0_row4_col0" class="data row4 col0" >2.570e-03</td>
+          <td id="T_97eb0_row4_col1" class="data row4 col1" >2.559e-03</td>
+          <td id="T_97eb0_row4_col2" class="data row4 col2" >1.056e-05</td>
+          <td id="T_97eb0_row4_col3" class="data row4 col3" >2.4</td>
+          <td id="T_97eb0_row4_col4" class="data row4 col4" >30000</td>
+          <td id="T_97eb0_row4_col5" class="data row4 col5" >0.0</td>
         </tr>
       </tbody>
     </table>
@@ -892,63 +892,63 @@ Run several algorithms on all reliability benchmark problems: print statistics o
     <div class="output_subarea output_html rendered_html output_result">
     <style type="text/css">
     </style>
-    <table id="T_28590">
+    <table id="T_efdee">
       <thead>
         <tr>
           <th class="blank level0" >&nbsp;</th>
-          <th id="T_28590_level0_col0" class="col_heading level0 col0" >Exact PF RP35</th>
-          <th id="T_28590_level0_col1" class="col_heading level0 col1" >Estimated PF</th>
-          <th id="T_28590_level0_col2" class="col_heading level0 col2" >Absolute Error</th>
-          <th id="T_28590_level0_col3" class="col_heading level0 col3" >Correct Digits</th>
-          <th id="T_28590_level0_col4" class="col_heading level0 col4" >Function Calls</th>
-          <th id="T_28590_level0_col5" class="col_heading level0 col5" >Digits / Evaluation</th>
+          <th id="T_efdee_level0_col0" class="col_heading level0 col0" >Exact PF RP35</th>
+          <th id="T_efdee_level0_col1" class="col_heading level0 col1" >Estimated PF</th>
+          <th id="T_efdee_level0_col2" class="col_heading level0 col2" >Absolute Error</th>
+          <th id="T_efdee_level0_col3" class="col_heading level0 col3" >Correct Digits</th>
+          <th id="T_efdee_level0_col4" class="col_heading level0 col4" >Function Calls</th>
+          <th id="T_efdee_level0_col5" class="col_heading level0 col5" >Digits / Evaluation</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <th id="T_28590_level0_row0" class="row_heading level0 row0" >Monte-Carlo</th>
-          <td id="T_28590_row0_col0" class="data row0 col0" >3.479e-03</td>
-          <td id="T_28590_row0_col1" class="data row0 col1" >4.200e-03</td>
-          <td id="T_28590_row0_col2" class="data row0 col2" >7.211e-04</td>
-          <td id="T_28590_row0_col3" class="data row0 col3" >0.7</td>
-          <td id="T_28590_row0_col4" class="data row0 col4" >10000</td>
-          <td id="T_28590_row0_col5" class="data row0 col5" >0.0</td>
+          <th id="T_efdee_level0_row0" class="row_heading level0 row0" >Monte-Carlo</th>
+          <td id="T_efdee_row0_col0" class="data row0 col0" >3.479e-03</td>
+          <td id="T_efdee_row0_col1" class="data row0 col1" >3.400e-03</td>
+          <td id="T_efdee_row0_col2" class="data row0 col2" >7.895e-05</td>
+          <td id="T_efdee_row0_col3" class="data row0 col3" >1.6</td>
+          <td id="T_efdee_row0_col4" class="data row0 col4" >10000</td>
+          <td id="T_efdee_row0_col5" class="data row0 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_28590_level0_row1" class="row_heading level0 row1" >FORM</th>
-          <td id="T_28590_row1_col0" class="data row1 col0" >3.479e-03</td>
-          <td id="T_28590_row1_col1" class="data row1 col1" >1.350e-03</td>
-          <td id="T_28590_row1_col2" class="data row1 col2" >2.129e-03</td>
-          <td id="T_28590_row1_col3" class="data row1 col3" >0.2</td>
-          <td id="T_28590_row1_col4" class="data row1 col4" >20</td>
-          <td id="T_28590_row1_col5" class="data row1 col5" >0.0</td>
+          <th id="T_efdee_level0_row1" class="row_heading level0 row1" >FORM</th>
+          <td id="T_efdee_row1_col0" class="data row1 col0" >3.479e-03</td>
+          <td id="T_efdee_row1_col1" class="data row1 col1" >1.350e-03</td>
+          <td id="T_efdee_row1_col2" class="data row1 col2" >2.129e-03</td>
+          <td id="T_efdee_row1_col3" class="data row1 col3" >0.2</td>
+          <td id="T_efdee_row1_col4" class="data row1 col4" >20</td>
+          <td id="T_efdee_row1_col5" class="data row1 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_28590_level0_row2" class="row_heading level0 row2" >SORM</th>
-          <td id="T_28590_row2_col0" class="data row2 col0" >3.479e-03</td>
-          <td id="T_28590_row2_col1" class="data row2 col1" >2.134e-03</td>
-          <td id="T_28590_row2_col2" class="data row2 col2" >1.345e-03</td>
-          <td id="T_28590_row2_col3" class="data row2 col3" >0.4</td>
-          <td id="T_28590_row2_col4" class="data row2 col4" >33</td>
-          <td id="T_28590_row2_col5" class="data row2 col5" >0.0</td>
+          <th id="T_efdee_level0_row2" class="row_heading level0 row2" >SORM</th>
+          <td id="T_efdee_row2_col0" class="data row2 col0" >3.479e-03</td>
+          <td id="T_efdee_row2_col1" class="data row2 col1" >2.134e-03</td>
+          <td id="T_efdee_row2_col2" class="data row2 col2" >1.345e-03</td>
+          <td id="T_efdee_row2_col3" class="data row2 col3" >0.4</td>
+          <td id="T_efdee_row2_col4" class="data row2 col4" >33</td>
+          <td id="T_efdee_row2_col5" class="data row2 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_28590_level0_row3" class="row_heading level0 row3" >FORM-IS</th>
-          <td id="T_28590_row3_col0" class="data row3 col0" >3.479e-03</td>
-          <td id="T_28590_row3_col1" class="data row3 col1" >2.534e-03</td>
-          <td id="T_28590_row3_col2" class="data row3 col2" >9.453e-04</td>
-          <td id="T_28590_row3_col3" class="data row3 col3" >0.6</td>
-          <td id="T_28590_row3_col4" class="data row3 col4" >10020</td>
-          <td id="T_28590_row3_col5" class="data row3 col5" >0.0</td>
+          <th id="T_efdee_level0_row3" class="row_heading level0 row3" >FORM-IS</th>
+          <td id="T_efdee_row3_col0" class="data row3 col0" >3.479e-03</td>
+          <td id="T_efdee_row3_col1" class="data row3 col1" >2.410e-03</td>
+          <td id="T_efdee_row3_col2" class="data row3 col2" >1.069e-03</td>
+          <td id="T_efdee_row3_col3" class="data row3 col3" >0.5</td>
+          <td id="T_efdee_row3_col4" class="data row3 col4" >10020</td>
+          <td id="T_efdee_row3_col5" class="data row3 col5" >0.0</td>
         </tr>
         <tr>
-          <th id="T_28590_level0_row4" class="row_heading level0 row4" >SUBSET</th>
-          <td id="T_28590_row4_col0" class="data row4 col0" >3.479e-03</td>
-          <td id="T_28590_row4_col1" class="data row4 col1" >3.250e-03</td>
-          <td id="T_28590_row4_col2" class="data row4 col2" >2.289e-04</td>
-          <td id="T_28590_row4_col3" class="data row4 col3" >1.2</td>
-          <td id="T_28590_row4_col4" class="data row4 col4" >30000</td>
-          <td id="T_28590_row4_col5" class="data row4 col5" >0.0</td>
+          <th id="T_efdee_level0_row4" class="row_heading level0 row4" >SUBSET</th>
+          <td id="T_efdee_row4_col0" class="data row4 col0" >3.479e-03</td>
+          <td id="T_efdee_row4_col1" class="data row4 col1" >3.348e-03</td>
+          <td id="T_efdee_row4_col2" class="data row4 col2" >1.309e-04</td>
+          <td id="T_efdee_row4_col3" class="data row4 col3" >1.4</td>
+          <td id="T_efdee_row4_col4" class="data row4 col4" >30000</td>
+          <td id="T_efdee_row4_col5" class="data row4 col5" >0.0</td>
         </tr>
       </tbody>
     </table>
@@ -960,7 +960,7 @@ Run several algorithms on all reliability benchmark problems: print statistics o
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.239 seconds)
+   **Total running time of the script:** (0 minutes 15.017 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_reliability_benchmark_table.py:

@@ -414,7 +414,7 @@ where :math:`n` is the sample size.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.251 seconds)
+   **Total running time of the script:** (0 minutes 2.164 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_convergence_reliability_mc.py:

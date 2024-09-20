@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.596 seconds)
+   **Total running time of the script:** (0 minutes 1.516 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py:

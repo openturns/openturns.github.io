@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:29.105** total execution time for 20 files **from auto_examples/reliability_problems**:
+**01:27.759** total execution time for 20 files **from auto_examples/reliability_problems**:
 
 .. container::
 
@@ -33,61 +33,61 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp25.py` (``plot_rp25.py``)
-     - 00:30.112
+     - 00:26.804
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_benchmark_table.py` (``plot_reliability_benchmark_table.py``)
-     - 00:14.239
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp28.py` (``plot_rp28.py``)
-     - 00:06.009
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py` (``plot_rp111.py``)
-     - 00:05.639
+     - 00:15.017
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_compute_reference_rp55_pf.py` (``plot_compute_reference_rp55_pf.py``)
-     - 00:03.666
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_benchmark.py` (``plot_reliability_benchmark.py``)
-     - 00:02.934
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp110.py` (``plot_rp110.py``)
-     - 00:02.795
+     - 00:05.687
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_compute_reference_proba.py` (``plot_reliability_compute_reference_proba.py``)
-     - 00:02.631
+     - 00:04.156
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_case_rs.py` (``plot_case_rs.py``)
-     - 00:02.501
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp28.py` (``plot_rp28.py``)
+     - 00:03.622
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py` (``plot_rp24.py``)
-     - 00:02.268
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp53.py` (``plot_rp53.py``)
-     - 00:02.166
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp57.py` (``plot_rp57.py``)
-     - 00:01.994
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp55.py` (``plot_rp55.py``)
-     - 00:01.980
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py` (``plot_rp111.py``)
+     - 00:03.293
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp31.py` (``plot_rp31.py``)
-     - 00:01.840
+     - 00:02.966
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_benchmark.py` (``plot_reliability_benchmark.py``)
+     - 00:02.929
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp35.py` (``plot_rp35.py``)
-     - 00:01.739
+     - 00:02.813
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py` (``plot_rp24.py``)
+     - 00:02.708
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py` (``plot_rp89.py``)
-     - 00:01.667
+     - 00:02.638
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_case_rs.py` (``plot_case_rs.py``)
+     - 00:02.535
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp75.py` (``plot_rp75.py``)
-     - 00:01.662
+     - 00:02.139
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp22.py` (``plot_rp22.py``)
-     - 00:01.632
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp53.py` (``plot_rp53.py``)
+     - 00:02.019
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp55.py` (``plot_rp55.py``)
+     - 00:01.928
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_four_branch_serial_system_waarts.py` (``plot_four_branch_serial_system_waarts.py``)
-     - 00:01.629
+     - 00:01.708
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp110.py` (``plot_rp110.py``)
+     - 00:01.661
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp22.py` (``plot_rp22.py``)
+     - 00:01.573
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp57.py` (``plot_rp57.py``)
+     - 00:01.561
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_print_reliability_benchmark.py` (``plot_print_reliability_benchmark.py``)
      - 00:00.003
