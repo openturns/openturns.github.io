@@ -32,6 +32,23 @@ Sensitivity examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Distribution of the Sobol&#x27; indices on Ishigami function">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_sensitivity_distribution_ishigami_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_sensitivity_distribution_ishigami.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Distribution of the Sobol' indices on Ishigami function</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Flooding test function">
 
 .. only:: html
@@ -262,6 +279,7 @@ Sensitivity examples
    :hidden:
 
    /auto_examples/sensitivity_problems/plot_print_problems
+   /auto_examples/sensitivity_problems/plot_sensitivity_distribution_ishigami
    /auto_examples/sensitivity_problems/plot_flood_sensitivity
    /auto_examples/sensitivity_problems/plot_borgonovo_sensitivity
    /auto_examples/sensitivity_problems/plot_ishigami_sensitivity
