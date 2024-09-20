@@ -165,20 +165,13 @@ For each problem in the benchmark, print the problem name and the exact Sobol' i
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/runner/work/otbenchmark/otbenchmark/doc/examples/sensitivity_problems/plot_print_problems.py:53: FutureWarning: In future versions `DataFrame.to_latex` is expected to utilise the base implementation of `Styler.to_latex` for formatting and rendering. The arguments signature may therefore change. It is recommended instead to use `DataFrame.style.to_latex` which also contains additional functionality.
-      latex_code = df_problems_list.to_latex()
-
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.165 seconds)
+   **Total running time of the script:** (0 minutes 0.074 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_print_problems.py:

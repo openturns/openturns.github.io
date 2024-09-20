@@ -462,8 +462,8 @@ Use polynomial chaos.
     Elapsed = 0.0 (s), Sample size = 80
     Elapsed = 0.1 (s), Sample size = 160
     Elapsed = 0.6 (s), Sample size = 320
-    Elapsed = 3.1 (s), Sample size = 640
-    Elapsed = 18.76 (s)
+    Elapsed = 3.2 (s), Sample size = 640
+    Elapsed = 18.96 (s)
 
 
 
@@ -483,7 +483,7 @@ Use polynomial chaos.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 50.456 seconds)
+   **Total running time of the script:** (0 minutes 46.853 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_convergence_ishigami.py:

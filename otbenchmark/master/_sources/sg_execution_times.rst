@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**03:41.263** total execution time for 44 files **from all galleries**:
+**03:42.381** total execution time for 44 files **from all galleries**:
 
 .. container::
 
@@ -33,133 +33,133 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_convergence_ishigami.py` (``examples/sensitivity_problems/plot_convergence_ishigami.py``)
-     - 00:50.456
+     - 00:46.853
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp25.py` (``examples/reliability_problems/plot_rp25.py``)
-     - 00:29.898
+     - 00:30.112
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_sensitivity_distribution_ishigami.py` (``examples/sensitivity_problems/plot_sensitivity_distribution_ishigami.py``)
-     - 00:18.055
+     - 00:18.805
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_morris_sensitivity.py` (``examples/sensitivity_problems/plot_morris_sensitivity.py``)
-     - 00:16.148
+     - 00:18.707
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_benchmark_table.py` (``examples/reliability_problems/plot_reliability_benchmark_table.py``)
-     - 00:14.221
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``examples/plot_methodFactory.py``)
-     - 00:07.847
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py` (``examples/reliability_problems/plot_rp111.py``)
-     - 00:05.609
+     - 00:14.239
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``examples/plot_crosscut_distribution_3d.py``)
-     - 00:04.740
+     - 00:08.328
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp28.py` (``examples/reliability_problems/plot_rp28.py``)
-     - 00:04.687
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py` (``examples/plot_conditionaldistribution.py``)
-     - 00:04.559
+     - 00:06.009
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_nloscillator_sensitivity.py` (``examples/sensitivity_problems/plot_nloscillator_sensitivity.py``)
-     - 00:04.315
+     - 00:05.938
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py` (``examples/reliability_problems/plot_rp111.py``)
+     - 00:05.639
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py` (``examples/plot_conditionaldistribution.py``)
+     - 00:05.100
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``examples/plot_methodFactory.py``)
+     - 00:04.483
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``examples/plot_crosscut_distribution_2d.py``)
-     - 00:03.706
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_compute_reference_rp55_pf.py` (``examples/reliability_problems/plot_compute_reference_rp55_pf.py``)
-     - 00:03.636
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp31.py` (``examples/reliability_problems/plot_rp31.py``)
-     - 00:02.899
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_benchmark.py` (``examples/reliability_problems/plot_reliability_benchmark.py``)
-     - 00:02.879
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp53.py` (``examples/reliability_problems/plot_rp53.py``)
-     - 00:02.870
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borehole_sensitivity.py` (``examples/sensitivity_problems/plot_borehole_sensitivity.py``)
-     - 00:02.759
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp57.py` (``examples/reliability_problems/plot_rp57.py``)
-     - 00:02.654
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_compute_reference_proba.py` (``examples/reliability_problems/plot_reliability_compute_reference_proba.py``)
-     - 00:02.649
+     - 00:04.037
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_flood_sensitivity.py` (``examples/sensitivity_problems/plot_flood_sensitivity.py``)
-     - 00:02.642
+     - 00:03.840
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gsobol_sensitivity.py` (``examples/sensitivity_problems/plot_gsobol_sensitivity.py``)
-     - 00:02.504
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_compute_reference_rp55_pf.py` (``examples/reliability_problems/plot_compute_reference_rp55_pf.py``)
+     - 00:03.666
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py` (``examples/sensitivity_problems/plot_dirichlet_sensitivity.py``)
-     - 00:02.313
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borehole_sensitivity.py` (``examples/sensitivity_problems/plot_borehole_sensitivity.py``)
+     - 00:03.553
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp55.py` (``examples/reliability_problems/plot_rp55.py``)
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_benchmark.py` (``examples/reliability_problems/plot_reliability_benchmark.py``)
+     - 00:02.934
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp110.py` (``examples/reliability_problems/plot_rp110.py``)
+     - 00:02.795
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_reliability_compute_reference_proba.py` (``examples/reliability_problems/plot_reliability_compute_reference_proba.py``)
+     - 00:02.631
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_case_rs.py` (``examples/reliability_problems/plot_case_rs.py``)
+     - 00:02.501
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py` (``examples/reliability_problems/plot_rp24.py``)
      - 00:02.268
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``examples/plot_convergence_reliability_mc.py``)
-     - 00:02.260
+     - 00:02.251
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp75.py` (``examples/reliability_problems/plot_rp75.py``)
-     - 00:02.001
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp53.py` (``examples/reliability_problems/plot_rp53.py``)
+     - 00:02.166
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_four_branch_serial_system_waarts.py` (``examples/reliability_problems/plot_four_branch_serial_system_waarts.py``)
-     - 00:01.986
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp57.py` (``examples/reliability_problems/plot_rp57.py``)
+     - 00:01.994
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_oakleyohagan_sensitivity.py` (``examples/sensitivity_problems/plot_oakleyohagan_sensitivity.py``)
-     - 00:01.897
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp55.py` (``examples/reliability_problems/plot_rp55.py``)
+     - 00:01.980
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_product_sensitivity.py` (``examples/sensitivity_problems/plot_gaussian_product_sensitivity.py``)
-     - 00:01.801
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_sum.py` (``examples/sensitivity_problems/plot_gaussian_sum.py``)
-     - 00:01.759
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp110.py` (``examples/reliability_problems/plot_rp110.py``)
-     - 00:01.715
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp31.py` (``examples/reliability_problems/plot_rp31.py``)
+     - 00:01.840
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp35.py` (``examples/reliability_problems/plot_rp35.py``)
-     - 00:01.702
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_case_rs.py` (``examples/reliability_problems/plot_case_rs.py``)
-     - 00:01.642
+     - 00:01.739
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py` (``examples/reliability_problems/plot_rp89.py``)
-     - 00:01.617
+     - 00:01.667
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp75.py` (``examples/reliability_problems/plot_rp75.py``)
+     - 00:01.662
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp22.py` (``examples/reliability_problems/plot_rp22.py``)
-     - 00:01.607
+     - 00:01.632
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py` (``examples/reliability_problems/plot_rp24.py``)
-     - 00:01.583
+   * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_four_branch_serial_system_waarts.py` (``examples/reliability_problems/plot_four_branch_serial_system_waarts.py``)
+     - 00:01.629
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py` (``examples/sensitivity_problems/plot_dirichlet_sensitivity.py``)
+     - 00:01.596
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gsobol_sensitivity.py` (``examples/sensitivity_problems/plot_gsobol_sensitivity.py``)
+     - 00:01.571
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_uncecomp_ot_examples.py` (``examples/plot_uncecomp_ot_examples.py``)
-     - 00:01.290
+     - 00:01.445
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_crosscut_function.py` (``examples/plot_crosscut_function.py``)
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_sum.py` (``examples/sensitivity_problems/plot_gaussian_sum.py``)
+     - 00:01.246
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_product_sensitivity.py` (``examples/sensitivity_problems/plot_gaussian_product_sensitivity.py``)
      - 00:01.239
      - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_oakleyohagan_sensitivity.py` (``examples/sensitivity_problems/plot_oakleyohagan_sensitivity.py``)
+     - 00:01.190
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_crosscut_function.py` (``examples/plot_crosscut_function.py``)
+     - 00:00.796
+     - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py` (``examples/sensitivity_problems/plot_ishigami_sensitivity.py``)
-     - 00:01.111
+     - 00:00.795
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py` (``examples/sensitivity_problems/plot_borgonovo_sensitivity.py``)
-     - 00:01.055
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_check_reliability_reference_probabilities.py` (``examples/plot_check_reliability_reference_probabilities.py``)
-     - 00:00.272
+     - 00:00.780
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_lognormal_bbrc.py` (``examples/plot_lognormal_bbrc.py``)
-     - 00:00.218
+     - 00:00.322
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_check_reliability_reference_probabilities.py` (``examples/plot_check_reliability_reference_probabilities.py``)
+     - 00:00.295
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_print_problems.py` (``examples/sensitivity_problems/plot_print_problems.py``)
-     - 00:00.165
+     - 00:00.074
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_benchmark_sensitivity_methods.py` (``examples/sensitivity_problems/plot_benchmark_sensitivity_methods.py``)
-     - 00:00.029
+     - 00:00.033
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_problems_plot_print_reliability_benchmark.py` (``examples/reliability_problems/plot_print_reliability_benchmark.py``)
      - 00:00.003
