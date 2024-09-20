@@ -174,7 +174,7 @@ In order to get the best possible accuracy within this time limit, we set the co
 
  .. code-block:: none
 
-      0%|          | 0/26 [00:00<?, ?it/s]      4%|▍         | 1/26 [00:00<00:16,  1.53it/s]      8%|▊         | 2/26 [00:00<00:09,  2.63it/s]     15%|█▌        | 4/26 [00:00<00:03,  5.71it/s]     23%|██▎       | 6/26 [00:01<00:02,  8.31it/s]     31%|███       | 8/26 [00:01<00:01, 10.65it/s]     38%|███▊      | 10/26 [00:01<00:01, 11.85it/s]     46%|████▌     | 12/26 [00:01<00:01, 13.41it/s]     54%|█████▍    | 14/26 [00:01<00:01, 11.12it/s]     62%|██████▏   | 16/26 [00:01<00:00, 12.70it/s]     69%|██████▉   | 18/26 [00:01<00:00, 11.86it/s]     77%|███████▋  | 20/26 [00:03<00:01,  4.54it/s]     85%|████████▍ | 22/26 [00:03<00:00,  4.00it/s]     92%|█████████▏| 24/26 [00:03<00:00,  5.22it/s]    100%|██████████| 26/26 [00:03<00:00,  6.72it/s]    100%|██████████| 26/26 [00:03<00:00,  6.72it/s]
+      0%|          | 0/26 [00:00<?, ?it/s]      4%|▍         | 1/26 [00:00<00:16,  1.54it/s]     12%|█▏        | 3/26 [00:00<00:04,  4.68it/s]     27%|██▋       | 7/26 [00:00<00:01, 11.64it/s]     38%|███▊      | 10/26 [00:00<00:01, 15.63it/s]     50%|█████     | 13/26 [00:01<00:00, 17.64it/s]     65%|██████▌   | 17/26 [00:01<00:00, 21.24it/s]     77%|███████▋  | 20/26 [00:01<00:00, 11.54it/s]     85%|████████▍ | 22/26 [00:02<00:00,  9.71it/s]    100%|██████████| 26/26 [00:02<00:00, 13.73it/s]    100%|██████████| 26/26 [00:02<00:00, 11.86it/s]
 
 
 
@@ -231,7 +231,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.001218</td>
           <td>0.377832</td>
           <td>-0.577299</td>
-          <td>0.652181</td>
+          <td>0.647994</td>
         </tr>
         <tr>
           <th>RP14</th>
@@ -241,7 +241,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.001488</td>
           <td>0.333183</td>
           <td>-0.522683</td>
-          <td>0.189734</td>
+          <td>0.098728</td>
         </tr>
         <tr>
           <th>RP22</th>
@@ -251,7 +251,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.004190</td>
           <td>0.179327</td>
           <td>-0.253645</td>
-          <td>0.051208</td>
+          <td>0.024495</td>
         </tr>
         <tr>
           <th>RP24</th>
@@ -261,7 +261,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.004072</td>
           <td>0.182300</td>
           <td>-0.260787</td>
-          <td>0.054883</td>
+          <td>0.024573</td>
         </tr>
         <tr>
           <th>RP25</th>
@@ -271,7 +271,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.059412</td>
+          <td>0.026421</td>
         </tr>
         <tr>
           <th>RP28</th>
@@ -281,7 +281,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.058447</td>
+          <td>0.026172</td>
         </tr>
         <tr>
           <th>RP31</th>
@@ -291,7 +291,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.004307</td>
           <td>0.176494</td>
           <td>-0.246729</td>
-          <td>0.054910</td>
+          <td>0.024520</td>
         </tr>
         <tr>
           <th>RP33</th>
@@ -301,7 +301,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.003836</td>
           <td>0.188717</td>
           <td>-0.275812</td>
-          <td>0.054384</td>
+          <td>0.028858</td>
         </tr>
         <tr>
           <th>RP35</th>
@@ -311,7 +311,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.004541</td>
           <td>0.171207</td>
           <td>-0.233521</td>
-          <td>0.044850</td>
+          <td>0.025017</td>
         </tr>
         <tr>
           <th>RP38</th>
@@ -321,7 +321,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.009968</td>
           <td>0.109978</td>
           <td>-0.041305</td>
-          <td>0.090779</td>
+          <td>0.047609</td>
         </tr>
         <tr>
           <th>RP53</th>
@@ -331,7 +331,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.037447</td>
           <td>0.053384</td>
           <td>0.272589</td>
-          <td>0.055494</td>
+          <td>0.024920</td>
         </tr>
         <tr>
           <th>RP55</th>
@@ -341,7 +341,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.568532</td>
           <td>0.008886</td>
           <td>1.051310</td>
-          <td>0.055751</td>
+          <td>0.025414</td>
         </tr>
         <tr>
           <th>RP54</th>
@@ -351,7 +351,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.001488</td>
           <td>0.333183</td>
           <td>-0.522683</td>
-          <td>0.186060</td>
+          <td>0.083179</td>
         </tr>
         <tr>
           <th>RP57</th>
@@ -361,7 +361,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.031550</td>
           <td>0.058597</td>
           <td>0.232127</td>
-          <td>0.056069</td>
+          <td>0.024908</td>
         </tr>
         <tr>
           <th>RP75</th>
@@ -371,7 +371,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.011291</td>
           <td>0.102656</td>
           <td>-0.011385</td>
-          <td>0.054269</td>
+          <td>0.024086</td>
         </tr>
         <tr>
           <th>RP89</th>
@@ -381,7 +381,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.006950</td>
           <td>0.134469</td>
           <td>-0.128621</td>
-          <td>0.055397</td>
+          <td>0.024723</td>
         </tr>
         <tr>
           <th>RP107</th>
@@ -391,7 +391,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.136680</td>
+          <td>0.060641</td>
         </tr>
         <tr>
           <th>RP110</th>
@@ -401,7 +401,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.056107</td>
+          <td>0.026827</td>
         </tr>
         <tr>
           <th>RP111</th>
@@ -411,7 +411,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.046841</td>
+          <td>0.026337</td>
         </tr>
         <tr>
           <th>RP63</th>
@@ -421,7 +421,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000938</td>
           <td>0.447102</td>
           <td>-0.650406</td>
-          <td>1.001051</td>
+          <td>0.472198</td>
         </tr>
         <tr>
           <th>RP91</th>
@@ -431,7 +431,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.001354</td>
           <td>0.353412</td>
           <td>-0.548281</td>
-          <td>0.070034</td>
+          <td>0.039350</td>
         </tr>
         <tr>
           <th>RP60</th>
@@ -441,7 +441,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.047915</td>
           <td>0.046668</td>
           <td>0.330981</td>
-          <td>0.563308</td>
+          <td>0.277451</td>
         </tr>
         <tr>
           <th>RP77</th>
@@ -451,7 +451,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.064567</td>
+          <td>0.031199</td>
         </tr>
         <tr>
           <th>Four-branch serial system</th>
@@ -461,7 +461,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.003836</td>
           <td>0.188717</td>
           <td>-0.275812</td>
-          <td>0.052443</td>
+          <td>0.025339</td>
         </tr>
         <tr>
           <th>R-S</th>
@@ -471,7 +471,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.082225</td>
           <td>0.034622</td>
           <td>0.460645</td>
-          <td>0.050569</td>
+          <td>0.024360</td>
         </tr>
         <tr>
           <th>Axial stressed beam</th>
@@ -481,7 +481,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.034713</td>
           <td>0.055632</td>
           <td>0.254678</td>
-          <td>0.050478</td>
+          <td>0.024423</td>
         </tr>
       </tbody>
     </table>
@@ -538,7 +538,7 @@ a sample size equal to :math:`n=10^9`, since the exact :math:`p_f \approx 10^{-7
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.315 seconds)
+   **Total running time of the script:** (0 minutes 2.649 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_reliability_compute_reference_proba.py:

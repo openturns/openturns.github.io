@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:23.205** total execution time for 6 files **from auto_examples**:
+**00:26.129** total execution time for 9 files **from auto_examples**:
 
 .. container::
 
@@ -32,21 +32,30 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``plot_crosscut_distribution_3d.py``)
-     - 00:07.691
-     - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``plot_methodFactory.py``)
-     - 00:07.477
+     - 00:07.847
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_ConditionalDistribution_Demo.py` (``plot_ConditionalDistribution_Demo.py``)
-     - 00:02.595
+   * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``plot_crosscut_distribution_3d.py``)
+     - 00:04.740
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``plot_convergence_reliability_mc.py``)
-     - 00:02.194
+   * - :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py` (``plot_conditionaldistribution.py``)
+     - 00:04.559
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``plot_crosscut_distribution_2d.py``)
-     - 00:02.064
+     - 00:03.706
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_CrossCutFunction_Demo.py` (``plot_CrossCutFunction_Demo.py``)
-     - 00:01.184
+   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``plot_convergence_reliability_mc.py``)
+     - 00:02.260
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_uncecomp_ot_examples.py` (``plot_uncecomp_ot_examples.py``)
+     - 00:01.290
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_crosscut_function.py` (``plot_crosscut_function.py``)
+     - 00:01.239
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_check_reliability_reference_probabilities.py` (``plot_check_reliability_reference_probabilities.py``)
+     - 00:00.272
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_lognormal_bbrc.py` (``plot_lognormal_bbrc.py``)
+     - 00:00.218
      - 0.0

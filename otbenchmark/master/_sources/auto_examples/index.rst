@@ -33,14 +33,31 @@ Examples
 
 .. only:: html
 
-  .. image:: /auto_examples/images/thumb/sphx_glr_plot_CrossCutFunction_Demo_thumb.png
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_crosscut_function_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_plot_CrossCutFunction_Demo.py`
+  :ref:`sphx_glr_auto_examples_plot_crosscut_function.py`
 
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Draw cross-cuts of multidimensional functions</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Analysis of the LogNormal distribution in the BBRC">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_lognormal_bbrc_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_plot_lognormal_bbrc.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Analysis of the LogNormal distribution in the BBRC</div>
     </div>
 
 
@@ -84,14 +101,31 @@ Examples
 
 .. only:: html
 
-  .. image:: /auto_examples/images/thumb/sphx_glr_plot_ConditionalDistribution_Demo_thumb.png
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_conditionaldistribution_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_plot_ConditionalDistribution_Demo.py`
+  :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py`
 
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Conditional distributions</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Check reliability problems reference probabilities">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_check_reliability_reference_probabilities_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_plot_check_reliability_reference_probabilities.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Check reliability problems reference probabilities</div>
     </div>
 
 
@@ -112,6 +146,23 @@ Examples
     </div>
 
 
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Introduction to OpenTURNS objects">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_uncecomp_ot_examples_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_plot_uncecomp_ot_examples.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Introduction to OpenTURNS objects</div>
+    </div>
+
+
 .. thumbnail-parent-div-close
 
 .. raw:: html
@@ -123,11 +174,14 @@ Examples
    :hidden:
 
    /auto_examples/plot_crosscut_distribution_2d
-   /auto_examples/plot_CrossCutFunction_Demo
+   /auto_examples/plot_crosscut_function
+   /auto_examples/plot_lognormal_bbrc
    /auto_examples/plot_crosscut_distribution_3d
    /auto_examples/plot_methodFactory
-   /auto_examples/plot_ConditionalDistribution_Demo
+   /auto_examples/plot_conditionaldistribution
+   /auto_examples/plot_check_reliability_reference_probabilities
    /auto_examples/plot_convergence_reliability_mc
+   /auto_examples/plot_uncecomp_ot_examples
 
 Reliability examples
 ====================

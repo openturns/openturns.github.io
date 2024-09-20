@@ -352,7 +352,7 @@ where :math:`n` is the sample size.
 
  .. code-block:: none
 
-    Elapsed = 1.73 (s)
+    Elapsed = 1.81 (s)
 
 
 
@@ -414,7 +414,7 @@ where :math:`n` is the sample size.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.194 seconds)
+   **Total running time of the script:** (0 minutes 2.260 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_convergence_reliability_mc.py:

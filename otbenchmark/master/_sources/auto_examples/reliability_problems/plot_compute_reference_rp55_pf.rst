@@ -416,10 +416,10 @@ From integration
     <div class="output_subarea output_html rendered_html output_result">
     <table>
       <tr><td></td><th>y0</th></tr>
-      <tr><th>0</th><td>0</td></tr>
-      <tr><th>1</th><td>0</td></tr>
-      <tr><th>2</th><td>0.25</td></tr>
-      <tr><th>3</th><td>0.25</td></tr>
+      <tr><th>0</th><td>0.25</td></tr>
+      <tr><th>1</th><td>0.25</td></tr>
+      <tr><th>2</th><td>0</td></tr>
+      <tr><th>3</th><td>0</td></tr>
       <tr><th>4</th><td>0</td></tr>
     </table>
     </div>
@@ -1049,7 +1049,7 @@ The area of each polygon is computed based on the shapely module.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.643 seconds)
+   **Total running time of the script:** (0 minutes 3.636 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_compute_reference_rp55_pf.py:
