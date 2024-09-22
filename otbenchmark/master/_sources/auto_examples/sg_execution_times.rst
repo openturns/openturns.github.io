@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**02:06.062** total execution time for 9 files **from auto_examples**:
+**02:26.894** total execution time for 11 files **from auto_examples**:
 
 .. container::
 
@@ -33,29 +33,35 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_plot_uncecomp_ot_examples.py` (``plot_uncecomp_ot_examples.py``)
-     - 01:41.289
+     - 01:41.156
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_draw_cross_cuts.py` (``plot_draw_cross_cuts.py``)
+     - 00:10.017
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``plot_crosscut_distribution_3d.py``)
-     - 00:08.290
+     - 00:08.401
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_drawevent.py` (``plot_drawevent.py``)
+     - 00:08.199
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py` (``plot_conditionaldistribution.py``)
-     - 00:04.643
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``plot_methodFactory.py``)
-     - 00:04.380
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``plot_crosscut_distribution_2d.py``)
-     - 00:03.943
+     - 00:05.451
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``plot_convergence_reliability_mc.py``)
-     - 00:02.164
+     - 00:04.570
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``plot_methodFactory.py``)
+     - 00:04.358
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``plot_crosscut_distribution_2d.py``)
+     - 00:03.284
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_function.py` (``plot_crosscut_function.py``)
-     - 00:00.769
+     - 00:00.893
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_lognormal_bbrc.py` (``plot_lognormal_bbrc.py``)
-     - 00:00.298
+     - 00:00.292
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_check_reliability_reference_probabilities.py` (``plot_check_reliability_reference_probabilities.py``)
-     - 00:00.287
+     - 00:00.273
      - 0.0

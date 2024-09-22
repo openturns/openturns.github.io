@@ -145,8 +145,8 @@ Get the results
  .. code-block:: none
 
     Number of function calls = 1000
-    Failure Probability = 0.0320
-    95.0 % confidence interval :[0.0211,0.0429] 
+    Failure Probability = 0.0310
+    95.0 % confidence interval :[0.0203,0.0417] 
 
 
 
@@ -287,18 +287,17 @@ Draw the limit state surface
 
     graph = drawEvent.drawLimitStateCrossCut(bounds)
     graph.add(cloud)
-    graph
+    _ = otv.View(graph)
 
 
 
 
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_003.png
+   :alt: Limit state surface
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_003.png
+   :class: sphx-glr-single-img
 
-.. rst-class:: sphx-glr-script-out
 
- .. code-block:: none
-
-
-    class=Graph name=Limit state surface implementation=class=GraphImplementation name=Limit state surface title=Limit state surface xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition= legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Contour name=Unnamed x=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-4.26489],[-4.09764],[-3.93039],[-3.76314],[-3.59589],[-3.42864],[-3.26139],[-3.09414],[-2.92689],[-2.75964],[-2.59238],[-2.42513],[-2.25788],[-2.09063],[-1.92338],[-1.75613],[-1.58888],[-1.42163],[-1.25438],[-1.08713],[-0.919878],[-0.752628],[-0.585377],[-0.418127],[-0.250876],[-0.0836253],[0.0836253],[0.250876],[0.418127],[0.585377],[0.752628],[0.919878],[1.08713],[1.25438],[1.42163],[1.58888],[1.75613],[1.92338],[2.09063],[2.25788],[2.42513],[2.59238],[2.75964],[2.92689],[3.09414],[3.26139],[3.42864],[3.59589],[3.76314],[3.93039],[4.09764],[4.26489]] y=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-4.26489],[-4.09764],[-3.93039],[-3.76314],[-3.59589],[-3.42864],[-3.26139],[-3.09414],[-2.92689],[-2.75964],[-2.59238],[-2.42513],[-2.25788],[-2.09063],[-1.92338],[-1.75613],[-1.58888],[-1.42163],[-1.25438],[-1.08713],[-0.919878],[-0.752628],[-0.585377],[-0.418127],[-0.250876],[-0.0836253],[0.0836253],[0.250876],[0.418127],[0.585377],[0.752628],[0.919878],[1.08713],[1.25438],[1.42163],[1.58888],[1.75613],[1.92338],[2.09063],[2.25788],[2.42513],[2.59238],[2.75964],[2.92689],[3.09414],[3.26139],[3.42864],[3.59589],[3.76314],[3.93039],[4.09764],[4.26489]] levels=class=Point name=Unnamed dimension=1 values=[0] labels=[0.0] show labels=true isFilled=false colorBarPosition=right isVminUsed=false vmin=0 isVmaxUsed=false vmax=0 colorMap=hsv alpha=1 norm=linear extend=both hatches=[] derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2704 dimension=1 description=[gsys] data=[[-0.800103],[-1.19524],[-1.53443],...,[65.1274],[63.7847],[62.3861]] color=#1f77b4 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=plus lineWidth=1,class=Drawable name=In implementation=class=Cloud name=In derived from class=DrawableImplementation name=In legend=In data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=158 dimension=2 data=[[1.87966,0.23391],[-3.07006,0.63851],[2.27732,0.815924],[2.76367,1.12799],[1.9361,0.510651],[-1.40079,-1.80399],[-2.56471,0.59558],[-2.23883,1.01986],[-1.72293,-1.76637],[1.9887,0.155824],[-1.94525,0.767903],[-1.19727,-2.21787],[-1.15272,-2.32065],[-2.32815,-1.56184],[2.0486,0.411058],[1.78468,0.173316],[-2.77444,-1.37077],[-2.10971,-1.22165],[-2.68501,-3.10037],[-1.41065,-2.75175],[2.07629,1.0732],[1.78592,0.524694],[-2.36693,0.685496],[-1.76017,-1.70591],[-1.41524,-1.78353],[-1.63649,-1.57128],[1.90446,0.513924],[-2.42739,-1.36776],[2.58859,1.28606],[2.78962,0.108586],[-2.77141,1.60763],[-1.25886,-2.28162],[1.91434,0.677086],[-1.97676,-1.62139],[2.3358,0.719959],[-3.23488,0.934329],[2.72708,-0.0839255],[-2.43718,0.749291],[-2.2139,-2.7291],[2.58458,0.411818],[2.25934,0.279588],[-2.08691,0.645606],[2.29732,0.485816],[-1.79026,-1.42917],[-2.96104,1.3271],[2.4057,0.853305],[2.05606,0.360547],[1.81509,0.564831],[2.43294,0.305977],[2.03927,0.785408],[1.7448,0.11675],[1.74367,0.336293],[1.84282,0.577646],[-2.28861,-1.758],[2.63964,0.811063],[-2.0117,0.66889],[-1.34843,-2.40918],[2.60199,0.0467081],[1.90024,0.24765],[3.02495,1.47116],[2.11373,1.06793],[-2.20495,1.18681],[-2.0852,-1.24517],[-2.62211,0.667446],[-1.99478,-1.35793],[-2.43291,1.2402],[-1.56054,-2.14201],[1.86622,0.414413],[1.79072,0.228141],[-2.53537,-1.69258],[2.33462,0.118933],[-2.11747,1.0276],[-2.15077,-1.42147],[2.32335,0.923234],[-2.59822,1.38104],[2.96418,0.232393],[2.52645,0.435318],[-3.28078,-2.10529],[2.1028,0.413535],[-2.40053,-1.75074],[-2.84851,-1.69269],[1.85576,0.310545],[-2.60486,0.998248],[-2.53947,-1.41532],[1.84861,0.364269],[-1.29196,-2.07333],[1.95626,0.879102],[-1.70195,-1.72357],[-1.40121,-2.26752],[-1.46183,-2.31617],[-3.05509,0.730728],[-2.01068,0.622307],[2.64482,-0.0301231],[-2.24022,0.567151],[-2.29022,1.04781],[-1.79916,-2.16242],[-1.91039,-1.5999],[-2.10341,0.6434],[3.22146,0.192355],[1.85442,0.453515],[2.25283,1.23259],[-1.84153,0.681658],[-1.56368,-2.00128],[1.81773,0.396183],[-2.10589,1.02752],[-3.38127,0.906864],[-2.3537,0.937428],[1.90464,0.354834],[-1.71744,-1.8433],[2.35212,1.02118],[-2.84762,0.954437],[3.028,0.794874],[2.19444,0.213706],[-1.78478,-1.79287],[2.3554,0.319598],[1.84615,0.104778],[-2.32228,-1.65973],[-2.27542,-1.65386],[-2.20585,1.12977],[-1.83767,-1.65861],[1.79493,0.268199],[-2.42603,0.706658],[3.20135,1.20417],[1.85203,0.583352],[-1.07469,-2.62851],[-2.45443,0.841627],[-2.09246,-1.91446],[-1.22366,-2.25682],[-1.98292,0.792879],[-2.23708,-2.16047],[-1.33434,-2.00448],[-1.78128,0.501531],[-1.86983,0.50471],[2.51326,0.135947],[3.03739,1.06003],[2.0999,0.243958],[-2.05809,-1.50816],[-2.0041,0.940927],[-2.55633,-1.07496],[-2.69259,0.687527],[2.56613,1.17582],[-1.25626,-2.43818],[-2.06808,1.02409],[2.05463,0.280526],[-1.8338,0.676699],[1.91003,0.233354],[-1.86774,0.49186],[-2.46456,-1.39848],[2.0407,0.104566],[1.77001,0.41614],[-1.68262,-1.92257],[1.82554,0.390517],[2.45855,0.9005],[-1.67044,-2.24452],[2.3523,0.843986],[2.09709,1.11353],[-2.55847,-1.24936],[-1.35812,-1.9027]] color=lightsalmon3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1,class=Drawable name=Out implementation=class=Cloud name=Out derived from class=DrawableImplementation name=Out legend=Out data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=4842 dimension=2 data=[[1.34601,0.193696],[1.26375,0.687371],[0.394581,-0.398466],...,[1.1569,0.152898],[-0.584263,-0.317682],[-1.91138,0.402832]] color=darkseagreen3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]
 
 
 
@@ -312,9 +311,9 @@ Draw the limit state surface
 
 
 
-.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_003.png
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_004.png
    :alt: Domain where g(x) < 0.0
-   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_003.png
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_004.png
    :class: sphx-glr-single-img
 
 
@@ -331,9 +330,9 @@ Draw the limit state surface
 
 
 
-.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_004.png
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_005.png
    :alt: Domain where g(x) < 0.0
-   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_004.png
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp57_005.png
    :class: sphx-glr-single-img
 
 
@@ -355,7 +354,7 @@ Draw the limit state surface
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.561 seconds)
+   **Total running time of the script:** (0 minutes 1.659 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp57.py:

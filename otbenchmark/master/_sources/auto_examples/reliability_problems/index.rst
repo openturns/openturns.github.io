@@ -49,6 +49,23 @@ Reliability examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="RP33 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp33_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp33.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP33 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="RP53 analysis and 2D graphics">
 
 .. only:: html
@@ -61,6 +78,23 @@ Reliability examples
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP53 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Problem RP8">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp8_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp8.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Problem RP8</div>
     </div>
 
 
@@ -83,23 +117,6 @@ Reliability examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="RP24 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp24_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP24 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="RP57 analysis and 2D graphics">
 
 .. only:: html
@@ -117,18 +134,52 @@ Reliability examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="RP111 analysis and 2D graphics">
+    <div class="sphx-glr-thumbcontainer" tooltip="RP31 analysis and 2D graphics">
 
 .. only:: html
 
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp111_thumb.png
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp31_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py`
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp31.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">RP111 analysis and 2D graphics</div>
+      <div class="sphx-glr-thumbnail-title">RP31 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="RP24 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp24_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP24 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
     </div>
 
 
@@ -151,6 +202,23 @@ Reliability examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="RP111 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp111_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP111 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="RP25 analysis and 2D graphics">
 
 .. only:: html
@@ -163,23 +231,6 @@ Reliability examples
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP25 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
     </div>
 
 
@@ -214,23 +265,6 @@ Reliability examples
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP110 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="RP31 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp31_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp31.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP31 analysis and 2D graphics</div>
     </div>
 
 
@@ -365,17 +399,19 @@ Reliability examples
 
    /auto_examples/reliability_problems/plot_print_reliability_benchmark
    /auto_examples/reliability_problems/plot_four_branch_serial_system_waarts
+   /auto_examples/reliability_problems/plot_rp33
    /auto_examples/reliability_problems/plot_rp53
+   /auto_examples/reliability_problems/plot_rp8
    /auto_examples/reliability_problems/plot_case_rs
-   /auto_examples/reliability_problems/plot_rp24
    /auto_examples/reliability_problems/plot_rp57
-   /auto_examples/reliability_problems/plot_rp111
-   /auto_examples/reliability_problems/plot_rp35
-   /auto_examples/reliability_problems/plot_rp25
+   /auto_examples/reliability_problems/plot_rp31
+   /auto_examples/reliability_problems/plot_rp24
    /auto_examples/reliability_problems/plot_rp89
+   /auto_examples/reliability_problems/plot_rp35
+   /auto_examples/reliability_problems/plot_rp111
+   /auto_examples/reliability_problems/plot_rp25
    /auto_examples/reliability_problems/plot_rp22
    /auto_examples/reliability_problems/plot_rp110
-   /auto_examples/reliability_problems/plot_rp31
    /auto_examples/reliability_problems/plot_rp28
    /auto_examples/reliability_problems/plot_reliability_compute_reference_proba
    /auto_examples/reliability_problems/plot_rp55

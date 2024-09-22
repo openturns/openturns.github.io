@@ -158,25 +158,24 @@ Compute the bounds of the domain
 
     nbPoints = [100, 100]
     figure = g.draw(lowerBound, upperBound, nbPoints)
-    figure.setTitle(" Iso-values of limit state function")
-    figure
+    figure.setTitle("Iso-values of limit state function")
+    _ = otv.View(figure)
 
 
 
 
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_001.png
+   :alt: Iso-values of limit state function
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_001.png
+   :class: sphx-glr-single-img
 
-.. rst-class:: sphx-glr-script-out
 
- .. code-block:: none
-
-
-    class=Graph name=gsys as a function of (x1,x2) implementation=class=GraphImplementation name=gsys as a function of (x1,x2) title= Iso-values of limit state function xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition=upper left legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Contour name=Unnamed x=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=1 data=[[-0.99998],[-0.979778],[-0.959577],[-0.939375],[-0.919174],[-0.898972],[-0.87877],[-0.858569],[-0.838367],[-0.818165],[-0.797964],[-0.777762],[-0.757561],[-0.737359],[-0.717157],[-0.696956],[-0.676754],[-0.656553],[-0.636351],[-0.616149],[-0.595948],[-0.575746],[-0.555544],[-0.535343],[-0.515141],[-0.49494],[-0.474738],[-0.454536],[-0.434335],[-0.414133],[-0.393932],[-0.37373],[-0.353528],[-0.333327],[-0.313125],[-0.292923],[-0.272722],[-0.25252],[-0.232319],[-0.212117],[-0.191915],[-0.171714],[-0.151512],[-0.131311],[-0.111109],[-0.0909073],[-0.0707057],[-0.050504],[-0.0303024],[-0.0101008],[0.0101008],[0.0303024],[0.050504],[0.0707057],[0.0909073],[0.111109],[0.131311],[0.151512],[0.171714],[0.191915],[0.212117],[0.232319],[0.25252],[0.272722],[0.292923],[0.313125],[0.333327],[0.353528],[0.37373],[0.393932],[0.414133],[0.434335],[0.454536],[0.474738],[0.49494],[0.515141],[0.535343],[0.555544],[0.575746],[0.595948],[0.616149],[0.636351],[0.656553],[0.676754],[0.696956],[0.717157],[0.737359],[0.757561],[0.777762],[0.797964],[0.818165],[0.838367],[0.858569],[0.87877],[0.898972],[0.919174],[0.939375],[0.959577],[0.979778],[0.99998]] y=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=100 dimension=1 data=[[-0.99998],[-0.979778],[-0.959577],[-0.939375],[-0.919174],[-0.898972],[-0.87877],[-0.858569],[-0.838367],[-0.818165],[-0.797964],[-0.777762],[-0.757561],[-0.737359],[-0.717157],[-0.696956],[-0.676754],[-0.656553],[-0.636351],[-0.616149],[-0.595948],[-0.575746],[-0.555544],[-0.535343],[-0.515141],[-0.49494],[-0.474738],[-0.454536],[-0.434335],[-0.414133],[-0.393932],[-0.37373],[-0.353528],[-0.333327],[-0.313125],[-0.292923],[-0.272722],[-0.25252],[-0.232319],[-0.212117],[-0.191915],[-0.171714],[-0.151512],[-0.131311],[-0.111109],[-0.0909073],[-0.0707057],[-0.050504],[-0.0303024],[-0.0101008],[0.0101008],[0.0303024],[0.050504],[0.0707057],[0.0909073],[0.111109],[0.131311],[0.151512],[0.171714],[0.191915],[0.212117],[0.232319],[0.25252],[0.272722],[0.292923],[0.313125],[0.333327],[0.353528],[0.37373],[0.393932],[0.414133],[0.434335],[0.454536],[0.474738],[0.49494],[0.515141],[0.535343],[0.555544],[0.575746],[0.595948],[0.616149],[0.636351],[0.656553],[0.676754],[0.696956],[0.717157],[0.737359],[0.757561],[0.777762],[0.797964],[0.818165],[0.838367],[0.858569],[0.87877],[0.898972],[0.919174],[0.939375],[0.959577],[0.979778],[0.99998]] levels=class=Point name=Unnamed dimension=10 values=[-0.240192,-0.147598,-0.125737,-0.0908542,-0.0539797,-0.00921154,0.0443314,0.100247,0.142887,0.187845] labels=[-0.240192,-0.147598,-0.125737,-0.0908542,-0.0539797,-0.00921154,0.0443314,0.100247,0.142887,0.187845] show labels=false isFilled=false colorBarPosition=right isVminUsed=false vmin=0 isVmaxUsed=false vmax=0 colorMap=hsv alpha=1 norm=linear extend=both hatches=[] derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=10000 dimension=1 description=[gsys] data=[[0.2],[0.185715],[0.171432],...,[0.171432],[0.185715],[0.2]] color=#1f77b4 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=plus lineWidth=1]
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 64-66
 
-Print the iso-values of the distribution
+Plot the iso-values of the distribution
 ----------------------------------------
 
 .. GENERATED FROM PYTHON SOURCE LINES 68-71
@@ -189,9 +188,9 @@ Print the iso-values of the distribution
 
 
 
-.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_001.png
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_002.png
    :alt: [X1,X2] iso-PDF
-   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_001.png
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_002.png
    :class: sphx-glr-single-img
 
 
@@ -220,26 +219,26 @@ Print the iso-values of the distribution
 .. code-block:: Python
 
     cloud = drawEvent.drawSampleCrossCut(sampleSize)
-    cloud
+    _ = otv.View(cloud)
+
+
+
+
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_003.png
+   :alt: Points X s.t. g(X) < 0.0
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_003.png
+   :class: sphx-glr-single-img
 
 
 
 
 
-.. rst-class:: sphx-glr-script-out
+.. GENERATED FROM PYTHON SOURCE LINES 83-85
 
- .. code-block:: none
+Draw the limit state surface
+----------------------------
 
-
-    class=Graph name=Points X s.t. g(X) < 0.0 implementation=class=GraphImplementation name=Points X s.t. g(X) < 0.0 title=Points X s.t. g(X) < 0.0 xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition=topright legendFontSize=1 drawables=[class=Drawable name=In implementation=class=Cloud name=In derived from class=DrawableImplementation name=In legend=In data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2786 dimension=2 data=[[0.782682,0.347024],[0.475555,0.875775],[0.927966,-0.787187],...,[-0.433171,-0.895469],[0.631521,-0.889689],[0.987537,-0.918999]] color=lightsalmon3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1,class=Drawable name=Out implementation=class=Cloud name=Out derived from class=DrawableImplementation name=Out legend=Out data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2214 dimension=2 data=[[0.0230678,0.262145],[-0.631242,-0.723988],[-0.672408,-0.817885],...,[-0.15484,0.0909679],[-0.723212,0.242593],[-0.481728,-0.68306]] color=darkseagreen3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
-
-## Draw the limit state surface
-
-.. GENERATED FROM PYTHON SOURCE LINES 86-90
+.. GENERATED FROM PYTHON SOURCE LINES 87-91
 
 .. code-block:: Python
 
@@ -260,29 +259,28 @@ Print the iso-values of the distribution
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-96
+.. GENERATED FROM PYTHON SOURCE LINES 92-97
 
 .. code-block:: Python
 
     graph = drawEvent.drawLimitStateCrossCut(bounds)
     graph.add(cloud)
-    graph
+    _ = otv.View(graph)
 
 
 
 
 
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-
-    class=Graph name=Limit state surface implementation=class=GraphImplementation name=Limit state surface title=Limit state surface xTitle=x1 yTitle=x2 axes=ON grid=ON legendposition= legendFontSize=1 drawables=[class=Drawable name=Unnamed implementation=class=Contour name=Unnamed x=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-0.99998],[-0.960765],[-0.92155],[-0.882335],[-0.84312],[-0.803905],[-0.764691],[-0.725476],[-0.686261],[-0.647046],[-0.607831],[-0.568616],[-0.529401],[-0.490186],[-0.450971],[-0.411756],[-0.372542],[-0.333327],[-0.294112],[-0.254897],[-0.215682],[-0.176467],[-0.137252],[-0.0980373],[-0.0588224],[-0.0196075],[0.0196075],[0.0588224],[0.0980373],[0.137252],[0.176467],[0.215682],[0.254897],[0.294112],[0.333327],[0.372542],[0.411756],[0.450971],[0.490186],[0.529401],[0.568616],[0.607831],[0.647046],[0.686261],[0.725476],[0.764691],[0.803905],[0.84312],[0.882335],[0.92155],[0.960765],[0.99998]] y=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=52 dimension=1 description=[t] data=[[-0.99998],[-0.960765],[-0.92155],[-0.882335],[-0.84312],[-0.803905],[-0.764691],[-0.725476],[-0.686261],[-0.647046],[-0.607831],[-0.568616],[-0.529401],[-0.490186],[-0.450971],[-0.411756],[-0.372542],[-0.333327],[-0.294112],[-0.254897],[-0.215682],[-0.176467],[-0.137252],[-0.0980373],[-0.0588224],[-0.0196075],[0.0196075],[0.0588224],[0.0980373],[0.137252],[0.176467],[0.215682],[0.254897],[0.294112],[0.333327],[0.372542],[0.411756],[0.450971],[0.490186],[0.529401],[0.568616],[0.607831],[0.647046],[0.686261],[0.725476],[0.764691],[0.803905],[0.84312],[0.882335],[0.92155],[0.960765],[0.99998]] levels=class=Point name=Unnamed dimension=1 values=[0] labels=[0.0] show labels=true isFilled=false colorBarPosition=right isVminUsed=false vmin=0 isVmaxUsed=false vmax=0 colorMap=hsv alpha=1 norm=linear extend=both hatches=[] derived from class=DrawableImplementation name=Unnamed legend= data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2704 dimension=1 description=[gsys] data=[[0.2],[0.172272],[0.144564],...,[0.144564],[0.172272],[0.2]] color=#1f77b4 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=plus lineWidth=1,class=Drawable name=In implementation=class=Cloud name=In derived from class=DrawableImplementation name=In legend=In data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2786 dimension=2 data=[[0.782682,0.347024],[0.475555,0.875775],[0.927966,-0.787187],...,[-0.433171,-0.895469],[0.631521,-0.889689],[0.987537,-0.918999]] color=lightsalmon3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1,class=Drawable name=Out implementation=class=Cloud name=Out derived from class=DrawableImplementation name=Out legend=Out data=class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2214 dimension=2 data=[[0.0230678,0.262145],[-0.631242,-0.723988],[-0.672408,-0.817885],...,[-0.15484,0.0909679],[-0.723212,0.242593],[-0.481728,-0.68306]] color=darkseagreen3 isColorExplicitlySet=true fillStyle=solid lineStyle=solid pointStyle=fsquare lineWidth=1]
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_004.png
+   :alt: Limit state surface
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_004.png
+   :class: sphx-glr-single-img
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-101
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 98-102
 
 .. code-block:: Python
 
@@ -293,16 +291,16 @@ Print the iso-values of the distribution
 
 
 
-.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_002.png
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_005.png
    :alt: Domain where g(x) < 0.0
-   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_002.png
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_005.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-105
+.. GENERATED FROM PYTHON SOURCE LINES 103-106
 
 .. code-block:: Python
 
@@ -312,21 +310,21 @@ Print the iso-values of the distribution
 
 
 
-.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_003.png
+.. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_006.png
    :alt: Domain where g(x) < 0.0
-   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_003.png
+   :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_006.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-108
+.. GENERATED FROM PYTHON SOURCE LINES 107-109
 
 Perform Monte-Carlo simulation
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-116
+.. GENERATED FROM PYTHON SOURCE LINES 111-117
 
 .. code-block:: Python
 
@@ -343,7 +341,7 @@ Perform Monte-Carlo simulation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-128
+.. GENERATED FROM PYTHON SOURCE LINES 118-129
 
 .. code-block:: Python
 
@@ -367,18 +365,18 @@ Perform Monte-Carlo simulation
  .. code-block:: none
 
     Number of function calls = 43704
-    Failure Probability = 0.5380
-    95.0 % confidence interval :[0.5071,0.5689] 
+    Failure Probability = 0.5620
+    95.0 % confidence interval :[0.5312,0.5928] 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-131
+.. GENERATED FROM PYTHON SOURCE LINES 130-132
 
 With FORM-IS
 ------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-146
+.. GENERATED FROM PYTHON SOURCE LINES 134-147
 
 .. code-block:: Python
 
@@ -402,7 +400,7 @@ With FORM-IS
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-153
+.. GENERATED FROM PYTHON SOURCE LINES 148-154
 
 .. code-block:: Python
 
@@ -419,7 +417,7 @@ With FORM-IS
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-156
+.. GENERATED FROM PYTHON SOURCE LINES 155-157
 
 .. code-block:: Python
 
@@ -443,12 +441,12 @@ With FORM-IS
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
+.. GENERATED FROM PYTHON SOURCE LINES 158-160
 
 With Quasi-Monte-Carlo
 ----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-166
+.. GENERATED FROM PYTHON SOURCE LINES 162-167
 
 .. code-block:: Python
 
@@ -464,7 +462,7 @@ With Quasi-Monte-Carlo
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-174
+.. GENERATED FROM PYTHON SOURCE LINES 168-175
 
 .. code-block:: Python
 
@@ -482,7 +480,7 @@ With Quasi-Monte-Carlo
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-179
+.. GENERATED FROM PYTHON SOURCE LINES 176-180
 
 .. code-block:: Python
 
@@ -503,7 +501,7 @@ With Quasi-Monte-Carlo
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-181
+.. GENERATED FROM PYTHON SOURCE LINES 181-182
 
 .. code-block:: Python
 
@@ -518,7 +516,7 @@ With Quasi-Monte-Carlo
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.928 seconds)
+   **Total running time of the script:** (0 minutes 2.268 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp55.py:

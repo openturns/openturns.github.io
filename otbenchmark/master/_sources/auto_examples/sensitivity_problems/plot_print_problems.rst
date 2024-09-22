@@ -158,9 +158,9 @@ For each problem in the benchmark, print the problem name and the exact Sobol' i
 .. code-block:: Python
 
     latex_code = df_problems_list.to_latex()
-    text_file = open("sensitivity_problems_list.tex", "w")
-    text_file.write(latex_code)
-    text_file.close()
+    # text_file = open("sensitivity_problems_list.tex", "w")
+    # text_file.write(latex_code)
+    # text_file.close()
 
 
 
@@ -171,7 +171,7 @@ For each problem in the benchmark, print the problem name and the exact Sobol' i
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.232 seconds)
+   **Total running time of the script:** (0 minutes 0.229 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_print_problems.py:

@@ -174,7 +174,7 @@ In order to get the best possible accuracy within this time limit, we set the co
 
  .. code-block:: none
 
-      0%|          | 0/26 [00:00<?, ?it/s]      4%|▍         | 1/26 [00:00<00:16,  1.54it/s]      8%|▊         | 2/26 [00:00<00:09,  2.63it/s]     15%|█▌        | 4/26 [00:00<00:03,  5.66it/s]     23%|██▎       | 6/26 [00:01<00:02,  8.26it/s]     31%|███       | 8/26 [00:01<00:01, 10.35it/s]     38%|███▊      | 10/26 [00:01<00:01, 11.12it/s]     50%|█████     | 13/26 [00:01<00:01, 11.18it/s]     58%|█████▊    | 15/26 [00:01<00:00, 12.58it/s]     65%|██████▌   | 17/26 [00:01<00:00, 11.80it/s]     73%|███████▎  | 19/26 [00:02<00:00, 12.96it/s]     81%|████████  | 21/26 [00:03<00:01,  4.61it/s]     88%|████████▊ | 23/26 [00:03<00:00,  4.08it/s]     96%|█████████▌| 25/26 [00:03<00:00,  5.33it/s]    100%|██████████| 26/26 [00:03<00:00,  6.65it/s]
+      0%|          | 0/26 [00:00<?, ?it/s]      4%|▍         | 1/26 [00:00<00:08,  3.09it/s]     12%|█▏        | 3/26 [00:00<00:03,  7.64it/s]     27%|██▋       | 7/26 [00:00<00:01, 16.86it/s]     38%|███▊      | 10/26 [00:00<00:00, 20.59it/s]     50%|█████     | 13/26 [00:00<00:00, 21.14it/s]     65%|██████▌   | 17/26 [00:00<00:00, 23.87it/s]     77%|███████▋  | 20/26 [00:01<00:00, 11.65it/s]     85%|████████▍ | 22/26 [00:01<00:00,  9.74it/s]    100%|██████████| 26/26 [00:01<00:00, 13.75it/s]    100%|██████████| 26/26 [00:01<00:00, 13.64it/s]
 
 
 
@@ -225,53 +225,53 @@ In order to get the best possible accuracy within this time limit, we set the co
       <tbody>
         <tr>
           <th>RP8</th>
-          <td>0.0008</td>
+          <td>0.0010</td>
           <td>10000.0</td>
-          <td>0.000246</td>
-          <td>0.001354</td>
-          <td>0.353412</td>
-          <td>-0.548281</td>
-          <td>0.650091</td>
+          <td>0.000381</td>
+          <td>0.001619</td>
+          <td>0.316070</td>
+          <td>-0.499783</td>
+          <td>0.323921</td>
         </tr>
         <tr>
           <th>RP14</th>
-          <td>0.0016</td>
+          <td>0.0007</td>
           <td>10000.0</td>
-          <td>0.000817</td>
-          <td>0.002383</td>
-          <td>0.249800</td>
-          <td>-0.397592</td>
-          <td>0.191696</td>
+          <td>0.000182</td>
+          <td>0.001218</td>
+          <td>0.377832</td>
+          <td>-0.577299</td>
+          <td>0.088928</td>
         </tr>
         <tr>
           <th>RP22</th>
-          <td>0.0043</td>
+          <td>0.0044</td>
           <td>10000.0</td>
-          <td>0.003018</td>
-          <td>0.005582</td>
-          <td>0.152170</td>
-          <td>-0.182330</td>
-          <td>0.055004</td>
+          <td>0.003103</td>
+          <td>0.005697</td>
+          <td>0.150424</td>
+          <td>-0.177316</td>
+          <td>0.037610</td>
         </tr>
         <tr>
           <th>RP24</th>
-          <td>0.0025</td>
+          <td>0.0028</td>
           <td>10000.0</td>
-          <td>0.001521</td>
-          <td>0.003479</td>
-          <td>0.199750</td>
-          <td>-0.300486</td>
-          <td>0.055540</td>
+          <td>0.001764</td>
+          <td>0.003836</td>
+          <td>0.188717</td>
+          <td>-0.275812</td>
+          <td>0.024857</td>
         </tr>
         <tr>
           <th>RP25</th>
-          <td>0.0000</td>
+          <td>0.0001</td>
           <td>10000.0</td>
-          <td>0.000000</td>
-          <td>0.000000</td>
-          <td>-1.000000</td>
-          <td>0.000000</td>
-          <td>0.059361</td>
+          <td>-0.000096</td>
+          <td>0.000296</td>
+          <td>0.999950</td>
+          <td>-0.999978</td>
+          <td>0.025474</td>
         </tr>
         <tr>
           <th>RP28</th>
@@ -281,107 +281,107 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.058594</td>
+          <td>0.026501</td>
         </tr>
         <tr>
           <th>RP31</th>
-          <td>0.0035</td>
+          <td>0.0034</td>
           <td>10000.0</td>
-          <td>0.002343</td>
-          <td>0.004657</td>
-          <td>0.168735</td>
-          <td>-0.227205</td>
-          <td>0.054770</td>
+          <td>0.002259</td>
+          <td>0.004541</td>
+          <td>0.171207</td>
+          <td>-0.233521</td>
+          <td>0.024809</td>
         </tr>
         <tr>
           <th>RP33</th>
-          <td>0.0025</td>
-          <td>10000.0</td>
-          <td>0.001521</td>
-          <td>0.003479</td>
-          <td>0.199750</td>
-          <td>-0.300486</td>
-          <td>0.065452</td>
-        </tr>
-        <tr>
-          <th>RP35</th>
           <td>0.0029</td>
           <td>10000.0</td>
           <td>0.001846</td>
           <td>0.003954</td>
           <td>0.185426</td>
           <td>-0.268170</td>
-          <td>0.056661</td>
+          <td>0.029114</td>
+        </tr>
+        <tr>
+          <th>RP35</th>
+          <td>0.0037</td>
+          <td>10000.0</td>
+          <td>0.002510</td>
+          <td>0.004890</td>
+          <td>0.164095</td>
+          <td>-0.215094</td>
+          <td>0.025150</td>
         </tr>
         <tr>
           <th>RP38</th>
-          <td>0.0075</td>
+          <td>0.0077</td>
           <td>10000.0</td>
-          <td>0.005809</td>
-          <td>0.009191</td>
-          <td>0.115036</td>
-          <td>-0.060835</td>
-          <td>0.099861</td>
+          <td>0.005987</td>
+          <td>0.009413</td>
+          <td>0.113521</td>
+          <td>-0.055076</td>
+          <td>0.047002</td>
         </tr>
         <tr>
           <th>RP53</th>
-          <td>0.0293</td>
+          <td>0.0342</td>
           <td>10000.0</td>
-          <td>0.025995</td>
-          <td>0.032605</td>
-          <td>0.057558</td>
-          <td>0.239891</td>
-          <td>0.045425</td>
+          <td>0.030638</td>
+          <td>0.037762</td>
+          <td>0.053141</td>
+          <td>0.274569</td>
+          <td>0.025393</td>
         </tr>
         <tr>
           <th>RP55</th>
-          <td>0.5574</td>
+          <td>0.5565</td>
           <td>10000.0</td>
-          <td>0.547665</td>
-          <td>0.567135</td>
-          <td>0.008911</td>
-          <td>1.050078</td>
-          <td>0.044742</td>
+          <td>0.546763</td>
+          <td>0.566237</td>
+          <td>0.008927</td>
+          <td>1.049286</td>
+          <td>0.025883</td>
         </tr>
         <tr>
           <th>RP54</th>
-          <td>0.0008</td>
+          <td>0.0009</td>
           <td>10000.0</td>
-          <td>0.000246</td>
-          <td>0.001354</td>
-          <td>0.353412</td>
-          <td>-0.548281</td>
-          <td>0.175900</td>
+          <td>0.000312</td>
+          <td>0.001488</td>
+          <td>0.333183</td>
+          <td>-0.522683</td>
+          <td>0.084171</td>
         </tr>
         <tr>
           <th>RP57</th>
-          <td>0.0285</td>
+          <td>0.0262</td>
           <td>10000.0</td>
-          <td>0.025239</td>
-          <td>0.031761</td>
-          <td>0.058385</td>
-          <td>0.233701</td>
-          <td>0.056547</td>
+          <td>0.023069</td>
+          <td>0.029331</td>
+          <td>0.060966</td>
+          <td>0.214916</td>
+          <td>0.025151</td>
         </tr>
         <tr>
           <th>RP75</th>
-          <td>0.0095</td>
+          <td>0.0098</td>
           <td>10000.0</td>
-          <td>0.007599</td>
-          <td>0.011401</td>
-          <td>0.102109</td>
-          <td>-0.009065</td>
-          <td>0.054662</td>
+          <td>0.007869</td>
+          <td>0.011731</td>
+          <td>0.100519</td>
+          <td>-0.002248</td>
+          <td>0.025164</td>
         </tr>
         <tr>
           <th>RP89</th>
-          <td>0.0052</td>
+          <td>0.0051</td>
           <td>10000.0</td>
-          <td>0.003790</td>
-          <td>0.006610</td>
-          <td>0.138314</td>
-          <td>-0.140866</td>
-          <td>0.055798</td>
+          <td>0.003704</td>
+          <td>0.006496</td>
+          <td>0.139670</td>
+          <td>-0.145105</td>
+          <td>0.025684</td>
         </tr>
         <tr>
           <th>RP107</th>
@@ -391,7 +391,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.138443</td>
+          <td>0.061048</td>
         </tr>
         <tr>
           <th>RP110</th>
@@ -401,7 +401,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.059659</td>
+          <td>0.027044</td>
         </tr>
         <tr>
           <th>RP111</th>
@@ -411,7 +411,7 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.058645</td>
+          <td>0.026397</td>
         </tr>
         <tr>
           <th>RP63</th>
@@ -421,27 +421,27 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000639</td>
           <td>0.577264</td>
           <td>-0.761374</td>
-          <td>1.007421</td>
+          <td>0.498756</td>
         </tr>
         <tr>
           <th>RP91</th>
-          <td>0.0008</td>
+          <td>0.0006</td>
           <td>10000.0</td>
-          <td>0.000246</td>
-          <td>0.001354</td>
-          <td>0.353412</td>
-          <td>-0.548281</td>
-          <td>0.083976</td>
+          <td>0.000120</td>
+          <td>0.001080</td>
+          <td>0.408126</td>
+          <td>-0.610794</td>
+          <td>0.041424</td>
         </tr>
         <tr>
           <th>RP60</th>
-          <td>0.0429</td>
+          <td>0.0426</td>
           <td>10000.0</td>
-          <td>0.038928</td>
-          <td>0.046872</td>
-          <td>0.047233</td>
-          <td>0.325750</td>
-          <td>0.556696</td>
+          <td>0.038642</td>
+          <td>0.046558</td>
+          <td>0.047407</td>
+          <td>0.324158</td>
+          <td>0.278373</td>
         </tr>
         <tr>
           <th>RP77</th>
@@ -451,37 +451,37 @@ In order to get the best possible accuracy within this time limit, we set the co
           <td>0.000000</td>
           <td>-1.000000</td>
           <td>0.000000</td>
-          <td>0.066092</td>
+          <td>0.031299</td>
         </tr>
         <tr>
           <th>Four-branch serial system</th>
-          <td>0.0014</td>
+          <td>0.0019</td>
           <td>10000.0</td>
-          <td>0.000667</td>
-          <td>0.002133</td>
-          <td>0.267074</td>
-          <td>-0.426632</td>
-          <td>0.053441</td>
+          <td>0.001046</td>
+          <td>0.002754</td>
+          <td>0.229198</td>
+          <td>-0.360210</td>
+          <td>0.026052</td>
         </tr>
         <tr>
           <th>R-S</th>
-          <td>0.0765</td>
+          <td>0.0791</td>
           <td>10000.0</td>
-          <td>0.071290</td>
-          <td>0.081710</td>
-          <td>0.034745</td>
-          <td>0.459112</td>
-          <td>0.051489</td>
+          <td>0.073810</td>
+          <td>0.084390</td>
+          <td>0.034121</td>
+          <td>0.466982</td>
+          <td>0.024187</td>
         </tr>
         <tr>
           <th>Axial stressed beam</th>
-          <td>0.0273</td>
+          <td>0.0277</td>
           <td>10000.0</td>
-          <td>0.024106</td>
-          <td>0.030494</td>
-          <td>0.059691</td>
-          <td>0.224092</td>
-          <td>0.051436</td>
+          <td>0.024483</td>
+          <td>0.030917</td>
+          <td>0.059246</td>
+          <td>0.227340</td>
+          <td>0.024418</td>
         </tr>
       </tbody>
     </table>
@@ -538,7 +538,7 @@ a sample size equal to :math:`n=10^9`, since the exact :math:`p_f \approx 10^{-7
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.156 seconds)
+   **Total running time of the script:** (0 minutes 2.041 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_reliability_compute_reference_proba.py:

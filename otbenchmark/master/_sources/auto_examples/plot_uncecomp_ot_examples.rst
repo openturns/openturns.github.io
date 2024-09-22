@@ -21,27 +21,18 @@
 Introduction to OpenTURNS objects
 =================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 5-14
+.. GENERATED FROM PYTHON SOURCE LINES 7-15
 
-.. code-block:: Python
+In the otbenchmark package, we use several objects that must be known in order to distinguish which objects
+come from the OpenTURNS library or from otbenchmark.
+For reliability problems, there are three objects that cannot be ignored:
 
-
-    # In the otbenchmark package, we use several objects that must be known in order to distinguish which objects
-    # come from the OpenTURNS library or from otbenchmark.
-    # For reliability problems, there are three objects that cannot be ignored:
-    # * the `Distribution`,
-    # * the `Function`,
-    # * the `ThresholdEvent`.
-    #
+* the :class:`openturns.Distribution`,
+* the :class:`openturns.Function`,
+* the :class:`openturns.ThresholdEvent`.
 
 
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 15-19
+.. GENERATED FROM PYTHON SOURCE LINES 17-21
 
 .. code-block:: Python
 
@@ -56,11 +47,11 @@ Introduction to OpenTURNS objects
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Avoid mixture warnings
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-25
 
 .. code-block:: Python
 
@@ -73,16 +64,16 @@ Avoid mixture warnings
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-26
+.. GENERATED FROM PYTHON SOURCE LINES 26-28
 
 Distribution
 ------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Define two marginals
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-32
+.. GENERATED FROM PYTHON SOURCE LINES 31-34
 
 .. code-block:: Python
 
@@ -96,11 +87,11 @@ Define two marginals
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Define an independent joint distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-36
+.. GENERATED FROM PYTHON SOURCE LINES 36-38
 
 .. code-block:: Python
 
@@ -113,11 +104,11 @@ Define an independent joint distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Define a dependent joint distribution using a copula (e.g., Frank copula)
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-41
+.. GENERATED FROM PYTHON SOURCE LINES 40-43
 
 .. code-block:: Python
 
@@ -131,11 +122,11 @@ Define a dependent joint distribution using a copula (e.g., Frank copula)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 Generate a sample of each joint distribution
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-49
 
 .. code-block:: Python
 
@@ -150,7 +141,7 @@ Generate a sample of each joint distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-52
+.. GENERATED FROM PYTHON SOURCE LINES 50-54
 
 .. code-block:: Python
 
@@ -171,7 +162,7 @@ Generate a sample of each joint distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-72
+.. GENERATED FROM PYTHON SOURCE LINES 55-74
 
 .. code-block:: Python
 
@@ -206,7 +197,7 @@ Generate a sample of each joint distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-90
+.. GENERATED FROM PYTHON SOURCE LINES 75-92
 
 .. code-block:: Python
 
@@ -225,7 +216,7 @@ Generate a sample of each joint distribution
     graph.setLegendPosition("topright")
     graph.setColors(ot.Drawable.BuildDefaultPalette(2))
     view = otv.View(graph, figure_kw={"figsize": (4.5, 3.5)})
-    view.save("two_samples.pdf")
+    # view.save("two_samples.pdf")
 
 
 
@@ -239,16 +230,16 @@ Generate a sample of each joint distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-93
+.. GENERATED FROM PYTHON SOURCE LINES 93-95
 
 Function
 --------
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-96
+.. GENERATED FROM PYTHON SOURCE LINES 97-98
 
 Define a symbolic function
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-102
 
 .. code-block:: Python
 
@@ -263,11 +254,11 @@ Define a symbolic function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-102
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
 
 Define input random vectors
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-105
+.. GENERATED FROM PYTHON SOURCE LINES 104-107
 
 .. code-block:: Python
 
@@ -281,11 +272,11 @@ Define input random vectors
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-107
+.. GENERATED FROM PYTHON SOURCE LINES 108-109
 
 Compose input random vectors by the symbolic function
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-110
+.. GENERATED FROM PYTHON SOURCE LINES 109-112
 
 .. code-block:: Python
 
@@ -299,11 +290,11 @@ Compose input random vectors by the symbolic function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-112
+.. GENERATED FROM PYTHON SOURCE LINES 113-114
 
 Sample the output random variable
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-116
+.. GENERATED FROM PYTHON SOURCE LINES 114-118
 
 .. code-block:: Python
 
@@ -318,7 +309,7 @@ Sample the output random variable
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-137
+.. GENERATED FROM PYTHON SOURCE LINES 119-139
 
 .. code-block:: Python
 
@@ -354,7 +345,7 @@ Sample the output random variable
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-148
+.. GENERATED FROM PYTHON SOURCE LINES 140-150
 
 .. code-block:: Python
 
@@ -366,7 +357,7 @@ Sample the output random variable
     graph.add(curve)
     graph.setColors(ot.Drawable.BuildDefaultPalette(2))
     view = otv.View(graph, figure_kw={"figsize": (4.5, 3.5)})
-    view.save("histo_output.pdf")
+    # view.save("histo_output.pdf")
 
 
 
@@ -380,7 +371,7 @@ Sample the output random variable
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-159
+.. GENERATED FROM PYTHON SOURCE LINES 151-161
 
 .. code-block:: Python
 
@@ -392,7 +383,7 @@ Sample the output random variable
     graph.add(curve)
     graph.setColors(ot.Drawable.BuildDefaultPalette(2))
     view = otv.View(graph, figure_kw={"figsize": (4.5, 3.5)})
-    view.save("kernel_output.pdf")
+    # view.save("kernel_output.pdf")
 
 
 
@@ -406,12 +397,12 @@ Sample the output random variable
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-162
+.. GENERATED FROM PYTHON SOURCE LINES 162-164
 
 ThresholdEvent
 --------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-168
+.. GENERATED FROM PYTHON SOURCE LINES 166-170
 
 .. code-block:: Python
 
@@ -432,7 +423,7 @@ ThresholdEvent
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-177
+.. GENERATED FROM PYTHON SOURCE LINES 171-179
 
 .. code-block:: Python
 
@@ -451,7 +442,7 @@ ThresholdEvent
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-180
+.. GENERATED FROM PYTHON SOURCE LINES 180-182
 
 .. code-block:: Python
 
@@ -464,7 +455,7 @@ ThresholdEvent
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-184
+.. GENERATED FROM PYTHON SOURCE LINES 183-186
 
 .. code-block:: Python
 
@@ -479,7 +470,7 @@ ThresholdEvent
 
  .. code-block:: none
 
-    Pf =  0.15619223659889064
+    Pf =  0.1497584541062803
 
 
 
@@ -487,7 +478,7 @@ ThresholdEvent
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 41.289 seconds)
+   **Total running time of the script:** (1 minutes 41.156 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_uncecomp_ot_examples.py:

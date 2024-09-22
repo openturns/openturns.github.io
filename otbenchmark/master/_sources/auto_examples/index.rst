@@ -1,7 +1,7 @@
 :orphan:
 
-Examples
-========
+General examples
+================
 
 
 .. raw:: html
@@ -131,6 +131,40 @@ Examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Demonstration of the DrawEvent class">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_drawevent_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_plot_drawevent.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Demonstration of the DrawEvent class</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Draw multidimensional functions, distributions and events">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_draw_cross_cuts_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_plot_draw_cross_cuts.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Draw multidimensional functions, distributions and events</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Convergence of Monte-Carlo to estimate the probability in a reliability problem">
 
 .. only:: html
@@ -180,6 +214,8 @@ Examples
    /auto_examples/plot_methodFactory
    /auto_examples/plot_conditionaldistribution
    /auto_examples/plot_check_reliability_reference_probabilities
+   /auto_examples/plot_drawevent
+   /auto_examples/plot_draw_cross_cuts
    /auto_examples/plot_convergence_reliability_mc
    /auto_examples/plot_uncecomp_ot_examples
 
@@ -230,6 +266,23 @@ Reliability examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="RP33 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp33_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp33.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP33 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="RP53 analysis and 2D graphics">
 
 .. only:: html
@@ -242,6 +295,23 @@ Reliability examples
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP53 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Problem RP8">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp8_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp8.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Problem RP8</div>
     </div>
 
 
@@ -264,23 +334,6 @@ Reliability examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="RP24 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp24_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP24 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="RP57 analysis and 2D graphics">
 
 .. only:: html
@@ -298,18 +351,52 @@ Reliability examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="RP111 analysis and 2D graphics">
+    <div class="sphx-glr-thumbcontainer" tooltip="RP31 analysis and 2D graphics">
 
 .. only:: html
 
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp111_thumb.png
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp31_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py`
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp31.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">RP111 analysis and 2D graphics</div>
+      <div class="sphx-glr-thumbnail-title">RP31 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="RP24 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp24_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp24.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP24 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
     </div>
 
 
@@ -332,6 +419,23 @@ Reliability examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="RP111 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp111_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp111.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP111 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="RP25 analysis and 2D graphics">
 
 .. only:: html
@@ -344,23 +448,6 @@ Reliability examples
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP25 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
     </div>
 
 
@@ -395,23 +482,6 @@ Reliability examples
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP110 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="RP31 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp31_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp31.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP31 analysis and 2D graphics</div>
     </div>
 
 

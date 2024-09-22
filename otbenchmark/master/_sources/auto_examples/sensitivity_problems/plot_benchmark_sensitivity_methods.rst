@@ -172,9 +172,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.18553,0.173199,0.637105]
+    Computed first order =  [0.17601,0.170182,0.622979]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.203344,0.210474,0.620406]
+    Computed total order =  [0.211086,0.211408,0.612966]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -274,9 +274,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  500
-    Computed first order =  [0.18553,0.173199,0.637105]
+    Computed first order =  [0.17601,0.170182,0.622979]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.203344,0.210474,0.620406]
+    Computed total order =  [0.211086,0.211408,0.612966]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -352,17 +352,17 @@ Loop over the estimators
 
     Monte-Carlo sampling
     SaltelliSensitivityAlgorithm
-        S =  [0.199997,0.180685,0.664071]
-        T =  [0.223721,0.228732,0.6502]
+        S =  [0.136566,0.171703,0.642677]
+        T =  [0.177844,0.201708,0.68052]
     MartinezSensitivityAlgorithm
-        S =  [0.191903,0.173622,0.638601]
-        T =  [0.2242,0.207898,0.591462]
+        S =  [0.277433,0.214366,0.668679]
+        T =  [0.185356,0.188883,0.608279]
     JansenSensitivityAlgorithm
-        S =  [0.0952801,0.125079,0.615803]
-        T =  [0.253686,0.237742,0.592254]
+        S =  [0.186198,0.164263,0.62107]
+        T =  [0.213544,0.212001,0.649407]
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.205369,0.314775,0.698245]
-        T =  [0.220371,0.172107,0.567821]
+        S =  [0.160285,0.100477,0.710167]
+        T =  [0.200836,0.203425,0.679275]
 
 
 

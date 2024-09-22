@@ -98,15 +98,12 @@ Exact first and total order
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-31
+.. GENERATED FROM PYTHON SOURCE LINES 25-28
 
 .. code-block:: Python
 
     exact_total_order = problem.getTotalOrderIndices()
     print(exact_total_order)
-
-
-    # ## Plot the function
 
 
 
@@ -121,11 +118,16 @@ Exact first and total order
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 29-31
+
+Plot the function
+-----------------
+
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Create X/Y data
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-38
+.. GENERATED FROM PYTHON SOURCE LINES 34-39
 
 .. code-block:: Python
 
@@ -141,7 +143,7 @@ Create X/Y data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-60
+.. GENERATED FROM PYTHON SOURCE LINES 40-61
 
 .. code-block:: Python
 
@@ -178,7 +180,7 @@ Create X/Y data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-64
+.. GENERATED FROM PYTHON SOURCE LINES 62-65
 
 .. code-block:: Python
 
@@ -197,15 +199,16 @@ Create X/Y data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 66-68
 
-## Perform sensitivity analysis
+Perform sensitivity analysis
+----------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 70-71
 
 Create X/Y data
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 .. code-block:: Python
 
@@ -221,11 +224,11 @@ Create X/Y data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Compute first order indices using the Saltelli estimator
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-80
+.. GENERATED FROM PYTHON SOURCE LINES 78-82
 
 .. code-block:: Python
 
@@ -240,11 +243,11 @@ Compute first order indices using the Saltelli estimator
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
 
 Compare with exact results
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-92
+.. GENERATED FROM PYTHON SOURCE LINES 84-94
 
 .. code-block:: Python
 
@@ -275,7 +278,7 @@ Compare with exact results
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-95
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 .. code-block:: Python
 
@@ -293,7 +296,7 @@ Compare with exact results
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-97
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 .. code-block:: Python
 
@@ -308,7 +311,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.655 seconds)
+   **Total running time of the script:** (0 minutes 1.793 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_oakleyohagan_sensitivity.py:
