@@ -146,7 +146,7 @@ Print the iso-values of the distribution
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.401 seconds)
+   **Total running time of the script:** (0 minutes 7.550 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_crosscut_distribution_3d.py:

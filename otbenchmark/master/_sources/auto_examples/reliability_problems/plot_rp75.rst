@@ -151,8 +151,8 @@ Get the results
  .. code-block:: none
 
     Number of function calls = 1000
-    Failure Probability = 0.0080
-    95.0 % confidence interval :[0.0025,0.0135] 
+    Failure Probability = 0.0040
+    95.0 % confidence interval :[0.0001,0.0079] 
 
 
 
@@ -530,7 +530,7 @@ In order to fix this, we just use a different starting point.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.790 seconds)
+   **Total running time of the script:** (0 minutes 1.756 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp75.py:
