@@ -476,10 +476,35 @@ but increases the simulation elapsed time.
 We see that these distributions are never far away from each other.
 This proves that the computation of the distribution is correct, for both the asymptotic and bootstrap options.
 
+.. GENERATED FROM PYTHON SOURCE LINES 128-130
+
+.. code-block:: Python
+
+    otv.View.ShowAll()
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 131-132
+
+.. code-block:: Python
+
+    ot.ResourceMap.Reload()
+
+
+
+
+
+
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.833 seconds)
+   **Total running time of the script:** (0 minutes 16.207 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_sensitivity_distribution_ishigami.py:

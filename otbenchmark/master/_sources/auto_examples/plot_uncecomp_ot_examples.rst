@@ -455,7 +455,7 @@ ThresholdEvent
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-186
+.. GENERATED FROM PYTHON SOURCE LINES 183-187
 
 .. code-block:: Python
 
@@ -466,11 +466,24 @@ ThresholdEvent
 
 
 
+
 .. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
-    Pf =  0.15821596244131447
+    Pf =  0.1497584541062803
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 188-189
+
+.. code-block:: Python
+
+    otv.View.ShowAll()
+
+
+
 
 
 
@@ -478,7 +491,7 @@ ThresholdEvent
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 35.870 seconds)
+   **Total running time of the script:** (1 minutes 40.251 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_uncecomp_ot_examples.py:

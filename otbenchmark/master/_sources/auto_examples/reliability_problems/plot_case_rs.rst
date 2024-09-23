@@ -138,8 +138,8 @@ Get the results
  .. code-block:: none
 
     Number of function calls = 1000
-    Failure Probability = 0.0760
-    95.0 % confidence interval :[0.0596,0.0924] 
+    Failure Probability = 0.0880
+    95.0 % confidence interval :[0.0704,0.1056] 
 
 
 
@@ -438,7 +438,7 @@ Fill the event domain with a color
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.688 seconds)
+   **Total running time of the script:** (0 minutes 1.764 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_case_rs.py:
