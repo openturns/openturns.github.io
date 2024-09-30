@@ -166,7 +166,7 @@ This is why we generate an input sample using the <cite>getSample</cite> method 
 <span class="n">Y_train</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The following figure presents the distribution of the vertical deviations Y on the training sample. We observe that the large deviations occur less often.</p>
+<p>The following figure presents the distribution of the vertical deviations <cite>Y</cite> on the training sample. We observe that the large deviations occur less often.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">histo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 <span class="n">histo</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Vertical deviation (cm)&quot;</span><span class="p">)</span>
 <span class="n">histo</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Distribution of the vertical deviation&quot;</span><span class="p">)</span>
@@ -177,14 +177,15 @@ This is why we generate an input sample using the <cite>getSample</cite> method 
 <img src="../../_images/sphx_glr_plot_kriging_cantilever_beam_001.png" srcset="../../_images/sphx_glr_plot_kriging_cantilever_beam_001.png" alt="Distribution of the vertical deviation" class = "sphx-glr-single-img"/></section>
 <section id="create-the-metamodel">
 <h2>Create the metamodel<a class="headerlink" href="#create-the-metamodel" title="Link to this heading">¶</a></h2>
-<p>In order to create the Kriging metamodel, we first select a constant trend with the <cite>ConstantBasisFactory</cite> class. Then we use a squared exponential covariance kernel.
-The <cite>SquaredExponential</cite> kernel has one amplitude coefficient and 4 scale coefficients.
+<p>In order to create the Kriging metamodel, we first select a constant trend with the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.ConstantBasisFactory.html#openturns.ConstantBasisFactory" title="openturns.ConstantBasisFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantBasisFactory</span></code></a> class.
+Then we use a squared exponential covariance kernel.
+The <a class="reference internal" href="../../user_manual/_generated/openturns.SquaredExponential.html#openturns.SquaredExponential" title="openturns.SquaredExponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">SquaredExponential</span></code></a> kernel has one amplitude coefficient and 4 scale coefficients.
 This is because this covariance kernel is anisotropic : each of the 4 input variables is associated with its own scale coefficient.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Typically, the optimization algorithm is quite good at setting sensible optimization bounds.
+<p>Typically, the optimization algorithm is quite good at setting optimization bounds.
 In this case, however, the range of the input domain is extreme.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lower and upper bounds of X_train:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMin</span><span class="p">(),</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
@@ -194,16 +195,16 @@ In this case, however, the range of the input domain is extreme.</p>
 [6.52677e+10,244.612,2.50392,1.34039e-07] [7.35161e+10,354.916,2.59295,1.56347e-07]
 </pre></div>
 </div>
-<p>We need to manually define sensible optimization bounds.
+<p>We need to manually define optimization bounds.
 Note that since the amplitude parameter is computed analytically (this is possible when the output dimension is 1), we only need to set bounds on the scale parameter.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span>
     <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0e11</span><span class="p">,</span> <span class="mf">1.0e3</span><span class="p">,</span> <span class="mf">1.0e1</span><span class="p">,</span> <span class="mf">1.0e-5</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Finally, we use the <cite>KrigingAlgorithm</cite> class to create the Kriging metamodel.
+<p>Finally, we use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.KrigingAlgorithm.html#openturns.KrigingAlgorithm" title="openturns.KrigingAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code></a> class to create the Kriging metamodel.
 It requires a training sample, a covariance kernel and a trend basis as input arguments.
-We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
+We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensitive choice here.
 We must not forget to actually set the optimization bounds defined above.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
@@ -268,12 +269,11 @@ R2 coefficient of determination.</p>
 <img src="../../_images/sphx_glr_plot_kriging_cantilever_beam_002.png" srcset="../../_images/sphx_glr_plot_kriging_cantilever_beam_002.png" alt="Distribution of the residuals" class = "sphx-glr-single-img"/><p>We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first sign of good quality.</p>
 <p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation.drawValidation" title="openturns.MetaModelValidation.drawValidation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">drawValidation()</span></code></a> method allows one to compare
 the observed outputs and the metamodel outputs.</p>
-<p>sphinx_gallery_thumbnail_number = 3</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;R2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">r2Score</span><span class="p">))</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># sphinx_gallery_thumbnail_number = 3</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_kriging_cantilever_beam_003.png" srcset="../../_images/sphx_glr_plot_kriging_cantilever_beam_003.png" alt="R2 = 99.99%" class = "sphx-glr-single-img"/><div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-cantilever-beam-py">
