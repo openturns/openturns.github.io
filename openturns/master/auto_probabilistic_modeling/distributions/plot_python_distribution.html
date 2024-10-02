@@ -124,8 +124,8 @@ to download the full example code.</p>
 <p>Then an instance of the new class can be passed on into a Distribution object.</p>
 <p>At least <cite>computeCDF</cite> should be overridden.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">openturns.testing</span> <span class="k">as</span> <span class="nn">ott</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
 <span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -202,9 +202,6 @@ to download the full example code.</p>
     <span class="k">def</span> <span class="nf">getMoment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">n</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">getCentralMoment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">computeCharacteristicFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dim&gt;1&quot;</span><span class="p">)</span>
@@ -233,10 +230,10 @@ to download the full example code.</p>
         <span class="k">return</span> <span class="n">ot</span><span class="o">.</span><span class="n">Distribution</span><span class="p">(</span><span class="n">py_dist</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">computeQuantile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob</span><span class="p">,</span> <span class="n">tail</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">prob</span> <span class="k">if</span> <span class="n">tail</span> <span class="k">else</span> <span class="n">prob</span>
-        <span class="n">quantile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">prob</span> <span class="k">if</span> <span class="n">tail</span> <span class="k">else</span> <span class="n">prob</span>
+        <span class="n">quantile</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)):</span>
-            <span class="n">quantile</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">q</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">quantile</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">quantile</span>
 </pre></div>
 </div>
@@ -247,7 +244,7 @@ to download the full example code.</p>
 <p>And plot the CDF:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">()</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">])</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_python_distribution_001.png" srcset="../../_images/sphx_glr_plot_python_distribution_001.png" alt="[X0,X1] iso-CDF" class = "sphx-glr-single-img"/><p>We can easily generate sample:</p>
@@ -257,11 +254,11 @@ to download the full example code.</p>
 <div class="output_subarea output_html rendered_html output_result">
 <table>
   <tr><td></td><th>v0</th><th>v1</th></tr>
-  <tr><th>0</th><td>6.504736</td><td>7.441644</td></tr>
-  <tr><th>1</th><td>5.640709</td><td>8.209125</td></tr>
-  <tr><th>2</th><td>6.206639</td><td>6.076844</td></tr>
-  <tr><th>3</th><td>6.61748</td><td>6.613415</td></tr>
-  <tr><th>4</th><td>5.784583</td><td>6.582148</td></tr>
+  <tr><th>0</th><td>6.870011</td><td>7.296867</td></tr>
+  <tr><th>1</th><td>5.453448</td><td>6.775741</td></tr>
+  <tr><th>2</th><td>5.72106</td><td>6.763608</td></tr>
+  <tr><th>3</th><td>6.400207</td><td>6.45434</td></tr>
+  <tr><th>4</th><td>6.363995</td><td>8.844842</td></tr>
 </table>
 </div>
 <br />
@@ -273,12 +270,23 @@ to download the full example code.</p>
 class=Point name=Unnamed dimension=2 values=[6,7.5]
 </div>
 <br />
-<br /><p>Also we can compute the probability contained in an interval :</p>
+<br /><p>Also we can compute the probability contained in an interval:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span><span class="o">.</span><span class="n">computeProbability</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mf">8.5</span><span class="p">,</span> <span class="mi">9</span><span class="p">]))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>And do more (see <a class="reference internal" href="../../user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></a> for all methods)</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.75
+</pre></div>
+</div>
+<p>Now let us validate our distribution with <a class="reference internal" href="../../user_manual/_generated/openturns.testing.DistributionChecker.html#openturns.testing.DistributionChecker" title="openturns.testing.DistributionChecker"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.testing.DistributionChecker</span></code></a>
+It automatically checks the consistency of most services and allows one to check for errors.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">checker</span> <span class="o">=</span> <span class="n">ott</span><span class="o">.</span><span class="n">DistributionChecker</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+<span class="n">checker</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.628 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-probabilistic-modeling-distributions-plot-python-distribution-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1d3f4da281aaa57d7633000b66ef0209/plot_python_distribution.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_python_distribution.ipynb</span></code></a></p>
