@@ -644,7 +644,7 @@ in absolute value, to the Monte-Carlo estimator.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.498 seconds)
+   **Total running time of the script:** (0 minutes 0.272 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_check_reliability_reference_probabilities.py:

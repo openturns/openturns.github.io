@@ -213,7 +213,7 @@ Let :math:`\bar{x}\in\mathbb{R}^3` be the reference point.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.145 seconds)
+   **Total running time of the script:** (0 minutes 0.911 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_crosscut_function.py:

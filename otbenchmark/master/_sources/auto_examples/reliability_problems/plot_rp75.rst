@@ -151,8 +151,8 @@ Get the results
  .. code-block:: none
 
     Number of function calls = 1000
-    Failure Probability = 0.0080
-    95.0 % confidence interval :[0.0025,0.0135] 
+    Failure Probability = 0.0100
+    95.0 % confidence interval :[0.0038,0.0162] 
 
 
 
@@ -427,15 +427,13 @@ We create a NearestPoint algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-155
+.. GENERATED FROM PYTHON SOURCE LINES 150-153
 
 If the mean point is used as a starting point with the `AbdoRackwitz` class, then the algorithm fails with:
-```
-RuntimeError: InternalException : Error in Abdo Rackwitz algorithm: the gradient of the level function is zero ...
-```
+*RuntimeError: InternalException : Error in Abdo Rackwitz algorithm: the gradient of the level function is zero*
 In order to fix this, we just use a different starting point.
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
+.. GENERATED FROM PYTHON SOURCE LINES 155-157
 
 .. code-block:: Python
 
@@ -448,7 +446,7 @@ In order to fix this, we just use a different starting point.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-170
+.. GENERATED FROM PYTHON SOURCE LINES 158-168
 
 .. code-block:: Python
 
@@ -476,7 +474,7 @@ In order to fix this, we just use a different starting point.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-173
+.. GENERATED FROM PYTHON SOURCE LINES 169-171
 
 .. code-block:: Python
 
@@ -495,7 +493,7 @@ In order to fix this, we just use a different starting point.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-176
+.. GENERATED FROM PYTHON SOURCE LINES 172-174
 
 .. code-block:: Python
 
@@ -515,7 +513,7 @@ In order to fix this, we just use a different starting point.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-178
+.. GENERATED FROM PYTHON SOURCE LINES 175-176
 
 .. code-block:: Python
 
@@ -530,7 +528,7 @@ In order to fix this, we just use a different starting point.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.758 seconds)
+   **Total running time of the script:** (0 minutes 2.891 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp75.py:
