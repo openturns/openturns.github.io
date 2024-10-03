@@ -20,7 +20,7 @@ elif "FrankCopula" == "SklarCopula":
 elif "FrankCopula" == "StudentCopula":
     R = ot.CorrelationMatrix(2)
     R[1, 0] = 0.3
-    copula = otexp.StudentCopula(3.0, R)
+    copula = ot.StudentCopula(3.0, R)
 else:
     copula = ot.FrankCopula()
 if copula.getDimension() == 1:

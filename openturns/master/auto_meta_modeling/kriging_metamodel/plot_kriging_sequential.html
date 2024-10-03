@@ -136,6 +136,7 @@ In order to create simple graphics, we consider a 1-d function.</p>
 <section id="create-the-function-and-the-design-of-experiments">
 <h2>Create the function and the design of experiments<a class="headerlink" href="#create-the-function-and-the-design-of-experiments" title="Link to this heading">¶</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.experimental</span> <span class="k">as</span> <span class="nn">otexp</span>
 <span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">openturns</span> <span class="kn">import</span> <span class="n">viewer</span>
@@ -176,10 +177,12 @@ In order to create simple graphics, we consider a 1-d function.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
     <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">1.5</span><span class="p">)</span>
-    <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+    <span class="n">fitter</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+    <span class="n">fitter</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">fitter</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
     <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="n">krigResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">krigResult</span>
+    <span class="n">gprResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">gprResult</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">linearSample</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">npoints</span><span class="p">):</span>
@@ -195,13 +198,13 @@ In order to create simple graphics, we consider a 1-d function.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sqrt</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;sqrt(x)&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotMyBasicKriging</span><span class="p">(</span><span class="n">krigResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotMyBasicKriging</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a kriging result, plot the data, the kriging metamodel</span>
 <span class="sd">    and a confidence interval.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">samplesize</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-    <span class="n">meta</span> <span class="o">=</span> <span class="n">krigResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">gprResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
     <span class="n">graphKriging</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
     <span class="n">graphKriging</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Kriging&quot;</span><span class="p">])</span>
     <span class="c1"># Create a grid of points and evaluate the function and the kriging</span>
@@ -210,8 +213,9 @@ In order to create simple graphics, we consider a 1-d function.</p>
     <span class="n">yFunction</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
     <span class="n">yKrig</span> <span class="o">=</span> <span class="n">meta</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
     <span class="c1"># Compute the conditional covariance</span>
+    <span class="n">gpcc</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span><span class="n">gprResult</span><span class="p">)</span>
     <span class="n">epsilon</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0e-8</span><span class="p">])</span>
-    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">krigResult</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
+    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">gpcc</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
     <span class="n">conditionalSigma</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">conditionalVariance</span><span class="p">)</span>
     <span class="c1"># Compute the quantile of the Normal distribution</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
@@ -258,8 +262,8 @@ In order to create simple graphics, we consider a 1-d function.</p>
 </pre></div>
 </div>
 <p>We start by creating the initial Kriging metamodel on the 4 points in the design of experiments.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krigResult</span> <span class="o">=</span> <span class="n">createMyBasicKriging</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicKriging</span><span class="p">(</span><span class="n">krigResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicKriging</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicKriging</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -267,14 +271,15 @@ In order to create simple graphics, we consider a 1-d function.</p>
 <section id="sequentially-add-new-points">
 <h2>Sequentially add new points<a class="headerlink" href="#sequentially-add-new-points" title="Link to this heading">¶</a></h2>
 <p>The following function is the building block of the algorithm. It returns a new point which maximizes the conditional variance.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">krigResult</span><span class="p">):</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a new point to be added to the design of experiments.</span>
 <span class="sd">    This point maximizes the conditional variance of the kriging.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nbpoints</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="n">xGrid</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">nbpoints</span><span class="p">)</span>
-    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">krigResult</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="n">gpcc</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span><span class="n">gprResult</span><span class="p">)</span>
+    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">gpcc</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
     <span class="n">iMaxVar</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">conditionalVariance</span><span class="p">))</span>
     <span class="n">xNew</span> <span class="o">=</span> <span class="n">xGrid</span><span class="p">[</span><span class="n">iMaxVar</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">xNew</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="n">xNew</span><span class="p">])</span>
@@ -282,7 +287,7 @@ In order to create simple graphics, we consider a 1-d function.</p>
 </pre></div>
 </div>
 <p>We first call <cite>getNewPoint</cite> to get a point to add to the design of experiments.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">krigResult</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">)</span>
 <span class="n">xNew</span>
 </pre></div>
 </div>
@@ -298,28 +303,28 @@ class=Point name=Unnamed dimension=1 values=[1.9]
 </div>
 <p>We now plot the updated Kriging.</p>
 <p>sphinx_gallery_thumbnail_number = 3</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krigResult</span> <span class="o">=</span> <span class="n">createMyBasicKriging</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicKriging</span><span class="p">(</span><span class="n">krigResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicKriging</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicKriging</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Kriging #0&quot;</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_kriging_sequential_003.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_003.png" alt="Kriging #0" class = "sphx-glr-single-img"/><p>The algorithm added a point to the right bound of the domain.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">krigingStep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">krigResult</span><span class="p">)</span>
+    <span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">)</span>
     <span class="n">yNew</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
     <span class="n">X</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
     <span class="n">Y</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">yNew</span><span class="p">)</span>
-    <span class="n">krigResult</span> <span class="o">=</span> <span class="n">createMyBasicKriging</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-    <span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicKriging</span><span class="p">(</span><span class="n">krigResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicKriging</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicKriging</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Kriging #</span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">krigingStep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">graph</span><span class="o">.</span><span class="n">getTitle</span><span class="p">())</span>
     <span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
 <li><img src="../../_images/sphx_glr_plot_kriging_sequential_004.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_004.png" alt="Kriging #1 Size = 6, R2=98.80%" class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_kriging_sequential_005.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_005.png" alt="Kriging #2 Size = 7, R2=99.74%" class = "sphx-glr-multi-img"/></li>
-<li><img src="../../_images/sphx_glr_plot_kriging_sequential_006.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_006.png" alt="Kriging #3 Size = 8, R2=99.87%" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_kriging_sequential_005.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_005.png" alt="Kriging #2 Size = 7, R2=99.72%" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_kriging_sequential_006.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_006.png" alt="Kriging #3 Size = 8, R2=99.81%" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_kriging_sequential_007.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_007.png" alt="Kriging #4 Size = 9, R2=99.89%" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_kriging_sequential_008.png" srcset="../../_images/sphx_glr_plot_kriging_sequential_008.png" alt="Kriging #5 Size = 10, R2=99.90%" class = "sphx-glr-multi-img"/></li>
 </ul>

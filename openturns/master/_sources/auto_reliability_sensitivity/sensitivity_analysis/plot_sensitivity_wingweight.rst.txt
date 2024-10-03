@@ -85,8 +85,8 @@ The colors of each contour plot are comparable. The number of contour levels are
     ot.ResourceMap.SetAsBool("Contour-DefaultIsFilled", True)
     ot.ResourceMap.SetAsUnsignedInteger("Contour-DefaultLevelsNumber", 50)
 
-    lowerBound = m.distributionX.getRange().getLowerBound()
-    upperBound = m.distributionX.getRange().getUpperBound()
+    lowerBound = m.inputDistribution.getRange().getLowerBound()
+    upperBound = m.inputDistribution.getRange().getUpperBound()
 
     grid = ot.GridLayout(m.dim - 1, m.dim - 1)
     for i in range(1, m.dim):
@@ -97,7 +97,7 @@ The colors of each contour plot are comparable. The number of contour levels are
                 if k != i and k != j:
                     crossCutIndices.append(k)
                     # Definition of the reference point
-                    crossCutReferencePoint.append(m.distributionX.getMean()[k])
+                    crossCutReferencePoint.append(m.inputDistribution.getMean()[k])
 
             # Definition of 2D cross cut function
             crossCutFunction = ot.ParametricFunction(
@@ -122,9 +122,9 @@ The colors of each contour plot are comparable. The number of contour levels are
 
             # Creation of axes title
             if j == 0:
-                graph.setYTitle(m.distributionX.getDescription()[i])
+                graph.setYTitle(m.inputDistribution.getDescription()[i])
             if i == 9:
-                graph.setXTitle(m.distributionX.getDescription()[j])
+                graph.setXTitle(m.inputDistribution.getDescription()[j])
 
             grid.setGraph(i - 1, j, graph)
 
@@ -169,10 +169,10 @@ We create the input and output data for the estimation of the different sensitiv
 .. code-block:: Python
 
 
-    inputNames = m.distributionX.getDescription()
+    inputNames = m.inputDistribution.getDescription()
 
     size = 500
-    inputDesign = m.distributionX.getSample(size)
+    inputDesign = m.inputDistribution.getSample(size)
     outputDesign = m.model(inputDesign)
 
 
@@ -222,7 +222,7 @@ We compute here PCC coefficients using the :class:`~openturns.CorrelationAnalysi
 
  .. code-block:: none
 
-    [0.943195,-0.0719582,0.966757,0.104356,-0.0168604,0.271874,-0.945223,0.981902,0.914195,0.448612]#10
+    [0.942801,0.0146971,0.963954,0.0471221,-0.0171501,0.319334,-0.944516,0.979952,0.907646,0.435131]#10
 
 
 
@@ -269,7 +269,7 @@ We compute here PRCC coefficients using the :class:`~openturns.CorrelationAnalys
 
  .. code-block:: none
 
-    [0.868747,-0.0690074,0.926949,-0.0705432,0.0165869,0.260671,-0.874925,0.961124,0.819996,0.286135]#10
+    [0.887607,0.0149862,0.927025,0.0148019,0.0955716,0.240199,-0.889329,0.959604,0.824026,0.274503]#10
 
 
 
@@ -316,7 +316,7 @@ We compute here SRC coefficients using the :class:`~openturns.CorrelationAnalysi
 
  .. code-block:: none
 
-    [0.344248,-0.00874343,0.460798,0.0127166,-0.00204946,0.0342475,-0.352055,0.632169,0.274457,0.0611331]#10
+    [0.369054,0.00191698,0.474967,0.00613359,-0.00223852,0.0443933,-0.375146,0.643262,0.28408,0.0631151]#10
 
 
 
@@ -361,7 +361,7 @@ Normalized squared SRC coefficients (coefficients are made to sum to 1) :
 
  .. code-block:: none
 
-    [0.126759,8.17707e-05,0.22712,0.000172973,4.49275e-06,0.00125456,0.132573,0.427465,0.0805719,0.00399749]#10
+    [0.135791,3.66377e-06,0.224915,3.75077e-05,4.99592e-06,0.00196484,0.140311,0.412542,0.0804589,0.00397154]#10
 
 
 
@@ -412,7 +412,7 @@ We compute here SRRC coefficients using the :class:`~openturns.CorrelationAnalys
 
  .. code-block:: none
 
-    [0.323303,-0.0127426,0.4578,-0.0130256,0.00306401,0.0497339,-0.333881,0.645126,0.264992,0.0552599]#10
+    [0.362864,0.00281988,0.467839,0.00277594,0.0180698,0.047034,-0.366132,0.642975,0.275605,0.0537757]#10
 
 
 
@@ -459,7 +459,7 @@ We compute here the Pearson :math:`\rho` coefficients using the :class:`~opentur
 
  .. code-block:: none
 
-    [0.336267,-0.00931802,0.471827,-0.0318564,-0.0224971,0.00708379,-0.332824,0.683086,0.364572,0.052548]#10
+    [0.343082,0.0393668,0.503811,-0.0214446,0.0565804,0.0676019,-0.33644,0.610386,0.298603,0.172064]#10
 
 
 
@@ -507,7 +507,7 @@ We compute here the Spearman :math:`\rho_s` coefficients using the :class:`~open
 
  .. code-block:: none
 
-    [0.313817,-0.0128127,0.467777,-0.0533252,-0.0170981,0.0222142,-0.315071,0.692137,0.3569,0.0451898]#10
+    [0.335585,0.0370791,0.50151,-0.0208144,0.0746623,0.0683962,-0.327675,0.613847,0.293277,0.161524]#10
 
 
 
@@ -555,7 +555,7 @@ We create a distribution-based RandomVector.
 
 .. code-block:: Python
 
-    X = ot.RandomVector(m.distributionX)
+    X = ot.RandomVector(m.inputDistribution)
 
 
 
@@ -661,9 +661,9 @@ We compute the Sobol' indices from both sampling approach and  Polynomial Chaos 
 .. code-block:: Python
 
     sizeSobol = 1000
-    sie = ot.SobolIndicesExperiment(m.distributionX, sizeSobol)
+    sie = ot.SobolIndicesExperiment(m.inputDistribution, sizeSobol)
     inputDesignSobol = sie.generate()
-    inputNames = m.distributionX.getDescription()
+    inputNames = m.inputDistribution.getDescription()
     inputDesignSobol.setDescription(inputNames)
     inputDesignSobol.getSize()
 
@@ -738,7 +738,7 @@ The `getFirstOrderIndices` and `getTotalOrderIndices` methods respectively retur
 
  .. code-block:: none
 
-    First order indices: [0.0792809,-0.0497666,0.169256,-0.0493279,-0.0498466,-0.0506475,0.10712,0.368467,0.0390652,-0.0458043]#10
+    First order indices: [0.104592,-0.0127142,0.195142,-0.0129334,-0.0121335,-0.012292,0.111261,0.359861,0.0613847,-0.00973436]#10
 
 
 
@@ -758,7 +758,7 @@ The `getFirstOrderIndices` and `getTotalOrderIndices` methods respectively retur
 
  .. code-block:: none
 
-    Total order indices: [0.123244,0.000121576,0.255372,0.000317252,-0.000327391,0.00504451,0.201303,0.417093,0.0948381,0.00271039]#10
+    Total order indices: [0.16211,6.69558e-07,0.234316,0.0012256,-0.000845109,0.000685252,0.150425,0.384081,0.0848994,0.000413006]#10
 
 
 
@@ -796,9 +796,9 @@ We see that several Sobol' indices are negative, that is inconsistent with the t
 .. code-block:: Python
 
     sizeSobol = 10000
-    sie = ot.SobolIndicesExperiment(m.distributionX, sizeSobol)
+    sie = ot.SobolIndicesExperiment(m.inputDistribution, sizeSobol)
     inputDesignSobol = sie.generate()
-    inputNames = m.distributionX.getDescription()
+    inputNames = m.inputDistribution.getDescription()
     inputDesignSobol.setDescription(inputNames)
     inputDesignSobol.getSize()
     outputDesignSobol = m.model(inputDesignSobol)
@@ -840,10 +840,10 @@ We create a Functional Chaos Expansion.
 .. code-block:: Python
 
     sizePCE = 800
-    inputDesignPCE = m.distributionX.getSample(sizePCE)
+    inputDesignPCE = m.inputDistribution.getSample(sizePCE)
     outputDesignPCE = m.model(inputDesignPCE)
 
-    algo = ot.FunctionalChaosAlgorithm(inputDesignPCE, outputDesignPCE, m.distributionX)
+    algo = ot.FunctionalChaosAlgorithm(inputDesignPCE, outputDesignPCE, m.inputDistribution)
 
     algo.run()
     result = algo.getResult()
@@ -858,8 +858,8 @@ We create a Functional Chaos Expansion.
 
  .. code-block:: none
 
-    [0.000355663]
-    [4.30461e-08]
+    [0.000332456]
+    [3.71763e-08]
 
 
 
@@ -889,8 +889,8 @@ Then, we exploit the surrogate model to compute the Sobol' indices.
       <li>input dimension: 10</li>
       <li>output dimension: 1</li>
       <li>basis size: 761</li>
-      <li>mean: [268.085]</li>
-      <li>std-dev: [48.0822]</li>
+      <li>mean: [268.076]</li>
+      <li>std-dev: [48.0678]</li>
     </ul>
     <table>
       <tr>
@@ -902,62 +902,62 @@ Then, we exploit the surrogate model to compute the Sobol' indices.
       <tr>
         <td>0</td>
         <td>Sw</td>
-        <td>0.124224</td>
-        <td>0.127655</td>
+        <td>0.124414</td>
+        <td>0.127831</td>
       </tr>
       <tr>
         <td>1</td>
         <td>Wfw</td>
         <td>0.000003</td>
-        <td>0.000010</td>
+        <td>0.000006</td>
       </tr>
       <tr>
         <td>2</td>
         <td>A</td>
-        <td>0.220448</td>
-        <td>0.226185</td>
+        <td>0.220250</td>
+        <td>0.226008</td>
       </tr>
       <tr>
         <td>3</td>
         <td>Lambda</td>
-        <td>0.000488</td>
-        <td>0.000509</td>
+        <td>0.000485</td>
+        <td>0.000504</td>
       </tr>
       <tr>
         <td>4</td>
         <td>q</td>
-        <td>0.000090</td>
-        <td>0.000097</td>
+        <td>0.000086</td>
+        <td>0.000092</td>
       </tr>
       <tr>
         <td>5</td>
         <td>l</td>
-        <td>0.001807</td>
-        <td>0.001875</td>
+        <td>0.001819</td>
+        <td>0.001882</td>
       </tr>
       <tr>
         <td>6</td>
         <td>tc</td>
-        <td>0.140939</td>
-        <td>0.145042</td>
+        <td>0.141007</td>
+        <td>0.145091</td>
       </tr>
       <tr>
         <td>7</td>
         <td>Nz</td>
-        <td>0.411980</td>
-        <td>0.420005</td>
+        <td>0.411636</td>
+        <td>0.419615</td>
       </tr>
       <tr>
         <td>8</td>
         <td>Wdg</td>
-        <td>0.084693</td>
-        <td>0.087309</td>
+        <td>0.084983</td>
+        <td>0.087607</td>
       </tr>
       <tr>
         <td>9</td>
         <td>Wp</td>
-        <td>0.003347</td>
-        <td>0.003371</td>
+        <td>0.003362</td>
+        <td>0.003389</td>
       </tr>
     </table>
     <table>
@@ -969,27 +969,27 @@ Then, we exploit the surrogate model to compute the Sobol' indices.
       <tr>
         <td>8</td>
         <td>[0,0,0,0,0,0,0,1,0,0]#10</td>
-        <td>0.410672</td>
+        <td>0.410339</td>
       </tr>
       <tr>
         <td>3</td>
         <td>[0,0,1,0,0,0,0,0,0,0]#10</td>
-        <td>0.220297</td>
+        <td>0.220105</td>
       </tr>
       <tr>
         <td>7</td>
         <td>[0,0,0,0,0,0,1,0,0,0]#10</td>
-        <td>0.138339</td>
+        <td>0.138464</td>
       </tr>
       <tr>
         <td>1</td>
         <td>[1,0,0,0,0,0,0,0,0,0]#10</td>
-        <td>0.124212</td>
+        <td>0.124406</td>
       </tr>
       <tr>
         <td>9</td>
         <td>[0,0,0,0,0,0,0,0,1,0]#10</td>
-        <td>0.084638</td>
+        <td>0.084929</td>
       </tr>
     </table>
 
@@ -1030,7 +1030,7 @@ In such a way, the estimation of sensitivity indices does not involve any surrog
 .. code-block:: Python
 
     sizeRankSobol = 800
-    inputDesignRankSobol = m.distributionX.getSample(sizeRankSobol)
+    inputDesignRankSobol = m.inputDistribution.getSample(sizeRankSobol)
     outputDesignankSobol = m.model(inputDesignRankSobol)
     myRankSobol = otexp.RankSobolSensitivityAlgorithm(
         inputDesignRankSobol, outputDesignankSobol
@@ -1054,7 +1054,7 @@ In such a way, the estimation of sensitivity indices does not involve any surrog
 
  .. code-block:: none
 
-    First order indices: [0.0948125,-0.011427,0.213625,0.0602035,0.0279379,-0.0029266,0.202861,0.411582,0.0791244,-0.0444128]#10
+    First order indices: [0.219707,0.056403,0.180796,0.0263883,0.0380841,-0.00340235,0.107226,0.44097,0.0450809,0.0523331]#10
 
 
 
@@ -1082,7 +1082,7 @@ We then estimate the HSIC indices using a data-driven approach.
 .. code-block:: Python
 
     sizeHSIC = 250
-    inputDesignHSIC = m.distributionX.getSample(sizeHSIC)
+    inputDesignHSIC = m.inputDistribution.getSample(sizeHSIC)
     outputDesignHSIC = m.model(inputDesignHSIC)
 
     covarianceModelCollection = []
@@ -1189,7 +1189,7 @@ We get the R2-HSIC indices:
 
 
      Global HSIC analysis
-    R2-HSIC Indices:  [0.0780962,0.00221686,0.140306,-0.00613866,0.0023793,-0.00132872,0.0649564,0.312287,0.0914946,-0.00189391]#10
+    R2-HSIC Indices:  [0.082831,-0.00416762,0.192346,-0.00515997,-0.00166083,8.15814e-05,0.0818061,0.353705,0.0493093,-0.00190752]#10
 
 
 
@@ -1213,7 +1213,7 @@ and the HSIC indices:
 
  .. code-block:: none
 
-    HSIC Indices:  [0.00725694,0.000201445,0.0129624,-0.000551457,0.000213765,-0.000118734,0.00593143,0.0276205,0.0082076,-0.00016761]#10
+    HSIC Indices:  [0.00721601,-0.000366066,0.0171733,-0.000465613,-0.000149481,7.08356e-06,0.00737526,0.0316188,0.00441525,-0.00017465]#10
 
 
 
@@ -1237,7 +1237,7 @@ The p-value by permutation.
 
  .. code-block:: none
 
-    p-value (permutation):  [0,0.277228,0,0.940594,0.237624,0.50495,0,0,0,0.524752]#10
+    p-value (permutation):  [0,0.772277,0,0.881188,0.485149,0.267327,0,0,0,0.584158]#10
 
 
 
@@ -1261,7 +1261,7 @@ We have an asymptotic estimate of the value for this estimator.
 
  .. code-block:: none
 
-    p-value (asymptotic):  [6.82222e-09,0.277419,3.89579e-15,0.919663,0.272547,0.514991,1.22543e-07,1.43071e-28,9.55187e-11,0.555707]#10
+    p-value (asymptotic):  [1.54432e-09,0.761116,6.48955e-21,0.848855,0.54071,0.409683,4.4423e-09,6.40633e-32,5.97639e-06,0.562308]#10
 
 
 
@@ -1349,7 +1349,7 @@ Reset default settings
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.415 seconds)
+   **Total running time of the script:** (0 minutes 18.189 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_sensitivity_analysis_plot_sensitivity_wingweight.py:
