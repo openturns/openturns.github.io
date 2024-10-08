@@ -219,49 +219,6 @@ General examples
    /auto_examples/plot_convergence_reliability_mc
    /auto_examples/plot_uncecomp_ot_examples
 
-Reliability examples
-====================
-
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbnails">
-
-.. thumbnail-parent-div-open
-
-.. thumbnail-parent-div-close
-
-.. raw:: html
-
-    </div>
-
-Sensitivity examples
-====================
-
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbnails">
-
-.. thumbnail-parent-div-open
-
-.. thumbnail-parent-div-close
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-   :includehidden:
-
-
-   /auto_examples/reliability/index.rst
-   /auto_examples/sensitivity/index.rst
-
 
 .. only:: html
 

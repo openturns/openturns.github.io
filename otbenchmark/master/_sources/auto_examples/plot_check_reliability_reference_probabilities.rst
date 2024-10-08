@@ -26,7 +26,7 @@ Check reliability problems reference probabilities
 In this example, we check that the reference probabilities in the reliability problems
 are consistent with confidence bounds from Monte-Carlo simulations.
 These 95% confidence bounds are stored in 'reliability_compute_reference_proba.csv'
-and required approximately than :math`10^9` function evaluations for each problem.
+and required approximately than :math:`10^9` function evaluations for each problem.
 
 We consider two different metrics:
 
@@ -644,7 +644,7 @@ in absolute value, to the Monte-Carlo estimator.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.269 seconds)
+   **Total running time of the script:** (0 minutes 0.271 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_check_reliability_reference_probabilities.py:
