@@ -471,7 +471,7 @@ ThresholdEvent
 
  .. code-block:: none
 
-    Pf =  0.1497584541062803
+    Pf =  0.15619223659889064
 
 
 
@@ -491,7 +491,7 @@ ThresholdEvent
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 39.838 seconds)
+   **Total running time of the script:** (1 minutes 41.783 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_uncecomp_ot_examples.py:
