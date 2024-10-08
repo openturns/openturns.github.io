@@ -287,9 +287,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.371175,0.132331,0.26067,0.0122818,0.191486,0.0325675,0.00737938,0.00742294]
+    Computed first order =  [0.377466,0.122976,0.250058,0.00377566,0.18736,0.0225314,-0.00071699,-0.00064024]
     Exact first order =  [0.38,0.13,0.25,0,0.19,0.02,0,0]
-    Computed total order =  [0.413371,0.145399,0.24342,0.00473238,0.181701,0.0226346,5.5996e-06,0.000250305]
+    Computed total order =  [0.399912,0.149459,0.253482,0.00499922,0.186917,0.0233599,-1.47072e-06,0.000194748]
     Exact total order =  [0.4,0.15,0.25,0.01,0.19,0.02,0,0]
 
 
@@ -328,7 +328,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.974 seconds)
+   **Total running time of the script:** (0 minutes 2.382 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_flood_sensitivity.py:

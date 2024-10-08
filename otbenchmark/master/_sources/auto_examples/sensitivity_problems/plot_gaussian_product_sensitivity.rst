@@ -289,9 +289,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.00444004,-0.030873]
+    Computed first order =  [-0.00181798,-0.00311334]
     Exact first order =  [0,0]
-    Computed total order =  [1.02181,0.996161]
+    Computed total order =  [1.00086,1.00496]
     Exact total order =  [1,1]
 
 
@@ -330,7 +330,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.723 seconds)
+   **Total running time of the script:** (0 minutes 1.101 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_gaussian_product_sensitivity.py:
