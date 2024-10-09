@@ -380,7 +380,7 @@ Draw the limit state surface
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.901 seconds)
+   **Total running time of the script:** (0 minutes 3.186 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp110.py:

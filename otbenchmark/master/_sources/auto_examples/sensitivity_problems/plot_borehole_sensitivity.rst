@@ -277,9 +277,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.664116,-0.00108752,-0.00108088,0.0941238,-0.00108089,0.0946764,0.0891493,0.0202337]
+    Computed first order =  [0.673759,0.00700637,0.00702324,0.0955299,0.00698057,0.106366,0.0916606,0.0283122]
     Exact first order =  [0.66,0,0,0.09,0,0.09,0.09,0.02]
-    Computed total order =  [0.693966,1.67107e-05,-1.84464e-09,0.106573,1.65568e-05,0.10643,0.103614,0.0260863]
+    Computed total order =  [0.699598,-5.69378e-05,-3.20159e-08,0.0973057,9.79799e-05,0.103265,0.095226,0.0247122]
     Exact total order =  [0.69,0,0,0.11,0,0.11,0.1,0.02]
 
 
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.086 seconds)
+   **Total running time of the script:** (0 minutes 2.224 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_borehole_sensitivity.py:

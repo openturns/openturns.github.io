@@ -470,6 +470,23 @@ Reliability problems
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="RP35 analysis and 2D graphics">
 
 .. only:: html
@@ -499,23 +516,6 @@ Reliability problems
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP111 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
     </div>
 
 
@@ -742,23 +742,6 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
-
-.. only:: html
-
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_ishigami_sensitivity_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Borgonovo test function">
 
 .. only:: html
@@ -771,6 +754,23 @@ Sensitivity problems
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Benchmark the Borgonovo test function</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_ishigami_sensitivity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
     </div>
 
 

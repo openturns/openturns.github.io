@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:07.825** total execution time for 4 files **from auto_examples/sensitivity_methods**:
+**01:09.163** total execution time for 4 files **from auto_examples/sensitivity_methods**:
 
 .. container::
 
@@ -33,14 +33,14 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_convergence_ishigami.py` (``plot_convergence_ishigami.py``)
-     - 00:55.698
+     - 00:56.485
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_sensitivity_distribution_ishigami.py` (``plot_sensitivity_distribution_ishigami.py``)
-     - 00:12.045
+     - 00:12.622
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_benchmark_sensitivity_methods.py` (``plot_benchmark_sensitivity_methods.py``)
-     - 00:00.050
+     - 00:00.029
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_print_problems.py` (``plot_print_problems.py``)
-     - 00:00.032
+     - 00:00.027
      - 0.0
