@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**02:30.989** total execution time for 11 files **from auto_examples**:
+**02:35.843** total execution time for 11 files **from auto_examples**:
 
 .. container::
 
@@ -33,35 +33,35 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_plot_uncecomp_ot_examples.py` (``plot_uncecomp_ot_examples.py``)
-     - 01:43.028
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_draw_cross_cuts.py` (``plot_draw_cross_cuts.py``)
-     - 00:10.794
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``plot_methodFactory.py``)
-     - 00:09.750
+     - 01:43.464
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_drawevent.py` (``plot_drawevent.py``)
-     - 00:08.316
+     - 00:14.829
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py` (``plot_conditionaldistribution.py``)
-     - 00:05.158
+   * - :ref:`sphx_glr_auto_examples_plot_draw_cross_cuts.py` (``plot_draw_cross_cuts.py``)
+     - 00:14.222
      - 0.0
-   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``plot_convergence_reliability_mc.py``)
-     - 00:04.545
+   * - :ref:`sphx_glr_auto_examples_plot_methodFactory.py` (``plot_methodFactory.py``)
+     - 00:06.196
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_3d.py` (``plot_crosscut_distribution_3d.py``)
-     - 00:04.167
+     - 00:05.615
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_distribution_2d.py` (``plot_crosscut_distribution_2d.py``)
-     - 00:03.558
+     - 00:03.990
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py` (``plot_conditionaldistribution.py``)
+     - 00:03.847
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_plot_convergence_reliability_mc.py` (``plot_convergence_reliability_mc.py``)
+     - 00:02.125
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_crosscut_function.py` (``plot_crosscut_function.py``)
-     - 00:01.171
+     - 00:00.770
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_check_reliability_reference_probabilities.py` (``plot_check_reliability_reference_probabilities.py``)
-     - 00:00.287
+     - 00:00.480
      - 0.0
    * - :ref:`sphx_glr_auto_examples_plot_lognormal_bbrc.py` (``plot_lognormal_bbrc.py``)
-     - 00:00.214
+     - 00:00.307
      - 0.0
