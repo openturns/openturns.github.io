@@ -21,9 +21,10 @@ sensitivityAnalysis = ot.SaltelliSensitivityAlgorithm(
 )
 graph = sensitivityAnalysis.draw()
 graph.setTitle("Height model with (Q, K_s, Z_v, Z_m) as inputs")
+graph.setLegendCorner([1.0, 1.0])
+graph.setLegendPosition('upper left')
 view = otv.View(
     graph,
     figure_kw={"figsize": (6.0, 4.0)},
-    legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
 )
 pl.subplots_adjust(right=0.7)
