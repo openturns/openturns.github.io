@@ -1,6 +1,7 @@
 import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
+
 title = None
 if "Chi" == "Bernoulli":
     distribution = ot.Bernoulli(0.7)
