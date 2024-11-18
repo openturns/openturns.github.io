@@ -165,61 +165,6 @@ Default is [False]*inputDim</p>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>You must provide at least func or func_sample arguments. For efficiency
-reasons, these functions do not receive a <a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a> or
-<a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a> as arguments, but a proxy object which gives
-access to internal object data. This object supports indexing, but nothing
-more. It must be wrapped into another object, for instance
-<a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a> in func and <a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a> in
-func_sample, or in a Numpy array, for vectorized operations.</p>
-<p>Note that if PythonFunction is distributed (n_cpus &gt; 1), the traceback of a raised
-exception by a func call is lost due to the way multiprocessing dispatches
-and handles func calls. This can be solved by temporarily deactivating
-n_cpus during the development of the wrapper or by manually handling the
-distribution of the wrapper with external libraries like joblib that keep
-track of a raised exception and shows the traceback to the user.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_exec</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">Y</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_grad</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">dY</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]]</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">dY</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a_exec</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">a_grad</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
-<span class="go">[200]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dY</span><span class="p">)</span>
-<span class="go">[[  3 ]</span>
-<span class="go"> [ -1 ]]</span>
-</pre></div>
-</div>
-<p>Same example, but optimized for best performance with Numpy when function
-is going to be evaluated on large samples.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_exec_sample</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">Xarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">Y</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">Xarray</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">Xarray</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_grad</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">dY</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]]</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">dY</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">func_sample</span><span class="o">=</span><span class="n">a_exec_sample</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">a_grad</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
-<span class="go">[200]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dY</span><span class="p">)</span>
-<span class="go">[[  3 ]</span>
-<span class="go"> [ -1 ]]</span>
-</pre></div>
-</div>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -336,6 +281,61 @@ is going to be evaluated on large samples.</p>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<p>You must provide at least func or func_sample arguments. For efficiency
+reasons, these functions do not receive a <a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a> or
+<a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a> as arguments, but a proxy object which gives
+access to internal object data. This object supports indexing, but nothing
+more. It must be wrapped into another object, for instance
+<a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a> in func and <a class="reference internal" href="openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a> in
+func_sample, or in a Numpy array, for vectorized operations.</p>
+<p>Note that if PythonFunction is distributed (n_cpus &gt; 1), the traceback of a raised
+exception by a func call is lost due to the way multiprocessing dispatches
+and handles func calls. This can be solved by temporarily deactivating
+n_cpus during the development of the wrapper or by manually handling the
+distribution of the wrapper with external libraries like joblib that keep
+track of a raised exception and shows the traceback to the user.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_exec</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_grad</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">dY</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]]</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">dY</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a_exec</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">a_grad</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span class="go">[200]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dY</span><span class="p">)</span>
+<span class="go">[[  3 ]</span>
+<span class="go"> [ -1 ]]</span>
+</pre></div>
+</div>
+<p>Same example, but optimized for best performance with Numpy when function
+is going to be evaluated on large samples.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_exec_sample</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">Xarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">Y</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">Xarray</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">Xarray</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">a_grad</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">dY</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]]</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">dY</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">func_sample</span><span class="o">=</span><span class="n">a_exec_sample</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">a_grad</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span class="go">[200]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dY</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dY</span><span class="p">)</span>
+<span class="go">[[  3 ]</span>
+<span class="go"> [ -1 ]]</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.PythonFunction.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.PythonFunction.__init__" title="Link to this definition">¶</a></dt>
@@ -1252,7 +1252,7 @@ and <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyB
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Oct 23, 2024.
+      Last updated on Nov 18, 2024.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>

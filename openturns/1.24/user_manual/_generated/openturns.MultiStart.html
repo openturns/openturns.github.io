@@ -139,45 +139,6 @@ The algorithm succeeds when at least one local search succeeds.</p>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The starting point of the internal solver is ignored.
-If you want to use it, add it to <em>startingSample</em>.</p>
-<p>Stopping criteria used are the ones set in the internal solver.</p>
-<p>A global number of evaluations can be set,
-in that case all starting points might not be used depending on the number
-of evaluations allocated to the internal solver.</p>
-<p>Starting points provided through the <em>startingSample</em> parameter
-should be within the bounds of the
-<a class="reference internal" href="openturns.OptimizationProblem.html#openturns.OptimizationProblem" title="openturns.OptimizationProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationProblem</span></code></a>, but this is not enforced.</p>
-<p class="rubric">Examples</p>
-<p>First define the <a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm" title="openturns.OptimizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationAlgorithm</span></code></a> to be run from multiple starting points.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;x^2+y^2*(1-x)^3&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="o">-</span><span class="mf">2.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TNC</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Starting points must be manually specified.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uniform</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">startingSample</span> <span class="o">=</span> <span class="n">uniform</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">startingSample</span><span class="p">)</span>
-<span class="go">    [ X0        X1        ]</span>
-<span class="go">0 : [  1.14938   2.84712  ]</span>
-<span class="go">1 : [  2.41403   2.6034   ]</span>
-<span class="go">2 : [ -1.32362   0.515201 ]</span>
-<span class="go">3 : [ -1.83749  -1.68397  ]</span>
-<span class="go">4 : [ -0.264715 -0.536216 ]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">startingSample</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">())</span>
-<span class="go">[3,3]</span>
-</pre></div>
-</div>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -291,6 +252,45 @@ should be within the bounds of the
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<p>The starting point of the internal solver is ignored.
+If you want to use it, add it to <em>startingSample</em>.</p>
+<p>Stopping criteria used are the ones set in the internal solver.</p>
+<p>A global number of evaluations can be set,
+in that case all starting points might not be used depending on the number
+of evaluations allocated to the internal solver.</p>
+<p>Starting points provided through the <em>startingSample</em> parameter
+should be within the bounds of the
+<a class="reference internal" href="openturns.OptimizationProblem.html#openturns.OptimizationProblem" title="openturns.OptimizationProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationProblem</span></code></a>, but this is not enforced.</p>
+<p class="rubric">Examples</p>
+<p>First define the <a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm" title="openturns.OptimizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationAlgorithm</span></code></a> to be run from multiple starting points.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;x^2+y^2*(1-x)^3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="o">-</span><span class="mf">2.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblem</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TNC</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Starting points must be manually specified.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uniform</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">startingSample</span> <span class="o">=</span> <span class="n">uniform</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">startingSample</span><span class="p">)</span>
+<span class="go">    [ X0        X1        ]</span>
+<span class="go">0 : [  1.14938   2.84712  ]</span>
+<span class="go">1 : [  2.41403   2.6034   ]</span>
+<span class="go">2 : [ -1.32362   0.515201 ]</span>
+<span class="go">3 : [ -1.83749  -1.68397  ]</span>
+<span class="go">4 : [ -0.264715 -0.536216 ]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">startingSample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalPoint</span><span class="p">())</span>
+<span class="go">[3,3]</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.MultiStart.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.MultiStart.__init__" title="Link to this definition">¶</a></dt>
@@ -874,7 +874,7 @@ no sense in a multi-start context.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Oct 23, 2024.
+      Last updated on Nov 18, 2024.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
