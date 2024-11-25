@@ -250,7 +250,7 @@ its diagonal coefficients from an <a class="reference internal" href="../../user
 </pre></div>
 </div>
 <p>Plot the simulated dataset.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Simulated data&quot;</span><span class="p">,</span> <span class="s2">&quot;$X_1$&quot;</span><span class="p">,</span> <span class="s2">&quot;$Y$&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Simulated data&quot;</span><span class="p">,</span> <span class="s2">&quot;$X_1$&quot;</span><span class="p">,</span> <span class="s2">&quot;$Y$&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
 <span class="n">cloud_obs</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asPoint</span><span class="p">(),</span> <span class="n">Yobs_sim</span><span class="p">)</span>
 <span class="n">cloud_obs</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
 <span class="n">cloud_sim</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asPoint</span><span class="p">(),</span> <span class="n">Y_sim</span><span class="p">)</span>
@@ -618,15 +618,17 @@ each component unto the constrained space.</p>
 <span class="n">post_sample</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
 <span class="n">post_sample</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_0$&quot;</span><span class="p">,</span> <span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">theta_1$&quot;</span><span class="p">,</span> <span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">tau$&quot;</span><span class="p">])</span>
 
-<span class="n">posterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">post_sample</span><span class="p">)</span>
-<span class="n">posterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TruncatedDistribution</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">getRange</span><span class="p">())</span>
+<span class="n">ks_post</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">post_sample</span><span class="p">)</span>
+<span class="n">posterior</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TruncatedDistribution</span><span class="p">(</span><span class="n">ks_post</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">getRange</span><span class="p">())</span>
 
 <span class="n">grid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GridLayout</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">grid</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Bayesian inference&quot;</span><span class="p">)</span>
 <span class="n">xlabs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$\theta_0$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\theta_1$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\tau$&quot;</span><span class="p">]</span>
 <span class="n">p_true</span> <span class="o">=</span> <span class="p">[</span><span class="n">theta_true</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">theta_true</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">tau_true</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">parameter_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-    <span class="n">graph</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+    <span class="c1"># use the cheaper truncated posterior marginal instead of the true posterior marginal</span>
+    <span class="n">posterior_marg</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">TruncatedDistribution</span><span class="p">(</span><span class="n">ks_post</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">),</span> <span class="n">prior</span><span class="o">.</span><span class="n">getRange</span><span class="p">()</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">))</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">posterior_marg</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
     <span class="n">bbox</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">getBoundingBox</span><span class="p">()</span>
     <span class="n">bound</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">prior_pdf</span> <span class="o">=</span> <span class="n">prior</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">parameter_index</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
@@ -659,12 +661,12 @@ each component unto the constrained space.</p>
 <span class="n">grid</span><span class="o">.</span><span class="n">setGraph</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
-
-
-<span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_gibbs_simus_003.png" srcset="../../_images/sphx_glr_plot_gibbs_simus_003.png" alt="plot gibbs simus" class = "sphx-glr-single-img"/><div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-calibration-bayesian-calibration-plot-gibbs-simus-py">
+<img src="../../_images/sphx_glr_plot_gibbs_simus_003.png" srcset="../../_images/sphx_glr_plot_gibbs_simus_003.png" alt="plot gibbs simus" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-calibration-bayesian-calibration-plot-gibbs-simus-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/74a3b4665b1c5e5168204eea0ecddf4f/plot_gibbs_simus.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gibbs_simus.ipynb</span></code></a></p>
 </div>
@@ -708,7 +710,7 @@ each component unto the constrained space.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 18, 2024.
+      Last updated on Nov 25, 2024.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
