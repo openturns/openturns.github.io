@@ -504,7 +504,7 @@ This proves that the computation of the distribution is correct, for both the as
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.360 seconds)
+   **Total running time of the script:** (0 minutes 11.562 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_methods_plot_sensitivity_distribution_ishigami.py:

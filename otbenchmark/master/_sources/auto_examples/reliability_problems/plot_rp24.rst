@@ -157,8 +157,8 @@ Get the results
  .. code-block:: none
 
     Number of function calls = 1000
-    Failure Probability = 0.0020
-    95.0 % confidence interval :[-0.0008,0.0048] 
+    Failure Probability = 0.0050
+    95.0 % confidence interval :[0.0006,0.0094] 
 
 
 
@@ -228,7 +228,7 @@ Print the iso-values of the distribution
 
 
 .. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp24_002.png
-   :alt: [X1,X2] iso-PDF
+   :alt: X1 iso-PDF
    :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp24_002.png
    :class: sphx-glr-single-img
 
@@ -361,7 +361,7 @@ Draw the limit state surface
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.759 seconds)
+   **Total running time of the script:** (0 minutes 3.321 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp24.py:

@@ -151,8 +151,8 @@ Get the results
  .. code-block:: none
 
     Number of function calls = 1000
-    Failure Probability = 0.0090
-    95.0 % confidence interval :[0.0031,0.0149] 
+    Failure Probability = 0.0060
+    95.0 % confidence interval :[0.0012,0.0108] 
 
 
 
@@ -222,7 +222,7 @@ Print the iso-values of the distribution
 
 
 .. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp75_002.png
-   :alt: [X1,X2] iso-PDF
+   :alt: X1 iso-PDF
    :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp75_002.png
    :class: sphx-glr-single-img
 
@@ -528,7 +528,7 @@ In order to fix this, we just use a different starting point.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.777 seconds)
+   **Total running time of the script:** (0 minutes 3.235 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp75.py:

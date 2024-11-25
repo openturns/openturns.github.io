@@ -189,7 +189,7 @@ Plot the iso-values of the distribution
 
 
 .. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_002.png
-   :alt: [X1,X2] iso-PDF
+   :alt: X1 iso-PDF
    :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp55_002.png
    :class: sphx-glr-single-img
 
@@ -365,8 +365,8 @@ Perform Monte-Carlo simulation
  .. code-block:: none
 
     Number of function calls = 43704
-    Failure Probability = 0.5610
-    95.0 % confidence interval :[0.5302,0.5918] 
+    Failure Probability = 0.5510
+    95.0 % confidence interval :[0.5202,0.5818] 
 
 
 
@@ -516,7 +516,7 @@ With Quasi-Monte-Carlo
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.370 seconds)
+   **Total running time of the script:** (0 minutes 2.461 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp55.py:

@@ -277,9 +277,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.374552,0.0347919,0.0853174,0.186246,0.120437,0.04356,0.0358369,0.00467826]
+    Computed first order =  [0.366841,0.0321862,0.075108,0.176081,0.108141,0.0422779,0.0290906,0.00195959]
     Exact first order =  [0.4,0.03,0.09,0.18,0.12,0.05,0.05,0]
-    Computed total order =  [0.375092,0.0778412,0.127126,0.279952,0.201389,0.0667096,0.0458004,0.00812321]
+    Computed total order =  [0.379633,0.0734962,0.130833,0.262576,0.202452,0.0649898,0.0547967,0.00605193]
     Exact total order =  [0.4,0.04,0.1,0.23,0.16,0.07,0.06,0.01]
 
 
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.803 seconds)
+   **Total running time of the script:** (0 minutes 3.541 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_nloscillator_sensitivity.py:

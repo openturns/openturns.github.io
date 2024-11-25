@@ -172,9 +172,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.179466,0.183322,0.638309]
+    Computed first order =  [0.156823,0.161461,0.634277]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.208098,0.201184,0.628255]
+    Computed total order =  [0.209326,0.214636,0.639424]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -274,9 +274,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  500
-    Computed first order =  [0.179466,0.183322,0.638309]
+    Computed first order =  [0.156823,0.161461,0.634277]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.208098,0.201184,0.628255]
+    Computed total order =  [0.209326,0.214636,0.639424]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -352,17 +352,17 @@ Loop over the estimators
 
     Monte-Carlo sampling
     SaltelliSensitivityAlgorithm
-        S =  [0.205728,0.208074,0.612671]
-        T =  [0.214211,0.17974,0.596736]
+        S =  [0.143836,0.16279,0.54157]
+        T =  [0.236648,0.281946,0.562707]
     MartinezSensitivityAlgorithm
-        S =  [0.216186,0.177355,0.76058]
-        T =  [0.246616,0.197072,0.612744]
+        S =  [0.099833,0.120081,0.706197]
+        T =  [0.229993,0.214,0.649706]
     JansenSensitivityAlgorithm
-        S =  [0.116863,0.112309,0.619395]
-        T =  [0.246374,0.235741,0.650331]
+        S =  [0.177528,0.164591,0.586526]
+        T =  [0.195121,0.180157,0.68538]
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.133985,0.161746,0.568101]
-        T =  [0.24987,0.16939,0.626428]
+        S =  [0.160346,0.16923,0.548474]
+        T =  [0.229613,0.246127,0.62042]
 
 
 
@@ -554,7 +554,7 @@ The digit per point ratio measure the number of digits relatively to the sample 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.037 seconds)
+   **Total running time of the script:** (0 minutes 0.044 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_methods_plot_benchmark_sensitivity_methods.py:

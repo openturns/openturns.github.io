@@ -92,7 +92,7 @@ This shows the main utility of the `Factory` classes.
  .. code-block:: none
 
 
-    0.0006900000000000031
+    0.0007399999999999966
 
 
 
@@ -271,7 +271,7 @@ using the FORM design point with gaussian importance distribution.
  .. code-block:: none
 
 
-    0.0005702210872887895
+    0.0008619170758804403
 
 
 
@@ -298,7 +298,7 @@ Create a SubsetSampling algorithm
  .. code-block:: none
 
 
-    0.0007323000000000017
+    0.0007137999999999998
 
 
 
@@ -324,14 +324,14 @@ Create a LHS algorithm
  .. code-block:: none
 
 
-    0.0
+    0.0009999999999999987
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.196 seconds)
+   **Total running time of the script:** (0 minutes 1.819 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_methodFactory.py:

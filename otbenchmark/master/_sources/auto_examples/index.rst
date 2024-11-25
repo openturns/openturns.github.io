@@ -97,23 +97,6 @@ General examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Conditional distributions">
-
-.. only:: html
-
-  .. image:: /auto_examples/images/thumb/sphx_glr_plot_conditionaldistribution_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_plot_conditionaldistribution.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Conditional distributions</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Check reliability problems reference probabilities">
 
 .. only:: html
@@ -212,7 +195,6 @@ General examples
    /auto_examples/plot_lognormal_bbrc
    /auto_examples/plot_crosscut_distribution_3d
    /auto_examples/plot_methodFactory
-   /auto_examples/plot_conditionaldistribution
    /auto_examples/plot_check_reliability_reference_probabilities
    /auto_examples/plot_drawevent
    /auto_examples/plot_draw_cross_cuts
@@ -470,23 +452,6 @@ Reliability problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="RP35 analysis and 2D graphics">
 
 .. only:: html
@@ -516,6 +481,23 @@ Reliability problems
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP111 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="RP89 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp89_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp89.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP89 analysis and 2D graphics</div>
     </div>
 
 
@@ -742,23 +724,6 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Borgonovo test function">
-
-.. only:: html
-
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_borgonovo_sensitivity_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Benchmark the Borgonovo test function</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
 
 .. only:: html
@@ -771,6 +736,23 @@ Sensitivity problems
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Borgonovo test function">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_borgonovo_sensitivity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Benchmark the Borgonovo test function</div>
     </div>
 
 

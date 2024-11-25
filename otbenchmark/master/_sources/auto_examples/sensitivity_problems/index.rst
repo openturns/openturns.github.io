@@ -32,23 +32,6 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Borgonovo test function">
-
-.. only:: html
-
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_borgonovo_sensitivity_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Benchmark the Borgonovo test function</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
 
 .. only:: html
@@ -61,6 +44,23 @@ Sensitivity problems
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Borgonovo test function">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_borgonovo_sensitivity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Benchmark the Borgonovo test function</div>
     </div>
 
 
@@ -211,8 +211,8 @@ Sensitivity problems
    :hidden:
 
    /auto_examples/sensitivity_problems/plot_flood_sensitivity
-   /auto_examples/sensitivity_problems/plot_borgonovo_sensitivity
    /auto_examples/sensitivity_problems/plot_ishigami_sensitivity
+   /auto_examples/sensitivity_problems/plot_borgonovo_sensitivity
    /auto_examples/sensitivity_problems/plot_dirichlet_sensitivity
    /auto_examples/sensitivity_problems/plot_borehole_sensitivity
    /auto_examples/sensitivity_problems/plot_nloscillator_sensitivity

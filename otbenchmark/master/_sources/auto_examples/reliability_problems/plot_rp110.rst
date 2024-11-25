@@ -241,7 +241,7 @@ Print the iso-values of the distribution
 
 
 .. image-sg:: /auto_examples/reliability_problems/images/sphx_glr_plot_rp110_002.png
-   :alt: [X1,X2] iso-PDF
+   :alt: X1 iso-PDF
    :srcset: /auto_examples/reliability_problems/images/sphx_glr_plot_rp110_002.png
    :class: sphx-glr-single-img
 
@@ -380,7 +380,7 @@ Draw the limit state surface
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.383 seconds)
+   **Total running time of the script:** (0 minutes 1.983 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp110.py:
