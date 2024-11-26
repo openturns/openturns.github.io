@@ -2,6 +2,7 @@
 Estimate a GEV on the Port Pirie sea-levels data
 ================================================
 """
+
 # %%
 # In this example, we illustrate various techniques of extreme value modeling applied
 # to the annual maximum sea-levels recorded in Port Pirie, north of Adelaide,
@@ -23,7 +24,6 @@ Estimate a GEV on the Port Pirie sea-levels data
 # through time.
 import openturns as ot
 import openturns.viewer as otv
-import openturns.experimental as otexp
 from openturns.usecases import coles
 
 data = coles.Coles().portpirie
@@ -79,7 +79,7 @@ for i in range(3):
 
 # %%
 # At last, we can validate the inference result thanks the 4 usual diagnostic plots.
-validation = otexp.GeneralizedExtremeValueValidation(result_LL, sample)
+validation = ot.GeneralizedExtremeValueValidation(result_LL, sample)
 graph = validation.drawDiagnosticPlot()
 view = otv.View(graph)
 
@@ -252,12 +252,12 @@ print(f"xi = {beta[3]:.4f}")
 # We get the asymptotic distribution of :math:`\vect{\beta}` to compute some confidence intervals of
 # the estimates, for example of order :math:`p = 0.95`.
 dist_beta = result_NonStatLL.getParameterDistribution()
-condifence_level = 0.95
+confidence_level = 0.95
 for i in range(beta.getSize()):
-    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - condifence_level) / 2)[
+    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - confidence_level) / 2)[
         0
     ]
-    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + condifence_level) / 2)[
+    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + confidence_level) / 2)[
         0
     ]
     print(

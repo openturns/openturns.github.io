@@ -1,23 +1,23 @@
 import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
-if ot.RankMCovarianceModel().__class__.__name__ == 'ExponentialModel':
+if "RankMCovarianceModel" == "ExponentialModel":
     covarianceModel = ot.ExponentialModel([0.5], [5.0])
-elif ot.RankMCovarianceModel().__class__.__name__ == 'GeneralizedExponential':
+elif "RankMCovarianceModel" == "GeneralizedExponential":
     covarianceModel = ot.GeneralizedExponential([2.0], [3.0], 1.5)
-elif ot.RankMCovarianceModel().__class__.__name__ == 'ProductCovarianceModel':
+elif "RankMCovarianceModel" == "ProductCovarianceModel":
     amplitude = [1.0]
     scale1 = [4.0]
     scale2 = [4.0]
     cov1 = ot.ExponentialModel(scale1, amplitude)
     cov2 = ot.ExponentialModel(scale2, amplitude)
     covarianceModel = ot.ProductCovarianceModel([cov1, cov2])
-elif ot.RankMCovarianceModel().__class__.__name__ == 'RankMCovarianceModel':
+elif "RankMCovarianceModel" == "RankMCovarianceModel":
     variance = [1.0, 2.0]
     basis = ot.LinearBasisFactory().build()
     covarianceModel = ot.RankMCovarianceModel(variance, basis)
-elif ot.RankMCovarianceModel().__class__.__name__ == 'StationaryFunctionalCovarianceModel':
-    rho = ot.SymbolicFunction(['tau'], ['exp(-tau)*cos(2*pi_*tau)'])
+elif "RankMCovarianceModel" == "StationaryFunctionalCovarianceModel":
+    rho = ot.SymbolicFunction(["tau"], ["exp(-tau)*cos(2*pi_*tau)"])
     covarianceModel = ot.StationaryFunctionalCovarianceModel([1.0], [1.0], rho)
 else:
     covarianceModel = ot.RankMCovarianceModel()
@@ -28,7 +28,7 @@ if covarianceModel.getInputDimension() == 1:
         def f(x):
             return [covarianceModel(x)[0, 0]]
         func = ot.PythonFunction(1, 1, f)
-        func.setDescription(['$tau$', '$cov$'])
+        func.setDescription(["$tau$", "$cov$"])
         cov_graph = func.draw(-3.0 * scale, 3.0 * scale, 129)
         cov_graph.setTitle(title)
         fig = plt.figure(figsize=(10, 4))
@@ -38,7 +38,7 @@ if covarianceModel.getInputDimension() == 1:
         def f(x):
             return [covarianceModel([x[0]], [x[1]])[0, 0]]
         func = ot.PythonFunction(2, 1, f)
-        func.setDescription(['$s$', '$t$', '$cov$'])
+        func.setDescription(["$s$", "$t$", "$cov$"])
         cov_graph = func.draw([-3.0 * scale]*2, [3.0 * scale]*2, [129]*2)
         cov_graph.setTitle(title)
         fig = plt.figure(figsize=(10, 4))
@@ -50,7 +50,7 @@ elif covarianceModel.getInputDimension() == 2:
         def f(x):
             return [covarianceModel(x)[0, 0]]
         func = ot.PythonFunction(2, 1, f)
-        func.setDescription(['$s$', '$t$', '$cov$'])
+        func.setDescription(["$s$", "$t$", "$cov$"])
         cov_graph = func.draw(-3.0 * scale, 3.0 * scale, [129]*2)
         cov_graph.setTitle(title)
         fig = plt.figure(figsize=(10, 4))

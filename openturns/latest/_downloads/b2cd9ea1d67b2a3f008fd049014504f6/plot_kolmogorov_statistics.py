@@ -2,24 +2,24 @@
 Kolmogorov-Smirnov : understand the statistics
 ==============================================
 """
+
 # %%
 
 # %%
-# In this example, we illustrate how the Kolmogorov-Smirnov statistic is computed.
+# In this example, we illustrate how the Kolmogorov-Smirnov (KS) statistic is computed.
 #
-# * We generate a sample from a normal distribution.
+# * We generate a sample from a Normal distribution.
 # * We create a uniform distribution and estimate its parameters from the sample.
 # * Compute the Kolmogorov-Smirnov statistic and plot it on top of the empirical cumulated distribution function.
 
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
 
 ot.Log.Show(ot.Log.NONE)
 
 # %%
-# The `computeKSStatisticsIndex()` function computes the Kolmogorov-Smirnov
+# The `computeKSStatisticsIndex` function computes the Kolmogorov-Smirnov
 # distance between the sample and the distribution.
 # Furthermore, it returns the index which achieves the maximum distance
 # in the sorted sample.
@@ -93,12 +93,11 @@ def drawKSDistance(sample, distribution, observation, D, distFactory):
     cdf = distribution.drawCDF()
     cdf.setLegends([distname])
     graph.add(cdf)
-    graph.setColors(ot.Drawable.BuildDefaultPalette(3))
     return graph
 
 
 # %%
-# We generate a sample from a standard normal distribution.
+# We generate a sample from a standard Normal distribution.
 
 # %%
 N = ot.Normal()
@@ -128,7 +127,11 @@ print("D=", D, ", Index=", index, ", Obs.=", observation)
 # %%
 graph = drawKSDistance(sample, distribution, observation, D, distFactory)
 view = viewer.View(graph)
-plt.show()
+
+
+# %%
+# Display the graphs
+view.ShowAll()
 
 # %%
 # We see that the K.S. statistics is achieved at the observation where the distance

@@ -124,7 +124,7 @@ Yobs_sim = np.round(Y_sim / delta) * delta
 
 # %%
 # Plot the simulated dataset.
-graph = ot.Graph("Simulated data", "$X_1$", "$Y$", True, "upper left", 16)
+graph = ot.Graph("Simulated data", "$X_1$", "$Y$", True, "upper left")
 cloud_obs = ot.Cloud(X[:, 1].asPoint(), Yobs_sim)
 cloud_obs.setPointStyle("bullet")
 cloud_sim = ot.Cloud(X[:, 1].asPoint(), Y_sim)
@@ -348,8 +348,8 @@ class BoxConstrainedNormal(ot.PythonRandomVector):
     def setParameter(self, parameter):
         d = self.getDimension()
         self.mu = np.array(parameter[:d])
-        self.Sigma = np.array(parameter[d: d + d * d]).reshape(d, d)
-        self.r = np.array(parameter[-2 * d: -d])
+        self.Sigma = np.array(parameter[d : d + d * d]).reshape(d, d)
+        self.r = np.array(parameter[-2 * d : -d])
         self.s = np.array(parameter[-d:])
         self.interval = ot.Interval(self.r, self.s)
 
@@ -561,22 +561,23 @@ print("Acceptance rate: %s" % acc_rate)
 post_sample = sample.getMarginal([i for i in range(p + 1)])
 post_sample.setDescription(["$\\theta_0$", "$\\theta_1$", "$\\tau$"])
 
-posterior = ot.KernelSmoothing().build(post_sample)
-posterior = ot.TruncatedDistribution(posterior, prior.getRange())
+ks_post = ot.KernelSmoothing().build(post_sample)
+posterior = ot.TruncatedDistribution(ks_post, prior.getRange())
 
 grid = ot.GridLayout(1, 3)
 grid.setTitle("Bayesian inference")
 xlabs = [r"$\theta_0$", r"$\theta_1$", r"$\tau$"]
 p_true = [theta_true[0][0], theta_true[1][0], tau_true]
 for parameter_index in range(3):
-    graph = posterior.getMarginal(parameter_index).drawPDF()
+    # use the cheaper truncated posterior marginal instead of the true posterior marginal
+    posterior_marg = ot.TruncatedDistribution(ks_post.getMarginal(parameter_index), prior.getRange().getMarginal(parameter_index))
+    graph = posterior_marg.drawPDF()
     bbox = graph.getBoundingBox()
     bound = bbox.getUpperBound()[1]
     prior_pdf = prior.getMarginal(parameter_index).drawPDF()
     graph.add(prior_pdf)
     curve_true = ot.Curve([p_true[parameter_index]] * 2, [0.0, bound])
     graph.add(curve_true)
-    graph.setColors(ot.Drawable.BuildDefaultPalette(3))
     graph.setLegends(["Posterior", "Prior", "True value"])
     graph.setXTitle(xlabs[parameter_index])
     grid.setGraph(0, parameter_index, graph)
@@ -606,5 +607,5 @@ grid.setGraph(1, 1, graph)
 
 _ = View(grid)
 
-
+# %%
 View.ShowAll()

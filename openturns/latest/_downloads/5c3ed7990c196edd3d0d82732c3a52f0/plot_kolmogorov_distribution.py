@@ -2,10 +2,11 @@
 Kolmogorov-Smirnov : get the statistics distribution
 ====================================================
 """
+
 # %%
 
 # %%
-# In this example, we draw the Kolmogorov-Smirnov distribution for a sample size 10.
+# In this example, we draw the Kolmogorov-Smirnov (KS) distribution for a sample size 10.
 # We want to test the hypothesis that this sample has the `Uniform(0, 1)`
 # distribution.
 # The K.S. distribution is first plotted in the case where the
@@ -22,7 +23,6 @@ Kolmogorov-Smirnov : get the statistics distribution
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
 
 ot.Log.Show(ot.Log.NONE)
 
@@ -49,7 +49,7 @@ view = viewer.View(graph)
 
 
 # %%
-# The computeKSStatisticsIndex function computes the Kolmogorov-Smirnov
+# The `computeKSStatisticsIndex` function computes the Kolmogorov-Smirnov
 # distance between the sample and the distribution.
 # The following function is for teaching purposes only: use `FittingTest`
 # for real applications.
@@ -198,12 +198,15 @@ graph = ot.KernelSmoothing().build(sampleD).drawPDF()
 graph.setLegends(["Known parameters"])
 graphP = ot.KernelSmoothing().build(sampleDP).drawPDF()
 graphP.setLegends(["Estimated parameters"])
-graphP.setColors(["blue"])
 graph.add(graphP)
 graph.setTitle("Kolmogorov-Smirnov distribution")
 graph.setXTitle("KS-Statistics")
 view = viewer.View(graph)
-plt.show()
+
+# %%
+# Display the graphs
+view.ShowAll()
+
 
 # %%
 # We see that the distribution of the KS distances when the parameters are

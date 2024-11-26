@@ -2,6 +2,7 @@
 Link Pandas and OpenTURNS
 =========================
 """
+
 # sphinx_gallery_thumbnail_path = '_static/pandas.png'
 
 # %%
@@ -13,7 +14,7 @@ import openturns as ot
 ot.Log.Show(ot.Log.NONE)
 
 # %%
-# Create a sample from a 3-d normal distribution
+# Create a sample from a 3-d Normal distribution
 sample = ot.Normal(3).getSample(10)
 
 # %%

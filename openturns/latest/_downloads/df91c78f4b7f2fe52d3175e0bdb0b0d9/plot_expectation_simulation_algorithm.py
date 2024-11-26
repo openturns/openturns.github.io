@@ -2,6 +2,7 @@
 Evaluate the mean of a random vector by simulations
 ===================================================
 """
+
 # %%
 # Abstract
 # --------
@@ -23,7 +24,7 @@ im = ishigami_function.IshigamiModel()
 # The Ishigami `model` and the distribution of the input variables are stored in
 # the `im` object :
 model = im.model
-distribution = im.distributionX
+distribution = im.inputDistribution
 
 # %%
 # We create a random vector that follows the distribution of the input variables.

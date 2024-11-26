@@ -2,6 +2,7 @@
 Example of multi output Kriging on the fire satellite model
 ===========================================================
 """
+
 # %%
 # This example aims to illustrate Kriging metamodel with several outputs on the fire satellite model.
 
@@ -31,7 +32,7 @@ model = m.model
 # We also define the distribution of input variables to build the training and test sets.
 
 # %%
-inputDistribution = m.distributionX
+inputDistribution = m.inputDistribution
 
 
 # %%
@@ -64,8 +65,8 @@ basis = ot.Basis(
 
 # %%
 # We would like to have separate covariance models for the three outputs.
-# To do so, we use the `TensorizedCovarianceModel`.
-# For the purpose of illustration, we consider `MaternModel` for the first and third outputs, and `SquaredExponential` for the second output.
+# To do so, we use the :class:`~openturns.TensorizedCovarianceModel`.
+# For the purpose of illustration, we consider :class:`~openturns.MaternModel` for the first and third outputs, and :class:`~openturns.SquaredExponential` for the second output.
 
 # %%
 myCov1 = ot.MaternModel([1.0] * m.dim, 2.5)
@@ -77,7 +78,7 @@ covarianceModel = ot.TensorizedCovarianceModel([myCov1, myCov2, myCov3])
 # %%
 # The scaling of the data is really important when dealing with Kriging,
 # especially considering the domain definition of the input variables (the
-# altitude varies in order of 1e7 whereas the drag coefficient is around 1).
+# altitude varies in order of :math:`10^7` whereas the drag coefficient is around 1).
 # We thus define appropriate bounds for the training algorithm based on the
 # domain definition of each variable.
 
@@ -109,20 +110,20 @@ ot.RandomGenerator.SetSeed(1)
 experimentTest = ot.LHSExperiment(inputDistribution, 50 * m.dim)
 inputTestSet = experimentTest.generate()
 outputTestSet = model(inputTestSet)
-outputKriging = krigingMetamodel(inputTestSet)
 
 # %%
-# Then, we use the `MetaModelValidation` class to validate the metamodel.
-val = ot.MetaModelValidation(outputTestSet, krigingMetamodel(inputTestSet))
+# Then, we use the :class:`~openturns.MetaModelValidation` class to validate the metamodel.
+metamodelPredictions = krigingMetamodel(inputTestSet)
+val = ot.MetaModelValidation(outputTestSet, metamodelPredictions)
 
-R2 = val.computeR2Score()
+r2Score = val.computeR2Score()
 
 label = ["Total torque", "Total power", "Solar array area"]
 
 for i in range(3):
     graph = val.drawValidation().getGraph(0, i)
     graph.setLegends([""])
-    graph.setLegends(["R2 = %.2f%%" % (100 * R2[i]), ""])
+    graph.setLegends(["R2 = %.2f%%" % (100 * r2Score[i]), ""])
     graph.setLegendPosition("upper left")
     graph.setXTitle("Exact function")
     graph.setYTitle("Metamodel prediction")

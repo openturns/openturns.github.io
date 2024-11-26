@@ -1,10 +1,11 @@
 """
-Sequentially adding new points to a kriging
+Sequentially adding new points to a Kriging
 ===========================================
 """
+
 # %%
-# In this example, we show how to sequentially add new points to a kriging in order to improve the predictivity of the metamodel.
-# In order to create simple graphics, we consider a 1D function.
+# In this example, we show how to sequentially add new points to a Kriging in order to improve the predictivity of the metamodel.
+# In order to create simple graphics, we consider a 1-d function.
 
 # %%
 # Create the function and the design of experiments
@@ -12,6 +13,7 @@ Sequentially adding new points to a kriging
 
 # %%
 import openturns as ot
+import openturns.experimental as otexp
 from openturns.viewer import View
 import numpy as np
 from openturns import viewer
@@ -59,10 +61,12 @@ def createMyBasicKriging(X, Y):
     """
     basis = ot.ConstantBasisFactory(dimension).build()
     covarianceModel = ot.MaternModel([1.0], 1.5)
-    algo = ot.KrigingAlgorithm(X, Y, covarianceModel, basis)
+    fitter = otexp.GaussianProcessFitter(X, Y, covarianceModel, basis)
+    fitter.run()
+    algo = otexp.GaussianProcessRegression(fitter.getResult())
     algo.run()
-    krigResult = algo.getResult()
-    return krigResult
+    gprResult = algo.getResult()
+    return gprResult
 
 
 # %%
@@ -83,13 +87,13 @@ sqrt = ot.SymbolicFunction(["x"], ["sqrt(x)"])
 
 
 # %%
-def plotMyBasicKriging(krigResult, xMin, xMax, X, Y, level=0.95):
+def plotMyBasicKriging(gprResult, xMin, xMax, X, Y, level=0.95):
     """
     Given a kriging result, plot the data, the kriging metamodel
     and a confidence interval.
     """
     samplesize = X.getSize()
-    meta = krigResult.getMetaModel()
+    meta = gprResult.getMetaModel()
     graphKriging = meta.draw(xMin, xMax)
     graphKriging.setLegends(["Kriging"])
     # Create a grid of points and evaluate the function and the kriging
@@ -98,8 +102,9 @@ def plotMyBasicKriging(krigResult, xMin, xMax, X, Y, level=0.95):
     yFunction = g(xGrid)
     yKrig = meta(xGrid)
     # Compute the conditional covariance
+    gpcc = otexp.GaussianProcessConditionalCovariance(gprResult)
     epsilon = ot.Sample(nbpoints, [1.0e-8])
-    conditionalVariance = krigResult.getConditionalMarginalVariance(xGrid) + epsilon
+    conditionalVariance = gpcc.getConditionalMarginalVariance(xGrid) + epsilon
     conditionalSigma = sqrt(conditionalVariance)
     # Compute the quantile of the Normal distribution
     alpha = 1 - (1 - level) / 2
@@ -116,8 +121,9 @@ def plotMyBasicKriging(krigResult, xMin, xMax, X, Y, level=0.95):
     boundsPoly = ot.Polygon.FillBetween(xGrid.asPoint(), dataLower, dataUpper)
     boundsPoly.setLegend("95% bounds")
     # Validate the kriging metamodel
-    mmv = ot.MetaModelValidation(yFunction, meta(xGrid))
-    R2 = mmv.computeR2Score()[0]
+    metamodelPredictions = meta(xGrid)
+    mmv = ot.MetaModelValidation(yFunction, metamodelPredictions)
+    r2Score = mmv.computeR2Score()[0]
     # Plot the function
     graphFonction = ot.Curve(xGrid, yFunction)
     graphFonction.setLineStyle("dashed")
@@ -138,18 +144,18 @@ def plotMyBasicKriging(krigResult, xMin, xMax, X, Y, level=0.95):
     graph.setLegendPosition("lower right")
     graph.setAxes(True)
     graph.setGrid(True)
-    graph.setTitle("Size = %d, R2=%.2f%%" % (samplesize, 100 * R2))
+    graph.setTitle("Size = %d, R2=%.2f%%" % (samplesize, 100 * r2Score))
     graph.setXTitle("X")
     graph.setYTitle("Y")
     return graph
 
 
 # %%
-# We start by creating the initial kriging metamodel on the 4 points in the design of experiments.
+# We start by creating the initial Kriging metamodel on the 4 points in the design of experiments.
 
 # %%
-krigResult = createMyBasicKriging(X, Y)
-graph = plotMyBasicKriging(krigResult, xMin, xMax, X, Y)
+gprResult = createMyBasicKriging(X, Y)
+graph = plotMyBasicKriging(gprResult, xMin, xMax, X, Y)
 view = viewer.View(graph)
 
 
@@ -162,14 +168,15 @@ view = viewer.View(graph)
 
 
 # %%
-def getNewPoint(xMin, xMax, krigResult):
+def getNewPoint(xMin, xMax, gprResult):
     """
     Returns a new point to be added to the design of experiments.
     This point maximizes the conditional variance of the kriging.
     """
     nbpoints = 50
     xGrid = linearSample(xMin, xMax, nbpoints)
-    conditionalVariance = krigResult.getConditionalMarginalVariance(xGrid)
+    gpcc = otexp.GaussianProcessConditionalCovariance(gprResult)
+    conditionalVariance = gpcc.getConditionalMarginalVariance(xGrid)
     iMaxVar = int(np.argmax(conditionalVariance))
     xNew = xGrid[iMaxVar, 0]
     xNew = ot.Point([xNew])
@@ -181,7 +188,7 @@ def getNewPoint(xMin, xMax, krigResult):
 
 
 # %%
-xNew = getNewPoint(xMin, xMax, krigResult)
+xNew = getNewPoint(xMin, xMax, gprResult)
 xNew
 
 # %%
@@ -193,12 +200,12 @@ X.add(xNew)
 Y.add(yNew)
 
 # %%
-# We now plot the updated kriging.
+# We now plot the updated Kriging.
 
 # %%
 # sphinx_gallery_thumbnail_number = 3
-krigResult = createMyBasicKriging(X, Y)
-graph = plotMyBasicKriging(krigResult, xMin, xMax, X, Y)
+gprResult = createMyBasicKriging(X, Y)
+graph = plotMyBasicKriging(gprResult, xMin, xMax, X, Y)
 graph.setTitle("Kriging #0")
 view = viewer.View(graph)
 
@@ -207,12 +214,12 @@ view = viewer.View(graph)
 
 # %%
 for krigingStep in range(5):
-    xNew = getNewPoint(xMin, xMax, krigResult)
+    xNew = getNewPoint(xMin, xMax, gprResult)
     yNew = g(xNew)
     X.add(xNew)
     Y.add(yNew)
-    krigResult = createMyBasicKriging(X, Y)
-    graph = plotMyBasicKriging(krigResult, xMin, xMax, X, Y)
+    gprResult = createMyBasicKriging(X, Y)
+    graph = plotMyBasicKriging(gprResult, xMin, xMax, X, Y)
     graph.setTitle("Kriging #%d " % (krigingStep + 1) + graph.getTitle())
     View(graph)
 
@@ -220,7 +227,7 @@ for krigingStep in range(5):
 # We observe that the second added point is the left bound of the domain.
 # The remaining points were added strictly inside the domain where the accuracy was drastically improved.
 #
-# With only 10 points, the metamodel accuracy is already very good with a Q2 which is equal to 99.9%.
+# With only 10 points, the metamodel accuracy is already very good with a :math:`Q^2` which is equal to 99.9%.
 
 # %%
 # Conclusion

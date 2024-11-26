@@ -2,6 +2,7 @@
 Optimization using bonmin
 =========================
 """
+
 # %%
 
 # %%
@@ -63,12 +64,7 @@ for algo in ot.Bonmin.GetAlgorithmNames():
 objectiveFunction = ot.SymbolicFunction(["x0", "x1", "x2", "x3"], ["-x0 -x1 -x2"])
 
 # Definition of variables bounds
-bounds = ot.Interval(
-    [0, 0, 0, 0],
-    [1, 1e99, 1e99, 5],
-    [True, True, True, True],
-    [True, False, False, True],
-)
+bounds = ot.Interval([0.0] * 4, [1, 1e6, 1e6, 5])
 
 # Definition of constraints
 # Constraints are defined as g(x) = 0 and h(x) >= 0
@@ -94,7 +90,7 @@ problem.setInequalityConstraint(h)
 bonminAlgorithm = ot.Bonmin(problem, "B-BB")
 bonminAlgorithm.setMaximumCallsNumber(10000)
 bonminAlgorithm.setMaximumIterationNumber(1000)
-bonminAlgorithm.setStartingPoint([0, 0, 0, 0])
+bonminAlgorithm.setStartingPoint([0.0] * 4)
 
 # %%
 # Running the solver

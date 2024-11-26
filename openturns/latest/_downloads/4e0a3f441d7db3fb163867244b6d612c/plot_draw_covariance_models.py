@@ -2,6 +2,7 @@
 Kriging : draw covariance models
 ================================
 """
+
 import openturns as ot
 import openturns.viewer as otv
 from matplotlib import pylab as plt
@@ -11,12 +12,12 @@ import pylab as pl
 # Abstract
 # --------
 #
-# Gaussian processes are a common fixture in UQ.
+# Gaussian processes are a common fixture in `UQ`.
 # They are defined by their covariance function and the library implements several of them.
-# In this example we should depict covariance functions and play with parameters
-# for two families of models: the generalized exponential model and the Matern models.
+# In this example we plot covariance functions and modify their parameters
+# for two families of models: the generalized exponential model and the Matérn models.
 #
-# For visualization sake we should limit ourselves to the dimension 1.
+# For visualization sake, we limit ourselves to the dimension 1.
 dimension = 1
 
 # %%
@@ -38,7 +39,7 @@ ot.ResourceMap.SetAsScalar("CovarianceModel-DefaultTMin", 0.0)
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
 # In this part we set the correlation length to :math:`\theta = 0.1` and study three different models
-# with parameters :math:`p=0.25`, :math:`p=1` and :math:`p=2` and trajectories from gaussian processes
+# with parameters :math:`p=0.25`, :math:`p=1` and :math:`p=2` and trajectories from Gaussian processes
 # based on these models.
 
 # %%
@@ -65,7 +66,7 @@ graphModel.setLegends([r"$p = 0.25$", r"$p = 1$", r"$p = 2$"])
 
 
 # %%
-# For each covariance model we build a gaussian process and generate a random trajectory of
+# For each covariance model we build a Gaussian process and generate a random trajectory of
 # on :math:`[-1,1]`.
 # We first build a discretization of this interval with a regular grid with step 0.01.
 xmin = -1.0
@@ -75,7 +76,7 @@ grid1D = ot.RegularGrid(xmin, step, n + 1)
 nbTrajectories = 1
 
 # %%
-# We define the first gaussian process and its trajectory :
+# We define the first Gaussian process and its trajectory :
 process = ot.GaussianProcess(covarianceModel, grid1D)
 sample = process.getSample(nbTrajectories)
 
@@ -101,7 +102,7 @@ graphTraj.setColors(["green", "orange", "blue"])
 graphTraj.setLegends([r"$p = 0.25$", r"$p = 1$", r"$p = 2$"])
 
 # %%
-# We present each covariance model and the corresponding tracjectory side by side.
+# We present each covariance model and the corresponding trajectory side by side.
 fig = pl.figure(figsize=(12, 4))
 ax_pdf = fig.add_subplot(1, 2, 1)
 _ = otv.View(graphModel, figure=fig, axes=[ax_pdf])
@@ -146,7 +147,7 @@ graphModel.setLegends([r"$\theta = 0.01$", r"$\theta = 0.1$", r"$\theta = 1$"])
 
 
 # %%
-# For each covariance model we build a gaussian process and generate a random trajectory of
+# For each covariance model we build a Gaussian process and generate a random trajectory of
 # on :math:`[-1,1]`.
 # We first build a discretization of this interval with a regular grid with step 0.01.
 xmin = -1.0
@@ -156,7 +157,7 @@ grid1D = ot.RegularGrid(xmin, step, n + 1)
 nbTrajectories = 1
 
 # %%
-# We define the first gaussian process and its trajectory :
+# We define the first Gaussian process and its trajectory :
 process = ot.GaussianProcess(covarianceModel, grid1D)
 sample = process.getSample(nbTrajectories)
 
@@ -227,7 +228,7 @@ graphModel.setLegends([r"$\theta = 0.01$", r"$\theta = 0.1$", r"$\theta = 1$"])
 
 
 # %%
-# For each covariance model we build a gaussian process and generate a random trajectory of
+# For each covariance model we build a Gaussian process and generate a random trajectory of
 # on :math:`[-1,1]`.
 # We first build a discretization of this interval with a regular grid with step 0.01.
 xmin = -1.0
@@ -237,7 +238,7 @@ grid1D = ot.RegularGrid(xmin, step, n + 1)
 nbTrajectories = 1
 
 # %%
-# We define the first gaussian process and its trajectory :
+# We define the first Gaussian process and its trajectory :
 process = ot.GaussianProcess(covarianceModel, grid1D)
 sample = process.getSample(nbTrajectories)
 
@@ -275,12 +276,12 @@ _ = fig.suptitle(
 )
 
 # %%
-# Execpt for very small values of the correlation length, trajectories are usually smooth. It is the
-# main effect of the squared exponential model which leads to smooth process.
+# Except for very small values of the correlation length, trajectories are usually smooth. It is the
+# main effect of the squared exponential model which leads to smooth processes.
 
 
 # %%
-# The Matern covariance model
+# The Matérn covariance model
 # ---------------------------
 #
 # The :class:`~openturns.MaternModel` class implements the Matern model of parameter :math:`\nu`.
@@ -320,7 +321,7 @@ graphModel.setLegends([r"$\nu = 1/2$", r"$\nu = 3/2$", r"$\nu = 5/2$"])
 
 
 # %%
-# For each covariance model we build a gaussian process and generate a random trajectory of
+# For each covariance model we build a Gaussian process and generate a random trajectory of
 # on :math:`[-1,1]`.
 # We first build a discretization of this interval with a regular grid with step 0.001.
 xmin = -5.0
@@ -330,7 +331,7 @@ grid1D = ot.RegularGrid(xmin, step, n + 1)
 nbTrajectories = 1
 
 # %%
-# We define the first gaussian process and its trajectory :
+# We define the first Gaussian process and its trajectory :
 process = ot.GaussianProcess(covarianceModel, grid1D)
 sample = process.getSample(nbTrajectories)
 
@@ -376,7 +377,7 @@ _ = fig.suptitle(r"Matern model : influence of the regularity $\nu$ parameter")
 # In this paragraph we fix the regularity by choosing :math:`\nu = 1.5` so we expect a continuously
 # differentiable realization.
 # We then use three different correlation lengths :math:`\theta = 0.01`, :math:`\theta = 0.1` and
-# :math:`\theta = 1.0` and observe the impact on realizations of gaussian processes based on these
+# :math:`\theta = 1.0` and observe the impact on realizations of Gaussian processes based on these
 # covariance models.
 
 # %%
@@ -403,7 +404,7 @@ graphModel.setTitle("Matern covariance model with \nu = 3/2")
 graphModel.setLegends([r"$\theta = 0.01$", r"$\theta = 0.1$", r"$\theta = 1.0$"])
 
 # %%
-# For each covariance model we build a gaussian process and generate a random trajectory of
+# For each covariance model we build a Gaussian process and generate a random trajectory of
 # on :math:`[-1,1]`.
 # We build a discretization of this interval with a regular grid with step 0.01.
 xmin = -1.0
@@ -413,7 +414,7 @@ grid1D = ot.RegularGrid(xmin, step, n + 1)
 nbTrajectories = 1
 
 # %%
-# We define the first gaussian process and its trajectory :
+# We define the first Gaussian process and its trajectory :
 process = ot.GaussianProcess(covarianceModel, grid1D)
 sample = process.getSample(nbTrajectories)
 
@@ -447,7 +448,7 @@ _ = otv.View(graphTraj, figure=fig, axes=[ax_cdf])
 _ = fig.suptitle("The Matern model : variation of the correlation length")
 
 # %%
-# From the previous figure we see that the trajectory of the gaussian process is smoother with large
+# From the previous figure we see that the trajectory of the Gaussian process is smoother with large
 # correlation length.
 
 # %%

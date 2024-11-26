@@ -2,6 +2,7 @@
 Create a parametric spectral density function
 =============================================
 """
+
 # %%
 # This example illustrates how the User can create a density spectral
 # function from parametric models.
@@ -9,7 +10,7 @@ Create a parametric spectral density function
 # The library implements the *Cauchy spectral model* as a parametric model for the spectral density function
 # :math:`S`.
 #
-# The library defines this model thanks to the object *CauchyModel*.
+# The library defines this model thanks to the object :class:`~openturns.CauchyModel`.
 
 # %%
 import openturns as ot

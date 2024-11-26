@@ -1,10 +1,10 @@
 import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
-if ot.GaussianProcess().__class__.__name__ == 'Process':
+if "GaussianProcess" == "Process":
     # default to Gaussian for the interface class
     process = ot.GaussianProcess()
-elif ot.GaussianProcess().__class__.__name__ == 'DiscreteMarkovChain':
+elif "GaussianProcess" == "DiscreteMarkovChain":
     process = ot.GaussianProcess()
     process.setTransitionMatrix(ot.SquareMatrix([[0.0,0.5,0.5],[0.7,0.0,0.3],[0.8,0.0,0.2]]))
     origin = 0
@@ -12,7 +12,7 @@ elif ot.GaussianProcess().__class__.__name__ == 'DiscreteMarkovChain':
 else:
     process = ot.GaussianProcess()
 process.setTimeGrid(ot.RegularGrid(0.0, 0.02, 50))
-process.setDescription(['$x$'])
+process.setDescription(["$x$"])
 sample = process.getSample(6)
 sample_graph = sample.drawMarginal(0)
 sample_graph.setTitle(str(process))

@@ -2,6 +2,7 @@
 Create a linear least squares model
 ===================================
 """
+
 # %%
 # In this example we are going to create a global approximation of a model
 # response based on a linear function using the :class:`~openturns.LinearLeastSquares` class.
@@ -9,7 +10,7 @@ Create a linear least squares model
 # We consider the function :math:`h : \Rset^2 \rightarrow \Rset^2` is defined by:
 #
 # .. math::
-#    h(x_1, x_2) = \left(\cos(x_1 + x_2), (x_2 + 1) e^{x_1 - 2 x_2} \right)
+#    \vect{h}(x_1, x_2) = \Tr{\left(\cos(x_1 + x_2), (x_2 + 1) e^{x_1 - 2 x_2} \right)}
 #
 # for any :math:`\vect{x} \in \Rset^2`.
 # Since the output is a dimension 2 vector, the model has vector
@@ -53,7 +54,6 @@ Create a linear least squares model
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
 
 ot.Log.Show(ot.Log.NONE)
 
@@ -125,6 +125,7 @@ curve.setLineStyle("dashed")
 curve.setLegend("Linear L.S.")
 graph.add(curve)
 graph.setLegendPosition("upper right")
-graph.setColors(ot.Drawable.BuildDefaultPalette(2))
 view = viewer.View(graph)
-plt.show()
+
+# %%
+view.ShowAll()

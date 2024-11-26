@@ -2,6 +2,7 @@
 Randomize the lines of a Sample
 ===============================
 """
+
 # %%
 import openturns as ot
 
@@ -10,7 +11,7 @@ import openturns as ot
 # thanks to the :class:`~openturns.KPermutationsDistribution` class.
 
 # %%
-# We first define a small sample of size :math:`N` based on a standard unit gaussian distribution.
+# We first define a small sample of size :math:`\sampleSize` based on a standard unit Gaussian distribution.
 distribution = ot.Normal()
 N = 5
 sample = distribution.getSample(N)
@@ -20,10 +21,11 @@ sample = distribution.getSample(N)
 sample
 
 # %%
-# A new set of randomly mixed indices is a realization of a permutation of N elements amongst N :
+# A new set of randomly mixed indices is a realization of a permutation of :math:`\sampleSize` elements amongst :math:`\sampleSize`:
+# This generates a random permutation of the integers :math:`\{0, ..., \sampleSize - 1\}`.
 #
 mixingDistribution = ot.KPermutationsDistribution(N, N)
-newIndices = mixingDistribution.getSample(1)[0, :]
+newIndices = mixingDistribution.getRealization()
 
 # %%
 # The new indices will be these ones :

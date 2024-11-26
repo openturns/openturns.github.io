@@ -22,17 +22,17 @@ from matplotlib import pylab as plt
 ot.Log.Show(ot.Log.NONE)
 
 # %%
-# To illustrate the usage of the method mentioned above, we define a set of X/Y data using the :ref:`Ishigami model <use-case-ishigami>`.
+# To illustrate the usage of the method mentioned above, we define a set of `X` and `Y` data using the :ref:`Ishigami model <use-case-ishigami>`.
 # This classical model is defined in a data class:
 im = ishigami_function.IshigamiModel()
 
 # %%
 # Create X/Y data
 # We get the input variables description :
-input_names = im.distributionX.getDescription()
+input_names = im.inputDistribution.getDescription()
 
 size = 100
-inputDesign = ot.SobolIndicesExperiment(im.distributionX, size, True).generate()
+inputDesign = ot.SobolIndicesExperiment(im.inputDistribution, size, True).generate()
 outputDesign = im.model(inputDesign)
 
 # %%

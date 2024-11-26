@@ -2,9 +2,10 @@
 Validate a polynomial chaos
 ===========================
 """
+
 # %%
 #
-# In this example, we show how to perform the draw validation of a polynomial chaos for the :ref:`Ishigami function <use-case-ishigami>`.
+# In this example, we show how to perform the validation plot of a polynomial chaos for the :ref:`Ishigami function <use-case-ishigami>`.
 
 # %%
 from openturns.usecases import ishigami_function
@@ -23,13 +24,14 @@ ot.Log.Show(ot.Log.NONE)
 im = ishigami_function.IshigamiModel()
 
 # %%
-# The `IshigamiModel` data class contains the input distribution :math:`X=(X_1, X_2, X_3)` in `im.distributionX` and the Ishigami function in `im.model`.
+# The model contains the input distribution :math:`X=(X_1, X_2, X_3)` in
+# `im.inputDistribution` and the Ishigami function in `im.model`.
 # We also have access to the input variable names with
-input_names = im.distributionX.getDescription()
+input_names = im.inputDistribution.getDescription()
 
 # %%
 N = 100
-inputTrain = im.distributionX.getSample(N)
+inputTrain = im.inputDistribution.getSample(N)
 outputTrain = im.model(inputTrain)
 
 # %%
@@ -43,14 +45,16 @@ outputTrain = im.model(inputTrain)
 chaosalgo = ot.FunctionalChaosAlgorithm(inputTrain, outputTrain)
 
 # %%
-# Since the input distribution is known in our particular case, we instead create the multivariate basis from the distribution, that is three independent variables X1, X2 and X3.
+# Since the input distribution is known in our particular case,
+# we instead create the multivariate basis from the distribution,
+# that is three independent variables :math:`X_1` , :math:`X_2` and :math:`X_3` .
 
 # %%
 multivariateBasis = ot.OrthogonalProductPolynomialFactory([im.X1, im.X2, im.X3])
 totalDegree = 8
 enumfunc = multivariateBasis.getEnumerateFunction()
-P = enumfunc.getStrataCumulatedCardinal(totalDegree)
-adaptiveStrategy = ot.FixedStrategy(multivariateBasis, P)
+basisSize = enumfunc.getBasisSizeFromTotalDegree(totalDegree)
+adaptiveStrategy = ot.FixedStrategy(multivariateBasis, basisSize)
 
 # %%
 selectionAlgorithm = ot.LeastSquaresMetaModelSelectionFactory()
@@ -60,7 +64,7 @@ projectionStrategy = ot.LeastSquaresStrategy(
 
 # %%
 chaosalgo = ot.FunctionalChaosAlgorithm(
-    inputTrain, outputTrain, im.distributionX, adaptiveStrategy, projectionStrategy
+    inputTrain, outputTrain, im.inputDistribution, adaptiveStrategy, projectionStrategy
 )
 
 # %%
@@ -77,19 +81,19 @@ metamodel = result.getMetaModel()
 
 # %%
 n_valid = 1000
-inputTest = im.distributionX.getSample(n_valid)
+inputTest = im.inputDistribution.getSample(n_valid)
 outputTest = im.model(inputTest)
-prediction = metamodel(inputTest)
-val = ot.MetaModelValidation(outputTest, prediction)
-R2 = val.computeR2Score()[0]
-R2
+metamodelPredictions = metamodel(inputTest)
+val = ot.MetaModelValidation(outputTest, metamodelPredictions)
+r2Score = val.computeR2Score()[0]
+r2Score
 
 # %%
-# The R2 is very close to 1: the metamodel is excellent.
+# The :math:`R^2` is very close to 1: the metamodel seems very accurate.
 
 # %%
 graph = val.drawValidation()
-graph.setTitle("R2=%.2f%%" % (R2 * 100))
+graph.setTitle("R2=%.2f%%" % (r2Score * 100))
 view = viewer.View(graph)
 plt.show()
 

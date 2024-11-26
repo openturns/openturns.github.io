@@ -9,6 +9,7 @@ using Metropolis-Hastings algorithms.
 
 This example is drawn from [1].
 """
+
 # %%
 # Draw the unnormalized probability density
 # -----------------------------------------
@@ -92,7 +93,6 @@ graph = ot.Graph(
 graph.setBoundingBox(ot.Interval([lower_bound, 0.0], [upper_bound, f([0.0])[0]]))
 graph.add(f.draw(lower_bound, upper_bound, 100))
 graph.add(posterior.drawPDF(lower_bound, upper_bound, 100))
-graph.setColors(ot.Drawable.BuildDefaultPalette(2))
 graph.setLegends(["Unnormalized target density", "Sample PDF"])
 _ = View(graph)
 
@@ -132,7 +132,6 @@ graph = ot.Graph(
 graph.setBoundingBox(ot.Interval([lower_bound, 0.0], [upper_bound, f([0.0])[0]]))
 graph.add(f.draw(lower_bound, upper_bound, 100))
 graph.add(posterior.drawPDF(lower_bound, upper_bound, 100))
-graph.setColors(ot.Drawable.BuildDefaultPalette(2))
 graph.setLegends(["Unnormalized target density", "Sample PDF"])
 _ = View(graph)
 

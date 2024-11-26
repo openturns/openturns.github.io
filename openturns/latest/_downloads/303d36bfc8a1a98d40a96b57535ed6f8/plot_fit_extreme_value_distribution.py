@@ -3,7 +3,6 @@ Fit an extreme value distribution
 =================================
 """
 
-
 # %%
 import openturns as ot
 import openturns.viewer as viewer
@@ -22,7 +21,7 @@ ot.RandomGenerator.SetSeed(0)
 
 # %%
 # The :class:`~openturns.GeneralizedExtremeValue` distribution is a family of continuous probability distributions
-# that combine the :class:`~openturns.Gumbel`, :class:`~openturns.Frechet` and :class:`~openturns.WeibullMax` distribution, all extreme value distribution.
+# that combine the :class:`~openturns.Gumbel`, :class:`~openturns.Frechet` and :class:`~openturns.WeibullMax` distributions, all extreme value distributions.
 #
 # In this example we use the associated :class:`~openturns.GeneralizedExtremeValueFactory` to fit sample with extreme values.
 # This factory returns the best model among the Frechet, Gumbel and Weibull estimates according to the BIC criterion.
@@ -51,7 +50,7 @@ sample.add(sampleGumbel)
 
 
 # %%
-# We fit the sample thanks to the `GeneralizedExtremeValueFactory`:
+# We fit the sample thanks to the :class:`~openturns.GeneralizedExtremeValueFactory`:
 myDistribution = ot.GeneralizedExtremeValueFactory().buildAsGeneralizedExtremeValue(
     sample
 )
@@ -71,7 +70,6 @@ print(myDistribution.getActualDistribution())
 # We draw the fitted distribution and a histogram of the data.
 graph = myDistribution.drawPDF()
 graph.add(ot.HistogramFactory().build(sample).drawPDF())
-graph.setColors(["black", "red"])
 graph.setLegends(["GEV fitting", "histogram"])
 graph.setLegendPosition("upper right")
 
@@ -104,7 +102,6 @@ curveWeibullMax = distWeibullMax.drawPDF().getDrawable(0)
 curveWeibullMax.setLineStyle("dashed")
 graph.add(curveWeibullMax)
 
-graph.setColors(["black", "red", "green", "blue", "orange"])
 graph.setLegends(
     [
         "GEV fitting",
@@ -160,7 +157,6 @@ print(myFittedDist)
 graph = myFittedDist.drawPDF()
 graph.add(ot.HistogramFactory().build(sample).drawPDF())
 graph.setTitle("Generalized Pareto distribution fitting on a sample")
-graph.setColors(["black", "red"])
 graph.setLegends(["GPD fitting", "histogram"])
 graph.setLegendPosition("upper right")
 
@@ -191,13 +187,11 @@ print(myFittedDist)
 graph = myFittedDist.drawPDF()
 graph.add(ot.HistogramFactory().build(sample).drawPDF())
 graph.setTitle("Generalized Pareto distribution fitting on a sample")
-graph.setColors(["black", "red"])
 graph.setLegends(["GPD fitting", "histogram"])
 graph.setLegendPosition("upper right")
 
 view = viewer.View(graph)
 axes = view.getAxes()
 _ = axes[0].set_xlim(-1.0, 10.0)
-
 
 plt.show()

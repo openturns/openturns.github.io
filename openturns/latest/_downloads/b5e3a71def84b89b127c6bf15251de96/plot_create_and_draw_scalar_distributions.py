@@ -2,6 +2,7 @@
 Create and draw scalar distributions
 ====================================
 """
+
 # %%
 import openturns as ot
 import openturns.viewer as viewer
@@ -14,7 +15,7 @@ ot.Log.Show(ot.Log.NONE)
 # A continuous distribution
 # -------------------------
 #
-# We build a normal distribution with parameters :
+# We build a Normal distribution with parameters:
 #
 # .. math::
 #     \mu = 2.2, \sigma = 0.6

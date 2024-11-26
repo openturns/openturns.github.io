@@ -2,6 +2,7 @@
 Estimate a GPD on the daily rainfall data
 =========================================
 """
+
 # %%
 # In this example, we illustrate various techniques of extreme value modeling applied
 # to the daily rainfall accumulations in south-west England, over the period 1914-1962.
@@ -261,12 +262,12 @@ print(f"Max log-likelihood = {result_NonStatLL.getLogLikelihood()}")
 # We get the asymptotic distribution of :math:`\vect{\beta}` to compute some confidence intervals of
 # the estimates, for example of order :math:`p = 0.95`.
 dist_beta = result_NonStatLL.getParameterDistribution()
-condifence_level = 0.95
+confidence_level = 0.95
 for i in range(beta.getSize()):
-    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - condifence_level) / 2)[
+    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - confidence_level) / 2)[
         0
     ]
-    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + condifence_level) / 2)[
+    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + confidence_level) / 2)[
         0
     ]
     print(

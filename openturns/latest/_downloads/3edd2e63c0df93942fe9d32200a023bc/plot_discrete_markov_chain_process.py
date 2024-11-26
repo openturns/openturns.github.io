@@ -2,6 +2,7 @@
 Create a discrete Markov chain process
 ======================================
 """
+
 # %%
 # This example details first how to create and manipulate a discrete Markov chain.
 #
@@ -22,7 +23,7 @@ Create a discrete Markov chain process
 #         \forall t_k \in \mathcal{D}, \forall i,j < p , \> m_{i+1,j+1} = \mathbb{P} (X_{t_{k+1}} = j \> | \> X_{t_{k}} = i)
 #     \end{aligned}
 #
-# The library proposes to model it through the object *DiscreteMarkovChain* defined thanks to the origin :math:`X_{t_0}`
+# The library proposes to model it through the object :class:`~openturns.DiscreteMarkovChain` defined thanks to the origin :math:`X_{t_0}`
 # (which can be either deterministic or uncertain), the transition matrix :math:`\mathcal{M}` and the time grid.
 
 # %%

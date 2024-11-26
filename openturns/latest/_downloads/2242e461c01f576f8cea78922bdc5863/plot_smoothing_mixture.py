@@ -2,6 +2,7 @@
 Bandwidth sensitivity in kernel smoothing
 =========================================
 """
+
 # %%
 #
 # Introduction
@@ -78,7 +79,7 @@ sample1 = distribution1.getSample(int(w1 * n))
 sample2 = distribution2.getSample(int(w2 * n))
 
 # %%
-# Then we merge the sub-samples into a larger one with the `add` method of the `Sample` class.
+# Then we merge the sub-samples into a larger one with the `add` method of the :class:`~openturns.Sample` class.
 
 # %%
 sample = ot.Sample(sample1)
@@ -105,7 +106,7 @@ view = otv.View(graph)
 # Simulation based on a mixture
 # -----------------------------
 #
-# Since the distribution that we approximate is a mixture, it will be more convenient to create it from the `Mixture` class.
+# Since the distribution that we approximate is a mixture, it will be more convenient to create it from the :class:`~openturns.Mixture` class.
 # It takes as input argument a list of distributions and a list of weights.
 
 # %%
@@ -131,7 +132,6 @@ factory.getBandwidth()
 graph = distribution.drawPDF()
 curve = fit.drawPDF()
 graph.add(curve)
-graph.setColors(["dodgerblue3", "darkorange1"])
 graph.setLegends(["Mixture", "Kernel smoothing"])
 graph.setLegendPosition("upper left")
 view = otv.View(graph)
@@ -164,7 +164,6 @@ for i in range(nLen):
     graph.setXTitle("X")
     graph.setTitle("h=%.4f" % (hArray[i]))
     graph.setLegends([""])
-    graph.setColors(ot.Drawable.BuildDefaultPalette(2))
     bounding_box = graph.getBoundingBox()
     upper_bound = bounding_box.getUpperBound()
     upper_bound[1] = 0.5  # Common y-range
@@ -222,7 +221,6 @@ for i in range(nLen):
     graph.setLegends([""])
     graph.setTitle("h=%.4f, %s" % (hArray[i], legends[i]))
     graph.setXTitle("X")
-    graph.setColors(ot.Drawable.BuildDefaultPalette(2))
     if i > 0:
         graph.setYTitle("")
     bounding_box = graph.getBoundingBox()

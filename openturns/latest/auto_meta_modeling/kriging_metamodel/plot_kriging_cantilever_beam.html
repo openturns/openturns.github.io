@@ -5,20 +5,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Kriging : cantilever beam model &#8212; OpenTURNS 1.23 documentation</title>
+    <title>Kriging : cantilever beam model &#8212; OpenTURNS 1.24 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=890937b7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
     <script src="../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../_static/documentation_options.js?v=247a55f2"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/documentation_options.js?v=eff3c53f"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
     <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../../about.html" />
@@ -51,7 +54,7 @@
   </a>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -63,7 +66,7 @@
         <li class="right" >
           <a href="plot_kriging_likelihood.html" title="Kriging : draw the likelihood"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
@@ -71,7 +74,7 @@
         <li class="nav-item nav-item-this"><a href="">Kriging : cantilever beam model</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../../index.html">Table of Contents</a></h3>
@@ -163,7 +166,7 @@ This is why we generate an input sample using the <cite>getSample</cite> method 
 <span class="n">Y_train</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The following figure presents the distribution of the vertical deviations Y on the training sample. We observe that the large deviations occur less often.</p>
+<p>The following figure presents the distribution of the vertical deviations <cite>Y</cite> on the training sample. We observe that the large deviations occur less often.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">histo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
 <span class="n">histo</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Vertical deviation (cm)&quot;</span><span class="p">)</span>
 <span class="n">histo</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Distribution of the vertical deviation&quot;</span><span class="p">)</span>
@@ -174,33 +177,34 @@ This is why we generate an input sample using the <cite>getSample</cite> method 
 <img src="../../_images/sphx_glr_plot_kriging_cantilever_beam_001.png" srcset="../../_images/sphx_glr_plot_kriging_cantilever_beam_001.png" alt="Distribution of the vertical deviation" class = "sphx-glr-single-img"/></section>
 <section id="create-the-metamodel">
 <h2>Create the metamodel<a class="headerlink" href="#create-the-metamodel" title="Link to this heading">¶</a></h2>
-<p>In order to create the Kriging metamodel, we first select a constant trend with the <cite>ConstantBasisFactory</cite> class. Then we use a squared exponential covariance kernel.
-The <cite>SquaredExponential</cite> kernel has one amplitude coefficient and 4 scale coefficients.
+<p>In order to create the Kriging metamodel, we first select a constant trend with the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.ConstantBasisFactory.html#openturns.ConstantBasisFactory" title="openturns.ConstantBasisFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantBasisFactory</span></code></a> class.
+Then we use a squared exponential covariance kernel.
+The <a class="reference internal" href="../../user_manual/_generated/openturns.SquaredExponential.html#openturns.SquaredExponential" title="openturns.SquaredExponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">SquaredExponential</span></code></a> kernel has one amplitude coefficient and 4 scale coefficients.
 This is because this covariance kernel is anisotropic : each of the 4 input variables is associated with its own scale coefficient.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Typically, the optimization algorithm is quite good at setting sensible optimization bounds.
+<p>Typically, the optimization algorithm is quite good at setting optimization bounds.
 In this case, however, the range of the input domain is extreme.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lower and upper bounds of X_train:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMin</span><span class="p">(),</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lower and upper bounds of X_train:
-[6.51899e+10,240.933,2.50312,1.31237e-07] [7.40235e+10,387.288,2.59677,1.61993e-07]
+[6.52677e+10,244.612,2.50392,1.34039e-07] [7.35161e+10,354.916,2.59295,1.56347e-07]
 </pre></div>
 </div>
-<p>We need to manually define sensible optimization bounds.
+<p>We need to manually define optimization bounds.
 Note that since the amplitude parameter is computed analytically (this is possible when the output dimension is 1), we only need to set bounds on the scale parameter.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span>
     <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0e11</span><span class="p">,</span> <span class="mf">1.0e3</span><span class="p">,</span> <span class="mf">1.0e1</span><span class="p">,</span> <span class="mf">1.0e-5</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Finally, we use the <cite>KrigingAlgorithm</cite> class to create the Kriging metamodel.
+<p>Finally, we use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.KrigingAlgorithm.html#openturns.KrigingAlgorithm" title="openturns.KrigingAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code></a> class to create the Kriging metamodel.
 It requires a training sample, a covariance kernel and a trend basis as input arguments.
-We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
+We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensitive choice here.
 We must not forget to actually set the optimization bounds defined above.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
 <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
@@ -218,7 +222,7 @@ We must not forget to actually set the optimization bounds defined above.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.359039]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.45244]
 </pre></div>
 </div>
 <p>We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.</p>
@@ -226,7 +230,7 @@ We must not forget to actually set the optimization bounds defined above.</p>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[7.40235e+10,387.288,2.59677,1.61993e-07], amplitude=[0.402853])</p>
+<p>SquaredExponential(scale=[7.35161e+10,354.916,2.59295,1.56347e-07], amplitude=[0.350094])</p>
 </div>
 <br />
 <br /></section>
@@ -238,16 +242,19 @@ We must not forget to actually set the optimization bounds defined above.</p>
 <span class="n">Y_test</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <cite>MetaModelValidation</cite> classe makes the validation easy. To create it, we use the validation samples and the metamodel.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">Y_test</span><span class="p">,</span> <span class="n">krigingMetamodel</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a> class makes surrogate model validation easy.
+To create it, we use the validation samples and the metamodel.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">krigingMetamodel</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">Y_test</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <cite>computePredictivityFactor</cite> computes the Q2 factor.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">R2</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">R2</span><span class="p">)</span>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation.computeR2Score" title="openturns.MetaModelValidation.computeR2Score"><code class="xref py py-meth docutils literal notranslate"><span class="pre">computeR2Score()</span></code></a> method computes the
+R2 coefficient of determination.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">r2Score</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r2Score</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9999093255530566
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9999090577204818
 </pre></div>
 </div>
 <p>The residuals are the difference between the model and the metamodel.</p>
@@ -260,13 +267,13 @@ We must not forget to actually set the optimization bounds defined above.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_kriging_cantilever_beam_002.png" srcset="../../_images/sphx_glr_plot_kriging_cantilever_beam_002.png" alt="Distribution of the residuals" class = "sphx-glr-single-img"/><p>We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first sign of good quality.</p>
-<p>The <cite>drawValidation</cite> method allows one to compare the observed outputs and the metamodel outputs.</p>
-<p>sphinx_gallery_thumbnail_number = 3</p>
+<p>The <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation.drawValidation" title="openturns.MetaModelValidation.drawValidation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">drawValidation()</span></code></a> method allows one to compare
+the observed outputs and the metamodel outputs.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;R2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">R2</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;R2 = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">r2Score</span><span class="p">))</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># sphinx_gallery_thumbnail_number = 3</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_kriging_cantilever_beam_003.png" srcset="../../_images/sphx_glr_plot_kriging_cantilever_beam_003.png" alt="R2 = 99.99%" class = "sphx-glr-single-img"/><div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-cantilever-beam-py">
@@ -275,6 +282,9 @@ We must not forget to actually set the optimization bounds defined above.</p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1d2922f8ac55cd6e0784732d99cbdc94/plot_kriging_cantilever_beam.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_cantilever_beam.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/e3bafa69b0bbf0743f0fee9afc085ff9/plot_kriging_cantilever_beam.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_kriging_cantilever_beam.zip</span></code></a></p>
 </div>
 </div>
 </section>
@@ -287,7 +297,7 @@ We must not forget to actually set the optimization bounds defined above.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -299,7 +309,7 @@ We must not forget to actually set the optimization bounds defined above.</p>
         <li class="right" >
           <a href="plot_kriging_likelihood.html" title="Kriging : draw the likelihood"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
@@ -309,8 +319,8 @@ We must not forget to actually set the optimization bounds defined above.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Jun 05, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Last updated on Nov 25, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

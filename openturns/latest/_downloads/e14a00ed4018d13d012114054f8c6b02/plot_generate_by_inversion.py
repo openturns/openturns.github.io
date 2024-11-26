@@ -2,6 +2,7 @@
 Generate random variates by inverting the CDF
 =============================================
 """
+
 # %%
 #
 # Abstract
@@ -97,15 +98,14 @@ Generate random variates by inverting the CDF
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
 import numpy as np
 
 ot.Log.Show(ot.Log.NONE)
 
 
 # %%
-# The following function defines the quantile function of the `WeibullMin` distribution.
-# (Of course, we could use the `computeQuantile` method of the `WeibullMin` class as well.
+# The following function defines the quantile function of the :class:`~openturns.WeibullMin` distribution.
+# (Of course, we could use the `computeQuantile` method of the :class:`~openturns.WeibullMin` class as well.
 # This would create a simpler, but less interesting example: this is a trade off
 # that we accept in order to better understand the algorithm.)
 
@@ -154,7 +154,7 @@ uniformSample = U.getSample(n)
 weibullSample = quantile(uniformSample)
 
 # %%
-# In order to compare the results, we use the `WeibullMin` class (using the default value of the location parameter :math:`\gamma=0`).
+# In order to compare the results, we use the :class:`~openturns.WeibullMin` class (using the default value of the location parameter :math:`\gamma=0`).
 
 # %%
 W = ot.WeibullMin(beta, alpha)
@@ -164,7 +164,6 @@ histo = ot.HistogramFactory().build(weibullSample).drawPDF()
 histo.setTitle("Weibull alpha=%s, beta=%s, n=%d" % (alpha, beta, n))
 histo.setLegends(["Sample"])
 wpdf = W.drawPDF()
-wpdf.setColors(["blue"])
 wpdf.setLegends(["Weibull"])
 histo.add(wpdf)
 view = viewer.View(histo)
@@ -207,7 +206,6 @@ uniformSample = sample[:, 1]
 graph = ot.Graph("Weibull alpha=%s, beta=%s, n=%s" % (alpha, beta, n), "x", "U", True)
 # Add the CDF plot
 curve = W.drawCDF()
-curve.setColors(["blue"])
 graph.add(curve)
 # Plot dashed horizontal & vertical lines
 for i in range(n):
@@ -219,8 +217,11 @@ for i in range(n):
     curve.setLineStyle("dashed")
     graph.add(curve)
 view = viewer.View(graph)
-plt.show()
 
 # %%
-# This graphics must be read from the U axis on the left to the blue curve (representing the CDF), and down to the X axis.
-# We see that the horizontal lines on the U axis follow the uniform distribution. On the other hand, the vertical lines (on the X axis) follow the Weibull distribution.
+# Show all the graphs.
+view.ShowAll()
+
+# %%
+# This graphics must be read from the `U` axis on the left to the blue curve (representing the CDF), and down to the `X` axis.
+# We see that the horizontal lines on the `U` axis follow the uniform distribution. On the other hand, the vertical lines (on the `X` axis) follow the Weibull distribution.

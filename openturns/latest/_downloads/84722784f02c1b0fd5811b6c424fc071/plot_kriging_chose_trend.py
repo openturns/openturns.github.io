@@ -2,6 +2,7 @@
 Kriging: choose a polynomial trend
 ==================================
 """
+
 import openturns as ot
 import openturns.viewer as otv
 from matplotlib import pylab as plt
@@ -10,7 +11,7 @@ from matplotlib import pylab as plt
 # Introduction
 # ------------
 #
-# In this example we present the polynomial trends which we may use in a kriging metamodel.
+# In this example we present the polynomial trends which we may use in a Kriging metamodel.
 # This example focuses on three polynomial trends:
 #
 # - :class:`~openturns.ConstantBasisFactory`;
@@ -32,14 +33,14 @@ from matplotlib import pylab as plt
 # where :math:`\vect{\theta} = (\sigma, \rho)` is the vector of hyperparameters.
 # The covariance model is fixed but its parameters must be calibrated
 # depending on the data.
-# The kriging metamodel is:
+# The Kriging metamodel is:
 #
 # .. math::
 #    \widehat{Y}(x) = m(x) + Z(x)
 #
 # where :math:`m(.)` is the trend and :math:`Z(.)` is a Gaussian process with zero mean and covariance model :math:`C_{\vect{\theta}}(s,t)`.
 # The trend is deterministic and the Gaussian process is probabilistic but they both contribute to the metamodel.
-# A special feature of the kriging is the interpolation property: the metamodel is exact at the
+# A special feature of the Kriging is the interpolation property: the metamodel is exact at the
 # training data.
 
 # %%
@@ -110,8 +111,8 @@ view = otv.View(graph)
 # -------------------------------
 
 # %%
-# We often have to apply a transform on the input data before performing the kriging.
-# This make the estimation of the hyperparameters of the kriging metamodel
+# We often have to apply a transform on the input data before performing the Kriging.
+# This make the estimation of the hyperparameters of the Kriging metamodel
 # easier for the optimization algorithm.
 # To do so we write a linear transform of our input data: we make it unit centered at its mean.
 # Then we fix the mean and the standard deviation to their values with the :class:`~openturns.ParametricFunction`.
@@ -139,7 +140,7 @@ scaledXtrain
 # Constant basis
 # --------------
 #
-# In this paragraph we choose a basis constant for the kriging.
+# In this paragraph we choose a basis constant for the Kriging.
 # This trend only has one parameter which is the
 # value of the constant.
 # The basis is built with the :class:`~openturns.ConstantBasisFactory` class.
@@ -149,7 +150,7 @@ dimension = 1
 basis = ot.ConstantBasisFactory(dimension).build()
 
 # %%
-# We build the kriging algorithm by giving it the transformed data, the output data, the covariance
+# We build the Kriging algorithm by giving it the transformed data, the output data, the covariance
 # model and the basis.
 algo = ot.KrigingAlgorithm(scaledXtrain, Ytrain, covarianceModel, basis)
 
@@ -204,7 +205,7 @@ myTrend = ot.ParametricFunction(constantTrend, [0], [c0[0]])
 
 
 # %%
-# Define a function to plot the trend
+# Define a function to plot the trend.
 
 
 def plotTrend(x_test, myTrend, myTransform, color):
@@ -218,7 +219,7 @@ def plotTrend(x_test, myTrend, myTransform, color):
 
 
 # %%
-# We draw the trend found by the kriging procedure.
+# We draw the trend found by the Kriging procedure.
 graph.add(plotTrend(x_test, myTrend, myTransform, palette[2]))
 graph.setTitle("1D Kriging with a constant trend")
 view = otv.View(graph)
@@ -258,9 +259,10 @@ def plotKrigingConfidenceBounds(krigingResult, x_test, myTransform, color, alpha
 # Plot a confidence interval.
 graph.add(plotKrigingConfidenceBounds(result, x_test, myTransform, palette[3]))
 graph.setTitle("1D Kriging with a constant trend")
+graph.setLegendCorner([1.0, 1.0])
+graph.setLegendPosition("upper left")
 view = otv.View(
     graph,
-    legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
     figure_kw={"figsize": (7.0, 3.0)},
 )
 
@@ -282,7 +284,7 @@ basis = ot.LinearBasisFactory(dimension).build()
 
 
 # %%
-# We run the kriging analysis and store the result.
+# We run the Kriging analysis and store the result.
 algo = ot.KrigingAlgorithm(scaledXtrain, Ytrain, covarianceModel, basis)
 algo.run()
 result = algo.getResult()
@@ -321,9 +323,10 @@ graph.add(plotTrend(x_test, myTrend, myTransform, palette[2]))
 # Add the 95% confidence interval.
 graph.add(plotKrigingConfidenceBounds(result, x_test, myTransform, palette[3]))
 graph.setTitle("1D Kriging with a linear trend")
+graph.setLegendCorner([1.0, 1.0])
+graph.setLegendPosition("upper left")
 view = otv.View(
     graph,
-    legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
     figure_kw={"figsize": (7.0, 3.0)},
 )
 
@@ -338,7 +341,7 @@ basis = ot.QuadraticBasisFactory(dimension).build()
 
 
 # %%
-# We run the kriging analysis and store the result.
+# We run the Kriging analysis and store the result.
 algo = ot.KrigingAlgorithm(scaledXtrain, Ytrain, covarianceModel, basis)
 algo.run()
 result = algo.getResult()
@@ -383,9 +386,10 @@ graph.add(plotTrend(x_test, myTrend, myTransform, palette[2]))
 # sphinx_gallery_thumbnail_number = 6
 graph.add(plotKrigingConfidenceBounds(result, x_test, myTransform, palette[3]))
 graph.setTitle("1D Kriging with a quadratic trend")
+graph.setLegendCorner([1.0, 1.0])
+graph.setLegendPosition("upper left")
 view = otv.View(
     graph,
-    legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
     figure_kw={"figsize": (7.0, 3.0)},
 )
 

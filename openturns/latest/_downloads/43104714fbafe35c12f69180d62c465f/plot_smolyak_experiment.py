@@ -2,13 +2,13 @@
 Plot the Smolyak quadrature
 ===========================
 """
+
 # %%
 # The goal of this example is to present different properties of Smolyak's
 # quadrature.
 
 # %%
 import openturns as ot
-import openturns.experimental as otexp
 import openturns.viewer as otv
 from matplotlib import pylab as plt
 
@@ -29,7 +29,7 @@ grid = ot.GridLayout(number_of_rows, number_of_columns)
 for i in range(number_of_rows):
     for j in range(number_of_columns):
         level = 1 + j + i * number_of_columns
-        experiment = otexp.SmolyakExperiment(collection, level)
+        experiment = ot.SmolyakExperiment(collection, level)
         nodes, weights = experiment.generateWithWeights()
         sample_size = weights.getDimension()
         graph = ot.Graph(
@@ -126,10 +126,11 @@ for dimension in dimension_list:
     graph.add(curve)
     graph_index += 1
 graph.setLogScale(ot.GraphImplementation.LOGY)
+graph.setLegendCorner([1.0, 1.0])
+graph.setLegendPosition("upper left")
 view = otv.View(
     graph,
     figure_kw={"figsize": (5.0, 3.0)},
-    legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
 )
 plt.tight_layout()
 plt.show()
@@ -160,7 +161,7 @@ for dimension in range(1, dimension_max):
     number_of_nodes = ot.Sample(level_max, 1)
     for level in level_list:
         collection = [uniform] * dimension
-        experiment = otexp.SmolyakExperiment(collection, level)
+        experiment = ot.SmolyakExperiment(collection, level)
         nodes, weights = experiment.generateWithWeights()
         size = nodes.getSize()
         number_of_nodes[level - 1, 0] = size
@@ -176,10 +177,11 @@ for dimension in range(1, dimension_max):
     graph.add(curve)
     graph_index += 1
 graph.setLogScale(ot.GraphImplementation.LOGY)
+graph.setLegendCorner([1.0, 1.0])
+graph.setLegendPosition("upper left")
 view = otv.View(
     graph,
     figure_kw={"figsize": (5.0, 3.0)},
-    legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
 )
 
 plt.tight_layout()

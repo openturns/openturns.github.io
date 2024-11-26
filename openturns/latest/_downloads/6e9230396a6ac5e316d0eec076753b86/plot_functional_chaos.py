@@ -2,6 +2,7 @@
 Create a polynomial chaos metamodel from a data set
 ===================================================
 """
+
 # %%
 # In this example, we create a polynomial chaos expansion (PCE) using
 # a data set.
@@ -13,13 +14,13 @@ Create a polynomial chaos metamodel from a data set
 # In this example we create a global approximation of a model response using
 # polynomial chaos expansion.
 #
-# Let :math:`h` be the function defined by:
+# Let :math:`\vect{g}` be the function defined by:
 #
 # .. math::
-#    g(\mathbf{x}) = \left[\cos(x_1 + x_2), (x_2 + 1) e^{x_1}\right]
+#    \vect{g}(\vect{x}) = \Tr{\left(\cos(x_1 + x_2), (x_2 + 1) e^{x_1}\right)}
 #
 #
-# for any :math:`\mathbf{x}\in\mathbb{R}^2`.
+# for any :math:`\vect{x} \in \Rset^2`.
 #
 # We assume that
 #
@@ -47,18 +48,19 @@ ot.Log.Show(ot.Log.NONE)
 # We first create the function `model`.
 
 # %%
-ot.RandomGenerator.SetSeed(2)
-dimension = 2
+ot.RandomGenerator.SetSeed(0)
 input_names = ["x1", "x2"]
 formulas = ["cos(x1 + x2)", "(x2 + 1) * exp(x1)"]
 model = ot.SymbolicFunction(input_names, formulas)
+inputDimension = model.getInputDimension()
+outputDimension = model.getOutputDimension()
 
 # %%
 # Then we create a sample `inputSample` and compute the corresponding output
 # sample `outputSample`.
 
 # %%
-distribution = ot.Normal(dimension)
+distribution = ot.Normal(inputDimension)
 samplesize = 80
 inputSample = distribution.getSample(samplesize)
 outputSample = model(inputSample)
@@ -85,7 +87,7 @@ ot.ResourceMap.SetAsUnsignedInteger("FittingTest-LillieforsMaximumSamplingSize",
 # %%
 # The main topic of this example is to introduce the next constructor of
 # :class:`~openturns.FunctionalChaosAlgorithm`.
-# Notice that the only input arguments are the input and output sample.
+# Notice that the only input arguments are the input and output samples.
 algo = ot.FunctionalChaosAlgorithm(inputSample, outputSample)
 algo.run()
 result = algo.getResult()
@@ -130,7 +132,7 @@ view = viewer.View(graph)
 # We see that the metamodel fits approximately to the model, except
 # perhaps for extreme values of :math:`x_2`.
 # However, there is a better way of globally validating the metamodel,
-# using the :class:`~openturns.MetaModelValidation` on a validation design of experiment.
+# using the :class:`~openturns.MetaModelValidation` on a validation design of experiments.
 
 # %%
 n_valid = 100
@@ -142,16 +144,17 @@ outputTest = model(inputTest)
 # Plot the corresponding validation graphics.
 
 # %%
-val = ot.MetaModelValidation(outputTest, metamodel(inputTest))
-R2 = val.computeR2Score()
+metamodelPredictions = metamodel(inputTest)
+val = ot.MetaModelValidation(outputTest, metamodelPredictions)
+r2Score = val.computeR2Score()
 graph = val.drawValidation()
-graph.setTitle("Metamodel validation R2=" + str(R2))
+graph.setTitle("Metamodel validation R2=" + str(r2Score))
 view = viewer.View(graph)
 
 # %%
-# The coefficient of predictivity is not extremely satisfactory for the
+# The coefficient of determination is not extremely satisfactory for the
 # first output, but is would be sufficient for a central dispersion study.
-# The second output has a much more satisfactory R2: only one single
+# The second output has a much more satisfactory :math:`R^2`: only one single
 # extreme point is far from the diagonal of the graphics.
 
 # %%
@@ -163,7 +166,7 @@ chaosSI = ot.FunctionalChaosSobolIndices(result)
 chaosSI
 
 # %%
-# Let us analyse the results of this global sensitivity analysis.
+# Let us analyze the results of this global sensitivity analysis.
 #
 # * We see that the first output involves significant multi-indices with
 #   higher marginal degree.
@@ -177,8 +180,8 @@ chaosSI
 
 # %%
 sensitivityAnalysis = ot.FunctionalChaosSobolIndices(result)
-first_order = [sensitivityAnalysis.getSobolIndex(i) for i in range(dimension)]
-total_order = [sensitivityAnalysis.getSobolTotalIndex(i) for i in range(dimension)]
+first_order = [sensitivityAnalysis.getSobolIndex(i) for i in range(inputDimension)]
+total_order = [sensitivityAnalysis.getSobolTotalIndex(i) for i in range(inputDimension)]
 
 # %%
 input_names = model.getInputDescription()
@@ -190,9 +193,9 @@ view = viewer.View(graph)
 # Testing the sensitivity to the degree
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# With the specific constructor of `FunctionalChaosAlgorithm` that
+# With the specific constructor of :class:`~openturns.FunctionalChaosAlgorithm` that
 # we use, the `FunctionalChaosAlgorithm-MaximumTotalDegree`
-# in the `ResourceMap` configure the maximum degree explored by
+# in the `ResourceMap` configures the maximum degree explored by
 # the algorithm. This degree is a trade-off.
 #
 # * If the maximum degree is too low, the polynomial may miss some
@@ -210,11 +213,12 @@ view = viewer.View(graph)
 ot.ResourceMap.GetAsUnsignedInteger("FunctionalChaosAlgorithm-MaximumTotalDegree")
 
 # %%
-# This is why we explore the values from 1 to 15.
+# This is why we explore the values from 1 to 10.
 
 # %%
-degrees = range(1, 12)
-r2 = ot.Sample(len(degrees), 2)
+maximumDegree = 11
+degrees = range(1, maximumDegree)
+r2Score = ot.Sample(len(degrees), outputDimension)
 for maximumDegree in degrees:
     ot.ResourceMap.SetAsUnsignedInteger(
         "FunctionalChaosAlgorithm-MaximumTotalDegree", maximumDegree
@@ -224,43 +228,39 @@ for maximumDegree in degrees:
     algo.run()
     result = algo.getResult()
     metamodel = result.getMetaModel()
-    for outputIndex in range(2):
-        val = ot.MetaModelValidation(
-            outputTest[:, outputIndex], metamodel.getMarginal(outputIndex)(inputTest)
-        )
-        r2Value = min(1.0, max(0.0, val.computeR2Score()[0]))  # Get lucky.
-        r2[maximumDegree - degrees[0], outputIndex] = r2Value
+    metamodelPredictions = metamodel(inputTest)
+    val = ot.MetaModelValidation(outputTest, metamodelPredictions)
+    r2ScoreLocal = val.computeR2Score()
+    r2ScoreLocal = [max(0.0, r2ScoreLocal[i]) for i in range(outputDimension)]
+    r2Score[maximumDegree - degrees[0]] = r2ScoreLocal
 
 # %%
 graph = ot.Graph("Predictivity", "Total degree", "R2", True)
-cloud = ot.Cloud([[d] for d in degrees], r2[:, 0])
+cloud = ot.Cloud([[d] for d in degrees], r2Score[:, 0])
 cloud.setLegend("Output #0")
 cloud.setPointStyle("bullet")
 graph.add(cloud)
-cloud = ot.Cloud([[d] for d in degrees], r2[:, 1])
+cloud = ot.Cloud([[d] for d in degrees], r2Score[:, 1])
 cloud.setLegend("Output #1")
-cloud.setColor("red")
-cloud.setPointStyle("bullet")
+cloud.setPointStyle("diamond")
 graph.add(cloud)
-graph.setLegendPosition("upper right")
-view = viewer.View(graph, legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"})
+graph.setLegendPosition("upper left")
+graph.setLegendCorner([1.0, 1.0])
+view = viewer.View(graph)
 plt.subplots_adjust(right=0.7)
-
 plt.show()
 
 # %%
-# We see that the R2 score increases then gets constant or decreases.
-# A low total polynomial degree is not sufficient to describe
-# the first output with good predictivity.
-# However, the coefficient of predictivity can decrease when the total degree
-# gets greater.
-# The predictivity of the second output seems to be much less
-# satisfactory: a little more work would be required to improve the metamodel.
+# We see that a low total degree is not sufficient to describe the
+# first output with good :math:`R^2` score.
+# However, the coefficient of determination can drop when the total degree increases.
+# The :math:`R^2` score of the second output seems to be much less satisfactory:
+# a little more work would be required to improve the metamodel.
 #
 # In this situation, the following methods may be used.
 #
 # * Since the distribution of the input is known, we may want to give
-#   this information to the `FunctionalChaosAlgorithm`.
+#   this information to the :class:`~openturns.FunctionalChaosAlgorithm`.
 #   This prevents the algorithm from trying to fit the input distribution
 #   which best fit to the data.
 # * We may want to customize the `adaptiveStrategy` by selecting an enumerate
@@ -271,7 +271,7 @@ plt.show()
 #   to compute the coefficient which improves the estimation.
 #   For example, it might be interesting to
 #   try an integration rule instead of the least squares method.
-#   Notice that a specific design of experiment is required in this case.
+#   Notice that a specific design of experiments is required in this case.
 
 # %%
 # Reset default settings

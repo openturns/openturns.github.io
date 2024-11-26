@@ -2,6 +2,7 @@
 FAST sensitivity indices
 ========================
 """
+
 # %%
 # This example will demonstrate how to quantify the correlation between the input
 # variables and the output variable of a model using the FAST method,
@@ -36,7 +37,7 @@ im = ishigami_function.IshigamiModel()
 
 # %%
 # The `IshigamiModel` data class contains the input independent joint distribution :
-distribution = im.distributionX
+distribution = im.inputDistribution
 
 # %%
 # and the Ishigami function :

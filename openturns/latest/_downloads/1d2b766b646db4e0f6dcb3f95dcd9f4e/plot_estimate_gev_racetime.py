@@ -2,6 +2,7 @@
 Estimate a GEV on race times data
 =================================
 """
+
 # %%
 # In this example, we illustrate various techniques of extreme value modeling applied
 # to the fatest annual race times for the women's 1500 meter event over the period 1975-1992.
@@ -54,7 +55,6 @@ Estimate a GEV on race times data
 # First, we load the race times dataset. We start by looking at them through time.
 import openturns as ot
 import openturns.viewer as otv
-import openturns.experimental as otexp
 from openturns.usecases import coles
 
 data = coles.Coles().racetime
@@ -109,7 +109,7 @@ print("Standard dev = ", parameterEstimate.getStandardDeviation())
 # - the quantile-quantile pot,
 # - the return level plot,
 # - the data histogram and the density of the fitted model.
-validation = otexp.GeneralizedExtremeValueValidation(result_LL, sample)
+validation = ot.GeneralizedExtremeValueValidation(result_LL, sample)
 graph = validation.drawDiagnosticPlot()
 view = otv.View(graph)
 
@@ -320,12 +320,12 @@ functionTheta = result_NonStatLL.getParameterFunction()
 # the estimates, for example of order :math:`p = 0.95`.
 
 dist_beta = result_NonStatLL.getParameterDistribution()
-condifence_level = 0.95
+confidence_level = 0.95
 for i in range(beta.getSize()):
-    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - condifence_level) / 2)[
+    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - confidence_level) / 2)[
         0
     ]
-    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + condifence_level) / 2)[
+    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + confidence_level) / 2)[
         0
     ]
     print(
@@ -463,12 +463,12 @@ print(f"xi = {beta[4]:.4f}")
 # We get the asymptotic distribution of :math:`\vect{\beta}` to compute some confidence intervals of
 # the estimates, for example of order :math:`p = 0.95`.
 dist_beta = result_NonStatLL_2.getParameterDistribution()
-condifence_level = 0.95
+confidence_level = 0.95
 for i in range(beta.getSize()):
-    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - condifence_level) / 2)[
+    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - confidence_level) / 2)[
         0
     ]
-    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + condifence_level) / 2)[
+    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + confidence_level) / 2)[
         0
     ]
     print(

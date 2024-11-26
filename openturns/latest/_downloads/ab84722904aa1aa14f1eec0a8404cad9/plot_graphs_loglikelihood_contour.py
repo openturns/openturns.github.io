@@ -13,14 +13,13 @@ import openturns as ot
 
 ot.RandomGenerator.SetSeed(0)
 ot.Log.Show(ot.Log.NONE)
-ot.ResourceMap.SetAsString("Contour-DefaultColorMap", "viridis")
 
 # %%
 # Generate a sample
 # -----------------
 
 # %%
-# We create a `TruncatedNormal` and generate a small sample.
+# We create a :class:`~openturns.TruncatedNormal` and generate a small sample.
 
 # %%
 a = -1
@@ -31,12 +30,11 @@ distribution = ot.TruncatedNormal(mu, sigma, a, b)
 sample = distribution.getSample(11)
 
 # %%
-# In order to see the distribution and the sample, we draw the PDF of the distribution and generate a clouds which X coordinates are the sample values.
+# In order to see the distribution and the sample, we draw the PDF of the distribution and generate a cloud which `X` coordinates are the sample values.
 
 # %%
 graph = distribution.drawPDF()
 graph.setLegends(["TruncatedNormal"])
-graph.setColors(["red"])
 zeros = ot.Sample(sample.getSize(), 1)
 cloud = ot.Cloud(sample, zeros)
 cloud.setLegend("Sample")
@@ -46,7 +44,7 @@ view = viewer.View(graph)
 
 
 # %%
-# The following function computes the log-likelihood of a `TruncatedNormal`
+# The following function computes the log-likelihood of a :class:`~openturns.TruncatedNormal`
 # which mean and standard deviations are given as input arguments.
 # The lower and upper bounds of the distribution are computed as minimum and maximum of the sample.
 
@@ -90,7 +88,7 @@ def logLikelihood(X):
 
 # %%
 # Draw the log-likelihood function with the `draw` method: this is much faster than using a `for` loop.
-# In order to print LaTeX X and Y labels, we use the `"r"` character in front of the string containing the LaTeX command.
+# In order to print LaTeX `X` and `Y` labels, we use the `"r"` character in front of the string containing the LaTeX command.
 
 # %%
 logLikelihoodFunction = ot.PythonFunction(2, 1, logLikelihood)
@@ -105,7 +103,7 @@ view = viewer.View(graphBasic)
 
 # %%
 # The level values are computed from the quantiles of the data, so that the contours are equally spaced.
-# We can configure the number of levels by setting the `Contour-DefaultLevelsNumber` key in the `ResourceMap`.
+# We can configure the number of levels by setting the `Contour-DefaultLevelsNumber` key in the :class:`~openturns.ResourceMap`.
 
 # %%
 ot.ResourceMap.SetAsUnsignedInteger("Contour-DefaultLevelsNumber", 5)
@@ -121,7 +119,7 @@ view = viewer.View(graphBasic)
 contour = graphBasic.getDrawable(0)
 
 # %%
-# To be able to use specific `Contour` methods like `buildDefaultLevels`, we need to use `getImplementation`.
+# To be able to use specific `Contour` methods like `buildDefaultLevels`, we need to use the method named `getImplementation`.
 
 contour = contour.getImplementation()
 contour.buildDefaultLevels(50)
@@ -133,8 +131,9 @@ view = viewer.View(manyLevelGraph)
 # %%
 # Using a rank-based normalization of the colors
 # ----------------------------------------------
+
 # %%
-# In the previous plots, there was little color variation for isolines corresponding to high log-likelihood values.
+# In the previous plots, there was little color variation for isolines corresponding to large log-likelihood values.
 # This is due to a steep cliff visible for low values of :math:`\sigma`.
 # To make the color variation clearer around -13, we use a normalization based on the rank of the level curve and not on its value.
 contour.setColorMapNorm("rank")
@@ -204,9 +203,9 @@ view = viewer.View(graphFineTune)
 # ----------------------------
 
 # %%
-# The `Contour` class does not allow us to manually set multiple colors.
+# The :class:`~openturns.Contour` class does not allow us to manually set multiple colors.
 # Here we show how to assign explicit colors to the different contour lines by passing keyword
-# arguments to the `viewer.View` class.
+# arguments to the class:`~openturns.viewer.View` class.
 
 # Build a range of colors corresponding to the Tableau palette
 palette = ot.Drawable.BuildTableauPalette(len(levels))

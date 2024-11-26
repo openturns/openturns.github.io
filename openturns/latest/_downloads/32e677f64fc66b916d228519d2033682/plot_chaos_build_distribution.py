@@ -2,6 +2,7 @@
 Fit a distribution from an input sample
 =======================================
 """
+
 # %%
 #
 # In this example we show how to use the
@@ -75,7 +76,7 @@ distribution = ot.FunctionalChaosAlgorithm.BuildDistribution(inputSample)
 distribution
 
 # %%
-# We can also analyse its properties in more details.
+# We can also analyze its properties in more details.
 
 # %%
 for i in range(dimension):
@@ -86,7 +87,7 @@ distribution.getCopula()
 
 # %%
 # The previous call to :meth:`~openturns.MetaModelAlgorithm.BuildDistribution` is what is done internally by the
-# following constructor of `FunctionalChaosAlgorithm`.
+# following constructor of :class:`~openturns.FunctionalChaosAlgorithm`.
 
 # %%
 algo = ot.FunctionalChaosAlgorithm(inputSample, outputSample)

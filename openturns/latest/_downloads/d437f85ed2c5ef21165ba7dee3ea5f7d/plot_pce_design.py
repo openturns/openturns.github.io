@@ -2,6 +2,7 @@
 Compute leave-one-out error of a polynomial chaos expansion
 ===========================================================
 """
+
 # %%
 #
 # Introduction
@@ -220,7 +221,7 @@ im = ishigami_function.IshigamiModel()
 
 # %%
 nTrain = 100
-xTrain = im.distributionX.getSample(nTrain)
+xTrain = im.inputDistribution.getSample(nTrain)
 yTrain = im.model(xTrain)
 
 # %%
@@ -294,7 +295,7 @@ chaosResult = ComputeSparseLeastSquaresFunctionalChaos(
     yTrain,
     multivariateBasis,
     basisSize,
-    im.distributionX,
+    im.inputDistribution,
     sparse,
 )
 
@@ -395,7 +396,7 @@ for j in range(nTrain):
         yTrainLOO,
         multivariateBasis,
         basisSize,
-        im.distributionX,
+        im.inputDistribution,
         sparse,
     )
     metamodelLOO = chaosResultLOO.getMetaModel()

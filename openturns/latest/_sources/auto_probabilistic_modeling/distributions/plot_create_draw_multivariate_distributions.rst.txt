@@ -21,11 +21,11 @@
 Create and draw multivariate distributions
 ==========================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-7
+.. GENERATED FROM PYTHON SOURCE LINES 7-8
 
 In this example we create and draw multidimensional distributions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-14
+.. GENERATED FROM PYTHON SOURCE LINES 8-15
 
 .. code-block:: Python
 
@@ -43,28 +43,39 @@ In this example we create and draw multidimensional distributions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-21
+.. GENERATED FROM PYTHON SOURCE LINES 16-38
 
-Create a multivariate model with `JointDistribution`
--------------------------------------------------------
+Create a multivariate model with a :class:`~openturns.JointDistribution`
+------------------------------------------------------------------------
 
-In this paragraph we use :math:`~openturns.JointDistribution` class to
-build multidimensional distribution described by its marginal distributions and optionally its dependence structure (a particular copula).
+In this paragraph we use :class:`~openturns.JointDistribution` class to
+build a multivariate distribution of dimension :math:`\inputDim`, from:
 
+- :math:`\inputDim` scalar distributions whose cumulative distribution functions are
+  denoted by :math:`(F_1, \dots, F_\inputDim)`, called the  *instrumental marginals*,
+- and a core :math:`K` which is a multivariate distribution of dimension :math:`\inputDim` whose range is
+  included in :math:`[0,1]^\inputDim`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-29
+First case: the core is a copula
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In this case, we use a core which is a copula. Thus, the instrumental marginals
+are the marginals of the multivariate distribution.
 
-We first create the marginals of the distribution :
+We first create the marginals of the distribution:
 
-  - a Normal distribution ;
-  - a Gumbel distribution.
+  - a :class:`~openturns.Normal` distribution;
+  - a :class:`~openturns.Gumbel` distribution.
 
+We use a :class:`~openturns.ClaytonCopula` as dependence structure.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
+.. GENERATED FROM PYTHON SOURCE LINES 38-43
 
 .. code-block:: Python
 
     marginals = [ot.Normal(), ot.Gumbel()]
+    theta = 2.0
+    cop = ot.ClaytonCopula(theta)
+    distribution = ot.JointDistribution(marginals, cop)
 
 
 
@@ -73,20 +84,28 @@ We first create the marginals of the distribution :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 44-48
 
-We draw their PDF. We recall that the `drawPDF` command just generates the graph data. It is the viewer module that enables the actual display.
+We can check here that the instrumental marginals really are  the marginal distributions.
+In the following graphs, we draw the instrumental marginals and the real marginals, obtained with
+the method :meth:`~openturns.Distribution.getMarginal`.
+First, we draw the probability density functions of each component.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-40
+.. GENERATED FROM PYTHON SOURCE LINES 48-60
 
 .. code-block:: Python
 
-    graphNormalPDF = marginals[0].drawPDF()
-    graphNormalPDF.setTitle("PDF of the first marginal")
-    graphGumbelPDF = marginals[1].drawPDF()
-    graphGumbelPDF.setTitle("PDF of the second marginal")
-    view = otv.View(graphNormalPDF)
-    view = otv.View(graphGumbelPDF)
+    graph_PDF_0 = marginals[0].drawPDF()
+    graph_PDF_0.add(distribution.getMarginal(0).drawPDF())
+    graph_PDF_0.setLegends(['instrumental marg', 'marg'])
+    graph_PDF_0.setTitle("First component")
+    view = otv.View(graph_PDF_0)
+
+    graph_PDF_1 = marginals[1].drawPDF()
+    graph_PDF_1.add(distribution.getMarginal(1).drawPDF())
+    graph_PDF_1.setLegends(['instrumental marg', 'marg'])
+    graph_PDF_1.setTitle("Second component")
+    view = otv.View(graph_PDF_1)
 
 
 
@@ -97,14 +116,14 @@ We draw their PDF. We recall that the `drawPDF` command just generates the graph
     *
 
       .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_001.png
-         :alt: PDF of the first marginal
+         :alt: First component
          :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_001.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_002.png
-         :alt: PDF of the second marginal
+         :alt: Second component
          :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_002.png
          :class: sphx-glr-multi-img
 
@@ -112,32 +131,89 @@ We draw their PDF. We recall that the `drawPDF` command just generates the graph
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
-The CDF is also available with the `drawCDF` method.
+Then, we draw the cumulative distribution functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
-
-We then have the minimum required to create a bivariate distribution, assuming no dependency structure :
-
-.. GENERATED FROM PYTHON SOURCE LINES 45-47
+.. GENERATED FROM PYTHON SOURCE LINES 62-74
 
 .. code-block:: Python
 
-    distribution = ot.JointDistribution(marginals)
+    graph_CDF_0 = marginals[0].drawCDF()
+    graph_CDF_0.add(distribution.getMarginal(0).drawCDF())
+    graph_CDF_0.setLegends(['instrumental marg', 'marg'])
+    graph_CDF_0.setTitle("First component")
+    view = otv.View(graph_CDF_0)
+
+    graph_CDF_1 = marginals[1].drawCDF()
+    graph_CDF_1.add(distribution.getMarginal(1).drawCDF())
+    graph_CDF_1.setLegends(['instrumental marg', 'marg'])
+    graph_CDF_1.setTitle("Second component")
+    view = otv.View(graph_CDF_1)
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_003.png
+         :alt: First component
+         :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_003.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_004.png
+         :alt: Second component
+         :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_004.png
+         :class: sphx-glr-multi-img
 
 
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 75-77
+
+At last, we check that the copula of the multivariate distribution is the specified core
+which was a copula.
+
+.. GENERATED FROM PYTHON SOURCE LINES 77-90
+
+.. code-block:: Python
+
+    cop_dist = distribution.getCopula()
+    graph_cop = cop_dist.drawPDF()
+    # Get the Contour Drawable's actual implementation from the Graph
+    # produced by drawPDF in order to access all its methods
+    contour_cop = cop.drawPDF().getDrawable(1).getImplementation()
+    contour_cop.setLineStyle('dashed')
+    # Remove the colorbar
+    contour_cop.setColorBarPosition("")
+    graph_cop.add(contour_cop)
+    # Add the contour without a colorbargraph_cop.add(cop.drawPDF())
+    graph_cop.setTitle('Distribution copula and core')
+    view = otv.View(graph_cop)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
-We can draw the PDF (here in dimension 2) :
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_005.png
+   :alt: Distribution copula and core
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_005.png
+   :class: sphx-glr-single-img
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-52
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
+
+We can draw the PDF of the bivariate distribution:
+
+.. GENERATED FROM PYTHON SOURCE LINES 92-95
 
 .. code-block:: Python
 
@@ -147,20 +223,20 @@ We can draw the PDF (here in dimension 2) :
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_003.png
-   :alt: [X0,X1] iso-PDF
-   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_003.png
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_006.png
+   :alt: X0 iso-PDF
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_006.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 96-97
 
 We also draw the CDF :
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-58
+.. GENERATED FROM PYTHON SOURCE LINES 97-101
 
 .. code-block:: Python
 
@@ -171,115 +247,263 @@ We also draw the CDF :
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_004.png
-   :alt: [X0,X1] iso-CDF
-   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_004.png
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_007.png
+   :alt: X0 iso-CDF
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_007.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 102-113
 
-If a dependence between marginals is needed we have to create the copula specifying the dependency structure, here a :class:`~openturns.NormalCopula` :
+Second case: the core is not a copula
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In this case, we use a core which is not a copula. Thus, the instrumental marginals
+are not the marginals of the multivariate distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-65
+We first create the instrumental marginals of the distribution:
 
-.. code-block:: Python
+- a :class:`~openturns.Normal` distribution;
+- a :class:`~openturns.Gumbel` distribution.
 
-    R = ot.CorrelationMatrix(2)
-    R[0, 1] = 0.3
-    copula = ot.NormalCopula(R)
-    print(copula)
+We use a :class:`~openturns.Dirichlet` as the core.
 
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    NormalCopula(R = [[ 1   0.3 ]
-     [ 0.3 1   ]])
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
-
-We create the bivariate distribution with the desired copula and draw it.
-
-.. GENERATED FROM PYTHON SOURCE LINES 67-72
+.. GENERATED FROM PYTHON SOURCE LINES 113-117
 
 .. code-block:: Python
 
-    distribution = ot.JointDistribution(marginals, copula)
+    inst_marginals = [ot.Normal(), ot.Gumbel()]
+    core_dir = ot.Dirichlet([2.0, 1.5, 2.5])
+    distribution = ot.JointDistribution(inst_marginals, core_dir)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 118-122
+
+We can check here that the instrumental marginals are not the marginal distributions.
+In the following graphs, we draw the instrumental marginals and the real marginals, obtained with
+the method :meth:`~openturns.Distribution.getMarginal`.
+First, we draw the probability density functions of each component.
+
+.. GENERATED FROM PYTHON SOURCE LINES 122-134
+
+.. code-block:: Python
+
+    graph_PDF_0 = inst_marginals[0].drawPDF()
+    graph_PDF_0.add(distribution.getMarginal(0).drawPDF())
+    graph_PDF_0.setLegends(['instrumental marg', 'marg'])
+    graph_PDF_0.setTitle("First component")
+    view = otv.View(graph_PDF_0)
+
+    graph_PDF_1 = inst_marginals[1].drawPDF()
+    graph_PDF_1.add(distribution.getMarginal(1).drawPDF())
+    graph_PDF_1.setLegends(['instrumental marg', 'marg'])
+    graph_PDF_1.setTitle("Second component")
+    view = otv.View(graph_PDF_1)
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_008.png
+         :alt: First component
+         :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_008.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_009.png
+         :alt: Second component
+         :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_009.png
+         :class: sphx-glr-multi-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 135-136
+
+Then, we draw the cumulative distribution functions.
+
+.. GENERATED FROM PYTHON SOURCE LINES 136-148
+
+.. code-block:: Python
+
+    graph_CDF_0 = inst_marginals[0].drawCDF()
+    graph_CDF_0.add(distribution.getMarginal(0).drawCDF())
+    graph_CDF_0.setLegends(['instrumental marg', 'marg'])
+    graph_CDF_0.setTitle("First component")
+    view = otv.View(graph_CDF_0)
+
+    graph_CDF_1 = inst_marginals[1].drawCDF()
+    graph_CDF_1.add(distribution.getMarginal(1).drawCDF())
+    graph_CDF_1.setLegends(['instrumental marg', 'marg'])
+    graph_CDF_1.setTitle("Second component")
+    view = otv.View(graph_CDF_1)
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_010.png
+         :alt: First component
+         :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_010.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_011.png
+         :alt: Second component
+         :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_011.png
+         :class: sphx-glr-multi-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 149-150
+
+At last, we check that the copula of the multivariate distribution is not the specified core.
+
+.. GENERATED FROM PYTHON SOURCE LINES 150-164
+
+.. code-block:: Python
+
+    cop_dist = distribution.getCopula()
+    graph_cop = cop_dist.drawPDF()
+    cop_dist_draw = graph_cop.getDrawable(1)
+    levels = cop_dist_draw.getLevels()
+    graph_core = core_dir.drawPDF()
+    core_draw = graph_core.getDrawable(0).getImplementation()
+    core_draw.setColorBarPosition("")
+    core_draw.setLevels(levels)
+    core_draw.setLineStyle('dashed')
+
+    graph_cop.add(core_draw)
+    graph_cop.setTitle('Distribution copula and core')
+    view = otv.View(graph_cop)
+
+
+
+
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_012.png
+   :alt: Distribution copula and core
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_012.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 165-166
+
+We can draw the PDF of the bivariate distribution.
+
+.. GENERATED FROM PYTHON SOURCE LINES 166-169
+
+.. code-block:: Python
+
     graph = distribution.drawPDF()
     view = otv.View(graph)
 
 
 
 
-
-.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_005.png
-   :alt: [X0,X1] iso-PDF
-   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_005.png
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_013.png
+   :alt: X0 iso-PDF
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_013.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-87
+.. GENERATED FROM PYTHON SOURCE LINES 170-171
 
-Multivariate models
--------------------
-Some models in the library are natively multivariate. We present examples of three of them :
+We also draw the CDF.
 
- - the Normal distribution ;
- - the Student distribution ;
- - the UserDefined distribution.
+.. GENERATED FROM PYTHON SOURCE LINES 171-174
+
+.. code-block:: Python
+
+    graph = distribution.drawCDF()
+    view = otv.View(graph)
+
+
+
+
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_014.png
+   :alt: X0 iso-CDF
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_014.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 175-189
+
+Use some native multivariate models
+-----------------------------------
+Some models in the library are natively multivariate. We present examples of three of them:
+
+ - the :class:`~openturns.Normal` distribution,
+ - the :class:`~openturns.Student` distribution,
+ - the :class:`~openturns.UserDefined` distribution.
 
 The Normal distribution
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 The :class:`~openturns.Normal` distribution is natively multivariate.
-Here we define a bivariate standard unit gaussian distribution and display
+Here we define a bivariate standard unit Normal distribution and display
 its PDF.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-94
+.. GENERATED FROM PYTHON SOURCE LINES 189-196
 
 .. code-block:: Python
 
     dim = 2
     distribution = ot.Normal(dim)
     graph = distribution.drawPDF()
-    graph.setTitle("Bivariate standard unit gaussian PDF")
+    graph.setTitle("Bivariate standard unit Normal PDF")
     view = otv.View(graph)
 
 
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_006.png
-   :alt: Bivariate standard unit gaussian PDF
-   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_006.png
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_015.png
+   :alt: Bivariate standard unit Normal PDF
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_015.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-99
+.. GENERATED FROM PYTHON SOURCE LINES 197-201
 
 The Student distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 The :class:`~openturns.Student` distribution is natively multivariate. Here we define a Student distribution in dimension 2 and display its PDF :
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-107
+.. GENERATED FROM PYTHON SOURCE LINES 201-209
 
 .. code-block:: Python
 
@@ -294,16 +518,16 @@ The :class:`~openturns.Student` distribution is natively multivariate. Here we d
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_007.png
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_016.png
    :alt: Bivariate Student PDF
-   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_007.png
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_016.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-115
+.. GENERATED FROM PYTHON SOURCE LINES 210-217
 
 The UserDefined distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -313,11 +537,11 @@ For instance consider the square :math:`[-1,1] \times [-1, 1]` with some
 random points uniformly drawn. For each point the weight chosen is the square
 of the distance to the origin. The :class:`~openturns.UserDefined` class normalizes the weights.
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-118
+.. GENERATED FROM PYTHON SOURCE LINES 219-220
 
 We first generate random points in the square.
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-122
+.. GENERATED FROM PYTHON SOURCE LINES 220-224
 
 .. code-block:: Python
 
@@ -332,11 +556,11 @@ We first generate random points in the square.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-124
+.. GENERATED FROM PYTHON SOURCE LINES 225-226
 
 We then build the points and weights for the `UserDefined` distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-130
+.. GENERATED FROM PYTHON SOURCE LINES 226-232
 
 .. code-block:: Python
 
@@ -353,11 +577,11 @@ We then build the points and weights for the `UserDefined` distribution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-132
+.. GENERATED FROM PYTHON SOURCE LINES 233-234
 
 We build the distribution :
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-136
+.. GENERATED FROM PYTHON SOURCE LINES 234-238
 
 .. code-block:: Python
 
@@ -372,11 +596,11 @@ We build the distribution :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-138
+.. GENERATED FROM PYTHON SOURCE LINES 239-240
 
-We can draw a sample from this distribution with the `getSample` method :
+We can generate and display a sample from this distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-143
+.. GENERATED FROM PYTHON SOURCE LINES 240-245
 
 .. code-block:: Python
 
@@ -388,24 +612,24 @@ We can draw a sample from this distribution with the `getSample` method :
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_008.png
+.. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_017.png
    :alt: User defined PDF
-   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_008.png
+   :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_create_draw_multivariate_distributions_017.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-145
+.. GENERATED FROM PYTHON SOURCE LINES 246-247
 
 As expected most values are near the edge of the square where the PDF is the higher.
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-148
+.. GENERATED FROM PYTHON SOURCE LINES 249-250
 
 Display all figures
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-149
+.. GENERATED FROM PYTHON SOURCE LINES 250-251
 
 .. code-block:: Python
 
@@ -416,6 +640,11 @@ Display all figures
 
 
 
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** (0 minutes 2.987 seconds)
 
 
 .. _sphx_glr_download_auto_probabilistic_modeling_distributions_plot_create_draw_multivariate_distributions.py:
@@ -431,3 +660,7 @@ Display all figures
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_create_draw_multivariate_distributions.py <plot_create_draw_multivariate_distributions.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_create_draw_multivariate_distributions.zip <plot_create_draw_multivariate_distributions.zip>`

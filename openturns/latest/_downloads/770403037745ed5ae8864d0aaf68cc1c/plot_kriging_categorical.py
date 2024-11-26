@@ -2,6 +2,7 @@
 Kriging: metamodel with continuous and categorical variables
 ============================================================
 """
+
 # %%
 # We consider here the surrogate modeling of an analytical function characterized by
 # continuous and categorical variables
@@ -81,7 +82,7 @@ for i in range(len(lowerBoundInd)):
     initDistInd.add(ot.Uniform(lowerBoundInd[i], upperBoundInd[i]))
 initDistInd = ot.JointDistribution(initDistInd)
 initSampleInd = initDistInd.getSample(10)
-optAlgInd = ot.MultiStart(ot.NLopt("LN_COBYLA"), initSampleInd)
+optAlgInd = ot.MultiStart(ot.Cobyla(), initSampleInd)
 
 # %%
 # Generate the training data set
@@ -96,7 +97,7 @@ yPlt = fun(xPlt)
 # %%
 # Initialize  and parameterize the optimization algorithm
 initSampleLV = initDistLV.getSample(30)
-optAlgLV = ot.MultiStart(ot.NLopt("LN_COBYLA"), initSampleLV)
+optAlgLV = ot.MultiStart(ot.Cobyla(), initSampleLV)
 
 # %%
 # Create and train the Gaussian process models
@@ -295,18 +296,16 @@ for i in range(len(lowerBoundInd)):
     initDistInd.add(ot.Uniform(lowerBoundInd[i], upperBoundInd[i]))
 initDistInd = ot.JointDistribution(initDistInd)
 initSampleInd = initDistInd.getSample(10)
-optAlgInd = ot.MultiStart(ot.NLopt("LN_COBYLA"), initSampleInd)
+optAlgInd = ot.MultiStart(ot.Cobyla(), initSampleInd)
 
 # %%
 # In order to assess their respective robustness with regards to the training data set,
-# we repeat the experiments 10 times with different training of size 72,
+# we repeat the experiments 3 times with different training of size 72,
 # and compute each time the normalized prediction Root Mean Squared Error (RMSE) on a
 # test data set of size 1000.
-
-# %%
 rmseLVList = []
 rmseIndList = []
-for rep in range(5):
+for rep in range(3):
     # Generate the normalized training data set
     x = dist.getSample(72)
     y = fun(x)
@@ -314,9 +313,9 @@ for rep in range(5):
     yMin = y.getMin()
     y = (y - yMin) / (yMin - yMax)
 
-    # Initialize  and parameterize the optimization algorithm
+    # Initialize and parameterize the optimization algorithm
     initSampleLV = initDistLV.getSample(10)
-    optAlgLV = ot.MultiStart(ot.NLopt("LN_COBYLA"), initSampleLV)
+    optAlgLV = ot.MultiStart(ot.Cobyla(), initSampleLV)
 
     # Create and train the Gaussian process models
     basis = ot.ConstantBasisFactory(dim).build()

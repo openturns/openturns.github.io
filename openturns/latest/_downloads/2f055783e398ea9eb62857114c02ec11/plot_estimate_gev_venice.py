@@ -2,6 +2,7 @@
 Estimate a GEV on the Venice sea-levels data
 ============================================
 """
+
 # %%
 # In this example, we illustrate various techniques of extreme value modeling applied
 # to the annual maximum sea-levels recorded in Venice over the period 1931-1981.
@@ -22,7 +23,6 @@ Estimate a GEV on the Venice sea-levels data
 # used for all the analyses beased on the largest :math:`r` annual sea-levels for :math:`r \leq 6`.
 import openturns as ot
 import openturns.viewer as otv
-import openturns.experimental as otexp
 from openturns.usecases import coles
 
 data = coles.Coles().venice
@@ -86,7 +86,7 @@ for i in range(3):
 # - the quantile-quantile pot,
 # - the return level plot,
 # - the empirical distribution function.
-validation = otexp.GeneralizedExtremeValueValidation(result_LL_max, sample)
+validation = ot.GeneralizedExtremeValueValidation(result_LL_max, sample)
 graph = validation.drawDiagnosticPlot()
 view = otv.View(graph)
 
@@ -116,7 +116,7 @@ except Exception as ex:
     pass
 
 # %%
-# **Stationary GEV modeling from the largest :math:`r` annual sea-levels**
+# **Stationary GEV modeling from the largest** :math:`r` **annual sea-levels**
 #
 # We still assume that the dependence through time is negligible.  We estimate the parameters of the
 # GEV distribution by maximizing the log-likelihood of the data. Now, we want to model more of the

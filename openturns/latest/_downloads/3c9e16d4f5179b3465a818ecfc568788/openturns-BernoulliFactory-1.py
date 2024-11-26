@@ -1,8 +1,12 @@
 import openturns as ot
+import openturns.experimental as otexp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 ot.RandomGenerator.SetSeed(0)
-factory = ot.BernoulliFactory()
+if hasattr(ot, "BernoulliFactory"):
+    factory = ot.BernoulliFactory()
+else:
+    factory = otexp.BernoulliFactory()
 ref = factory.build()
 dimension = ref.getDimension()
 if dimension <= 2:

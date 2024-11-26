@@ -21,13 +21,13 @@
 Estimate Sobol' indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis
 ===================================================================================================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-9
+.. GENERATED FROM PYTHON SOURCE LINES 7-10
 
 In this example, we estimate the Sobol' indices for the
 :ref:`Ishigami function <use-case-ishigami>` by sampling methods.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-51
+.. GENERATED FROM PYTHON SOURCE LINES 13-52
 
 Introduction
 ------------
@@ -69,12 +69,12 @@ to be easily analyzed.
 In these situations, we limit the analysis to the first order and total
 Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-55
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
 
 Define the model
 ----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-65
+.. GENERATED FROM PYTHON SOURCE LINES 58-66
 
 .. code-block:: Python
 
@@ -93,11 +93,11 @@ Define the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 We load the Ishigami model from the usecases model :
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-69
+.. GENERATED FROM PYTHON SOURCE LINES 68-70
 
 .. code-block:: Python
 
@@ -110,18 +110,18 @@ We load the Ishigami model from the usecases model :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-74
+.. GENERATED FROM PYTHON SOURCE LINES 71-75
 
 The :class:`~openturns.usecases.ishigami_function.IshigamiModel` data class contains the input distribution
-:math:`\vect{X}=(X_1, X_2, X_3)` in `im.distributionX` and the Ishigami
+:math:`\vect{X}=(X_1, X_2, X_3)` in `im.inputDistribution` and the Ishigami
 function in `im.model`.
 We also have access to the input variable names with:
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-76
+.. GENERATED FROM PYTHON SOURCE LINES 75-77
 
 .. code-block:: Python
 
-    input_names = im.distributionX.getDescription()
+    input_names = im.inputDistribution.getDescription()
 
 
 
@@ -130,17 +130,17 @@ We also have access to the input variable names with:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-79
+.. GENERATED FROM PYTHON SOURCE LINES 78-80
 
 Draw the function
 -----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-86
+.. GENERATED FROM PYTHON SOURCE LINES 82-86
 
 .. code-block:: Python
 
     n = 10000
-    sampleX = im.distributionX.getSample(n)
+    sampleX = im.inputDistribution.getSample(n)
     sampleY = im.model(sampleX)
 
 
@@ -150,50 +150,15 @@ Draw the function
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 87-88
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-128
+Display relationships between the output and the inputs
+
+.. GENERATED FROM PYTHON SOURCE LINES 90-93
 
 .. code-block:: Python
 
-    def plotXvsY(sampleX, sampleY):
-        """
-        Plot a Y sample against a X sample on a grid.
-
-        Parameters
-        ----------
-        sampleX : ot.Sample(sampleSize, inputDimension)
-            The input sample.
-        sampleY : ot.Sample(sampleSize, outputDimension)
-            The output sample.
-
-        Returns
-        -------
-        grid: ot.GridLayout(outputDimension, inputDimension)
-            The grid of plots of all projections of Y vs X.
-        """
-        dimX = sampleX.getDimension()
-        dimY = sampleY.getDimension()
-        descriptionX = sampleX.getDescription()
-        descriptionY = sampleY.getDescription()
-        grid = ot.GridLayout(dimY, dimX)
-        for i in range(dimY):
-            for j in range(dimX):
-                graph = ot.Graph("", descriptionX[j], descriptionY[i], True, "")
-                cloud = ot.Cloud(sampleX[:, j], sampleY[:, i])
-                graph.add(cloud)
-                if j == 0:
-                    graph.setYTitle(descriptionY[i])
-                else:
-                    graph.setYTitle("")
-                if i == dimY - 1:
-                    graph.setXTitle(descriptionX[j])
-                else:
-                    graph.setXTitle("")
-                grid.setGraph(i, j, graph)
-        return grid
-
-
-    grid = plotXvsY(sampleX, sampleY)
+    grid = ot.VisualTest.DrawPairsXY(sampleX, sampleY)
     _ = ot.viewer.View(grid, figure_kw={"figsize": (10.0, 4.0)})
 
 
@@ -208,7 +173,7 @@ Draw the function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-132
+.. GENERATED FROM PYTHON SOURCE LINES 94-97
 
 .. code-block:: Python
 
@@ -227,30 +192,30 @@ Draw the function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-134
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 We see that the distribution of the output has two modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-138
+.. GENERATED FROM PYTHON SOURCE LINES 101-103
 
 Estimate the Sobol' indices
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-144
+.. GENERATED FROM PYTHON SOURCE LINES 105-109
 
 We first create a design of experiments with the `SobolIndicesExperiment`.
 Since we are not interested in second order indices for the moment,
 we use the default value of the third argument (we will come back to this
 topic later).
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-153
+.. GENERATED FROM PYTHON SOURCE LINES 111-118
 
 .. code-block:: Python
 
     size = 1000
-    sie = ot.SobolIndicesExperiment(im.distributionX, size)
+    sie = ot.SobolIndicesExperiment(im.inputDistribution, size)
     inputDesign = sie.generate()
-    input_names = im.distributionX.getDescription()
+    input_names = im.inputDistribution.getDescription()
     inputDesign.setDescription(input_names)
     inputDesign.getSize()
 
@@ -267,16 +232,16 @@ topic later).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-156
+.. GENERATED FROM PYTHON SOURCE LINES 119-121
 
 We see that 5000 function evaluations are required to estimate the first
 order and total Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-159
+.. GENERATED FROM PYTHON SOURCE LINES 123-124
 
 Then we evaluate the outputs corresponding to this design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-163
+.. GENERATED FROM PYTHON SOURCE LINES 126-128
 
 .. code-block:: Python
 
@@ -289,11 +254,11 @@ Then we evaluate the outputs corresponding to this design of experiments.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-165
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 Then we estimate the Sobol' indices with the `SaltelliSensitivityAlgorithm`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-169
+.. GENERATED FROM PYTHON SOURCE LINES 132-134
 
 .. code-block:: Python
 
@@ -306,11 +271,11 @@ Then we estimate the Sobol' indices with the `SaltelliSensitivityAlgorithm`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-171
+.. GENERATED FROM PYTHON SOURCE LINES 135-136
 
 Let us estimate first order and total Sobol' indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-175
+.. GENERATED FROM PYTHON SOURCE LINES 138-140
 
 .. code-block:: Python
 
@@ -324,12 +289,12 @@ Let us estimate first order and total Sobol' indices.
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    class=Point name=Unnamed dimension=3 values=[0.326888,0.463521,-0.0324203]
+    class=Point name=Unnamed dimension=3 values=[0.331161,0.440542,-0.0470845]
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-178
+.. GENERATED FROM PYTHON SOURCE LINES 141-143
 
 .. code-block:: Python
 
@@ -343,17 +308,17 @@ Let us estimate first order and total Sobol' indices.
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    class=Point name=Unnamed dimension=3 values=[0.564151,0.459759,0.238202]
+    class=Point name=Unnamed dimension=3 values=[0.541982,0.475516,0.269542]
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-181
+.. GENERATED FROM PYTHON SOURCE LINES 144-146
 
 In the following graph, the vertical bars represent
 the 95% confidence intervals of the estimates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-186
+.. GENERATED FROM PYTHON SOURCE LINES 148-151
 
 .. code-block:: Python
 
@@ -372,7 +337,7 @@ the 95% confidence intervals of the estimates.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-202
+.. GENERATED FROM PYTHON SOURCE LINES 152-167
 
 - We see that the variable :math:`X_1`, with a total Sobol' index close
   to 0.6, is the most significant variable, taking into account both its direct
@@ -390,18 +355,18 @@ the 95% confidence intervals of the estimates.
   Moreover, since the exact first order Sobol' index for :math:`X_3` is zero,
   its estimate has a 50% chance of being nonpositive.
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-206
+.. GENERATED FROM PYTHON SOURCE LINES 169-171
 
 Estimate the second order indices
 ---------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-216
+.. GENERATED FROM PYTHON SOURCE LINES 173-181
 
 .. code-block:: Python
 
     size = 1000
     computeSecondOrder = True
-    sie = ot.SobolIndicesExperiment(im.distributionX, size, computeSecondOrder)
+    sie = ot.SobolIndicesExperiment(im.inputDistribution, size, computeSecondOrder)
     inputDesign = sie.generate()
     print(inputDesign.getSize())
     inputDesign.setDescription(input_names)
@@ -420,12 +385,12 @@ Estimate the second order indices
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-219
+.. GENERATED FROM PYTHON SOURCE LINES 182-184
 
 We see that 8000 function evaluations are now required; that is 3000 more
 evaluations than in the previous situation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-223
+.. GENERATED FROM PYTHON SOURCE LINES 186-188
 
 .. code-block:: Python
 
@@ -438,7 +403,7 @@ evaluations than in the previous situation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-229
+.. GENERATED FROM PYTHON SOURCE LINES 189-194
 
 .. code-block:: Python
 
@@ -455,19 +420,19 @@ evaluations than in the previous situation.
 
  .. code-block:: none
 
-    2nd order index (1,0)=0.0666107
-    2nd order index (2,0)=0.360378
-    2nd order index (2,1)=0.0242381
+    2nd order index (1,0)=-0.141016
+    2nd order index (2,0)=0.134265
+    2nd order index (2,1)=-0.118956
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 230-232
+.. GENERATED FROM PYTHON SOURCE LINES 195-197
 
 This shows that the only significant interaction is the one between :math:`X_1`
 and :math:`X_3` (beware of Python's index shift: 0 denotes the first input variable).
 
-.. GENERATED FROM PYTHON SOURCE LINES 234-245
+.. GENERATED FROM PYTHON SOURCE LINES 199-210
 
 Using a different estimator
 ---------------------------
@@ -481,12 +446,12 @@ Others are available in the library:
 * `MauntzKucherenkoSensitivityAlgorithm`
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 247-249
+.. GENERATED FROM PYTHON SOURCE LINES 212-214
 
 In order to compare the results with another method, we use the
 `MartinezSensitivityAlgorithm` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-253
+.. GENERATED FROM PYTHON SOURCE LINES 216-218
 
 .. code-block:: Python
 
@@ -499,7 +464,7 @@ In order to compare the results with another method, we use the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-258
+.. GENERATED FROM PYTHON SOURCE LINES 219-223
 
 .. code-block:: Python
 
@@ -519,7 +484,7 @@ In order to compare the results with another method, we use the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-260
+.. GENERATED FROM PYTHON SOURCE LINES 224-225
 
 We see that the results do not change significantly in this particular situation.
 
@@ -537,3 +502,7 @@ We see that the results do not change significantly in this particular situation
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: plot_sensitivity_sobol.py <plot_sensitivity_sobol.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: plot_sensitivity_sobol.zip <plot_sensitivity_sobol.zip>`

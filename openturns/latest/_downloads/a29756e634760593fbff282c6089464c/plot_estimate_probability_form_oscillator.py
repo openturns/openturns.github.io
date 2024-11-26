@@ -2,6 +2,7 @@
 Using the FORM - SORM algorithms on a nonlinear function
 =========================================================
 """
+
 # %%
 # In this example, we estimate a failure probability with the `FORM` and `SORM` algorithms on the :ref:`oscillator <use-case-oscillator>` example.
 # This test-case is highly non linear with a significant curvature near the design point.
@@ -305,7 +306,7 @@ print(
 )
 
 optim_res = resultSORM.getOptimizationResult()
-print("Simulation budget:", optim_res.getEvaluationNumber())
+print("Simulation budget:", optim_res.getCallsNumber())
 
 # %%
 # One can see that the probability estimate has been decreased by a factor 10 compared to the FORM estimate.

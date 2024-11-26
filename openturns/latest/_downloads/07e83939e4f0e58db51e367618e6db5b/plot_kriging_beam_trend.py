@@ -2,6 +2,7 @@
 Kriging: choose a polynomial trend on the beam model
 ====================================================
 """
+
 # %%
 # The goal of this example is to show how to configure the trend in a Kriging metamodel.
 # This example focuses on three polynomial trends:
@@ -59,9 +60,9 @@ Y_train = model(X_train)
 # --------------------
 
 # %%
-# In order to create the Kriging metamodel, we first select a constant trend with the `ConstantBasisFactory` class.
+# In order to create the Kriging metamodel, we first select a constant trend with the :class:`~openturns.ConstantBasisFactory` class.
 # Then we use a squared exponential covariance kernel.
-# The `SquaredExponential` kernel has one amplitude coefficient and 4 scale coefficients.
+# The :class:`~openturns.SquaredExponential` kernel has one amplitude coefficient and 4 scale coefficients.
 # This is because this covariance kernel is anisotropic : each of the 4 input variables is associated with its own scale coefficient.
 
 # %%
@@ -69,7 +70,7 @@ basis = ot.ConstantBasisFactory(dimension).build()
 covarianceModel = ot.SquaredExponential(dimension)
 
 # %%
-# Typically, the optimization algorithm is quite good at setting sensible optimization bounds.
+# Typically, the optimization algorithm is quite good at setting optimization bounds.
 # In this case, however, the range of the input domain is extreme.
 
 # %%
@@ -86,7 +87,7 @@ scaleOptimizationBounds = ot.Interval(
 )
 
 # %%
-# Finally, we use the `KrigingAlgorithm` class to create the Kriging metamodel.
+# Finally, we use the :class:`~openturns.KrigingAlgorithm` class to create the Kriging metamodel.
 # It requires a training sample, a covariance kernel and a trend basis as input arguments.
 # We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
 # We must not forget to actually set the optimization bounds defined above.
@@ -143,7 +144,7 @@ result.getTrendCoefficients()
 # We observe that the number of coefficients in the trend is 5, which corresponds to:
 #
 # * 1 coefficient for the constant part,
-# * dim=4 coefficients for the linear part.
+# * dim = 4 coefficients for the linear part.
 
 # %%
 covarianceModel.setScale(X_train.getMax())
@@ -167,7 +168,7 @@ print(result.getCovarianceModel())
 # This is because the number of coefficients in the quadratic part has
 #
 # .. math::
-#    \frac{dim (dim+1)}{2}=\frac{4\times 5}{2}=10
+#    \frac{dim \times (dim+1)}{2}=\frac{4\times 5}{2}=10
 #
 #
 # coefficients, associated with the symmetric matrix of the quadratic function.
@@ -187,11 +188,12 @@ Y_test = model(X_test)
 
 # %%
 def drawMetaModelValidation(X_test, Y_test, krigingMetamodel, title):
-    val = ot.MetaModelValidation(Y_test, krigingMetamodel(X_test))
-    R2 = val.computeR2Score()[0]
+    metamodelPredictions = krigingMetamodel(X_test)
+    val = ot.MetaModelValidation(Y_test, metamodelPredictions)
+    r2Score = val.computeR2Score()[0]
     graph = val.drawValidation().getGraph(0, 0)
     graph.setLegends([""])
-    graph.setLegends(["%s, R2 = %.2f%%" % (title, 100 * R2), ""])
+    graph.setLegends(["%s, R2 = %.2f%%" % (title, 100 * r2Score), ""])
     graph.setLegendPosition("upper left")
     return graph
 
@@ -216,7 +218,7 @@ _ = View(grid, figure_kw={"figsize": (13, 4)})
 # With more coefficients, the Kriging metamodel is more flexibile and can adjust better to the training sample.
 # This does not mean, however, that the trend coefficients will provide a good fit for the validation sample.
 #
-# The number of parameters in each Kriging metamodel is the following:
+# The number of parameters in each Kriging metamodel is the following :
 #
 # * the constant trend Kriging has 6 coefficients to estimate: 5 coefficients for the covariance matrix and 1 coefficient for the trend,
 # * the linear trend Kriging has 10 coefficients to estimate: 5 coefficients for the covariance matrix and 5 coefficients for the trend,

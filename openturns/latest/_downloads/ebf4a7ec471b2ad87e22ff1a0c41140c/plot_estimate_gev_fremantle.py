@@ -2,6 +2,7 @@
 Estimate a GEV on the Fremantle sea-levels data
 ===============================================
 """
+
 # %%
 # In this example, we illustrate various techniques of extreme value modeling applied
 # to the annual maximum sea-levels recorded at Fremantle, near Perth, western Australia, over the period
@@ -25,7 +26,6 @@ Estimate a GEV on the Fremantle sea-levels data
 # which is a proxy for meteorological volatility due to effects such as El Nino.
 import openturns as ot
 import openturns.viewer as otv
-import openturns.experimental as otexp
 from openturns.usecases import coles
 
 data = coles.Coles().fremantle
@@ -85,7 +85,7 @@ for i in range(3):
 # - the quantile-quantile pot,
 # - the return level plot,
 # - the empirical distribution function.
-validation = otexp.GeneralizedExtremeValueValidation(result_LL, sample)
+validation = ot.GeneralizedExtremeValueValidation(result_LL, sample)
 graph = validation.drawDiagnosticPlot()
 view = otv.View(graph)
 
@@ -287,12 +287,12 @@ functionTheta = result_NonStatLL.getParameterFunction()
 # We get the asymptotic distribution of :math:`\vect{\beta}` to compute some confidence intervals of
 # the estimates, for example of order :math:`p = 0.95`.
 dist_beta = result_NonStatLL.getParameterDistribution()
-condifence_level = 0.95
+confidence_level = 0.95
 for i in range(beta.getSize()):
-    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - condifence_level) / 2)[
+    lower_bound = dist_beta.getMarginal(i).computeQuantile((1 - confidence_level) / 2)[
         0
     ]
-    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + condifence_level) / 2)[
+    upper_bound = dist_beta.getMarginal(i).computeQuantile((1 + confidence_level) / 2)[
         0
     ]
     print(

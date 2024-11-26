@@ -1,8 +1,12 @@
 import openturns as ot
+import openturns.experimental as otexp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 ot.RandomGenerator.SetSeed(0)
-factory = ot.NormalCopulaFactory()
+if hasattr(ot, "NormalCopulaFactory"):
+    factory = ot.NormalCopulaFactory()
+else:
+    factory = otexp.NormalCopulaFactory()
 ref = factory.build()
 dimension = ref.getDimension()
 if dimension <= 2:

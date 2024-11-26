@@ -2,6 +2,7 @@
 Estimate a conditional quantile
 ===============================
 """
+
 # sphinx_gallery_thumbnail_number = 8
 # %%
 # From a multivariate data sample, we estimate a distribution with kernel smoothing.
@@ -12,13 +13,12 @@ Estimate a conditional quantile
 #    Q_2 : x_1 \mapsto q_{0.9}(X_2|X_1=x_1)
 #
 # We then draw the curve :math:`Q_2 : x_1 \mapsto Q_2(x_1)`.
-# We first start with independent normals then we consider dependent marginals with a Clayton copula.
+# We first start with independent Normals then we consider dependent marginals with a Clayton copula.
 #
 
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
 import numpy as np
 
 ot.Log.Show(ot.Log.NONE)
@@ -31,7 +31,7 @@ ot.RandomGenerator.SetSeed(0)
 # Defining the marginals
 # ----------------------
 #
-# We consider two independent normal marginals :
+# We consider two independent Normal marginals :
 X1 = ot.Normal(0.0, 1.0)
 X2 = ot.Normal(0.0, 3.0)
 
@@ -84,7 +84,7 @@ view = viewer.View(graph)
 #
 
 # %%
-# We first create N observation points in :math:`[-3.0, 3.0]` :
+# We first create :math:`\sampleSize` observation points in :math:`[-3.0, 3.0]` :
 
 # %%
 N = 301
@@ -107,7 +107,6 @@ graph.add(cxy_app)
 graph.add(cxy_ex)
 graph.setLegends(["$Q_2$ kernel smoothing", "$Q_2$ exact"])
 graph.setLegendPosition("lower right")
-graph.setColors(["red", "blue"])
 view = viewer.View(graph)
 
 # %%
@@ -170,7 +169,7 @@ view = viewer.View(graph)
 #
 
 # %%
-# We first create N observation points in :math:`[-3.0, 3.0]` :
+# We first create :math:`\sampleSize` observation points in :math:`[-3.0, 3.0]` :
 
 # %%
 N = 301
@@ -193,10 +192,11 @@ graph.add(cxy_app)
 graph.add(cxy_ex)
 graph.setLegends(["$Q_2$ kernel smoothing", "$Q_2$ exact"])
 graph.setLegendPosition("lower right")
-graph.setColors(["red", "blue"])
 view = viewer.View(graph)
 
 # %%
 # Our estimated conditional quantile is a good approximate and should be better the more data we have. We can observe it by increasing the number of samples.
-#
-plt.show()
+
+# %%
+# Display the graphs
+view.ShowAll()

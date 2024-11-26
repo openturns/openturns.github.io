@@ -2,6 +2,7 @@
 Compute the L2 error between two functions
 ==========================================
 """
+
 # %%
 
 # %%
@@ -23,7 +24,7 @@ partOfIshigamiFunction = ot.SymbolicFunction(
 )
 ot.RandomGenerator.SetSeed(0)
 sampleSize = 1000
-experiment = ot.MonteCarloExperiment(im.distributionX, sampleSize)
+experiment = ot.MonteCarloExperiment(im.inputDistribution, sampleSize)
 integration = otexp.ExperimentIntegration(experiment)
 functionError = integration.computeL2Norm(im.model - partOfIshigamiFunction)
 print(functionError)

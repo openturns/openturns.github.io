@@ -2,6 +2,7 @@
 Transform a distribution
 ========================
 """
+
 # %%
 # In this example we are going to use distribution algebra and distribution transformation via functions.
 
@@ -129,11 +130,11 @@ view = viewer.View(graph)
 #
 
 # %%
-# We create a 1D normal distribution
+# We create a 1-d Normal distribution
 antecedent = ot.Normal()
 
 # %%
-# and a 1D transform :
+# and a 1-d transform :
 f = ot.SymbolicFunction(["x"], ["sin(x)+cos(x)"])
 
 # %%

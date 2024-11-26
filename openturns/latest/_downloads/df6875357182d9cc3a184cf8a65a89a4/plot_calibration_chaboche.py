@@ -21,13 +21,11 @@ Parameters to calibrate and observations
 The vector of parameters to calibrate is:
 
 .. math::
-
    \theta = (R,C,\gamma).
 
 We consider a data set where the number of observations is equal to:
 
 .. math::
-
    n = 10.
 
 
@@ -62,6 +60,7 @@ ot.Log.Show(ot.Log.NONE)
 # class.
 
 # %%
+ot.RandomGenerator.SetSeed(0)
 cm = chaboche_model.ChabocheModel()
 print(cm.data)
 observedStrain = cm.data[:, 0]
@@ -409,6 +408,9 @@ def plotDistributionGridPDF(distribution):
             else:
                 distributionJI = distribution.getMarginal([j, i])
                 graph = distributionJI.drawPDF()
+                contour = graph.getDrawable(0).getImplementation()
+                contour.setColorBarPosition("")  # Hide color bar
+                graph.setDrawable(contour, 0)
             graph.setLegends([""])
             graph.setTitle("")
             if i < dimension - 1:

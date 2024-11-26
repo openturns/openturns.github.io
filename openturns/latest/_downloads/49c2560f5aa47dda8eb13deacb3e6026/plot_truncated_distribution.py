@@ -2,6 +2,7 @@
 Truncate a  distribution
 ========================
 """
+
 # %%
 # In this example we are going to define truncated distributions.
 #
@@ -21,29 +22,28 @@ Truncate a  distribution
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
 
 ot.Log.Show(ot.Log.NONE)
 
-# the original distribution
+# The original distribution
 distribution = ot.Gumbel(0.45, 0.6)
 graph = distribution.drawPDF()
 view = viewer.View(graph)
 
 # %%
-# truncate on the left
+# Truncate on the left
 truncated = ot.TruncatedDistribution(distribution, 0.2, ot.TruncatedDistribution.LOWER)
 graph = truncated.drawPDF()
 view = viewer.View(graph)
 
 # %%
-# truncate on the right
+# Truncate on the right
 truncated = ot.TruncatedDistribution(distribution, 1.5, ot.TruncatedDistribution.UPPER)
 graph = truncated.drawPDF()
 view = viewer.View(graph)
 
 # %%
-# truncated on both bounds
+# Truncate on both bounds
 truncated = ot.TruncatedDistribution(distribution, 0.2, 1.5)
 graph = truncated.drawPDF()
 view = viewer.View(graph)
@@ -56,7 +56,7 @@ sample = ot.Normal(dimension).getSample(size)
 ks = ot.KernelSmoothing().build(sample)
 
 # %%
-# Truncate it between (-2;2)^n
+# Truncate it between :math:`[-2,2]^n`
 bounds = ot.Interval([-2.0] * dimension, [2.0] * dimension)
 truncatedKS = ot.Distribution(ot.TruncatedDistribution(ks, bounds))
 
@@ -64,6 +64,8 @@ truncatedKS = ot.Distribution(ot.TruncatedDistribution(ks, bounds))
 # Draw its PDF
 graph = truncatedKS.drawPDF([-2.5] * dimension, [2.5] * dimension, [256] * dimension)
 graph.add(ot.Cloud(truncatedKS.getSample(200)))
-graph.setColors(["blue", "red"])
 view = viewer.View(graph)
-plt.show()
+
+# %%
+# Display all the graphs
+view.ShowAll()

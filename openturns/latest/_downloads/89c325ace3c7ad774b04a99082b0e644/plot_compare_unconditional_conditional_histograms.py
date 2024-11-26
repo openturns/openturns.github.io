@@ -2,6 +2,7 @@
 Compare unconditional and conditional histograms
 ================================================
 """
+
 # %%
 # In this example, we compare unconditional and conditional histograms for a
 # simulation.
@@ -32,7 +33,6 @@ import numpy as np
 from openturns.usecases import flood_model
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
 
 ot.Log.Show(ot.Log.NONE)
 
@@ -103,10 +103,10 @@ numberOfBins = 10
 histogram = ot.HistogramFactory().buildAsHistogram(sampleQ, numberOfBins)
 
 # %%
-# Extract the sub-sample of the input flowrates Q which leads to large values of the output S.
+# Extract the sub-sample of the input flowrates `Q` which leads to large values of the output `S`.
 
 # %%
-# Search the index of the marginal S in the columns of the sample.
+# Search the index of the marginal `S` in the columns of the sample.
 criteriaComponent = list(sample.getDescription()).index("S")
 criteriaComponent
 
@@ -144,12 +144,15 @@ graph = histogram.drawPDF()
 graph.setLegends(["Q"])
 #
 graphConditionnalQ = conditionnedHistogram.drawPDF()
-graphConditionnalQ.setColors(["blue"])
 graphConditionnalQ.setLegends([r"$Q | S > S_{%s}$" % (alpha)])
 graph.add(graphConditionnalQ)
 view = viewer.View(graph)
 
-plt.show()
+
+# %%
+# Show all the graphs.
+view.ShowAll()
+
 # %%
 # We see that the two histograms are very different.
 # The high values of the input :math:`Q` seem to often lead to a high value of the output :math:`S`.

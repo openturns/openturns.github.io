@@ -2,13 +2,14 @@
 Polynomial chaos is sensitive to the degree
 ===========================================
 """
+
 # %%
 #
 # Introduction
 # ------------
 #
 # In this example, we observe the sensitivity of the polynomial chaos expansion to the total degree of the polynomial.
-# More precisely, we observe how this impacts the :math:`Q^2` predictivity coefficient.
+# More precisely, we observe how this impacts the :math:`R^2` predictivity coefficient.
 #
 # We consider the example of the cantilever beam. We create a sparse polynomial chaos with a linear enumeration rule
 # and the family of orthogonal polynomials corresponding to each input variable.
@@ -29,7 +30,7 @@ maxDegree = 4
 # For real tests, we suggest using the following parameter value:
 
 # %%
-# maxDegree = 7
+# `maxDegree` = 7
 
 # %%
 # Let us define the parameters of the cantilever beam problem.
@@ -99,8 +100,8 @@ def ComputeSparseLeastSquaresChaos(
     selectionAlgorithm = ot.LeastSquaresMetaModelSelectionFactory()
     projectionStrategy = ot.LeastSquaresStrategy(selectionAlgorithm)
     enumfunc = multivariateBasis.getEnumerateFunction()
-    P = enumfunc.getStrataCumulatedCardinal(totalDegree)
-    adaptiveStrategy = ot.FixedStrategy(multivariateBasis, P)
+    basisSize = enumfunc.getBasisSizeFromTotalDegree(totalDegree)
+    adaptiveStrategy = ot.FixedStrategy(multivariateBasis, basisSize)
     chaosalgo = ot.FunctionalChaosAlgorithm(
         inputTrain, outputTrain, myDistribution, adaptiveStrategy, projectionStrategy
     )
@@ -119,45 +120,47 @@ def ComputeSparseLeastSquaresChaos(
 # %%
 def computeSparsityRate(multivariateBasis, totalDegree, chaosResult):
     """Compute the sparsity rate, assuming a FixedStrategy."""
-    # Get P, the maximum possible number of coefficients
+    # Get basisSize, the number of candidate coefficients
     enumfunc = multivariateBasis.getEnumerateFunction()
-    P = enumfunc.getStrataCumulatedCardinal(totalDegree)
+    basisSize = enumfunc.getStrataCumulatedCardinal(totalDegree)
     # Get number of coefficients in the selection
     indices = chaosResult.getIndices()
     nbcoeffs = indices.getSize()
     # Compute rate
-    sparsityRate = 1.0 - nbcoeffs / P
+    sparsityRate = 1.0 - nbcoeffs / basisSize
     return sparsityRate
 
 
 # %%
-# The following functions compute and plot the R2 predictivity coefficients within the validation plot.
+# The following functions compute and plot the :math:`R^2` predictivity coefficients within the validation plot.
 
 
 # %%
 def computeR2Chaos(chaosResult, inputTest, outputTest):
     """Compute the R2 of a chaos."""
     metamodel = chaosResult.getMetaModel()
-    val = ot.MetaModelValidation(outputTest, metamodel(inputTest))
-    R2 = val.computeR2Score()[0]
-    R2 = max(R2, 0.0)  # We are not lucky every day.
-    return R2
+    metamodelPredictions = metamodel(inputTest)
+    val = ot.MetaModelValidation(outputTest, metamodelPredictions)
+    r2Score = val.computeR2Score()[0]
+    r2Score = max(r2Score, 0.0)  # We are not lucky every day.
+    return r2Score
 
 
 # %%
 def printChaosStats(multivariateBasis, chaosResult, inputTest, outputTest, totalDegree):
     """Print statistics of a chaos."""
     sparsityRate = computeSparsityRate(multivariateBasis, totalDegree, chaosResult)
-    R2 = computeR2Chaos(chaosResult, inputTest, outputTest)
+    r2Score = computeR2Chaos(chaosResult, inputTest, outputTest)
     metamodel = chaosResult.getMetaModel()
-    val = ot.MetaModelValidation(outputTest, metamodel(inputTest))
+    metamodelPredictions = metamodel(inputTest)
+    val = ot.MetaModelValidation(outputTest, metamodelPredictions)
     graph = val.drawValidation().getGraph(0, 0)
-    legend1 = "D=%d, R2=%.2f%%" % (totalDegree, 100 * R2)
+    legend1 = "D=%d, R2=%.2f%%" % (totalDegree, 100 * r2Score)
     graph.setLegends(["", legend1])
     graph.setLegendPosition("upper left")
     print(
         "Degree=%d, R2=%.2f%%, Sparsity=%.2f%%"
-        % (totalDegree, 100 * R2, 100 * sparsityRate)
+        % (totalDegree, 100 * r2Score, 100 * sparsityRate)
     )
     return graph
 
@@ -198,7 +201,7 @@ for totalDegree in range(1, maxDegree + 1):
     pl.suptitle("Metamodel validation")
 
 # %%
-# We see that when the degree of the polynomial increases, the R2 coefficient decreases.
+# We see that when the degree of the polynomial increases, the :math:`R^2` coefficient decreases.
 # We also see that the sparsity rate increases: while the basis size grows rapidly with the degree, the algorithm selects a smaller fraction of this basis.
 # This shows that the algorithm performs its task of selecting relevant coefficients.
 # However, this selection does not seem to be sufficient to mitigate the large number of coefficients.
@@ -211,18 +214,17 @@ for totalDegree in range(1, maxDegree + 1):
 # --------------------------------------------
 
 # %%
-# Let us repeat the following experiment to see the variability of the R2 coefficient.
+# Let us repeat the following experiment to see the variability of the :math:`R^2` coefficient.
+
 
 # %%
-
-
 def computeSampleR2(N, n_valid, numberAttempts, maxDegree):
     """For a given sample size N, for degree from 1 to maxDegree,
     repeat the following experiment numberAttempts times:
     create a sparse least squares chaos and compute the R2
     using n_valid points.
     """
-    R2sample = ot.Sample(numberAttempts, maxDegree)
+    r2Sample = ot.Sample(numberAttempts, maxDegree)
     for totalDegree in range(1, maxDegree + 1):
         print("Degree = %d" % (totalDegree))
         for i in range(numberAttempts):
@@ -233,19 +235,19 @@ def computeSampleR2(N, n_valid, numberAttempts, maxDegree):
             chaosResult = ComputeSparseLeastSquaresChaos(
                 inputTrain, outputTrain, multivariateBasis, totalDegree, myDistribution
             )
-            R2sample[i, totalDegree - 1] = computeR2Chaos(
+            r2Sample[i, totalDegree - 1] = computeR2Chaos(
                 chaosResult, inputTest, outputTest
             )
-    return R2sample
+    return r2Sample
 
 
 # %%
-# The following function uses a boxplot to see the distribution of the R2 coefficients.
+# The following function uses a boxplot to see the distribution of the :math:`R^2` coefficients.
 
 
 # %%
-def plotR2Boxplots(R2sample, N):
-    data = np.array(R2sample)
+def plotR2Boxplots(r2Sample, N):
+    data = np.array(r2Sample)
     pl.figure()
     pl.boxplot(data)
     pl.title("N=%d" % (N))
@@ -262,29 +264,29 @@ numberAttempts = 50  # Number of repetitions
 
 # %%
 N = 20  # size of the train design
-R2sample = computeSampleR2(N, n_valid, numberAttempts, maxDegree)
-plotR2Boxplots(R2sample, N)
+r2Sample = computeSampleR2(N, n_valid, numberAttempts, maxDegree)
+plotR2Boxplots(r2Sample, N)
 
 # %%
 # We see that when the size of the design of experiments is as small as 20, it is more appropriate to use a very low degree polynomial. Here 1 performs best and 4 is risky.
 
 # %%
 N = 30  # size of the train design
-R2sample = computeSampleR2(N, n_valid, numberAttempts, maxDegree)
-plotR2Boxplots(R2sample, N)
+r2Sample = computeSampleR2(N, n_valid, numberAttempts, maxDegree)
+plotR2Boxplots(r2Sample, N)
 
 # %%
 # With a 30-point design set, a polynomial degree of 2 is usually advisable.
 
 # %%
 N = 50  # size of the train design
-R2sample = computeSampleR2(N, n_valid, numberAttempts, maxDegree)
-plotR2Boxplots(R2sample, N)
+r2Sample = computeSampleR2(N, n_valid, numberAttempts, maxDegree)
+plotR2Boxplots(r2Sample, N)
 
 pl.show()
 
 # %%
-# When the sample size increases, the R2 computation becomes less sensitive to the polynomial degree.
+# When the sample size increases, the :math:`R^2` computation becomes less sensitive to the polynomial degree.
 
 # %%
 # Conclusion
@@ -292,9 +294,9 @@ pl.show()
 #
 # We observe that on the cantilever beam example, to use a polynomial total
 # degree equal to 4, we need a sample size at least equal to 50 to get a
-# satisfactory and reproducible R2.
-# When the degree is equal to 4, if the sample is small, then depending on the
-# particular sample, the predictivity coefficient can be very low (i.e. less than 0.5).
+# satisfactory and reproducible :math:`R^2` .
+# When the degree is equal to 4, if the sample size is small, then depending on the
+# particular sample, the predictivity coefficient can be very low (i.e., less than 0.5).
 # With a sample size as small as 20, a polynomial degree of 1 is safer.
 # However the limited sample size may have an impact on other statistics that
 # could be derived from a metamodel calculated on such a small training sample.

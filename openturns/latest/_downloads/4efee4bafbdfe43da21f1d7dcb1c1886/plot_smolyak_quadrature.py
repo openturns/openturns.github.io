@@ -2,6 +2,7 @@
 Use the Smolyak quadrature
 ===========================
 """
+
 # %%
 # The goal of this example is to use Smolyak's quadrature.
 # We create a Smolyak quadrature using a Gauss-Legendre marginal
@@ -14,7 +15,6 @@ Use the Smolyak quadrature
 # %%
 import numpy as np
 import openturns as ot
-import openturns.experimental as otexp
 import openturns.viewer as otv
 from matplotlib import pylab as plt
 
@@ -26,7 +26,7 @@ uniform = ot.GaussProductExperiment(ot.Uniform(0.0, 1.0))
 collection = [uniform] * 2
 level = 3
 print("level = ", level)
-experiment = otexp.SmolyakExperiment(collection, level)
+experiment = ot.SmolyakExperiment(collection, level)
 nodes, weights = experiment.generateWithWeights()
 print(nodes)
 print(weights)
@@ -98,7 +98,7 @@ uniform = ot.GaussProductExperiment(ot.Uniform(0.0, 1.0))
 collection = [uniform] * dimension
 level = 5
 print("level = ", level)
-experiment = otexp.SmolyakExperiment(collection, level)
+experiment = ot.SmolyakExperiment(collection, level)
 nodes, weights = experiment.generateWithWeights()
 print("size = ", nodes.getSize())
 
@@ -116,7 +116,7 @@ print("Log-relative error in base 10= %.2f" % (lre10))
 # %%
 # We see that Smolyak's quadrature has produced a quite accurate
 # approximation of the integral.
-# With only 781 nodes in dimension 4, the approximation has more than 2 correct
+# With only 781 nodes in dimension 5, the approximation has more than 2 correct
 # digits.
 
 # %%
@@ -178,7 +178,7 @@ def smolyakQuadrature(g_function, level):
     dimension = g_function.getInputDimension()
     uniform = ot.GaussProductExperiment(ot.Uniform(0.0, 1.0))
     collection = [uniform] * dimension
-    experiment = otexp.SmolyakExperiment(collection, level)
+    experiment = ot.SmolyakExperiment(collection, level)
     nodes, weights = experiment.generateWithWeights()
     size = nodes.getSize()
     g_values = g_function(nodes)
@@ -325,13 +325,11 @@ n_max = 11
 curve = drawTensorizedGaussQuadrature(n_max)
 graph.add(curve)
 graph.setLogScale(ot.GraphImplementation.LOGXY)
-graph.setLegendPosition("upper right")
-palette = ot.Drawable.BuildDefaultPalette(4)
-graph.setColors(palette)
+graph.setLegendCorner([1.0, 1.0])
+graph.setLegendPosition("upper left")
 view = otv.View(
     graph,
     figure_kw={"figsize": (5.0, 3.0)},
-    legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
 )
 plt.tight_layout()
 plt.show()

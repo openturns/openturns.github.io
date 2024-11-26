@@ -2,6 +2,7 @@
 Posterior sampling using a PythonDistribution
 =============================================
 """
+
 # %%
 # In this example we are going to show how to do Bayesian inference using the :class:`~openturns.RandomWalkMetropolisHastings` algorithm
 # in a statistical model defined through a :class:`~openturns.PythonDistribution`.
@@ -202,7 +203,6 @@ for parameter_index in range(2):
     graph = posterior.getMarginal(parameter_index).drawPDF()
     priorGraph = prior.getMarginal(parameter_index).drawPDF()
     graph.add(priorGraph)
-    graph.setColors(ot.Drawable.BuildDefaultPalette(2))
     graph.setLegends(["Posterior", "Prior"])
     grid.setGraph(0, parameter_index, graph)
 _ = View(grid)
@@ -245,4 +245,6 @@ for parameter_index in range(2):
     grid.setGraph(0, parameter_index, graph)
 _ = View(grid)
 
+
+# %%
 View.ShowAll()
