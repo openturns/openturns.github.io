@@ -73,7 +73,7 @@ uncertain input of the model is the ``ìnfection_rate``.
 
     import otfmi.example.utility
     import openturns as ot
-    import openturns.viewer as viewer
+    import openturns.viewer as otv
 
     path_fmu = otfmi.example.utility.get_path_fmu("epid")
     mesh = ot.RegularGrid(0.0, 0.05, 20)
@@ -101,7 +101,7 @@ We create a Monte-Carlo design of experiment, on which we
 simulate the FMU.
 The simulation inputs and outputs will be used to train the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-82
+.. GENERATED FROM PYTHON SOURCE LINES 69-81
 
 .. code-block:: Python
 
@@ -114,9 +114,8 @@ The simulation inputs and outputs will be used to train the metamodel.
     graph.setTitle("FMU simulations")
     graph.setXTitle("Time")
     graph.setYTitle("Number of infected")
-    graph.setLegends(["{:.3f}".format(line[0]) for line in inputSample])
-    view = viewer.View(graph, legend_kw={"title": "infection rate", "loc": "upper left"})
-    view.ShowAll()
+    graph.setLegends([f"{line[0]:.3f}" for line in inputSample[:15]] + ["_"] * 15)
+    view = otv.View(graph, legend_kw={"title": "infection rate", "loc": "upper left"})
 
 
 
@@ -130,11 +129,11 @@ The simulation inputs and outputs will be used to train the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
-We define a function to visualize the upcoming Karhunen-Loevem modes.
+We define a function to visualize the upcoming Karhunen-Loeve modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-109
+.. GENERATED FROM PYTHON SOURCE LINES 83-108
 
 .. code-block:: Python
 
@@ -170,13 +169,13 @@ We define a function to visualize the upcoming Karhunen-Loevem modes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-113
+.. GENERATED FROM PYTHON SOURCE LINES 109-112
 
 We compute the Karhunen-Loeve decomposition of the model outputs.
 The underlying assumption is that these outputs are realizations of a
 stochastic process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-119
+.. GENERATED FROM PYTHON SOURCE LINES 112-118
 
 .. code-block:: Python
 
@@ -193,19 +192,18 @@ stochastic process.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-121
+.. GENERATED FROM PYTHON SOURCE LINES 119-120
 
 Let be curious and plot the Karhunen-Loeve modes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-127
+.. GENERATED FROM PYTHON SOURCE LINES 120-125
 
 .. code-block:: Python
 
     phi_Y = resultKL.getScaledModesAsProcessSample()
     lambda_Y = resultKL.getEigenvalues()
     graph_modes_Y, graph_ev_Y = drawKL(phi_Y, lambda_Y, mesh, "Y")
-    view = viewer.View(graph_modes_Y)
-    view.ShowAll()
+    view = otv.View(graph_modes_Y)
 
 
 
@@ -219,18 +217,18 @@ Let be curious and plot the Karhunen-Loeve modes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-130
+.. GENERATED FROM PYTHON SOURCE LINES 126-128
 
 Now that Karhunen-Loeve algorithm is trained, we can project them
 in the smaller-dimension space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-134
+.. GENERATED FROM PYTHON SOURCE LINES 128-132
 
 .. code-block:: Python
 
     projectionSample = resultKL.project(outputFMUSample)
     n_mode = projectionSample.getDimension()
-    print("Karhunen-Loeve projection is dimension {}".format(n_mode))
+    print(f"Karhunen-Loeve projection in dimension {n_mode}")
 
 
 
@@ -240,18 +238,18 @@ in the smaller-dimension space:
 
  .. code-block:: none
 
-    Karhunen-Loeve projection is dimension 3
+    Karhunen-Loeve projection in dimension 3
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-138
+.. GENERATED FROM PYTHON SOURCE LINES 133-136
 
 We keep on following our road map, by metamodeling the projection
 of the curves on the smaller-dimension space.
 We metamodel the Karhunen-Loeve coefficients using ordinary Kriging.
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-151
+.. GENERATED FROM PYTHON SOURCE LINES 136-149
 
 .. code-block:: Python
 
@@ -275,12 +273,12 @@ We metamodel the Karhunen-Loeve coefficients using ordinary Kriging.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-154
+.. GENERATED FROM PYTHON SOURCE LINES 150-152
 
 We have created all pieces for a "PointToField" metamodel. Let put these
 pieces together:
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-163
+.. GENERATED FROM PYTHON SOURCE LINES 152-161
 
 .. code-block:: Python
 
@@ -300,17 +298,17 @@ pieces together:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-166
+.. GENERATED FROM PYTHON SOURCE LINES 162-164
 
 Validate the metamodel
 ++++++++++++++++++++++
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-171
+.. GENERATED FROM PYTHON SOURCE LINES 167-169
 
 We create a new Monte-Carlo design of experiment. On this design of
 experiment, the FMU is simulated as well as the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-176
+.. GENERATED FROM PYTHON SOURCE LINES 169-174
 
 .. code-block:: Python
 
@@ -326,11 +324,11 @@ experiment, the FMU is simulated as well as the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-178
+.. GENERATED FROM PYTHON SOURCE LINES 175-176
 
 First, we have a visual check:
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-198
+.. GENERATED FROM PYTHON SOURCE LINES 176-195
 
 .. code-block:: Python
 
@@ -345,14 +343,13 @@ First, we have a visual check:
     for graph in [graph1, graph2]:
         graph.setXTitle("Time")
         graph.setYTitle("Number of infected")
-        graph.setLegends(["{:.3f}".format(line[0]) for line in inputSample])
+        graph.setLegends([f"{line[0]:.3f}" for line in inputSample[:10]])
 
     gridLayout.setGraph(0, 0, graph1)
     gridLayout.setGraph(0, 1, graph2)
-    view = viewer.View(
+    view = otv.View(
         gridLayout, legend_kw={"title": "infection rate", "loc": "upper left"}
     )
-    view.ShowAll()
 
 
 
@@ -366,17 +363,18 @@ First, we have a visual check:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-200
+.. GENERATED FROM PYTHON SOURCE LINES 196-197
 
 We validate the pertinence of Karhunen-Loeve decomposition:
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-205
+.. GENERATED FROM PYTHON SOURCE LINES 197-203
 
 .. code-block:: Python
 
 
     validationKL = ot.KarhunenLoeveValidation(outputFMUTestSample, resultKL)
     graph = validationKL.computeResidualMean().draw()
+    graph.setYTitle("infected residual mean")
     ot.Show(graph)
 
 
@@ -391,17 +389,17 @@ We validate the pertinence of Karhunen-Loeve decomposition:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-208
+.. GENERATED FROM PYTHON SOURCE LINES 204-206
 
 As the epidemiological model considers a population size of 700, the residual
 mean error on the field is acceptable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-212
+.. GENERATED FROM PYTHON SOURCE LINES 208-210
 
 We validate the Kriging (using the Karhunen-Loeve coefficients of the test
 sample):
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-221
+.. GENERATED FROM PYTHON SOURCE LINES 210-219
 
 .. code-block:: Python
 
@@ -427,14 +425,14 @@ sample):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-226
+.. GENERATED FROM PYTHON SOURCE LINES 220-224
 
 The predictivity factor is very close to 1, which is satisfying.
 Further statistical tests exist in
 `OpenTURNS <http://openturns.github.io/openturns/master/contents.html>`_ to
 assert the quality of the obtained metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-239
+.. GENERATED FROM PYTHON SOURCE LINES 226-237
 
 ----------------------
 
@@ -448,10 +446,22 @@ substitute to the FMU for
 
 etc.
 
+.. GENERATED FROM PYTHON SOURCE LINES 240-241
+
+.. code-block:: Python
+
+    otv.View.ShowAll()
+
+
+
+
+
+
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.753 seconds)
+   **Total running time of the script:** (0 minutes 0.728 seconds)
 
 
 .. _sphx_glr_download_auto_application_plot_metamodel.py:
