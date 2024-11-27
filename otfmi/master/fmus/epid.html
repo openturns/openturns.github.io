@@ -116,20 +116,21 @@ An Infected becomes Removed after an infection duration (<img class="math" src="
 <p>The evolution of the number of Susceptibles, Infected and Removed over
 time writes:</p>
 <div class="math">
-<p><img src="../_images/math/f83cc7728de18d3907b9dcae1bcf7ada86b8d148.svg" alt="\begin{aligned}
-\frac{\partial S}{\partial t}(t) &amp;= - \beta S(t) I(t) \\
-\frac{\partial I}{\partial t}(t) &amp;= \beta S(t) I(t) - \gamma I(t) \\
+<p><img src="../_images/math/3abc38bbb9d6b8f656c36a26661f6d1d34003f0f.svg" alt="\begin{aligned}
+\frac{\partial S}{\partial t}(t) &amp;= - \frac{\beta}{N} S(t) I(t) \\
+\frac{\partial I}{\partial t}(t) &amp;= \frac{\beta}{N} S(t) I(t) - \gamma I(t) \\
 \frac{\partial R}{\partial t}(t) &amp;= \gamma I(t)
 \end{aligned}"/></p>
 </div><p>This model is implemented in Modelica language. The default simulation time is 50 units of time (days for instance).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="n">epid</span>
 
-<span class="n">parameter</span> <span class="n">Real</span> <span class="n">total_pop</span> <span class="o">=</span> <span class="mi">700</span><span class="p">;</span>
+<span class="n">parameter</span> <span class="n">Real</span> <span class="n">total_pop</span> <span class="o">=</span> <span class="mi">763</span><span class="p">;</span>
+<span class="n">parameter</span> <span class="n">Real</span> <span class="n">infection_rate</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">;</span>
+<span class="n">parameter</span> <span class="n">Real</span> <span class="n">healing_rate</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span>
+
 <span class="n">Real</span> <span class="n">infected</span><span class="p">;</span>
 <span class="n">Real</span> <span class="n">susceptible</span><span class="p">;</span>
 <span class="n">Real</span> <span class="n">removed</span><span class="p">;</span>
-<span class="n">parameter</span> <span class="n">Real</span> <span class="n">infection_rate</span> <span class="o">=</span> <span class="mf">0.007</span><span class="p">;</span>
-<span class="n">parameter</span> <span class="n">Real</span> <span class="n">healing_rate</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">;</span>
 
 <span class="n">initial</span> <span class="n">equation</span>
 <span class="n">infected</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
@@ -137,12 +138,13 @@ time writes:</p>
 <span class="n">total_pop</span> <span class="o">=</span> <span class="n">infected</span> <span class="o">+</span> <span class="n">susceptible</span> <span class="o">+</span> <span class="n">removed</span><span class="p">;</span>
 
 <span class="n">equation</span>
-<span class="n">der</span><span class="p">(</span><span class="n">susceptible</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span> <span class="n">infection_rate</span><span class="o">*</span><span class="n">infected</span><span class="o">*</span><span class="n">susceptible</span><span class="p">;</span>
-<span class="n">der</span><span class="p">(</span><span class="n">infected</span><span class="p">)</span> <span class="o">=</span> <span class="n">infection_rate</span><span class="o">*</span><span class="n">infected</span><span class="o">*</span><span class="n">susceptible</span> <span class="o">-</span> <span class="n">healing_rate</span><span class="o">*</span><span class="n">infected</span><span class="p">;</span>
-<span class="n">der</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">=</span> <span class="n">healing_rate</span><span class="o">*</span><span class="n">infected</span><span class="p">;</span>
+<span class="n">der</span><span class="p">(</span><span class="n">susceptible</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span> <span class="n">infection_rate</span> <span class="o">*</span> <span class="n">infected</span> <span class="o">*</span> <span class="n">susceptible</span> <span class="o">/</span> <span class="n">total_pop</span><span class="p">;</span>
+<span class="n">der</span><span class="p">(</span><span class="n">infected</span><span class="p">)</span> <span class="o">=</span> <span class="n">infection_rate</span> <span class="o">*</span> <span class="n">infected</span> <span class="o">*</span> <span class="n">susceptible</span> <span class="o">/</span> <span class="n">total_pop</span> <span class="o">-</span>
+                <span class="n">healing_rate</span> <span class="o">*</span> <span class="n">infected</span><span class="p">;</span>
+<span class="n">der</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">=</span> <span class="n">healing_rate</span> <span class="o">*</span> <span class="n">infected</span><span class="p">;</span>
 
 <span class="n">annotation</span><span class="p">(</span>
-    <span class="n">experiment</span><span class="p">(</span><span class="n">StartTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">StopTime</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">Tolerance</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="n">Interval</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">));</span>
+    <span class="n">experiment</span><span class="p">(</span><span class="n">StartTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">StopTime</span> <span class="o">=</span> <span class="mf">200.0</span><span class="p">,</span> <span class="n">Tolerance</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="n">Interval</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">));</span>
 <span class="n">end</span> <span class="n">epid</span><span class="p">;</span>
 </pre></div>
 </div>
