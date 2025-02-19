@@ -2,6 +2,7 @@ import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 
+ot.RandomGenerator.SetSeed(0)
 title = None
 if "Pareto" == "Bernoulli":
     distribution = ot.Bernoulli(0.7)

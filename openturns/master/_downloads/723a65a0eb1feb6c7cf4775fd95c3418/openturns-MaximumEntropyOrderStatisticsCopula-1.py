@@ -2,6 +2,8 @@ import openturns as ot
 import openturns.experimental as otexp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
+
+ot.RandomGenerator.SetSeed(0)
 if "MaximumEntropyOrderStatisticsCopula" == "EmpiricalBernsteinCopula":
     sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
     copula = ot.EmpiricalBernsteinCopula(sample, 4)

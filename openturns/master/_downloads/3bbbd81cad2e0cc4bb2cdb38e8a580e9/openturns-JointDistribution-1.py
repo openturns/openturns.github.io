@@ -1,6 +1,8 @@
 import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
+
+ot.RandomGenerator.SetSeed(0)
 if "JointDistribution" == "BlockIndependentCopula":
     distribution = ot.BlockIndependentCopula([ot.ClaytonCopula(2.0), ot.GumbelCopula(3.0)])
 elif "JointDistribution" == "JointDistribution":
