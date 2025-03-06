@@ -38,7 +38,7 @@
 <h1>otwrapy.TempWorkDir<a class="headerlink" href="#otwrapy-tempworkdir" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="otwrapy.TempWorkDir">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TempWorkDir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_temp_work_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'run-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otwrapy.TempWorkDir" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TempWorkDir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_temp_work_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'run-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otwrapy.TempWorkDir" title="Link to this definition">¶</a></dt>
 <dd><p>Implement a context manager that creates a temporary working directory.</p>
 <p>Create a temporary working directory on <cite>base_temp_work_dir</cite> preceded by
 <cite>prefix</cite> and clean up at the exit if necessary.
@@ -46,17 +46,20 @@ See: <a class="reference external" href="http://sametmax.com/les-context-manager
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>base_temp_work_dir</strong><span class="classifier">str (optional)</span></dt><dd><p>Root path where the temporary working directory will be created. If None,
+<dt><strong>base_temp_work_dir</strong><span class="classifier">str, optional</span></dt><dd><p>Root path where the temporary working directory will be created. If None,
 it will default to the platform dependant temporary working directory
 Default = None</p>
 </dd>
-<dt><strong>prefix</strong><span class="classifier">str (optional)</span></dt><dd><p>String that preceeds the directory name.
+<dt><strong>prefix</strong><span class="classifier">str, optional</span></dt><dd><p>String that preceeds the directory name.
 Default = ‘run-’</p>
 </dd>
-<dt><strong>cleanup</strong><span class="classifier">bool (optional)</span></dt><dd><p>If True erase the directory and its children at the exit.
+<dt><strong>cleanup</strong><span class="classifier">bool, optional</span></dt><dd><p>If True erase the directory and its children at the exit.
 Default = False</p>
 </dd>
-<dt><strong>transfer</strong><span class="classifier">list (optional)</span></dt><dd><p>List of files or folders to transfer to the temporary working directory</p>
+<dt><strong>transfer</strong><span class="classifier">list, optional</span></dt><dd><p>List of files or folders to transfer to the temporary working directory</p>
+</dd>
+<dt><strong>chdir</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to change directory to the temporary working directory.
+Default is False, should not be necessary and intended for backward compatibility only.</p>
 </dd>
 </dl>
 </dd>
@@ -65,35 +68,19 @@ Default = False</p>
 <p>In the following example, everything that is executed inside the <cite>with</cite>
 environment will happen at a temporary working directory created at
 <code class="file docutils literal notranslate"><span class="pre">/tmp</span></code> with <code class="file docutils literal notranslate"><span class="pre">/run-</span></code> as a prefix. The created directory will be
-erased upon the exit of the  <cite>with</cite> environment and python will go
-back to the preceding working directory, even if an Exception is raised.</p>
+erased upon the exit of the <cite>with</cite> environment, even if an Exception is raised.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">otwrapy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otw</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="s2">&quot;I&#39;m on my project directory&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">otw</span><span class="o">.</span><span class="n">TempWorkDir</span><span class="p">(</span><span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;run-&#39;</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="c1">#</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># Do stuff</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="c1">#</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="s2">&quot;...&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="s2">&quot;Now I&#39;m in a temporary directory&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="s2">&quot;...&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="s2">&quot;I&#39;m back to my project directory :&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="go">I&#39;m on my project directory</span>
-<span class="go">/home/aguirre/otwrapy</span>
-<span class="go">...</span>
-<span class="go">Now I&#39;m in a temporary directory</span>
-<span class="go">/tmp/run-pZYpzQ</span>
-<span class="go">...</span>
-<span class="go">I&#39;m back to my project directory :</span>
-<span class="go">/home/aguirre/otwrapy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">otw</span><span class="o">.</span><span class="n">TempWorkDir</span><span class="p">(</span><span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;run-&#39;</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">cwd</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span> <span class="nb">print</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span> <span class="c1"># [write input files]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;myexe&quot;</span><span class="p">,</span> <span class="s2">&quot;input.txt&quot;</span><span class="p">],</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span> <span class="c1"># [read output files]</span>
 </pre></div>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="otwrapy.TempWorkDir.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_temp_work_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'run-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otwrapy.TempWorkDir.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_temp_work_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'run-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otwrapy.TempWorkDir.__init__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
