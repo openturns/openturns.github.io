@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sphx_glr.css?v=2ae27345" />
     <script src="../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
     <script src="../../_static/documentation_options.js?v=e2d0d5e7"></script>
@@ -130,10 +131,8 @@ to download the full example code.</p>
 <section class="sphx-glr-example-title" id="optimization-using-dlib">
 <span id="sphx-glr-auto-numerical-methods-optimization-plot-optimization-dlib-py"></span><h1>Optimization using dlib<a class="headerlink" href="#optimization-using-dlib" title="Link to this heading">¶</a></h1>
 <p>In this example we are going to explore optimization using the interface to the <a class="reference external" href="http://dlib.net/">dlib</a> library.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viewer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otv</span>
 
 <span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
 </pre></div>
@@ -273,13 +272,14 @@ Constraint error:  0.0
 The bounds defined for input variables are always strictly respected when using dlib algorithms. Consequently, the constraint error is always 0.</p>
 <p>Draw optimal value history</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_optimization_dlib_001.png" srcset="../../_images/sphx_glr_plot_optimization_dlib_001.png" alt="Optimal value history" class = "sphx-glr-single-img"/></section>
 <section id="solving-least-squares-problem">
 <h2>Solving least squares problem<a class="headerlink" href="#solving-least-squares-problem" title="Link to this heading">¶</a></h2>
-<p>In least squares problem, the user provides the residual function to minimize. Here the underlying OptimizationProblem is defined as a LeastSquaresProblem.</p>
+<p>In least squares problem, the user provides the residual function to minimize.
+Here the underlying OptimizationProblem is defined as a LeastSquaresProblem.</p>
 <p>dlib least squares algorithms use the same stop criteria as CG, BFGS/LBFGS and Newton algorithms.
 However, optimization will stop earlier if no significant improvement can be achieved during the process.</p>
 <p>Define residual function</p>
@@ -292,12 +292,13 @@ However, optimization will stop earlier if no significant improvement can be ach
 <span class="n">modelx</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">p_ref</span><span class="p">)</span>
 
 <span class="c1"># Generate reference sample (with normal noise)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">modelx</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
+<span class="n">x00</span> <span class="o">=</span> <span class="n">modelx</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">x00</span> <span class="o">*</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">getRealization</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">residualFunction</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
     <span class="n">modelx</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">modelx</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">modelx</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
 </pre></div>
 </div>
 <p>Definition of residual as ot.PythonFunction and optimization problem</p>
@@ -324,26 +325,26 @@ However, optimization will stop earlier if no significant improvement can be ach
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constraint error: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getConstraintError</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>x^ =  [2.66834,1.14357,0.5]
-f(x^) =  [5.47812e-22]
-Iteration number:  7
-Evaluation number:  8
-Absolute error:  3.694436675128635e-06
-Relative error:  1.2541319957698637e-06
-Residual error:  7.423486914397966e-12
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>x^ =  [3.80846,0.0397634,0.453575]
+f(x^) =  [0.404762]
+Iteration number:  38
+Evaluation number:  48
+Absolute error:  7.463034762816493e-07
+Relative error:  1.9457370063766787e-07
+Residual error:  2.4980018054066022e-15
 Constraint error:  0.0
 </pre></div>
 </div>
 <p>Draw errors history</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">drawErrorHistory</span><span class="p">()</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_optimization_dlib_002.png" srcset="../../_images/sphx_glr_plot_optimization_dlib_002.png" alt="Error history" class = "sphx-glr-single-img"/><p>Draw optimal value history</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_plot_optimization_dlib_003.png" srcset="../../_images/sphx_glr_plot_optimization_dlib_003.png" alt="Optimal value history" class = "sphx-glr-single-img"/><div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-numerical-methods-optimization-plot-optimization-dlib-py">
