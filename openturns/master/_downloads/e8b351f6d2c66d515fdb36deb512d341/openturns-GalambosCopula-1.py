@@ -9,9 +9,6 @@ if "GalambosCopula" == "EmpiricalBernsteinCopula":
     copula = ot.EmpiricalBernsteinCopula(sample, 4)
 elif "GalambosCopula" == "ExtremeValueCopula":
     copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-elif "GalambosCopula" == "MaximumEntropyOrderStatisticsCopula":
-    marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-    copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
 elif "GalambosCopula" == "NormalCopula":
     R = ot.CorrelationMatrix(2)
     R[1, 0] = 0.8

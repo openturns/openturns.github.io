@@ -9,9 +9,6 @@ if "StudentCopula" == "EmpiricalBernsteinCopula":
     copula = ot.EmpiricalBernsteinCopula(sample, 4)
 elif "StudentCopula" == "ExtremeValueCopula":
     copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-elif "StudentCopula" == "MaximumEntropyOrderStatisticsCopula":
-    marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-    copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
 elif "StudentCopula" == "NormalCopula":
     R = ot.CorrelationMatrix(2)
     R[1, 0] = 0.8
