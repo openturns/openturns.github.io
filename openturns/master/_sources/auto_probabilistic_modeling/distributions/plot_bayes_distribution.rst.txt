@@ -18,29 +18,28 @@
 .. _sphx_glr_auto_probabilistic_modeling_distributions_plot_bayes_distribution.py:
 
 
-Create a Bayes distribution
-===========================
+Create a Joint by Conditioning  distribution
+============================================
 
 .. GENERATED FROM PYTHON SOURCE LINES 7-17
 
-In this example we are going to build the distribution of the random vector
+In this example we are going to build the distribution of the random vector:
 
 .. math::
    (Y, \vect{X}|\vect{\Theta})
 
-with :math:`\vect{X}` conditioned by the random vector :math:`\vect{\Theta}` obtained with the random variable :math:`Y` through a function :math:`f`
+with :math:`\vect{X}` conditioned by the random vector :math:`\vect{\Theta}` obtained with the random variable :math:`Y` through a function :math:`f`:
 
 .. math::
-   \vect{\Theta}=f(Y)
+   \vect{\Theta} = f(\vect{Y})
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-25
+.. GENERATED FROM PYTHON SOURCE LINES 19-24
 
 .. code-block:: Python
 
     import openturns as ot
     import openturns.viewer as viewer
-    from matplotlib import pylab as plt
 
     ot.Log.Show(ot.Log.NONE)
 
@@ -51,14 +50,16 @@ with :math:`\vect{X}` conditioned by the random vector :math:`\vect{\Theta}` obt
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 25-29
 
-Create the :math:`Y` distribution
+We consider the following case: :math:`X|\vect{\Theta} \sim \cN(\vect{\Theta})`
+with :math:`\vect{\Theta} = (Y, 0.1 + Y^2)` and :math:`Y \sim \cN(0,1)`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-30
+We first create the :math:`Y` distribution:
+
+.. GENERATED FROM PYTHON SOURCE LINES 29-31
 
 .. code-block:: Python
-
 
     YDist = ot.Normal(0.0, 1.0)
 
@@ -69,11 +70,11 @@ Create the :math:`Y` distribution
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
-Create :math:`\vect{\Theta}=f(Y)`
+Then we create the link function :math:`f: y \rightarrow (y, 0.1+y^2)`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-34
+.. GENERATED FROM PYTHON SOURCE LINES 33-35
 
 .. code-block:: Python
 
@@ -86,14 +87,13 @@ Create :math:`\vect{\Theta}=f(Y)`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
-Create the :math:`\vect{X}|\vect{\Theta}` distribution
+Then, we create the :math:`\vect{X}|\vect{\Theta}` distribution:
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-39
+.. GENERATED FROM PYTHON SOURCE LINES 37-39
 
 .. code-block:: Python
-
 
     XgivenThetaDist = ot.Normal()
 
@@ -106,14 +106,14 @@ Create the :math:`\vect{X}|\vect{\Theta}` distribution
 
 .. GENERATED FROM PYTHON SOURCE LINES 40-41
 
-create the distribution
+At last, we create the distribution of :math:`(Y,X)`:
 
 .. GENERATED FROM PYTHON SOURCE LINES 41-45
 
 .. code-block:: Python
 
     XDist = ot.JointByConditioningDistribution(XgivenThetaDist, YDist, f)
-    XDist.setDescription(["X|Theta=f(y)", "y"])
+    XDist.setDescription(["Y", r"$X|\mathbf{\boldsymbol{\Theta}} = f(Y)$"])
     XDist
 
 
@@ -131,7 +131,7 @@ create the distribution
       <li>weight=1</li>
       <li>range=]-inf (-7.65063), (7.65063) +inf[
     ]-inf (-396.355), (396.355) +inf[</li>
-      <li>description=[X|Theta=f(y),y]</li>
+      <li>description=[Y,$X|\mathbf{\boldsymbol{\Theta}} = f(Y)$]</li>
       <li>isParallel=false</li>
       <li>isCopula=false</li>
     </ul>
@@ -142,7 +142,7 @@ create the distribution
 
 .. GENERATED FROM PYTHON SOURCE LINES 46-47
 
-Get a sample
+Get a sample:
 
 .. GENERATED FROM PYTHON SOURCE LINES 47-49
 
@@ -159,26 +159,40 @@ Get a sample
 
 .. GENERATED FROM PYTHON SOURCE LINES 50-51
 
-Draw PDF
+Draw the PDF:
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-58
+.. GENERATED FROM PYTHON SOURCE LINES 51-60
 
 .. code-block:: Python
 
-    graph = XDist.drawPDF()
+    ot.ResourceMap.SetAsString("Contour-DefaultColorMapNorm", "rank")
+    graph = XDist.drawPDF(sample.getMin(), sample.getMax(), [256] * 2)
+    graph.setTitle(r"$(Y,X)$ iso-PDF")
     cloud = ot.Cloud(sample)
     cloud.setColor("red")
     cloud.setLegend("sample")
     graph.add(cloud)
     view = viewer.View(graph)
-    plt.show()
+
 
 
 
 .. image-sg:: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_bayes_distribution_001.png
-   :alt: X|Theta=f(y) iso-PDF
+   :alt: $(Y,X)$ iso-PDF
    :srcset: /auto_probabilistic_modeling/distributions/images/sphx_glr_plot_bayes_distribution_001.png
    :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
+
+.. code-block:: Python
+
+    view.ShowAll()
+
+
 
 
 
