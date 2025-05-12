@@ -379,60 +379,6 @@ into a training set and a test set.</p>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">outputDimension</span><span class="p">):</span>
         <span class="n">r2Score</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">mse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">sampleVariance</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">r2Score</span>
-
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute mean squared error by (naive) KFold.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    inputSample : Sample(size, input_dimension)</span>
-<span class="sd">        The inputSample dataset.</span>
-<span class="sd">    outputSample : Sample(size, output_dimension)</span>
-<span class="sd">        The outputSample dataset.</span>
-<span class="sd">    multivariateBasis : multivariateBasis</span>
-<span class="sd">        The multivariate chaos multivariateBasis.</span>
-<span class="sd">    totalDegree : int</span>
-<span class="sd">        The total degree of the chaos polynomial.</span>
-<span class="sd">    distribution : Distribution.</span>
-<span class="sd">        The distribution of the input variable.</span>
-<span class="sd">    kParameter : int, in (2, sampleSize)</span>
-<span class="sd">        The parameter K.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    mse : Point(output_dimension)</span>
-<span class="sd">        The mean squared error.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#</span>
-    <span class="n">sampleSize</span> <span class="o">=</span> <span class="n">inputSample</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-    <span class="n">outputDimension</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
-    <span class="n">splitter</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KFoldSplitter</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">,</span> <span class="n">kParameter</span><span class="p">)</span>
-    <span class="n">squaredResiduals</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">,</span> <span class="n">outputDimension</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">indicesTrain</span><span class="p">,</span> <span class="n">indicesTest</span> <span class="ow">in</span> <span class="n">splitter</span><span class="p">:</span>
-        <span class="n">inputSampleTrain</span><span class="p">,</span> <span class="n">inputSampleTest</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">inputSample</span><span class="p">[</span><span class="n">indicesTrain</span><span class="p">],</span>
-            <span class="n">inputSample</span><span class="p">[</span><span class="n">indicesTest</span><span class="p">],</span>
-        <span class="p">)</span>
-        <span class="n">outputSampleTrain</span><span class="p">,</span> <span class="n">outputSampleTest</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">outputSample</span><span class="p">[</span><span class="n">indicesTrain</span><span class="p">],</span>
-            <span class="n">outputSample</span><span class="p">[</span><span class="n">indicesTest</span><span class="p">],</span>
-        <span class="p">)</span>
-        <span class="n">chaosResultKFold</span> <span class="o">=</span> <span class="n">compute_sparse_least_squares_chaos</span><span class="p">(</span>
-            <span class="n">inputSampleTrain</span><span class="p">,</span>
-            <span class="n">outputSampleTrain</span><span class="p">,</span>
-            <span class="n">multivariateBasis</span><span class="p">,</span>
-            <span class="n">totalDegree</span><span class="p">,</span>
-            <span class="n">distribution</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">metamodelKFold</span> <span class="o">=</span> <span class="n">chaosResultKFold</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
-        <span class="n">predictionsKFold</span> <span class="o">=</span> <span class="n">metamodelKFold</span><span class="p">(</span><span class="n">inputSampleTest</span><span class="p">)</span>
-        <span class="n">residualsKFold</span> <span class="o">=</span> <span class="n">outputSampleTest</span> <span class="o">-</span> <span class="n">predictionsKFold</span>
-        <span class="n">foldSize</span> <span class="o">=</span> <span class="n">indicesTest</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">outputDimension</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">foldSize</span><span class="p">):</span>
-                <span class="n">squaredResiduals</span><span class="p">[</span><span class="n">indicesTest</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">residualsKFold</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
-    <span class="n">mse</span> <span class="o">=</span> <span class="n">squaredResiduals</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">mse</span>
 </pre></div>
 </div>
 </section>
@@ -586,7 +532,7 @@ FunctionalChaosResult
 <section id="validate-the-metamodel-from-a-test-set">
 <h2>Validate the metamodel from a test set<a class="headerlink" href="#validate-the-metamodel-from-a-test-set" title="Link to this heading">¶</a></h2>
 <p>In order to validate our polynomial chaos, we generate an extra pair of
-input / output samples and use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a> class.</p>
+input / output samples and use the <a class="reference internal" href="../../user_manual/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a> class.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">test_sample_size</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># Size of the validation design of experiments</span>
 <span class="n">inputTest</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">inputDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">test_sample_size</span><span class="p">)</span>
 <span class="n">outputTest</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
