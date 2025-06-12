@@ -9,7 +9,6 @@ Import / export a sample via a CSV file
 # %%
 import openturns as ot
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # Create a sample from a 2-d Gaussian distribution.
@@ -30,4 +29,10 @@ with open("sample.csv", "r") as f:
 # %%
 # Read the previous CSV file.
 sample = ot.Sample.ImportFromCSVFile("sample.csv", ",")
+print(sample)
+
+# %%
+# ImportFromTextFile can also be used for the same purpose
+# although it allows more permissive formats with whitespace separator, comments, etc.
+sample = ot.Sample.ImportFromTextFile("sample.csv", ",")
 print(sample)

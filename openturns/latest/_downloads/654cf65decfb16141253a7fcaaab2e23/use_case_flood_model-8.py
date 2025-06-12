@@ -1,6 +1,6 @@
 import openturns as ot
 import openturns.viewer as otv
-import pylab as pl
+from matplotlib import pyplot as plt
 from openturns.usecases import flood_model
 
 fm = flood_model.FloodModel()
@@ -27,4 +27,4 @@ view = otv.View(
     graph,
     figure_kw={"figsize": (6.0, 4.0)},
 )
-pl.subplots_adjust(right=0.7)
+plt.subplots_adjust(right=0.7)

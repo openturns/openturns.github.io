@@ -228,7 +228,7 @@ sample = standardLogNormal.getSample(1000)
 
 # %%
 logNormalFactoryWithZeroLocation = ot.MaximumLikelihoodFactory(standardLogNormal)
-logNormalFactoryWithZeroLocation.setKnownParameter([0.0], [2])
+logNormalFactoryWithZeroLocation.setKnownParameter([2], [0.0])
 lowerBound = [-5.0, 1.0e-4]
 upperBound = [5.0, -1.0]
 finiteLowerBound = [True, True]
@@ -290,7 +290,3 @@ solver.setStartingPoint(startingPoint)
 logNormalFactoryWithZeroLocation.setOptimizationAlgorithm(solver)
 fittedDistribution = logNormalFactoryWithZeroLocation.build(sample)
 print("   fittedDistribution = ", fittedDistribution)
-
-# %%
-# Reset altered entries
-ot.ResourceMap.Reload()

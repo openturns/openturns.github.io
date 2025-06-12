@@ -17,9 +17,8 @@ Estimate correlation coefficients
 from openturns.usecases import ishigami_function
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # To illustrate the usage of the method mentioned above, we define a set of `X` and `Y` data using the :ref:`Ishigami model <use-case-ishigami>`.

@@ -21,7 +21,6 @@ distribution = beam.independentDistribution
 
 # %%
 # Generate a learning sample with Monte-Carlo simulation (or retrieve the design from experimental data).
-ot.RandomGenerator.SetSeed(0)
 N = 30  # size of the experimental design
 X = distribution.getSample(N)
 Y = g(X)
@@ -30,7 +29,6 @@ Y = g(X)
 # Build a chaos metamodel
 algo = ot.FunctionalChaosAlgorithm(X, Y, distribution)
 algo.run()
-assert algo.getResult().getResiduals()[0] < 1e-12
 metamodel = algo.getResult().getMetaModel()
 
 # %%

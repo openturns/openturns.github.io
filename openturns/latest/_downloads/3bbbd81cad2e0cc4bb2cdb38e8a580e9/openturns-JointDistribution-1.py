@@ -1,6 +1,8 @@
 import openturns as ot
 from matplotlib import pyplot as plt
 from openturns.viewer import View
+
+ot.RandomGenerator.SetSeed(0)
 if "JointDistribution" == "BlockIndependentCopula":
     distribution = ot.BlockIndependentCopula([ot.ClaytonCopula(2.0), ot.GumbelCopula(3.0)])
 elif "JointDistribution" == "JointDistribution":
@@ -45,7 +47,7 @@ for j in range(dimension):
             pdf_contour = pdf_graph.getDrawable(0).getImplementation()
             pdf_contour.setColorBarPosition("")
             pdf_contour.setColorMapNorm("rank")
-            pdf_graph.setDrawable(pdf_contour, 0)
+            pdf_graph.setDrawable(0, pdf_contour)
             cloud = ot.Cloud(sample.getMarginal([i, j]))
             cloud.setPointStyle("dot")
             pdf_graph.add(cloud)

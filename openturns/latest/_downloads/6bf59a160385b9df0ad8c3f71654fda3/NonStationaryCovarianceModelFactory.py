@@ -3,7 +3,7 @@ from math import exp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
 
-
+ot.RandomGenerator.SetSeed(0)
 # Create the covariance function at (s,t)
 
 
@@ -29,7 +29,7 @@ for i in range(alld.getSize()):
     d = alld[i]
     d.setLineStyle("twodash")
     d.setLineWidth(2)
-    myGraphRef.setDrawable(d, i)
+    myGraphRef.setDrawable(i, d)
     levels[i] = d.getLevels()[0]
 
 

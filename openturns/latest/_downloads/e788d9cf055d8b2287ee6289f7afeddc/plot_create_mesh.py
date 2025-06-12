@@ -6,11 +6,8 @@ Create a mesh
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 import math as m
-
-ot.Log.Show(ot.Log.NONE)
-
 
 # %%
 # Creation of a regular grid
@@ -131,6 +128,7 @@ view = viewer.View(graphMappedBox)
 
 # %%
 # Finally we create a mesh of a heart in dimension 2.
+# sphinx_gallery_thumbnail_number = 6
 def meshHeart(ntheta, nr):
     # First, build the nodes
     nodes = ot.Sample(0, 2)

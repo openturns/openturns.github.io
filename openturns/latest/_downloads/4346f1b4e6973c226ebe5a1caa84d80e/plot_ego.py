@@ -5,7 +5,7 @@ EfficientGlobalOptimization examples
 
 # %%
 # The EGO algorithm [jones1998]_ is an adaptative optimization method based on
-# kriging.
+# Gaussian Process metamodel.
 #
 # An initial design of experiment is used to build a first metamodel.
 # At each iteration a new point that maximizes a criterion is chosen as
@@ -22,12 +22,8 @@ EfficientGlobalOptimization examples
 from openturns.usecases import branin_function
 from openturns.usecases import ackley_function
 import openturns as ot
+import openturns.experimental as otexp
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.RandomGenerator.SetSeed(0)
-ot.ResourceMap.SetAsString("KrigingAlgorithm-LinearAlgebra", "LAPACK")
-ot.Log.Show(ot.Log.NONE)
 
 
 # %%
@@ -72,10 +68,10 @@ view = viewer.View(graph)
 # We see that the Ackley function has many local minimas. The global minimum, however, is unique and located at the center of the domain.
 
 # %%
-# Create the initial kriging
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^
+# Create the initial GP
+# ^^^^^^^^^^^^^^^^^^^^^
 #
-# Before using the EGO algorithm, we must create an initial kriging.
+# Before using the EGO algorithm, we must create an initial GP metamodel.
 # In order to do this, we must create a design of experiment which fills the space.
 # In this situation, the :class:`~openturns.LHSExperiment` is a good place to start (but other design of experiments may allow one to better fill the space).
 # We use a uniform distribution in order to create a LHS design.
@@ -100,14 +96,16 @@ graph.add(cloud)
 view = viewer.View(graph)
 
 # %%
-# We now create the kriging metamodel.
+# We now create the GP metamodel.
 # We selected the :class:`~openturns.MaternModel` covariance model with a constant basis as recommended in [leriche2021]_.
 
 # %%
 covarianceModel = ot.MaternModel([1.0] * dim, [0.5], 2.5)
 basis = ot.ConstantBasisFactory(dim).build()
-kriging = ot.KrigingAlgorithm(inputSample, outputSample, covarianceModel, basis)
-kriging.run()
+fitter = otexp.GaussianProcessFitter(inputSample, outputSample, covarianceModel, basis)
+fitter.run()
+gpr = otexp.GaussianProcessRegression(fitter.getResult())
+gpr.run()
 
 # %%
 # Create the optimization problem
@@ -124,11 +122,11 @@ problem.setBounds(bounds)
 # %%
 # In order to show the various options, we configure them all, even if most could be left to default settings in this case.
 #
-# The most important method is :class:`~openturns.EfficientGlobalOptimization.setMaximumCallsNumber` which limits the number of iterations that the algorithm can perform.
+# The most important method is :class:`~openturns.experimental.EfficientGlobalOptimization.setMaximumCallsNumber` which limits the number of iterations that the algorithm can perform.
 # In the Ackley example, we choose to perform 30 iterations of the algorithm.
 
 # %%
-algo = ot.EfficientGlobalOptimization(problem, kriging.getResult())
+algo = otexp.EfficientGlobalOptimization(problem, gpr.getResult())
 algo.setMaximumCallsNumber(30)
 algo.run()
 result = algo.getResult()
@@ -203,9 +201,9 @@ lowerbound = bm.lowerbound
 upperbound = bm.upperbound
 
 # %%
-# and we load the model function and its noise :
+# and we load the model function and its noise:
 objectiveFunction = bm.model
-noise = bm.noiseModel
+noise = bm.trueNoiseFunction
 
 # %%
 # We build a sample out of the three minima :
@@ -225,8 +223,8 @@ view = viewer.View(graph)
 # The Branin function has three local minimas.
 
 # %%
-# Create the initial kriging
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^
+# Create the initial GP
+# ^^^^^^^^^^^^^^^^^^^^^
 
 # %%
 distribution = ot.JointDistribution([ot.Uniform(0.0, 1.0)] * dim)
@@ -234,7 +232,6 @@ sampleSize = 10 * dim
 experiment = ot.LHSExperiment(distribution, sampleSize)
 inputSample = experiment.generate()
 outputSample = objectiveFunction(inputSample)
-noiseSample = noise(inputSample)
 
 # %%
 graph = ot.Graph(
@@ -245,13 +242,17 @@ graph.add(cloud)
 view = viewer.View(graph)
 
 # %%
+# Configure the covariance model with the noise
 covarianceModel = ot.MaternModel([1.0] * dim, [0.5], 2.5)
-basis = ot.ConstantBasisFactory(dim).build()
-kriging = ot.KrigingAlgorithm(inputSample, outputSample, covarianceModel, basis)
+covarianceModel.setNuggetFactor(noise)
 
 # %%
-kriging.setNoise([x[0] for x in noiseSample])
-kriging.run()
+# Build the initial GP
+basis = ot.ConstantBasisFactory(dim).build()
+fitter = otexp.GaussianProcessFitter(inputSample, outputSample, covarianceModel, basis)
+fitter.run()
+gpr = otexp.GaussianProcessRegression(fitter.getResult())
+gpr.run()
 
 # %%
 # Create and solve the problem
@@ -265,8 +266,9 @@ bounds = ot.Interval(lowerbound, upperbound)
 problem.setBounds(bounds)
 
 # %%
-# We configure the algorithm, with the model noise:
-algo = ot.EfficientGlobalOptimization(problem, kriging.getResult(), noise)
+# We configure the algorithm
+# the nugget factor set in the covariance model with enable the AEI formulation
+algo = otexp.EfficientGlobalOptimization(problem, gpr.getResult())
 algo.setMaximumCallsNumber(30)
 
 # %%
@@ -310,8 +312,7 @@ graph = result.drawOptimalValueHistory()
 optimum_curve = ot.Curve(ot.Sample([[0, fexact[0][0]], [29, fexact[0][0]]]))
 graph.add(optimum_curve)
 view = viewer.View(graph, axes_kw={"xticks": range(0, result.getIterationNumber(), 5)})
-plt.show()
+
 
 # %%
-# Reset default settings
-ot.ResourceMap.Reload()
+viewer.View.ShowAll()

@@ -15,10 +15,6 @@ Fit a non parametric distribution
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
 
 # %%
 # An introductory example
@@ -27,7 +23,6 @@ ot.Log.Show(ot.Log.NONE)
 
 # %%
 # We create the data from a :class:`~openturns.Gamma` distribution :
-ot.RandomGenerator.SetSeed(0)
 distribution = ot.Gamma(6.0, 1.0)
 sample = distribution.getSample(800)
 
@@ -320,4 +315,5 @@ for i, distribution in enumerate(distCollection):
 
 view = viewer.View(grid)
 
-plt.show()
+# %%
+viewer.View.ShowAll()

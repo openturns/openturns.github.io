@@ -20,7 +20,6 @@ from openturns.usecases import stiffened_panel
 import openturns as ot
 import openturns.viewer as viewer
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # We load the stiffened panel model from the usecases module :
@@ -77,8 +76,8 @@ optimAlgo.setMaximumConstraintError(1.0e-10)
 # Run FORM.
 
 # %%
-startingPoint = distribution.getMean()
-algo = ot.FORM(optimAlgo, event, startingPoint)
+optimAlgo.setStartingPoint(distribution.getMean())
+algo = ot.FORM(optimAlgo, event)
 n0 = model.getCallsNumber()
 algo.run()
 n1 = model.getCallsNumber()
@@ -108,7 +107,7 @@ view = viewer.View(graph)
 # Run SORM.
 
 # %%
-algo = ot.SORM(optimAlgo, event, startingPoint)
+algo = ot.SORM(optimAlgo, event)
 n0 = model.getCallsNumber()
 algo.run()
 n1 = model.getCallsNumber()

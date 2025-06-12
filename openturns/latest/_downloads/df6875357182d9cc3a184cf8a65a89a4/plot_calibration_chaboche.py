@@ -44,10 +44,9 @@ variables and observed output variables.
 # %%
 import openturns as ot
 import openturns.viewer as otv
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 from openturns.usecases import chaboche_model
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # Define the observations
@@ -60,7 +59,6 @@ ot.Log.Show(ot.Log.NONE)
 # class.
 
 # %%
-ot.RandomGenerator.SetSeed(0)
 cm = chaboche_model.ChabocheModel()
 print(cm.data)
 observedStrain = cm.data[:, 0]
@@ -410,7 +408,7 @@ def plotDistributionGridPDF(distribution):
                 graph = distributionJI.drawPDF()
                 contour = graph.getDrawable(0).getImplementation()
                 contour.setColorBarPosition("")  # Hide color bar
-                graph.setDrawable(contour, 0)
+                graph.setDrawable(0, contour)
             graph.setLegends([""])
             graph.setTitle("")
             if i < dimension - 1:
@@ -893,9 +891,4 @@ plt.subplots_adjust(wspace=plot_space, hspace=plot_space)
 # parameter are close to each other, but not superimposed: the observations
 # significantly brought information to the variable :math:`\gamma` during
 # the calibration.
-
 otv.View.ShowAll()
-
-# %%
-# Reset default settings
-ot.ResourceMap.Reload()

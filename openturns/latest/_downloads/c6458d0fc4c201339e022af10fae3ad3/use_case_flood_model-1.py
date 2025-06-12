@@ -1,6 +1,5 @@
 import openturns as ot
 import openturns.viewer as otv
-import pylab as pl
 from openturns.usecases import flood_model
 
 fm = flood_model.FloodModel()

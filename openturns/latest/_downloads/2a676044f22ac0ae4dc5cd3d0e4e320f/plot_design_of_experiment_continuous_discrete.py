@@ -9,9 +9,8 @@ Create a design of experiments with discrete and continuous variables
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # To create the first marginal of the distribution, we select a univariate discrete distribution.

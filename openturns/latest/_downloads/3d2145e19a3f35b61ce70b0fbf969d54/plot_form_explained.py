@@ -1,4 +1,4 @@
-"""
+r"""
 An illustrated example of a FORM probability estimate
 =====================================================
 """
@@ -15,6 +15,8 @@ An illustrated example of a FORM probability estimate
 import openturns as ot
 import openturns.viewer as otv
 import numpy as np
+
+# sphinx_gallery_thumbnail_number = 8
 
 # %%
 # Context
@@ -40,10 +42,11 @@ graph_PDF.setXTitle(r"$x_1$")
 graph_PDF.setYTitle(r"$x_2$")
 graph_PDF.setLegendPosition("lower right")
 contours = graph_PDF.getDrawable(0).getImplementation()
-contours.setColorMapNorm("log")
-graph_PDF.setDrawable(contours, 0)
+contours.setColorMapNorm("rank")
+contours.setIsFilled(True)
+contours.buildDefaultLevels(50)
+graph_PDF.setDrawable(0, contours)
 view = otv.View(graph_PDF, square_axes=True)
-
 
 # %%
 # We consider the model from :math:`\Rset^2` into  :math:`\Rset` defined by:
@@ -58,6 +61,11 @@ graph_model = g.draw([0.0, -10.0], [20.0, 10.0])
 graph_model.setXTitle(r"$x_1$")
 graph_model.setYTitle(r"$x_2$")
 graph_model.setTitle(r"Isolines of the model : $g$")
+contours = graph_model.getDrawable(0).getImplementation()
+contours.setColorMapNorm("rank")
+contours.setIsFilled(True)
+contours.buildDefaultLevels(50)
+graph_model.setDrawable(0, contours)
 view = otv.View(graph_model, square_axes=True)
 
 
@@ -319,7 +327,8 @@ solver.setMaximumConstraintError(1.0e-3)
 # %%
 # We build the FORM algorithm with its basic constructor. The starting point for the optimization
 # algorithm is the mean of the input distribution.
-algo_FORM = ot.FORM(solver, event, dist_X.getMean())
+solver.setStartingPoint(dist_X.getMean())
+algo_FORM = ot.FORM(solver, event)
 
 # %%
 # We are ready to run the algorithm and store the result.
@@ -525,8 +534,9 @@ print("Curvature (analytic formula) = ", curvature)
 
 
 # %%
-# We build the SORM algorithm and run it :
-algo_SORM = ot.SORM(solver, event, dist_X.getMean())
+# We build the SORM algorithm and run it:
+solver.setStartingPoint(dist_X.getMean())
+algo_SORM = ot.SORM(solver, event)
 algo_SORM.run()
 
 # %%
@@ -563,7 +573,3 @@ print("Probability of failure (SORM Tvedt) Pf = ", pf_Tvedt)
 # %%
 # Display all figures
 otv.View.ShowAll()
-
-# %%
-# Reset default settings
-ot.ResourceMap.Reload()

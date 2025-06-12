@@ -18,15 +18,14 @@ Estimate Sobol indices on a field to point function
 # This involves these steps:
 #
 # - Generate some input/output data matching the application :math:`h`
-# - Run the :class:`~openturns.experimental.FieldToPointFunctionalChaosAlgorithm` class
+# - Run the :class:`~openturns.FieldToPointFunctionalChaosAlgorithm` class
 # - Validate the Karhunen-Loeve decompositions of the inputs
 # - Validate the chaos metamodel between the KL coefficients and the outputs
-# - Retrieve the Sobol' indices from :class:`openturns.experimental.FieldFunctionalChaosSobolIndices`
+# - Retrieve the Sobol' indices from :class:`openturns.FieldFunctionalChaosSobolIndices`
 #
 
 # %%
 import openturns as ot
-import openturns.experimental as otexp
 from openturns.viewer import View
 
 # %%
@@ -49,7 +48,6 @@ X.setMesh(tg)
 
 # %%
 # Draw some input trajectories from our process
-ot.RandomGenerator.SetSeed(0)
 x = X.getSample(10)
 graph = x.drawMarginal(0)
 graph.setTitle(f"{x.getSize()} input trajectories")
@@ -80,7 +78,7 @@ y = f(x)
 # %%
 # Run the field-vector algorithm that performs KL-decomposition of the inputs
 # and chaos learning between the KL coefficients and the output vectors
-algo = otexp.FieldToPointFunctionalChaosAlgorithm(x, y)
+algo = ot.FieldToPointFunctionalChaosAlgorithm(x, y)
 # 1. KL parameters
 algo.setCenteredSample(False)  # our input sample is not centered (default)
 algo.setThreshold(4e-2)  # we expect to explain 96% of variance
@@ -138,18 +136,12 @@ gnorm = normal.drawLogPDF(data.getMin(), data.getMax())
 bad = [l_pair[i][1] for i in range(index_bad + 1)]
 c = ot.Cloud(bad)
 c.setPointStyle("bullet")
-graph.setDrawable(c, 1)
+graph.setDrawable(1, c)
 dr = gnorm.getDrawable(0)
 dr.setLevels([beta])
 dr.setLegend("99% level-set")
 graph.add(dr)
 _ = View(graph)
-
-# %%
-# Inspect the chaos quality: residuals and relative errors.
-# The relative error is very low; that means the chaos decomposition performs very well.
-print(f"residuals={result.getFCEResult().getResiduals()}")
-print(f"relative errors={result.getFCEResult().getRelativeErrors()}")
 
 # %%
 # Graphically validate the chaos result:
@@ -178,7 +170,7 @@ print(f"y0={y0} y0^={y0hat}")
 # %%
 # Retrieve the first order Sobol' indices
 # The preponderant variables are x2, x4 whereas x1, x3 have a low influence on the output
-sensitivity = otexp.FieldFunctionalChaosSobolIndices(result)
+sensitivity = ot.FieldFunctionalChaosSobolIndices(result)
 sobol_0 = sensitivity.getFirstOrderIndices()
 print(f"first order={sobol_0}")
 
@@ -194,8 +186,5 @@ print(f"total order={sobol_0t}")
 graph = sensitivity.draw()
 view = View(graph)
 
-View.ShowAll()
-
 # %%
-# Reset default settings
-ot.ResourceMap.Reload()
+View.ShowAll()

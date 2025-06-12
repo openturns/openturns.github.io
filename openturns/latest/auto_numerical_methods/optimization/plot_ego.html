@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>EfficientGlobalOptimization examples &#8212; OpenTURNS 1.24 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <title>EfficientGlobalOptimization examples &#8212; OpenTURNS 1.25 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,9 +15,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sphx_glr.css?v=2ae27345" />
     <script src="../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../_static/documentation_options.js?v=eff3c53f"></script>
+    <script src="../../_static/documentation_options.js?v=4b8b4126"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -40,7 +41,6 @@
     <li><a href="../../install.html">Get it</a></li>
     <li><a href="../../contents.html">Doc</a></li>
     <li><a href="https://openturns.discourse.group/">Forum</a></li>
-    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
     <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
     <li><a href="https://github.com/openturns">Code</a></li>
     <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
@@ -66,7 +66,7 @@
         <li class="right" >
           <a href="plot_optimization_dlib.html" title="Optimization using dlib"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Numerical methods</a> &#187;</li>
@@ -82,13 +82,13 @@
 <li><a class="reference internal" href="#">EfficientGlobalOptimization examples</a><ul>
 <li><a class="reference internal" href="#ackley-test-case">Ackley test-case</a><ul>
 <li><a class="reference internal" href="#define-the-problem">Define the problem</a></li>
-<li><a class="reference internal" href="#create-the-initial-kriging">Create the initial kriging</a></li>
+<li><a class="reference internal" href="#create-the-initial-gp">Create the initial GP</a></li>
 <li><a class="reference internal" href="#create-the-optimization-problem">Create the optimization problem</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#branin-test-case">Branin test-case</a><ul>
 <li><a class="reference internal" href="#id4">Define the problem</a></li>
-<li><a class="reference internal" href="#id5">Create the initial kriging</a></li>
+<li><a class="reference internal" href="#id5">Create the initial GP</a></li>
 <li><a class="reference internal" href="#create-and-solve-the-problem">Create and solve the problem</a></li>
 </ul>
 </li>
@@ -140,7 +140,7 @@ to download the full example code.</p>
 <section class="sphx-glr-example-title" id="efficientglobaloptimization-examples">
 <span id="sphx-glr-auto-numerical-methods-optimization-plot-ego-py"></span><h1>EfficientGlobalOptimization examples<a class="headerlink" href="#efficientglobaloptimization-examples" title="Link to this heading">¶</a></h1>
 <p>The EGO algorithm <a class="reference internal" href="../../bibliography.html#jones1998" id="id1"><span>[jones1998]</span></a> is an adaptative optimization method based on
-kriging.</p>
+Gaussian Process metamodel.</p>
 <p>An initial design of experiment is used to build a first metamodel.
 At each iteration a new point that maximizes a criterion is chosen as
 optimizer candidate.</p>
@@ -148,15 +148,11 @@ optimizer candidate.</p>
 variance.</p>
 <p>Then the new point is evaluated using the original model and the metamodel is
 relearnt on the extended design of experiments.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">branin_function</span>
-<span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">ackley_function</span>
-<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
-<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
-
-<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsString</span><span class="p">(</span><span class="s2">&quot;KrigingAlgorithm-LinearAlgebra&quot;</span><span class="p">,</span> <span class="s2">&quot;LAPACK&quot;</span><span class="p">)</span>
-<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openturns.usecases</span><span class="w"> </span><span class="kn">import</span> <span class="n">branin_function</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openturns.usecases</span><span class="w"> </span><span class="kn">import</span> <span class="n">ackley_function</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.experimental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otexp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viewer</span>
 </pre></div>
 </div>
 <section id="ackley-test-case">
@@ -196,11 +192,11 @@ class=Point name=Unnamed dimension=1 values=[4.44089e-16]
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_001.png" srcset="../../_images/sphx_glr_plot_ego_001.png" alt="Ackley function" class = "sphx-glr-single-img"/><p>We see that the Ackley function has many local minimas. The global minimum, however, is unique and located at the center of the domain.</p>
+<img src="../../_images/sphx_glr_plot_ego_001.svg" srcset="../../_images/sphx_glr_plot_ego_001.svg" alt="Ackley function" class = "sphx-glr-single-img"/><p>We see that the Ackley function has many local minimas. The global minimum, however, is unique and located at the center of the domain.</p>
 </section>
-<section id="create-the-initial-kriging">
-<h3>Create the initial kriging<a class="headerlink" href="#create-the-initial-kriging" title="Link to this heading">¶</a></h3>
-<p>Before using the EGO algorithm, we must create an initial kriging.
+<section id="create-the-initial-gp">
+<h3>Create the initial GP<a class="headerlink" href="#create-the-initial-gp" title="Link to this heading">¶</a></h3>
+<p>Before using the EGO algorithm, we must create an initial GP metamodel.
 In order to do this, we must create a design of experiment which fills the space.
 In this situation, the <a class="reference internal" href="../../user_manual/_generated/openturns.LHSExperiment.html#openturns.LHSExperiment" title="openturns.LHSExperiment"><code class="xref py py-class docutils literal notranslate"><span class="pre">LHSExperiment</span></code></a> is a good place to start (but other design of experiments may allow one to better fill the space).
 We use a uniform distribution in order to create a LHS design.
@@ -223,12 +219,14 @@ The length of the first LHS is set to ten times the problem dimension as recomme
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_002.png" srcset="../../_images/sphx_glr_plot_ego_002.png" alt="Initial LHS design of experiment - n=20" class = "sphx-glr-single-img"/><p>We now create the kriging metamodel.
+<img src="../../_images/sphx_glr_plot_ego_002.svg" srcset="../../_images/sphx_glr_plot_ego_002.svg" alt="Initial LHS design of experiment - n=20" class = "sphx-glr-single-img"/><p>We now create the GP metamodel.
 We selected the <a class="reference internal" href="../../user_manual/_generated/openturns.MaternModel.html#openturns.MaternModel" title="openturns.MaternModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaternModel</span></code></a> covariance model with a constant basis as recommended in <a class="reference internal" href="../../bibliography.html#leriche2021" id="id3"><span>[leriche2021]</span></a>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="mf">2.5</span><span class="p">)</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-<span class="n">kriging</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
-<span class="n">kriging</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">fitter</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">fitter</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">gpr</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">fitter</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+<span class="n">gpr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
@@ -242,9 +240,9 @@ We selected the <a class="reference internal" href="../../user_manual/_generated
 </pre></div>
 </div>
 <p>In order to show the various options, we configure them all, even if most could be left to default settings in this case.</p>
-<p>The most important method is <a class="reference internal" href="../../user_manual/_generated/openturns.EfficientGlobalOptimization.html#openturns.EfficientGlobalOptimization.setMaximumCallsNumber" title="openturns.EfficientGlobalOptimization.setMaximumCallsNumber"><code class="xref py py-class docutils literal notranslate"><span class="pre">setMaximumCallsNumber</span></code></a> which limits the number of iterations that the algorithm can perform.
+<p>The most important method is <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.EfficientGlobalOptimization.html#openturns.experimental.EfficientGlobalOptimization.setMaximumCallsNumber" title="openturns.experimental.EfficientGlobalOptimization.setMaximumCallsNumber"><code class="xref py py-class docutils literal notranslate"><span class="pre">setMaximumCallsNumber</span></code></a> which limits the number of iterations that the algorithm can perform.
 In the Ackley example, we choose to perform 30 iterations of the algorithm.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">kriging</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">gpr</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setMaximumCallsNumber</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
@@ -260,14 +258,14 @@ In the Ackley example, we choose to perform 30 iterations of the algorithm.</p>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-class=Point name=Unnamed dimension=2 values=[-0.0062633,-0.0052574]
+class=Point name=Unnamed dimension=2 values=[-0.00626534,-0.00526313]
 </div>
 <br />
 <br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-class=Point name=Unnamed dimension=1 values=[0.0249089]
+class=Point name=Unnamed dimension=1 values=[0.024926]
 </div>
 <br />
 <br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fexact</span>
@@ -289,7 +287,7 @@ the EGO algorithm, for a total equal to 50 function evaluations.</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_003.png" srcset="../../_images/sphx_glr_plot_ego_003.png" alt="Optimal value history" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">inputHistory</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getInputSample</span><span class="p">()</span>
+<img src="../../_images/sphx_glr_plot_ego_003.svg" srcset="../../_images/sphx_glr_plot_ego_003.svg" alt="Optimal value history" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">inputHistory</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getInputSample</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">lowerbound</span><span class="p">,</span> <span class="n">upperbound</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
@@ -305,7 +303,7 @@ the EGO algorithm, for a total equal to 50 function evaluations.</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_004.png" srcset="../../_images/sphx_glr_plot_ego_004.png" alt="Ackley function" class = "sphx-glr-single-img"/><p>We see that the initial (black) points are dispersed in the whole domain,
+<img src="../../_images/sphx_glr_plot_ego_004.svg" srcset="../../_images/sphx_glr_plot_ego_004.svg" alt="Ackley function" class = "sphx-glr-single-img"/><p>We see that the initial (black) points are dispersed in the whole domain,
 while the solution points are much closer to the solution.</p>
 </section>
 </section>
@@ -327,9 +325,9 @@ while the solution points are much closer to the solution.</p>
 <span class="n">upperbound</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">upperbound</span>
 </pre></div>
 </div>
-<p>and we load the model function and its noise :</p>
+<p>and we load the model function and its noise:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">model</span>
-<span class="n">noise</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">noiseModel</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">bm</span><span class="o">.</span><span class="n">trueNoiseFunction</span>
 </pre></div>
 </div>
 <p>We build a sample out of the three minima :</p>
@@ -355,16 +353,15 @@ while the solution points are much closer to the solution.</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_005.png" srcset="../../_images/sphx_glr_plot_ego_005.png" alt="Branin function" class = "sphx-glr-single-img"/><p>The Branin function has three local minimas.</p>
+<img src="../../_images/sphx_glr_plot_ego_005.svg" srcset="../../_images/sphx_glr_plot_ego_005.svg" alt="Branin function" class = "sphx-glr-single-img"/><p>The Branin function has three local minimas.</p>
 </section>
 <section id="id5">
-<h3>Create the initial kriging<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<h3>Create the initial GP<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
 <span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">dim</span>
 <span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">sampleSize</span><span class="p">)</span>
 <span class="n">inputSample</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="n">outputSample</span> <span class="o">=</span> <span class="n">objectiveFunction</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
-<span class="n">noiseSample</span> <span class="o">=</span> <span class="n">noise</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
@@ -375,13 +372,17 @@ while the solution points are much closer to the solution.</p>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_006.png" srcset="../../_images/sphx_glr_plot_ego_006.png" alt="Initial LHS design of experiment - n=20" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="mf">2.5</span><span class="p">)</span>
-<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
-<span class="n">kriging</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<img src="../../_images/sphx_glr_plot_ego_006.svg" srcset="../../_images/sphx_glr_plot_ego_006.svg" alt="Initial LHS design of experiment - n=20" class = "sphx-glr-single-img"/><p>Configure the covariance model with the noise</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="mf">2.5</span><span class="p">)</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setNuggetFactor</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">kriging</span><span class="o">.</span><span class="n">setNoise</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">noiseSample</span><span class="p">])</span>
-<span class="n">kriging</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<p>Build the initial GP</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">fitter</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">fitter</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">gpr</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">fitter</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+<span class="n">gpr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
@@ -394,8 +395,9 @@ while the solution points are much closer to the solution.</p>
 <span class="n">problem</span><span class="o">.</span><span class="n">setBounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We configure the algorithm, with the model noise:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">kriging</span><span class="o">.</span><span class="n">getResult</span><span class="p">(),</span> <span class="n">noise</span><span class="p">)</span>
+<p>We configure the algorithm
+the nugget factor set in the covariance model with enable the AEI formulation</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">EfficientGlobalOptimization</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">gpr</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
 <span class="n">algo</span><span class="o">.</span><span class="n">setMaximumCallsNumber</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -414,14 +416,14 @@ while the solution points are much closer to the solution.</p>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-class=Point name=Unnamed dimension=2 values=[0.528177,0.167468]
+class=Point name=Unnamed dimension=2 values=[0.542,0.152006]
 </div>
 <br />
 <br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getOptimalValue</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-class=Point name=Unnamed dimension=1 values=[-1.04293]
+class=Point name=Unnamed dimension=1 values=[-1.0474]
 </div>
 <br />
 <br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fexact</span>
@@ -452,19 +454,16 @@ class=Point name=Unnamed dimension=1 values=[-1.04293]
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_007.png" srcset="../../_images/sphx_glr_plot_ego_007.png" alt="Branin function" class = "sphx-glr-single-img"/><p>We see that the EGO algorithm reached the different optima locations.</p>
+<img src="../../_images/sphx_glr_plot_ego_007.svg" srcset="../../_images/sphx_glr_plot_ego_007.svg" alt="Branin function" class = "sphx-glr-single-img"/><p>We see that the EGO algorithm reached the different optima locations.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">drawOptimalValueHistory</span><span class="p">()</span>
 <span class="n">optimum_curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="n">fexact</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="mi">29</span><span class="p">,</span> <span class="n">fexact</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]]))</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">optimum_curve</span><span class="p">)</span>
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">axes_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;xticks&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">(),</span> <span class="mi">5</span><span class="p">)})</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_ego_008.png" srcset="../../_images/sphx_glr_plot_ego_008.png" alt="Optimal value history" class = "sphx-glr-single-img"/><p>Reset default settings</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">Reload</span><span class="p">()</span>
+<img src="../../_images/sphx_glr_plot_ego_008.svg" srcset="../../_images/sphx_glr_plot_ego_008.svg" alt="Optimal value history" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.282 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-numerical-methods-optimization-plot-ego-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/b663e1b1b3c4d94b9641214799794e94/plot_ego.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_ego.ipynb</span></code></a></p>
@@ -499,7 +498,7 @@ class=Point name=Unnamed dimension=1 values=[-1.04293]
         <li class="right" >
           <a href="plot_optimization_dlib.html" title="Optimization using dlib"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../index.html" >Numerical methods</a> &#187;</li>
@@ -508,9 +507,9 @@ class=Point name=Unnamed dimension=1 values=[-1.04293]
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
-      Last updated on Nov 25, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    &#169; Copyright 2005-2025 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jun 12, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

@@ -29,7 +29,6 @@ Test the design point with the Strong Maximum Test
 # %%
 import openturns as ot
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # Create the model Y = x1 + 2*x2
@@ -56,8 +55,8 @@ myStandardEvent = ot.StandardEvent(myEvent)
 # %%
 # First : FORM analyses to get the design point
 myCobyla = ot.Cobyla()
-myStartingPoint = inputDist.getMean()
-myAlgoFORM = ot.FORM(myCobyla, myEvent, myStartingPoint)
+myCobyla.setStartingPoint(inputDist.getMean())
+myAlgoFORM = ot.FORM(myCobyla, myEvent)
 myAlgoFORM.run()
 FORMResult = myAlgoFORM.getResult()
 standardSpaceDesignPoint = FORMResult.getStandardSpaceDesignPoint()

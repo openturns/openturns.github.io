@@ -17,9 +17,8 @@ Export a field to VTK
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # First, we define a regular 2-d mesh

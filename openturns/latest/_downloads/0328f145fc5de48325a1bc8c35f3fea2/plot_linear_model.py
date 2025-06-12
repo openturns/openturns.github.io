@@ -1,7 +1,7 @@
 """
 Create a linear model
 =====================
-In this example we create a surrogate model using linear model approximation
+In this example we create a metamodel model using a linear model approximation
 with the :class:`~openturns.LinearModelAlgorithm` class.
 We show how the :class:`~openturns.LinearModelAnalysis` class
 can be used to produce the statistical analysis of the least squares
@@ -43,7 +43,7 @@ regression model.
 
 # %%
 import openturns as ot
-import openturns.viewer as viewer
+import openturns.viewer as otv
 
 # %%
 # Simulate the data set
@@ -52,7 +52,6 @@ import openturns.viewer as viewer
 # We first generate the data and we add noise to the output observations:
 
 # %%
-ot.RandomGenerator.SetSeed(0)
 distribution = ot.Normal(2)
 distribution.setDescription(["x", "y"])
 sampleSize = 1000
@@ -84,15 +83,14 @@ residuals = result.getSampleResiduals()
 residuals[:5]
 
 # %%
-# Alternatively, the `standardized` or `studentized` residuals can be used:
+# Alternatively, the standardized residuals can be used:
 
 # %%
 stdresiduals = result.getStandardizedResiduals()
 stdresiduals[:5]
 
 # %%
-# Similarly, we can also obtain the underyling distribution characterizing
-# the residuals:
+# We can also get the noise distribution which is assumed to be gaussian:
 
 # %%
 result.getNoiseDistribution()
@@ -112,7 +110,7 @@ analysis
 # %%
 # The results seem to indicate that the linear model is satisfactory.
 #
-# - The basis uses the three functions :math:`1` (i.e. the intercept),
+# - The basis uses the three functions :math:`1` (which is called the intercept),
 #   :math:`x` and :math:`y`.
 # - Each row of the table of coefficients tests if one single coefficient is zero.
 #   The probability of observing a large value of the T statistics is close to
@@ -141,7 +139,7 @@ analysis
 
 # %%
 graph = analysis.drawModelVsFitted()
-view = viewer.View(graph)
+view = otv.View(graph)
 
 # %%
 # The previous figure seems to indicate that the linearity hypothesis
@@ -152,15 +150,15 @@ view = viewer.View(graph)
 
 # %%
 graph = analysis.drawResidualsVsFitted()
-view = viewer.View(graph)
+view = otv.View(graph)
 
 # %%
 graph = analysis.drawScaleLocation()
-view = viewer.View(graph)
+view = otv.View(graph)
 
 # %%
 graph = analysis.drawQQplot()
-view = viewer.View(graph)
+view = otv.View(graph)
 
 # %%
 # In this case, the two distributions are very close: there is no obvious
@@ -171,7 +169,7 @@ view = viewer.View(graph)
 
 # %%
 graph = analysis.drawCookDistance()
-view = viewer.View(graph)
+view = otv.View(graph)
 
 # %%
 # This graph shows us the index of the points with disproportionate influence.
@@ -183,7 +181,7 @@ view = viewer.View(graph)
 
 # sphinx_gallery_thumbnail_number = 6
 graph = analysis.drawResidualsVsLeverages()
-view = viewer.View(graph)
+view = otv.View(graph)
 
 # %%
 # In this case, there seems to be no obvious influential outlier characterized
@@ -194,7 +192,7 @@ view = viewer.View(graph)
 
 # %%
 graph = analysis.drawCookVsLeverages()
-view = viewer.View(graph)
+view = otv.View(graph)
 
 # %%
 # Finally, we give the intervals for each estimated coefficient (95% confidence
@@ -205,3 +203,7 @@ alpha = 0.95
 interval = analysis.getCoefficientsConfidenceInterval(alpha)
 print("confidence intervals with level=%1.2f: " % (alpha))
 print("%s" % (interval))
+
+
+# %%
+otv.View.ShowAll()

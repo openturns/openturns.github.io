@@ -40,15 +40,13 @@ Create a polynomial chaos metamodel from a data set
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # We first create the function `model`.
 
 # %%
-ot.RandomGenerator.SetSeed(0)
 input_names = ["x1", "x2"]
 formulas = ["cos(x1 + x2)", "(x2 + 1) * exp(x1)"]
 model = ot.SymbolicFunction(input_names, formulas)
@@ -272,7 +270,3 @@ plt.show()
 #   For example, it might be interesting to
 #   try an integration rule instead of the least squares method.
 #   Notice that a specific design of experiments is required in this case.
-
-# %%
-# Reset default settings
-ot.ResourceMap.Reload()

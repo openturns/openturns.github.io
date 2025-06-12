@@ -24,9 +24,8 @@ Use the FORM - SORM algorithms
 from openturns.usecases import cantilever_beam
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # We load the model from the usecases module :
@@ -55,17 +54,18 @@ event.setName("deviation")
 # -------------
 
 # %%
-# Define a solver
-optimAlgo = ot.Cobyla()
+# Define a solver, here we use a :class:`~openturns.MultiStart` optimization based on :class:`~openturns.Cobyla`
+startingSample = distribution.getSample(10)
+optimAlgo = ot.MultiStart(ot.Cobyla(), startingSample)
 optimAlgo.setMaximumCallsNumber(1000)
-optimAlgo.setMaximumAbsoluteError(1.0e-10)
-optimAlgo.setMaximumRelativeError(1.0e-10)
-optimAlgo.setMaximumResidualError(1.0e-10)
-optimAlgo.setMaximumConstraintError(1.0e-10)
+optimAlgo.setMaximumAbsoluteError(1.0e-4)
+optimAlgo.setMaximumRelativeError(1.0e-4)
+optimAlgo.setMaximumResidualError(1.0e-4)
+optimAlgo.setMaximumConstraintError(1.0e-4)
 
 # %%
 # Run FORM
-algo = ot.FORM(optimAlgo, event, distribution.getMean())
+algo = ot.FORM(optimAlgo, event)
 algo.run()
 result = algo.getResult()
 
@@ -120,7 +120,7 @@ view = viewer.View(graphErrors)
 
 # %%
 # Get additional results with SORM
-algo = ot.SORM(optimAlgo, event, distribution.getMean())
+algo = ot.SORM(optimAlgo, event)
 algo.run()
 sorm_result = algo.getResult()
 
@@ -190,6 +190,6 @@ event.setName("deviation")
 
 # %%
 # We can then run the FORM analysis in the same way as before:
-algo = ot.FORM(optimAlgo, event, distribution.getMean())
+algo = ot.FORM(optimAlgo, event)
 algo.run()
 result = algo.getResult()

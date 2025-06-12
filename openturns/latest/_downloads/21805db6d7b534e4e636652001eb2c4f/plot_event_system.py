@@ -14,10 +14,7 @@ Create unions or intersections of events
 #
 import openturns as ot
 import openturns.viewer as otv
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
+from matplotlib import pyplot as plt
 
 # %%
 # **Intersection**
@@ -296,7 +293,8 @@ solver.setMaximumConstraintError(1.0e-3)
 
 # %%
 # We build the :class:`~openturns.SystemFORM` algorithm from the solver, the event and a starting point (here the mean) and then run the algorithm.
-algo = ot.SystemFORM(solver, event, mean)
+solver.setStartingPoint(mean)
+algo = ot.SystemFORM(solver, event)
 algo.run()
 
 # %%

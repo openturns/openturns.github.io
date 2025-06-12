@@ -16,9 +16,8 @@ Estimate a flooding probability
 from openturns.usecases import flood_model
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # We load the flooding model from the usecases module :
@@ -72,10 +71,8 @@ optimAlgo.setMaximumConstraintError(1.0e-10)
 
 # %%
 # Run FORM.
-
-# %%
-startingPoint = distribution.getMean()
-algo = ot.FORM(optimAlgo, event, startingPoint)
+optimAlgo.setStartingPoint(distribution.getMean())
+algo = ot.FORM(optimAlgo, event)
 algo.run()
 result = algo.getResult()
 standardSpaceDesignPoint = result.getStandardSpaceDesignPoint()

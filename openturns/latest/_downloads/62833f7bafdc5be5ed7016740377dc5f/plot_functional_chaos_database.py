@@ -18,7 +18,6 @@ Create a full or sparse polynomial chaos expansion
 # %%
 import openturns as ot
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # Define the model
@@ -132,10 +131,6 @@ metamodel = result.getMetaModel()
 xPoint = distribution.getMean()
 yPoint = metamodel(xPoint)
 print("Value at ", xPoint, " is ", yPoint)
-
-# %%
-# Print residuals.
-result.getResiduals()
 
 # %%
 # Based on these results, we may want to validate our metamodel.

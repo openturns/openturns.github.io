@@ -2,14 +2,13 @@ import openturns as ot
 import openturns.experimental as otexp
 from matplotlib import pyplot as plt
 from openturns.viewer import View
+
+ot.RandomGenerator.SetSeed(0)
 if "JoeCopula" == "EmpiricalBernsteinCopula":
     sample = ot.Dirichlet([1.0, 2.0, 3.0]).getSample(100)
     copula = ot.EmpiricalBernsteinCopula(sample, 4)
 elif "JoeCopula" == "ExtremeValueCopula":
     copula = ot.ExtremeValueCopula(ot.SymbolicFunction("t", "t^3/2-t/2+1"))
-elif "JoeCopula" == "MaximumEntropyOrderStatisticsCopula":
-    marginals = [ot.Beta(1.5, 3.2, 0.0, 1.0),  ot.Beta(2.0, 4.3, 0.5, 1.2)]
-    copula = ot.MaximumEntropyOrderStatisticsCopula(marginals)
 elif "JoeCopula" == "NormalCopula":
     R = ot.CorrelationMatrix(2)
     R[1, 0] = 0.8

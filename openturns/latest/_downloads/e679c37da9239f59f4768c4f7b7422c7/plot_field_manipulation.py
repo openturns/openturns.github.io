@@ -13,13 +13,13 @@ Draw a field
 #
 # A field is stored in the :class:`~openturns.Field` object that stores the mesh and the values at each vertex of the mesh.
 # It can be built from a mesh and values or as a realization of a stochastic process.
+# sphinx_gallery_thumbnail_number = 6
 
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # First, define a regular 2-d mesh
@@ -66,6 +66,7 @@ view = viewer.View(graph)
 
 # %%
 # Draw the field with interpolation
+# sphinx_gallery_thumbnail_number = 4
 graph = field.drawMarginal(0)
 graph.setTitle("Marginal field (with interpolation)")
 view = viewer.View(graph)

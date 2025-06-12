@@ -205,7 +205,7 @@ gpd_first = ot.GeneralizedParetoFactory().build(sample_X_upper)
 mlFact = ot.MaximumLikelihoodFactory(gpd_first)
 
 # we fix the threshold to :math:`x_0`.
-mlFact.setKnownParameter([x0], [2])
+mlFact.setKnownParameter([2], [x0])
 gpd_estimated = mlFact.build(sample_X_upper)
 print("estimated gpd = ", gpd_estimated)
 
@@ -314,9 +314,5 @@ graph.setLegendPosition("")
 view = otv.View(graph)
 
 # %%
-# Reset ResourceMap
-ot.ResourceMap.Reload()
-
-# %%
 # Show all the graphs.
-view.ShowAll()
+otv.View.ShowAll()

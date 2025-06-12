@@ -14,10 +14,9 @@ Using the FORM - SORM algorithms on a nonlinear function
 # %%
 from openturns.usecases import oscillator
 import openturns as ot
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 import numpy as np
 
-ot.Log.Show(ot.Log.NONE)
 ot.RandomGenerator.SetSeed(1)
 
 # %%
@@ -130,6 +129,7 @@ print("Failure probability = ", probability)
 # %%
 # Define a solver:
 optimAlgo = ot.Cobyla()
+optimAlgo.setStartingPoint(distribution.getMean())
 optimAlgo.setMaximumCallsNumber(1000)
 optimAlgo.setMaximumAbsoluteError(1.0e-3)
 optimAlgo.setMaximumRelativeError(1.0e-3)
@@ -138,7 +138,7 @@ optimAlgo.setMaximumConstraintError(1.0e-3)
 
 # %%
 # Run FORM initialized at the mean of the distribution:
-algo = ot.FORM(optimAlgo, event, distribution.getMean())
+algo = ot.FORM(optimAlgo, event)
 algo.run()
 result = algo.getResult()
 
@@ -257,9 +257,7 @@ for i in range(distribution.getDimension()):
             ax.set_xlabel(distribution.getDescription()[j])
 
         if i == 1 and j == 0:
-            cs2.collections[0].set_label(my_labels["TLSF"])
             h2, l2 = cs2.legend_elements()
-            cs3.collections[0].set_label(my_labels["ALSF"])
             h3, l3 = cs3.legend_elements()
             lg = ax.legend(
                 [h2[0], h3[0]],
@@ -287,7 +285,9 @@ for i in range(distribution.getDimension()):
 
 
 # %%
-algoSORM = ot.SORM(ot.Cobyla(), event, distribution.getMean())
+solver = ot.Cobyla()
+solver.setStartingPoint(distribution.getMean())
+algoSORM = ot.SORM(solver, event)
 algoSORM.run()
 
 # %%
@@ -397,9 +397,7 @@ for i in range(distribution.getDimension()):
             ax.set_xlabel(distribution.getDescription()[j])
 
         if i == 1 and j == 0:
-            cs2.collections[0].set_label(my_labels["TLSF"])
             h2, l2 = cs2.legend_elements()
-            cs3.collections[0].set_label(my_labels["ALSF"])
             h3, l3 = cs3.legend_elements()
             lg = ax.legend(
                 [h2[0], h3[0]],

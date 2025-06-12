@@ -19,13 +19,11 @@ Fit a distribution from an input sample
 # %%
 import openturns as ot
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # We first create the function `model`.
 
 # %%
-ot.RandomGenerator.SetSeed(0)
 dimension = 2
 input_names = ["x1", "x2"]
 formulas = ["cos(x1 + x2)", "(x2 + 1) * exp(x1)"]
@@ -95,6 +93,3 @@ algo = ot.FunctionalChaosAlgorithm(inputSample, outputSample)
 # %%
 # The previous constructor is the main topic of the example
 # :doc:`Create a polynomial chaos metamodel from a data set </auto_meta_modeling/polynomial_chaos_metamodel/plot_functional_chaos>`.
-
-# %%
-ot.ResourceMap.Reload()  # reset default settings

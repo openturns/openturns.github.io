@@ -31,16 +31,15 @@ This test-case is highly non linear with a significant curvature near the design
 Model definition
 -----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-23
+.. GENERATED FROM PYTHON SOURCE LINES 15-22
 
 .. code-block:: Python
 
     from openturns.usecases import oscillator
     import openturns as ot
-    from matplotlib import pylab as plt
+    from matplotlib import pyplot as plt
     import numpy as np
 
-    ot.Log.Show(ot.Log.NONE)
     ot.RandomGenerator.SetSeed(1)
 
 
@@ -50,11 +49,11 @@ Model definition
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 We load the model from the usecases module:
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-27
+.. GENERATED FROM PYTHON SOURCE LINES 24-26
 
 .. code-block:: Python
 
@@ -67,11 +66,11 @@ We load the model from the usecases module:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 27-28
 
 We use the input parameters distribution from the data class:
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-32
+.. GENERATED FROM PYTHON SOURCE LINES 28-31
 
 .. code-block:: Python
 
@@ -85,11 +84,11 @@ We use the input parameters distribution from the data class:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 We define the model:
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-36
+.. GENERATED FROM PYTHON SOURCE LINES 33-35
 
 .. code-block:: Python
 
@@ -102,11 +101,11 @@ We define the model:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 We create the event whose probability we want to estimate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-45
+.. GENERATED FROM PYTHON SOURCE LINES 39-44
 
 .. code-block:: Python
 
@@ -122,18 +121,18 @@ We create the event whose probability we want to estimate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-48
+.. GENERATED FROM PYTHON SOURCE LINES 45-47
 
 Cross cuts in the physical space
 ---------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-53
+.. GENERATED FROM PYTHON SOURCE LINES 49-52
 
 Let’s have a look on 2D cross cuts of the limit state function. For each 2D cross cut, the other variables are fixed to the input distribution mean values.
 This graph allows one to have a first idea of the variations of the function in pairs of dimensions. The colors of each contour plot are comparable.
 The number of contour levels are related to the amount of variation of the function in the corresponding coordinates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-102
+.. GENERATED FROM PYTHON SOURCE LINES 52-101
 
 .. code-block:: Python
 
@@ -189,26 +188,26 @@ The number of contour levels are related to the amount of variation of the funct
 
 
 
-.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_001.png
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_001.svg
    :alt: plot estimate probability form oscillator
-   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_001.png
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_001.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-105
+.. GENERATED FROM PYTHON SOURCE LINES 102-104
 
 Computation of reference probability with Monte-Carlo simulation
 ----------------------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-109
+.. GENERATED FROM PYTHON SOURCE LINES 106-108
 
 The target probability is supposed to be extremely low (:math:`3.78\times 10^{-7}`).
 Indeed, when performing Monte-Carlo simulation with a simulation budget of 100000 points, no sample are in the failure state, that induces a probability estimate of zero.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-119
+.. GENERATED FROM PYTHON SOURCE LINES 108-118
 
 .. code-block:: Python
 
@@ -235,28 +234,29 @@ Indeed, when performing Monte-Carlo simulation with a simulation budget of 10000
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-121
+.. GENERATED FROM PYTHON SOURCE LINES 119-120
 
 To get an accurate estimate of this probability, a billion of simulations are necessary.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-125
+.. GENERATED FROM PYTHON SOURCE LINES 122-124
 
 FORM Analysis
 -------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-128
+.. GENERATED FROM PYTHON SOURCE LINES 126-127
 
 To get a first idea of the failure probability with reduced simulation budget, one can use the First Order Reliability Method (FORM).
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-132
+.. GENERATED FROM PYTHON SOURCE LINES 130-131
 
 Define a solver:
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-139
+.. GENERATED FROM PYTHON SOURCE LINES 131-139
 
 .. code-block:: Python
 
     optimAlgo = ot.Cobyla()
+    optimAlgo.setStartingPoint(distribution.getMean())
     optimAlgo.setMaximumCallsNumber(1000)
     optimAlgo.setMaximumAbsoluteError(1.0e-3)
     optimAlgo.setMaximumRelativeError(1.0e-3)
@@ -278,7 +278,7 @@ Run FORM initialized at the mean of the distribution:
 
 .. code-block:: Python
 
-    algo = ot.FORM(optimAlgo, event, distribution.getMean())
+    algo = ot.FORM(optimAlgo, event)
     algo.run()
     result = algo.getResult()
 
@@ -364,7 +364,7 @@ Design point in the physical space:
 
 For this test case, in order to validate the results obtained by FORM, we can plot the cross cuts in the standard space near the design point found by FORM.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-276
+.. GENERATED FROM PYTHON SOURCE LINES 168-274
 
 .. code-block:: Python
 
@@ -460,9 +460,7 @@ For this test case, in order to validate the results obtained by FORM, we can pl
                 ax.set_xlabel(distribution.getDescription()[j])
 
             if i == 1 and j == 0:
-                cs2.collections[0].set_label(my_labels["TLSF"])
                 h2, l2 = cs2.legend_elements()
-                cs3.collections[0].set_label(my_labels["ALSF"])
                 h3, l3 = cs3.legend_elements()
                 lg = ax.legend(
                     [h2[0], h3[0]],
@@ -479,35 +477,37 @@ For this test case, in order to validate the results obtained by FORM, we can pl
 
 
 
-.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_002.png
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_002.svg
    :alt: plot estimate probability form oscillator
-   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_002.png
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_002.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 277-280
+.. GENERATED FROM PYTHON SOURCE LINES 275-278
 
 As it can be seen, the curvature of the limit state function near the design point is significant.
 In that way, FORM provides poor estimate since it linearly approximates the limit state function.
 Thus, SORM can be used in order to refine this probability estimation by approximating the limit state function with a quadratic model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-284
+.. GENERATED FROM PYTHON SOURCE LINES 280-282
 
 SORM Analysis
 -------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 286-287
+.. GENERATED FROM PYTHON SOURCE LINES 284-285
 
 Run SORM initialized at the mean of the distribution:
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-293
+.. GENERATED FROM PYTHON SOURCE LINES 288-293
 
 .. code-block:: Python
 
-    algoSORM = ot.SORM(ot.Cobyla(), event, distribution.getMean())
+    solver = ot.Cobyla()
+    solver.setStartingPoint(distribution.getMean())
+    algoSORM = ot.SORM(solver, event)
     algoSORM.run()
 
 
@@ -547,8 +547,8 @@ Analysis of SORM results:
 
  .. code-block:: none
 
-    Probability estimate with SORM (Breitung correction) = 3.8119422417743107e-07
-    Probability estimate with SORM (Hohenbichler correction) = 3.6841954700676055e-07
+    Probability estimate with SORM (Breitung correction) = 3.8119422417743017e-07
+    Probability estimate with SORM (Hohenbichler correction) = 3.6841954700675944e-07
     Simulation budget: 783
 
 
@@ -563,7 +563,7 @@ This probability is quite close to the reference probability and obtained with l
 
 In order to visualize the SORM limit state approximation, we can draw cross cuts of SORM oscultating parabola using second order Taylor approximation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 317-415
+.. GENERATED FROM PYTHON SOURCE LINES 317-413
 
 .. code-block:: Python
 
@@ -650,9 +650,7 @@ In order to visualize the SORM limit state approximation, we can draw cross cuts
                 ax.set_xlabel(distribution.getDescription()[j])
 
             if i == 1 and j == 0:
-                cs2.collections[0].set_label(my_labels["TLSF"])
                 h2, l2 = cs2.legend_elements()
-                cs3.collections[0].set_label(my_labels["ALSF"])
                 h3, l3 = cs3.legend_elements()
                 lg = ax.legend(
                     [h2[0], h3[0]],
@@ -668,30 +666,30 @@ In order to visualize the SORM limit state approximation, we can draw cross cuts
 
 
 
-.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_003.png
+.. image-sg:: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_003.svg
    :alt: plot estimate probability form oscillator
-   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_003.png
+   :srcset: /auto_reliability_sensitivity/reliability/images/sphx_glr_plot_estimate_probability_form_oscillator_003.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 416-417
+.. GENERATED FROM PYTHON SOURCE LINES 414-415
 
 We can see that this approximation is very appropriate, explaining the accuracy of the obtained results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 419-421
+.. GENERATED FROM PYTHON SOURCE LINES 417-419
 
 Estimation with post analytical Importance Sampling
 ---------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 423-425
+.. GENERATED FROM PYTHON SOURCE LINES 421-423
 
 Different algorithms exist for the reliability analysis by Importance Sampling.
 One way is to perform post analytical Importance Sampling by defining the auxiliary density centered at the design point found by FORM.
 
-.. GENERATED FROM PYTHON SOURCE LINES 428-437
+.. GENERATED FROM PYTHON SOURCE LINES 426-435
 
 .. code-block:: Python
 
@@ -717,14 +715,9 @@ One way is to perform post analytical Importance Sampling by defining the auxili
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 438-439
+.. GENERATED FROM PYTHON SOURCE LINES 436-437
 
 We can see that this post-treatment of FORM result allows one to greatly improve the quality of the probability estimation.
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** (0 minutes 5.494 seconds)
 
 
 .. _sphx_glr_download_auto_reliability_sensitivity_reliability_plot_estimate_probability_form_oscillator.py:

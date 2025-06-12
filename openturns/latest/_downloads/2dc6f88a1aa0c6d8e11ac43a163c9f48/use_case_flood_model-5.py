@@ -1,6 +1,6 @@
 import openturns as ot
 import openturns.viewer as otv
-import pylab as pl
+from matplotlib import pyplot as plt
 from openturns.usecases import flood_model
 
 fm = flood_model.FloodModel(distributionHdLow=False)
@@ -22,4 +22,4 @@ for i in range(outputDimension):
 
 grid.setTitle("Default scenario: dyke is high")
 _ = otv.View(grid, figure_kw={"figsize": (8.0, 2.5)})
-pl.subplots_adjust(wspace=0.4, top=0.8)
+plt.subplots_adjust(wspace=0.4, top=0.8)

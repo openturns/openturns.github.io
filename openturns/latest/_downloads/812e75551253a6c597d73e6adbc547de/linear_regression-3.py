@@ -16,7 +16,7 @@ regressionModel = ot.LinearModelAlgorithm(sampleX, sampleY).getResult()
 graph = ot.VisualTest.DrawLinearModelResidual(regressionModel)
 cloud = graph.getDrawable(0)
 cloud.setPointStyle('times')
-graph.setDrawable(cloud, 0)
+graph.setDrawable(0, cloud)
 graph.setTitle('')
 # copy the graph in a file
 View(graph)

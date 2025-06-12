@@ -20,9 +20,8 @@ Metamodel of a field function
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # Create the input model.
@@ -233,7 +232,3 @@ graph_sample_Y.setXTitle(r"$t$")
 graph_sample_Y.setYTitle(r"$Y$")
 view = viewer.View(graph_sample_Y)
 plt.show()
-
-# %%
-# Reset default settings
-ot.ResourceMap.Reload()
