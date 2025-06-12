@@ -30,10 +30,7 @@ and observed output variables.
 from openturns.usecases import deflection_tube
 import openturns as ot
 import openturns.viewer as otv
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
+from matplotlib import pyplot as plt
 
 # %%
 # Create a calibration problem
@@ -422,8 +419,5 @@ view = otv.View(
 )
 plt.subplots_adjust(wspace=0.3, left=0.05, right=0.8)
 
-otv.View.ShowAll()
-
 # %%
-# Reset default settings
-ot.ResourceMap.Reload()
+otv.View.ShowAll()

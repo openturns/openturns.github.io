@@ -92,7 +92,6 @@ import openturns as ot
 from openturns.viewer import View
 import numpy as np
 
-ot.Log.Show(ot.Log.NONE)
 ot.RandomGenerator.SetSeed(1)
 
 n = 10
@@ -570,7 +569,10 @@ xlabs = [r"$\theta_0$", r"$\theta_1$", r"$\tau$"]
 p_true = [theta_true[0][0], theta_true[1][0], tau_true]
 for parameter_index in range(3):
     # use the cheaper truncated posterior marginal instead of the true posterior marginal
-    posterior_marg = ot.TruncatedDistribution(ks_post.getMarginal(parameter_index), prior.getRange().getMarginal(parameter_index))
+    posterior_marg = ot.TruncatedDistribution(
+        ks_post.getMarginal(parameter_index),
+        prior.getRange().getMarginal(parameter_index),
+    )
     graph = posterior_marg.drawPDF()
     bbox = graph.getBoundingBox()
     bound = bbox.getUpperBound()[1]

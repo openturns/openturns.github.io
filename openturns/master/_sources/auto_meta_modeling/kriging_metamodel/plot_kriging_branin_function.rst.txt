@@ -18,8 +18,8 @@
 .. _sphx_glr_auto_meta_modeling_kriging_metamodel_plot_kriging_branin_function.py:
 
 
-Kriging: metamodel of the Branin-Hoo function
-==============================================
+Gaussian Process Regression: metamodel of the Branin-Hoo function
+=================================================================
 
 .. GENERATED FROM PYTHON SOURCE LINES 7-10
 
@@ -35,7 +35,7 @@ of the Branin (also referred to as Branin-Hoo) function.
     import openturns as ot
     import openturns.viewer as otv
     from openturns.usecases import branin_function
-    from matplotlib import pylab as plt
+    import openturns.experimental as otexp
 
 
 
@@ -79,9 +79,9 @@ thanks to the following `ResourceMap` key :
 
 
 
-.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_001.png
+.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_001.svg
    :alt: y0 as a function of (u1,u2)
-   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_001.png
+   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_001.svg
    :class: sphx-glr-single-img
 
 
@@ -138,9 +138,9 @@ We also represent the three minima of the Branin function with orange diamonds :
 
 
 
-.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_002.png
+.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_002.svg
    :alt: The exact Branin model
-   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_002.png
+   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_002.svg
    :class: sphx-glr-single-img
 
 
@@ -163,10 +163,10 @@ metamodel of this function that presents the same behaviour.
 
 .. GENERATED FROM PYTHON SOURCE LINES 65-70
 
-Definition of the Kriging metamodel
------------------------------------
+Optimization of GP hyperparameters and conditioning to data
+-----------------------------------------------------------
 
-We use the :class:`~openturns.KrigingAlgorithm` class to perform the Kriging analysis.
+We use the :class:`~openturns.experimental.GaussianProcessFitter` class to perform the GP fitter analysis.
 We first generate a design of experiments with LHS and store the input training points in `xdata`
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-78
@@ -243,54 +243,78 @@ We choose a squared exponential covariance model in dimension 2 :
 
 .. GENERATED FROM PYTHON SOURCE LINES 93-94
 
-We have all the components to build a Kriging algorithm and run it :
+We have all the components to build a GP fitter  algorithm and run it :
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-97
-
-.. code-block:: Python
-
-    algo = ot.KrigingAlgorithm(xdata, ydata, covarianceModel, basis)
-    algo.run()
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 98-99
-
-We get the result of the Kriging analysis with :
-
-.. GENERATED FROM PYTHON SOURCE LINES 99-101
+.. GENERATED FROM PYTHON SOURCE LINES 94-103
 
 .. code-block:: Python
 
-    result = algo.getResult()
+    fitter_algo = otexp.GaussianProcessFitter(xdata, ydata, covarianceModel, basis)
+    fitter_algo.setOptimizeParameters(True)
+    fitter_algo.run()
+    fitter_result = fitter_algo.getResult()
+    gpr_algo = otexp.GaussianProcessRegression(fitter_result)
+    gpr_algo.run()
+    gpr_result = gpr_algo.getResult()
+    print(gpr_result)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    GaussianProcessRegressionResult(covariance models=SquaredExponential(scale=[0.276988,1.31975], amplitude=[6.0618]), covariance coefficients= 0 : [   62.0178  ]
+     1 : [  265.391   ]
+     2 : [    3.20301 ]
+     3 : [   42.1932  ]
+     4 : [   10.6165  ]
+     5 : [  407.88    ]
+     6 : [ -110.292   ]
+     7 : [ -212.386   ]
+     8 : [  526.873   ]
+     9 : [  434.372   ]
+    10 : [  -18.6194  ]
+    11 : [ -149.119   ]
+    12 : [ -432.201   ]
+    13 : [ -243.57    ]
+    14 : [    8.33127 ]
+    15 : [   55.9271  ]
+    16 : [  140.58    ]
+    17 : [ -289.953   ]
+    18 : [  148.289   ]
+    19 : [ -256.343   ]
+    20 : [  -29.9597  ]
+    21 : [  -21.2533  ]
+    22 : [  -31.8661  ]
+    23 : [ -320.602   ]
+    24 : [  122.277   ]
+    25 : [  -67.2518  ]
+    26 : [  152.138   ]
+    27 : [ -196.672   ], basis=Basis( [[x0,x1]->[1]] ), trend coefficients=[6.87357])
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-106
+
+.. GENERATED FROM PYTHON SOURCE LINES 104-109
 
 Metamodel visualization
 -----------------------
 
-We draw the Kriging metamodel of the Branin function. It is the mean of the random process.
+We get the metamodel (mean of the conditioned Gaussian Process) and the variance estimation.
+We draw the GP metamodel of the Branin function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-124
+.. GENERATED FROM PYTHON SOURCE LINES 109-128
 
 .. code-block:: Python
 
-    metamodel = result.getMetaModel()
+    gprMetamodel = gpr_result.getMetaModel()
+    gccc = otexp.GaussianProcessConditionalCovariance(gpr_result)
 
 
-    graphBasic = metamodel.draw([0.0, 0.0], [1.0, 1.0], [100] * 2)
+    graphBasic = gprMetamodel.draw([0.0, 0.0], [1.0, 1.0], [100] * 2)
     # Take the first drawable as the only contour with multiple levels
     contours = graphBasic.getDrawable(0).getImplementation()
     contours.setColorBarPosition("")  # Hide the color bar
@@ -312,11 +336,11 @@ We draw the Kriging metamodel of the Branin function. It is the mean of the rand
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-126
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 We also represent the location of the minima of the Branin function :
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-131
+.. GENERATED FROM PYTHON SOURCE LINES 130-135
 
 .. code-block:: Python
 
@@ -328,24 +352,24 @@ We also represent the location of the minima of the Branin function :
 
 
 
-.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_003.png
+.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_003.svg
    :alt: Branin metamodel (mean)
-   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_003.png
+   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_003.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-133
+.. GENERATED FROM PYTHON SOURCE LINES 136-137
 
 We evaluate the metamodel at the minima locations :
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-135
+.. GENERATED FROM PYTHON SOURCE LINES 137-139
 
 .. code-block:: Python
 
-    print(metamodel(sample1))
+    print(gprMetamodel(sample1))
 
 
 
@@ -355,20 +379,20 @@ We evaluate the metamodel at the minima locations :
 
  .. code-block:: none
 
-    0 : [ -1.05619 ]
-    1 : [ -1.04756 ]
-    2 : [ -1.05932 ]
+    0 : [ -1.02994 ]
+    1 : [ -1.04632 ]
+    2 : [ -1.05056 ]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-139
+.. GENERATED FROM PYTHON SOURCE LINES 140-143
 
 Graphically, both the metamodel and the exact function look the same. The metamodel also has three
 basins around the minima and the value of the metamodel at each minimum location is comparable to
 the exact value of -0.979476. We have roughly two correct digits for each isoline.
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-147
+.. GENERATED FROM PYTHON SOURCE LINES 146-151
 
 Standard deviation
 ------------------
@@ -376,11 +400,11 @@ Standard deviation
 We finally take a look at the standard deviation in the :math:`[0,1] \times [0,1]` domain. It may be
 seen as a measure of the error of the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-150
+.. GENERATED FROM PYTHON SOURCE LINES 153-154
 
 We discretize the domain with 22 points (`N` inside points and 2 endpoints) :
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-153
+.. GENERATED FROM PYTHON SOURCE LINES 154-157
 
 .. code-block:: Python
 
@@ -394,15 +418,15 @@ We discretize the domain with 22 points (`N` inside points and 2 endpoints) :
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-155
+.. GENERATED FROM PYTHON SOURCE LINES 158-159
 
 We compute the conditional variance of the model and take the square root to get the deviation :
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-158
+.. GENERATED FROM PYTHON SOURCE LINES 159-162
 
 .. code-block:: Python
 
-    condCov = result.getConditionalMarginalVariance(inputData, 0)
+    condCov = gccc.getConditionalMarginalVariance(inputData, 0)
     condCovSd = sqrt(condCov)
 
 
@@ -412,11 +436,11 @@ We compute the conditional variance of the model and take the square root to get
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-160
+.. GENERATED FROM PYTHON SOURCE LINES 163-164
 
 As we have previously done we build contours with the following levels ans labels :
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-167
+.. GENERATED FROM PYTHON SOURCE LINES 164-171
 
 .. code-block:: Python
 
@@ -434,11 +458,11 @@ As we have previously done we build contours with the following levels ans label
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-169
+.. GENERATED FROM PYTHON SOURCE LINES 172-173
 
 We superimpose the training sample :
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-175
+.. GENERATED FROM PYTHON SOURCE LINES 173-179
 
 .. code-block:: Python
 
@@ -451,26 +475,26 @@ We superimpose the training sample :
 
 
 
-.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_004.png
+.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_004.svg
    :alt: Standard deviation
-   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_004.png
+   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_kriging_branin_function_004.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-179
+.. GENERATED FROM PYTHON SOURCE LINES 180-183
 
 We observe that the standard deviation is small in the center of the domain where we have enough
 data to learn the model.
 We can print the value of the variance at the first 5 training points (they all behave similarly) :
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-181
+.. GENERATED FROM PYTHON SOURCE LINES 183-185
 
 .. code-block:: Python
 
-    print(result.getConditionalMarginalVariance(xdata, 0)[0:5])
+    print(gccc.getConditionalMarginalVariance(xdata, 0)[0:5])
 
 
 
@@ -481,46 +505,29 @@ We can print the value of the variance at the first 5 training points (they all 
  .. code-block:: none
 
         [ v0          ]
-    0 : [ 2.84217e-14 ]
-    1 : [ 9.79317e-27 ]
-    2 : [ 2.84217e-14 ]
-    3 : [ 1.17329e-24 ]
+    0 : [ 2.13163e-14 ]
+    1 : [ 1.42109e-14 ]
+    2 : [ 2.13163e-14 ]
+    3 : [ 2.84217e-14 ]
     4 : [ 2.84217e-14 ]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-184
+.. GENERATED FROM PYTHON SOURCE LINES 186-188
 
-These values are nearly zero which is expected as the Kriging interpolates data. The value being
+These values are nearly zero which is expected as the metamodel interpolates data. The value being
 known it is not random anymore and the variance ought to be zero.
-
-.. GENERATED FROM PYTHON SOURCE LINES 186-187
-
-Display all figures
-
-.. GENERATED FROM PYTHON SOURCE LINES 187-189
-
-.. code-block:: Python
-
-    plt.show()
-
-
-
-
-
-
-
 
 .. GENERATED FROM PYTHON SOURCE LINES 190-191
 
-Reset default settings
+Display all figures
 
 .. GENERATED FROM PYTHON SOURCE LINES 191-192
 
 .. code-block:: Python
 
-    ot.ResourceMap.Reload()
+    otv.View.ShowAll()
 
 
 

@@ -1,6 +1,6 @@
 """
-Draw fields
-===========
+Manipulate stochastic processes
+===============================
 """
 
 # %%
@@ -21,9 +21,8 @@ Draw fields
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # We create a mesh -a time grid- which is a :class:`~openturns.RegularGrid` :
@@ -131,6 +130,7 @@ fieldSample = process.getSample(number)
 
 # %%
 # Let us draw them the first marginal
+# sphinx_gallery_thumbnail_number = 5
 graph = fieldSample.drawMarginal(0, False)
 graph.setTitle("First marginal of 10 realizations of the process")
 graph.setXTitle("t")

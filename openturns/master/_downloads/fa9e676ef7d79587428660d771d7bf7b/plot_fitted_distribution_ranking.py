@@ -16,7 +16,6 @@ Select fitted distributions
 import openturns as ot
 import openturns.viewer as otv
 
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # Create a sample from a continuous distribution
@@ -103,7 +102,3 @@ test_result
 # Rank the discrete models with respect to the BIC criteria:
 ot.FittingTest.BestModelBIC(sample, distributions)
 otv.View.ShowAll()
-
-# %%
-# Reset default settings
-ot.ResourceMap.Reload()

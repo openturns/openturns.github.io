@@ -12,10 +12,7 @@ Create a random design of experiments
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
+from matplotlib import pyplot as plt
 
 # %%
 # We create the underlying distribution: a standard 2-dimensional normal distribution.

@@ -48,7 +48,6 @@ X.setMesh(tg)
 
 # %%
 # Draw some input trajectories from our process
-ot.RandomGenerator.SetSeed(0)
 x = X.getSample(10)
 graph = x.drawMarginal(0)
 graph.setTitle(f"{x.getSize()} input trajectories")
@@ -187,8 +186,5 @@ print(f"total order={sobol_0t}")
 graph = sensitivity.draw()
 view = View(graph)
 
-View.ShowAll()
-
 # %%
-# Reset default settings
-ot.ResourceMap.Reload()
+View.ShowAll()

@@ -6,14 +6,7 @@ Fit an extreme value distribution
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
-# %%
-# Set the random generator seed
-ot.RandomGenerator.SetSeed(0)
-
+from matplotlib import pyplot as plt
 
 # %%
 # The generalized extreme value distribution (GEV)

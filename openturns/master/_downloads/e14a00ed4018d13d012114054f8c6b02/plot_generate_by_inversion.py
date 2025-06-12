@@ -100,9 +100,6 @@ import openturns as ot
 import openturns.viewer as viewer
 import numpy as np
 
-ot.Log.Show(ot.Log.NONE)
-
-
 # %%
 # The following function defines the quantile function of the :class:`~openturns.WeibullMin` distribution.
 # (Of course, we could use the `computeQuantile` method of the :class:`~openturns.WeibullMin` class as well.
@@ -110,7 +107,6 @@ ot.Log.Show(ot.Log.NONE)
 # that we accept in order to better understand the algorithm.)
 
 
-# %%
 def weibullQ(argument):
     """
     WeibullMin quantile function

@@ -10,10 +10,7 @@ Create and manipulate an ARMA process
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
+from matplotlib import pyplot as plt
 
 # %%
 # Create an ARMA process
@@ -198,6 +195,7 @@ curve = graph.getDrawable(0)
 curve.setLineStyle("dashed")
 graph0.add(curve)
 graph0.setTitle("One ARMA realization and a possible future")
+# sphinx_gallery_thumbnail_number = 3
 view = viewer.View(graph0)
 
 

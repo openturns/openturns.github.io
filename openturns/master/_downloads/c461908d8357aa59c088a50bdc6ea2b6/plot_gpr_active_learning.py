@@ -21,23 +21,14 @@ from openturns.viewer import View
 import numpy as np
 from openturns import viewer
 
-ot.Log.Show(ot.Log.NONE)
-
-
 # %%
 # Define the function, the threshold above which the system is considered in failure, and the input probability distribution.
-
-# %%
-
 g = ot.SymbolicFunction(["x"], ["0.5*x^2 + sin(5*x)"])
 threshold = 1.25
 distribution = ot.Normal(0, 0.4)
 
-
 # %%
 # Create the design of experiments.
-
-# %%
 dimension = 1
 DoESize = 4
 xMin = -2.0
@@ -158,14 +149,12 @@ def plotMyBasicGPR(
         )
 
     gpcc = otexp.GaussianProcessConditionalCovariance(gprResult)
-    epsilon = ot.Sample(nbpoints, [1.0e-8])
-    conditionalVariance = gpcc.getConditionalMarginalVariance(xGrid) + epsilon
+    conditionalVariance = gpcc.getConditionalMarginalVariance(xGrid)
     conditionalSigma = np.sqrt(conditionalVariance)
     # Compute the quantile of the Normal distribution
     alpha = 1 - (1 - level) / 2
     quantileAlpha = ot.DistFunc.qNormal(alpha)
     # Draw the bounds
-    epsilon = 1.0e-8
     dataLower = [
         yKrig[i, 0] - quantileAlpha * conditionalSigma[i, 0] for i in range(nbpoints)
     ]
@@ -206,7 +195,8 @@ def plotMyBasicGPR(
     graph.setAxes(True)
     graph.setGrid(True)
     graph.setTitle(
-        "Estimated probability = %f, Reference probability =  %f" % (proba, refProbability)
+        "Estimated probability = %f, Reference probability =  %f"
+        % (proba, refProbability)
     )
     graph.setXTitle("X")
     graph.setYTitle("Y")
@@ -232,6 +222,7 @@ view = viewer.View(graph)
 # It consists in finding the new point as the sample :math:`\mathbf{x}` in the Monte-Carlo experiment that minimizes  the following expression:
 # :math:`\frac{ \left| T - \hat{\mathcal{M}} ( \mathbf{x}) \right|}{\hat{\sigma}(\mathbf{x})}`
 # with :math:`\hat{\sigma}(\mathbf{x})` the square root of the marginal covariance of the Gaussian Process evaluated on :math:`\mathbf{x}`, and :math:`T` the event threshold (here 1.5)
+
 
 # %%
 def getNewPoint(X, gprResult, threshold):

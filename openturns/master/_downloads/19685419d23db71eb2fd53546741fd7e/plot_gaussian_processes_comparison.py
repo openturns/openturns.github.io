@@ -4,7 +4,7 @@ Compare covariance models
 """
 
 # %%
-# The main goal of this example is to briefly review the most important covariance models and compare them in terms of regularity.
+# The main goal of this example is to briefly review the most important covariance models and compare them in terms of regularity of the trajectories.
 #
 # We first show how to define a covariance model, a temporal grid and a Gaussian process.
 # We first consider the squared exponential covariance model and show how the trajectories are sensitive to its parameters.
@@ -26,12 +26,10 @@ Compare covariance models
 # * :math:`\boldsymbol{\theta}\in\mathbb{R}^d` is the scale.
 
 # %%
-import pylab as pl
+from matplotlib import pyplot as plt
 from openturns.viewer import View
 import openturns as ot
 import openturns.viewer as viewer
-
-ot.Log.Show(ot.Log.NONE)
 
 # %%
 # Amplitude values
@@ -72,7 +70,6 @@ view = viewer.View(graph)
 
 # %%
 process = ot.GaussianProcess(myModel, myTimeGrid)
-process
 
 # %%
 # Then we generate 10 trajectores with the `getSample` method. This trajectories are in a :class:`~openturns.ProcessSample`.
@@ -142,9 +139,9 @@ amplitude = [3.5]
 scale = [1.5]
 myModel = ot.SquaredExponential(scale, amplitude)
 process = ot.GaussianProcess(fTrend, myModel, myTimeGrid)
-process
 
 # %%
+# sphinx_gallery_thumbnail_number = 5
 nbTrajectories = 10
 sample = process.getSample(nbTrajectories)
 graph = sample.drawMarginal(0)
@@ -186,7 +183,7 @@ graph2 = plotCovarianceModel(myModel2, myTimeGrid, nbTrajectories)
 graph3 = plotCovarianceModel(myModel3, myTimeGrid, nbTrajectories)
 
 # %%
-fig = pl.figure(figsize=(20, 6))
+fig = plt.figure(figsize=(20, 6))
 ax1 = fig.add_subplot(1, 3, 1)
 _ = View(graph1, figure=fig, axes=[ax1])
 _ = ax1.set_title("Matern 5/2")
@@ -210,3 +207,4 @@ view = viewer.View(graph)
 
 # %%
 # We see that the exponential model produces very irregular trajectories.
+viewer.View.ShowAll()

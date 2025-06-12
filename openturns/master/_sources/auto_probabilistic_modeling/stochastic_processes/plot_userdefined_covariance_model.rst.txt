@@ -21,22 +21,23 @@
 Create a custom covariance model
 ================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-10
+.. GENERATED FROM PYTHON SOURCE LINES 7-12
 
-This example illustrates how the user can define his own covariance model.
+This example illustrates how the user can define his own covariance model in both cases:
+
+- Case 1: stationary covariance model,
+- Case 2: any covariance model.
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 12-18
+.. GENERATED FROM PYTHON SOURCE LINES 14-19
 
 .. code-block:: Python
 
     import openturns as ot
     import openturns.viewer as viewer
-    from matplotlib import pylab as plt
+    from matplotlib import pyplot as plt
     import math as m
 
-    ot.Log.Show(ot.Log.NONE)
 
 
 
@@ -44,16 +45,121 @@ This example illustrates how the user can define his own covariance model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-21
+.. GENERATED FROM PYTHON SOURCE LINES 20-40
 
-Construct the covariance model
-------------------------------
+Case 1: stationary covariance model
+-----------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+In this example, we show how to build our own stationary covariance modelusing the class
+:class:`~openturns.UserDefinedStationaryCovarianceModel`.
 
-Create the time grid
+We define the covariance model from:
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-29
+- a mesh :math:`\mathcal{M}` of dimension :math:`n` defined by the vertices :math:`(\vect{\tau}_0,\dots, \vect{\tau}_{N-1})`
+  and the associated simplices,
+- a collection of covariance matrices stored in the object :class:`~openturns.CovarianceMatrixCollection` denoted by
+  :math:`\vect{C}_0, \dots, \vect{C}_{N-1}`, where :math:`\vect{C}_k \in \mathcal{M}_{d \times d}(\mathbb{R})`
+  for :math:`0 \leq k \leq N-1`.
+
+Then we build a stationary covariance function which is a piecewise constant function on :math:`\mathcal{D}` defined by:
+
+.. math::
+   \forall \vect{\tau} \in \mathcal{D}, \, C^{stat}(\vect{\tau}) =  \vect{C}_k
+
+where :math:`k`  is such that :math:`\vect{\tau}_k` is the  vertex of :math:`\mathcal{M}` the nearest to :math:`\vect{t}.`
+
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
+
+We first create the time grid and the covariance function
+
+.. GENERATED FROM PYTHON SOURCE LINES 43-60
+
+.. code-block:: Python
+
+    t0 = 0.0
+    dt = 0.5
+    N = int((20.0 - t0) / dt)
+    mesh = ot.RegularGrid(t0, dt, N)
+
+
+    def gamma(tau):
+        return 1.0 / (1.0 + tau * tau)
+
+
+    # We create the collection of :class:`~openturns.SquareMatrix`.
+    coll = ot.SquareMatrixCollection()
+    for k in range(N):
+        t = mesh.getValue(k)
+        matrix = ot.SquareMatrix([[gamma(t)]])
+        coll.add(matrix)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
+
+We create  the final stationary covariance model.
+
+.. GENERATED FROM PYTHON SOURCE LINES 62-64
+
+.. code-block:: Python
+
+    covmodel = ot.UserDefinedStationaryCovarianceModel(mesh, coll)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
+
+We can draw the covariance function.
+
+.. GENERATED FROM PYTHON SOURCE LINES 66-80
+
+.. code-block:: Python
+
+    x = ot.Sample(N, 2)
+    for k in range(N):
+        t = mesh.getValue(k)
+        x[k, 0] = t
+        value = covmodel(t)
+        x[k, 1] = value[0, 0]
+
+    curve = ot.Curve(x, "User Model")
+    myGraph = ot.Graph("User covariance model", "Time", "Covariance function", True)
+    myGraph.add(curve)
+    myGraph.setLegendPosition("upper right")
+    view = viewer.View(myGraph)
+
+
+
+
+
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_001.svg
+   :alt: User covariance model
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_001.svg
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 81-86
+
+Case 2: any covariance model
+----------------------------
+
+In this example, we build a covariance model from a time grid and a covariance function depending on :math:`s,t)`,
+using the class :class:`~openturns.UserDefinedCovarianceModel`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 86-95
 
 .. code-block:: Python
 
@@ -61,21 +167,6 @@ Create the time grid
     a = 4.0
     mesh = ot.IntervalMesher([N]).build(ot.Interval(-a, a))
 
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
-
-Create the covariance function depending on `(s,t)`
-
-.. GENERATED FROM PYTHON SOURCE LINES 31-35
-
-.. code-block:: Python
 
     def C(s, t):
         return m.exp(-4.0 * abs(s - t) / (1 + (s * s + t * t)))
@@ -88,11 +179,11 @@ Create the covariance function depending on `(s,t)`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 96-97
 
-Create the large covariance matrix
+The, we create the  covariance matrix on the mesh.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-44
+.. GENERATED FROM PYTHON SOURCE LINES 97-104
 
 .. code-block:: Python
 
@@ -110,11 +201,11 @@ Create the large covariance matrix
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 105-106
 
-Create the covariance model
+The, we create the final non stationary covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-49
+.. GENERATED FROM PYTHON SOURCE LINES 106-108
 
 .. code-block:: Python
 
@@ -127,19 +218,15 @@ Create the covariance model
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 109-110
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-52
+We can draw the covariance model as a function: first, we define the function to draw.
 
-Draw the covariance model as a function
----------------------------------------
-
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
-
-Define the function to draw
-
-.. GENERATED FROM PYTHON SOURCE LINES 56-63
+.. GENERATED FROM PYTHON SOURCE LINES 110-119
 
 .. code-block:: Python
+
+
 
     def f(x):
         return [covmodel([x[0]], [x[1]])[0, 0]]
@@ -155,11 +242,11 @@ Define the function to draw
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-65
+.. GENERATED FROM PYTHON SOURCE LINES 120-121
 
-Draw the function with default options
+Then we can draw the function with default options.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-70
+.. GENERATED FROM PYTHON SOURCE LINES 121-126
 
 .. code-block:: Python
 
@@ -171,20 +258,21 @@ Draw the function with default options
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_001.png
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_002.svg
    :alt: $cov$ as a function of ($s$,$t$)
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_001.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_002.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 127-129
 
-Draw the function in a filled contour graph
+We can draw the function in a filled contour graph.
+sphinx_gallery_thumbnail_number = 3
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-77
+.. GENERATED FROM PYTHON SOURCE LINES 129-134
 
 .. code-block:: Python
 
@@ -196,25 +284,20 @@ Draw the function in a filled contour graph
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_002.png
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_003.svg
    :alt: $cov$ as a function of ($s$,$t$)
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_002.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_003.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
+.. GENERATED FROM PYTHON SOURCE LINES 135-136
 
-Draw the covariance model as a matrix
--------------------------------------
+We can also draw the covariance model as a matrix, using the raw matshow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-83
-
-Use raw matshow
-
-.. GENERATED FROM PYTHON SOURCE LINES 83-85
+.. GENERATED FROM PYTHON SOURCE LINES 136-138
 
 .. code-block:: Python
 
@@ -223,24 +306,24 @@ Use raw matshow
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_003.png
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_004.svg
    :alt: plot userdefined covariance model
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_003.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_004.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-91
+.. GENERATED FROM PYTHON SOURCE LINES 139-144
 
-Draw the covariance model as a matrix with the correct axes.
+The, we draw the covariance model as a matrix with the correct axes.
 
 To obtain the correct orientation of the y axis we use the origin argument.
 To obtain the correct graduations we use the extent argument.
 We also change the colormap used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-99
+.. GENERATED FROM PYTHON SOURCE LINES 144-153
 
 .. code-block:: Python
 
@@ -255,10 +338,27 @@ We also change the colormap used.
 
 
 
-.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_004.png
+
+.. image-sg:: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_005.svg
    :alt: plot userdefined covariance model
-   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_004.png
+   :srcset: /auto_probabilistic_modeling/stochastic_processes/images/sphx_glr_plot_userdefined_covariance_model_005.svg
    :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 154-155
+
+Display all figures
+
+.. GENERATED FROM PYTHON SOURCE LINES 155-156
+
+.. code-block:: Python
+
+    viewer.View.ShowAll()
+
+
 
 
 

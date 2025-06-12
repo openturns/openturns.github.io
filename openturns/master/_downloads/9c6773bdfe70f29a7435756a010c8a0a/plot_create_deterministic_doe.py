@@ -6,10 +6,7 @@ Create a deterministic design of experiments
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
+from matplotlib import pyplot as plt
 
 # %%
 # Four types of deterministic designs of experiments are available:

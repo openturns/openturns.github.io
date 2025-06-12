@@ -29,13 +29,12 @@ Create a discrete Markov chain process
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
+from matplotlib import pyplot as plt
 
 # %%
 # Define a generic function to plot matrices
+
+
 def plotMatrix(matrix, texts=False, origin=None, colorbar=False, extent=None, **kwargs):
     """Generic procedure for displaying a matrix with or without text overlay and color bar"""
     res = plt.matshow(matrix, origin=origin, extent=extent, **kwargs)

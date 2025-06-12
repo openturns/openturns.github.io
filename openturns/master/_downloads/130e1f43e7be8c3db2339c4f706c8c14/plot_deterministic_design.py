@@ -20,16 +20,12 @@ Deterministic design of experiments
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
+from matplotlib import pyplot as plt
 
 # %%
 # We will use the following function to plot bi-dimensional samples.
 
 
-# %%
 def drawBidimensionalSample(sample, title):
     n = sample.getSize()
     graph = ot.Graph("%s, size=%d" % (title, n), "X1", "X2", True, "")

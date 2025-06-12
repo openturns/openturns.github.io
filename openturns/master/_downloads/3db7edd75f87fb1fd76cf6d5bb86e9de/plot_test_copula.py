@@ -6,10 +6,6 @@ Test the copula
 # %%
 import openturns as ot
 import openturns.viewer as viewer
-from matplotlib import pylab as plt
-
-ot.Log.Show(ot.Log.NONE)
-
 
 # %%
 # Copula fitting test using Kendall plot
@@ -108,8 +104,4 @@ view = viewer.View(myGraph)
 
 # %%
 # Display figures
-plt.show()
-
-# %%
-# Reset default settings
-ot.ResourceMap.Reload()
+viewer.View.ShowAll()

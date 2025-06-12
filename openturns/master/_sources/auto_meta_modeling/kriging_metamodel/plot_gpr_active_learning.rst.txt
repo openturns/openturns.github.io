@@ -46,7 +46,7 @@ In order to create simple graphs, we consider a 1-d function.
 Create the function and the design of experiments
 -------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-27
+.. GENERATED FROM PYTHON SOURCE LINES 18-24
 
 .. code-block:: Python
 
@@ -56,7 +56,6 @@ Create the function and the design of experiments
     import numpy as np
     from openturns import viewer
 
-    ot.Log.Show(ot.Log.NONE)
 
 
 
@@ -64,16 +63,13 @@ Create the function and the design of experiments
 
 
 
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Define the function, the threshold above which the system is considered in failure, and the input probability distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-37
+.. GENERATED FROM PYTHON SOURCE LINES 26-30
 
 .. code-block:: Python
-
 
     g = ot.SymbolicFunction(["x"], ["0.5*x^2 + sin(5*x)"])
     threshold = 1.25
@@ -86,12 +82,11 @@ Define the function, the threshold above which the system is considered in failu
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Create the design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-49
+.. GENERATED FROM PYTHON SOURCE LINES 32-40
 
 .. code-block:: Python
 
@@ -110,11 +105,11 @@ Create the design of experiments.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 We plot the limit state function, the initial design of experiments and the failure threshold.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-76
+.. GENERATED FROM PYTHON SOURCE LINES 42-67
 
 .. code-block:: Python
 
@@ -146,25 +141,25 @@ We plot the limit state function, the initial design of experiments and the fail
 
 
 
-.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_001.png
+.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_001.svg
    :alt: plot gpr active learning
-   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_001.png
+   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_001.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-79
+.. GENERATED FROM PYTHON SOURCE LINES 68-70
 
 Define the reliability analysis
 -------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 72-73
 
 We define the event and estimate the reference failure probability with Monte-Carlo algorithm.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-100
+.. GENERATED FROM PYTHON SOURCE LINES 75-91
 
 .. code-block:: Python
 
@@ -197,12 +192,12 @@ We define the event and estimate the reference failure probability with Monte-Ca
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-103
+.. GENERATED FROM PYTHON SOURCE LINES 92-94
 
 Create the algorithms
 ---------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-121
+.. GENERATED FROM PYTHON SOURCE LINES 97-112
 
 .. code-block:: Python
 
@@ -228,7 +223,7 @@ Create the algorithms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-131
+.. GENERATED FROM PYTHON SOURCE LINES 113-122
 
 .. code-block:: Python
 
@@ -248,7 +243,7 @@ Create the algorithms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-216
+.. GENERATED FROM PYTHON SOURCE LINES 123-206
 
 .. code-block:: Python
 
@@ -281,14 +276,12 @@ Create the algorithms
             )
 
         gpcc = otexp.GaussianProcessConditionalCovariance(gprResult)
-        epsilon = ot.Sample(nbpoints, [1.0e-8])
-        conditionalVariance = gpcc.getConditionalMarginalVariance(xGrid) + epsilon
+        conditionalVariance = gpcc.getConditionalMarginalVariance(xGrid)
         conditionalSigma = np.sqrt(conditionalVariance)
         # Compute the quantile of the Normal distribution
         alpha = 1 - (1 - level) / 2
         quantileAlpha = ot.DistFunc.qNormal(alpha)
         # Draw the bounds
-        epsilon = 1.0e-8
         dataLower = [
             yKrig[i, 0] - quantileAlpha * conditionalSigma[i, 0] for i in range(nbpoints)
         ]
@@ -329,7 +322,8 @@ Create the algorithms
         graph.setAxes(True)
         graph.setGrid(True)
         graph.setTitle(
-            "Estimated probability = %f, Reference probability =  %f" % (proba, refProbability)
+            "Estimated probability = %f, Reference probability =  %f"
+            % (proba, refProbability)
         )
         graph.setXTitle("X")
         graph.setYTitle("Y")
@@ -343,12 +337,12 @@ Create the algorithms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-219
+.. GENERATED FROM PYTHON SOURCE LINES 207-209
 
 We start by creating the initial Gaussian Process Regressor model :math:`\hat{\mathcal{M}}` on the 4 points in the design of experiments.
 We estimate the probability on this surrogate model and compare with the reference probability computed on the real limit state function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-226
+.. GENERATED FROM PYTHON SOURCE LINES 211-216
 
 .. code-block:: Python
 
@@ -360,28 +354,28 @@ We estimate the probability on this surrogate model and compare with the referen
 
 
 
-.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_002.png
+.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_002.svg
    :alt: Estimated probability = 0.017606, Reference probability =  0.016760
-   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_002.png
+   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_002.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 227-229
+.. GENERATED FROM PYTHON SOURCE LINES 217-219
 
 Active learning Gaussian Process Regressor to sequentially add new points
 -------------------------------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 231-235
+.. GENERATED FROM PYTHON SOURCE LINES 221-225
 
 To sequentially add the new points, the "U criterion" is used.
 It consists in finding the new point as the sample :math:`\mathbf{x}` in the Monte-Carlo experiment that minimizes  the following expression:
 :math:`\frac{ \left| T - \hat{\mathcal{M}} ( \mathbf{x}) \right|}{\hat{\sigma}(\mathbf{x})}`
 with :math:`\hat{\sigma}(\mathbf{x})` the square root of the marginal covariance of the Gaussian Process evaluated on :math:`\mathbf{x}`, and :math:`T` the event threshold (here 1.5)
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-255
+.. GENERATED FROM PYTHON SOURCE LINES 228-246
 
 .. code-block:: Python
 
@@ -410,11 +404,11 @@ with :math:`\hat{\sigma}(\mathbf{x})` the square root of the marginal covariance
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-257
+.. GENERATED FROM PYTHON SOURCE LINES 247-248
 
 We first call `getNewPoint` to get a point to add to the design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 260-263
+.. GENERATED FROM PYTHON SOURCE LINES 251-254
 
 .. code-block:: Python
 
@@ -434,11 +428,11 @@ We first call `getNewPoint` to get a point to add to the design of experiments.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-265
+.. GENERATED FROM PYTHON SOURCE LINES 255-256
 
 Then we evaluate the function on the new point and add it to the training design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 267-271
+.. GENERATED FROM PYTHON SOURCE LINES 258-262
 
 .. code-block:: Python
 
@@ -453,11 +447,11 @@ Then we evaluate the function on the new point and add it to the training design
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 272-273
+.. GENERATED FROM PYTHON SOURCE LINES 263-264
 
 We now plot the updated Gaussian Process Regressor.
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-279
+.. GENERATED FROM PYTHON SOURCE LINES 266-270
 
 .. code-block:: Python
 
@@ -468,20 +462,20 @@ We now plot the updated Gaussian Process Regressor.
 
 
 
-.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_003.png
+.. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_003.svg
    :alt: Estimated probability = 0.000000, Reference probability =  0.016760
-   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_003.png
+   :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_003.svg
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-281
+.. GENERATED FROM PYTHON SOURCE LINES 271-272
 
 The algorithm added in the domain.
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-292
+.. GENERATED FROM PYTHON SOURCE LINES 274-283
 
 .. code-block:: Python
 
@@ -502,86 +496,86 @@ The algorithm added in the domain.
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_004.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_004.svg
          :alt: Estimated probability = 0.000339, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_004.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_004.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_005.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_005.svg
          :alt: Estimated probability = 0.000339, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_005.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_005.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_006.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_006.svg
          :alt: Estimated probability = 0.000339, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_006.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_006.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_007.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_007.svg
          :alt: Estimated probability = 0.000339, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_007.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_007.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_008.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_008.svg
          :alt: Estimated probability = 0.000339, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_008.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_008.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_009.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_009.svg
          :alt: Estimated probability = 0.005248, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_009.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_009.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_010.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_010.svg
          :alt: Estimated probability = 0.012020, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_010.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_010.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_011.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_011.svg
          :alt: Estimated probability = 0.016083, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_011.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_011.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_012.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_012.svg
          :alt: Estimated probability = 0.016760, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_012.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_012.svg
          :class: sphx-glr-multi-img
 
     *
 
-      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_013.png
+      .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_013.svg
          :alt: Estimated probability = 0.016760, Reference probability =  0.016760
-         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_013.png
+         :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_active_learning_013.svg
          :class: sphx-glr-multi-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-297
+.. GENERATED FROM PYTHON SOURCE LINES 284-288
 
 We can see that the metamodel only needs to be accurate near the event threshold to retrieve a precise estimation probability of failure.
 With only 10 points evaluated on the real limit state function, the metamodel accuracy is sufficient to estimate the failure probability.
 Indeed, the estimated probability is very close to the reference probability.
 This kind of active learning strategies allows one to save a large number of simulations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-309
+.. GENERATED FROM PYTHON SOURCE LINES 290-300
 
 Conclusion
 ----------
@@ -594,7 +588,7 @@ More practical algorithms are presented in the following references.
 * Echard, B. (2012). Assessment by kriging of the reliability of structures subjected to fatigue stress, Université Blaise Pascal, PhD thesis
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 309-311
+.. GENERATED FROM PYTHON SOURCE LINES 300-302
 
 .. code-block:: Python
 

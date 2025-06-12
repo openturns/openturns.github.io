@@ -11,10 +11,7 @@ Polynomial chaos graphs
 import openturns as ot
 import openturns.viewer as viewer
 
-ot.Log.Show(ot.Log.NONE)
 
-
-# %%
 def drawFamily(factory, degreeMax=5):
 
     # Create a fine title
@@ -44,8 +41,7 @@ def drawFamily(factory, degreeMax=5):
 # Draw the 5-th first members of the Jacobi family.
 
 # %%
-# Create the Jacobi polynomials family using the default Jacobi.ANALYSIS
-# parameter set
+# Instantiate a polynomial from the Jacobi family using the default Jacobi.ANALYSIS parameter set.
 alpha = 0.5
 beta = 1.5
 jacobiFamily = ot.JacobiFactory(alpha, beta)
