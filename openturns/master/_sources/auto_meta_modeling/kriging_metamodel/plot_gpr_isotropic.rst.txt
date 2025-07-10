@@ -125,7 +125,7 @@ Because we are going to view several Gaussian Process Regression models in this 
 we use a function to automate the process of optimizing the scale parameter
 and producing the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-100
+.. GENERATED FROM PYTHON SOURCE LINES 67-103
 
 .. code-block:: Python
 
@@ -138,6 +138,10 @@ and producing the metamodel.
         """
         Fit the parameters of a Gaussian Process Regression surrogate model.
         """
+        # Set the starting scale for the optimization.
+        scale_dimension = covarianceModel.getScale().getDimension()
+        covarianceModel.setScale([upper] * scale_dimension)
+
         # Prepare to fit Gaussian process hyperparameters.
         fitter = otexp.GaussianProcessFitter(
             coordinates, observations, covarianceModel, basis
@@ -145,7 +149,6 @@ and producing the metamodel.
 
         # Set the optimization bounds for the scale parameter to sensible values
         # given the data set.
-        scale_dimension = covarianceModel.getScale().getDimension()
         fitter.setOptimizationBounds(
             ot.Interval([lower] * scale_dimension, [upper] * scale_dimension)
         )
@@ -169,11 +172,11 @@ and producing the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-102
+.. GENERATED FROM PYTHON SOURCE LINES 104-105
 
 Let us define a helper function to plot Gaussian Process Regression predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-135
+.. GENERATED FROM PYTHON SOURCE LINES 105-138
 
 .. code-block:: Python
 
@@ -217,14 +220,14 @@ Let us define a helper function to plot Gaussian Process Regression predictions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-140
+.. GENERATED FROM PYTHON SOURCE LINES 139-143
 
 Predict with an anisotropic geometric covariance kernel
 -------------------------------------------------------
 In order to illustrate the usefulness of isotropic covariance kernels,
 we first perform prediction with an anisotropic geometric kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-149
+.. GENERATED FROM PYTHON SOURCE LINES 145-152
 
 Keep in mind that, when there are more than one input dimension,
 the :class:`~openturns.CovarianceModel` classes use a multidimensional
@@ -234,7 +237,7 @@ They are anisotropic geometric by default.
 Our example has two input dimensions,
 so :math:`\vect{\theta} = (\theta_1, \theta_2)`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-157
+.. GENERATED FROM PYTHON SOURCE LINES 152-160
 
 .. code-block:: Python
 
@@ -258,13 +261,13 @@ so :math:`\vect{\theta} = (\theta_1, \theta_2)`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-161
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 We see weird vertical columns on the plot.
 How did this happen? Let us have a look at the optimized scale parameter
 :math:`\hat{\vect{\theta}} = (\hat{\theta}_1, \hat{\theta}_2)`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-163
+.. GENERATED FROM PYTHON SOURCE LINES 164-166
 
 .. code-block:: Python
 
@@ -278,16 +281,16 @@ How did this happen? Let us have a look at the optimized scale parameter
 
  .. code-block:: none
 
-    [50,80.4]
+    [924.809,934.83]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-165
+.. GENERATED FROM PYTHON SOURCE LINES 167-168
 
 The value of :math:`\hat{\theta}_1` is actually equal to the lower bound:
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-168
+.. GENERATED FROM PYTHON SOURCE LINES 168-171
 
 .. code-block:: Python
 
@@ -307,12 +310,12 @@ The value of :math:`\hat{\theta}_1` is actually equal to the lower bound:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-171
+.. GENERATED FROM PYTHON SOURCE LINES 172-174
 
 This means that temperatures are likely to vary a lot along the X axis
 and much slower across the Y axis based on the observation data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-178
+.. GENERATED FROM PYTHON SOURCE LINES 176-181
 
 Predict with an isotropic covariance kernel
 ---------------------------------------------------
@@ -320,7 +323,7 @@ If we know that variations of the temperature are isotropic
 (i.e. with no priviledged direction),
 we can embed this information within the covariance kernel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-181
+.. GENERATED FROM PYTHON SOURCE LINES 181-184
 
 .. code-block:: Python
 
@@ -334,7 +337,7 @@ we can embed this information within the covariance kernel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-187
+.. GENERATED FROM PYTHON SOURCE LINES 185-190
 
 The :class:`~openturns.IsotropicCovarianceModel` class creates an isotropic
 version with a given input dimension of a :class:`~openturns.CovarianceModel`.
@@ -342,7 +345,7 @@ Because is isotropic, it only needs one scale parameter :math:`\theta_{iso}`
 and it will make sure :math:`\theta_1 = \theta_2 = \theta_{iso}` at all times
 during the optimization.
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-191
+.. GENERATED FROM PYTHON SOURCE LINES 190-194
 
 .. code-block:: Python
 
@@ -358,16 +361,16 @@ during the optimization.
 
  .. code-block:: none
 
-    [100.9]
+    [900.2]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-193
+.. GENERATED FROM PYTHON SOURCE LINES 195-196
 
 Prediction with the isotropic covariance kernel is much more satisfactory.
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-196
+.. GENERATED FROM PYTHON SOURCE LINES 196-199
 
 .. code-block:: Python
 
