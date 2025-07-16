@@ -107,23 +107,22 @@ and I is the Moment of inertia (m^4).</p>
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">beam_input.xml</span></code> is the input file containing the four parameter. Note that an example of this file can be created by manually replacing the tokens <code class="docutils literal notranslate"><span class="pre">&#64;F&#64;,</span> <span class="pre">&#64;E&#64;,</span> <span class="pre">&#64;L&#64;,</span> <span class="pre">&#64;I&#64;</span></code> by numerical values in the file <code class="docutils literal notranslate"><span class="pre">template/beam_input_template.xml</span></code>. The output of the code is an xml file <code class="docutils literal notranslate"><span class="pre">_beam_outputs_.xml</span></code> containing the deviation and its derivates.</p>
-<section id="prepare-your-environment-in-cronos">
-<h2>1- Prepare your environment in CRONOS<a class="headerlink" href="#prepare-your-environment-in-cronos" title="Link to this heading">¶</a></h2>
+<section id="prepare-your-environment-on-the-cluster">
+<h2>1- Prepare your environment on the cluster<a class="headerlink" href="#prepare-your-environment-on-the-cluster" title="Link to this heading">¶</a></h2>
+<p>The following commands suit the users who have access to one of the clusters owned by EDF (in the following the cluster is name CRONOS).</p>
 <ul>
 <li><p>Connect to CRONOS, create your Python environment called <code class="docutils literal notranslate"><span class="pre">myenv</span></code> using conda-forge:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>NNI@dspxxxxxxx:~$ ssh cronos
 [NNI-crfront1-pts48] ~ $ module load Miniforge3
-[NNI-crfront1-pts48] ~ $ conda create -n myenv openturns dask-jobqueue 
-[NNI-crfront1-pts48] ~ $ conda activate myenv
+[NNI-crfront1-pts48] ~ $ conda create -n myenv 
 </pre></div>
 </div>
 <p>The creation of your environment (second line), does not need to be repeated at each connection.</p>
 </li>
 <li><p>Clone the git repository in your “scratch” space and create your branch:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~$ cd /scratch/users/{NNI}/
-(myenv) [NNI-crfront1-pts48] ~$ git clone /https://gitlab.pleiade.edf.fr/projet-incertitudes/openturns/openturns/actions-openturns/hpc-phimeca.git
-(myenv) [NNI-crfront1-pts48] ~$ cd /scratch/users/{NNI}/hpc-phimeca/othpc/
-(myenv) [NNI-crfront1-pts48] ~$ pip install -e .
+(myenv) [NNI-crfront1-pts48] ~$ git clone [https://github.com/openturns/othpc](https://github.com/openturns/othpc)
+(myenv) [NNI-crfront1-pts48] ~$ pip install -e othpc/
 </pre></div>
 </div>
 </li>
@@ -152,43 +151,48 @@ and I is the Moment of inertia (m^4).</p>
 </section>
 <section id="how-to-run-an-othpc-script">
 <h2>3- How to run an <code class="docutils literal notranslate"><span class="pre">othpc</span></code> script?<a class="headerlink" href="#how-to-run-an-othpc-script" title="Link to this heading">¶</a></h2>
-<p>A- Define the simulation model</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">othpc</span>
+<section id="define-the-simulation-model">
+<h3>Define the simulation model<a class="headerlink" href="#define-the-simulation-model" title="Link to this heading">¶</a></h3>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">othpc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">cantilever_beam</span><span class="w"> </span><span class="kn">import</span> <span class="n">CantileverBeam</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">othpc.example</span><span class="w"> </span><span class="kn">import</span> <span class="n">CantileverBeam</span>
 
-<span class="n">input_template_file</span> <span class="o">=</span> <span class="s2">&quot;template/beam_input_template.xml&quot;</span>
-<span class="n">executable_file</span> <span class="o">=</span> <span class="s2">&quot;template/beam&quot;</span>
 <span class="n">my_results_directory</span> <span class="o">=</span> <span class="s2">&quot;my_results&quot;</span>
-<span class="n">cb</span> <span class="o">=</span> <span class="n">CantileverBeam</span><span class="p">(</span><span class="n">input_template_file</span><span class="p">,</span> <span class="n">executable_file</span><span class="p">,</span> <span class="n">my_results_directory</span><span class="p">,</span> <span class="n">n_cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">CantileverBeam</span><span class="p">(</span><span class="n">my_results_directory</span><span class="p">,</span> <span class="n">n_cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note that the argument <code class="docutils literal notranslate"><span class="pre">n_cpus</span></code> is set here to 2 (by default <code class="docutils literal notranslate"><span class="pre">n_cpus=1</span></code>).
 Therefore, the evaluation of a sample of input points is distributed by <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> on 2 CPUs.</p>
-<p>B- Define an OpenTURNS function distributing its evaluations</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dw</span> <span class="o">=</span> <span class="n">othpc</span><span class="o">.</span><span class="n">SubmitFunction</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">tasks_per_job</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cpus_per_job</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">timeout_per_job</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">dwfun</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">dw</span><span class="p">)</span>
+</section>
+<section id="define-an-openturns-function-distributing-its-evaluations">
+<h3>Define an OpenTURNS function distributing its evaluations<a class="headerlink" href="#define-an-openturns-function-distributing-its-evaluations" title="Link to this heading">¶</a></h3>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sf</span> <span class="o">=</span> <span class="n">othpc</span><span class="o">.</span><span class="n">SubmitFunction</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">evals_per_jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cpus_per_job</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">timeout_per_job</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>As the evaluations of the <code class="docutils literal notranslate"><span class="pre">CantileverBeam</span></code> class are distributed over 2 CPUs here (see remark above),
 two evaluation are done per SLURM job.</p>
-<p>C- Define input design of experiments with size <code class="docutils literal notranslate"><span class="pre">N=10</span></code> and evaluate it on the HPC</p>
+</section>
+<section id="define-input-design-of-experiments-with-size-n-10-and-evaluate-it-on-the-hpc">
+<h3>Define input design of experiments with size <code class="docutils literal notranslate"><span class="pre">N=10</span></code> and evaluate it on the HPC<a class="headerlink" href="#define-input-design-of-experiments-with-size-n-10-and-evaluate-it-on-the-hpc" title="Link to this heading">¶</a></h3>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">ImportFromCSVFile</span><span class="p">(</span><span class="s2">&quot;input_doe/doe.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">dwfun</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>D- Create a summary table gathering inputs and corresponding evaluated outputs</p>
+</section>
+<section id="create-a-summary-table-gathering-inputs-and-corresponding-evaluated-outputs">
+<h3>Create a summary table gathering inputs and corresponding evaluated outputs<a class="headerlink" href="#create-a-summary-table-gathering-inputs-and-corresponding-evaluated-outputs" title="Link to this heading">¶</a></h3>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">othpc</span><span class="o">.</span><span class="n">make_summary_file</span><span class="p">(</span><span class="s2">&quot;my_results&quot;</span><span class="p">,</span> <span class="n">summary_file</span><span class="o">=</span><span class="s2">&quot;summary_table.csv&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
 </section>
 <section id="resulting-file-tree">
 <h2>3- Resulting file tree<a class="headerlink" href="#resulting-file-tree" title="Link to this heading">¶</a></h2>
 <p>After running the previous Python script, one gets the following file-tree results.
 In the folder <code class="docutils literal notranslate"><span class="pre">my_results</span></code>, 10 subfolders have been created with a unique hash, corresponding to each evaluation.
-In the <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder, 5 subfolders were created, corresponding to all the SLURM jobs submitted (since the argument <code class="docutils literal notranslate"><span class="pre">tasks_per_job=2</span></code> here).</p>
+In the <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder, 5 subfolders were created, corresponding to all the SLURM jobs submitted (since the argument <code class="docutils literal notranslate"><span class="pre">evals_per_jobs=2</span></code> here).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  ├── cantilever_beam
   |   ├── input_doe
   |   |    ├── doe.csv 
