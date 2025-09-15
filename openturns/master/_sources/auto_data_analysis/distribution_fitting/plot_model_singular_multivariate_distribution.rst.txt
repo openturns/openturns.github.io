@@ -21,14 +21,53 @@
 Model a singular multivariate distribution
 ==========================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-11
+.. GENERATED FROM PYTHON SOURCE LINES 7-50
 
-From time to time we need to model singular :math:`n_D` distributions
-(e.g. the joint distribution of Karhunen Loeve coefficients for curves resulting from the transport of a low dimensional random vector).
-A way to do that is to use an :class:`~openturns.EmpiricalBernsteinCopula` with a bin number equal to the sample size
-(also called the empirical beta copula in this case).
+The objective of the example is to show how to fit a singular copula
+on a sample of dimension :math:`n_\inputDim` which might be high. For example,
+this is the case when we want to fit the joint distribution of the :math:`n_\inputDim` Karhunen Loeve
+coefficients in the Karhunen Loeve modelisation of a process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-16
+We first show that when the copula is singular, using a kernel smoothing fitting might
+not be a good idea.
+
+The good way to follow is to fit an empirical Bernstein copula implemented in
+:class:`~openturns.EmpiricalBernsteinCopula` through its factory
+:class:`~openturns.BernsteinCopulaFactory`. This factory garantees that the built
+:class:`~openturns.EmpiricalBernsteinCopula` is really a copula and not only a
+core (ie a multivariate distribution which range is included in :math:`[0,1]^\inputDim`).
+According to the level of singularity, the number :math:`m` of cells used to build the
+empirical Bernstein copula differs: the higher the singularity, the larger :math:`m`.
+
+The cells partition the sample: all the points of the same cell are grouped into a
+single *global* point. The empirical Bernstein copula is a mixture of products of Beta
+distributions centered on the global point of each cell.
+
+We denote by :math:`\sampleSize` the sample size. The number of global points varies according to the number of
+cells considered (math:`m`):
+
+- :math:`m = \sampleSize` means that all the sample has been retained: we create one cell around
+  each point of the sample; in that case, the empirical Bernstein copula is the *Beta copula* in the sens of [segers2016]_;
+- :math:`m = 1` means the sample has been grouped into one single global point: we get the independent copula;
+- :math:`1 < m < \sampleSize` means that we create :math:`m` cells gathering several points.
+
+As the  empirical Bernstein copula defined in this way is a copula only if  :math:`m`  divides
+:math:`\sampleSize`, the :class:`~openturns.BernsteinCopulaFactory` throws away
+some part of the sample is set aside in order to check this condition.
+
+A point's *zone of influence* is its cell. The larger :math:`m`, the smaller its zone of influence:
+the final copula thus adheres strongly to the sample. The smaller :math:`m`, the larger
+its zone of influence, and the more the final copula will be able to fill a large
+area around it.
+
+So, if we know that the final copula is diffuse, we recommend to let the
+:class:`~openturns.BernsteinCopulaFactory` automatically calculate the optimal number of cells to take. If
+we know that the final copula is singular, we recommend to specify the value of :math:`m` to be equal
+to the sample size :math:`\sampleSize`.
+
+We illustrate the influence of  :math:`m` on a singular copula.
+
+.. GENERATED FROM PYTHON SOURCE LINES 50-55
 
 .. code-block:: Python
 
@@ -44,11 +83,11 @@ A way to do that is to use an :class:`~openturns.EmpiricalBernsteinCopula` with 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-18
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Routine to draw a distribution cloud and a sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-40
+.. GENERATED FROM PYTHON SOURCE LINES 57-79
 
 .. code-block:: Python
 
@@ -81,7 +120,10 @@ Routine to draw a distribution cloud and a sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-68
+.. GENERATED FROM PYTHON SOURCE LINES 80-110
+
+Introduction
+~~~~~~~~~~~~
 
 We consider the function :math:`f: \Rset^3 \rightarrow \Rset` defined by:
 
@@ -111,7 +153,7 @@ We define the output random vector :math:`\vect{Y}` as:
 
      \vect{Y} = f(U, V_1, V_2)
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-77
+.. GENERATED FROM PYTHON SOURCE LINES 110-119
 
 .. code-block:: Python
 
@@ -131,11 +173,11 @@ We define the output random vector :math:`\vect{Y}` as:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-79
+.. GENERATED FROM PYTHON SOURCE LINES 120-121
 
 We generate a sample of the output random vector :math:`\vect{Y}` of size :math:`N`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-82
+.. GENERATED FROM PYTHON SOURCE LINES 121-124
 
 .. code-block:: Python
 
@@ -149,11 +191,14 @@ We generate a sample of the output random vector :math:`\vect{Y}` of size :math:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
+.. GENERATED FROM PYTHON SOURCE LINES 125-129
+
+Multivariate kernel smoothing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We estimate the distribution of the output random vector :math:`\vect{Y}` by multivariate kernel smoothing.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-87
+.. GENERATED FROM PYTHON SOURCE LINES 129-132
 
 .. code-block:: Python
 
@@ -172,21 +217,27 @@ We estimate the distribution of the output random vector :math:`\vect{Y}` by mul
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-99
+.. GENERATED FROM PYTHON SOURCE LINES 133-135
+
+We see that the fitting is not satisfactory: the empty regions have not been respected. The fitted copula is
+diffuse and does not model the observed singularity correctly.
+
+.. GENERATED FROM PYTHON SOURCE LINES 137-149
+
+Empirical Bernstein copula factory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now, we estimate the distribution of :math:`\vect{Y}` splitting the estimation of the marginals
 from the estimation of the copula:
 
 - the marginals are fitted by kernel smoothing,
-- the copula is fitted using the Bernstein copula factory :class:`~openturns.BernsteinCopulaFactory` that builds
+- the copula is fitted using the :class:`~openturns.BernsteinCopulaFactory` that builds
   an empirical Bernstein copula.
 
 First, we do not specify the bin number :math:`m`. It is equal to the value computed by the default method, which is the
-LogLikelihood criteria. We get :math:`m=1`, which
-means that one cell is created: the built copula is diffuse in :math:`[0,1]^2`. The estimated copula is
-the independent copula.
+LogLikelihood criteria.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-108
+.. GENERATED FROM PYTHON SOURCE LINES 149-158
 
 .. code-block:: Python
 
@@ -217,13 +268,18 @@ the independent copula.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-112
+.. GENERATED FROM PYTHON SOURCE LINES 159-163
+
+We see that the optimal number of cells is :math:`m = 1`: it means that one single cell has been created.
+The built copula  is the independent copula. It is diffuse
+in :math:`[0,1]^2`. This is not satisfactory. The optimal
+:math:`m` is not correct fot the singular copula we try to estimate.
+
+.. GENERATED FROM PYTHON SOURCE LINES 165-166
 
 Now, we specify a bin number equal to the sample size: :math:`m = N` so that the built copula is very close to the sample.
-With this parametrization, the empirical Bernstein copula is the *Beta copula* in the sens of [segers2016]_.
-In that case, it manages to reproduce its specific feature.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-116
+.. GENERATED FROM PYTHON SOURCE LINES 166-171
 
 .. code-block:: Python
 
@@ -234,10 +290,24 @@ In that case, it manages to reproduce its specific feature.
 
 
 
+
 .. image-sg:: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_model_singular_multivariate_distribution_003.svg
    :alt: plot model singular multivariate distribution
    :srcset: /auto_data_analysis/distribution_fitting/images/sphx_glr_plot_model_singular_multivariate_distribution_003.svg
    :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 172-174
+
+.. code-block:: Python
+
+
+    # In that case, the built copula manages to reproduce the specific feature we observe in the data.
+
+
 
 
 

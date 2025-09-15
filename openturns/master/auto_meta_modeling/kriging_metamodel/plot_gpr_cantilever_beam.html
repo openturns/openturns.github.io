@@ -158,7 +158,7 @@ We use a squared exponential covariance kernel for the Gaussian process. In orde
 </section>
 <section id="create-the-design-of-experiments">
 <h2>Create the design of experiments<a class="headerlink" href="#create-the-design-of-experiments" title="Link to this heading">¶</a></h2>
-<p>We consider a simple Monte-Carlo sample as a design of experiments.
+<p>We consider a simple Monte Carlo sample as a design of experiments.
 This is why we generate an input sample using the method <a class="reference internal" href="../../user_manual/_generated/openturns.Distribution.html#openturns.Distribution.getSample" title="openturns.Distribution.getSample"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getSample()</span></code></a> of the
 distribution. Then we evaluate the output using the <cite>model</cite> function.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">20</span>
@@ -184,34 +184,16 @@ This is because this covariance kernel is anisotropic : each of the 4 input vari
 <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Typically, the optimization algorithm is quite good at setting sensible optimization bounds.
-In this case, however, the range of the input domain is extreme.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lower and upper bounds of X_train:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMin</span><span class="p">(),</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Lower and upper bounds of X_train:
-[6.50289e+10,248.4,2.50959,1.33551e-07] [7.19913e+10,332.67,2.59947,1.57999e-07]
-</pre></div>
-</div>
-<p>We need to manually define sensible optimization bounds.
-Note that since the amplitude parameter is computed analytically (this is possible when the output dimension is 1), we only need to set bounds on the scale parameter.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span>
-    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0e-10</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0e11</span><span class="p">,</span> <span class="mf">1.0e3</span><span class="p">,</span> <span class="mf">1.0e1</span><span class="p">,</span> <span class="mf">1.0e-5</span><span class="p">]</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Finally, we use the <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter" title="openturns.experimental.GaussianProcessFitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessFitter</span></code></a> and <cite>GaussianProcessRegression</cite> classes to create the GPR metamodel.
+<p>Finally, we use the <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter" title="openturns.experimental.GaussianProcessFitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessFitter</span></code></a> and <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessRegression.html#openturns.experimental.GaussianProcessRegression" title="openturns.experimental.GaussianProcessRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessRegression</span></code></a> classes to create the GPR metamodel.
 It requires a training sample, a covariance kernel and a trend basis as input arguments.
 We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
 We must not forget to actually set the optimization bounds defined above.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">())</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">computeRange</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
 <span class="n">fitter_algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
-<span class="n">fitter_algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The method <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter.run" title="openturns.experimental.GaussianProcessFitter.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a>  of
-the class <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter.run" title="openturns.experimental.GaussianProcessFitter.run"><code class="xref py py-class docutils literal notranslate"><span class="pre">run</span></code></a> optimizes the Gaussian process
+the class <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter" title="openturns.experimental.GaussianProcessFitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessFitter</span></code></a> optimizes the Gaussian process
 hyperparameters and the method <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessRegression.html#openturns.experimental.GaussianProcessRegression.run" title="openturns.experimental.GaussianProcessRegression.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> of the class
 <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessRegression.html#openturns.experimental.GaussianProcessRegression" title="openturns.experimental.GaussianProcessRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessRegression</span></code></a> conditions the
 Gaussian process to the data set.</p>
@@ -230,7 +212,7 @@ the class
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">gpr_result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.427435]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.177884]
 </pre></div>
 </div>
 <p>We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.</p>
@@ -238,7 +220,7 @@ the class
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
-<p>SquaredExponential(scale=[7.19913e+10,332.782,2.59947,1.57999e-07], amplitude=[0.528744])</p>
+<p>SquaredExponential(scale=[3.48123e+09,40.0058,0.0219621,0.01], amplitude=[0.0306551])</p>
 </div>
 <br />
 <br /></section>
@@ -259,7 +241,7 @@ the class
 <span class="nb">print</span><span class="p">(</span><span class="n">R2</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.9999355169838081
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.5509391858432096
 </pre></div>
 </div>
 <p>The residuals are the difference between the model and the metamodel.</p>
@@ -278,7 +260,7 @@ The method <a class="reference internal" href="../../user_manual/_generated/open
 <span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_plot_gpr_cantilever_beam_003.svg" srcset="../../_images/sphx_glr_plot_gpr_cantilever_beam_003.svg" alt="R2 = 99.99%" class = "sphx-glr-single-img"/><p>Display all figures</p>
+<img src="../../_images/sphx_glr_plot_gpr_cantilever_beam_003.svg" srcset="../../_images/sphx_glr_plot_gpr_cantilever_beam_003.svg" alt="R2 = 55.09%" class = "sphx-glr-single-img"/><p>Display all figures</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
 </pre></div>
 </div>

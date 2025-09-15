@@ -33,7 +33,7 @@ We use the :class:`~openturns.RandomWalkMetropolisHastings` and
 and simulate a sample of the posterior distribution using
 :ref:`metropolis_hastings`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-80
+.. GENERATED FROM PYTHON SOURCE LINES 19-71
 
 Parameters to calibrate
 -----------------------
@@ -44,7 +44,7 @@ The vector of parameters to calibrate is:
    \vect{\theta} = (K_s,Z_v,Z_m).
 
 
-The variables to calibrate are :math:`(K_s,Z_v,Z_m)` and are set to the following values:
+The reference values are:
 
 .. math::
    K_s = 30, \qquad Z_v = 50, \qquad Z_m = 55.
@@ -53,41 +53,32 @@ The variables to calibrate are :math:`(K_s,Z_v,Z_m)` and are set to the followin
 Observations
 ------------
 
-In this section, we describe the statistical model associated with the :math:`n` observations.
-The errors of the water heights are associated with a gaussian distribution with a zero mean and a standard variation equal to:
+We consider the probabilistic model:
 
 .. math::
-   \sigma=0.1.
+   H =  \model(Q,K_s,Z_v,Z_m) + \epsilon
 
-
-Therefore, the observed water heights are:
-
-.. math::
-   H_i = G(Q_i,K_s,Z_v,Z_m) + \epsilon_i
-
-
-for :math:`i=1,...,n` where
+where:
 
 .. math::
    \epsilon \sim \mathcal{N}(0,\sigma^2)
 
+Thus, the error of the water height follows a normal distribution with a zero mean and a standard variation :math:`\sigma`.
 
-and we make the hypothesis that the observation errors are independent.
+We have some observations :math:`\{(Q_i,h_i)\}_{i=1,...,\sampleSize}`. Each observation is a couple made of the flowrate
+and the corresponding river height. We assume that the observations are associated to independent errors.
 We consider a sample size equal to:
 
 .. math::
-   n=20.
+   \sampleSize = 10.
 
-
-The observations are the couples :math:`\{(Q_i,H_i)\}_{i=1,...,n}`,
-i.e. each observation is a couple made of the flowrate and the corresponding river height.
 
 Variables
 ---------
 
 - :math:`Q` : Input. Observed.
 - :math:`K_s`, :math:`Z_v`, :math:`Z_m` : Input. Calibrated.
-- :math:`H`: Output. Observed.
+- :math:`h`: Output. Observed.
 
 Analysis
 --------
@@ -97,12 +88,12 @@ can be identified.
 Hence, calibrating this model requires some regularization.
 In this example, we use Bayesian methods as a way to regularize the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-84
+.. GENERATED FROM PYTHON SOURCE LINES 73-75
 
 Generate the observations
 -------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-92
+.. GENERATED FROM PYTHON SOURCE LINES 77-83
 
 .. code-block:: Python
 
@@ -119,11 +110,11 @@ Generate the observations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-94
+.. GENERATED FROM PYTHON SOURCE LINES 84-85
 
 A basic implementation of the probabilistic model is available in the usecases module :
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-96
+.. GENERATED FROM PYTHON SOURCE LINES 85-87
 
 .. code-block:: Python
 
@@ -136,11 +127,11 @@ A basic implementation of the probabilistic model is available in the usecases m
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-107
+.. GENERATED FROM PYTHON SOURCE LINES 88-98
 
-We define the model :math:`g` which has 4 inputs and one output H.
+We define the model :math:`\model` which has 4 inputs and one output :math:`h`.
 
-The nonlinear least squares does not take into account for bounds in the parameters.
+The non linear least squares algorithm does not take into account bounds in the parameters.
 Therefore, we ensure that the output is computed whatever the inputs.
 The model fails into two situations:
 
@@ -149,7 +140,7 @@ The model fails into two situations:
 
 In these cases, we return an infinite number.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-123
+.. GENERATED FROM PYTHON SOURCE LINES 100-114
 
 .. code-block:: Python
 
@@ -174,7 +165,7 @@ In these cases, we return an infinite number.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-128
+.. GENERATED FROM PYTHON SOURCE LINES 115-119
 
 .. code-block:: Python
 
@@ -189,11 +180,11 @@ In these cases, we return an infinite number.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+.. GENERATED FROM PYTHON SOURCE LINES 120-121
 
-We load the input distribution for :math:`Q`.
+We load the input distribution for the flow :math:`Q`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-132
+.. GENERATED FROM PYTHON SOURCE LINES 121-123
 
 .. code-block:: Python
 
@@ -206,11 +197,11 @@ We load the input distribution for :math:`Q`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-134
+.. GENERATED FROM PYTHON SOURCE LINES 124-125
 
 Set the parameters to be calibrated.
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-143
+.. GENERATED FROM PYTHON SOURCE LINES 127-134
 
 .. code-block:: Python
 
@@ -228,11 +219,11 @@ Set the parameters to be calibrated.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-145
+.. GENERATED FROM PYTHON SOURCE LINES 135-136
 
-We create the joint input distribution.
+We create the joint input distribution of :math:`(Q, K_s, Z_v, Z_m)`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-149
+.. GENERATED FROM PYTHON SOURCE LINES 138-140
 
 .. code-block:: Python
 
@@ -245,38 +236,18 @@ We create the joint input distribution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-151
+.. GENERATED FROM PYTHON SOURCE LINES 141-143
 
-Create a Monte-Carlo sample of the output :math:`H`.
+We import some noisy observations of the flow rate (column 0) and the height (column 1) already
+stored of the  :ref:`flooding model<use-case-flood-model>` in the field *data*.
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-157
-
-.. code-block:: Python
-
-    nbobs = 20
-    inputSample = inputRandomVector.getSample(nbobs)
-    outputH = g(inputSample)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 158-159
-
-Generate the observation noise and add it to the output of the model.
-
-.. GENERATED FROM PYTHON SOURCE LINES 161-167
+.. GENERATED FROM PYTHON SOURCE LINES 143-147
 
 .. code-block:: Python
 
-    sigmaObservationNoiseH = 0.1  # (m)
-    noiseH = ot.Normal(0.0, sigmaObservationNoiseH)
-    ot.RandomGenerator.SetSeed(0)
-    sampleNoiseH = noiseH.getSample(nbobs)
-    Hobs = outputH + sampleNoiseH
+    Q_H_obs = fm.data
+    Qobs = Q_H_obs.getMarginal(0)
+    Hobs = Q_H_obs.getMarginal(1)
 
 
 
@@ -285,29 +256,13 @@ Generate the observation noise and add it to the output of the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-169
-
-Plot the Y observations versus the X observations.
-
-.. GENERATED FROM PYTHON SOURCE LINES 171-173
+.. GENERATED FROM PYTHON SOURCE LINES 148-155
 
 .. code-block:: Python
 
-    Qobs = inputSample[:, 0]
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 174-180
-
-.. code-block:: Python
-
-    graph = ot.Graph("Observations", "Q (m3/s)", "H (m)", True)
-    cloud = ot.Cloud(Qobs, Hobs)
+    graph = ot.Graph("Observations", "Q (m3/s)", "h (m)", True)
+    cloud = ot.Cloud(Q_H_obs)
+    # cloud = ot.Cloud(Qobs, Hobs)
     graph.add(cloud)
     view = viewer.View(graph)
 
@@ -324,20 +279,23 @@ Plot the Y observations versus the X observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-183
+.. GENERATED FROM PYTHON SOURCE LINES 156-158
 
 Setting the calibration parameters
 ----------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-190
+.. GENERATED FROM PYTHON SOURCE LINES 160-168
 
-Define the parametric model :math:`\vect z = f_Q(\vect\theta)` that associates each observation
+We assume that the output of the model :math:`H` is random and follows a normal distribution with the standard
+deviation :math:`\sigma = 0.5` and centered on :math:`\mu = \model(Q, K_s, Z_v, Z_m)`.
+
+Then, we define the parametric model :math:`\vect z = f_Q(\vect\theta)` that associates each observation
 :math:`Q` and value of the parameters :math:`\vect \theta = (K_s, Z_v, Z_m)`
-to the parameters of the distribution of the corresponding observation:
-here :math:`\vect z=(\mu, \sigma)` with :math:`\mu = G(Q, K_s, Z_v, Z_m)`
-and :math:`\sigma = 0.5`.
+to the parameters :math:`\vect z=(\mu, \sigma)`.
+We want to get the posterior distribution of the random vector :math:`\vect \Theta` that fits the best to the
+observations :math:`(Q_i, h_i)_i`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-204
+.. GENERATED FROM PYTHON SOURCE LINES 171-182
 
 .. code-block:: Python
 
@@ -365,12 +323,15 @@ and :math:`\sigma = 0.5`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-207
+.. GENERATED FROM PYTHON SOURCE LINES 183-188
 
-Define the value of the reference values of the :math:`\vect\theta` parameter.
-In the Bayesian framework, this is called the mean of the *prior* Gaussian distribution. In the data assimilation framework, this is called the *background*.
+We define the prior distribution of  :math:`\vect\Theta`. We assume that it is a normal distribution.
+In the Bayesian framework, this is called the *prior* normal distribution. In the data assimilation framework, this
+is called the *background*.
+We assume that the prior distribution has independent components, that the mean marginal values are equal to the reference values
+and that the marginal standard deviations are known.
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-215
+.. GENERATED FROM PYTHON SOURCE LINES 190-196
 
 .. code-block:: Python
 
@@ -387,11 +348,7 @@ In the Bayesian framework, this is called the mean of the *prior* Gaussian distr
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-217
-
-Define the covariance matrix of the parameters :math:`\vect\theta` to calibrate.
-
-.. GENERATED FROM PYTHON SOURCE LINES 219-223
+.. GENERATED FROM PYTHON SOURCE LINES 197-201
 
 .. code-block:: Python
 
@@ -406,7 +363,7 @@ Define the covariance matrix of the parameters :math:`\vect\theta` to calibrate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-229
+.. GENERATED FROM PYTHON SOURCE LINES 202-207
 
 .. code-block:: Python
 
@@ -422,11 +379,11 @@ Define the covariance matrix of the parameters :math:`\vect\theta` to calibrate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 230-231
+.. GENERATED FROM PYTHON SOURCE LINES 208-209
 
-Define the prior distribution :math:`\pi(\vect\theta)` of the parameter :math:`\vect\theta`
+Define the prior distribution of :math:`\vect\Theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-236
+.. GENERATED FROM PYTHON SOURCE LINES 209-212
 
 .. code-block:: Python
 
@@ -440,15 +397,14 @@ Define the prior distribution :math:`\pi(\vect\theta)` of the parameter :math:`\
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-242
+.. GENERATED FROM PYTHON SOURCE LINES 213-217
 
-Define the distribution of observations :math:`\vect{y} | \vect{z}` conditional on model predictions.
-
+Define the distribution of the output :math:`H | \vect{z}` conditional on model predictions.
 Note that its parameter dimension is the one of :math:`\vect{z}`, so the model must be adjusted accordingly.
 In other words, the input argument of the `setParameter` method of the conditional distribution must be equal to the dimension of the output of the `model`.
 Hence, we do not have to set the actual parameters: only the type of distribution is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-246
+.. GENERATED FROM PYTHON SOURCE LINES 219-221
 
 .. code-block:: Python
 
@@ -461,13 +417,13 @@ Hence, we do not have to set the actual parameters: only the type of distributio
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 247-250
+.. GENERATED FROM PYTHON SOURCE LINES 222-225
 
 The proposed steps for :math:`K_s` :math:`Z_v` and :math:`Z_m`
 will all follow uniform distributions,
 but with different supports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-254
+.. GENERATED FROM PYTHON SOURCE LINES 227-229
 
 .. code-block:: Python
 
@@ -480,15 +436,14 @@ but with different supports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 255-257
+.. GENERATED FROM PYTHON SOURCE LINES 230-232
 
 Build a Gibbs sampler
 ---------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-267
+.. GENERATED FROM PYTHON SOURCE LINES 232-241
 
 .. code-block:: Python
-
 
     initialState = parameterPriorMean
     mh_coll = [
@@ -506,11 +461,11 @@ Build a Gibbs sampler
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-269
+.. GENERATED FROM PYTHON SOURCE LINES 242-243
 
-Generate a sample from the posterior distribution of :math:`\vect \theta`.
+Generate a sample from the posterior distribution of :math:`\vect \Theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-274
+.. GENERATED FROM PYTHON SOURCE LINES 243-246
 
 .. code-block:: Python
 
@@ -524,14 +479,13 @@ Generate a sample from the posterior distribution of :math:`\vect \theta`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-276
+.. GENERATED FROM PYTHON SOURCE LINES 247-248
 
 Look at the acceptance rates of the random walk Metropolis-Hastings samplers.
 
-.. GENERATED FROM PYTHON SOURCE LINES 276-279
+.. GENERATED FROM PYTHON SOURCE LINES 248-250
 
 .. code-block:: Python
-
 
     [mh.getAcceptanceRate() for mh in sampler.getMetropolisHastingsCollection()]
 
@@ -544,18 +498,17 @@ Look at the acceptance rates of the random walk Metropolis-Hastings samplers.
  .. code-block:: none
 
 
-    [0.361, 0.39, 0.389]
+    [0.365, 0.361, 0.367]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-281
+.. GENERATED FROM PYTHON SOURCE LINES 251-252
 
-Build the distribution of the posterior by kernel smoothing.
+Build the posterior distribution of :math:`\vect \Theta` by kernel smoothing.
 
-.. GENERATED FROM PYTHON SOURCE LINES 281-285
+.. GENERATED FROM PYTHON SOURCE LINES 252-255
 
 .. code-block:: Python
-
 
     kernel = ot.KernelSmoothing()
     posterior = kernel.build(sample)
@@ -567,11 +520,11 @@ Build the distribution of the posterior by kernel smoothing.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 286-287
+.. GENERATED FROM PYTHON SOURCE LINES 256-257
 
 Display prior vs posterior for each parameter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-335
+.. GENERATED FROM PYTHON SOURCE LINES 257-305
 
 .. code-block:: Python
 
@@ -630,11 +583,11 @@ Display prior vs posterior for each parameter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 336-337
+.. GENERATED FROM PYTHON SOURCE LINES 306-307
 
 sphinx_gallery_thumbnail_number = 2
 
-.. GENERATED FROM PYTHON SOURCE LINES 337-345
+.. GENERATED FROM PYTHON SOURCE LINES 307-315
 
 .. code-block:: Python
 
@@ -658,7 +611,7 @@ sphinx_gallery_thumbnail_number = 2
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 346-347
+.. GENERATED FROM PYTHON SOURCE LINES 316-317
 
 .. code-block:: Python
 
