@@ -28,8 +28,8 @@
     <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Gaussian Process Regression : generate trajectories from the metamodel" href="plot_gpr_simulate.html" />
-    <link rel="prev" title="Example of multi output Gaussian Process Regression on the fire satellite model" href="plot_kriging_multioutput_firesatellite.html" />
+    <link rel="next" title="Gaussian Process Regression: use an isotropic covariance kernel" href="plot_gpr_isotropic.html" />
+    <link rel="prev" title="Gaussian Process Regression: Normalization for optimization" href="plot_gpr_normalization.html" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
           rel='stylesheet' type='text/css' />
  
@@ -61,10 +61,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="plot_gpr_simulate.html" title="Gaussian Process Regression : generate trajectories from the metamodel"
+          <a href="plot_gpr_isotropic.html" title="Gaussian Process Regression: use an isotropic covariance kernel"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_multioutput_firesatellite.html" title="Example of multi output Gaussian Process Regression on the fire satellite model"
+          <a href="plot_gpr_normalization.html" title="Gaussian Process Regression: Normalization for optimization"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.26dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
@@ -93,13 +93,13 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="plot_kriging_multioutput_firesatellite.html"
-                          title="previous chapter">Example of multi output Gaussian Process Regression on the fire satellite model</a></p>
+    <p class="topless"><a href="plot_gpr_normalization.html"
+                          title="previous chapter">Gaussian Process Regression: Normalization for optimization</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="plot_gpr_simulate.html"
-                          title="next chapter">Gaussian Process Regression : generate trajectories from the metamodel</a></p>
+    <p class="topless"><a href="plot_gpr_isotropic.html"
+                          title="next chapter">Gaussian Process Regression: use an isotropic covariance kernel</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -198,6 +198,8 @@ We need to set the initial scale parameter for the optimization. The upper bound
 We must not forget to actually set the optimization bounds defined above.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covariance_model</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">computeRange</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
 <span class="n">algo_fit</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covariance_model</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">X_train</span><span class="o">.</span><span class="n">computeRange</span><span class="p">(),</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">X_train</span><span class="o">.</span><span class="n">computeRange</span><span class="p">())</span>
+<span class="n">algo_fit</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
 <span class="n">algo_fit</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">fit_result</span> <span class="o">=</span> <span class="n">algo_fit</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 </pre></div>
@@ -218,14 +220,14 @@ The constant trend always has only one coefficient (if there is one single outpu
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">gpr_result_cst</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.177884]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.202608]
 </pre></div>
 </div>
 <p>We can check the estimated covariance model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">gpr_result_cst</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[3.48123e+09,40.0058,0.0219621,0.01], amplitude=[0.0306551])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[2.78498e+10,263.171,0.35952,9.77903e-08], amplitude=[0.092994])
 </pre></div>
 </div>
 </section>
@@ -236,6 +238,7 @@ The basis is built with the <a class="reference internal" href="../../user_manua
 we do not detail it.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">algo_fit</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covariance_model</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo_fit</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
 <span class="n">algo_fit</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">fit_result</span> <span class="o">=</span> <span class="n">algo_fit</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">algo_gpr</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">fit_result</span><span class="p">)</span>
@@ -246,8 +249,8 @@ we do not detail it.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">gpr_result_lin</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[3.80916e-23,2.59737e-12,1.11818e-20,9.72478e-23,5.19941e-30]
-SquaredExponential(scale=[3.48123e+09,47.3064,0.0219903,0.01], amplitude=[0.0398099])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[3.50059e-23,2.57158e-12,1.0772e-20,8.87503e-23,5.0624e-30]
+SquaredExponential(scale=[2.78498e+10,275.096,0.35952,9.77903e-08], amplitude=[0.114623])
 </pre></div>
 </div>
 <p>The number of coefficients in the linear and quadratic trends depends on the number of inputs, which is
@@ -281,6 +284,7 @@ DefaultOptimizationAlgorithm”, “TNC”)</em>,</p></li>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsScalar</span><span class="p">(</span><span class="s2">&quot;OptimizationAlgorithm-DefaultMaximumConstraintError&quot;</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">QuadraticBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 <span class="n">algo_fit</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covariance_model</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo_fit</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
 <span class="n">algo_fit</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="n">fit_result</span> <span class="o">=</span> <span class="n">algo_fit</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
 <span class="n">algo_gpr</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">fit_result</span><span class="p">)</span>
@@ -291,8 +295,8 @@ DefaultOptimizationAlgorithm”, “TNC”)</em>,</p></li>
 <span class="nb">print</span><span class="p">(</span><span class="n">gpr_result_quad</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[8.03973e-45,5.49711e-34,2.35613e-42,2.05303e-44,1.09917e-51,3.76675e-23,1.60972e-31,7.01601e-40,1.40362e-33,6.01965e-42,5.24365e-44,7.53948e-41,3.21771e-49,2.80599e-51,1.50927e-58]#15
-SquaredExponential(scale=[3.48123e+09,42.1423,0.0239028,0.01], amplitude=[0.0755324])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[4.24543e-45,3.35565e-34,1.37259e-42,1.07379e-44,6.15302e-52,2.74545e-23,1.06723e-31,5.59832e-40,8.49921e-34,3.49037e-42,2.7331e-44,4.88416e-41,1.99487e-49,1.55728e-51,1.014e-58]#15
+SquaredExponential(scale=[2.78498e+10,289.85,0.35952,9.77903e-08], amplitude=[0.217065])
 </pre></div>
 </div>
 <p>This time, the trend has 15 coefficients:</p>
@@ -382,10 +386,10 @@ In this case, a quadratic trend is not advisable because it can interpolate all 
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="plot_gpr_simulate.html" title="Gaussian Process Regression : generate trajectories from the metamodel"
+          <a href="plot_gpr_isotropic.html" title="Gaussian Process Regression: use an isotropic covariance kernel"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot_kriging_multioutput_firesatellite.html" title="Example of multi output Gaussian Process Regression on the fire satellite model"
+          <a href="plot_gpr_normalization.html" title="Gaussian Process Regression: Normalization for optimization"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.26dev documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>

@@ -180,12 +180,14 @@ trend basis as input arguments.
 We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
 We must not forget to actually set the optimization bounds defined above.
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-79
+.. GENERATED FROM PYTHON SOURCE LINES 74-81
 
 .. code-block:: Python
 
     covariance_model.setScale(X_train.computeRange() * 0.5)
     algo_fit = otexp.GaussianProcessFitter(X_train, Y_train, covariance_model, basis)
+    scaleOptimizationBounds = ot.Interval(0.1 * X_train.computeRange(), 4.0 * X_train.computeRange())
+    algo_fit.setOptimizationBounds(scaleOptimizationBounds)
     algo_fit.run()
     fit_result = algo_fit.getResult()
 
@@ -196,12 +198,12 @@ We must not forget to actually set the optimization bounds defined above.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-82
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
 
 Then, we condition the process :math:`Y(\omega, x)` to the data set with the class
 :class:`~openturns.experimental.GaussianProcessRegression`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-85
+.. GENERATED FROM PYTHON SOURCE LINES 84-87
 
 .. code-block:: Python
 
@@ -215,11 +217,11 @@ Then, we condition the process :math:`Y(\omega, x)` to the data set with the cla
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 88-89
 
 Get the Gaussian Process Regression metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-90
+.. GENERATED FROM PYTHON SOURCE LINES 89-92
 
 .. code-block:: Python
 
@@ -233,12 +235,12 @@ Get the Gaussian Process Regression metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-93
+.. GENERATED FROM PYTHON SOURCE LINES 93-95
 
 The :meth:`~openturns.experimental.GaussianProcessRegressionResult.getTrendCoefficients` method returns the coefficients of the trend.
 The constant trend always has only one coefficient (if there is one single output).
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-95
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 .. code-block:: Python
 
@@ -252,16 +254,16 @@ The constant trend always has only one coefficient (if there is one single outpu
 
  .. code-block:: none
 
-    [0.177884]
+    [0.202608]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-97
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 We can check the estimated covariance model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-99
+.. GENERATED FROM PYTHON SOURCE LINES 99-101
 
 .. code-block:: Python
 
@@ -275,12 +277,12 @@ We can check the estimated covariance model.
 
  .. code-block:: none
 
-    SquaredExponential(scale=[3.48123e+09,40.0058,0.0219621,0.01], amplitude=[0.0306551])
+    SquaredExponential(scale=[2.78498e+10,263.171,0.35952,9.77903e-08], amplitude=[0.092994])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-106
+.. GENERATED FROM PYTHON SOURCE LINES 102-108
 
 Linear basis
 ------------
@@ -289,12 +291,13 @@ In this paragraph we choose a linear basis for the estimation of the trend.
 The basis is built with the :class:`~openturns.LinearBasisFactory` class. The same methodology is followed:
 we do not detail it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-117
+.. GENERATED FROM PYTHON SOURCE LINES 108-120
 
 .. code-block:: Python
 
     basis = ot.LinearBasisFactory(dimension).build()
     algo_fit = otexp.GaussianProcessFitter(X_train, Y_train, covariance_model, basis)
+    algo_fit.setOptimizationBounds(scaleOptimizationBounds)
     algo_fit.run()
     fit_result = algo_fit.getResult()
     algo_gpr = otexp.GaussianProcessRegression(fit_result)
@@ -312,13 +315,13 @@ we do not detail it.
 
  .. code-block:: none
 
-    [3.80916e-23,2.59737e-12,1.11818e-20,9.72478e-23,5.19941e-30]
-    SquaredExponential(scale=[3.48123e+09,47.3064,0.0219903,0.01], amplitude=[0.0398099])
+    [3.50059e-23,2.57158e-12,1.0772e-20,8.87503e-23,5.0624e-30]
+    SquaredExponential(scale=[2.78498e+10,275.096,0.35952,9.77903e-08], amplitude=[0.114623])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-152
+.. GENERATED FROM PYTHON SOURCE LINES 121-155
 
 The number of coefficients in the linear and quadratic trends depends on the number of inputs, which is
 equal to
@@ -355,13 +358,14 @@ Thus, we can either:
   -DefaultMaximumConstraintError", 1e-6)*.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-164
+.. GENERATED FROM PYTHON SOURCE LINES 155-168
 
 .. code-block:: Python
 
     ot.ResourceMap.SetAsScalar("OptimizationAlgorithm-DefaultMaximumConstraintError", 1e-6)
     basis = ot.QuadraticBasisFactory(dimension).build()
     algo_fit = otexp.GaussianProcessFitter(X_train, Y_train, covariance_model, basis)
+    algo_fit.setOptimizationBounds(scaleOptimizationBounds)
     algo_fit.run()
     fit_result = algo_fit.getResult()
     algo_gpr = otexp.GaussianProcessRegression(fit_result)
@@ -379,13 +383,13 @@ Thus, we can either:
 
  .. code-block:: none
 
-    [8.03973e-45,5.49711e-34,2.35613e-42,2.05303e-44,1.09917e-51,3.76675e-23,1.60972e-31,7.01601e-40,1.40362e-33,6.01965e-42,5.24365e-44,7.53948e-41,3.21771e-49,2.80599e-51,1.50927e-58]#15
-    SquaredExponential(scale=[3.48123e+09,42.1423,0.0239028,0.01], amplitude=[0.0755324])
+    [4.24543e-45,3.35565e-34,1.37259e-42,1.07379e-44,6.15302e-52,2.74545e-23,1.06723e-31,5.59832e-40,8.49921e-34,3.49037e-42,2.7331e-44,4.88416e-41,1.99487e-49,1.55728e-51,1.014e-58]#15
+    SquaredExponential(scale=[2.78498e+10,289.85,0.35952,9.77903e-08], amplitude=[0.217065])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-184
+.. GENERATED FROM PYTHON SOURCE LINES 169-188
 
 This time, the trend has 15 coefficients:
 
@@ -407,7 +411,7 @@ Validate the metamodel
 We finally want to validate the Gaussian Process Regression metamodel. This is why we generate a validation sample
 with size 100 and we evaluate the output of the model on this sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-188
+.. GENERATED FROM PYTHON SOURCE LINES 188-192
 
 .. code-block:: Python
 
@@ -422,11 +426,11 @@ with size 100 and we evaluate the output of the model on this sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-190
+.. GENERATED FROM PYTHON SOURCE LINES 193-194
 
 We define a function to easily draw the QQ-plot graphs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-203
+.. GENERATED FROM PYTHON SOURCE LINES 194-207
 
 .. code-block:: Python
 
@@ -450,11 +454,11 @@ We define a function to easily draw the QQ-plot graphs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-205
+.. GENERATED FROM PYTHON SOURCE LINES 208-209
 
 We plot here the validation graph for each metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-215
+.. GENERATED FROM PYTHON SOURCE LINES 209-219
 
 .. code-block:: Python
 
@@ -480,7 +484,7 @@ We plot here the validation graph for each metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-228
+.. GENERATED FROM PYTHON SOURCE LINES 220-232
 
 We observe that the three trends perform very well in this case.
 With more coefficients, the Gaussian Process Regression metamodel is more flexibile and can adjust better to the training sample.
@@ -495,11 +499,11 @@ The number of parameters in each Gaussian Process Regression metamodel is the fo
 In the cantilever beam example, fitting the metamodel to a training sample with only 10 points is made much easier because the function to approximate is almost linear.
 In this case, a quadratic trend is not advisable because it can interpolate all points in the training sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 231-232
+.. GENERATED FROM PYTHON SOURCE LINES 235-236
 
 Display figures
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-233
+.. GENERATED FROM PYTHON SOURCE LINES 236-237
 
 .. code-block:: Python
 

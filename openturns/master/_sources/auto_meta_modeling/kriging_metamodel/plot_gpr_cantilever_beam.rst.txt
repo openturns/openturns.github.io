@@ -178,12 +178,14 @@ It requires a training sample, a covariance kernel and a trend basis as input ar
 We need to set the initial scale parameter for the optimization. The upper bound of the input domain is a sensible choice here.
 We must not forget to actually set the optimization bounds defined above.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-70
+.. GENERATED FROM PYTHON SOURCE LINES 67-72
 
 .. code-block:: Python
 
     covarianceModel.setScale(X_train.computeRange() * 0.5)
     fitter_algo = otexp.GaussianProcessFitter(X_train, Y_train, covarianceModel, basis)
+    scaleOptimizationBounds = ot.Interval(0.1 * X_train.computeRange(), 4.0 * X_train.computeRange())
+    fitter_algo.setOptimizationBounds(scaleOptimizationBounds)
 
 
 
@@ -192,7 +194,7 @@ We must not forget to actually set the optimization bounds defined above.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-78
+.. GENERATED FROM PYTHON SOURCE LINES 73-80
 
 The method :meth:`~openturns.experimental.GaussianProcessFitter.run`  of
 the class :class:`~openturns.experimental.GaussianProcessFitter` optimizes the Gaussian process
@@ -202,7 +204,7 @@ Gaussian process to the data set.
 
 We can then print the constant trend of the metamodel, estimated using the least squares method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-85
+.. GENERATED FROM PYTHON SOURCE LINES 80-87
 
 .. code-block:: Python
 
@@ -220,13 +222,13 @@ We can then print the constant trend of the metamodel, estimated using the least
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-89
+.. GENERATED FROM PYTHON SOURCE LINES 88-91
 
 The method :meth:`~openturns.experimental.GaussianProcessRegressionResult.getTrendCoefficients` of
 the class
 :class:`~openturns.experimental.GaussianProcessRegressionResult` returns the coefficients of the trend.
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-91
+.. GENERATED FROM PYTHON SOURCE LINES 91-93
 
 .. code-block:: Python
 
@@ -240,16 +242,16 @@ the class
 
  .. code-block:: none
 
-    [0.177884]
+    [0.202608]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-93
+.. GENERATED FROM PYTHON SOURCE LINES 94-95
 
 We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-95
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 .. code-block:: Python
 
@@ -263,19 +265,19 @@ We can also print the hyperparameters of the covariance model, which have been e
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <p>SquaredExponential(scale=[3.48123e+09,40.0058,0.0219621,0.01], amplitude=[0.0306551])</p>
+    <p>SquaredExponential(scale=[2.78498e+10,263.171,0.35952,9.77903e-08], amplitude=[0.092994])</p>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-102
 
 Validate the metamodel
 ----------------------
 
 We finally want to validate the GPR metamodel. This is why we generate a validation sample with size 100 and we evaluate the output of the model on this sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-104
+.. GENERATED FROM PYTHON SOURCE LINES 102-106
 
 .. code-block:: Python
 
@@ -290,11 +292,11 @@ We finally want to validate the GPR metamodel. This is why we generate a validat
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-106
+.. GENERATED FROM PYTHON SOURCE LINES 107-108
 
 The class :class:`~openturns.MetaModelValidation`  makes the validation easy. To create it, we use the validation samples and the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-108
+.. GENERATED FROM PYTHON SOURCE LINES 108-110
 
 .. code-block:: Python
 
@@ -307,11 +309,11 @@ The class :class:`~openturns.MetaModelValidation`  makes the validation easy. To
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-110
+.. GENERATED FROM PYTHON SOURCE LINES 111-112
 
 The method :meth:`~openturns.MetaModelValidation.computeR2Score` computes the R2 score.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-113
+.. GENERATED FROM PYTHON SOURCE LINES 112-115
 
 .. code-block:: Python
 
@@ -326,16 +328,16 @@ The method :meth:`~openturns.MetaModelValidation.computeR2Score` computes the R2
 
  .. code-block:: none
 
-    0.5509391858432096
+    0.9997389096675838
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-115
+.. GENERATED FROM PYTHON SOURCE LINES 116-117
 
 The residuals are the difference between the model and the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-122
+.. GENERATED FROM PYTHON SOURCE LINES 117-124
 
 .. code-block:: Python
 
@@ -358,12 +360,12 @@ The residuals are the difference between the model and the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-125
+.. GENERATED FROM PYTHON SOURCE LINES 125-127
 
 We observe that the negative residuals occur with nearly the same frequency of the positive residuals: this is a first sign of good quality.
 The method :meth:`~openturns.MetaModelValidation.drawValidation` compares the observed outputs and the metamodel outputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-129
+.. GENERATED FROM PYTHON SOURCE LINES 127-131
 
 .. code-block:: Python
 
@@ -375,7 +377,7 @@ The method :meth:`~openturns.MetaModelValidation.drawValidation` compares the ob
 
 
 .. image-sg:: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_cantilever_beam_003.svg
-   :alt: R2 = 55.09%
+   :alt: R2 = 99.97%
    :srcset: /auto_meta_modeling/kriging_metamodel/images/sphx_glr_plot_gpr_cantilever_beam_003.svg
    :class: sphx-glr-single-img
 
@@ -383,11 +385,11 @@ The method :meth:`~openturns.MetaModelValidation.drawValidation` compares the ob
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-131
+.. GENERATED FROM PYTHON SOURCE LINES 132-133
 
 Display all figures
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-132
+.. GENERATED FROM PYTHON SOURCE LINES 133-134
 
 .. code-block:: Python
 
