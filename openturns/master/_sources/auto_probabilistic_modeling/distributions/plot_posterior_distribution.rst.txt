@@ -84,10 +84,10 @@ We denote by :math:`\vect{\theta}_n^{MC}` the parameter obtained.
     import openturns.experimental as otexp
 
     ot.ResourceMap.SetAsUnsignedInteger(
-        "DeconditionedDistribution-MarginalIntegrationNodesNumber", 32
+        "CompoundDistribution-MarginalIntegrationNodesNumber", 32
     )
     ot.ResourceMap.SetAsString(
-        "DeconditionedDistribution-ContinuousDiscretizationMethod", "GaussProduct"
+        "CompoundDistribution-ContinuousDiscretizationMethod", "GaussProduct"
     )
 
 
@@ -210,13 +210,13 @@ We create the prior distribution of :math:`\vect{Y}`.
 
 We have to decondition the :math:`\vect{X}|\vect{\Theta} = g(\vect{Y})` distribution with
 respect to the  prior distribution :math:`\pi_{\vect{Y}}^{0,1}` in order to get the
-final distribution of :math:`\vect{X}`. To do that, we use the :class:`~openturns.DeconditionedDistribution`.
+final distribution of :math:`\vect{X}`. To do that, we use the :class:`~openturns.CompoundDistribution`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 120-122
 
 .. code-block:: Python
 
-    deconditioned = ot.DeconditionedDistribution(conditioned, conditioning, linkFunction)
+    compound = ot.CompoundDistribution(conditioned, conditioning, linkFunction)
 
 
 
@@ -227,14 +227,14 @@ final distribution of :math:`\vect{X}`. To do that, we use the :class:`~openturn
 
 .. GENERATED FROM PYTHON SOURCE LINES 123-125
 
-Then, we can create the posterior distribution :math:`\pi_{\vect{Y}}^\sampleSize` based on the deconditioned distribution of :math:`\vect{X}` and
+Then, we can create the posterior distribution :math:`\pi_{\vect{Y}}^\sampleSize` based on the compound distribution of :math:`\vect{X}` and
 the sample.
 
 .. GENERATED FROM PYTHON SOURCE LINES 125-127
 
 .. code-block:: Python
 
-    posterior_Y = otexp.PosteriorDistribution(deconditioned, observations)
+    posterior_Y = otexp.PosteriorDistribution(compound, observations)
 
 
 
@@ -271,7 +271,7 @@ From  :math:`\pi_{\vect{Y}}^\sampleSize`, we get:
     print("Beta =", beta)
     print("Condifence interval Bay =\n", interval_Bay)
     print("Volume =", interval_Bay.getVolume())
-    sample = model_Bay.getSample(1000000)
+    sample = model_Bay.getSample(10000)
     dist_Bay = (
         model_Bay.computeLogPDF(sample) - conditioned.computeLogPDF(sample)
     ).computeMean()
@@ -292,7 +292,7 @@ From  :math:`\pi_{\vect{Y}}^\sampleSize`, we get:
      [0.75347, 1.37423]
     [0.741497, 1.35528]
     Volume = 0.38101391892307496
-    Kullback-Leibler distance Bay = 0.001003194257281321
+    Kullback-Leibler distance Bay = 0.0007635351429163072
 
 
 
@@ -343,7 +343,7 @@ We extract from the likelihood estimate:
     print("Beta =", beta)
     print("Condifence interval ML =\n", interval_ML)
     print("Volume =", interval_ML.getVolume())
-    sample = model_ML.getSample(1000000)
+    sample = model_ML.getSample(10000)
     dist_KL = (
         model_ML.computeLogPDF(sample) - conditioned.computeLogPDF(sample)
     ).computeMean()
@@ -359,12 +359,12 @@ We extract from the likelihood estimate:
  .. code-block:: none
 
     Theta ML =  [0,0.987259,0,0.970747,0]
-    Beta = 0.9746523439535231
+    Beta = 0.9746625068775499
     Condifence interval ML =
-     [0.612215, 1.26385]
-    [0.660547, 1.21927]
-    Volume = 0.3640815958194955
-    Kullback-Leibler distance ML = 0.0035275895390841725
+     [0.621608, 1.24499]
+    [0.617829, 1.214]
+    Volume = 0.371639051822211
+    Kullback-Leibler distance ML = 0.0022185253298159196
 
 
 
@@ -572,9 +572,9 @@ But in order to get the posterior distribution of :math:
     )
     conditioning = ot.JointDistribution([ot.Triangular(-1.0, 0.0, 1.0)] * 2)
     conditioning.setDescription(["Y0", "Y1"])
-    deconditioned = ot.DeconditionedDistribution(conditioned, conditioning, linkFunction)
-    posterior_Y = otexp.PosteriorDistribution(deconditioned, observations)
-    sample_posterior = linkFunction(posterior_Y.getSample(100000)).getMarginal([1, 3])
+    compound = ot.CompoundDistribution(conditioned, conditioning, linkFunction)
+    posterior_Y = otexp.PosteriorDistribution(compound, observations)
+    sample_posterior = linkFunction(posterior_Y.getSample(10000)).getMarginal([1, 3])
     dist_estimateur_Bay = ot.KernelSmoothing().build(sample_posterior)
 
     theta_Bay = linkFunction(computeMode(posterior_Y))
@@ -588,7 +588,7 @@ But in order to get the posterior distribution of :math:
     print("Beta =", beta)
     print("Condifence interval Bay =\n", interval_Bay)
     print("Volume =", interval_Bay.getVolume())
-    sample = model_Bay.getSample(1000000)
+    sample = model_Bay.getSample(10000)
     dist_Bay = (
         model_Bay.computeLogPDF(sample) - conditioned.computeLogPDF(sample)
     ).computeMean()
@@ -603,12 +603,12 @@ But in order to get the posterior distribution of :math:
  .. code-block:: none
 
     Theta Bay = [0,0.929774,0,0.915277,0]
-    Beta = 0.9746612121090181
+    Beta = 0.9746679128857786
     Condifence interval Bay =
-     [0.706559, 1.26452]
-    [0.696458, 1.25376]
-    Volume = 0.31095363354970784
-    Kullback-Leibler distance Bay = 0.012475430552002089
+     [0.701378, 1.27114]
+    [0.688197, 1.24981]
+    Volume = 0.3199828293404894
+    Kullback-Leibler distance Bay = 0.013199263874213102
 
 
 
