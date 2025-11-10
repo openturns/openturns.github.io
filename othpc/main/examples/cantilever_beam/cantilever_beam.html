@@ -109,34 +109,27 @@ and I is the Moment of inertia (m^4).</p>
 <p>where <code class="docutils literal notranslate"><span class="pre">beam_input.xml</span></code> is the input file containing the four parameter. Note that an example of this file can be created by manually replacing the tokens <code class="docutils literal notranslate"><span class="pre">&#64;F&#64;,</span> <span class="pre">&#64;E&#64;,</span> <span class="pre">&#64;L&#64;,</span> <span class="pre">&#64;I&#64;</span></code> by numerical values in the file <code class="docutils literal notranslate"><span class="pre">template/beam_input_template.xml</span></code>. The output of the code is an xml file <code class="docutils literal notranslate"><span class="pre">_beam_outputs_.xml</span></code> containing the deviation and its derivates.</p>
 <section id="prepare-your-environment-on-the-cluster">
 <h2>1- Prepare your environment on the cluster<a class="headerlink" href="#prepare-your-environment-on-the-cluster" title="Link to this heading">¶</a></h2>
-<p>The following commands suit the users who have access to one of the clusters owned by EDF (in the following the cluster is name CRONOS).</p>
-<ul>
-<li><p>Connect to CRONOS, create your Python environment called <code class="docutils literal notranslate"><span class="pre">myenv</span></code> using conda-forge:</p>
+<p>The following commands are designed for users who have access to one of the clusters owned by EDF (in the following the cluster is name CRONOS).</p>
+<p>Connect to CRONOS, create your Python environment called <code class="docutils literal notranslate"><span class="pre">myenv</span></code> using conda-forge:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>NNI@dspxxxxxxx:~$ ssh cronos
 [NNI-crfront1-pts48] ~ $ module load Miniforge3
-[NNI-crfront1-pts48] ~ $ conda create -n myenv 
+[NNI-crfront1-pts48] ~ $ conda create -n myenv othpc
 </pre></div>
 </div>
-<p>The creation of your environment (second line), does not need to be repeated at each connection.</p>
-</li>
-<li><p>Clone the git repository (if you are in a non-EDF setting, use the GitHub mirror at <a class="reference external" href="https://github.com/openturns/othpc">https://github.com/openturns/othpc</a> instead) in your “scratch” space and create your branch:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~$ cd /scratch/users/{NNI}/
-(myenv) [NNI-crfront1-pts48] ~$ git clone https://gitlab.pleiade.edf.fr/projet-incertitudes/openturns/openturns/actions-openturns/othpc
-(myenv) [NNI-crfront1-pts48] ~$ pip install -e othpc/
-</pre></div>
-</div>
-</li>
-</ul>
+<p>The creation of your environment (last line), does not need to be repeated at each connection.</p>
 </section>
 <section id="files-required-for-the-cantilever-beam">
 <h2>2- Files required for the cantilever beam<a class="headerlink" href="#files-required-for-the-cantilever-beam" title="Link to this heading">¶</a></h2>
-<p>The requirements for this example include:</p>
-<ul>
+<p>In the following, we use the <code class="docutils literal notranslate"><span class="pre">CantileverBeam</span></code> class, which is available from the <code class="docutils literal notranslate"><span class="pre">othpc.example</span></code> module. You may have a look at <a class="reference external" href="https://github.com/openturns/othpc/blob/main/othpc/example/cantilever_beam/cantilever_beam.py">its code</a> for an example of how to wrap a simulation model within a child class of <code class="docutils literal notranslate"><span class="pre">OpenTURNSPythonFunction</span></code>.</p>
+<p>To run this example, you will need to clone the <code class="docutils literal notranslate"><span class="pre">othpc</span></code> repository either from <a class="reference external" href="https://github.com/openturns/othpc">GitHub</a> (if you do not work at EDF) or from the <a class="reference external" href="https://gitlab.pleiade.edf.fr/projet-incertitudes/openturns/openturns/actions-openturns/othpc">EDF GitLab instance</a> (if you work at EDF) and copy the <a class="reference external" href="https://github.com/openturns/othpc/blob/main/othpc/example/cantilever_beam"><code class="docutils literal notranslate"><span class="pre">othpc/example/cantilever_beam</span></code></a> folder to, for example, a <code class="docutils literal notranslate"><span class="pre">cantilever_beam</span></code> folder within your home folder.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cantilever_beam</span></code> folder includes:</p>
+<ul class="simple">
 <li><p>Template input file (here, <code class="docutils literal notranslate"><span class="pre">template/beam_input_template.xml</span></code>);</p></li>
 <li><p>Executable file (here, <code class="docutils literal notranslate"><span class="pre">template/beam</span></code>);</p></li>
 <li><p>Input design of experiments to be evaluated (here, <code class="docutils literal notranslate"><span class="pre">input_doe/doe.csv</span></code>).</p></li>
-<li><p>Output folder for my results (here, <code class="docutils literal notranslate"><span class="pre">my_results</span></code>)</p>
-<p>In the case of the cantilever beam, this is its content:</p>
+<li><p>Output folder for my results (here, <code class="docutils literal notranslate"><span class="pre">my_results</span></code>)</p></li>
+</ul>
+<p>It is organized as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── cantilever_beam
 |   ├── input_doe
 |   |    ├── doe.csv 
@@ -146,16 +139,14 @@ and I is the Moment of inertia (m^4).</p>
 |   ├── my_results 
 </pre></div>
 </div>
-</li>
-</ul>
 </section>
 <section id="write-an-othpc-script">
 <h2>3- Write an <code class="docutils literal notranslate"><span class="pre">othpc</span></code> script<a class="headerlink" href="#write-an-othpc-script" title="Link to this heading">¶</a></h2>
+<p>In the context of this example, the Python working directoy must be the <code class="docutils literal notranslate"><span class="pre">cantilever_beam</span></code> folder. You can check the Python working directory by running the <code class="docutils literal notranslate"><span class="pre">os.getcwd()</span></code> Python command.</p>
 <section id="define-the-simulation-model">
 <h3>Define the simulation model<a class="headerlink" href="#define-the-simulation-model" title="Link to this heading">¶</a></h3>
 <p>To be able to use <code class="docutils literal notranslate"><span class="pre">othpc</span></code> you will need to encapsulate your simulation model within an OpenTURNS <code class="docutils literal notranslate"><span class="pre">Function</span></code> object,
 usually implemented as a child class of <a class="reference external" href="https://openturns.github.io/openturns/master/user_manual/_generated/openturns.OpenTURNSPythonFunction.html">OpenTURNSPythonFunction</a>.</p>
-<p>In the following, we use the <code class="docutils literal notranslate"><span class="pre">CantileverBeam</span></code> class, which is available from the <code class="docutils literal notranslate"><span class="pre">othpc.example</span></code> module. You may have a look at <a class="reference external" href="https://github.com/openturns/othpc/blob/main/othpc/example/cantilever_beam/cantilever_beam.py">its code</a> for an example of how to wrap a simulation model within a child class of <code class="docutils literal notranslate"><span class="pre">OpenTURNSPythonFunction</span></code>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">othpc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">othpc.example</span><span class="w"> </span><span class="kn">import</span> <span class="n">CantileverBeam</span>
@@ -164,7 +155,6 @@ usually implemented as a child class of <a class="reference external" href="http
 <span class="n">cb</span> <span class="o">=</span> <span class="n">CantileverBeam</span><span class="p">(</span><span class="n">my_results_directory</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Note that the <code class="docutils literal notranslate"><span class="pre">CantileverBeam</span></code> relies on auxiliary files that can be found at the URL <a class="reference external" href="https://github.com/openturns/othpc/tree/main/othpc/example/cantilever_beam">https://github.com/openturns/othpc/tree/main/othpc/example/cantilever_beam</a>.</p>
 </section>
 <section id="define-a-submitfunction-to-distribute-its-evaluations-on-the-cluster">
 <h3>Define a SubmitFunction to distribute its evaluations on the cluster<a class="headerlink" href="#define-a-submitfunction-to-distribute-its-evaluations-on-the-cluster" title="Link to this heading">¶</a></h3>
@@ -199,24 +189,24 @@ gather all your results in a single summary file.</p>
 </section>
 <section id="run-the-script">
 <h2>4- Run the script<a class="headerlink" href="#run-the-script" title="Link to this heading">¶</a></h2>
-<p>Assuming the script is called <code class="docutils literal notranslate"><span class="pre">cantilever_beam.py</span></code>, then it can be run on the cluster using the command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~$ python cantilever_beam.py
+<p>Assuming the script containing the commands described in the previous section is called <code class="docutils literal notranslate"><span class="pre">run_cantilever_beam.py</span></code>, then it can be run on the cluster using the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~/cantilever_beam $ python run_cantilever_beam.py
 </pre></div>
 </div>
 <p>However, the downside of this simple command is that it requires the terminal to be kept open in order to keep running. This means that if the connection to the cluster is lost, the command stops running prematurely.</p>
 <p>A simple solution is to use the <a class="reference external" href="https://www.digitalocean.com/community/tutorials/nohup-command-in-linux"><code class="docutils literal notranslate"><span class="pre">nohup</span></code> command</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~$ nohup python cantilever_beam.py &amp;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~/cantilever_beam $ nohup python run_cantilever_beam.py &amp;
 </pre></div>
 </div>
 <p>This will keep the Python process alive even if the connection to the cluster is lost. This way results can be retrieved at a later date. Please note that the <code class="docutils literal notranslate"><span class="pre">nohup</span></code> command will print a process ID (for example <code class="docutils literal notranslate"><span class="pre">2565</span></code>). Write it down so you can kill the process if you need to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~$ kill 2565
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(myenv) [NNI-crfront1-pts48] ~/cantilever_beam $ kill 2565
 </pre></div>
 </div>
 <p>A possible alternative to <code class="docutils literal notranslate"><span class="pre">nohup</span></code>, which has the advantage of also working if you are running an interactive Python process, is the <a class="reference external" href="https://hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/"><code class="docutils literal notranslate"><span class="pre">tmux</span></code> terminal multiplexer</a>.</p>
 </section>
 <section id="resulting-file-tree">
 <h2>5- Resulting file tree<a class="headerlink" href="#resulting-file-tree" title="Link to this heading">¶</a></h2>
-<p>After running the previous Python script, one gets the following file-tree results.
+<p>After running the Python script, one gets the following file-tree results.
 In the folder <code class="docutils literal notranslate"><span class="pre">my_results</span></code>, 10 subfolders have been created with a unique hash, corresponding to each evaluation.
 In the <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder, 5 subfolders were created, corresponding to all the SLURM jobs submitted (since <code class="docutils literal notranslate"><span class="pre">ntasks_per_node=2</span></code> and <code class="docutils literal notranslate"><span class="pre">nodes_per_job=1</span></code> were passed as argument to the <code class="docutils literal notranslate"><span class="pre">SubmitFunction</span></code>).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  ├── cantilever_beam
