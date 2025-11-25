@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>The HSIC sensitivity indices: the Ishigami model &#8212; OpenTURNS 1.21.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Example of sensitivity analyses on the wing weight model" href="plot_sensitivity_wingweight.html" />
+    <link rel="prev" title="Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis" href="plot_sensitivity_sobol.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_sensitivity_wingweight.html" title="Example of sensitivity analyses on the wing weight model"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_sensitivity_sobol.html" title="Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Sensitivity analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The HSIC sensitivity indices: the Ishigami model</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">The HSIC sensitivity indices: the Ishigami model</a><ul>
+<li><a class="reference internal" href="#definition-of-the-model">Definition of the model</a></li>
+<li><a class="reference internal" href="#setting-the-covariance-models">Setting the covariance models</a></li>
+<li><a class="reference internal" href="#the-global-hsic-estimator">The Global HSIC estimator</a><ul>
+<li><a class="reference internal" href="#choosing-an-estimator">Choosing an estimator</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-target-hsic-estimator">The Target HSIC estimator</a><ul>
+<li><a class="reference internal" href="#defining-a-filter-function">Defining a filter function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-conditional-hsic-estimator">The Conditional HSIC estimator</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_sensitivity_sobol.html"
+                          title="previous chapter">Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_sensitivity_wingweight.html"
+                          title="next chapter">Example of sensitivity analyses on the wing weight model</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_reliability_sensitivity/sensitivity_analysis/plot_hsic_estimators_ishigami.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-reliability-sensitivity-sensitivity-analysis-plot-hsic-estimators-ishigami-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="the-hsic-sensitivity-indices-the-ishigami-model">
+<span id="sphx-glr-auto-reliability-sensitivity-sensitivity-analysis-plot-hsic-estimators-ishigami-py"></span><h1>The HSIC sensitivity indices: the Ishigami model<a class="headerlink" href="#the-hsic-sensitivity-indices-the-ishigami-model" title="Permalink to this heading">¶</a></h1>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
+<span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">ishigami_function</span>
+</pre></div>
+</div>
+<p>This example is a brief overview of the HSIC sensitivity indices classes and how to call them.
+HSIC estimators rely on a reproducing kernel of a Hilbert space. We can use them to compute sensitivity
+indices. We present the methods on the <a class="reference internal" href="../../usecases/use_case_ishigami.html#use-case-ishigami"><span class="std std-ref">Ishigami function</span></a>.</p>
+<section id="definition-of-the-model">
+<h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Permalink to this heading">¶</a></h2>
+<p>We load the model from the usecases module.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">im</span> <span class="o">=</span> <span class="n">ishigami_function</span><span class="o">.</span><span class="n">IshigamiModel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We generate an input sample of size 100 (and dimension 3).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distributionX</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We compute the output by applying the Ishigami model to the input sample.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-covariance-models">
+<h2>Setting the covariance models<a class="headerlink" href="#setting-the-covariance-models" title="Permalink to this heading">¶</a></h2>
+<p>The HSIC algorithms use reproducing kernels defined on Hilbert spaces to estimate independence.
+For each input variable we choose a covariance kernel.
+Here we choose a <a class="reference internal" href="../../user_manual/_generated/openturns.SquaredExponential.html#openturns.SquaredExponential" title="openturns.SquaredExponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">SquaredExponential</span></code></a>
+kernel for all input variables.</p>
+<p>They are all stored in a list of <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzI2LjM1MzY2MnB0JyBoZWlnaHQ9JzkuMjE1MzkzcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDI2LjM1MzY2MiA5LjIxNTM5Myc+CjxkZWZzPgo8cGF0aCBpZD0nZzEtNDMnIGQ9J000Ljc3MDExMi0yLjc2MTY0NEg4LjA2OTczOEM4LjIzNzExMS0yLjc2MTY0NCA4LjQ1MjMwNC0yLjc2MTY0NCA4LjQ1MjMwNC0yLjk3NjgzN0M4LjQ1MjMwNC0zLjIwMzk4NSA4LjI0OTA2Ni0zLjIwMzk4NSA4LjA2OTczOC0zLjIwMzk4NUg0Ljc3MDExMlYtNi41MDM2MTFDNC43NzAxMTItNi42NzA5ODQgNC43NzAxMTItNi44ODYxNzcgNC41NTQ5MTktNi44ODYxNzdDNC4zMjc3NzEtNi44ODYxNzcgNC4zMjc3NzEtNi42ODI5MzkgNC4zMjc3NzEtNi41MDM2MTFWLTMuMjAzOTg1SDEuMDI4MTQ0Qy44NjA3NzItMy4yMDM5ODUgLjY0NTU3OS0zLjIwMzk4NSAuNjQ1NTc5LTIuOTg4NzkyQy42NDU1NzktMi43NjE2NDQgLjg0ODgxNy0yLjc2MTY0NCAxLjAyODE0NC0yLjc2MTY0NEg0LjMyNzc3MVYuNTM3OTgzQzQuMzI3NzcxIC43MDUzNTUgNC4zMjc3NzEgLjkyMDU0OCA0LjU0Mjk2NCAuOTIwNTQ4QzQuNzcwMTEyIC45MjA1NDggNC43NzAxMTIgLjcxNzMxIDQuNzcwMTEyIC41Mzc5ODNWLTIuNzYxNjQ0WicvPgo8cGF0aCBpZD0nZzEtNDknIGQ9J00zLjQ0MzA4OC03LjY2MzI2M0MzLjQ0MzA4OC03LjkzODIzMiAzLjQ0MzA4OC03Ljk1MDE4NyAzLjIwMzk4NS03Ljk1MDE4N0MyLjkxNzA2MS03LjYyNzM5NyAyLjMxOTMwMy03LjE4NTA1NiAxLjA4NzkyLTcuMTg1MDU2Vi02LjgzODM1NkMxLjM2Mjg4OS02LjgzODM1NiAxLjk2MDY0OC02LjgzODM1NiAyLjYxODE4Mi03LjE0OTE5MVYtLjkyMDU0OEMyLjYxODE4Mi0uNDkwMTYyIDIuNTgyMzE2LS4zNDY3IDEuNTMwMjYyLS4zNDY3SDEuMTU5NjUxVjBDMS40ODI0NDEtLjAyMzkxIDIuNjQyMDkyLS4wMjM5MSAzLjAzNjYxMy0uMDIzOTFTNC41Nzg4MjktLjAyMzkxIDQuOTAxNjE5IDBWLS4zNDY3SDQuNTMxMDA5QzMuNDc4OTU0LS4zNDY3IDMuNDQzMDg4LS40OTAxNjIgMy40NDMwODgtLjkyMDU0OFYtNy42NjMyNjNaJy8+CjxwYXRoIGlkPSdnMC0xMDAnIGQ9J002LjAxMzQ1LTcuOTk4MDA3QzYuMDI1NDA1LTguMDQ1ODI4IDYuMDQ5MzE1LTguMTE3NTU5IDYuMDQ5MzE1LTguMTc3MzM1QzYuMDQ5MzE1LTguMjk2ODg3IDUuOTI5NzYzLTguMjk2ODg3IDUuOTA1ODUzLTguMjk2ODg3QzUuODkzODk4LTguMjk2ODg3IDUuMzA4MDk1LTguMjQ5MDY2IDUuMjQ4MzE5LTguMjM3MTExQzUuMDQ1MDgxLTguMjI1MTU2IDQuODY1NzUzLTguMjAxMjQ1IDQuNjUwNTYtOC4xODkyOUM0LjM1MTY4MS04LjE2NTM4IDQuMjY3OTk1LTguMTUzNDI1IDQuMjY3OTk1LTcuOTM4MjMyQzQuMjY3OTk1LTcuODE4NjggNC4zNjM2MzYtNy44MTg2OCA0LjUzMTAwOS03LjgxODY4QzUuMTE2ODEyLTcuODE4NjggNS4xMjg3NjctNy43MTEwODMgNS4xMjg3NjctNy41OTE1MzJDNS4xMjg3NjctNy41MTk4MDEgNS4xMDQ4NTctNy40MjQxNTkgNS4wOTI5MDItNy4zODgyOTRMNC4zNjM2MzYtNC40ODMxODhDNC4yMzIxMy00Ljc5NDAyMiAzLjkwOTM0LTUuMjcyMjI5IDMuMjg3NjcxLTUuMjcyMjI5QzEuOTM2NzM3LTUuMjcyMjI5IC40NzgyMDctMy41MjY3NzUgLjQ3ODIwNy0xLjc1NzQxQy40NzgyMDctLjU3Mzg0OCAxLjE3MTYwNiAuMTE5NTUyIDEuOTg0NTU4IC4xMTk1NTJDMi42NDIwOTIgLjExOTU1MiAzLjIwMzk4NS0uMzk0NTIxIDMuNTM4NzMtLjc4OTA0MUMzLjY1ODI4MS0uMDgzNjg2IDQuMjIwMTc0IC4xMTk1NTIgNC41Nzg4MjkgLjExOTU1MlM1LjIyNDQwOC0uMDk1NjQxIDUuNDM5NjAxLS41MjYwMjdDNS42MzA4ODQtLjkzMjUwMyA1Ljc5ODI1Ny0xLjY2MTc2OCA1Ljc5ODI1Ny0xLjcwOTU4OUM1Ljc5ODI1Ny0xLjc2OTM2NSA1Ljc1MDQzNi0xLjgxNzE4NiA1LjY3ODcwNS0xLjgxNzE4NkM1LjU3MTEwOC0xLjgxNzE4NiA1LjU1OTE1My0xLjc1NzQxIDUuNTExMzMzLTEuNTc4MDgyQzUuMzMyMDA1LS44NzI3MjcgNS4xMDQ4NTctLjExOTU1MiA0LjYxNDY5NS0uMTE5NTUyQzQuMjY3OTk1LS4xMTk1NTIgNC4yNDQwODUtLjQzMDM4NiA0LjI0NDA4NS0uNjY5NDg5QzQuMjQ0MDg1LS43MTczMSA0LjI0NDA4NS0uOTY4MzY5IDQuMzI3NzcxLTEuMzAzMTEzTDYuMDEzNDUtNy45OTgwMDdaTTMuNTk4NTA2LTEuNDIyNjY1QzMuNTM4NzMtMS4yMTk0MjcgMy41Mzg3My0xLjE5NTUxNyAzLjM3MTM1Ny0uOTY4MzY5QzMuMTA4MzQ0LS42MzM2MjQgMi41ODIzMTYtLjExOTU1MiAyLjAyMDQyMy0uMTE5NTUyQzEuNTMwMjYyLS4xMTk1NTIgMS4yNTUyOTMtLjU2MTg5MyAxLjI1NTI5My0xLjI2NzI0OEMxLjI1NTI5My0xLjkyNDc4MiAxLjYyNTkwMy0zLjI2Mzc2MSAxLjg1MzA1MS0zLjc2NTg3OEMyLjI1OTUyNy00LjYwMjc0IDIuODIxNDItNS4wMzMxMjYgMy4yODc2NzEtNS4wMzMxMjZDNC4wNzY3MTItNS4wMzMxMjYgNC4yMzIxMy00LjA1MjgwMiA0LjIzMjEzLTMuOTU3MTYxQzQuMjMyMTMtMy45NDUyMDUgNC4xOTYyNjQtMy43ODk3ODggNC4xODQzMDktMy43NjU4NzhMMy41OTg1MDYtMS40MjI2NjVaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzAtMTAwJy8+Cjx1c2UgeD0nOC43MzkzNTYnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS00MycvPgo8dXNlIHg9JzIwLjUwMDY3MScgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTQ5Jy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MSAtLT4=" alt="d+1" style="vertical-align: -1px"/> covariance kernels where <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzYuMDgyNjkzcHQnIGhlaWdodD0nOC4zMDIxOTFwdCcgdmlld0JveD0nMCAtOC4zMDIxOTEgNi4wODI2OTMgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTEwMCcgZD0nTTYuMDEzNDUtNy45OTgwMDdDNi4wMjU0MDUtOC4wNDU4MjggNi4wNDkzMTUtOC4xMTc1NTkgNi4wNDkzMTUtOC4xNzczMzVDNi4wNDkzMTUtOC4yOTY4ODcgNS45Mjk3NjMtOC4yOTY4ODcgNS45MDU4NTMtOC4yOTY4ODdDNS44OTM4OTgtOC4yOTY4ODcgNS4zMDgwOTUtOC4yNDkwNjYgNS4yNDgzMTktOC4yMzcxMTFDNS4wNDUwODEtOC4yMjUxNTYgNC44NjU3NTMtOC4yMDEyNDUgNC42NTA1Ni04LjE4OTI5QzQuMzUxNjgxLTguMTY1MzggNC4yNjc5OTUtOC4xNTM0MjUgNC4yNjc5OTUtNy45MzgyMzJDNC4yNjc5OTUtNy44MTg2OCA0LjM2MzYzNi03LjgxODY4IDQuNTMxMDA5LTcuODE4NjhDNS4xMTY4MTItNy44MTg2OCA1LjEyODc2Ny03LjcxMTA4MyA1LjEyODc2Ny03LjU5MTUzMkM1LjEyODc2Ny03LjUxOTgwMSA1LjEwNDg1Ny03LjQyNDE1OSA1LjA5MjkwMi03LjM4ODI5NEw0LjM2MzYzNi00LjQ4MzE4OEM0LjIzMjEzLTQuNzk0MDIyIDMuOTA5MzQtNS4yNzIyMjkgMy4yODc2NzEtNS4yNzIyMjlDMS45MzY3MzctNS4yNzIyMjkgLjQ3ODIwNy0zLjUyNjc3NSAuNDc4MjA3LTEuNzU3NDFDLjQ3ODIwNy0uNTczODQ4IDEuMTcxNjA2IC4xMTk1NTIgMS45ODQ1NTggLjExOTU1MkMyLjY0MjA5MiAuMTE5NTUyIDMuMjAzOTg1LS4zOTQ1MjEgMy41Mzg3My0uNzg5MDQxQzMuNjU4MjgxLS4wODM2ODYgNC4yMjAxNzQgLjExOTU1MiA0LjU3ODgyOSAuMTE5NTUyUzUuMjI0NDA4LS4wOTU2NDEgNS40Mzk2MDEtLjUyNjAyN0M1LjYzMDg4NC0uOTMyNTAzIDUuNzk4MjU3LTEuNjYxNzY4IDUuNzk4MjU3LTEuNzA5NTg5QzUuNzk4MjU3LTEuNzY5MzY1IDUuNzUwNDM2LTEuODE3MTg2IDUuNjc4NzA1LTEuODE3MTg2QzUuNTcxMTA4LTEuODE3MTg2IDUuNTU5MTUzLTEuNzU3NDEgNS41MTEzMzMtMS41NzgwODJDNS4zMzIwMDUtLjg3MjcyNyA1LjEwNDg1Ny0uMTE5NTUyIDQuNjE0Njk1LS4xMTk1NTJDNC4yNjc5OTUtLjExOTU1MiA0LjI0NDA4NS0uNDMwMzg2IDQuMjQ0MDg1LS42Njk0ODlDNC4yNDQwODUtLjcxNzMxIDQuMjQ0MDg1LS45NjgzNjkgNC4zMjc3NzEtMS4zMDMxMTNMNi4wMTM0NS03Ljk5ODAwN1pNMy41OTg1MDYtMS40MjI2NjVDMy41Mzg3My0xLjIxOTQyNyAzLjUzODczLTEuMTk1NTE3IDMuMzcxMzU3LS45NjgzNjlDMy4xMDgzNDQtLjYzMzYyNCAyLjU4MjMxNi0uMTE5NTUyIDIuMDIwNDIzLS4xMTk1NTJDMS41MzAyNjItLjExOTU1MiAxLjI1NTI5My0uNTYxODkzIDEuMjU1MjkzLTEuMjY3MjQ4QzEuMjU1MjkzLTEuOTI0NzgyIDEuNjI1OTAzLTMuMjYzNzYxIDEuODUzMDUxLTMuNzY1ODc4QzIuMjU5NTI3LTQuNjAyNzQgMi44MjE0Mi01LjAzMzEyNiAzLjI4NzY3MS01LjAzMzEyNkM0LjA3NjcxMi01LjAzMzEyNiA0LjIzMjEzLTQuMDUyODAyIDQuMjMyMTMtMy45NTcxNjFDNC4yMzIxMy0zLjk0NTIwNSA0LjE5NjI2NC0zLjc4OTc4OCA0LjE4NDMwOS0zLjc2NTg3OEwzLjU5ODUwNi0xLjQyMjY2NVonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMDAnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD0wIC0tPg==" alt="d" style="vertical-align: 0px"/> is the number of
+input variables. The remaining one is for the output variable.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModelCollection</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">Xi</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">inputCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">inputCovariance</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">Xi</span><span class="o">.</span><span class="n">computeStandardDeviation</span><span class="p">())</span>
+    <span class="n">covarianceModelCollection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputCovariance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Likewise we define a covariance kernel associated to the output variable.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">outputCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">outputCovariance</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">computeStandardDeviation</span><span class="p">())</span>
+<span class="n">covarianceModelCollection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outputCovariance</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="the-global-hsic-estimator">
+<h2>The Global HSIC estimator<a class="headerlink" href="#the-global-hsic-estimator" title="Permalink to this heading">¶</a></h2>
+<p>In this paragraph, we perform the analysis on the raw data: that is
+the global HSIC estimator.</p>
+<section id="choosing-an-estimator">
+<h3>Choosing an estimator<a class="headerlink" href="#choosing-an-estimator" title="Permalink to this heading">¶</a></h3>
+<p>After having defined the covariance kernels one has to select an
+appropriate estimator for the computations.</p>
+<p>Two estimators are proposed:</p>
+<ul class="simple">
+<li><p>an unbiased estimator through the <a class="reference internal" href="../../user_manual/_generated/openturns.HSICUStat.html#openturns.HSICUStat" title="openturns.HSICUStat"><code class="xref py py-class docutils literal notranslate"><span class="pre">HSICUStat</span></code></a> class</p></li>
+<li><p>a biased, but asymptotically unbiased, estimator through the <a class="reference internal" href="../../user_manual/_generated/openturns.HSICVStat.html#openturns.HSICVStat" title="openturns.HSICVStat"><code class="xref py py-class docutils literal notranslate"><span class="pre">HSICVStat</span></code></a> class</p></li>
+</ul>
+<p>Beware that the conditional analysis used later cannot be performed with the unbiased estimator.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">estimatorType</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICUStat</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We now build the HSIC estimator:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">globHSIC</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICEstimatorGlobalSensitivity</span><span class="p">(</span>
+    <span class="n">covarianceModelCollection</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">estimatorType</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We get the R2-HSIC indices:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">R2HSICIndices</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getR2HSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Global HSIC analysis&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2-HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">R2HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> Global HSIC analysis
+R2-HSIC Indices:  [0.249305,-0.00429972,0.0437032]
+</pre></div>
+</div>
+<p>and the HSIC indices:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">HSICIndices</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getHSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>HSIC Indices:  [0.0204961,-0.000366135,0.00366669]
+</pre></div>
+</div>
+<p>The p-value by permutation.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pvperm</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getPValuesPermutation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (permutation): &quot;</span><span class="p">,</span> <span class="n">pvperm</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (permutation):  [0,0.50495,0.00990099]
+</pre></div>
+</div>
+<p>We have an asymptotic estimate of the value for this estimator.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pvas</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">getPValuesAsymptotic</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (asymptotic): &quot;</span><span class="p">,</span> <span class="n">pvas</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (asymptotic):  [4.62161e-12,0.553716,0.0159241]
+</pre></div>
+</div>
+<p>We vizualise the results.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph1</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawHSICIndices</span><span class="p">()</span>
+<span class="n">view1</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph1</span><span class="p">)</span>
+
+<span class="n">graph2</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawPValuesAsymptotic</span><span class="p">()</span>
+<span class="n">view2</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph2</span><span class="p">)</span>
+
+<span class="n">graph3</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawR2HSICIndices</span><span class="p">()</span>
+<span class="n">view3</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph3</span><span class="p">)</span>
+
+<span class="n">graph4</span> <span class="o">=</span> <span class="n">globHSIC</span><span class="o">.</span><span class="n">drawPValuesPermutation</span><span class="p">()</span>
+<span class="n">view4</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph4</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_001.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_001.png" alt="HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_002.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_002.png" alt="Asymptotic p-values" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_003.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_003.png" alt="R2-HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_004.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_004.png" alt="p-values by permutation" class = "sphx-glr-multi-img"/></li>
+</ul>
+</section>
+</section>
+<section id="the-target-hsic-estimator">
+<h2>The Target HSIC estimator<a class="headerlink" href="#the-target-hsic-estimator" title="Permalink to this heading">¶</a></h2>
+<p>We now perform the target analysis which consists in using a filter function over the
+output.</p>
+<section id="defining-a-filter-function">
+<h3>Defining a filter function<a class="headerlink" href="#defining-a-filter-function" title="Permalink to this heading">¶</a></h3>
+<p>We define a filter function on the output variable for the target
+analysis. In this example we use the function <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzU1LjcyOTQ3MnB0JyBoZWlnaHQ9JzExLjk1NTE2OHB0JyB2aWV3Qm94PScwIC04Ljk2NjM3NiA1NS43Mjk0NzIgMTEuOTU1MTY4Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMS02MScgZD0nTTUuMTI4NzY3LTguNTI0MDM1QzUuMTI4NzY3LTguNTM1OTkgNS4yMDA0OTgtOC43MTUzMTggNS4yMDA0OTgtOC43MzkyMjhDNS4yMDA0OTgtOC44ODI2OSA1LjA4MDk0Ni04Ljk2NjM3NiA0Ljk4NTMwNS04Ljk2NjM3NkM0LjkyNTUyOS04Ljk2NjM3NiA0LjgxNzkzMy04Ljk2NjM3NiA0LjcyMjI5MS04LjcwMzM2MkwuNzE3MzEgMi41NDY0NTFDLjcxNzMxIDIuNTU4NDA2IC42NDU1NzkgMi43Mzc3MzMgLjY0NTU3OSAyLjc2MTY0NEMuNjQ1NTc5IDIuOTA1MTA2IC43NjUxMzEgMi45ODg3OTIgLjg2MDc3MiAyLjk4ODc5MkMuOTMyNTAzIDIuOTg4NzkyIDEuMDQwMSAyLjk3NjgzNyAxLjEyMzc4NiAyLjcyNTc3OEw1LjEyODc2Ny04LjUyNDAzNVonLz4KPHBhdGggaWQ9J2cxLTEwMCcgZD0nTTYuMDEzNDUtNy45OTgwMDdDNi4wMjU0MDUtOC4wNDU4MjggNi4wNDkzMTUtOC4xMTc1NTkgNi4wNDkzMTUtOC4xNzczMzVDNi4wNDkzMTUtOC4yOTY4ODcgNS45Mjk3NjMtOC4yOTY4ODcgNS45MDU4NTMtOC4yOTY4ODdDNS44OTM4OTgtOC4yOTY4ODcgNS4zMDgwOTUtOC4yNDkwNjYgNS4yNDgzMTktOC4yMzcxMTFDNS4wNDUwODEtOC4yMjUxNTYgNC44NjU3NTMtOC4yMDEyNDUgNC42NTA1Ni04LjE4OTI5QzQuMzUxNjgxLTguMTY1MzggNC4yNjc5OTUtOC4xNTM0MjUgNC4yNjc5OTUtNy45MzgyMzJDNC4yNjc5OTUtNy44MTg2OCA0LjM2MzYzNi03LjgxODY4IDQuNTMxMDA5LTcuODE4NjhDNS4xMTY4MTItNy44MTg2OCA1LjEyODc2Ny03LjcxMTA4MyA1LjEyODc2Ny03LjU5MTUzMkM1LjEyODc2Ny03LjUxOTgwMSA1LjEwNDg1Ny03LjQyNDE1OSA1LjA5MjkwMi03LjM4ODI5NEw0LjM2MzYzNi00LjQ4MzE4OEM0LjIzMjEzLTQuNzk0MDIyIDMuOTA5MzQtNS4yNzIyMjkgMy4yODc2NzEtNS4yNzIyMjlDMS45MzY3MzctNS4yNzIyMjkgLjQ3ODIwNy0zLjUyNjc3NSAuNDc4MjA3LTEuNzU3NDFDLjQ3ODIwNy0uNTczODQ4IDEuMTcxNjA2IC4xMTk1NTIgMS45ODQ1NTggLjExOTU1MkMyLjY0MjA5MiAuMTE5NTUyIDMuMjAzOTg1LS4zOTQ1MjEgMy41Mzg3My0uNzg5MDQxQzMuNjU4MjgxLS4wODM2ODYgNC4yMjAxNzQgLjExOTU1MiA0LjU3ODgyOSAuMTE5NTUyUzUuMjI0NDA4LS4wOTU2NDEgNS40Mzk2MDEtLjUyNjAyN0M1LjYzMDg4NC0uOTMyNTAzIDUuNzk4MjU3LTEuNjYxNzY4IDUuNzk4MjU3LTEuNzA5NTg5QzUuNzk4MjU3LTEuNzY5MzY1IDUuNzUwNDM2LTEuODE3MTg2IDUuNjc4NzA1LTEuODE3MTg2QzUuNTcxMTA4LTEuODE3MTg2IDUuNTU5MTUzLTEuNzU3NDEgNS41MTEzMzMtMS41NzgwODJDNS4zMzIwMDUtLjg3MjcyNyA1LjEwNDg1Ny0uMTE5NTUyIDQuNjE0Njk1LS4xMTk1NTJDNC4yNjc5OTUtLjExOTU1MiA0LjI0NDA4NS0uNDMwMzg2IDQuMjQ0MDg1LS42Njk0ODlDNC4yNDQwODUtLjcxNzMxIDQuMjQ0MDg1LS45NjgzNjkgNC4zMjc3NzEtMS4zMDMxMTNMNi4wMTM0NS03Ljk5ODAwN1pNMy41OTg1MDYtMS40MjI2NjVDMy41Mzg3My0xLjIxOTQyNyAzLjUzODczLTEuMTk1NTE3IDMuMzcxMzU3LS45NjgzNjlDMy4xMDgzNDQtLjYzMzYyNCAyLjU4MjMxNi0uMTE5NTUyIDIuMDIwNDIzLS4xMTk1NTJDMS41MzAyNjItLjExOTU1MiAxLjI1NTI5My0uNTYxODkzIDEuMjU1MjkzLTEuMjY3MjQ4QzEuMjU1MjkzLTEuOTI0NzgyIDEuNjI1OTAzLTMuMjYzNzYxIDEuODUzMDUxLTMuNzY1ODc4QzIuMjU5NTI3LTQuNjAyNzQgMi44MjE0Mi01LjAzMzEyNiAzLjI4NzY3MS01LjAzMzEyNkM0LjA3NjcxMi01LjAzMzEyNiA0LjIzMjEzLTQuMDUyODAyIDQuMjMyMTMtMy45NTcxNjFDNC4yMzIxMy0zLjk0NTIwNSA0LjE5NjI2NC0zLjc4OTc4OCA0LjE4NDMwOS0zLjc2NTg3OEwzLjU5ODUwNi0xLjQyMjY2NVonLz4KPHBhdGggaWQ9J2cxLTExNScgZD0nTTIuNzI1Nzc4LTIuMzkxMDM0QzIuOTI5MDE2LTIuMzU1MTY4IDMuMjUxODA2LTIuMjgzNDM3IDMuMzIzNTM3LTIuMjcxNDgyQzMuNDc4OTU0LTIuMjIzNjYxIDQuMDE2OTM2LTIuMDMyMzc5IDQuMDE2OTM2LTEuNDU4NTMxQzQuMDE2OTM2LTEuMDg3OTIgMy42ODIxOTItLjExOTU1MiAyLjI5NTM5Mi0uMTE5NTUyQzIuMDQ0MzM0LS4xMTk1NTIgMS4xNDc2OTYtLjE1NTQxNyAuOTA4NTkzLS44MTI5NTFDMS4zODY4LS43NTMxNzYgMS42MjU5MDMtMS4xMjM3ODYgMS42MjU5MDMtMS4zODY4QzEuNjI1OTAzLTEuNjM3ODU4IDEuNDU4NTMxLTEuNzY5MzY1IDEuMjE5NDI3LTEuNzY5MzY1Qy45NTY0MTMtMS43NjkzNjUgLjYwOTcxNC0xLjU2NjEyNyAuNjA5NzE0LTEuMDI4MTQ0Qy42MDk3MTQtLjMyMjc5IDEuMzI3MDI0IC4xMTk1NTIgMi4yODM0MzcgLjExOTU1MkM0LjEwMDYyMyAuMTE5NTUyIDQuNjM4NjA1LTEuMjE5NDI3IDQuNjM4NjA1LTEuODQxMDk2QzQuNjM4NjA1LTIuMDIwNDIzIDQuNjM4NjA1LTIuMzU1MTY4IDQuMjU2MDQtMi43Mzc3MzNDMy45NTcxNjEtMy4wMjQ2NTggMy42NzAyMzctMy4wODQ0MzMgMy4wMjQ2NTgtMy4yMTU5NEMyLjcwMTg2OC0zLjI4NzY3MSAyLjE4Nzc5Ni0zLjM5NTI2OCAyLjE4Nzc5Ni0zLjkzMzI1QzIuMTg3Nzk2LTQuMTcyMzU0IDIuNDAyOTg5LTUuMDMzMTI2IDMuNTM4NzMtNS4wMzMxMjZDNC4wNDA4NDctNS4wMzMxMjYgNC41MzEwMDktNC44NDE4NDMgNC42NTA1Ni00LjQxMTQ1N0M0LjEyNDUzMy00LjQxMTQ1NyA0LjEwMDYyMy0zLjk1NzE2MSA0LjEwMDYyMy0zLjk0NTIwNUM0LjEwMDYyMy0zLjY5NDE0NyA0LjMyNzc3MS0zLjYyMjQxNiA0LjQzNTM2Ny0zLjYyMjQxNkM0LjYwMjc0LTMuNjIyNDE2IDQuOTM3NDg0LTMuNzUzOTIzIDQuOTM3NDg0LTQuMjU2MDRTNC40ODMxODgtNS4yNzIyMjkgMy41NTA2ODUtNS4yNzIyMjlDMS45ODQ1NTgtNS4yNzIyMjkgMS41NjYxMjctNC4wNDA4NDcgMS41NjYxMjctMy41NTA2ODVDMS41NjYxMjctMi42NDIwOTIgMi40NTA4MDktMi40NTA4MDkgMi43MjU3NzgtMi4zOTEwMzRaJy8+CjxwYXRoIGlkPSdnMC0wJyBkPSdNNy44Nzg0NTYtMi43NDk2ODlDOC4wODE2OTQtMi43NDk2ODkgOC4yOTY4ODctMi43NDk2ODkgOC4yOTY4ODctMi45ODg3OTJTOC4wODE2OTQtMy4yMjc4OTUgNy44Nzg0NTYtMy4yMjc4OTVIMS40MTA3MUMxLjIwNzQ3Mi0zLjIyNzg5NSAuOTkyMjc5LTMuMjI3ODk1IC45OTIyNzktMi45ODg3OTJTMS4yMDc0NzItMi43NDk2ODkgMS40MTA3MS0yLjc0OTY4OUg3Ljg3ODQ1NlonLz4KPHBhdGggaWQ9J2cyLTQwJyBkPSdNMy44ODU0MyAyLjkwNTEwNkMzLjg4NTQzIDIuODY5MjQgMy44ODU0MyAyLjg0NTMzIDMuNjgyMTkyIDIuNjQyMDkyQzIuNDg2Njc1IDEuNDM0NjIgMS44MTcxODYtLjUzNzk4MyAxLjgxNzE4Ni0yLjk3NjgzN0MxLjgxNzE4Ni01LjI5NjEzOSAyLjM3OTA3OC03LjI5MjY1MyAzLjc2NTg3OC04LjcwMzM2MkMzLjg4NTQzLTguODEwOTU5IDMuODg1NDMtOC44MzQ4NjkgMy44ODU0My04Ljg3MDczNUMzLjg4NTQzLTguOTQyNDY2IDMuODI1NjU0LTguOTY2Mzc2IDMuNzc3ODMzLTguOTY2Mzc2QzMuNjIyNDE2LTguOTY2Mzc2IDIuNjQyMDkyLTguMTA1NjA0IDIuMDU2Mjg5LTYuOTMzOTk4QzEuNDQ2NTc1LTUuNzI2NTI2IDEuMTcxNjA2LTQuNDQ3MzIzIDEuMTcxNjA2LTIuOTc2ODM3QzEuMTcxNjA2LTEuOTEyODI3IDEuMzM4OTc5LS40OTAxNjIgMS45NjA2NDggLjc4OTA0MUMyLjY2NjAwMiAyLjIyMzY2MSAzLjY0NjMyNiAzLjAwMDc0NyAzLjc3NzgzMyAzLjAwMDc0N0MzLjgyNTY1NCAzLjAwMDc0NyAzLjg4NTQzIDIuOTc2ODM3IDMuODg1NDMgMi45MDUxMDZaJy8+CjxwYXRoIGlkPSdnMi00MScgZD0nTTMuMzcxMzU3LTIuOTc2ODM3QzMuMzcxMzU3LTMuODg1NDMgMy4yNTE4MDYtNS4zNjc4NyAyLjU4MjMxNi02Ljc1NDY3QzEuODc2OTYxLTguMTg5MjkgLjg5NjYzOC04Ljk2NjM3NiAuNzY1MTMxLTguOTY2Mzc2Qy43MTczMS04Ljk2NjM3NiAuNjU3NTM0LTguOTQyNDY2IC42NTc1MzQtOC44NzA3MzVDLjY1NzUzNC04LjgzNDg2OSAuNjU3NTM0LTguODEwOTU5IC44NjA3NzItOC42MDc3MjFDMi4wNTYyODktNy40MDAyNDkgMi43MjU3NzgtNS40Mjc2NDYgMi43MjU3NzgtMi45ODg3OTJDMi43MjU3NzgtLjY2OTQ4OSAyLjE2Mzg4NSAxLjMyNzAyNCAuNzc3MDg2IDIuNzM3NzMzQy42NTc1MzQgMi44NDUzMyAuNjU3NTM0IDIuODY5MjQgLjY1NzUzNCAyLjkwNTEwNkMuNjU3NTM0IDIuOTc2ODM3IC43MTczMSAzLjAwMDc0NyAuNzY1MTMxIDMuMDAwNzQ3Qy45MjA1NDggMy4wMDA3NDcgMS45MDA4NzIgMi4xMzk5NzUgMi40ODY2NzUgLjk2ODM2OUMzLjA5NjM4OS0uMjUxMDU5IDMuMzcxMzU3LTEuNTQyMjE3IDMuMzcxMzU3LTIuOTc2ODM3WicvPgo8cGF0aCBpZD0nZzItMTAxJyBkPSdNNC41Nzg4MjktMi43NzM1OTlDNC44NDE4NDMtMi43NzM1OTkgNC44NjU3NTMtMi43NzM1OTkgNC44NjU3NTMtMy4wMDA3NDdDNC44NjU3NTMtNC4yMDgyMTkgNC4yMjAxNzQtNS4zMzIwMDUgMi43NzM1OTktNS4zMzIwMDVDMS40MTA3MS01LjMzMjAwNSAuMzU4NjU1LTQuMTAwNjIzIC4zNTg2NTUtMi42MTgxODJDLjM1ODY1NS0xLjA0MDEgMS41NzgwODIgLjExOTU1MiAyLjkwNTEwNiAuMTE5NTUyQzQuMzI3NzcxIC4xMTk1NTIgNC44NjU3NTMtMS4xNzE2MDYgNC44NjU3NTMtMS40MjI2NjVDNC44NjU3NTMtMS40OTQzOTYgNC44MDU5NzgtMS41NDIyMTcgNC43MzQyNDctMS41NDIyMTdDNC42Mzg2MDUtMS41NDIyMTcgNC42MTQ2OTUtMS40ODI0NDEgNC41OTA3ODUtMS40MjI2NjVDNC4yNzk5NS0uNDE4NDMxIDMuNDc4OTU0LS4xNDM0NjIgMi45NzY4MzctLjE0MzQ2MlMxLjI2NzI0OC0uNDc4MjA3IDEuMjY3MjQ4LTIuNTQ2NDUxVi0yLjc3MzU5OUg0LjU3ODgyOVpNMS4yNzkyMDMtMy4wMDA3NDdDMS4zNzQ4NDQtNC44Nzc3MDkgMi40MjY4OTktNS4wOTI5MDIgMi43NjE2NDQtNS4wOTI5MDJDNC4wNDA4NDctNS4wOTI5MDIgNC4xMTI1NzgtMy40MDcyMjMgNC4xMjQ1MzMtMy4wMDA3NDdIMS4yNzkyMDNaJy8+CjxwYXRoIGlkPSdnMi0xMTInIGQ9J00yLjkyOTAxNiAxLjk3MjYwM0MyLjE2Mzg4NSAxLjk3MjYwMyAyLjAyMDQyMyAxLjk3MjYwMyAyLjAyMDQyMyAxLjQzNDYyVi0uNjQ1NTc5QzIuMjM1NjE2LS4zNDY3IDIuNzI1Nzc4IC4xMTk1NTIgMy40OTA5MDkgLjExOTU1MkM0Ljg2NTc1MyAuMTE5NTUyIDYuMDczMjI1LTEuMDQwMSA2LjA3MzIyNS0yLjU4MjMxNkM2LjA3MzIyNS00LjEwMDYyMyA0Ljk0OTQ0LTUuMjcyMjI5IDMuNjQ2MzI2LTUuMjcyMjI5QzIuNTk0MjcxLTUuMjcyMjI5IDIuMDMyMzc5LTQuNTE5MDU0IDEuOTk2NTEzLTQuNDcxMjMzVi01LjI3MjIyOUwuMzM0NzQ1LTUuMTQwNzIyVi00Ljc5NDAyMkMxLjE3MTYwNi00Ljc5NDAyMiAxLjI0MzMzNy00LjcxMDMzNiAxLjI0MzMzNy00LjE4NDMwOVYxLjQzNDYyQzEuMjQzMzM3IDEuOTcyNjAzIDEuMTExODMxIDEuOTcyNjAzIC4zMzQ3NDUgMS45NzI2MDNWMi4zMTkzMDNDLjY0NTU3OSAyLjI5NTM5MiAxLjI5MTE1OCAyLjI5NTM5MiAxLjYyNTkwMyAyLjI5NTM5MkMxLjk3MjYwMyAyLjI5NTM5MiAyLjYxODE4MiAyLjI5NTM5MiAyLjkyOTAxNiAyLjMxOTMwM1YxLjk3MjYwM1pNMi4wMjA0MjMtMy44MTM2OTlDMi4wMjA0MjMtNC4wNDA4NDcgMi4wMjA0MjMtNC4wNTI4MDIgMi4xNTE5My00LjI0NDA4NUMyLjUxMDU4NS00Ljc4MjA2NyAzLjA5NjM4OS01LjAwOTIxNSAzLjU1MDY4NS01LjAwOTIxNUM0LjQ0NzMyMy01LjAwOTIxNSA1LjE2NDYzMy0zLjkyMTI5NSA1LjE2NDYzMy0yLjU4MjMxNkM1LjE2NDYzMy0xLjE1OTY1MSA0LjM1MTY4MS0uMTE5NTUyIDMuNDMxMTMzLS4xMTk1NTJDMy4wNjA1MjMtLjExOTU1MiAyLjcxMzgyMy0uMjc0OTY5IDIuNDc0NzItLjUwMjExN0MyLjE5OTc1MS0uNzc3MDg2IDIuMDIwNDIzLTEuMDE2MTg5IDIuMDIwNDIzLTEuMzUwOTM0Vi0zLjgxMzY5OVonLz4KPHBhdGggaWQ9J2cyLTEyMCcgZD0nTTMuMzQ3NDQ3LTIuODIxNDJDMy42OTQxNDctMy4yNzU3MTYgNC4xOTYyNjQtMy45MjEyOTUgNC40MjM0MTItNC4xNzIzNTRDNC45MTM1NzQtNC43MjIyOTEgNS40NzU0NjctNC44MDU5NzggNS44NTgwMzItNC44MDU5NzhWLTUuMTUyNjc3QzUuMzQzOTYtNS4xMjg3NjcgNS4zMjAwNS01LjEyODc2NyA0Ljg1Mzc5OC01LjEyODc2N0M0LjM5OTUwMi01LjEyODc2NyA0LjM3NTU5Mi01LjEyODc2NyAzLjc3NzgzMy01LjE1MjY3N1YtNC44MDU5NzhDMy45MzMyNS00Ljc4MjA2NyA0LjEyNDUzMy00LjcxMDMzNiA0LjEyNDUzMy00LjQzNTM2N0M0LjEyNDUzMy00LjIzMjEzIDQuMDE2OTM2LTQuMTAwNjIzIDMuOTQ1MjA1LTQuMDA0OTgxTDMuMTgwMDc1LTMuMDM2NjEzTDIuMjQ3NTcyLTQuMjY3OTk1QzIuMjExNzA2LTQuMzE1ODE2IDIuMTM5OTc1LTQuNDIzNDEyIDIuMTM5OTc1LTQuNTA3MDk4QzIuMTM5OTc1LTQuNTc4ODI5IDIuMTk5NzUxLTQuNzk0MDIyIDIuNTU4NDA2LTQuODA1OTc4Vi01LjE1MjY3N0MyLjI1OTUyNy01LjEyODc2NyAxLjY0OTgxMy01LjEyODc2NyAxLjMyNzAyNC01LjEyODc2N0MuOTMyNTAzLTUuMTI4NzY3IC45MDg1OTMtNS4xMjg3NjcgLjE3OTMyOC01LjE1MjY3N1YtNC44MDU5NzhDLjc4OTA0MS00LjgwNTk3OCAxLjAxNjE4OS00Ljc4MjA2NyAxLjI2NzI0OC00LjQ1OTI3OEwyLjY2NjAwMi0yLjYzMDEzN0MyLjY4OTkxMy0yLjYwNjIyNyAyLjczNzczMy0yLjUzNDQ5NiAyLjczNzczMy0yLjQ5ODYzUzEuODA1MjMtMS4yOTExNTggMS42ODU2NzktMS4xMzU3NDFDMS4xNTk2NTEtLjQ5MDE2MiAuNjMzNjI0LS4zNTg2NTUgLjExOTU1Mi0uMzQ2N1YwQy41NzM4NDgtLjAyMzkxIC41OTc3NTgtLjAyMzkxIDEuMTExODMxLS4wMjM5MUMxLjU2NjEyNy0uMDIzOTEgMS41OTAwMzctLjAyMzkxIDIuMTg3Nzk2IDBWLS4zNDY3QzEuOTAwODcyLS4zODI1NjUgMS44NTMwNTEtLjU2MTg5MyAxLjg1MzA1MS0uNzI5MjY1QzEuODUzMDUxLS45MjA1NDggMS45MzY3MzctMS4wMTYxODkgMi4wNTYyODktMS4xNzE2MDZDMi4yMzU2MTYtMS40MjI2NjUgMi42MzAxMzctMS45MTI4MjcgMi45MTcwNjEtMi4yODM0MzdMMy44OTczODUtMS4wMDQyMzRDNC4xMDA2MjMtLjc0MTIyIDQuMTAwNjIzLS43MTczMSA0LjEwMDYyMy0uNjQ1NTc5QzQuMTAwNjIzLS41NDk5MzggNC4wMDQ5ODEtLjM1ODY1NSAzLjY4MjE5Mi0uMzQ2N1YwQzMuOTkzMDI2LS4wMjM5MSA0LjU3ODgyOS0uMDIzOTEgNC45MTM1NzQtLjAyMzkxQzUuMzA4MDk1LS4wMjM5MSA1LjMzMjAwNS0uMDIzOTEgNi4wNDkzMTUgMFYtLjM0NjdDNS40MTU2OTEtLjM0NjcgNS4yMDA0OTgtLjM3MDYxIDQuOTEzNTc0LS43NTMxNzZMMy4zNDc0NDctMi44MjE0MlonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi0xMDEnLz4KPHVzZSB4PSc1LjIwMjY1OCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTEyMCcvPgo8dXNlIHg9JzExLjM4MDgxNCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTExMicvPgo8dXNlIHg9JzE5Ljg3NjYzNCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQwJy8+Cjx1c2UgeD0nMjQuNDI4OTYnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0wJy8+Cjx1c2UgeD0nMzMuNzI3NDU3JyB5PScwJyB4bGluazpocmVmPScjZzEtMTAwJy8+Cjx1c2UgeD0nMzkuODEwMTUnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS02MScvPgo8dXNlIHg9JzQ1LjY2MzE0MScgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTExNScvPgo8dXNlIHg9JzUxLjE3NzE0NicgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQxJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9NCAtLT4=" alt="\exp{(-d/s)}" style="vertical-align: -4px"/> where <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzYuMDgyNjkzcHQnIGhlaWdodD0nOC4zMDIxOTFwdCcgdmlld0JveD0nMCAtOC4zMDIxOTEgNi4wODI2OTMgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTEwMCcgZD0nTTYuMDEzNDUtNy45OTgwMDdDNi4wMjU0MDUtOC4wNDU4MjggNi4wNDkzMTUtOC4xMTc1NTkgNi4wNDkzMTUtOC4xNzczMzVDNi4wNDkzMTUtOC4yOTY4ODcgNS45Mjk3NjMtOC4yOTY4ODcgNS45MDU4NTMtOC4yOTY4ODdDNS44OTM4OTgtOC4yOTY4ODcgNS4zMDgwOTUtOC4yNDkwNjYgNS4yNDgzMTktOC4yMzcxMTFDNS4wNDUwODEtOC4yMjUxNTYgNC44NjU3NTMtOC4yMDEyNDUgNC42NTA1Ni04LjE4OTI5QzQuMzUxNjgxLTguMTY1MzggNC4yNjc5OTUtOC4xNTM0MjUgNC4yNjc5OTUtNy45MzgyMzJDNC4yNjc5OTUtNy44MTg2OCA0LjM2MzYzNi03LjgxODY4IDQuNTMxMDA5LTcuODE4NjhDNS4xMTY4MTItNy44MTg2OCA1LjEyODc2Ny03LjcxMTA4MyA1LjEyODc2Ny03LjU5MTUzMkM1LjEyODc2Ny03LjUxOTgwMSA1LjEwNDg1Ny03LjQyNDE1OSA1LjA5MjkwMi03LjM4ODI5NEw0LjM2MzYzNi00LjQ4MzE4OEM0LjIzMjEzLTQuNzk0MDIyIDMuOTA5MzQtNS4yNzIyMjkgMy4yODc2NzEtNS4yNzIyMjlDMS45MzY3MzctNS4yNzIyMjkgLjQ3ODIwNy0zLjUyNjc3NSAuNDc4MjA3LTEuNzU3NDFDLjQ3ODIwNy0uNTczODQ4IDEuMTcxNjA2IC4xMTk1NTIgMS45ODQ1NTggLjExOTU1MkMyLjY0MjA5MiAuMTE5NTUyIDMuMjAzOTg1LS4zOTQ1MjEgMy41Mzg3My0uNzg5MDQxQzMuNjU4MjgxLS4wODM2ODYgNC4yMjAxNzQgLjExOTU1MiA0LjU3ODgyOSAuMTE5NTUyUzUuMjI0NDA4LS4wOTU2NDEgNS40Mzk2MDEtLjUyNjAyN0M1LjYzMDg4NC0uOTMyNTAzIDUuNzk4MjU3LTEuNjYxNzY4IDUuNzk4MjU3LTEuNzA5NTg5QzUuNzk4MjU3LTEuNzY5MzY1IDUuNzUwNDM2LTEuODE3MTg2IDUuNjc4NzA1LTEuODE3MTg2QzUuNTcxMTA4LTEuODE3MTg2IDUuNTU5MTUzLTEuNzU3NDEgNS41MTEzMzMtMS41NzgwODJDNS4zMzIwMDUtLjg3MjcyNyA1LjEwNDg1Ny0uMTE5NTUyIDQuNjE0Njk1LS4xMTk1NTJDNC4yNjc5OTUtLjExOTU1MiA0LjI0NDA4NS0uNDMwMzg2IDQuMjQ0MDg1LS42Njk0ODlDNC4yNDQwODUtLjcxNzMxIDQuMjQ0MDg1LS45NjgzNjkgNC4zMjc3NzEtMS4zMDMxMTNMNi4wMTM0NS03Ljk5ODAwN1pNMy41OTg1MDYtMS40MjI2NjVDMy41Mzg3My0xLjIxOTQyNyAzLjUzODczLTEuMTk1NTE3IDMuMzcxMzU3LS45NjgzNjlDMy4xMDgzNDQtLjYzMzYyNCAyLjU4MjMxNi0uMTE5NTUyIDIuMDIwNDIzLS4xMTk1NTJDMS41MzAyNjItLjExOTU1MiAxLjI1NTI5My0uNTYxODkzIDEuMjU1MjkzLTEuMjY3MjQ4QzEuMjU1MjkzLTEuOTI0NzgyIDEuNjI1OTAzLTMuMjYzNzYxIDEuODUzMDUxLTMuNzY1ODc4QzIuMjU5NTI3LTQuNjAyNzQgMi44MjE0Mi01LjAzMzEyNiAzLjI4NzY3MS01LjAzMzEyNkM0LjA3NjcxMi01LjAzMzEyNiA0LjIzMjEzLTQuMDUyODAyIDQuMjMyMTMtMy45NTcxNjFDNC4yMzIxMy0zLjk0NTIwNSA0LjE5NjI2NC0zLjc4OTc4OCA0LjE4NDMwOS0zLjc2NTg3OEwzLjU5ODUwNi0xLjQyMjY2NVonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMDAnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD0wIC0tPg==" alt="d" style="vertical-align: 0px"/> is the distance
+to a well-chosen interval.</p>
+<p>We first define a critical domain: in our case that is the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzM4LjY2MDMyNXB0JyBoZWlnaHQ9JzExLjk1NTE2OHB0JyB2aWV3Qm94PScwIC04Ljk2NjM3NiAzOC42NjAzMjUgMTEuOTU1MTY4Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMS01OScgZD0nTTIuMzMxMjU4IC4wNDc4MjFDMi4zMzEyNTgtLjY0NTU3OSAyLjEwNDExLTEuMTU5NjUxIDEuNjEzOTQ4LTEuMTU5NjUxQzEuMjMxMzgyLTEuMTU5NjUxIDEuMDQwMS0uODQ4ODE3IDEuMDQwMS0uNTg1ODAzUzEuMjE5NDI3IDAgMS42MjU5MDMgMEMxLjc4MTMyIDAgMS45MTI4MjctLjA0NzgyMSAyLjAyMDQyMy0uMTU1NDE3QzIuMDQ0MzM0LS4xNzkzMjggMi4wNTYyODktLjE3OTMyOCAyLjA2ODI0NC0uMTc5MzI4QzIuMDkyMTU0LS4xNzkzMjggMi4wOTIxNTQtLjAxMTk1NSAyLjA5MjE1NCAuMDQ3ODIxQzIuMDkyMTU0IC40NDIzNDEgMi4wMjA0MjMgMS4yMTk0MjcgMS4zMjcwMjQgMS45OTY1MTNDMS4xOTU1MTcgMi4xMzk5NzUgMS4xOTU1MTcgMi4xNjM4ODUgMS4xOTU1MTcgMi4xODc3OTZDMS4xOTU1MTcgMi4yNDc1NzIgMS4yNTUyOTMgMi4zMDczNDcgMS4zMTUwNjggMi4zMDczNDdDMS40MTA3MSAyLjMwNzM0NyAyLjMzMTI1OCAxLjQyMjY2NSAyLjMzMTI1OCAuMDQ3ODIxWicvPgo8cGF0aCBpZD0nZzAtNDknIGQ9J002LjA3MzIyNS0zLjIzOTg1MUM1LjQyNzY0Ni00LjA1MjgwMiA1LjI4NDE4NC00LjIzMjEzIDQuOTEzNTc0LTQuNTMxMDA5QzQuMjQ0MDg1LTUuMDY4OTkxIDMuNTc0NTk1LTUuMjg0MTg0IDIuOTY0ODgyLTUuMjg0MTg0QzEuNTY2MTI3LTUuMjg0MTg0IC42NTc1MzQtMy45NjkxMTYgLjY1NzUzNC0yLjU3MDM2MUMuNjU3NTM0LTEuMTk1NTE3IDEuNTQyMjE3IC4xMzE1MDcgMi45MTcwNjEgLjEzMTUwN1M1LjI4NDE4NC0uOTU2NDEzIDUuODY5OTg4LTEuOTEyODI3QzYuNTE1NTY3LTEuMDk5ODc1IDYuNjU5MDI5LS45MjA1NDggNy4wMjk2MzktLjYyMTY2OUM3LjY5OTEyOC0uMDgzNjg2IDguMzY4NjE4IC4xMzE1MDcgOC45NzgzMzEgLjEzMTUwN0MxMC4zNzcwODYgLjEzMTUwNyAxMS4yODU2NzktMS4xODM1NjIgMTEuMjg1Njc5LTIuNTgyMzE2QzExLjI4NTY3OS0zLjk1NzE2MSAxMC40MDA5OTYtNS4yODQxODQgOS4wMjYxNTItNS4yODQxODRTNi42NTkwMjktNC4xOTYyNjQgNi4wNzMyMjUtMy4yMzk4NTFaTTYuMzg0MDYtMi44MzMzNzVDNi44NzQyMjItMy42OTQxNDcgNy43NTg5MDQtNC45MDE2MTkgOS4xMDk4MzgtNC45MDE2MTlDMTAuMzc3MDg2LTQuOTAxNjE5IDExLjAyMjY2NS0zLjY1ODI4MSAxMS4wMjI2NjUtMi41ODIzMTZDMTEuMDIyNjY1LTEuNDEwNzEgMTAuMjIxNjY5LS40NDIzNDEgOS4xNjk2MTQtLjQ0MjM0MUM4LjQ3NjIxNC0uNDQyMzQxIDcuOTM4MjMyLS45NDQ0NTggNy42ODcxNzMtMS4xOTU1MTdDNy4zODgyOTQtMS41MTgzMDYgNy4xMTMzMjUtMS44ODg5MTcgNi4zODQwNi0yLjgzMzM3NVpNNS41NTkxNTMtMi4zMTkzMDNDNS4wNjg5OTEtMS40NTg1MzEgNC4xODQzMDktLjI1MTA1OSAyLjgzMzM3NS0uMjUxMDU5QzEuNTY2MTI3LS4yNTEwNTkgLjkyMDU0OC0xLjQ5NDM5NiAuOTIwNTQ4LTIuNTcwMzYxQy45MjA1NDgtMy43NDE5NjggMS43MjE1NDQtNC43MTAzMzYgMi43NzM1OTktNC43MTAzMzZDMy40NjY5OTktNC43MTAzMzYgNC4wMDQ5ODEtNC4yMDgyMTkgNC4yNTYwNC0zLjk1NzE2MUM0LjU1NDkxOS0zLjYzNDM3MSA0LjgyOTg4OC0zLjI2Mzc2MSA1LjU1OTE1My0yLjMxOTMwM1onLz4KPHBhdGggaWQ9J2cyLTQzJyBkPSdNNC43NzAxMTItMi43NjE2NDRIOC4wNjk3MzhDOC4yMzcxMTEtMi43NjE2NDQgOC40NTIzMDQtMi43NjE2NDQgOC40NTIzMDQtMi45NzY4MzdDOC40NTIzMDQtMy4yMDM5ODUgOC4yNDkwNjYtMy4yMDM5ODUgOC4wNjk3MzgtMy4yMDM5ODVINC43NzAxMTJWLTYuNTAzNjExQzQuNzcwMTEyLTYuNjcwOTg0IDQuNzcwMTEyLTYuODg2MTc3IDQuNTU0OTE5LTYuODg2MTc3QzQuMzI3NzcxLTYuODg2MTc3IDQuMzI3NzcxLTYuNjgyOTM5IDQuMzI3NzcxLTYuNTAzNjExVi0zLjIwMzk4NUgxLjAyODE0NEMuODYwNzcyLTMuMjAzOTg1IC42NDU1NzktMy4yMDM5ODUgLjY0NTU3OS0yLjk4ODc5MkMuNjQ1NTc5LTIuNzYxNjQ0IC44NDg4MTctMi43NjE2NDQgMS4wMjgxNDQtMi43NjE2NDRINC4zMjc3NzFWLjUzNzk4M0M0LjMyNzc3MSAuNzA1MzU1IDQuMzI3NzcxIC45MjA1NDggNC41NDI5NjQgLjkyMDU0OEM0Ljc3MDExMiAuOTIwNTQ4IDQuNzcwMTEyIC43MTczMSA0Ljc3MDExMiAuNTM3OTgzVi0yLjc2MTY0NFonLz4KPHBhdGggaWQ9J2cyLTUzJyBkPSdNMS41MzAyNjItNi44NTAzMTFDMi4wNDQzMzQtNi42ODI5MzkgMi40NjI3NjUtNi42NzA5ODQgMi41OTQyNzEtNi42NzA5ODRDMy45NDUyMDUtNi42NzA5ODQgNC44MDU5NzgtNy42NjMyNjMgNC44MDU5NzgtNy44MzA2MzVDNC44MDU5NzgtNy44Nzg0NTYgNC43ODIwNjctNy45MzgyMzIgNC43MTAzMzYtNy45MzgyMzJDNC42ODY0MjYtNy45MzgyMzIgNC42NjI1MTYtNy45MzgyMzIgNC41NTQ5MTktNy44OTA0MTFDMy44ODU0My03LjYwMzQ4NyAzLjMxMTU4Mi03LjU2NzYyMSAzLjAwMDc0Ny03LjU2NzYyMUMyLjIxMTcwNi03LjU2NzYyMSAxLjY0OTgxMy03LjgwNjcyNSAxLjQyMjY2NS03LjkwMjM2NkMxLjMzODk3OS03LjkzODIzMiAxLjMxNTA2OC03LjkzODIzMiAxLjMwMzExMy03LjkzODIzMkMxLjIwNzQ3Mi03LjkzODIzMiAxLjIwNzQ3Mi03Ljg2NjUwMSAxLjIwNzQ3Mi03LjY3NTIxOFYtNC4xMjQ1MzNDMS4yMDc0NzItMy45MDkzNCAxLjIwNzQ3Mi0zLjgzNzYwOSAxLjM1MDkzNC0zLjgzNzYwOUMxLjQxMDcxLTMuODM3NjA5IDEuNDIyNjY1LTMuODQ5NTY0IDEuNTQyMjE3LTMuOTkzMDI2QzEuODc2OTYxLTQuNDgzMTg4IDIuNDM4ODU0LTQuNzcwMTEyIDMuMDM2NjEzLTQuNzcwMTEyQzMuNjcwMjM3LTQuNzcwMTEyIDMuOTgxMDcxLTQuMTg0MzA5IDQuMDc2NzEyLTMuOTgxMDcxQzQuMjc5OTUtMy41MTQ4MTkgNC4yOTE5MDUtMi45MjkwMTYgNC4yOTE5MDUtMi40NzQ3MlM0LjI5MTkwNS0xLjMzODk3OSAzLjk1NzE2MS0uODAwOTk2QzMuNjk0MTQ3LS4zNzA2MSAzLjIyNzg5NS0uMDcxNzMxIDIuNzAxODY4LS4wNzE3MzFDMS45MTI4MjctLjA3MTczMSAxLjEzNTc0MS0uNjA5NzE0IC45MjA1NDgtMS40ODI0NDFDLjk4MDMyNC0xLjQ1ODUzMSAxLjA1MjA1NS0xLjQ0NjU3NSAxLjExMTgzMS0xLjQ0NjU3NUMxLjMxNTA2OC0xLjQ0NjU3NSAxLjYzNzg1OC0xLjU2NjEyNyAxLjYzNzg1OC0xLjk3MjYwM0MxLjYzNzg1OC0yLjMwNzM0NyAxLjQxMDcxLTIuNDk4NjMgMS4xMTE4MzEtMi40OTg2M0MuODk2NjM4LTIuNDk4NjMgLjU4NTgwMy0yLjM5MTAzNCAuNTg1ODAzLTEuOTI0NzgyQy41ODU4MDMtLjkwODU5MyAxLjM5ODc1NSAuMjUxMDU5IDIuNzI1Nzc4IC4yNTEwNTlDNC4wNzY3MTIgLjI1MTA1OSA1LjI2MDI3NC0uODg0NjgyIDUuMjYwMjc0LTIuNDAyOTg5QzUuMjYwMjc0LTMuODI1NjU0IDQuMzAzODYxLTUuMDA5MjE1IDMuMDQ4NTY4LTUuMDA5MjE1QzIuMzY3MTIzLTUuMDA5MjE1IDEuODQxMDk2LTQuNzEwMzM2IDEuNTMwMjYyLTQuMzc1NTkyVi02Ljg1MDMxMVonLz4KPHBhdGggaWQ9J2cyLTkxJyBkPSdNMi45ODg3OTIgMi45ODg3OTJWMi41NDY0NTFIMS44MjkxNDFWLTguNTI0MDM1SDIuOTg4NzkyVi04Ljk2NjM3NkgxLjM4NjhWMi45ODg3OTJIMi45ODg3OTJaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzItOTEnLz4KPHVzZSB4PSczLjI1MTY2MScgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTUzJy8+Cjx1c2UgeD0nOS4xMDQ2NTInIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS01OScvPgo8dXNlIHg9JzE0LjM0ODgxJyB5PScwJyB4bGluazpocmVmPScjZzItNDMnLz4KPHVzZSB4PScyMy40NTM0NjInIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC00OScvPgo8dXNlIHg9JzM1LjQwODY2NCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTkxJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9NCAtLT4=" alt="[5,+\infty[" style="vertical-align: -4px"/> interval.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">criticalDomain</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We have access to the distance to this  domain thanks to the
+<a class="reference internal" href="../../user_manual/_generated/openturns.DistanceToDomainFunction.html#openturns.DistanceToDomainFunction" title="openturns.DistanceToDomainFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">DistanceToDomainFunction</span></code></a> class.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dist2criticalDomain</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DistanceToDomainFunction</span><span class="p">(</span><span class="n">criticalDomain</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We define the parameters in our function from the output sample</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">Y</span><span class="o">.</span><span class="n">computeStandardDeviation</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We now define our filter function by composition of the parametrized function and
+the distance function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;exp(-x/s)&quot;</span><span class="p">])</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">])</span>
+<span class="n">filterFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedFunction</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">dist2criticalDomain</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We choose an unbiased estimator</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">estimatorType</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICUStat</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>and build the HSIC estimator</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">targetHSIC</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICEstimatorTargetSensitivity</span><span class="p">(</span>
+    <span class="n">covarianceModelCollection</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">estimatorType</span><span class="p">,</span> <span class="n">filterFunction</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We get the R2-HSIC indices:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">R2HSICIndices</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">getR2HSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Target HSIC analysis&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2-HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">R2HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> Target HSIC analysis
+R2-HSIC Indices:  [0.260374,0.00207302,-0.00658141]
+</pre></div>
+</div>
+<p>and the HSIC indices:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">HSICIndices</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">getHSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>HSIC Indices:  [0.00108746,8.96771e-06,-2.80515e-05]
+</pre></div>
+</div>
+<p>The p-value by permutation.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pvperm</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">getPValuesPermutation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (permutation): &quot;</span><span class="p">,</span> <span class="n">pvperm</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (permutation):  [0,0.237624,0.693069]
+</pre></div>
+</div>
+<p>We have an asymptotic estimate of the value for this estimator.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pvas</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">getPValuesAsymptotic</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (asymptotic): &quot;</span><span class="p">,</span> <span class="n">pvas</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (asymptotic):  [1.42697e-09,0.316344,0.59066]
+</pre></div>
+</div>
+<p>We vizualise the results.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph5</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">drawHSICIndices</span><span class="p">()</span>
+<span class="n">view5</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph5</span><span class="p">)</span>
+
+<span class="n">graph6</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">drawPValuesAsymptotic</span><span class="p">()</span>
+<span class="n">view6</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph6</span><span class="p">)</span>
+
+<span class="n">graph7</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">drawR2HSICIndices</span><span class="p">()</span>
+<span class="n">view7</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph7</span><span class="p">)</span>
+
+<span class="n">graph8</span> <span class="o">=</span> <span class="n">targetHSIC</span><span class="o">.</span><span class="n">drawPValuesPermutation</span><span class="p">()</span>
+<span class="n">view8</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph8</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_005.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_005.png" alt="HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_006.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_006.png" alt="Asymptotic p-values" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_007.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_007.png" alt="R2-HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_008.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_008.png" alt="p-values by permutation" class = "sphx-glr-multi-img"/></li>
+</ul>
+</section>
+</section>
+<section id="the-conditional-hsic-estimator">
+<h2>The Conditional HSIC estimator<a class="headerlink" href="#the-conditional-hsic-estimator" title="Permalink to this heading">¶</a></h2>
+<p>In this last section we preprocess the input variables: that is the conditional
+analysis. To do so, one has to work with a weight function.
+Here the weight function is the filter function we used previously.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">weightFunction</span> <span class="o">=</span> <span class="n">filterFunction</span>
+</pre></div>
+</div>
+<p>We have to select a biased -but asymptotically unbiased- estimator</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">estimatorType</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICVStat</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We build the conditional HSIC estimator</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">condHSIC</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HSICEstimatorConditionalSensitivity</span><span class="p">(</span>
+    <span class="n">covarianceModelCollection</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">weightFunction</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We get the R2-HSIC indices:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">R2HSICIndices</span> <span class="o">=</span> <span class="n">condHSIC</span><span class="o">.</span><span class="n">getR2HSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Conditional HSIC analysis&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2-HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">R2HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span> Conditional HSIC analysis
+R2-HSIC Indices:  [0.155438,0.017438,0.188395]
+</pre></div>
+</div>
+<p>and the HSIC indices:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">HSICIndices</span> <span class="o">=</span> <span class="n">condHSIC</span><span class="o">.</span><span class="n">getHSICIndices</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HSIC Indices: &quot;</span><span class="p">,</span> <span class="n">HSICIndices</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>HSIC Indices:  [0.00492342,0.000779929,0.00858311]
+</pre></div>
+</div>
+<p>For the conditional estimator we only have access to the p-value by permutation:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pvperm</span> <span class="o">=</span> <span class="n">condHSIC</span><span class="o">.</span><span class="n">getPValuesPermutation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value (permutation): &quot;</span><span class="p">,</span> <span class="n">pvperm</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>p-value (permutation):  [0.029703,0.712871,0]
+</pre></div>
+</div>
+<p>We can vizualise the results thanks to the various drawing methods.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph9</span> <span class="o">=</span> <span class="n">condHSIC</span><span class="o">.</span><span class="n">drawHSICIndices</span><span class="p">()</span>
+<span class="n">view9</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph9</span><span class="p">)</span>
+
+<span class="n">graph10</span> <span class="o">=</span> <span class="n">condHSIC</span><span class="o">.</span><span class="n">drawR2HSICIndices</span><span class="p">()</span>
+<span class="n">view10</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph10</span><span class="p">)</span>
+
+<span class="n">graph11</span> <span class="o">=</span> <span class="n">condHSIC</span><span class="o">.</span><span class="n">drawPValuesPermutation</span><span class="p">()</span>
+<span class="n">view11</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph11</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_009.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_009.png" alt="HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_010.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_010.png" alt="R2-HSIC indices" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_hsic_estimators_ishigami_011.png" srcset="../../_images/sphx_glr_plot_hsic_estimators_ishigami_011.png" alt="p-values by permutation" class = "sphx-glr-multi-img"/></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-sensitivity-analysis-plot-hsic-estimators-ishigami-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/f4228a290d3fe75a60b0f4b230184c7c/plot_hsic_estimators_ishigami.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_hsic_estimators_ishigami.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/db227e2d269c18c21e6f81f19e8b6f32/plot_hsic_estimators_ishigami.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_hsic_estimators_ishigami.py</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_sensitivity_wingweight.html" title="Example of sensitivity analyses on the wing weight model"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_sensitivity_sobol.html" title="Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Sensitivity analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The HSIC sensitivity indices: the Ishigami model</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2023 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Dec 04, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

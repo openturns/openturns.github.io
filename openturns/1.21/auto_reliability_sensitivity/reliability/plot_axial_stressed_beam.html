@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Axial stressed beam : comparing different methods to estimate a probability &#8212; OpenTURNS 1.21.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Create unions or intersections of events" href="plot_event_system.html" />
+    <link rel="prev" title="Time variant system reliability problem" href="plot_proba_system_event.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_event_system.html" title="Create unions or intersections of events"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_proba_system_event.html" title="Time variant system reliability problem"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Reliability</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Axial stressed beam : comparing different methods to estimate a probability</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Axial stressed beam : comparing different methods to estimate a probability</a><ul>
+<li><a class="reference internal" href="#define-the-model">Define the model</a></li>
+<li><a class="reference internal" href="#using-monte-carlo-simulations">Using Monte Carlo simulations</a></li>
+<li><a class="reference internal" href="#using-form-analysis">Using FORM analysis</a></li>
+<li><a class="reference internal" href="#using-directional-sampling">Using Directional sampling</a></li>
+<li><a class="reference internal" href="#using-importance-sampling-with-form-design-point-form-is">Using importance sampling with FORM design point: FORM-IS</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_proba_system_event.html"
+                          title="previous chapter">Time variant system reliability problem</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_event_system.html"
+                          title="next chapter">Create unions or intersections of events</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_reliability_sensitivity/reliability/plot_axial_stressed_beam.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-reliability-sensitivity-reliability-plot-axial-stressed-beam-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="axial-stressed-beam-comparing-different-methods-to-estimate-a-probability">
+<span id="sphx-glr-auto-reliability-sensitivity-reliability-plot-axial-stressed-beam-py"></span><h1>Axial stressed beam : comparing different methods to estimate a probability<a class="headerlink" href="#axial-stressed-beam-comparing-different-methods-to-estimate-a-probability" title="Permalink to this heading">¶</a></h1>
+<p>In this example, we compare four methods to estimate the probability in the <a class="reference internal" href="../../usecases/use_case_beam.html#use-case-stressed-beam"><span class="std std-ref">axial stressed beam</span></a> example :</p>
+<ul class="simple">
+<li><p>Monte-Carlo simulation,</p></li>
+<li><p>FORM,</p></li>
+<li><p>directional sampling,</p></li>
+<li><p>importance sampling with FORM design point: FORM-IS.</p></li>
+</ul>
+<section id="define-the-model">
+<h2>Define the model<a class="headerlink" href="#define-the-model" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">stressed_beam</span>
+
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
+
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We load the model from the usecases module :</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sm</span> <span class="o">=</span> <span class="n">stressed_beam</span><span class="o">.</span><span class="n">AxialStressedBeam</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The limit state function is defined in the <cite>model</cite> field of the data class :</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">limitStateFunction</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">model</span>
+</pre></div>
+</div>
+<p>The probabilistic model of the axial stressed beam is defined in the data class.
+We get the first marginal and draw it :</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">R_dist</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">distribution_R</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">R_dist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_axial_stressed_beam_001.png" srcset="../../_images/sphx_glr_plot_axial_stressed_beam_001.png" alt="plot axial stressed beam" class = "sphx-glr-single-img"/><p>We get the second marginal and draw it :</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">F_dist</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">distribution_F</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">F_dist</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_axial_stressed_beam_002.png" srcset="../../_images/sphx_glr_plot_axial_stressed_beam_002.png" alt="plot axial stressed beam" class = "sphx-glr-single-img"/><p>These independent marginals define the joint distribution of the input parameters :</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">myDistribution</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">distribution</span>
+</pre></div>
+</div>
+<p>We create a <cite>RandomVector</cite> from the <cite>Distribution</cite>, then a composite random vector. Finally, we create a <cite>ThresholdEvent</cite> from this <cite>RandomVector</cite>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">inputRandomVector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">myDistribution</span><span class="p">)</span>
+<span class="n">outputRandomVector</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">limitStateFunction</span><span class="p">,</span> <span class="n">inputRandomVector</span><span class="p">)</span>
+<span class="n">myEvent</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">outputRandomVector</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Less</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-monte-carlo-simulations">
+<h2>Using Monte Carlo simulations<a class="headerlink" href="#using-monte-carlo-simulations" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cv</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">NbSim</span> <span class="o">=</span> <span class="mi">100000</span>
+
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">()</span>
+<span class="n">algoMC</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ProbabilitySimulationAlgorithm</span><span class="p">(</span><span class="n">myEvent</span><span class="p">,</span> <span class="n">experiment</span><span class="p">)</span>
+<span class="n">algoMC</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="n">NbSim</span><span class="p">)</span>
+<span class="n">algoMC</span><span class="o">.</span><span class="n">setBlockSize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">algoMC</span><span class="o">.</span><span class="n">setMaximumCoefficientOfVariation</span><span class="p">(</span><span class="n">cv</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For statistics about the algorithm</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">initialNumberOfCall</span> <span class="o">=</span> <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Perform the analysis.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algoMC</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algoMC</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">probabilityMonteCarlo</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
+<span class="n">numberOfFunctionEvaluationsMonteCarlo</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span> <span class="o">-</span> <span class="n">initialNumberOfCall</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of calls to the limit state =&quot;</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluationsMonteCarlo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pf = &quot;</span><span class="p">,</span> <span class="n">probabilityMonteCarlo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CV =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getCoefficientOfVariation</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Number of calls to the limit state = 13931
+Pf =  0.027923336443902068
+CV = 0.04998911613048065
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">algoMC</span><span class="o">.</span><span class="n">drawProbabilityConvergence</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLogScale</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">GraphImplementation</span><span class="o">.</span><span class="n">LOGX</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_axial_stressed_beam_003.png" srcset="../../_images/sphx_glr_plot_axial_stressed_beam_003.png" alt="ProbabilitySimulationAlgorithm convergence graph at level 0.95" class = "sphx-glr-single-img"/></section>
+<section id="using-form-analysis">
+<h2>Using FORM analysis<a class="headerlink" href="#using-form-analysis" title="Permalink to this heading">¶</a></h2>
+<p>We create a NearestPoint algorithm</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">myCobyla</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cobyla</span><span class="p">()</span>
+<span class="c1"># Resolution options:</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">myCobyla</span><span class="o">.</span><span class="n">setMaximumEvaluationNumber</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">myCobyla</span><span class="o">.</span><span class="n">setMaximumAbsoluteError</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+<span class="n">myCobyla</span><span class="o">.</span><span class="n">setMaximumRelativeError</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+<span class="n">myCobyla</span><span class="o">.</span><span class="n">setMaximumResidualError</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+<span class="n">myCobyla</span><span class="o">.</span><span class="n">setMaximumConstraintError</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For statistics about the algorithm</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">initialNumberOfCall</span> <span class="o">=</span> <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We create a FORM algorithm. The first parameter is a NearestPointAlgorithm. The second parameter is an event. The third parameter is a starting point for the design point research.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algoFORM</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FORM</span><span class="p">(</span><span class="n">myCobyla</span><span class="p">,</span> <span class="n">myEvent</span><span class="p">,</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getMean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Perform the analysis.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algoFORM</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">resultFORM</span> <span class="o">=</span> <span class="n">algoFORM</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">numberOfFunctionEvaluationsFORM</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span> <span class="o">-</span> <span class="n">initialNumberOfCall</span>
+<span class="p">)</span>
+<span class="n">probabilityFORM</span> <span class="o">=</span> <span class="n">resultFORM</span><span class="o">.</span><span class="n">getEventProbability</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of calls to the limit state =&quot;</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluationsFORM</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pf =&quot;</span><span class="p">,</span> <span class="n">probabilityFORM</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Number of calls to the limit state = 98
+Pf = 0.02998278558231473
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">resultFORM</span><span class="o">.</span><span class="n">drawImportanceFactors</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_axial_stressed_beam_004.png" srcset="../../_images/sphx_glr_plot_axial_stressed_beam_004.png" alt="Importance Factors from Design Point - Unnamed" class = "sphx-glr-single-img"/></section>
+<section id="using-directional-sampling">
+<h2>Using Directional sampling<a class="headerlink" href="#using-directional-sampling" title="Permalink to this heading">¶</a></h2>
+<p>Resolution options:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cv</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">NbSim</span> <span class="o">=</span> <span class="mi">10000</span>
+
+<span class="n">algoDS</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DirectionalSampling</span><span class="p">(</span><span class="n">myEvent</span><span class="p">)</span>
+<span class="n">algoDS</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="n">NbSim</span><span class="p">)</span>
+<span class="n">algoDS</span><span class="o">.</span><span class="n">setBlockSize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">algoDS</span><span class="o">.</span><span class="n">setMaximumCoefficientOfVariation</span><span class="p">(</span><span class="n">cv</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For statistics about the algorithm</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">initialNumberOfCall</span> <span class="o">=</span> <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Perform the analysis.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algoDS</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algoDS</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">probabilityDirectionalSampling</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
+<span class="n">numberOfFunctionEvaluationsDirectionalSampling</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span> <span class="o">-</span> <span class="n">initialNumberOfCall</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Number of calls to the limit state =&quot;</span><span class="p">,</span>
+    <span class="n">numberOfFunctionEvaluationsDirectionalSampling</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pf = &quot;</span><span class="p">,</span> <span class="n">probabilityDirectionalSampling</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CV =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getCoefficientOfVariation</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Number of calls to the limit state = 9050
+Pf =  0.029665915864919325
+CV = 0.04998871289144034
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">algoDS</span><span class="o">.</span><span class="n">drawProbabilityConvergence</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLogScale</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">GraphImplementation</span><span class="o">.</span><span class="n">LOGX</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_axial_stressed_beam_005.png" srcset="../../_images/sphx_glr_plot_axial_stressed_beam_005.png" alt="DirectionalSampling convergence graph at level 0.95" class = "sphx-glr-single-img"/></section>
+<section id="using-importance-sampling-with-form-design-point-form-is">
+<h2>Using importance sampling with FORM design point: FORM-IS<a class="headerlink" href="#using-importance-sampling-with-form-design-point-form-is" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>getStandardSpaceDesignPoint</cite> method returns the design point in the U-space.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">standardSpaceDesignPoint</span> <span class="o">=</span> <span class="n">resultFORM</span><span class="o">.</span><span class="n">getStandardSpaceDesignPoint</span><span class="p">()</span>
+<span class="n">standardSpaceDesignPoint</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[-1.59355,0.999463]</p>
+</div>
+<br />
+<br /><p>The key point is to define the importance distribution in the U-space.
+To define it, we use a multivariate standard Gaussian and configure it so that the center is equal to the design point in the U-space.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">dimension</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">myImportance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span>
+<span class="n">myImportance</span><span class="o">.</span><span class="n">setMean</span><span class="p">(</span><span class="n">standardSpaceDesignPoint</span><span class="p">)</span>
+<span class="n">myImportance</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>Normal(mu = [-1.59355,0.999463], sigma = [1,1], R = [[ 1 0 ]<br>
+ [ 0 1 ]])</p>
+</div>
+<br />
+<br /><p>Create the design of experiment corresponding to importance sampling. This generates a <cite>WeightedExperiment</cite> with weights corresponding to the importance distribution.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ImportanceSamplingExperiment</span><span class="p">(</span><span class="n">myImportance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create the standard event corresponding to the event. This transforms the original problem into the U-space, with Gaussian independent marginals.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">standardEvent</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">StandardEvent</span><span class="p">(</span><span class="n">myEvent</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We then create the simulation algorithm.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ProbabilitySimulationAlgorithm</span><span class="p">(</span><span class="n">standardEvent</span><span class="p">,</span> <span class="n">experiment</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumCoefficientOfVariation</span><span class="p">(</span><span class="n">cv</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="mi">40000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For statistics about the algorithm</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">initialNumberOfCall</span> <span class="o">=</span> <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>retrieve results</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">probabilityFORMIS</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
+<span class="n">numberOfFunctionEvaluationsFORMIS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">limitStateFunction</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span> <span class="o">-</span> <span class="n">initialNumberOfCall</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of calls to the limit state =&quot;</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluationsFORMIS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pf = &quot;</span><span class="p">,</span> <span class="n">probabilityFORMIS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CV =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getCoefficientOfVariation</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Number of calls to the limit state = 824
+Pf =  0.03192438900613578
+CV = 0.0499854933665548
+</pre></div>
+</div>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
+<p>We now compare the different methods in terms of accuracy and speed.</p>
+<p>The following function computes the number of correct base-10 digits in the computed result compared to the exact result.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">computeLogRelativeError</span><span class="p">(</span><span class="n">exact</span><span class="p">,</span> <span class="n">computed</span><span class="p">):</span>
+    <span class="n">logRelativeError</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">exact</span> <span class="o">-</span> <span class="n">computed</span><span class="p">)</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">exact</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">logRelativeError</span>
+</pre></div>
+</div>
+<p>The following function prints the results.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">printMethodSummary</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">computedProbability</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluations</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of calls to the limit state =&quot;</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluations</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pf = &quot;</span><span class="p">,</span> <span class="n">computedProbability</span><span class="p">)</span>
+    <span class="n">exactProbability</span> <span class="o">=</span> <span class="mf">0.02919819462483051</span>
+    <span class="n">logRelativeError</span> <span class="o">=</span> <span class="n">computeLogRelativeError</span><span class="p">(</span><span class="n">exactProbability</span><span class="p">,</span> <span class="n">computedProbability</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of correct digits=</span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logRelativeError</span><span class="p">))</span>
+    <span class="n">performance</span> <span class="o">=</span> <span class="n">logRelativeError</span> <span class="o">/</span> <span class="n">numberOfFunctionEvaluations</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Performance=</span><span class="si">%.2e</span><span class="s2"> (correct digits/evaluation)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">performance</span><span class="p">))</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">printMethodSummary</span><span class="p">(</span>
+    <span class="s2">&quot;Monte-Carlo&quot;</span><span class="p">,</span> <span class="n">probabilityMonteCarlo</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluationsMonteCarlo</span>
+<span class="p">)</span>
+<span class="n">printMethodSummary</span><span class="p">(</span><span class="s2">&quot;FORM&quot;</span><span class="p">,</span> <span class="n">probabilityFORM</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluationsFORM</span><span class="p">)</span>
+<span class="n">printMethodSummary</span><span class="p">(</span>
+    <span class="s2">&quot;DirectionalSampling&quot;</span><span class="p">,</span>
+    <span class="n">probabilityDirectionalSampling</span><span class="p">,</span>
+    <span class="n">numberOfFunctionEvaluationsDirectionalSampling</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">printMethodSummary</span><span class="p">(</span><span class="s2">&quot;FORM-IS&quot;</span><span class="p">,</span> <span class="n">probabilityFORMIS</span><span class="p">,</span> <span class="n">numberOfFunctionEvaluationsFORMIS</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>---
+Monte-Carlo :
+Number of calls to the limit state = 13931
+Pf =  0.027923336443902068
+Number of correct digits=1.360
+Performance=9.76e-05 (correct digits/evaluation)
+---
+FORM :
+Number of calls to the limit state = 98
+Pf =  0.02998278558231473
+Number of correct digits=1.571
+Performance=1.60e-02 (correct digits/evaluation)
+---
+DirectionalSampling :
+Number of calls to the limit state = 9050
+Pf =  0.029665915864919325
+Number of correct digits=1.795
+Performance=1.98e-04 (correct digits/evaluation)
+---
+FORM-IS :
+Number of calls to the limit state = 824
+Pf =  0.03192438900613578
+Number of correct digits=1.030
+Performance=1.25e-03 (correct digits/evaluation)
+</pre></div>
+</div>
+<p>We see that all three methods produce the correct probability, but not with the same accuracy.
+In this case, we have found the correct order of magnitude of the probability, i.e. between one and two correct digits.
+There is, however, a significant difference in computational performance (measured here by the number of function evaluations).</p>
+<ul class="simple">
+<li><p>The fastest method is the FORM method, which produces more than 1 correct
+digit with less than 98 function evaluations with a performance equal to <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzU3Ljk0OTEyNnB0JyBoZWlnaHQ9JzEwLjQ3MTAxMXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSA1Ny45NDkxMjYgMTAuNDcxMDExJz4KPGRlZnM+CjxwYXRoIGlkPSdnMy01MCcgZD0nTTIuMjQ3NTcyLTEuNjI1OTAzQzIuMzc1MDkzLTEuNzQ1NDU1IDIuNzA5ODM4LTIuMDA4NDY4IDIuODM3MzYtMi4xMjAwNUMzLjMzMTUwNy0yLjU3NDM0NiAzLjgwMTc0My0zLjAxMjcwMiAzLjgwMTc0My0zLjczNzk4M0MzLjgwMTc0My00LjY4NjQyNiAzLjAwNDczMi01LjMwMDEyNSAyLjAwODQ2OC01LjMwMDEyNUMxLjA1MjA1NS01LjMwMDEyNSAuNDIyNDE2LTQuNTc0ODQ0IC40MjI0MTYtMy44NjU1MDRDLjQyMjQxNi0zLjQ3NDk2OSAuNzMzMjUtMy40MTkxNzggLjg0NDgzMi0zLjQxOTE3OEMxLjAxMjIwNC0zLjQxOTE3OCAxLjI1OTI3OC0zLjUzODczIDEuMjU5Mjc4LTMuODQxNTk0QzEuMjU5Mjc4LTQuMjU2MDQgLjg2MDc3Mi00LjI1NjA0IC43NjUxMzEtNC4yNTYwNEMuOTk2MjY0LTQuODM3ODU4IDEuNTMwMjYyLTUuMDM3MTExIDEuOTIwNzk3LTUuMDM3MTExQzIuNjYyMDE3LTUuMDM3MTExIDMuMDQ0NTgzLTQuNDA3NDcyIDMuMDQ0NTgzLTMuNzM3OTgzQzMuMDQ0NTgzLTIuOTA5MDkxIDIuNDYyNzY1LTIuMzAzMzYyIDEuNTIyMjkxLTEuMzM4OTc5TC41MTgwNTctLjMwMjg2NEMuNDIyNDE2LS4yMTUxOTMgLjQyMjQxNi0uMTk5MjUzIC40MjI0MTYgMEgzLjU3MDYxTDMuODAxNzQzLTEuNDI2NjVIMy41NTQ2N0MzLjUzMDc2LTEuMjY3MjQ4IDMuNDY2OTk5LS44Njg3NDIgMy4zNzEzNTctLjcxNzMxQzMuMzIzNTM3LS42NTM1NDkgMi43MTc4MDgtLjY1MzU0OSAyLjU5MDI4Ni0uNjUzNTQ5SDEuMTcxNjA2TDIuMjQ3NTcyLTEuNjI1OTAzWicvPgo8cGF0aCBpZD0nZzAtMCcgZD0nTTUuNTcxMTA4LTEuODA5MjE1QzUuNjk4NjMtMS44MDkyMTUgNS44NzM5NzMtMS44MDkyMTUgNS44NzM5NzMtMS45OTI1MjhTNS42OTg2My0yLjE3NTg0MSA1LjU3MTEwOC0yLjE3NTg0MUgxLjAwNDIzNEMuODc2NzEyLTIuMTc1ODQxIC43MDEzNy0yLjE3NTg0MSAuNzAxMzctMS45OTI1MjhTLjg3NjcxMi0xLjgwOTIxNSAxLjAwNDIzNC0xLjgwOTIxNUg1LjU3MTEwOFonLz4KPHBhdGggaWQ9J2cxLTInIGQ9J000LjY1MDU2LTMuMzIzNTM3TDIuMjU5NTI3LTUuNzAyNjE1QzIuMTE2MDY1LTUuODQ2MDc3IDIuMDkyMTU0LTUuODY5OTg4IDEuOTk2NTEzLTUuODY5OTg4QzEuODc2OTYxLTUuODY5OTg4IDEuNzU3NDEtNS43NjIzOTEgMS43NTc0MS01LjYzMDg4NEMxLjc1NzQxLTUuNTQ3MTk4IDEuNzgxMzItNS41MjMyODggMS45MTI4MjctNS4zOTE3ODFMNC4zMDM4NjEtMi45ODg3OTJMMS45MTI4MjctLjU4NTgwM0MxLjc4MTMyLS40NTQyOTYgMS43NTc0MS0uNDMwMzg2IDEuNzU3NDEtLjM0NjdDMS43NTc0MS0uMjE1MTkzIDEuODc2OTYxLS4xMDc1OTcgMS45OTY1MTMtLjEwNzU5N0MyLjA5MjE1NC0uMTA3NTk3IDIuMTE2MDY1LS4xMzE1MDcgMi4yNTk1MjctLjI3NDk2OUw0LjYzODYwNS0yLjY1NDA0N0w3LjExMzMyNS0uMTc5MzI4QzcuMTM3MjM1LS4xNjczNzIgNy4yMjA5MjItLjEwNzU5NyA3LjI5MjY1My0uMTA3NTk3QzcuNDM2MTE1LS4xMDc1OTcgNy41MzE3NTYtLjIxNTE5MyA3LjUzMTc1Ni0uMzQ2N0M3LjUzMTc1Ni0uMzcwNjEgNy41MzE3NTYtLjQxODQzMSA3LjQ5NTg5LS40NzgyMDdDNy40ODM5MzUtLjUwMjExNyA1LjU4MzA2NC0yLjM3OTA3OCA0Ljk4NTMwNS0yLjk4ODc5Mkw3LjE3MzEwMS01LjE3NjU4OEM3LjIzMjg3Ny01LjI0ODMxOSA3LjQxMjIwNC01LjQwMzczNiA3LjQ3MTk4LTUuNDc1NDY3QzcuNDgzOTM1LTUuNDk5Mzc3IDcuNTMxNzU2LTUuNTQ3MTk4IDcuNTMxNzU2LTUuNjMwODg0QzcuNTMxNzU2LTUuNzYyMzkxIDcuNDM2MTE1LTUuODY5OTg4IDcuMjkyNjUzLTUuODY5OTg4QzcuMTk3MDExLTUuODY5OTg4IDcuMTQ5MTkxLTUuODIyMTY3IDcuMDE3Njg0LTUuNjkwNjZMNC42NTA1Ni0zLjMyMzUzN1onLz4KPHBhdGggaWQ9J2cyLTU4JyBkPSdNMi4xOTk3NTEtLjU3Mzg0OEMyLjE5OTc1MS0uOTIwNTQ4IDEuOTEyODI3LTEuMTU5NjUxIDEuNjI1OTAzLTEuMTU5NjUxQzEuMjc5MjAzLTEuMTU5NjUxIDEuMDQwMS0uODcyNzI3IDEuMDQwMS0uNTg1ODAzQzEuMDQwMS0uMjM5MTAzIDEuMzI3MDI0IDAgMS42MTM5NDggMEMxLjk2MDY0OCAwIDIuMTk5NzUxLS4yODY5MjQgMi4xOTk3NTEtLjU3Mzg0OFonLz4KPHBhdGggaWQ9J2c0LTQ4JyBkPSdNNS4zNTU5MTUtMy44MjU2NTRDNS4zNTU5MTUtNC44MTc5MzMgNS4yOTYxMzktNS43ODYzMDEgNC44NjU3NTMtNi42OTQ4OTRDNC4zNzU1OTItNy42ODcxNzMgMy41MTQ4MTktNy45NTAxODcgMi45MjkwMTYtNy45NTAxODdDMi4yMzU2MTYtNy45NTAxODcgMS4zODY4LTcuNjAzNDg3IC45NDQ0NTgtNi42MTEyMDhDLjYwOTcxNC01Ljg1ODAzMiAuNDkwMTYyLTUuMTE2ODEyIC40OTAxNjItMy44MjU2NTRDLjQ5MDE2Mi0yLjY2NjAwMiAuNTczODQ4LTEuNzkzMjc1IDEuMDA0MjM0LS45NDQ0NThDMS40NzA0ODYtLjAzNTg2NiAyLjI5NTM5MiAuMjUxMDU5IDIuOTE3MDYxIC4yNTEwNTlDMy45NTcxNjEgLjI1MTA1OSA0LjU1NDkxOS0uMzcwNjEgNC45MDE2MTktMS4wNjQwMUM1LjMzMjAwNS0xLjk2MDY0OCA1LjM1NTkxNS0zLjEzMjI1NCA1LjM1NTkxNS0zLjgyNTY1NFpNMi45MTcwNjEgLjAxMTk1NUMyLjUzNDQ5NiAuMDExOTU1IDEuNzU3NDEtLjIwMzIzOCAxLjUzMDI2Mi0xLjUwNjM1MUMxLjM5ODc1NS0yLjIyMzY2MSAxLjM5ODc1NS0zLjEzMjI1NCAxLjM5ODc1NS0zLjk2OTExNkMxLjM5ODc1NS00Ljk0OTQ0IDEuMzk4NzU1LTUuODM0MTIyIDEuNTkwMDM3LTYuNTM5NDc3QzEuNzkzMjc1LTcuMzQwNDczIDIuNDAyOTg5LTcuNzExMDgzIDIuOTE3MDYxLTcuNzExMDgzQzMuMzcxMzU3LTcuNzExMDgzIDQuMDY0NzU3LTcuNDM2MTE1IDQuMjkxOTA1LTYuNDA3OTdDNC40NDczMjMtNS43MjY1MjYgNC40NDczMjMtNC43ODIwNjcgNC40NDczMjMtMy45NjkxMTZDNC40NDczMjMtMy4xNjgxMiA0LjQ0NzMyMy0yLjI1OTUyNyA0LjMxNTgxNi0xLjUzMDI2MkM0LjA4ODY2Ny0uMjE1MTkzIDMuMzM1NDkyIC4wMTE5NTUgMi45MTcwNjEgLjAxMTk1NVonLz4KPHBhdGggaWQ9J2c0LTQ5JyBkPSdNMy40NDMwODgtNy42NjMyNjNDMy40NDMwODgtNy45MzgyMzIgMy40NDMwODgtNy45NTAxODcgMy4yMDM5ODUtNy45NTAxODdDMi45MTcwNjEtNy42MjczOTcgMi4zMTkzMDMtNy4xODUwNTYgMS4wODc5Mi03LjE4NTA1NlYtNi44MzgzNTZDMS4zNjI4ODktNi44MzgzNTYgMS45NjA2NDgtNi44MzgzNTYgMi42MTgxODItNy4xNDkxOTFWLS45MjA1NDhDMi42MTgxODItLjQ5MDE2MiAyLjU4MjMxNi0uMzQ2NyAxLjUzMDI2Mi0uMzQ2N0gxLjE1OTY1MVYwQzEuNDgyNDQxLS4wMjM5MSAyLjY0MjA5Mi0uMDIzOTEgMy4wMzY2MTMtLjAyMzkxUzQuNTc4ODI5LS4wMjM5MSA0LjkwMTYxOSAwVi0uMzQ2N0g0LjUzMTAwOUMzLjQ3ODk1NC0uMzQ2NyAzLjQ0MzA4OC0uNDkwMTYyIDMuNDQzMDg4LS45MjA1NDhWLTcuNjYzMjYzWicvPgo8cGF0aCBpZD0nZzQtNTQnIGQ9J00xLjQ3MDQ4Ni00LjE2MDM5OUMxLjQ3MDQ4Ni03LjE4NTA1NiAyLjk0MDk3MS03LjY2MzI2MyAzLjU4NjU1LTcuNjYzMjYzQzQuMDE2OTM2LTcuNjYzMjYzIDQuNDQ3MzIzLTcuNTMxNzU2IDQuNjc0NDcxLTcuMTczMTAxQzQuNTMxMDA5LTcuMTczMTAxIDQuMDc2NzEyLTcuMTczMTAxIDQuMDc2NzEyLTYuNjgyOTM5QzQuMDc2NzEyLTYuNDE5OTI1IDQuMjU2MDQtNi4xOTI3NzcgNC41NjY4NzQtNi4xOTI3NzdDNC44NjU3NTMtNi4xOTI3NzcgNS4wNjg5OTEtNi4zNzIxMDUgNS4wNjg5OTEtNi43MTg4MDRDNS4wNjg5OTEtNy4zNDA0NzMgNC42MTQ2OTUtNy45NTAxODcgMy41NzQ1OTUtNy45NTAxODdDMi4wNjgyNDQtNy45NTAxODcgLjQ5MDE2Mi02LjQwNzk3IC40OTAxNjItMy43Nzc4MzNDLjQ5MDE2Mi0uNDkwMTYyIDEuOTI0NzgyIC4yNTEwNTkgMi45NDA5NzEgLjI1MTA1OUM0LjI0NDA4NSAuMjUxMDU5IDUuMzU1OTE1LS44ODQ2ODIgNS4zNTU5MTUtMi40Mzg4NTRDNS4zNTU5MTUtNC4wMjg4OTIgNC4yNDQwODUtNS4wOTI5MDIgMy4wNDg1NjgtNS4wOTI5MDJDMS45ODQ1NTgtNS4wOTI5MDIgMS41OTAwMzctNC4xNzIzNTQgMS40NzA0ODYtMy44Mzc2MDlWLTQuMTYwMzk5Wk0yLjk0MDk3MS0uMDcxNzMxQzIuMTg3Nzk2LS4wNzE3MzEgMS44MjkxNDEtLjc0MTIyIDEuNzIxNTQ0LS45OTIyNzlDMS42MTM5NDgtMS4zMDMxMTMgMS40OTQzOTYtMS44ODg5MTcgMS40OTQzOTYtMi43MjU3NzhDMS40OTQzOTYtMy42NzAyMzcgMS45MjQ3ODItNC44NTM3OTggMy4wMDA3NDctNC44NTM3OThDMy42NTgyODEtNC44NTM3OTggNC4wMDQ5ODEtNC40MTE0NTcgNC4xODQzMDktNC4wMDQ5ODFDNC4zNzU1OTItMy41NjI2NCA0LjM3NTU5Mi0yLjk2NDg4MiA0LjM3NTU5Mi0yLjQ1MDgwOUM0LjM3NTU5Mi0xLjg0MTA5NiA0LjM3NTU5Mi0xLjMwMzExMyA0LjE0ODQ0My0uODQ4ODE3QzMuODQ5NTY0LS4yNzQ5NjkgMy40MTkxNzgtLjA3MTczMSAyLjk0MDk3MS0uMDcxNzMxWicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ5Jy8+Cjx1c2UgeD0nNS44NTI5OScgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTU4Jy8+Cjx1c2UgeD0nOS4xMDQ2NTInIHk9JzAnIHhsaW5rOmhyZWY9JyNnNC01NCcvPgo8dXNlIHg9JzE0Ljk1NzY0MicgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ4Jy8+Cjx1c2UgeD0nMjMuNDY3Mjk1JyB5PScwJyB4bGluazpocmVmPScjZzEtMicvPgo8dXNlIHg9JzM1LjQyMjQ1NicgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ5Jy8+Cjx1c2UgeD0nNDEuMjc1NDQ2JyB5PScwJyB4bGluazpocmVmPScjZzQtNDgnLz4KPHVzZSB4PSc0Ny4xMjg0MzcnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2cwLTAnLz4KPHVzZSB4PSc1My43MTQ5NDMnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2czLTUwJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MSAtLT4=" alt="1.60 \times 10^{-2}" style="vertical-align: -1px"/> (correct digits/evaluation).
+A practical limitation is that the FORM method does not produce a confidence interval: there is no guarantee that the computed probability is correct.</p></li>
+<li><p>The slowest method is Monte-Carlo simulation, which produces more than 1 correct digit with 12806 function evaluations.
+This is associated with a very slow performance equal to <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzU3Ljk0OTEyNnB0JyBoZWlnaHQ9JzEwLjQ3MTAxMXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSA1Ny45NDkxMjYgMTAuNDcxMDExJz4KPGRlZnM+CjxwYXRoIGlkPSdnMy01MicgZD0nTTMuMTQwMjI0LTUuMTU2NjYzQzMuMTQwMjI0LTUuMzE2MDY1IDMuMTQwMjI0LTUuMzc5ODI2IDIuOTcyODUyLTUuMzc5ODI2QzIuODY5MjQtNS4zNzk4MjYgMi44NjEyNy01LjM3MTg1NiAyLjc4MTU2OS01LjI2MDI3NEwuMjM5MTAzLTEuNTcwMTEyVi0xLjMwNzA5OEgyLjQ4NjY3NVYtLjY0NTU3OUMyLjQ4NjY3NS0uMzUwNjg1IDIuNDYyNzY1LS4yNjMwMTQgMS44NDkwNjYtLjI2MzAxNEgxLjY2NTc1M1YwQzIuMzQzMjEzLS4wMjM5MSAyLjM1OTE1My0uMDIzOTEgMi44MTM0NS0uMDIzOTFTMy4yODM2ODYtLjAyMzkxIDMuOTYxMTQ2IDBWLS4yNjMwMTRIMy43Nzc4MzNDMy4xNjQxMzQtLjI2MzAxNCAzLjE0MDIyNC0uMzUwNjg1IDMuMTQwMjI0LS42NDU1NzlWLTEuMzA3MDk4SDMuOTg1MDU2Vi0xLjU3MDExMkgzLjE0MDIyNFYtNS4xNTY2NjNaTTIuNTQyNDY2LTQuNTExMDgzVi0xLjU3MDExMkguNTE4MDU3TDIuNTQyNDY2LTQuNTExMDgzWicvPgo8cGF0aCBpZD0nZzAtMCcgZD0nTTUuNTcxMTA4LTEuODA5MjE1QzUuNjk4NjMtMS44MDkyMTUgNS44NzM5NzMtMS44MDkyMTUgNS44NzM5NzMtMS45OTI1MjhTNS42OTg2My0yLjE3NTg0MSA1LjU3MTEwOC0yLjE3NTg0MUgxLjAwNDIzNEMuODc2NzEyLTIuMTc1ODQxIC43MDEzNy0yLjE3NTg0MSAuNzAxMzctMS45OTI1MjhTLjg3NjcxMi0xLjgwOTIxNSAxLjAwNDIzNC0xLjgwOTIxNUg1LjU3MTEwOFonLz4KPHBhdGggaWQ9J2cxLTInIGQ9J000LjY1MDU2LTMuMzIzNTM3TDIuMjU5NTI3LTUuNzAyNjE1QzIuMTE2MDY1LTUuODQ2MDc3IDIuMDkyMTU0LTUuODY5OTg4IDEuOTk2NTEzLTUuODY5OTg4QzEuODc2OTYxLTUuODY5OTg4IDEuNzU3NDEtNS43NjIzOTEgMS43NTc0MS01LjYzMDg4NEMxLjc1NzQxLTUuNTQ3MTk4IDEuNzgxMzItNS41MjMyODggMS45MTI4MjctNS4zOTE3ODFMNC4zMDM4NjEtMi45ODg3OTJMMS45MTI4MjctLjU4NTgwM0MxLjc4MTMyLS40NTQyOTYgMS43NTc0MS0uNDMwMzg2IDEuNzU3NDEtLjM0NjdDMS43NTc0MS0uMjE1MTkzIDEuODc2OTYxLS4xMDc1OTcgMS45OTY1MTMtLjEwNzU5N0MyLjA5MjE1NC0uMTA3NTk3IDIuMTE2MDY1LS4xMzE1MDcgMi4yNTk1MjctLjI3NDk2OUw0LjYzODYwNS0yLjY1NDA0N0w3LjExMzMyNS0uMTc5MzI4QzcuMTM3MjM1LS4xNjczNzIgNy4yMjA5MjItLjEwNzU5NyA3LjI5MjY1My0uMTA3NTk3QzcuNDM2MTE1LS4xMDc1OTcgNy41MzE3NTYtLjIxNTE5MyA3LjUzMTc1Ni0uMzQ2N0M3LjUzMTc1Ni0uMzcwNjEgNy41MzE3NTYtLjQxODQzMSA3LjQ5NTg5LS40NzgyMDdDNy40ODM5MzUtLjUwMjExNyA1LjU4MzA2NC0yLjM3OTA3OCA0Ljk4NTMwNS0yLjk4ODc5Mkw3LjE3MzEwMS01LjE3NjU4OEM3LjIzMjg3Ny01LjI0ODMxOSA3LjQxMjIwNC01LjQwMzczNiA3LjQ3MTk4LTUuNDc1NDY3QzcuNDgzOTM1LTUuNDk5Mzc3IDcuNTMxNzU2LTUuNTQ3MTk4IDcuNTMxNzU2LTUuNjMwODg0QzcuNTMxNzU2LTUuNzYyMzkxIDcuNDM2MTE1LTUuODY5OTg4IDcuMjkyNjUzLTUuODY5OTg4QzcuMTk3MDExLTUuODY5OTg4IDcuMTQ5MTkxLTUuODIyMTY3IDcuMDE3Njg0LTUuNjkwNjZMNC42NTA1Ni0zLjMyMzUzN1onLz4KPHBhdGggaWQ9J2cyLTU4JyBkPSdNMi4xOTk3NTEtLjU3Mzg0OEMyLjE5OTc1MS0uOTIwNTQ4IDEuOTEyODI3LTEuMTU5NjUxIDEuNjI1OTAzLTEuMTU5NjUxQzEuMjc5MjAzLTEuMTU5NjUxIDEuMDQwMS0uODcyNzI3IDEuMDQwMS0uNTg1ODAzQzEuMDQwMS0uMjM5MTAzIDEuMzI3MDI0IDAgMS42MTM5NDggMEMxLjk2MDY0OCAwIDIuMTk5NzUxLS4yODY5MjQgMi4xOTk3NTEtLjU3Mzg0OFonLz4KPHBhdGggaWQ9J2c0LTQ4JyBkPSdNNS4zNTU5MTUtMy44MjU2NTRDNS4zNTU5MTUtNC44MTc5MzMgNS4yOTYxMzktNS43ODYzMDEgNC44NjU3NTMtNi42OTQ4OTRDNC4zNzU1OTItNy42ODcxNzMgMy41MTQ4MTktNy45NTAxODcgMi45MjkwMTYtNy45NTAxODdDMi4yMzU2MTYtNy45NTAxODcgMS4zODY4LTcuNjAzNDg3IC45NDQ0NTgtNi42MTEyMDhDLjYwOTcxNC01Ljg1ODAzMiAuNDkwMTYyLTUuMTE2ODEyIC40OTAxNjItMy44MjU2NTRDLjQ5MDE2Mi0yLjY2NjAwMiAuNTczODQ4LTEuNzkzMjc1IDEuMDA0MjM0LS45NDQ0NThDMS40NzA0ODYtLjAzNTg2NiAyLjI5NTM5MiAuMjUxMDU5IDIuOTE3MDYxIC4yNTEwNTlDMy45NTcxNjEgLjI1MTA1OSA0LjU1NDkxOS0uMzcwNjEgNC45MDE2MTktMS4wNjQwMUM1LjMzMjAwNS0xLjk2MDY0OCA1LjM1NTkxNS0zLjEzMjI1NCA1LjM1NTkxNS0zLjgyNTY1NFpNMi45MTcwNjEgLjAxMTk1NUMyLjUzNDQ5NiAuMDExOTU1IDEuNzU3NDEtLjIwMzIzOCAxLjUzMDI2Mi0xLjUwNjM1MUMxLjM5ODc1NS0yLjIyMzY2MSAxLjM5ODc1NS0zLjEzMjI1NCAxLjM5ODc1NS0zLjk2OTExNkMxLjM5ODc1NS00Ljk0OTQ0IDEuMzk4NzU1LTUuODM0MTIyIDEuNTkwMDM3LTYuNTM5NDc3QzEuNzkzMjc1LTcuMzQwNDczIDIuNDAyOTg5LTcuNzExMDgzIDIuOTE3MDYxLTcuNzExMDgzQzMuMzcxMzU3LTcuNzExMDgzIDQuMDY0NzU3LTcuNDM2MTE1IDQuMjkxOTA1LTYuNDA3OTdDNC40NDczMjMtNS43MjY1MjYgNC40NDczMjMtNC43ODIwNjcgNC40NDczMjMtMy45NjkxMTZDNC40NDczMjMtMy4xNjgxMiA0LjQ0NzMyMy0yLjI1OTUyNyA0LjMxNTgxNi0xLjUzMDI2MkM0LjA4ODY2Ny0uMjE1MTkzIDMuMzM1NDkyIC4wMTE5NTUgMi45MTcwNjEgLjAxMTk1NVonLz4KPHBhdGggaWQ9J2c0LTQ5JyBkPSdNMy40NDMwODgtNy42NjMyNjNDMy40NDMwODgtNy45MzgyMzIgMy40NDMwODgtNy45NTAxODcgMy4yMDM5ODUtNy45NTAxODdDMi45MTcwNjEtNy42MjczOTcgMi4zMTkzMDMtNy4xODUwNTYgMS4wODc5Mi03LjE4NTA1NlYtNi44MzgzNTZDMS4zNjI4ODktNi44MzgzNTYgMS45NjA2NDgtNi44MzgzNTYgMi42MTgxODItNy4xNDkxOTFWLS45MjA1NDhDMi42MTgxODItLjQ5MDE2MiAyLjU4MjMxNi0uMzQ2NyAxLjUzMDI2Mi0uMzQ2N0gxLjE1OTY1MVYwQzEuNDgyNDQxLS4wMjM5MSAyLjY0MjA5Mi0uMDIzOTEgMy4wMzY2MTMtLjAyMzkxUzQuNTc4ODI5LS4wMjM5MSA0LjkwMTYxOSAwVi0uMzQ2N0g0LjUzMTAwOUMzLjQ3ODk1NC0uMzQ2NyAzLjQ0MzA4OC0uNDkwMTYyIDMuNDQzMDg4LS45MjA1NDhWLTcuNjYzMjYzWicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ5Jy8+Cjx1c2UgeD0nNS44NTI5OScgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTU4Jy8+Cjx1c2UgeD0nOS4xMDQ2NTInIHk9JzAnIHhsaW5rOmhyZWY9JyNnNC00OScvPgo8dXNlIHg9JzE0Ljk1NzY0MicgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ5Jy8+Cjx1c2UgeD0nMjMuNDY3Mjk1JyB5PScwJyB4bGluazpocmVmPScjZzEtMicvPgo8dXNlIHg9JzM1LjQyMjQ1NicgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ5Jy8+Cjx1c2UgeD0nNDEuMjc1NDQ2JyB5PScwJyB4bGluazpocmVmPScjZzQtNDgnLz4KPHVzZSB4PSc0Ny4xMjg0MzcnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2cwLTAnLz4KPHVzZSB4PSc1My43MTQ5NDMnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2czLTUyJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MSAtLT4=" alt="1.11 \times 10^{-4}" style="vertical-align: -1px"/> (correct digits/evaluation).
+The interesting point with the Monte-Carlo simulation is that the method produces a confidence interval.</p></li>
+<li><p>The DirectionalSampling method is somewhat in-between the two previous methods.</p></li>
+<li><p>The FORM-IS method produces 2 correct digits and has a small number of function evaluations.i
+It has an intermediate performance equal to <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzU3Ljk0OTEyNnB0JyBoZWlnaHQ9JzEwLjQ3MTAxMXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSA1Ny45NDkxMjYgMTAuNDcxMDExJz4KPGRlZnM+CjxwYXRoIGlkPSdnMy01MScgZD0nTTIuMDE2NDM4LTIuNjYyMDE3QzIuNjQ2MDc3LTIuNjYyMDE3IDMuMDQ0NTgzLTIuMTk5NzUxIDMuMDQ0NTgzLTEuMzYyODg5QzMuMDQ0NTgzLS4zNjY2MjUgMi40Nzg3MDUtLjA3MTczMSAyLjA1NjI4OS0uMDcxNzMxQzEuNjE3OTMzLS4wNzE3MzEgMS4wMjAxNzQtLjIzMTEzMyAuNzQxMjItLjY1MzU0OUMxLjAyODE0NC0uNjUzNTQ5IDEuMjI3Mzk3LS44MzY4NjIgMS4yMjczOTctMS4wOTk4NzVDMS4yMjczOTctMS4zNTQ5MTkgMS4wNDQwODUtMS41MzgyMzIgLjc4OTA0MS0xLjUzODIzMkMuNTczODQ4LTEuNTM4MjMyIC4zNTA2ODUtMS40MDI3NCAuMzUwNjg1LTEuMDgzOTM1Qy4zNTA2ODUtLjMyNjc3NSAxLjE2MzYzNiAuMTY3MzcyIDIuMDcyMjI5IC4xNjczNzJDMy4xMzIyNTQgLjE2NzM3MiAzLjg3MzQ3NC0uNTY1ODc4IDMuODczNDc0LTEuMzYyODg5QzMuODczNDc0LTIuMDI0NDA4IDMuMzQ3NDQ3LTIuNjMwMTM3IDIuNTM0NDk2LTIuODA1NDc5QzMuMTY0MTM0LTMuMDI4NjQzIDMuNjM0MzcxLTMuNTcwNjEgMy42MzQzNzEtNC4yMDgyMTlTMi45MTcwNjEtNS4zMDAxMjUgMi4wODgxNjktNS4zMDAxMjVDMS4yMzUzNjctNS4zMDAxMjUgLjU4OTc4OC00LjgzNzg1OCAuNTg5Nzg4LTQuMjMyMTNDLjU4OTc4OC0zLjkzNzIzNSAuNzg5MDQxLTMuODA5NzE0IC45OTYyNjQtMy44MDk3MTRDMS4yNDMzMzctMy44MDk3MTQgMS40MDI3NC0zLjk4NTA1NiAxLjQwMjc0LTQuMjE2MTg5QzEuNDAyNzQtNC41MTEwODMgMS4xNDc2OTYtNC42MjI2NjUgLjk3MjM1NC00LjYzMDYzNUMxLjMwNzA5OC01LjA2ODk5MSAxLjkyMDc5Ny01LjA5MjkwMiAyLjA2NDI1OS01LjA5MjkwMkMyLjI3MTQ4Mi01LjA5MjkwMiAyLjg3NzIxLTUuMDI5MTQxIDIuODc3MjEtNC4yMDgyMTlDMi44NzcyMS0zLjY1MDMxMSAyLjY0NjA3Ny0zLjMxNTU2NyAyLjUzNDQ5Ni0zLjE4ODA0NUMyLjI5NTM5Mi0yLjk0MDk3MSAyLjExMjA4LTIuOTI1MDMxIDEuNjI1OTAzLTIuODkzMTUxQzEuNDc0NDcxLTIuODg1MTgxIDEuNDEwNzEtMi44NzcyMSAxLjQxMDcxLTIuNzczNTk5QzEuNDEwNzEtMi42NjIwMTcgMS40ODI0NDEtMi42NjIwMTcgMS42MTc5MzMtMi42NjIwMTdIMi4wMTY0MzhaJy8+CjxwYXRoIGlkPSdnMC0wJyBkPSdNNS41NzExMDgtMS44MDkyMTVDNS42OTg2My0xLjgwOTIxNSA1Ljg3Mzk3My0xLjgwOTIxNSA1Ljg3Mzk3My0xLjk5MjUyOFM1LjY5ODYzLTIuMTc1ODQxIDUuNTcxMTA4LTIuMTc1ODQxSDEuMDA0MjM0Qy44NzY3MTItMi4xNzU4NDEgLjcwMTM3LTIuMTc1ODQxIC43MDEzNy0xLjk5MjUyOFMuODc2NzEyLTEuODA5MjE1IDEuMDA0MjM0LTEuODA5MjE1SDUuNTcxMTA4WicvPgo8cGF0aCBpZD0nZzEtMicgZD0nTTQuNjUwNTYtMy4zMjM1MzdMMi4yNTk1MjctNS43MDI2MTVDMi4xMTYwNjUtNS44NDYwNzcgMi4wOTIxNTQtNS44Njk5ODggMS45OTY1MTMtNS44Njk5ODhDMS44NzY5NjEtNS44Njk5ODggMS43NTc0MS01Ljc2MjM5MSAxLjc1NzQxLTUuNjMwODg0QzEuNzU3NDEtNS41NDcxOTggMS43ODEzMi01LjUyMzI4OCAxLjkxMjgyNy01LjM5MTc4MUw0LjMwMzg2MS0yLjk4ODc5MkwxLjkxMjgyNy0uNTg1ODAzQzEuNzgxMzItLjQ1NDI5NiAxLjc1NzQxLS40MzAzODYgMS43NTc0MS0uMzQ2N0MxLjc1NzQxLS4yMTUxOTMgMS44NzY5NjEtLjEwNzU5NyAxLjk5NjUxMy0uMTA3NTk3QzIuMDkyMTU0LS4xMDc1OTcgMi4xMTYwNjUtLjEzMTUwNyAyLjI1OTUyNy0uMjc0OTY5TDQuNjM4NjA1LTIuNjU0MDQ3TDcuMTEzMzI1LS4xNzkzMjhDNy4xMzcyMzUtLjE2NzM3MiA3LjIyMDkyMi0uMTA3NTk3IDcuMjkyNjUzLS4xMDc1OTdDNy40MzYxMTUtLjEwNzU5NyA3LjUzMTc1Ni0uMjE1MTkzIDcuNTMxNzU2LS4zNDY3QzcuNTMxNzU2LS4zNzA2MSA3LjUzMTc1Ni0uNDE4NDMxIDcuNDk1ODktLjQ3ODIwN0M3LjQ4MzkzNS0uNTAyMTE3IDUuNTgzMDY0LTIuMzc5MDc4IDQuOTg1MzA1LTIuOTg4NzkyTDcuMTczMTAxLTUuMTc2NTg4QzcuMjMyODc3LTUuMjQ4MzE5IDcuNDEyMjA0LTUuNDAzNzM2IDcuNDcxOTgtNS40NzU0NjdDNy40ODM5MzUtNS40OTkzNzcgNy41MzE3NTYtNS41NDcxOTggNy41MzE3NTYtNS42MzA4ODRDNy41MzE3NTYtNS43NjIzOTEgNy40MzYxMTUtNS44Njk5ODggNy4yOTI2NTMtNS44Njk5ODhDNy4xOTcwMTEtNS44Njk5ODggNy4xNDkxOTEtNS44MjIxNjcgNy4wMTc2ODQtNS42OTA2Nkw0LjY1MDU2LTMuMzIzNTM3WicvPgo8cGF0aCBpZD0nZzItNTgnIGQ9J00yLjE5OTc1MS0uNTczODQ4QzIuMTk5NzUxLS45MjA1NDggMS45MTI4MjctMS4xNTk2NTEgMS42MjU5MDMtMS4xNTk2NTFDMS4yNzkyMDMtMS4xNTk2NTEgMS4wNDAxLS44NzI3MjcgMS4wNDAxLS41ODU4MDNDMS4wNDAxLS4yMzkxMDMgMS4zMjcwMjQgMCAxLjYxMzk0OCAwQzEuOTYwNjQ4IDAgMi4xOTk3NTEtLjI4NjkyNCAyLjE5OTc1MS0uNTczODQ4WicvPgo8cGF0aCBpZD0nZzQtNDgnIGQ9J001LjM1NTkxNS0zLjgyNTY1NEM1LjM1NTkxNS00LjgxNzkzMyA1LjI5NjEzOS01Ljc4NjMwMSA0Ljg2NTc1My02LjY5NDg5NEM0LjM3NTU5Mi03LjY4NzE3MyAzLjUxNDgxOS03Ljk1MDE4NyAyLjkyOTAxNi03Ljk1MDE4N0MyLjIzNTYxNi03Ljk1MDE4NyAxLjM4NjgtNy42MDM0ODcgLjk0NDQ1OC02LjYxMTIwOEMuNjA5NzE0LTUuODU4MDMyIC40OTAxNjItNS4xMTY4MTIgLjQ5MDE2Mi0zLjgyNTY1NEMuNDkwMTYyLTIuNjY2MDAyIC41NzM4NDgtMS43OTMyNzUgMS4wMDQyMzQtLjk0NDQ1OEMxLjQ3MDQ4Ni0uMDM1ODY2IDIuMjk1MzkyIC4yNTEwNTkgMi45MTcwNjEgLjI1MTA1OUMzLjk1NzE2MSAuMjUxMDU5IDQuNTU0OTE5LS4zNzA2MSA0LjkwMTYxOS0xLjA2NDAxQzUuMzMyMDA1LTEuOTYwNjQ4IDUuMzU1OTE1LTMuMTMyMjU0IDUuMzU1OTE1LTMuODI1NjU0Wk0yLjkxNzA2MSAuMDExOTU1QzIuNTM0NDk2IC4wMTE5NTUgMS43NTc0MS0uMjAzMjM4IDEuNTMwMjYyLTEuNTA2MzUxQzEuMzk4NzU1LTIuMjIzNjYxIDEuMzk4NzU1LTMuMTMyMjU0IDEuMzk4NzU1LTMuOTY5MTE2QzEuMzk4NzU1LTQuOTQ5NDQgMS4zOTg3NTUtNS44MzQxMjIgMS41OTAwMzctNi41Mzk0NzdDMS43OTMyNzUtNy4zNDA0NzMgMi40MDI5ODktNy43MTEwODMgMi45MTcwNjEtNy43MTEwODNDMy4zNzEzNTctNy43MTEwODMgNC4wNjQ3NTctNy40MzYxMTUgNC4yOTE5MDUtNi40MDc5N0M0LjQ0NzMyMy01LjcyNjUyNiA0LjQ0NzMyMy00Ljc4MjA2NyA0LjQ0NzMyMy0zLjk2OTExNkM0LjQ0NzMyMy0zLjE2ODEyIDQuNDQ3MzIzLTIuMjU5NTI3IDQuMzE1ODE2LTEuNTMwMjYyQzQuMDg4NjY3LS4yMTUxOTMgMy4zMzU0OTIgLjAxMTk1NSAyLjkxNzA2MSAuMDExOTU1WicvPgo8cGF0aCBpZD0nZzQtNDknIGQ9J00zLjQ0MzA4OC03LjY2MzI2M0MzLjQ0MzA4OC03LjkzODIzMiAzLjQ0MzA4OC03Ljk1MDE4NyAzLjIwMzk4NS03Ljk1MDE4N0MyLjkxNzA2MS03LjYyNzM5NyAyLjMxOTMwMy03LjE4NTA1NiAxLjA4NzkyLTcuMTg1MDU2Vi02LjgzODM1NkMxLjM2Mjg4OS02LjgzODM1NiAxLjk2MDY0OC02LjgzODM1NiAyLjYxODE4Mi03LjE0OTE5MVYtLjkyMDU0OEMyLjYxODE4Mi0uNDkwMTYyIDIuNTgyMzE2LS4zNDY3IDEuNTMwMjYyLS4zNDY3SDEuMTU5NjUxVjBDMS40ODI0NDEtLjAyMzkxIDIuNjQyMDkyLS4wMjM5MSAzLjAzNjYxMy0uMDIzOTFTNC41Nzg4MjktLjAyMzkxIDQuOTAxNjE5IDBWLS4zNDY3SDQuNTMxMDA5QzMuNDc4OTU0LS4zNDY3IDMuNDQzMDg4LS40OTAxNjIgMy40NDMwODgtLjkyMDU0OFYtNy42NjMyNjNaJy8+CjxwYXRoIGlkPSdnNC01MCcgZD0nTTUuMjYwMjc0LTIuMDA4NDY4SDQuOTk3MjZDNC45NjEzOTUtMS44MDUyMyA0Ljg2NTc1My0xLjE0NzY5NiA0Ljc0NjIwMi0uOTU2NDEzQzQuNjYyNTE2LS44NDg4MTcgMy45ODEwNzEtLjg0ODgxNyAzLjYyMjQxNi0uODQ4ODE3SDEuNDEwNzFDMS43MzM0OTktMS4xMjM3ODYgMi40NjI3NjUtMS44ODg5MTcgMi43NzM1OTktMi4xNzU4NDFDNC41OTA3ODUtMy44NDk1NjQgNS4yNjAyNzQtNC40NzEyMzMgNS4yNjAyNzQtNS42NTQ3OTVDNS4yNjAyNzQtNy4wMjk2MzkgNC4xNzIzNTQtNy45NTAxODcgMi43ODU1NTQtNy45NTAxODdTLjU4NTgwMy02Ljc2NjYyNSAuNTg1ODAzLTUuNzM4NDgxQy41ODU4MDMtNS4xMjg3NjcgMS4xMTE4MzEtNS4xMjg3NjcgMS4xNDc2OTYtNS4xMjg3NjdDMS4zOTg3NTUtNS4xMjg3NjcgMS43MDk1ODktNS4zMDgwOTUgMS43MDk1ODktNS42OTA2NkMxLjcwOTU4OS02LjAyNTQwNSAxLjQ4MjQ0MS02LjI1MjU1MyAxLjE0NzY5Ni02LjI1MjU1M0MxLjA0MDEtNi4yNTI1NTMgMS4wMTYxODktNi4yNTI1NTMgLjk4MDMyNC02LjI0MDU5OEMxLjIwNzQ3Mi03LjA1MzU0OSAxLjg1MzA1MS03LjYwMzQ4NyAyLjYzMDEzNy03LjYwMzQ4N0MzLjY0NjMyNi03LjYwMzQ4NyA0LjI2Nzk5NS02Ljc1NDY3IDQuMjY3OTk1LTUuNjU0Nzk1QzQuMjY3OTk1LTQuNjM4NjA1IDMuNjgyMTkyLTMuNzUzOTIzIDMuMDAwNzQ3LTIuOTg4NzkyTC41ODU4MDMtLjI4NjkyNFYwSDQuOTQ5NDRMNS4yNjAyNzQtMi4wMDg0NjhaJy8+CjxwYXRoIGlkPSdnNC01MScgZD0nTTIuMTk5NzUxLTQuMjkxOTA1QzEuOTk2NTEzLTQuMjc5OTUgMS45NDg2OTItNC4yNjc5OTUgMS45NDg2OTItNC4xNjAzOTlDMS45NDg2OTItNC4wNDA4NDcgMi4wMDg0NjgtNC4wNDA4NDcgMi4yMjM2NjEtNC4wNDA4NDdIMi43NzM1OTlDMy43ODk3ODgtNC4wNDA4NDcgNC4yNDQwODUtMy4yMDM5ODUgNC4yNDQwODUtMi4wNTYyODlDNC4yNDQwODUtLjQ5MDE2MiAzLjQzMTEzMy0uMDcxNzMxIDIuODQ1MzMtLjA3MTczMUMyLjI3MTQ4Mi0uMDcxNzMxIDEuMjkxMTU4LS4zNDY3IC45NDQ0NTgtMS4xMzU3NDFDMS4zMjcwMjQtMS4wNzU5NjUgMS42NzM3MjQtMS4yOTExNTggMS42NzM3MjQtMS43MjE1NDRDMS42NzM3MjQtMi4wNjgyNDQgMS40MjI2NjUtMi4zMDczNDcgMS4wODc5Mi0yLjMwNzM0N0MuODAwOTk2LTIuMzA3MzQ3IC40OTAxNjItMi4xMzk5NzUgLjQ5MDE2Mi0xLjY4NTY3OUMuNDkwMTYyLS42MjE2NjkgMS41NTQxNzIgLjI1MTA1OSAyLjg4MTE5NiAuMjUxMDU5QzQuMzAzODYxIC4yNTEwNTkgNS4zNTU5MTUtLjgzNjg2MiA1LjM1NTkxNS0yLjA0NDMzNEM1LjM1NTkxNS0zLjE0NDIwOSA0LjQ3MTIzMy00LjAwNDk4MSAzLjMyMzUzNy00LjIwODIxOUM0LjM2MzYzNi00LjUwNzA5OCA1LjAzMzEyNi01LjM3OTgyNiA1LjAzMzEyNi02LjMxMjMyOUM1LjAzMzEyNi03LjI1Njc4NyA0LjA1MjgwMi03Ljk1MDE4NyAyLjg5MzE1MS03Ljk1MDE4N0MxLjY5NzYzNC03Ljk1MDE4NyAuODEyOTUxLTcuMjIwOTIyIC44MTI5NTEtNi4zNDgxOTRDLjgxMjk1MS01Ljg2OTk4OCAxLjE4MzU2Mi01Ljc3NDM0NiAxLjM2Mjg4OS01Ljc3NDM0NkMxLjYxMzk0OC01Ljc3NDM0NiAxLjkwMDg3Mi01Ljk1MzY3NCAxLjkwMDg3Mi02LjMxMjMyOUMxLjkwMDg3Mi02LjY5NDg5NCAxLjYxMzk0OC02Ljg2MjI2NyAxLjM1MDkzNC02Ljg2MjI2N0MxLjI3OTIwMy02Ljg2MjI2NyAxLjI1NTI5My02Ljg2MjI2NyAxLjIxOTQyNy02Ljg1MDMxMUMxLjY3MzcyNC03LjY2MzI2MyAyLjc5NzUwOS03LjY2MzI2MyAyLjg1NzI4NS03LjY2MzI2M0MzLjI1MTgwNi03LjY2MzI2MyA0LjAyODg5Mi03LjQ4MzkzNSA0LjAyODg5Mi02LjMxMjMyOUM0LjAyODg5Mi02LjA4NTE4MSAzLjk5MzAyNi01LjQxNTY5MSAzLjY0NjMyNi00LjkwMTYxOUMzLjI4NzY3MS00LjM3NTU5MiAyLjg4MTE5Ni00LjMzOTcyNiAyLjU1ODQwNi00LjMyNzc3MUwyLjE5OTc1MS00LjI5MTkwNVonLz4KPHBhdGggaWQ9J2c0LTU1JyBkPSdNNS42Nzg3MDUtNy40MjQxNTlWLTcuNjk5MTI4SDIuNzk3NTA5QzEuMzUwOTM0LTcuNjk5MTI4IDEuMzI3MDI0LTcuODU0NTQ1IDEuMjc5MjAzLTguMDgxNjk0SDEuMDE2MTg5TC42NDU1NzktNS42OTA2NkguOTA4NTkzQy45NDQ0NTgtNS45MDU4NTMgMS4wNTIwNTUtNi42NDcwNzMgMS4yMDc0NzItNi43Nzg1OEMxLjMwMzExMy02Ljg1MDMxMSAyLjE5OTc1MS02Ljg1MDMxMSAyLjM2NzEyMy02Ljg1MDMxMUg0LjkwMTYxOUwzLjYzNDM3MS01LjAzMzEyNkMzLjMxMTU4Mi00LjU2Njg3NCAyLjEwNDExLTIuNjA2MjI3IDIuMTA0MTEtLjM1ODY1NUMyLjEwNDExLS4yMjcxNDggMi4xMDQxMSAuMjUxMDU5IDIuNTk0MjcxIC4yNTEwNTlDMy4wOTYzODkgLjI1MTA1OSAzLjA5NjM4OS0uMjE1MTkzIDMuMDk2Mzg5LS4zNzA2MVYtLjk2ODM2OUMzLjA5NjM4OS0yLjc0OTY4OSAzLjM4MzMxMy00LjEzNjQ4OCAzLjk0NTIwNS00LjkzNzQ4NEw1LjY3ODcwNS03LjQyNDE1OVonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnNC01MCcvPgo8dXNlIHg9JzUuODUyOTknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi01OCcvPgo8dXNlIHg9JzkuMTA0NjUyJyB5PScwJyB4bGluazpocmVmPScjZzQtNTEnLz4KPHVzZSB4PScxNC45NTc2NDInIHk9JzAnIHhsaW5rOmhyZWY9JyNnNC01NScvPgo8dXNlIHg9JzIzLjQ2NzI5NScgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTInLz4KPHVzZSB4PSczNS40MjI0NTYnIHk9JzAnIHhsaW5rOmhyZWY9JyNnNC00OScvPgo8dXNlIHg9JzQxLjI3NTQ0NicgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ4Jy8+Cjx1c2UgeD0nNDcuMTI4NDM3JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMC0wJy8+Cjx1c2UgeD0nNTMuNzE0OTQzJyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMy01MScvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTEgLS0+" alt="2.37\times 10^{-3}" style="vertical-align: -1px"/> (correct digits/evaluation).
+It combines the best of the both worlds: it has the small number of function evaluation of FORM computation and the confidence interval of Monte-Carlo simulation.</p></li>
+</ul>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-reliability-plot-axial-stressed-beam-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/6707ac12c8b0aa1c79d9201ee14f6b7a/plot_axial_stressed_beam.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_axial_stressed_beam.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/65bb7f045e1581a473c633e7f60f5ace/plot_axial_stressed_beam.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_axial_stressed_beam.py</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_event_system.html" title="Create unions or intersections of events"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_proba_system_event.html" title="Time variant system reliability problem"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Reliability</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Axial stressed beam : comparing different methods to estimate a probability</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2023 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Dec 04, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
