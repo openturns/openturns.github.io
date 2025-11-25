@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sequentially adding new points to a Gaussian Process metamodel &#8212; OpenTURNS 1.27dev documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sphx_glr.css?v=2ae27345" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=c75cadd3"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Gaussian process fitter: configure the optimization solver" href="plot_gpr_hyperparameters_optimization.html" />
+    <link rel="prev" title="Gaussian Process Regression : quick-start" href="plot_gpr_1d.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_gpr_hyperparameters_optimization.html" title="Gaussian process fitter: configure the optimization solver"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_gpr_1d.html" title="Gaussian Process Regression : quick-start"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.27dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Surrogate modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Gaussian Process Regression</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sequentially adding new points to a Gaussian Process metamodel</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Sequentially adding new points to a Gaussian Process metamodel</a><ul>
+<li><a class="reference internal" href="#create-the-function-and-the-design-of-experiments">Create the function and the design of experiments</a></li>
+<li><a class="reference internal" href="#create-the-algorithms">Create the algorithms</a></li>
+<li><a class="reference internal" href="#sequentially-add-new-points">Sequentially add new points</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_gpr_1d.html"
+                          title="previous chapter">Gaussian Process Regression : quick-start</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_gpr_hyperparameters_optimization.html"
+                          title="next chapter">Gaussian process fitter: configure the optimization solver</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_surrogate_modeling/gaussian_process_regression/plot_kriging_sequential.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-surrogate-modeling-gaussian-process-regression-plot-kriging-sequential-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="sequentially-adding-new-points-to-a-gaussian-process-metamodel">
+<span id="sphx-glr-auto-surrogate-modeling-gaussian-process-regression-plot-kriging-sequential-py"></span><h1>Sequentially adding new points to a Gaussian Process metamodel<a class="headerlink" href="#sequentially-adding-new-points-to-a-gaussian-process-metamodel" title="Link to this heading">¶</a></h1>
+<p>In this example, we show how to sequentially add new points to a  Gaussian Process fitter (Kriging) in order to improve the predictivity of the metamodel.
+In order to create simple graphics, we consider a 1-d function.</p>
+<section id="create-the-function-and-the-design-of-experiments">
+<h2>Create the function and the design of experiments<a class="headerlink" href="#create-the-function-and-the-design-of-experiments" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">dimension</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Define the function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;0.5*x^2 + sin(2.5*x)&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Create the design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">xMin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.9</span>
+<span class="n">xMax</span> <span class="o">=</span> <span class="mf">1.9</span>
+<span class="n">X_distr</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">X_distr</span><span class="p">,</span> <span class="n">sampleSize</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_sequential_001.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_001.svg" alt="y0 as a function of x" class = "sphx-glr-single-img"/></section>
+<section id="create-the-algorithms">
+<h2>Create the algorithms<a class="headerlink" href="#create-the-algorithms" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">createMyBasicGPfitter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a Gaussian Process model from a pair of X and Y samples.</span>
+<span class="sd">    We use a 3/2 Matérn covariance model and a constant trend.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">fitter</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+    <span class="n">fitter</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">fitter</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+    <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">gprResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">gprResult</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">linearSample</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">npoints</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a sample created from a regular grid</span>
+<span class="sd">    from xmin to xmax with npoints points.&quot;&quot;&quot;</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">npoints</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">rg</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">vertices</span>
+</pre></div>
+</div>
+<p>The following <cite>sqrt</cite> function will be used later to compute the standard deviation from the variance.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sqrt</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;sqrt(x)&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plotMyBasicGPfitter</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a metamodel result, plot the data, the GP fitter metamodel</span>
+<span class="sd">    and a confidence interval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">samplesize</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">gprResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="n">graphKriging</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
+    <span class="n">graphKriging</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Gaussian Process Regression&quot;</span><span class="p">])</span>
+    <span class="c1"># Create a grid of points and evaluate the function and the metamodel</span>
+    <span class="n">nbpoints</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">xGrid</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">nbpoints</span><span class="p">)</span>
+    <span class="n">yFunction</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="n">yKrig</span> <span class="o">=</span> <span class="n">meta</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="c1"># Compute the conditional covariance</span>
+    <span class="n">gpcc</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span><span class="n">gprResult</span><span class="p">)</span>
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0e-8</span><span class="p">])</span>
+    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">gpcc</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
+    <span class="n">conditionalSigma</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">conditionalVariance</span><span class="p">)</span>
+    <span class="c1"># Compute the quantile of the Normal distribution</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">quantileAlpha</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DistFunc</span><span class="o">.</span><span class="n">qNormal</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="c1"># Graphics of the bounds</span>
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1.0e-8</span>
+    <span class="n">dataLower</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">dataUpper</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="c1"># Compute the Polygon graphics</span>
+    <span class="n">boundsPoly</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Polygon</span><span class="o">.</span><span class="n">FillBetween</span><span class="p">(</span><span class="n">xGrid</span><span class="o">.</span><span class="n">asPoint</span><span class="p">(),</span> <span class="n">dataLower</span><span class="p">,</span> <span class="n">dataUpper</span><span class="p">)</span>
+    <span class="n">boundsPoly</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;95% bounds&quot;</span><span class="p">)</span>
+    <span class="c1"># Validate the metamodel</span>
+    <span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">meta</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="n">mmv</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">yFunction</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
+    <span class="n">r2Score</span> <span class="o">=</span> <span class="n">mmv</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Plot the function</span>
+    <span class="n">graphFonction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">xGrid</span><span class="p">,</span> <span class="n">yFunction</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;magenta&quot;</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setLineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Function&quot;</span><span class="p">)</span>
+    <span class="c1"># Draw the X and Y observed</span>
+    <span class="n">cloudDOE</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">cloudDOE</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+    <span class="n">cloudDOE</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">cloudDOE</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Data&quot;</span><span class="p">)</span>
+    <span class="c1"># Assemble the graphics</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">boundsPoly</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphFonction</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloudDOE</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphKriging</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Size = </span><span class="si">%d</span><span class="s2">, R2=</span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">samplesize</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">r2Score</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graph</span>
+</pre></div>
+</div>
+<p>We start by creating the initial GP fitter metamodel on the 4 points in the design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicGPfitter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicGPfitter</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_sequential_002.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_002.svg" alt="Size = 4, R2=96.34%" class = "sphx-glr-single-img"/></section>
+<section id="sequentially-add-new-points">
+<h2>Sequentially add new points<a class="headerlink" href="#sequentially-add-new-points" title="Link to this heading">¶</a></h2>
+<p>The following function is the building block of the algorithm. It returns a new point which maximizes the conditional variance.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a new point to be added to the design of experiments.</span>
+<span class="sd">    This point maximizes the conditional variance of the metamodel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nbpoints</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">xGrid</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">nbpoints</span><span class="p">)</span>
+    <span class="n">gpcc</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span><span class="n">gprResult</span><span class="p">)</span>
+    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">gpcc</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="n">iMaxVar</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">conditionalVariance</span><span class="p">))</span>
+    <span class="n">xNew</span> <span class="o">=</span> <span class="n">xGrid</span><span class="p">[</span><span class="n">iMaxVar</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">xNew</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="n">xNew</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">xNew</span>
+</pre></div>
+</div>
+<p>We first call <cite>getNewPoint</cite> to get a point to add to the design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">)</span>
+<span class="n">xNew</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+class=Point name=Unnamed dimension=1 values=[-0.9]
+</div>
+<br />
+<br /><p>Then we evaluate the function on the new point and add it to the training design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">yNew</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+<span class="n">X</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">yNew</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We now plot the updated GP fitter.</p>
+<p>sphinx_gallery_thumbnail_number = 3</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicGPfitter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicGPfitter</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;GP fitter #0&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_sequential_003.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_003.svg" alt="GP fitter #0" class = "sphx-glr-single-img"/><p>The algorithm added a point to the right bound of the domain.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">krigingStep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">)</span>
+    <span class="n">yNew</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+    <span class="n">X</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+    <span class="n">Y</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">yNew</span><span class="p">)</span>
+    <span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicGPfitter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicGPfitter</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;GP fitter #</span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">krigingStep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">graph</span><span class="o">.</span><span class="n">getTitle</span><span class="p">())</span>
+    <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_kriging_sequential_004.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_004.svg" alt="GP fitter #1 Size = 6, R2=98.80%" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_kriging_sequential_005.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_005.svg" alt="GP fitter #2 Size = 7, R2=99.74%" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_kriging_sequential_006.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_006.svg" alt="GP fitter #3 Size = 8, R2=99.87%" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_kriging_sequential_007.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_007.svg" alt="GP fitter #4 Size = 9, R2=99.89%" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_kriging_sequential_008.svg" srcset="../../_images/sphx_glr_plot_kriging_sequential_008.svg" alt="GP fitter #5 Size = 10, R2=99.90%" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p>We observe that the second added point is the left bound of the domain.
+The remaining points were added strictly inside the domain where the accuracy was drastically improved.</p>
+<p>With only 10 points, the metamodel accuracy is already very good with a <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy41MDU0MzFwdCcgaGVpZ2h0PScxMS43OTkzNDZwdCcgdmlld0JveD0nMCAtOS40NzQ3MzkgMTMuNTA1NDMxIDExLjc5OTM0Nic+CjxkZWZzPgo8cGF0aCBpZD0nZzAtODEnIGQ9J001LjA5MjkwMi0uMDcxNzMxQzcuMTQ5MTkxLS44OTY2MzggOC42Nzk0NTItMy4wNzI0NzggOC42Nzk0NTItNS4yMzYzNjRDOC42Nzk0NTItNy4yMDg5NjYgNy4zODgyOTQtOC40MTY0MzggNS43MTQ1Ny04LjQxNjQzOEMzLjE1NjE2NC04LjQxNjQzOCAuNTczODQ4LTUuNjY2NzUgLjU3Mzg0OC0yLjkwNTEwNkMuNTczODQ4LTEuMDI4MTQ0IDEuODE3MTg2IC4yNTEwNTkgMy41NTA2ODUgLjI1MTA1OUMzLjk1NzE2MSAuMjUxMDU5IDQuMzUxNjgxIC4xOTEyODMgNC43MzQyNDcgLjA3MTczMUM0LjY2MjUxNiAuNzg5MDQxIDQuNjYyNTE2IC44NDg4MTcgNC42NjI1MTYgMS4wNzU5NjVDNC42NjI1MTYgMS40MjI2NjUgNC42NjI1MTYgMi4zMTkzMDMgNS42MTg5MjkgMi4zMTkzMDNDNy4wNDE1OTQgMi4zMTkzMDMgNy41Njc2MjEgLjA4MzY4NiA3LjU2NzYyMSAuMDExOTU1UzcuNTE5ODAxLS4xMDc1OTcgNy40NjAwMjUtLjEwNzU5N0M3LjM4ODI5NC0uMTA3NTk3IDcuMzY0Mzg0LS4wNDc4MjEgNy4zMjg1MTggLjA4MzY4NkM3LjA2NTUwNCAuODM2ODYyIDYuNDQzODM2IDEuMjY3MjQ4IDUuOTE3ODA4IDEuMjY3MjQ4QzUuMzA4MDk1IDEuMjY3MjQ4IDUuMTUyNjc3IC44NDg4MTcgNS4wOTI5MDItLjA3MTczMVpNMi45NDA5NzEtLjEzMTUwN0MxLjk5NjUxMy0uNDU0Mjk2IDEuNTQyMjE3LTEuNDQ2NTc1IDEuNTQyMjE3LTIuNTQ2NDUxQzEuNTQyMjE3LTMuMzgzMzEzIDEuODUzMDUxLTQuOTczMzUgMi42NDIwOTItNi4xODA4MjJDMy41MjY3NzUtNy41NDM3MTEgNC43MTAzMzYtOC4xNTM0MjUgNS42NDI4MzktOC4xNTM0MjVDNi44ODYxNzctOC4xNTM0MjUgNy43MjMwMzktNy4xNDkxOTEgNy43MjMwMzktNS41OTUwMTlDNy43MjMwMzktNC43MTAzMzYgNy4zMDQ2MDgtMS43NDU0NTUgNS4wNTcwMzYtLjQzMDM4NkM0Ljk5NzI2LTEuMDQwMSA0LjgyOTg4OC0xLjc1NzQxIDQuMDQwODQ3LTEuNzU3NDFDMy4zOTUyNjgtMS43NTc0MSAyLjg0NTMzLTEuMTExODMxIDIuODQ1MzMtLjUyNjAyN0MyLjg0NTMzLS4zOTQ1MjEgMi44OTMxNTEtLjIxNTE5MyAyLjk0MDk3MS0uMTMxNTA3Wk00Ljc1ODE1Ny0uMjc0OTY5QzQuMzI3NzcxLS4wODM2ODYgMy45NTcxNjEtLjAxMTk1NSAzLjYyMjQxNi0uMDExOTU1QzMuNTAyODY0LS4wMTE5NTUgMy4wODQ0MzMtLjAxMTk1NSAzLjA4NDQzMy0uNTM3OTgzQzMuMDg0NDMzLS45NjgzNjkgMy41MDI4NjQtMS41MTgzMDYgNC4wNDA4NDctMS41MTgzMDZDNC42Mzg2MDUtMS41MTgzMDYgNC43NzAxMTItMS4xMTE4MzEgNC43NzAxMTItLjUxNDA3MkM0Ljc3MDExMi0uNDQyMzQxIDQuNzcwMTEyLS4zNDY3IDQuNzU4MTU3LS4yNzQ5NjlaJy8+CjxwYXRoIGlkPSdnMS01MCcgZD0nTTIuMjQ3NTcyLTEuNjI1OTAzQzIuMzc1MDkzLTEuNzQ1NDU1IDIuNzA5ODM4LTIuMDA4NDY4IDIuODM3MzYtMi4xMjAwNUMzLjMzMTUwNy0yLjU3NDM0NiAzLjgwMTc0My0zLjAxMjcwMiAzLjgwMTc0My0zLjczNzk4M0MzLjgwMTc0My00LjY4NjQyNiAzLjAwNDczMi01LjMwMDEyNSAyLjAwODQ2OC01LjMwMDEyNUMxLjA1MjA1NS01LjMwMDEyNSAuNDIyNDE2LTQuNTc0ODQ0IC40MjI0MTYtMy44NjU1MDRDLjQyMjQxNi0zLjQ3NDk2OSAuNzMzMjUtMy40MTkxNzggLjg0NDgzMi0zLjQxOTE3OEMxLjAxMjIwNC0zLjQxOTE3OCAxLjI1OTI3OC0zLjUzODczIDEuMjU5Mjc4LTMuODQxNTk0QzEuMjU5Mjc4LTQuMjU2MDQgLjg2MDc3Mi00LjI1NjA0IC43NjUxMzEtNC4yNTYwNEMuOTk2MjY0LTQuODM3ODU4IDEuNTMwMjYyLTUuMDM3MTExIDEuOTIwNzk3LTUuMDM3MTExQzIuNjYyMDE3LTUuMDM3MTExIDMuMDQ0NTgzLTQuNDA3NDcyIDMuMDQ0NTgzLTMuNzM3OTgzQzMuMDQ0NTgzLTIuOTA5MDkxIDIuNDYyNzY1LTIuMzAzMzYyIDEuNTIyMjkxLTEuMzM4OTc5TC41MTgwNTctLjMwMjg2NEMuNDIyNDE2LS4yMTUxOTMgLjQyMjQxNi0uMTk5MjUzIC40MjI0MTYgMEgzLjU3MDYxTDMuODAxNzQzLTEuNDI2NjVIMy41NTQ2N0MzLjUzMDc2LTEuMjY3MjQ4IDMuNDY2OTk5LS44Njg3NDIgMy4zNzEzNTctLjcxNzMxQzMuMzIzNTM3LS42NTM1NDkgMi43MTc4MDgtLjY1MzU0OSAyLjU5MDI4Ni0uNjUzNTQ5SDEuMTcxNjA2TDIuMjQ3NTcyLTEuNjI1OTAzWicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTgxJy8+Cjx1c2UgeD0nOS4yNzEyNDgnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2cxLTUwJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MyAtLT4=" alt="Q^2" style="vertical-align: -3px"/> which is equal to 99.9%.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
+<p>The current example presents the naive implementation on the creation of a sequential design of experiments based on Gaussian Process metamodel.
+More practical algorithms are presented in <a class="reference internal" href="../../bibliography.html#ginsbourger2018" id="id1"><span>[ginsbourger2018]</span></a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-surrogate-modeling-gaussian-process-regression-plot-kriging-sequential-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/59c5fad940ce712318fcf86aa47b9a8b/plot_kriging_sequential.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_kriging_sequential.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/3fc8ac8941415f38a682bbdb6beffc02/plot_kriging_sequential.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_sequential.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/18e23970f2244c14236c99518d7f97f1/plot_kriging_sequential.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_kriging_sequential.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_gpr_hyperparameters_optimization.html" title="Gaussian process fitter: configure the optimization solver"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_gpr_1d.html" title="Gaussian Process Regression : quick-start"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.27dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Surrogate modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Gaussian Process Regression</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sequentially adding new points to a Gaussian Process metamodel</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2026 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jan 01, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+  </body>
+</html>

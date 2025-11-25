@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Polynomial chaos expansion cross-validation &#8212; OpenTURNS 1.27dev documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sphx_glr.css?v=2ae27345" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=c75cadd3"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Gaussian Process Regression" href="../gaussian_process_regression/index.html" />
+    <link rel="prev" title="Conditional expectation of a polynomial chaos expansion" href="plot_chaos_conditional_expectation.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../gaussian_process_regression/index.html" title="Gaussian Process Regression"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_chaos_conditional_expectation.html" title="Conditional expectation of a polynomial chaos expansion"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.27dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Surrogate modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Polynomial chaos</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Polynomial chaos expansion cross-validation</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Polynomial chaos expansion cross-validation</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#define-helper-functions">Define helper functions</a></li>
+<li><a class="reference internal" href="#define-the-training-data-set">Define the training data set</a></li>
+<li><a class="reference internal" href="#validate-the-metamodel-from-a-test-set">Validate the metamodel from a test set</a></li>
+<li><a class="reference internal" href="#compute-the-r2-score-from-a-test-set">Compute the R2 score from a test set</a></li>
+<li><a class="reference internal" href="#compute-the-r2-score-from-k-fold-cross-validation">Compute the R2 score from K-Fold cross-validation</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_chaos_conditional_expectation.html"
+                          title="previous chapter">Conditional expectation of a polynomial chaos expansion</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../gaussian_process_regression/index.html"
+                          title="next chapter">Gaussian Process Regression</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_surrogate_modeling/polynomial_chaos/plot_chaos_cv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-surrogate-modeling-polynomial-chaos-plot-chaos-cv-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="polynomial-chaos-expansion-cross-validation">
+<span id="sphx-glr-auto-surrogate-modeling-polynomial-chaos-plot-chaos-cv-py"></span><h1>Polynomial chaos expansion cross-validation<a class="headerlink" href="#polynomial-chaos-expansion-cross-validation" title="Link to this heading">¶</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>In this example, we show how to perform the cross-validation of the
+<a class="reference internal" href="../../usecases/use_case_ishigami.html#use-case-ishigami"><span class="std std-ref">Ishigami model</span></a> using polynomial chaos expansion.
+More precisely, we use the methods suggested in <a class="reference internal" href="../../bibliography.html#muller2016" id="id1"><span>[muller2016]</span></a>, chapter 5, page 257.
+We make the assumption that a dataset is given and we create a metamodel using this data.
+Once done, we want to assess the quality of the metamodel using the data we have.
+Another example of this method is presented in
+<a class="reference internal" href="../../auto_numerical_methods/general_methods/plot_pce_design.html"><span class="doc">Compute leave-one-out error of a polynomial chaos expansion</span></a>.</p>
+<p>In this example, we compare two methods:</p>
+<ul class="simple">
+<li><p>split the data into two subsets, one for training and one for testing,</p></li>
+<li><p>use k-fold validation.</p></li>
+</ul>
+<p>The split of the data is performed by the <cite>compute_R2_score_by_splitting</cite> function below.
+It uses 75% of the data to estimate the coefficients of the metamodel (this is the training step)
+and use 25% of the data to estimate the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score (this is the validation step).
+To do this, we use the <cite>split</cite> method of the <a class="reference internal" href="../../user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a>.</p>
+<p>The K-Fold validation is performed by the <cite>compute_R2_score_by_kfold</cite> function below.
+It uses the K-Fold method with <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScyOC4wODg4MDVwdCcgaGVpZ2h0PSc4LjMwMjE5MXB0JyB2aWV3Qm94PScwIC04LjMwMjE5MSAyOC4wODg4MDUgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTEwNycgZD0nTTMuMzU5NDAyLTcuOTk4MDA3QzMuMzcxMzU3LTguMDQ1ODI4IDMuMzk1MjY4LTguMTE3NTU5IDMuMzk1MjY4LTguMTc3MzM1QzMuMzk1MjY4LTguMjk2ODg3IDMuMjc1NzE2LTguMjk2ODg3IDMuMjUxODA2LTguMjk2ODg3QzMuMjM5ODUxLTguMjk2ODg3IDIuODA5NDY1LTguMjYxMDIxIDIuNTk0MjcxLTguMjM3MTExQzIuMzkxMDM0LTguMjI1MTU2IDIuMjExNzA2LTguMjAxMjQ1IDEuOTk2NTEzLTguMTg5MjlDMS43MDk1ODktOC4xNjUzOCAxLjYyNTkwMy04LjE1MzQyNSAxLjYyNTkwMy03LjkzODIzMkMxLjYyNTkwMy03LjgxODY4IDEuNzQ1NDU1LTcuODE4NjggMS44NjUwMDYtNy44MTg2OEMyLjQ3NDcyLTcuODE4NjggMi40NzQ3Mi03LjcxMTA4MyAyLjQ3NDcyLTcuNTkxNTMyQzIuNDc0NzItNy41NDM3MTEgMi40NzQ3Mi03LjUxOTgwMSAyLjQxNDk0NC03LjMwNDYwOEwuNzA1MzU1LS40NjYyNTJDLjY1NzUzNC0uMjg2OTI0IC42NTc1MzQtLjI2MzAxNCAuNjU3NTM0LS4xOTEyODNDLjY1NzUzNCAuMDcxNzMxIC44NjA3NzIgLjExOTU1MiAuOTgwMzI0IC4xMTk1NTJDMS4zMTUwNjggLjExOTU1MiAxLjM4NjgtLjE0MzQ2MiAxLjQ4MjQ0MS0uNTE0MDcyTDIuMDQ0MzM0LTIuNzQ5Njg5QzIuOTA1MTA2LTIuNjU0MDQ3IDMuNDE5MTc4LTIuMjk1MzkyIDMuNDE5MTc4LTEuNzIxNTQ0QzMuNDE5MTc4LTEuNjQ5ODEzIDMuNDE5MTc4LTEuNjAxOTkzIDMuMzgzMzEzLTEuNDIyNjY1QzMuMzM1NDkyLTEuMjQzMzM3IDMuMzM1NDkyLTEuMDk5ODc1IDMuMzM1NDkyLTEuMDQwMUMzLjMzNTQ5Mi0uMzQ2NyAzLjc4OTc4OCAuMTE5NTUyIDQuMzk5NTAyIC4xMTk1NTJDNC45NDk0NCAuMTE5NTUyIDUuMjM2MzY0LS4zODI1NjUgNS4zMzIwMDUtLjU0OTkzOEM1LjU4MzA2NC0uOTkyMjc5IDUuNzM4NDgxLTEuNjYxNzY4IDUuNzM4NDgxLTEuNzA5NTg5QzUuNzM4NDgxLTEuNzY5MzY1IDUuNjkwNjYtMS44MTcxODYgNS42MTg5MjktMS44MTcxODZDNS41MTEzMzMtMS44MTcxODYgNS40OTkzNzctMS43NjkzNjUgNS40NTE1NTctMS41NzgwODJDNS4yODQxODQtLjk1NjQxMyA1LjAzMzEyNi0uMTE5NTUyIDQuNDIzNDEyLS4xMTk1NTJDNC4xODQzMDktLjExOTU1MiA0LjAyODg5Mi0uMjM5MTAzIDQuMDI4ODkyLS42OTM0QzQuMDI4ODkyLS45MjA1NDggNC4wNzY3MTItMS4xODM1NjIgNC4xMjQ1MzMtMS4zNjI4ODlDNC4xNzIzNTQtMS41NzgwODIgNC4xNzIzNTQtMS41OTAwMzcgNC4xNzIzNTQtMS43MzM0OTlDNC4xNzIzNTQtMi40Mzg4NTQgMy41Mzg3My0yLjgzMzM3NSAyLjQzODg1NC0yLjk3NjgzN0MyLjg2OTI0LTMuMjM5ODUxIDMuMjk5NjI2LTMuNzA2MTAyIDMuNDY2OTk5LTMuODg1NDNDNC4xNDg0NDMtNC42NTA1NiA0LjYxNDY5NS01LjAzMzEyNiA1LjE2NDYzMy01LjAzMzEyNkM1LjQzOTYwMS01LjAzMzEyNiA1LjUxMTMzMy00Ljk2MTM5NSA1LjU5NTAxOS00Ljg4OTY2NEM1LjE1MjY3Ny00Ljg0MTg0MyA0Ljk4NTMwNS00LjUzMTAwOSA0Ljk4NTMwNS00LjI5MTkwNUM0Ljk4NTMwNS00LjAwNDk4MSA1LjIxMjQ1My0zLjkwOTM0IDUuMzc5ODI2LTMuOTA5MzRDNS43MDI2MTUtMy45MDkzNCA1Ljk4OTUzOS00LjE4NDMwOSA1Ljk4OTUzOS00LjU2Njg3NEM1Ljk4OTUzOS00LjkxMzU3NCA1LjcxNDU3LTUuMjcyMjI5IDUuMTc2NTg4LTUuMjcyMjI5QzQuNTE5MDU0LTUuMjcyMjI5IDMuOTgxMDcxLTQuODA1OTc4IDMuMTMyMjU0LTMuODQ5NTY0QzMuMDEyNzAyLTMuNzA2MTAyIDIuNTcwMzYxLTMuMjUxODA2IDIuMTI4MDItMy4wODQ0MzNMMy4zNTk0MDItNy45OTgwMDdaJy8+CjxwYXRoIGlkPSdnMS01MycgZD0nTTEuNTMwMjYyLTYuODUwMzExQzIuMDQ0MzM0LTYuNjgyOTM5IDIuNDYyNzY1LTYuNjcwOTg0IDIuNTk0MjcxLTYuNjcwOTg0QzMuOTQ1MjA1LTYuNjcwOTg0IDQuODA1OTc4LTcuNjYzMjYzIDQuODA1OTc4LTcuODMwNjM1QzQuODA1OTc4LTcuODc4NDU2IDQuNzgyMDY3LTcuOTM4MjMyIDQuNzEwMzM2LTcuOTM4MjMyQzQuNjg2NDI2LTcuOTM4MjMyIDQuNjYyNTE2LTcuOTM4MjMyIDQuNTU0OTE5LTcuODkwNDExQzMuODg1NDMtNy42MDM0ODcgMy4zMTE1ODItNy41Njc2MjEgMy4wMDA3NDctNy41Njc2MjFDMi4yMTE3MDYtNy41Njc2MjEgMS42NDk4MTMtNy44MDY3MjUgMS40MjI2NjUtNy45MDIzNjZDMS4zMzg5NzktNy45MzgyMzIgMS4zMTUwNjgtNy45MzgyMzIgMS4zMDMxMTMtNy45MzgyMzJDMS4yMDc0NzItNy45MzgyMzIgMS4yMDc0NzItNy44NjY1MDEgMS4yMDc0NzItNy42NzUyMThWLTQuMTI0NTMzQzEuMjA3NDcyLTMuOTA5MzQgMS4yMDc0NzItMy44Mzc2MDkgMS4zNTA5MzQtMy44Mzc2MDlDMS40MTA3MS0zLjgzNzYwOSAxLjQyMjY2NS0zLjg0OTU2NCAxLjU0MjIxNy0zLjk5MzAyNkMxLjg3Njk2MS00LjQ4MzE4OCAyLjQzODg1NC00Ljc3MDExMiAzLjAzNjYxMy00Ljc3MDExMkMzLjY3MDIzNy00Ljc3MDExMiAzLjk4MTA3MS00LjE4NDMwOSA0LjA3NjcxMi0zLjk4MTA3MUM0LjI3OTk1LTMuNTE0ODE5IDQuMjkxOTA1LTIuOTI5MDE2IDQuMjkxOTA1LTIuNDc0NzJTNC4yOTE5MDUtMS4zMzg5NzkgMy45NTcxNjEtLjgwMDk5NkMzLjY5NDE0Ny0uMzcwNjEgMy4yMjc4OTUtLjA3MTczMSAyLjcwMTg2OC0uMDcxNzMxQzEuOTEyODI3LS4wNzE3MzEgMS4xMzU3NDEtLjYwOTcxNCAuOTIwNTQ4LTEuNDgyNDQxQy45ODAzMjQtMS40NTg1MzEgMS4wNTIwNTUtMS40NDY1NzUgMS4xMTE4MzEtMS40NDY1NzVDMS4zMTUwNjgtMS40NDY1NzUgMS42Mzc4NTgtMS41NjYxMjcgMS42Mzc4NTgtMS45NzI2MDNDMS42Mzc4NTgtMi4zMDczNDcgMS40MTA3MS0yLjQ5ODYzIDEuMTExODMxLTIuNDk4NjNDLjg5NjYzOC0yLjQ5ODYzIC41ODU4MDMtMi4zOTEwMzQgLjU4NTgwMy0xLjkyNDc4MkMuNTg1ODAzLS45MDg1OTMgMS4zOTg3NTUgLjI1MTA1OSAyLjcyNTc3OCAuMjUxMDU5QzQuMDc2NzEyIC4yNTEwNTkgNS4yNjAyNzQtLjg4NDY4MiA1LjI2MDI3NC0yLjQwMjk4OUM1LjI2MDI3NC0zLjgyNTY1NCA0LjMwMzg2MS01LjAwOTIxNSAzLjA0ODU2OC01LjAwOTIxNUMyLjM2NzEyMy01LjAwOTIxNSAxLjg0MTA5Ni00LjcxMDMzNiAxLjUzMDI2Mi00LjM3NTU5MlYtNi44NTAzMTFaJy8+CjxwYXRoIGlkPSdnMS02MScgZD0nTTguMDY5NzM4LTMuODczNDc0QzguMjM3MTExLTMuODczNDc0IDguNDUyMzA0LTMuODczNDc0IDguNDUyMzA0LTQuMDg4NjY3QzguNDUyMzA0LTQuMzE1ODE2IDguMjQ5MDY2LTQuMzE1ODE2IDguMDY5NzM4LTQuMzE1ODE2SDEuMDI4MTQ0Qy44NjA3NzItNC4zMTU4MTYgLjY0NTU3OS00LjMxNTgxNiAuNjQ1NTc5LTQuMTAwNjIzQy42NDU1NzktMy44NzM0NzQgLjg0ODgxNy0zLjg3MzQ3NCAxLjAyODE0NC0zLjg3MzQ3NEg4LjA2OTczOFpNOC4wNjk3MzgtMS42NDk4MTNDOC4yMzcxMTEtMS42NDk4MTMgOC40NTIzMDQtMS42NDk4MTMgOC40NTIzMDQtMS44NjUwMDZDOC40NTIzMDQtMi4wOTIxNTQgOC4yNDkwNjYtMi4wOTIxNTQgOC4wNjk3MzgtMi4wOTIxNTRIMS4wMjgxNDRDLjg2MDc3Mi0yLjA5MjE1NCAuNjQ1NTc5LTIuMDkyMTU0IC42NDU1NzktMS44NzY5NjFDLjY0NTU3OS0xLjY0OTgxMyAuODQ4ODE3LTEuNjQ5ODEzIDEuMDI4MTQ0LTEuNjQ5ODEzSDguMDY5NzM4WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTEwNycvPgo8dXNlIHg9JzkuODEwMzMzJyB5PScwJyB4bGluazpocmVmPScjZzEtNjEnLz4KPHVzZSB4PScyMi4yMzU4MTQnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS01MycvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="k = 5" style="vertical-align: 0px"/>.
+The code uses the <a class="reference internal" href="../../user_manual/_generated/openturns.KFoldSplitter.html#openturns.KFoldSplitter" title="openturns.KFoldSplitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFoldSplitter</span></code></a> class, which computes the appropriate indices.
+Similar results can be obtained with <a class="reference internal" href="../../user_manual/_generated/openturns.LeaveOneOutSplitter.html#openturns.LeaveOneOutSplitter" title="openturns.LeaveOneOutSplitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneOutSplitter</span></code></a> at a higher cost.
+This cross-validation method is used here to see which polynomial degree
+leads to an accurate metamodel of the Ishigami test function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openturns.usecases</span><span class="w"> </span><span class="kn">import</span> <span class="n">ishigami_function</span>
+</pre></div>
+</div>
+</section>
+<section id="define-helper-functions">
+<h2>Define helper functions<a class="headerlink" href="#define-helper-functions" title="Link to this heading">¶</a></h2>
+<p>The next function creates a polynomial chaos expansion from
+a training data set and a total degree.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_sparse_least_squares_chaos</span><span class="p">(</span>
+    <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">distribution</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a sparse polynomial chaos based on least squares.</span>
+
+<span class="sd">    * Uses the enumerate rule in multivariateBasis.</span>
+<span class="sd">    * Uses the LeastSquaresStrategy to compute the coefficients based on</span>
+<span class="sd">      least squares.</span>
+<span class="sd">    * Uses LeastSquaresMetaModelSelectionFactory to use the LARS selection method.</span>
+<span class="sd">    * Uses FixedStrategy in order to keep all the coefficients that the</span>
+<span class="sd">      LARS method selected.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inputTrain : Sample</span>
+<span class="sd">        The input design of experiments.</span>
+<span class="sd">    outputTrain : Sample</span>
+<span class="sd">        The output design of experiments.</span>
+<span class="sd">    multivariateBasis : multivariateBasis</span>
+<span class="sd">        The multivariate chaos multivariateBasis.</span>
+<span class="sd">    totalDegree : int</span>
+<span class="sd">        The total degree of the chaos polynomial.</span>
+<span class="sd">    distribution : Distribution.</span>
+<span class="sd">        The distribution of the input variable.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result : PolynomialChaosResult</span>
+<span class="sd">        The estimated polynomial chaos.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
+    <span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span>
+        <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">selectionAlgorithm</span>
+    <span class="p">)</span>
+    <span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">multivariateBasis</span><span class="o">.</span><span class="n">getEnumerateFunction</span><span class="p">()</span>
+    <span class="n">multivariateBasisSize</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getBasisSizeFromTotalDegree</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+    <span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">multivariateBasisSize</span><span class="p">)</span>
+    <span class="n">chaosAlgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+        <span class="n">inputTrain</span><span class="p">,</span> <span class="n">outputTrain</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
+    <span class="p">)</span>
+    <span class="n">chaosAlgo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">chaosAlgo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>The next function computes the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score by splitting the data set
+into a training set and a test set.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_R2_score_by_splitting</span><span class="p">(</span>
+    <span class="n">inputSample</span><span class="p">,</span>
+    <span class="n">outputSample</span><span class="p">,</span>
+    <span class="n">multivariateBasis</span><span class="p">,</span>
+    <span class="n">totalDegree</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="p">,</span>
+    <span class="n">split_fraction</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute R2 score by splitting into train/test sets.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inputSample : Sample(size, input_dimension)</span>
+<span class="sd">        The X dataset.</span>
+<span class="sd">    outputSample : Sample(size, output_dimension)</span>
+<span class="sd">        The Y dataset.</span>
+<span class="sd">    multivariateBasis : multivariateBasis</span>
+<span class="sd">        The multivariate chaos multivariateBasis.</span>
+<span class="sd">    totalDegree : int</span>
+<span class="sd">        The total degree of the chaos polynomial.</span>
+<span class="sd">    distribution : Distribution.</span>
+<span class="sd">        The distribution of the input variable.</span>
+<span class="sd">    split_fraction : float, in (0, 1)</span>
+<span class="sd">        The proportion of the sample used in the training.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    r2Score : float</span>
+<span class="sd">        The R2 score.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">training_sample_size</span> <span class="o">=</span> <span class="n">inputSample</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+    <span class="n">inputSampleTrain</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>  <span class="c1"># Make a copy</span>
+    <span class="n">outputSampleTrain</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">outputSample</span><span class="p">)</span>
+    <span class="n">split_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">split_fraction</span> <span class="o">*</span> <span class="n">training_sample_size</span><span class="p">)</span>
+    <span class="n">inputSampleTest</span> <span class="o">=</span> <span class="n">inputSampleTrain</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">split_index</span><span class="p">)</span>
+    <span class="n">outputSampleTest</span> <span class="o">=</span> <span class="n">outputSampleTrain</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">split_index</span><span class="p">)</span>
+    <span class="n">chaosResult</span> <span class="o">=</span> <span class="n">compute_sparse_least_squares_chaos</span><span class="p">(</span>
+        <span class="n">inputSampleTrain</span><span class="p">,</span>
+        <span class="n">outputSampleTrain</span><span class="p">,</span>
+        <span class="n">multivariateBasis</span><span class="p">,</span>
+        <span class="n">totalDegree</span><span class="p">,</span>
+        <span class="n">distribution</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">metamodel</span> <span class="o">=</span> <span class="n">chaosResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">inputSampleTest</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputSampleTest</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
+    <span class="n">r2Score</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">r2Score</span>
+</pre></div>
+</div>
+<p>The next function computes the mean squared error by K-Fold.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">computeMSENaiveKFold</span><span class="p">(</span>
+    <span class="n">inputSample</span><span class="p">,</span>
+    <span class="n">outputSample</span><span class="p">,</span>
+    <span class="n">multivariateBasis</span><span class="p">,</span>
+    <span class="n">totalDegree</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="p">,</span>
+    <span class="n">kParameter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute mean squared error by (naive) KFold.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inputSample : Sample(size, input_dimension)</span>
+<span class="sd">        The inputSample dataset.</span>
+<span class="sd">    outputSample : Sample(size, output_dimension)</span>
+<span class="sd">        The outputSample dataset.</span>
+<span class="sd">    multivariateBasis : multivariateBasis</span>
+<span class="sd">        The multivariate chaos multivariateBasis.</span>
+<span class="sd">    totalDegree : int</span>
+<span class="sd">        The total degree of the chaos polynomial.</span>
+<span class="sd">    distribution : Distribution.</span>
+<span class="sd">        The distribution of the input variable.</span>
+<span class="sd">    kParameter : int, in (2, sampleSize)</span>
+<span class="sd">        The parameter K.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mse : Point(output_dimension)</span>
+<span class="sd">        The mean squared error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="n">sampleSize</span> <span class="o">=</span> <span class="n">inputSample</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+    <span class="n">outputDimension</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+    <span class="n">splitter</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KFoldSplitter</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">,</span> <span class="n">kParameter</span><span class="p">)</span>
+    <span class="n">squaredResiduals</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">,</span> <span class="n">outputDimension</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">indicesTrain</span><span class="p">,</span> <span class="n">indicesTest</span> <span class="ow">in</span> <span class="n">splitter</span><span class="p">:</span>
+        <span class="n">inputSampleTrain</span><span class="p">,</span> <span class="n">inputSampleTest</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">inputSample</span><span class="p">[</span><span class="n">indicesTrain</span><span class="p">],</span>
+            <span class="n">inputSample</span><span class="p">[</span><span class="n">indicesTest</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">outputSampleTrain</span><span class="p">,</span> <span class="n">outputSampleTest</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">outputSample</span><span class="p">[</span><span class="n">indicesTrain</span><span class="p">],</span>
+            <span class="n">outputSample</span><span class="p">[</span><span class="n">indicesTest</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">chaosResultKFold</span> <span class="o">=</span> <span class="n">compute_sparse_least_squares_chaos</span><span class="p">(</span>
+            <span class="n">inputSampleTrain</span><span class="p">,</span>
+            <span class="n">outputSampleTrain</span><span class="p">,</span>
+            <span class="n">multivariateBasis</span><span class="p">,</span>
+            <span class="n">totalDegree</span><span class="p">,</span>
+            <span class="n">distribution</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">metamodelKFold</span> <span class="o">=</span> <span class="n">chaosResultKFold</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+        <span class="n">predictionsKFold</span> <span class="o">=</span> <span class="n">metamodelKFold</span><span class="p">(</span><span class="n">inputSampleTest</span><span class="p">)</span>
+        <span class="n">residualsKFold</span> <span class="o">=</span> <span class="n">outputSampleTest</span> <span class="o">-</span> <span class="n">predictionsKFold</span>
+        <span class="n">foldSize</span> <span class="o">=</span> <span class="n">indicesTest</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">outputDimension</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">foldSize</span><span class="p">):</span>
+                <span class="n">squaredResiduals</span><span class="p">[</span><span class="n">indicesTest</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">residualsKFold</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">squaredResiduals</span><span class="o">.</span><span class="n">computeMean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">mse</span>
+</pre></div>
+</div>
+<p>The next function computes the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score by K-Fold.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_R2_score_by_kfold</span><span class="p">(</span>
+    <span class="n">inputSample</span><span class="p">,</span>
+    <span class="n">outputSample</span><span class="p">,</span>
+    <span class="n">multivariateBasis</span><span class="p">,</span>
+    <span class="n">totalDegree</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="p">,</span>
+    <span class="n">kParameter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute R2 score by KFold.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inputSample : Sample(size, input_dimension)</span>
+<span class="sd">        The X dataset.</span>
+<span class="sd">    outputSample : Sample(size, output_dimension)</span>
+<span class="sd">        The Y dataset.</span>
+<span class="sd">    multivariateBasis : multivariateBasis</span>
+<span class="sd">        The multivariate chaos multivariateBasis.</span>
+<span class="sd">    totalDegree : int</span>
+<span class="sd">        The total degree of the chaos polynomial.</span>
+<span class="sd">    distribution : Distribution.</span>
+<span class="sd">        The distribution of the input variable.</span>
+<span class="sd">    kParameter : int</span>
+<span class="sd">        The parameter K.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    r2Score : float</span>
+<span class="sd">        The R2 score.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">computeMSENaiveKFold</span><span class="p">(</span>
+        <span class="n">inputSample</span><span class="p">,</span>
+        <span class="n">outputSample</span><span class="p">,</span>
+        <span class="n">multivariateBasis</span><span class="p">,</span>
+        <span class="n">totalDegree</span><span class="p">,</span>
+        <span class="n">distribution</span><span class="p">,</span>
+        <span class="n">kParameter</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sampleVariance</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">computeCentralMoment</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">outputDimension</span> <span class="o">=</span> <span class="n">outputSample</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+    <span class="n">r2Score</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">outputDimension</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">outputDimension</span><span class="p">):</span>
+        <span class="n">r2Score</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">mse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">sampleVariance</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">r2Score</span>
+</pre></div>
+</div>
+</section>
+<section id="define-the-training-data-set">
+<h2>Define the training data set<a class="headerlink" href="#define-the-training-data-set" title="Link to this heading">¶</a></h2>
+<p>We start by generating the input and output samples. We use a sample size equal to 1000.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">im</span> <span class="o">=</span> <span class="n">ishigami_function</span><span class="o">.</span><span class="n">IshigamiModel</span><span class="p">()</span>
+<span class="n">im</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;X0&quot;</span><span class="p">,</span> <span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;X2&quot;</span><span class="p">])</span>
+<span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">setOutputDescription</span><span class="p">([</span><span class="s2">&quot;$Y$&quot;</span><span class="p">])</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">sample_size</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Input sample:&quot;</span><span class="p">)</span>
+<span class="n">X</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Input sample:
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<table>
+  <tr><td></td><th>X0</th><th>X1</th><th>X2</th></tr>
+  <tr><th>0</th><td>0.8160385</td><td>-1.546951</td><td>2.67553</td></tr>
+  <tr><th>1</th><td>2.405236</td><td>-0.4441351</td><td>-2.192122</td></tr>
+  <tr><th>2</th><td>-2.291626</td><td>-3.013204</td><td>1.30032</td></tr>
+  <tr><th>3</th><td>-2.937372</td><td>0.0734501</td><td>-0.7336488</td></tr>
+  <tr><th>4</th><td>-0.960969</td><td>-0.1161257</td><td>-0.4336099</td></tr>
+</table>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;Y&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Output sample:&quot;</span><span class="p">)</span>
+<span class="n">Y</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Output sample:
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<table>
+  <tr><td></td><th>Y</th></tr>
+  <tr><th>0</th><td>11.45723</td></tr>
+  <tr><th>1</th><td>3.514782</td></tr>
+  <tr><th>2</th><td>-0.8512832</td></tr>
+  <tr><th>3</th><td>-0.170983</td></tr>
+  <tr><th>4</th><td>-0.728672</td></tr>
+</table>
+</div>
+<br />
+<br /><p>We compute a polynomial chaos decomposition with a total degree equal to 5.
+In order to reduce the number of coefficients, the <cite>compute_sparse_least_squares_chaos</cite>
+function creates a sparse chaos using regression and the LARS method.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">im</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Polynomial degree</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">compute_sparse_least_squares_chaos</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distribution</span>
+<span class="p">)</span>
+<span class="n">result</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+FunctionalChaosResult
+<ul>
+  <li>input dimension: 3</li>
+  <li>output dimension: 1</li>
+  <li>distribution dimension: 3</li>
+  <li>transformation: 3 -> 3</li>
+  <li>inverse transformation: 3 -> 3</li>
+  <li>orthogonal basis dimension: 3</li>
+  <li>indices size: 12</li>
+</ul>
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Multi-index</th>
+    <th>Coeff.</th>
+  </tr>
+  <tr>
+    <th>0</th>
+    <td>[0,0,0]</td>
+    <td>3.661918</td>
+  </tr>
+  <tr>
+    <th>1</th>
+    <td>[1,0,0]</td>
+    <td>1.599859</td>
+  </tr>
+  <tr>
+    <th>2</th>
+    <td>[1,0,1]</td>
+    <td>-0.1517826</td>
+  </tr>
+  <tr>
+    <th>3</th>
+    <td>[0,2,0]</td>
+    <td>-0.616015</td>
+  </tr>
+  <tr>
+    <th>4</th>
+    <td>[0,0,2]</td>
+    <td>-0.1429231</td>
+  </tr>
+  <tr>
+    <th>5</th>
+    <td>[3,0,0]</td>
+    <td>-1.21482</td>
+  </tr>
+  <tr>
+    <th>6</th>
+    <td>[1,0,2]</td>
+    <td>1.421431</td>
+  </tr>
+  <tr>
+    <th>7</th>
+    <td>[0,4,0]</td>
+    <td>-1.983213</td>
+  </tr>
+  <tr>
+    <th>8</th>
+    <td>[5,0,0]</td>
+    <td>0.161996</td>
+  </tr>
+  <tr>
+    <th>9</th>
+    <td>[4,1,0]</td>
+    <td>0.1837313</td>
+  </tr>
+  <tr>
+    <th>10</th>
+    <td>[3,0,2]</td>
+    <td>-1.165708</td>
+  </tr>
+  <tr>
+    <th>11</th>
+    <td>[1,0,4]</td>
+    <td>0.3744418</td>
+  </tr>
+</table>
+
+</div>
+<br />
+<br /><p>Get the metamodel.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="validate-the-metamodel-from-a-test-set">
+<h2>Validate the metamodel from a test set<a class="headerlink" href="#validate-the-metamodel-from-a-test-set" title="Link to this heading">¶</a></h2>
+<p>In order to validate our polynomial chaos, we generate an extra pair of
+input / output samples and use the <a class="reference internal" href="../../user_manual/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a> class.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">test_sample_size</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># Size of the validation design of experiments</span>
+<span class="n">inputTest</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">test_sample_size</span><span class="p">)</span>
+<span class="n">outputTest</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
+<span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">inputTest</span><span class="p">)</span>
+<span class="n">validation</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">outputTest</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
+<span class="n">r2Score</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;R2=</span><span class="si">%.2f</span><span class="s2">, n=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r2Score</span><span class="p">,</span> <span class="n">test_sample_size</span><span class="p">))</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_chaos_cv_001.svg" srcset="../../_images/sphx_glr_plot_chaos_cv_001.svg" alt="R2=0.84, n=200" class = "sphx-glr-single-img"/><p>The plot shows that the score is relatively high and might be satisfactory for some purposes.
+There are however several issues with the previous procedure:</p>
+<ul class="simple">
+<li><p>It may happen that the data in the validation sample with size 200 is more
+difficult to fit than the data in the training dataset.
+In this case, the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score may be pessimistic.</p></li>
+<li><p>It may happen that the data in the validation sample with size 200 is
+less difficult to fit than the data in the validation dataset.
+In this case, the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score may be optimistic.</p></li>
+<li><p>We may not be able to generate an extra dataset for validation.
+In this case, a part of the original dataset should be used for validation.</p></li>
+<li><p>The polynomial degree may not be appropriate for this data.</p></li>
+<li><p>The dataset may be ordered in some way, so that the split is somewhat arbitrary.
+One solution to circumvent this is to randomly shuffle the data.
+This can be done using the <a class="reference internal" href="../../user_manual/_generated/openturns.KPermutationsDistribution.html#openturns.KPermutationsDistribution" title="openturns.KPermutationsDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">KPermutationsDistribution</span></code></a>.</p></li>
+</ul>
+<p>The K-Fold validation aims at solving some of these issues, so that all the
+available data is used in order to estimate the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score.</p>
+</section>
+<section id="compute-the-r2-score-from-a-test-set">
+<h2>Compute the R2 score from a test set<a class="headerlink" href="#compute-the-r2-score-from-a-test-set" title="Link to this heading">¶</a></h2>
+<p>In the following script, we compute the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score associated with each polynomial degree from 1 to 10.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">split_fraction</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Split cross-validation, with </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">split_fraction</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">% for training&quot;</span><span class="p">)</span>
+<span class="n">degree_max</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">degree_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">degree_max</span><span class="p">))</span>
+<span class="n">n_degrees</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">degree_list</span><span class="p">)</span>
+<span class="n">scoreSampleSplit</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">degree_list</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_degrees</span><span class="p">):</span>
+    <span class="n">totalDegree</span> <span class="o">=</span> <span class="n">degree_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">scoreSampleSplit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_R2_score_by_splitting</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distribution</span><span class="p">,</span> <span class="n">split_fraction</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Degree = </span><span class="si">{</span><span class="n">totalDegree</span><span class="si">}</span><span class="s2">, score = </span><span class="si">{</span><span class="n">scoreSampleSplit</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Split cross-validation, with 75% for training
+Degree = 1, score = 0.1861
+Degree = 2, score = 0.1861
+Degree = 3, score = 0.4948
+Degree = 4, score = 0.7338
+Degree = 5, score = 0.8272
+Degree = 6, score = 0.9772
+Degree = 7, score = 0.9889
+Degree = 8, score = 0.9994
+Degree = 9, score = 0.9997
+Degree = 10, score = 1.0000
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Split CV, </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">split_fraction</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">% for training&quot;</span><span class="p">,</span> <span class="s2">&quot;Degree&quot;</span><span class="p">,</span> <span class="s2">&quot;$R^2$&quot;</span><span class="p">,</span> <span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">BuildFromPoint</span><span class="p">(</span><span class="n">degree_list</span><span class="p">),</span> <span class="n">scoreSampleSplit</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">boundingBox</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">degree_max</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setBoundingBox</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_chaos_cv_002.svg" srcset="../../_images/sphx_glr_plot_chaos_cv_002.svg" alt="Split CV, 75% for training" class = "sphx-glr-single-img"/><p>We see that the polynomial degree may be increased up to degree 7,
+after which the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score does not increase much.</p>
+</section>
+<section id="compute-the-r2-score-from-k-fold-cross-validation">
+<h2>Compute the R2 score from K-Fold cross-validation<a class="headerlink" href="#compute-the-r2-score-from-k-fold-cross-validation" title="Link to this heading">¶</a></h2>
+<p>One limitation of the previous method is that the estimate of the
+<img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> may be sensitive to the particular split of the dataset.
+The following script uses 5-Fold cross validation to estimate the
+<img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">kParameter</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kParameter</span><span class="si">}</span><span class="s2">-Fold cross-validation&quot;</span><span class="p">)</span>
+<span class="n">scoreSampleKFold</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">degree_list</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_degrees</span><span class="p">):</span>
+    <span class="n">totalDegree</span> <span class="o">=</span> <span class="n">degree_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">scoreSampleKFold</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_R2_score_by_kfold</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">multivariateBasis</span><span class="p">,</span> <span class="n">totalDegree</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">distribution</span><span class="p">,</span> <span class="n">kParameter</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Degree = </span><span class="si">{</span><span class="n">totalDegree</span><span class="si">}</span><span class="s2">, score = </span><span class="si">{</span><span class="n">scoreSampleKFold</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>5-Fold cross-validation
+Degree = 1, score = 0.1511
+Degree = 2, score = 0.1552
+Degree = 3, score = 0.4496
+Degree = 4, score = 0.7144
+Degree = 5, score = 0.8329
+Degree = 6, score = 0.9793
+Degree = 7, score = 0.9898
+Degree = 8, score = 0.9995
+Degree = 9, score = 0.9998
+Degree = 10, score = 1.0000
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kParameter</span><span class="si">}</span><span class="s2">-Fold cross-validation&quot;</span><span class="p">,</span> <span class="s2">&quot;Degree&quot;</span><span class="p">,</span> <span class="s2">&quot;$R^2$&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">BuildFromPoint</span><span class="p">(</span><span class="n">degree_list</span><span class="p">),</span> <span class="n">scoreSampleKFold</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setBoundingBox</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_chaos_cv_003.svg" srcset="../../_images/sphx_glr_plot_chaos_cv_003.svg" alt="5-Fold cross-validation" class = "sphx-glr-single-img"/><p>The conclusion is similar to the previous method.</p>
+<p>Compare the two cross-validation methods.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;CV : split vs K-Fold&quot;</span><span class="p">,</span> <span class="s2">&quot;Degree&quot;</span><span class="p">,</span> <span class="s2">&quot;$R^2$&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">BuildFromPoint</span><span class="p">(</span><span class="n">degree_list</span><span class="p">),</span> <span class="n">scoreSampleSplit</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Split&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">BuildFromPoint</span><span class="p">(</span><span class="n">degree_list</span><span class="p">),</span> <span class="n">scoreSampleKFold</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;square&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;K-Fold&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setBoundingBox</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)})</span>
+<span class="c1"># sphinx_gallery_thumbnail_number = 4</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_chaos_cv_004.svg" srcset="../../_images/sphx_glr_plot_chaos_cv_004.svg" alt="CV : split vs K-Fold" class = "sphx-glr-single-img"/></section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
+<p>When we select the best polynomial degree which maximizes the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score,
+the danger is that the validation set is used both for computing the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> and to maximize it:
+hence, the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score may be optimistic.
+In <a class="reference internal" href="../../bibliography.html#muller2016" id="id2"><span>[muller2016]</span></a>, chapter 5, page 269, the authors advocate the split of the dataset into three subsets:</p>
+<ul class="simple">
+<li><p>the training set,</p></li>
+<li><p>the validation set,</p></li>
+<li><p>the test set.</p></li>
+</ul>
+<p>When selecting the best parameters, the validation set is used.
+When estimating the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMy4yNDI2OThwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMy4yNDI2OTggOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTgyJyBkPSdNNC4zOTk1MDItNy4zNTI0MjhDNC41MDcwOTgtNy43OTQ3NyA0LjU1NDkxOS03LjgxODY4IDUuMDIxMTcxLTcuODE4NjhINS44ODE5NDNDNi45MTAwODctNy44MTg2OCA3LjY3NTIxOC03LjUwNzg0NiA3LjY3NTIxOC02LjU3NTM0MkM3LjY3NTIxOC01Ljk2NTYyOSA3LjM2NDM4NC00LjIwODIxOSA0Ljk2MTM5NS00LjIwODIxOUgzLjYxMDQ2MUw0LjM5OTUwMi03LjM1MjQyOFpNNi4wNjEyNy00LjA2NDc1N0M3LjU0MzcxMS00LjM4NzU0NyA4LjcwMzM2Mi01LjM0Mzk2IDguNzAzMzYyLTYuMzcyMTA1QzguNzAzMzYyLTcuMzA0NjA4IDcuNzU4OTA0LTguMTY1MzggNi4wOTcxMzYtOC4xNjUzOEgyLjg1NzI4NUMyLjYxODE4Mi04LjE2NTM4IDIuNTEwNTg1LTguMTY1MzggMi41MTA1ODUtNy45MzgyMzJDMi41MTA1ODUtNy44MTg2OCAyLjU5NDI3MS03LjgxODY4IDIuODIxNDItNy44MTg2OEMzLjUzODczLTcuODE4NjggMy41Mzg3My03LjcyMzAzOSAzLjUzODczLTcuNTkxNTMyQzMuNTM4NzMtNy41Njc2MjEgMy41Mzg3My03LjQ5NTg5IDMuNDkwOTA5LTcuMzE2NTYzTDEuODc2OTYxLS44ODQ2ODJDMS43NjkzNjUtLjQ2NjI1MiAxLjc0NTQ1NS0uMzQ2NyAuOTIwNTQ4LS4zNDY3Qy42NDU1NzktLjM0NjcgLjU2MTg5My0uMzQ2NyAuNTYxODkzLS4xMTk1NTJDLjU2MTg5MyAwIC42OTM0IDAgLjcyOTI2NSAwQy45NDQ0NTggMCAxLjE5NTUxNy0uMDIzOTEgMS40MjI2NjUtLjAyMzkxSDIuODMzMzc1QzMuMDQ4NTY4LS4wMjM5MSAzLjI5OTYyNiAwIDMuNTE0ODE5IDBDMy42MTA0NjEgMCAzLjc0MTk2OCAwIDMuNzQxOTY4LS4yMjcxNDhDMy43NDE5NjgtLjM0NjcgMy42MzQzNzEtLjM0NjcgMy40NTUwNDQtLjM0NjdDMi43MjU3NzgtLjM0NjcgMi43MjU3NzgtLjQ0MjM0MSAyLjcyNTc3OC0uNTYxODkzQzIuNzI1Nzc4LS41NzM4NDggMi43MjU3NzgtLjY1NzUzNCAyLjc0OTY4OS0uNzUzMTc2TDMuNTUwNjg1LTMuOTY5MTE2SDQuOTg1MzA1QzYuMTIxMDQ2LTMuOTY5MTE2IDYuMzM2MjM5LTMuMjUxODA2IDYuMzM2MjM5LTIuODU3Mjg1QzYuMzM2MjM5LTIuNjc3OTU4IDYuMjE2Njg3LTIuMjExNzA2IDYuMTMzMDAxLTEuOTAwODcyQzYuMDAxNDk0LTEuMzUwOTM0IDUuOTY1NjI5LTEuMjE5NDI3IDUuOTY1NjI5LS45OTIyNzlDNS45NjU2MjktLjE0MzQ2MiA2LjY1OTAyOSAuMjUxMDU5IDcuNDYwMDI1IC4yNTEwNTlDOC40MjgzOTQgLjI1MTA1OSA4Ljg0NjgyNC0uOTMyNTAzIDguODQ2ODI0LTEuMDk5ODc1QzguODQ2ODI0LTEuMTgzNTYyIDguNzg3MDQ5LTEuMjE5NDI3IDguNzE1MzE4LTEuMjE5NDI3QzguNjE5Njc2LTEuMjE5NDI3IDguNTk1NzY2LTEuMTQ3Njk2IDguNTcxODU2LTEuMDUyMDU1QzguMjg0OTMyLS4yMDMyMzggNy43OTQ3NyAuMDExOTU1IDcuNDk1ODkgLjAxMTk1NVM3LjAwNTcyOS0uMTE5NTUyIDcuMDA1NzI5LS42NTc1MzRDNy4wMDU3MjktLjk0NDQ1OCA3LjE0OTE5MS0yLjAzMjM3OSA3LjE2MTE0Ni0yLjA5MjE1NEM3LjIyMDkyMi0yLjUzNDQ5NiA3LjIyMDkyMi0yLjU4MjMxNiA3LjIyMDkyMi0yLjY3Nzk1OEM3LjIyMDkyMi0zLjU1MDY4NSA2LjUxNTU2Ny0zLjkyMTI5NSA2LjA2MTI3LTQuMDY0NzU3WicvPgo8cGF0aCBpZD0nZzEtNTAnIGQ9J00yLjI0NzU3Mi0xLjYyNTkwM0MyLjM3NTA5My0xLjc0NTQ1NSAyLjcwOTgzOC0yLjAwODQ2OCAyLjgzNzM2LTIuMTIwMDVDMy4zMzE1MDctMi41NzQzNDYgMy44MDE3NDMtMy4wMTI3MDIgMy44MDE3NDMtMy43Mzc5ODNDMy44MDE3NDMtNC42ODY0MjYgMy4wMDQ3MzItNS4zMDAxMjUgMi4wMDg0NjgtNS4zMDAxMjVDMS4wNTIwNTUtNS4zMDAxMjUgLjQyMjQxNi00LjU3NDg0NCAuNDIyNDE2LTMuODY1NTA0Qy40MjI0MTYtMy40NzQ5NjkgLjczMzI1LTMuNDE5MTc4IC44NDQ4MzItMy40MTkxNzhDMS4wMTIyMDQtMy40MTkxNzggMS4yNTkyNzgtMy41Mzg3MyAxLjI1OTI3OC0zLjg0MTU5NEMxLjI1OTI3OC00LjI1NjA0IC44NjA3NzItNC4yNTYwNCAuNzY1MTMxLTQuMjU2MDRDLjk5NjI2NC00LjgzNzg1OCAxLjUzMDI2Mi01LjAzNzExMSAxLjkyMDc5Ny01LjAzNzExMUMyLjY2MjAxNy01LjAzNzExMSAzLjA0NDU4My00LjQwNzQ3MiAzLjA0NDU4My0zLjczNzk4M0MzLjA0NDU4My0yLjkwOTA5MSAyLjQ2Mjc2NS0yLjMwMzM2MiAxLjUyMjI5MS0xLjMzODk3OUwuNTE4MDU3LS4zMDI4NjRDLjQyMjQxNi0uMjE1MTkzIC40MjI0MTYtLjE5OTI1MyAuNDIyNDE2IDBIMy41NzA2MUwzLjgwMTc0My0xLjQyNjY1SDMuNTU0NjdDMy41MzA3Ni0xLjI2NzI0OCAzLjQ2Njk5OS0uODY4NzQyIDMuMzcxMzU3LS43MTczMUMzLjMyMzUzNy0uNjUzNTQ5IDIuNzE3ODA4LS42NTM1NDkgMi41OTAyODYtLjY1MzU0OUgxLjE3MTYwNkwyLjI0NzU3Mi0xLjYyNTkwM1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8dXNlIHg9JzkuMDA4NTE1JyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMS01MCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="R^2" style="vertical-align: 0px"/> score with the best parameters, the test set is used.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-surrogate-modeling-polynomial-chaos-plot-chaos-cv-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9a15b53af9f055f91fba0000d614e294/plot_chaos_cv.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_chaos_cv.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ad7bacb326a6a8d4f5c946126427d622/plot_chaos_cv.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_chaos_cv.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/23a1d61a7fc8a75f40b89e6a6775eec8/plot_chaos_cv.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_chaos_cv.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../gaussian_process_regression/index.html" title="Gaussian Process Regression"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_chaos_conditional_expectation.html" title="Conditional expectation of a polynomial chaos expansion"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.27dev documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Surrogate modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Polynomial chaos</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Polynomial chaos expansion cross-validation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2026 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jan 01, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+  </body>
+</html>
