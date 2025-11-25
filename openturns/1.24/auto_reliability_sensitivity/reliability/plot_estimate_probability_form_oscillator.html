@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Using the FORM - SORM algorithms on a nonlinear function &#8212; OpenTURNS 1.24 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=eff3c53f"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reliability processes" href="../reliability_processes/index.html" />
+    <link rel="prev" title="An illustrated example of a FORM probability estimate" href="plot_form_explained.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../reliability_processes/index.html" title="Reliability processes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_form_explained.html" title="An illustrated example of a FORM probability estimate"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Reliability</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using the FORM - SORM algorithms on a nonlinear function</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Using the FORM - SORM algorithms on a nonlinear function</a><ul>
+<li><a class="reference internal" href="#model-definition">Model definition</a></li>
+<li><a class="reference internal" href="#cross-cuts-in-the-physical-space">Cross cuts in the physical space</a></li>
+<li><a class="reference internal" href="#computation-of-reference-probability-with-monte-carlo-simulation">Computation of reference probability with Monte-Carlo simulation</a></li>
+<li><a class="reference internal" href="#form-analysis">FORM Analysis</a></li>
+<li><a class="reference internal" href="#sorm-analysis">SORM Analysis</a></li>
+<li><a class="reference internal" href="#estimation-with-post-analytical-importance-sampling">Estimation with post analytical Importance Sampling</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_form_explained.html"
+                          title="previous chapter">An illustrated example of a FORM probability estimate</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../reliability_processes/index.html"
+                          title="next chapter">Reliability processes</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_reliability_sensitivity/reliability/plot_estimate_probability_form_oscillator.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-reliability-sensitivity-reliability-plot-estimate-probability-form-oscillator-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="using-the-form-sorm-algorithms-on-a-nonlinear-function">
+<span id="sphx-glr-auto-reliability-sensitivity-reliability-plot-estimate-probability-form-oscillator-py"></span><h1>Using the FORM - SORM algorithms on a nonlinear function<a class="headerlink" href="#using-the-form-sorm-algorithms-on-a-nonlinear-function" title="Link to this heading">¶</a></h1>
+<p>In this example, we estimate a failure probability with the <cite>FORM</cite> and <cite>SORM</cite> algorithms on the <a class="reference internal" href="../../usecases/use_case_oscillator.html#use-case-oscillator"><span class="std std-ref">oscillator</span></a> example.
+This test-case is highly non linear with a significant curvature near the design point.</p>
+<section id="model-definition">
+<h2>Model definition<a class="headerlink" href="#model-definition" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">oscillator</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We load the model from the usecases module:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">osc</span> <span class="o">=</span> <span class="n">oscillator</span><span class="o">.</span><span class="n">Oscillator</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We use the input parameters distribution from the data class:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">osc</span><span class="o">.</span><span class="n">distribution</span>
+</pre></div>
+</div>
+<p>We define the model:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">osc</span><span class="o">.</span><span class="n">model</span>
+</pre></div>
+</div>
+<p>We create the event whose probability we want to estimate.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">vect</span><span class="p">)</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Less</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="n">event</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">&quot;failure&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="cross-cuts-in-the-physical-space">
+<h2>Cross cuts in the physical space<a class="headerlink" href="#cross-cuts-in-the-physical-space" title="Link to this heading">¶</a></h2>
+<p>Let’s have a look on 2D cross cuts of the limit state function. For each 2D cross cut, the other variables are fixed to the input distribution mean values.
+This graph allows one to have a first idea of the variations of the function in pairs of dimensions. The colors of each contour plot are comparable.
+The number of contour levels are related to the amount of variation of the function in the corresponding coordinates.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">lowerBound</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span>
+<span class="n">upperBound</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getRange</span><span class="p">()</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()</span>
+
+<span class="c1"># Definition of number of meshes in x and y axes for the 2D cross cut plots</span>
+<span class="n">nX</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">nY</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">crossCutIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">crossCutReferencePoint</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">crossCutIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="c1"># Definition of the reference point</span>
+                <span class="n">crossCutReferencePoint</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getMean</span><span class="p">()[</span><span class="n">k</span><span class="p">])</span>
+        <span class="c1"># Definition of 2D cross cut function</span>
+        <span class="n">crossCutFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">crossCutIndices</span><span class="p">,</span> <span class="n">crossCutReferencePoint</span>
+        <span class="p">)</span>
+        <span class="n">crossCutLowerBound</span> <span class="o">=</span> <span class="p">[</span><span class="n">lowerBound</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">lowerBound</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">crossCutUpperBound</span> <span class="o">=</span> <span class="p">[</span><span class="n">upperBound</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">upperBound</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="c1"># Definition of the mesh</span>
+        <span class="n">inputData</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Box</span><span class="p">([</span><span class="n">nX</span><span class="p">,</span> <span class="n">nY</span><span class="p">])</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="n">inputData</span> <span class="o">*=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutUpperBound</span><span class="p">)</span> <span class="o">-</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">)</span>
+        <span class="n">inputData</span> <span class="o">+=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">)</span>
+        <span class="n">meshX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">meshY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">crossCutFunction</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+        <span class="n">meshZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">150</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">101</span><span class="p">)]</span>
+
+        <span class="c1"># Creation of the contour</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span> <span class="o">+</span> <span class="n">j</span>
+
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.add_subplot.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span></a><span class="p">(</span>
+            <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="n">index</span>
+        <span class="p">)</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.pcolormesh.html#matplotlib.axes.Axes.pcolormesh" title="matplotlib.axes.Axes.pcolormesh" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span></a><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span> <span class="n">meshZ</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;hsv&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xticks.html#matplotlib.axes.Axes.set_xticks" title="matplotlib.axes.Axes.set_xticks" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span></a><span class="p">([])</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_yticks.html#matplotlib.axes.Axes.set_yticks" title="matplotlib.axes.Axes.set_yticks" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span></a><span class="p">([])</span>
+        <span class="c1"># Creation of axes title</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_ylabel.html#matplotlib.axes.Axes.set_ylabel" title="matplotlib.axes.Axes.set_ylabel" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span></a><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xlabel.html#matplotlib.axes.Axes.set_xlabel" title="matplotlib.axes.Axes.set_xlabel" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span></a><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">j</span><span class="p">])</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_estimate_probability_form_oscillator_001.png" srcset="../../_images/sphx_glr_plot_estimate_probability_form_oscillator_001.png" alt="plot estimate probability form oscillator" class = "sphx-glr-single-img"/></section>
+<section id="computation-of-reference-probability-with-monte-carlo-simulation">
+<h2>Computation of reference probability with Monte-Carlo simulation<a class="headerlink" href="#computation-of-reference-probability-with-monte-carlo-simulation" title="Link to this heading">¶</a></h2>
+<p>The target probability is supposed to be extremely low (<img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNC4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzU3Ljk0OTEyNnB0JyBoZWlnaHQ9JzEwLjQ3MTAxMXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSA1Ny45NDkxMjYgMTAuNDcxMDExJz4KPGRlZnM+CjxwYXRoIGlkPSdnMy01NScgZD0nTTQuMDMyODc3LTQuODUzNzk4QzQuMTA0NjA4LTQuOTQxNDY5IDQuMTA0NjA4LTQuOTU3NDEgNC4xMDQ2MDgtNS4xMzI3NTJIMi4wODAxOTlDMS44ODA5NDYtNS4xMzI3NTIgMS42MzM4NzMtNS4xNDA3MjIgMS40MzQ2Mi01LjE1NjY2M0MxLjAyMDE3NC01LjE4ODU0MyAxLjAxMjIwNC01LjI2MDI3NCAuOTg4Mjk0LTUuMzg3Nzk2SC43NDEyMkwuNDcwMjM3LTMuNzA2MTAySC43MTczMUMuNzMzMjUtMy44MjU2NTQgLjgyMDkyMi00LjM3NTU5MiAuOTMyNTAzLTQuNDM5MzUyQzEuMDIwMTc0LTQuNDc5MjAzIDEuNjE3OTMzLTQuNDc5MjAzIDEuNzM3NDg0LTQuNDc5MjAzSDMuNDI3MTQ4TDIuNjA2MjI3LTMuMzc5MzI4QzEuNjk3NjM0LTIuMTY3ODcgMS41MDYzNTEtLjkwODU5MyAxLjUwNjM1MS0uMjc4OTU0QzEuNTA2MzUxLS4xOTkyNTMgMS41MDYzNTEgLjE2NzM3MiAxLjg4MDk0NiAuMTY3MzcyUzIuMjU1NTQyLS4xOTEyODMgMi4yNTU1NDItLjI4NjkyNFYtLjY2OTQ4OUMyLjI1NTU0Mi0xLjgxNzE4NiAyLjQ0NjgyNC0yLjc1NzY1OSAyLjgzNzM2LTMuMjc1NzE2TDQuMDMyODc3LTQuODUzNzk4WicvPgo8cGF0aCBpZD0nZzAtMCcgZD0nTTUuNTcxMTA4LTEuODA5MjE1QzUuNjk4NjMtMS44MDkyMTUgNS44NzM5NzMtMS44MDkyMTUgNS44NzM5NzMtMS45OTI1MjhTNS42OTg2My0yLjE3NTg0MSA1LjU3MTEwOC0yLjE3NTg0MUgxLjAwNDIzNEMuODc2NzEyLTIuMTc1ODQxIC43MDEzNy0yLjE3NTg0MSAuNzAxMzctMS45OTI1MjhTLjg3NjcxMi0xLjgwOTIxNSAxLjAwNDIzNC0xLjgwOTIxNUg1LjU3MTEwOFonLz4KPHBhdGggaWQ9J2cyLTU4JyBkPSdNMi4xOTk3NTEtLjU3Mzg0OEMyLjE5OTc1MS0uOTIwNTQ4IDEuOTEyODI3LTEuMTU5NjUxIDEuNjI1OTAzLTEuMTU5NjUxQzEuMjc5MjAzLTEuMTU5NjUxIDEuMDQwMS0uODcyNzI3IDEuMDQwMS0uNTg1ODAzQzEuMDQwMS0uMjM5MTAzIDEuMzI3MDI0IDAgMS42MTM5NDggMEMxLjk2MDY0OCAwIDIuMTk5NzUxLS4yODY5MjQgMi4xOTk3NTEtLjU3Mzg0OFonLz4KPHBhdGggaWQ9J2cxLTInIGQ9J000LjY1MDU2LTMuMzIzNTM3TDIuMjU5NTI3LTUuNzAyNjE1QzIuMTE2MDY1LTUuODQ2MDc3IDIuMDkyMTU0LTUuODY5OTg4IDEuOTk2NTEzLTUuODY5OTg4QzEuODc2OTYxLTUuODY5OTg4IDEuNzU3NDEtNS43NjIzOTEgMS43NTc0MS01LjYzMDg4NEMxLjc1NzQxLTUuNTQ3MTk4IDEuNzgxMzItNS41MjMyODggMS45MTI4MjctNS4zOTE3ODFMNC4zMDM4NjEtMi45ODg3OTJMMS45MTI4MjctLjU4NTgwM0MxLjc4MTMyLS40NTQyOTYgMS43NTc0MS0uNDMwMzg2IDEuNzU3NDEtLjM0NjdDMS43NTc0MS0uMjE1MTkzIDEuODc2OTYxLS4xMDc1OTcgMS45OTY1MTMtLjEwNzU5N0MyLjA5MjE1NC0uMTA3NTk3IDIuMTE2MDY1LS4xMzE1MDcgMi4yNTk1MjctLjI3NDk2OUw0LjYzODYwNS0yLjY1NDA0N0w3LjExMzMyNS0uMTc5MzI4QzcuMTM3MjM1LS4xNjczNzIgNy4yMjA5MjItLjEwNzU5NyA3LjI5MjY1My0uMTA3NTk3QzcuNDM2MTE1LS4xMDc1OTcgNy41MzE3NTYtLjIxNTE5MyA3LjUzMTc1Ni0uMzQ2N0M3LjUzMTc1Ni0uMzcwNjEgNy41MzE3NTYtLjQxODQzMSA3LjQ5NTg5LS40NzgyMDdDNy40ODM5MzUtLjUwMjExNyA1LjU4MzA2NC0yLjM3OTA3OCA0Ljk4NTMwNS0yLjk4ODc5Mkw3LjE3MzEwMS01LjE3NjU4OEM3LjIzMjg3Ny01LjI0ODMxOSA3LjQxMjIwNC01LjQwMzczNiA3LjQ3MTk4LTUuNDc1NDY3QzcuNDgzOTM1LTUuNDk5Mzc3IDcuNTMxNzU2LTUuNTQ3MTk4IDcuNTMxNzU2LTUuNjMwODg0QzcuNTMxNzU2LTUuNzYyMzkxIDcuNDM2MTE1LTUuODY5OTg4IDcuMjkyNjUzLTUuODY5OTg4QzcuMTk3MDExLTUuODY5OTg4IDcuMTQ5MTkxLTUuODIyMTY3IDcuMDE3Njg0LTUuNjkwNjZMNC42NTA1Ni0zLjMyMzUzN1onLz4KPHBhdGggaWQ9J2c0LTQ4JyBkPSdNNS4zNTU5MTUtMy44MjU2NTRDNS4zNTU5MTUtNC44MTc5MzMgNS4yOTYxMzktNS43ODYzMDEgNC44NjU3NTMtNi42OTQ4OTRDNC4zNzU1OTItNy42ODcxNzMgMy41MTQ4MTktNy45NTAxODcgMi45MjkwMTYtNy45NTAxODdDMi4yMzU2MTYtNy45NTAxODcgMS4zODY4LTcuNjAzNDg3IC45NDQ0NTgtNi42MTEyMDhDLjYwOTcxNC01Ljg1ODAzMiAuNDkwMTYyLTUuMTE2ODEyIC40OTAxNjItMy44MjU2NTRDLjQ5MDE2Mi0yLjY2NjAwMiAuNTczODQ4LTEuNzkzMjc1IDEuMDA0MjM0LS45NDQ0NThDMS40NzA0ODYtLjAzNTg2NiAyLjI5NTM5MiAuMjUxMDU5IDIuOTE3MDYxIC4yNTEwNTlDMy45NTcxNjEgLjI1MTA1OSA0LjU1NDkxOS0uMzcwNjEgNC45MDE2MTktMS4wNjQwMUM1LjMzMjAwNS0xLjk2MDY0OCA1LjM1NTkxNS0zLjEzMjI1NCA1LjM1NTkxNS0zLjgyNTY1NFpNMi45MTcwNjEgLjAxMTk1NUMyLjUzNDQ5NiAuMDExOTU1IDEuNzU3NDEtLjIwMzIzOCAxLjUzMDI2Mi0xLjUwNjM1MUMxLjM5ODc1NS0yLjIyMzY2MSAxLjM5ODc1NS0zLjEzMjI1NCAxLjM5ODc1NS0zLjk2OTExNkMxLjM5ODc1NS00Ljk0OTQ0IDEuMzk4NzU1LTUuODM0MTIyIDEuNTkwMDM3LTYuNTM5NDc3QzEuNzkzMjc1LTcuMzQwNDczIDIuNDAyOTg5LTcuNzExMDgzIDIuOTE3MDYxLTcuNzExMDgzQzMuMzcxMzU3LTcuNzExMDgzIDQuMDY0NzU3LTcuNDM2MTE1IDQuMjkxOTA1LTYuNDA3OTdDNC40NDczMjMtNS43MjY1MjYgNC40NDczMjMtNC43ODIwNjcgNC40NDczMjMtMy45NjkxMTZDNC40NDczMjMtMy4xNjgxMiA0LjQ0NzMyMy0yLjI1OTUyNyA0LjMxNTgxNi0xLjUzMDI2MkM0LjA4ODY2Ny0uMjE1MTkzIDMuMzM1NDkyIC4wMTE5NTUgMi45MTcwNjEgLjAxMTk1NVonLz4KPHBhdGggaWQ9J2c0LTQ5JyBkPSdNMy40NDMwODgtNy42NjMyNjNDMy40NDMwODgtNy45MzgyMzIgMy40NDMwODgtNy45NTAxODcgMy4yMDM5ODUtNy45NTAxODdDMi45MTcwNjEtNy42MjczOTcgMi4zMTkzMDMtNy4xODUwNTYgMS4wODc5Mi03LjE4NTA1NlYtNi44MzgzNTZDMS4zNjI4ODktNi44MzgzNTYgMS45NjA2NDgtNi44MzgzNTYgMi42MTgxODItNy4xNDkxOTFWLS45MjA1NDhDMi42MTgxODItLjQ5MDE2MiAyLjU4MjMxNi0uMzQ2NyAxLjUzMDI2Mi0uMzQ2N0gxLjE1OTY1MVYwQzEuNDgyNDQxLS4wMjM5MSAyLjY0MjA5Mi0uMDIzOTEgMy4wMzY2MTMtLjAyMzkxUzQuNTc4ODI5LS4wMjM5MSA0LjkwMTYxOSAwVi0uMzQ2N0g0LjUzMTAwOUMzLjQ3ODk1NC0uMzQ2NyAzLjQ0MzA4OC0uNDkwMTYyIDMuNDQzMDg4LS45MjA1NDhWLTcuNjYzMjYzWicvPgo8cGF0aCBpZD0nZzQtNTEnIGQ9J00yLjE5OTc1MS00LjI5MTkwNUMxLjk5NjUxMy00LjI3OTk1IDEuOTQ4NjkyLTQuMjY3OTk1IDEuOTQ4NjkyLTQuMTYwMzk5QzEuOTQ4NjkyLTQuMDQwODQ3IDIuMDA4NDY4LTQuMDQwODQ3IDIuMjIzNjYxLTQuMDQwODQ3SDIuNzczNTk5QzMuNzg5Nzg4LTQuMDQwODQ3IDQuMjQ0MDg1LTMuMjAzOTg1IDQuMjQ0MDg1LTIuMDU2Mjg5QzQuMjQ0MDg1LS40OTAxNjIgMy40MzExMzMtLjA3MTczMSAyLjg0NTMzLS4wNzE3MzFDMi4yNzE0ODItLjA3MTczMSAxLjI5MTE1OC0uMzQ2NyAuOTQ0NDU4LTEuMTM1NzQxQzEuMzI3MDI0LTEuMDc1OTY1IDEuNjczNzI0LTEuMjkxMTU4IDEuNjczNzI0LTEuNzIxNTQ0QzEuNjczNzI0LTIuMDY4MjQ0IDEuNDIyNjY1LTIuMzA3MzQ3IDEuMDg3OTItMi4zMDczNDdDLjgwMDk5Ni0yLjMwNzM0NyAuNDkwMTYyLTIuMTM5OTc1IC40OTAxNjItMS42ODU2NzlDLjQ5MDE2Mi0uNjIxNjY5IDEuNTU0MTcyIC4yNTEwNTkgMi44ODExOTYgLjI1MTA1OUM0LjMwMzg2MSAuMjUxMDU5IDUuMzU1OTE1LS44MzY4NjIgNS4zNTU5MTUtMi4wNDQzMzRDNS4zNTU5MTUtMy4xNDQyMDkgNC40NzEyMzMtNC4wMDQ5ODEgMy4zMjM1MzctNC4yMDgyMTlDNC4zNjM2MzYtNC41MDcwOTggNS4wMzMxMjYtNS4zNzk4MjYgNS4wMzMxMjYtNi4zMTIzMjlDNS4wMzMxMjYtNy4yNTY3ODcgNC4wNTI4MDItNy45NTAxODcgMi44OTMxNTEtNy45NTAxODdDMS42OTc2MzQtNy45NTAxODcgLjgxMjk1MS03LjIyMDkyMiAuODEyOTUxLTYuMzQ4MTk0Qy44MTI5NTEtNS44Njk5ODggMS4xODM1NjItNS43NzQzNDYgMS4zNjI4ODktNS43NzQzNDZDMS42MTM5NDgtNS43NzQzNDYgMS45MDA4NzItNS45NTM2NzQgMS45MDA4NzItNi4zMTIzMjlDMS45MDA4NzItNi42OTQ4OTQgMS42MTM5NDgtNi44NjIyNjcgMS4zNTA5MzQtNi44NjIyNjdDMS4yNzkyMDMtNi44NjIyNjcgMS4yNTUyOTMtNi44NjIyNjcgMS4yMTk0MjctNi44NTAzMTFDMS42NzM3MjQtNy42NjMyNjMgMi43OTc1MDktNy42NjMyNjMgMi44NTcyODUtNy42NjMyNjNDMy4yNTE4MDYtNy42NjMyNjMgNC4wMjg4OTItNy40ODM5MzUgNC4wMjg4OTItNi4zMTIzMjlDNC4wMjg4OTItNi4wODUxODEgMy45OTMwMjYtNS40MTU2OTEgMy42NDYzMjYtNC45MDE2MTlDMy4yODc2NzEtNC4zNzU1OTIgMi44ODExOTYtNC4zMzk3MjYgMi41NTg0MDYtNC4zMjc3NzFMMi4xOTk3NTEtNC4yOTE5MDVaJy8+CjxwYXRoIGlkPSdnNC01NScgZD0nTTUuNjc4NzA1LTcuNDI0MTU5Vi03LjY5OTEyOEgyLjc5NzUwOUMxLjM1MDkzNC03LjY5OTEyOCAxLjMyNzAyNC03Ljg1NDU0NSAxLjI3OTIwMy04LjA4MTY5NEgxLjAxNjE4OUwuNjQ1NTc5LTUuNjkwNjZILjkwODU5M0MuOTQ0NDU4LTUuOTA1ODUzIDEuMDUyMDU1LTYuNjQ3MDczIDEuMjA3NDcyLTYuNzc4NThDMS4zMDMxMTMtNi44NTAzMTEgMi4xOTk3NTEtNi44NTAzMTEgMi4zNjcxMjMtNi44NTAzMTFINC45MDE2MTlMMy42MzQzNzEtNS4wMzMxMjZDMy4zMTE1ODItNC41NjY4NzQgMi4xMDQxMS0yLjYwNjIyNyAyLjEwNDExLS4zNTg2NTVDMi4xMDQxMS0uMjI3MTQ4IDIuMTA0MTEgLjI1MTA1OSAyLjU5NDI3MSAuMjUxMDU5QzMuMDk2Mzg5IC4yNTEwNTkgMy4wOTYzODktLjIxNTE5MyAzLjA5NjM4OS0uMzcwNjFWLS45NjgzNjlDMy4wOTYzODktMi43NDk2ODkgMy4zODMzMTMtNC4xMzY0ODggMy45NDUyMDUtNC45Mzc0ODRMNS42Nzg3MDUtNy40MjQxNTlaJy8+CjxwYXRoIGlkPSdnNC01NicgZD0nTTMuNTYyNjQtNC4zMTU4MTZDNC4xNjAzOTktNC42Mzg2MDUgNS4wMzMxMjYtNS4xODg1NDMgNS4wMzMxMjYtNi4xOTI3NzdDNS4wMzMxMjYtNy4yMzI4NzcgNC4wMjg4OTItNy45NTAxODcgMi45MjkwMTYtNy45NTAxODdDMS43NDU0NTUtNy45NTAxODcgLjgxMjk1MS03LjA3NzQ2IC44MTI5NTEtNS45ODk1MzlDLjgxMjk1MS01LjU4MzA2NCAuOTMyNTAzLTUuMTc2NTg4IDEuMjY3MjQ4LTQuNzcwMTEyQzEuMzk4NzU1LTQuNjE0Njk1IDEuNDEwNzEtNC42MDI3NCAyLjI0NzU3Mi00LjAxNjkzNkMxLjA4NzkyLTMuNDc4OTU0IC40OTAxNjItMi42Nzc5NTggLjQ5MDE2Mi0xLjgwNTIzQy40OTAxNjItLjUzNzk4MyAxLjY5NzYzNCAuMjUxMDU5IDIuOTE3MDYxIC4yNTEwNTlDNC4yNDQwODUgLjI1MTA1OSA1LjM1NTkxNS0uNzI5MjY1IDUuMzU1OTE1LTEuOTg0NTU4QzUuMzU1OTE1LTMuMjAzOTg1IDQuNDk1MTQzLTMuNzQxOTY4IDMuNTYyNjQtNC4zMTU4MTZaTTEuOTM2NzM3LTUuMzkxNzgxQzEuNzgxMzItNS40OTkzNzcgMS4zMDMxMTMtNS44MTAyMTIgMS4zMDMxMTMtNi4zOTYwMTVDMS4zMDMxMTMtNy4xNzMxMDEgMi4xMTYwNjUtNy42NjMyNjMgMi45MTcwNjEtNy42NjMyNjNDMy43Nzc4MzMtNy42NjMyNjMgNC41NDI5NjQtNy4wNDE1OTQgNC41NDI5NjQtNi4xODA4MjJDNC41NDI5NjQtNS40NTE1NTcgNC4wMTY5MzYtNC44NjU3NTMgMy4zMjM1MzctNC40ODMxODhMMS45MzY3MzctNS4zOTE3ODFaTTIuNDk4NjMtMy44NDk1NjRMMy45NDUyMDUtMi45MDUxMDZDNC4yNTYwNC0yLjcwMTg2OCA0LjgwNTk3OC0yLjMzMTI1OCA0LjgwNTk3OC0xLjYwMTk5M0M0LjgwNTk3OC0uNjkzNCAzLjg4NTQzLS4wNzE3MzEgMi45MjkwMTYtLjA3MTczMUMxLjkxMjgyNy0uMDcxNzMxIDEuMDQwMS0uODEyOTUxIDEuMDQwMS0xLjgwNTIzQzEuMDQwMS0yLjczNzczMyAxLjcyMTU0NC0zLjQ5MDkwOSAyLjQ5ODYzLTMuODQ5NTY0WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTUxJy8+Cjx1c2UgeD0nNS44NTI5OScgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTU4Jy8+Cjx1c2UgeD0nOS4xMDQ2NTInIHk9JzAnIHhsaW5rOmhyZWY9JyNnNC01NScvPgo8dXNlIHg9JzE0Ljk1NzY0MicgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTU2Jy8+Cjx1c2UgeD0nMjMuNDY3Mjk1JyB5PScwJyB4bGluazpocmVmPScjZzEtMicvPgo8dXNlIHg9JzM1LjQyMjQ1NicgeT0nMCcgeGxpbms6aHJlZj0nI2c0LTQ5Jy8+Cjx1c2UgeD0nNDEuMjc1NDQ2JyB5PScwJyB4bGluazpocmVmPScjZzQtNDgnLz4KPHVzZSB4PSc0Ny4xMjg0MzcnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2cwLTAnLz4KPHVzZSB4PSc1My43MTQ5NDMnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2czLTU1Jy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MSAtLT4=" alt="3.78\times 10^{-7}" style="vertical-align: -1px"/>).
+Indeed, when performing Monte-Carlo simulation with a simulation budget of 100000 points, no sample are in the failure state, that induces a probability estimate of zero.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">()</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ProbabilitySimulationAlgorithm</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">experiment</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">))</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">probability</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failure probability = &quot;</span><span class="p">,</span> <span class="n">probability</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Failure probability =  0.0
+</pre></div>
+</div>
+<p>To get an accurate estimate of this probability, a billion of simulations are necessary.</p>
+</section>
+<section id="form-analysis">
+<h2>FORM Analysis<a class="headerlink" href="#form-analysis" title="Link to this heading">¶</a></h2>
+<p>To get a first idea of the failure probability with reduced simulation budget, one can use the First Order Reliability Method (FORM).</p>
+<p>Define a solver:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">optimAlgo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cobyla</span><span class="p">()</span>
+<span class="n">optimAlgo</span><span class="o">.</span><span class="n">setMaximumCallsNumber</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">optimAlgo</span><span class="o">.</span><span class="n">setMaximumAbsoluteError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
+<span class="n">optimAlgo</span><span class="o">.</span><span class="n">setMaximumRelativeError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
+<span class="n">optimAlgo</span><span class="o">.</span><span class="n">setMaximumResidualError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
+<span class="n">optimAlgo</span><span class="o">.</span><span class="n">setMaximumConstraintError</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Run FORM initialized at the mean of the distribution:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FORM</span><span class="p">(</span><span class="n">optimAlgo</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getMean</span><span class="p">())</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Probability of failure:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FORM estimate of the probability of failure: &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getEventProbability</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>FORM estimate of the probability of failure:  3.891496415542106e-06
+</pre></div>
+</div>
+<p>Design point in the standard space:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">designPointStandardSpace</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getStandardSpaceDesignPoint</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Design point in standard space : &quot;</span><span class="p">,</span> <span class="n">designPointStandardSpace</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Design point in standard space :  [0.292325,1.2089,1.28593,-0.286932,-2.85666,-1.8419,-2.03238,1.01191]
+</pre></div>
+</div>
+<p>Design point in the physical space:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Design point in physical space : &quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">getPhysicalSpaceDesignPoint</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Design point in physical space :  [1.53672,0.0112256,1.26498,0.00926413,0.0154449,0.00749384,22.3422,110.072]
+</pre></div>
+</div>
+<p>For this test case, in order to validate the results obtained by FORM, we can plot the cross cuts in the standard space near the design point found by FORM.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">distributionStandard</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">())</span>
+<span class="n">inverseIsoProbabilistic</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getInverseIsoProbabilisticTransformation</span><span class="p">()</span>
+<span class="n">standardSpaceLimitState</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ComposedFunction</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inverseIsoProbabilistic</span><span class="p">)</span>
+<span class="n">standardSpaceLimitStateFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">standardSpaceLimitState</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">lowerBound</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span>
+<span class="n">upperBound</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
+
+<span class="c1"># Definition of number of meshes in x and y axes for the 2D cross cut plots</span>
+<span class="n">nX</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">nY</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">my_labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;MPP&quot;</span><span class="p">:</span> <span class="s2">&quot;Design Point&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;O&quot;</span><span class="p">:</span> <span class="s2">&quot;Origin in Standard Space&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TLSF&quot;</span><span class="p">:</span> <span class="s2">&quot;True Limit State Function&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ALSF&quot;</span><span class="p">:</span> <span class="s2">&quot;Approximated Limit State Function&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">crossCutIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">crossCutReferencePoint</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">crossCutIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="c1"># Definition of the reference point</span>
+                <span class="n">crossCutReferencePoint</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="c1"># Definition of 2D cross cut function</span>
+        <span class="n">crossCutFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span>
+            <span class="n">standardSpaceLimitStateFunction</span><span class="p">,</span> <span class="n">crossCutIndices</span><span class="p">,</span> <span class="n">crossCutReferencePoint</span>
+        <span class="p">)</span>
+
+        <span class="n">crossCutLowerBound</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">lowerBound</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+            <span class="n">lowerBound</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="p">]</span>
+        <span class="n">crossCutUpperBound</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">upperBound</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+            <span class="n">upperBound</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="p">]</span>
+        <span class="c1"># Definition of the mesh</span>
+        <span class="n">inputData</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Box</span><span class="p">([</span><span class="n">nX</span><span class="p">,</span> <span class="n">nY</span><span class="p">])</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="n">inputData</span> <span class="o">*=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutUpperBound</span><span class="p">)</span> <span class="o">-</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">)</span>
+        <span class="n">inputData</span> <span class="o">+=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">)</span>
+        <span class="n">meshX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">meshY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">crossCutFunction</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+        <span class="n">meshZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">150</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">101</span><span class="p">)]</span>
+
+        <span class="c1"># Creation of the contour</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span> <span class="o">+</span> <span class="n">j</span>
+
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.add_subplot.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span></a><span class="p">(</span>
+            <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="n">index</span>
+        <span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.pcolormesh.html#matplotlib.axes.Axes.pcolormesh" title="matplotlib.axes.Axes.pcolormesh" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span></a><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span> <span class="n">meshZ</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;hsv&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+        <span class="n">cs0</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+            <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+            <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s2">&quot;o&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;MPP&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">cs1</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;rs&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">])</span>
+        <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.QuadContourSet" title="matplotlib.contour.QuadContourSet" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cs2</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="matplotlib.axes.Axes.contour" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">contour</span></a><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span> <span class="n">meshZ</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
+
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xticks.html#matplotlib.axes.Axes.set_xticks" title="matplotlib.axes.Axes.set_xticks" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span></a><span class="p">([])</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_yticks.html#matplotlib.axes.Axes.set_yticks" title="matplotlib.axes.Axes.set_yticks" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span></a><span class="p">([])</span>
+
+        <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearTaylor</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">crossCutFunction</span><span class="p">)</span>
+        <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">responseSurface</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+        <span class="n">data2</span> <span class="o">=</span> <span class="n">responseSurface</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+        <span class="n">meshZ2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+
+        <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.QuadContourSet" title="matplotlib.contour.QuadContourSet" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cs3</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="matplotlib.axes.Axes.contour" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">contour</span></a><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span> <span class="n">meshZ2</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Creation of axes title</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_ylabel.html#matplotlib.axes.Axes.set_ylabel" title="matplotlib.axes.Axes.set_ylabel" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span></a><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xlabel.html#matplotlib.axes.Axes.set_xlabel" title="matplotlib.axes.Axes.set_xlabel" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span></a><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">j</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.collections" title="matplotlib.contour.ContourSet.collections" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-property"><span class="n">cs2</span><span class="o">.</span><span class="n">collections</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;TLSF&quot;</span><span class="p">])</span>
+            <span class="n">h2</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.legend_elements" title="matplotlib.contour.ContourSet.legend_elements" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-method"><span class="n">cs2</span><span class="o">.</span><span class="n">legend_elements</span></a><span class="p">()</span>
+            <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.collections" title="matplotlib.contour.ContourSet.collections" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-property"><span class="n">cs3</span><span class="o">.</span><span class="n">collections</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;ALSF&quot;</span><span class="p">])</span>
+            <span class="n">h3</span><span class="p">,</span> <span class="n">l3</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.legend_elements" title="matplotlib.contour.ContourSet.legend_elements" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-method"><span class="n">cs3</span><span class="o">.</span><span class="n">legend_elements</span></a><span class="p">()</span>
+            <a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lg</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span>
+                <span class="p">[</span><span class="n">h2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h3</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;TLSF&quot;</span><span class="p">],</span> <span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;ALSF&quot;</span><span class="p">]],</span>
+                <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper center&quot;</span><span class="p">,</span>
+                <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lg1</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span>
+                <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper center&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">7.65</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">)</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_estimate_probability_form_oscillator_002.png" srcset="../../_images/sphx_glr_plot_estimate_probability_form_oscillator_002.png" alt="plot estimate probability form oscillator" class = "sphx-glr-single-img"/><p>As it can be seen, the curvature of the limit state function near the design point is significant.
+In that way, FORM provides poor estimate since it linearly approximates the limit state function.
+Thus, SORM can be used in order to refine this probability estimation by approximating the limit state function with a quadratic model.</p>
+</section>
+<section id="sorm-analysis">
+<h2>SORM Analysis<a class="headerlink" href="#sorm-analysis" title="Link to this heading">¶</a></h2>
+<p>Run SORM initialized at the mean of the distribution:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algoSORM</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SORM</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Cobyla</span><span class="p">(),</span> <span class="n">event</span><span class="p">,</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getMean</span><span class="p">())</span>
+<span class="n">algoSORM</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Analysis of SORM results:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">resultSORM</span> <span class="o">=</span> <span class="n">algoSORM</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Probability estimate with SORM (Breitung correction) =&quot;</span><span class="p">,</span>
+    <span class="n">resultSORM</span><span class="o">.</span><span class="n">getEventProbabilityBreitung</span><span class="p">(),</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Probability estimate with SORM (Hohenbichler correction) =&quot;</span><span class="p">,</span>
+    <span class="n">resultSORM</span><span class="o">.</span><span class="n">getEventProbabilityHohenbichler</span><span class="p">(),</span>
+<span class="p">)</span>
+
+<span class="n">optim_res</span> <span class="o">=</span> <span class="n">resultSORM</span><span class="o">.</span><span class="n">getOptimizationResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Simulation budget:&quot;</span><span class="p">,</span> <span class="n">optim_res</span><span class="o">.</span><span class="n">getCallsNumber</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Probability estimate with SORM (Breitung correction) = 3.8119422417743107e-07
+Probability estimate with SORM (Hohenbichler correction) = 3.6841954700676055e-07
+Simulation budget: 783
+</pre></div>
+</div>
+<p>One can see that the probability estimate has been decreased by a factor 10 compared to the FORM estimate.
+This probability is quite close to the reference probability and obtained with less than 1000 evaluations of the model.</p>
+<p>In order to visualize the SORM limit state approximation, we can draw cross cuts of SORM oscultating parabola using second order Taylor approximation.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">lowerBound</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span>
+<span class="n">upperBound</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span>
+
+<span class="c1"># Definition of number of meshes in x and y axes for the 2D cross cut plots</span>
+<span class="n">nX</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">nY</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">my_labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;MPP&quot;</span><span class="p">:</span> <span class="s2">&quot;Design Point&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;O&quot;</span><span class="p">:</span> <span class="s2">&quot;Origin in Standard Space&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TLSF&quot;</span><span class="p">:</span> <span class="s2">&quot;True Limit State Function&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ALSF&quot;</span><span class="p">:</span> <span class="s2">&quot;Approximated Limit State Function&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">crossCutIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">crossCutReferencePoint</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">i</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">crossCutIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="c1"># Definition of the reference point</span>
+                <span class="n">crossCutReferencePoint</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="c1"># Definition of 2D cross cut function</span>
+        <span class="n">crossCutFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span>
+            <span class="n">standardSpaceLimitStateFunction</span><span class="p">,</span> <span class="n">crossCutIndices</span><span class="p">,</span> <span class="n">crossCutReferencePoint</span>
+        <span class="p">)</span>
+
+        <span class="n">crossCutLowerBound</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">lowerBound</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+            <span class="n">lowerBound</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="p">]</span>
+        <span class="n">crossCutUpperBound</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">upperBound</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+            <span class="n">upperBound</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="p">]</span>
+        <span class="c1"># Definition of the mesh</span>
+        <span class="n">inputData</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Box</span><span class="p">([</span><span class="n">nX</span><span class="p">,</span> <span class="n">nY</span><span class="p">])</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="n">inputData</span> <span class="o">*=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutUpperBound</span><span class="p">)</span> <span class="o">-</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">)</span>
+        <span class="n">inputData</span> <span class="o">+=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">crossCutLowerBound</span><span class="p">)</span>
+        <span class="n">meshX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">meshY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputData</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">crossCutFunction</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+        <span class="n">meshZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">150</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">101</span><span class="p">)]</span>
+
+        <span class="c1"># Creation of the contour</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span> <span class="o">+</span> <span class="n">j</span>
+
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.add_subplot.html#matplotlib.figure.Figure.add_subplot" title="matplotlib.figure.Figure.add_subplot" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span></a><span class="p">(</span>
+            <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">(),</span> <span class="n">index</span>
+        <span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.pcolormesh.html#matplotlib.axes.Axes.pcolormesh" title="matplotlib.axes.Axes.pcolormesh" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span></a><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span> <span class="n">meshZ</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;hsv&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+        <span class="n">cs0</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+            <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+            <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s2">&quot;o&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;MPP&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">cs1</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;rs&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">])</span>
+        <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.QuadContourSet" title="matplotlib.contour.QuadContourSet" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cs2</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="matplotlib.axes.Axes.contour" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">contour</span></a><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span> <span class="n">meshZ</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xticks.html#matplotlib.axes.Axes.set_xticks" title="matplotlib.axes.Axes.set_xticks" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span></a><span class="p">([])</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_yticks.html#matplotlib.axes.Axes.set_yticks" title="matplotlib.axes.Axes.set_yticks" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span></a><span class="p">([])</span>
+
+        <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">designPointStandardSpace</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">QuadraticTaylor</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">crossCutFunction</span><span class="p">)</span>
+        <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">responseSurface</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+        <span class="n">data2</span> <span class="o">=</span> <span class="n">responseSurface</span><span class="p">(</span><span class="n">inputData</span><span class="p">)</span>
+        <span class="n">meshZ2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nX</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nY</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.QuadContourSet" title="matplotlib.contour.QuadContourSet" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cs3</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.contour.html#matplotlib.axes.Axes.contour" title="matplotlib.axes.Axes.contour" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">contour</span></a><span class="p">(</span><span class="n">meshX</span><span class="p">,</span> <span class="n">meshY</span><span class="p">,</span> <span class="n">meshZ2</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Creation of axes title</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_ylabel.html#matplotlib.axes.Axes.set_ylabel" title="matplotlib.axes.Axes.set_ylabel" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span></a><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xlabel.html#matplotlib.axes.Axes.set_xlabel" title="matplotlib.axes.Axes.set_xlabel" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span></a><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getDescription</span><span class="p">()[</span><span class="n">j</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.collections" title="matplotlib.contour.ContourSet.collections" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-property"><span class="n">cs2</span><span class="o">.</span><span class="n">collections</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;TLSF&quot;</span><span class="p">])</span>
+            <span class="n">h2</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.legend_elements" title="matplotlib.contour.ContourSet.legend_elements" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-method"><span class="n">cs2</span><span class="o">.</span><span class="n">legend_elements</span></a><span class="p">()</span>
+            <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.collections" title="matplotlib.contour.ContourSet.collections" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-property"><span class="n">cs3</span><span class="o">.</span><span class="n">collections</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;ALSF&quot;</span><span class="p">])</span>
+            <span class="n">h3</span><span class="p">,</span> <span class="n">l3</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/contour_api.html#matplotlib.contour.ContourSet.legend_elements" title="matplotlib.contour.ContourSet.legend_elements" class="sphx-glr-backref-module-matplotlib-contour sphx-glr-backref-type-py-method"><span class="n">cs3</span><span class="o">.</span><span class="n">legend_elements</span></a><span class="p">()</span>
+            <a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lg</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span>
+                <span class="p">[</span><span class="n">h2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h3</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="p">[</span><span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;TLSF&quot;</span><span class="p">],</span> <span class="n">my_labels</span><span class="p">[</span><span class="s2">&quot;ALSF&quot;</span><span class="p">]],</span>
+                <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper center&quot;</span><span class="p">,</span>
+                <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lg1</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span>
+                <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper center&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">7.65</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">)</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_estimate_probability_form_oscillator_003.png" srcset="../../_images/sphx_glr_plot_estimate_probability_form_oscillator_003.png" alt="plot estimate probability form oscillator" class = "sphx-glr-single-img"/><p>We can see that this approximation is very appropriate, explaining the accuracy of the obtained results.</p>
+</section>
+<section id="estimation-with-post-analytical-importance-sampling">
+<h2>Estimation with post analytical Importance Sampling<a class="headerlink" href="#estimation-with-post-analytical-importance-sampling" title="Link to this heading">¶</a></h2>
+<p>Different algorithms exist for the reliability analysis by Importance Sampling.
+One way is to perform post analytical Importance Sampling by defining the auxiliary density centered at the design point found by FORM.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">postAnalyticalIS</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PostAnalyticalImportanceSampling</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="n">postAnalyticalIS</span><span class="o">.</span><span class="n">setMaximumCoefficientOfVariation</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">postAnalyticalIS</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">resultPostAnalyticalIS</span> <span class="o">=</span> <span class="n">postAnalyticalIS</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Probability of failure with post analytical IS = &quot;</span><span class="p">,</span>
+    <span class="n">resultPostAnalyticalIS</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">(),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Probability of failure with post analytical IS =  3.948977006146584e-07
+</pre></div>
+</div>
+<p>We can see that this post-treatment of FORM result allows one to greatly improve the quality of the probability estimation.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.494 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-reliability-sensitivity-reliability-plot-estimate-probability-form-oscillator-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/452487099120eaf54f231b05b7fd7fc2/plot_estimate_probability_form_oscillator.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_estimate_probability_form_oscillator.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/a29756e634760593fbff282c6089464c/plot_estimate_probability_form_oscillator.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_estimate_probability_form_oscillator.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9b9d9194dc6d401cdd0b305ce7665892/plot_estimate_probability_form_oscillator.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_estimate_probability_form_oscillator.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../reliability_processes/index.html" title="Reliability processes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_form_explained.html" title="An illustrated example of a FORM probability estimate"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Reliability &amp; Sensitivity</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Reliability</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using the FORM - SORM algorithms on a nonlinear function</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 25, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

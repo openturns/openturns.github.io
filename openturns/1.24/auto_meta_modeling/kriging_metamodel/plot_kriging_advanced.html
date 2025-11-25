@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Advanced Kriging &#8212; OpenTURNS 1.24 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=eff3c53f"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Kriging : draw covariance models" href="plot_draw_covariance_models.html" />
+    <link rel="prev" title="Kriging: choose a polynomial trend" href="plot_kriging_chose_trend.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_draw_covariance_models.html" title="Kriging : draw covariance models"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_kriging_chose_trend.html" title="Kriging: choose a polynomial trend"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Kriging metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Advanced Kriging</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Advanced Kriging</a><ul>
+<li><a class="reference internal" href="#generate-design-of-experiments">Generate design of experiments</a></li>
+<li><a class="reference internal" href="#create-the-kriging-algorithm">Create the Kriging algorithm</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+<li><a class="reference internal" href="#display-the-confidence-interval">Display the confidence interval</a></li>
+<li><a class="reference internal" href="#generate-conditional-trajectories">Generate conditional trajectories</a></li>
+<li><a class="reference internal" href="#validation">Validation</a></li>
+<li><a class="reference internal" href="#nugget-effect">Nugget effect</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_kriging_chose_trend.html"
+                          title="previous chapter">Kriging: choose a polynomial trend</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_draw_covariance_models.html"
+                          title="next chapter">Kriging : draw covariance models</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_meta_modeling/kriging_metamodel/plot_kriging_advanced.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-advanced-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="advanced-kriging">
+<span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-kriging-advanced-py"></span><h1>Advanced Kriging<a class="headerlink" href="#advanced-kriging" title="Link to this heading">¶</a></h1>
+<p>In this example we will build a metamodel using Gaussian process regression of the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNC4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzM4Ljc3MzY2NnB0JyBoZWlnaHQ9JzExLjk1NTE2OHB0JyB2aWV3Qm94PScwIC04Ljk2NjM3NiAzOC43NzM2NjYgMTEuOTU1MTY4Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMS00MCcgZD0nTTMuODg1NDMgMi45MDUxMDZDMy44ODU0MyAyLjg2OTI0IDMuODg1NDMgMi44NDUzMyAzLjY4MjE5MiAyLjY0MjA5MkMyLjQ4NjY3NSAxLjQzNDYyIDEuODE3MTg2LS41Mzc5ODMgMS44MTcxODYtMi45NzY4MzdDMS44MTcxODYtNS4yOTYxMzkgMi4zNzkwNzgtNy4yOTI2NTMgMy43NjU4NzgtOC43MDMzNjJDMy44ODU0My04LjgxMDk1OSAzLjg4NTQzLTguODM0ODY5IDMuODg1NDMtOC44NzA3MzVDMy44ODU0My04Ljk0MjQ2NiAzLjgyNTY1NC04Ljk2NjM3NiAzLjc3NzgzMy04Ljk2NjM3NkMzLjYyMjQxNi04Ljk2NjM3NiAyLjY0MjA5Mi04LjEwNTYwNCAyLjA1NjI4OS02LjkzMzk5OEMxLjQ0NjU3NS01LjcyNjUyNiAxLjE3MTYwNi00LjQ0NzMyMyAxLjE3MTYwNi0yLjk3NjgzN0MxLjE3MTYwNi0xLjkxMjgyNyAxLjMzODk3OS0uNDkwMTYyIDEuOTYwNjQ4IC43ODkwNDFDMi42NjYwMDIgMi4yMjM2NjEgMy42NDYzMjYgMy4wMDA3NDcgMy43Nzc4MzMgMy4wMDA3NDdDMy44MjU2NTQgMy4wMDA3NDcgMy44ODU0MyAyLjk3NjgzNyAzLjg4NTQzIDIuOTA1MTA2WicvPgo8cGF0aCBpZD0nZzEtNDEnIGQ9J00zLjM3MTM1Ny0yLjk3NjgzN0MzLjM3MTM1Ny0zLjg4NTQzIDMuMjUxODA2LTUuMzY3ODcgMi41ODIzMTYtNi43NTQ2N0MxLjg3Njk2MS04LjE4OTI5IC44OTY2MzgtOC45NjYzNzYgLjc2NTEzMS04Ljk2NjM3NkMuNzE3MzEtOC45NjYzNzYgLjY1NzUzNC04Ljk0MjQ2NiAuNjU3NTM0LTguODcwNzM1Qy42NTc1MzQtOC44MzQ4NjkgLjY1NzUzNC04LjgxMDk1OSAuODYwNzcyLTguNjA3NzIxQzIuMDU2Mjg5LTcuNDAwMjQ5IDIuNzI1Nzc4LTUuNDI3NjQ2IDIuNzI1Nzc4LTIuOTg4NzkyQzIuNzI1Nzc4LS42Njk0ODkgMi4xNjM4ODUgMS4zMjcwMjQgLjc3NzA4NiAyLjczNzczM0MuNjU3NTM0IDIuODQ1MzMgLjY1NzUzNCAyLjg2OTI0IC42NTc1MzQgMi45MDUxMDZDLjY1NzUzNCAyLjk3NjgzNyAuNzE3MzEgMy4wMDA3NDcgLjc2NTEzMSAzLjAwMDc0N0MuOTIwNTQ4IDMuMDAwNzQ3IDEuOTAwODcyIDIuMTM5OTc1IDIuNDg2Njc1IC45NjgzNjlDMy4wOTYzODktLjI1MTA1OSAzLjM3MTM1Ny0xLjU0MjIxNyAzLjM3MTM1Ny0yLjk3NjgzN1onLz4KPHBhdGggaWQ9J2cxLTEwNScgZD0nTTIuMDgwMTk5LTcuMzY0Mzg0QzIuMDgwMTk5LTcuNjc1MjE4IDEuODI5MTQxLTcuOTUwMTg3IDEuNDk0Mzk2LTcuOTUwMTg3QzEuMTgzNTYyLTcuOTUwMTg3IC45MjA1NDgtNy42OTkxMjggLjkyMDU0OC03LjM3NjMzOUMuOTIwNTQ4LTcuMDE3Njg0IDEuMjA3NDcyLTYuNzkwNTM1IDEuNDk0Mzk2LTYuNzkwNTM1QzEuODY1MDA2LTYuNzkwNTM1IDIuMDgwMTk5LTcuMTAxMzcgMi4wODAxOTktNy4zNjQzODRaTS40MzAzODYtNS4xNDA3MjJWLTQuNzk0MDIyQzEuMTk1NTE3LTQuNzk0MDIyIDEuMzAzMTEzLTQuNzIyMjkxIDEuMzAzMTEzLTQuMTM2NDg4Vi0uODg0NjgyQzEuMzAzMTEzLS4zNDY3IDEuMTcxNjA2LS4zNDY3IC4zOTQ1MjEtLjM0NjdWMEMuNzI5MjY1LS4wMjM5MSAxLjMwMzExMy0uMDIzOTEgMS42NDk4MTMtLjAyMzkxQzEuNzgxMzItLjAyMzkxIDIuNDc0NzItLjAyMzkxIDIuODgxMTk2IDBWLS4zNDY3QzIuMTA0MTEtLjM0NjcgMi4wNTYyODktLjQwNjQ3NiAyLjA1NjI4OS0uODcyNzI3Vi01LjI3MjIyOUwuNDMwMzg2LTUuMTQwNzIyWicvPgo8cGF0aCBpZD0nZzEtMTEwJyBkPSdNNS4zMjAwNS0yLjkwNTEwNkM1LjMyMDA1LTQuMDE2OTM2IDUuMzIwMDUtNC4zNTE2ODEgNS4wNDUwODEtNC43MzQyNDdDNC42OTgzODEtNS4yMDA0OTggNC4xMzY0ODgtNS4yNzIyMjkgMy43MzAwMTItNS4yNzIyMjlDMi41NzAzNjEtNS4yNzIyMjkgMi4xMTYwNjUtNC4yNzk5NSAyLjAyMDQyMy00LjA0MDg0N0gyLjAwODQ2OFYtNS4yNzIyMjlMLjM4MjU2NS01LjE0MDcyMlYtNC43OTQwMjJDMS4xOTU1MTctNC43OTQwMjIgMS4yOTExNTgtNC43MTAzMzYgMS4yOTExNTgtNC4xMjQ1MzNWLS44ODQ2ODJDMS4yOTExNTgtLjM0NjcgMS4xNTk2NTEtLjM0NjcgLjM4MjU2NS0uMzQ2N1YwQy42OTM0LS4wMjM5MSAxLjMzODk3OS0uMDIzOTEgMS42NzM3MjQtLjAyMzkxQzIuMDIwNDIzLS4wMjM5MSAyLjY2NjAwMi0uMDIzOTEgMi45NzY4MzcgMFYtLjM0NjdDMi4yMTE3MDYtLjM0NjcgMi4wNjgyNDQtLjM0NjcgMi4wNjgyNDQtLjg4NDY4MlYtMy4xMDgzNDRDMi4wNjgyNDQtNC4zNjM2MzYgMi44OTMxNTEtNS4wMzMxMjYgMy42MzQzNzEtNS4wMzMxMjZTNC41NDI5NjQtNC40MjM0MTIgNC41NDI5NjQtMy42OTQxNDdWLS44ODQ2ODJDNC41NDI5NjQtLjM0NjcgNC40MTE0NTctLjM0NjcgMy42MzQzNzEtLjM0NjdWMEMzLjk0NTIwNS0uMDIzOTEgNC41OTA3ODUtLjAyMzkxIDQuOTI1NTI5LS4wMjM5MUM1LjI3MjIyOS0uMDIzOTEgNS45MTc4MDgtLjAyMzkxIDYuMjI4NjQzIDBWLS4zNDY3QzUuNjMwODg0LS4zNDY3IDUuMzMyMDA1LS4zNDY3IDUuMzIwMDUtLjcwNTM1NVYtMi45MDUxMDZaJy8+CjxwYXRoIGlkPSdnMS0xMTUnIGQ9J00zLjkyMTI5NS01LjA1NzAzNkMzLjkyMTI5NS01LjI3MjIyOSAzLjkyMTI5NS01LjMzMjAwNSAzLjgwMTc0My01LjMzMjAwNUMzLjcwNjEwMi01LjMzMjAwNSAzLjQ3ODk1NC01LjA2ODk5MSAzLjM5NTI2OC00Ljk2MTM5NUMzLjAyNDY1OC01LjI2MDI3NCAyLjY1NDA0Ny01LjMzMjAwNSAyLjI3MTQ4Mi01LjMzMjAwNUMuODI0OTA3LTUuMzMyMDA1IC4zOTQ1MjEtNC41NDI5NjQgLjM5NDUyMS0zLjg4NTQzQy4zOTQ1MjEtMy43NTM5MjMgLjM5NDUyMS0zLjMzNTQ5MiAuODQ4ODE3LTIuOTE3MDYxQzEuMjMxMzgyLTIuNTgyMzE2IDEuNjM3ODU4LTIuNDk4NjMgMi4xODc3OTYtMi4zOTEwMzRDMi44NDUzMy0yLjI1OTUyNyAzLjAwMDc0Ny0yLjIyMzY2MSAzLjI5OTYyNi0xLjk4NDU1OEMzLjUxNDgxOS0xLjgwNTIzIDMuNjcwMjM3LTEuNTQyMjE3IDMuNjcwMjM3LTEuMjA3NDcyQzMuNjcwMjM3LS42OTM0IDMuMzcxMzU3LS4xMTk1NTIgMi4zMTkzMDMtLjExOTU1MkMxLjUzMDI2Mi0uMTE5NTUyIC45NTY0MTMtLjU3Mzg0OCAuNjkzNC0xLjc2OTM2NUMuNjQ1NTc5LTEuOTg0NTU4IC42NDU1NzktMS45OTY1MTMgLjYzMzYyNC0yLjAwODQ2OEMuNjA5NzE0LTIuMDU2Mjg5IC41NjE4OTMtMi4wNTYyODkgLjUyNjAyNy0yLjA1NjI4OUMuMzk0NTIxLTIuMDU2Mjg5IC4zOTQ1MjEtMS45OTY1MTMgLjM5NDUyMS0xLjc4MTMyVi0uMTU1NDE3Qy4zOTQ1MjEgLjA1OTc3NiAuMzk0NTIxIC4xMTk1NTIgLjUxNDA3MiAuMTE5NTUyQy41NzM4NDggLjExOTU1MiAuNTg1ODAzIC4xMDc1OTcgLjc4OTA0MS0uMTQzNDYyQy44NDg4MTctLjIyNzE0OCAuODQ4ODE3LS4yNTEwNTkgMS4wMjgxNDQtLjQ0MjM0MUMxLjQ4MjQ0MSAuMTE5NTUyIDIuMTI4MDIgLjExOTU1MiAyLjMzMTI1OCAuMTE5NTUyQzMuNTg2NTUgLjExOTU1MiA0LjIwODIxOS0uNTczODQ4IDQuMjA4MjE5LTEuNTE4MzA2QzQuMjA4MjE5LTIuMTYzODg1IDMuODEzNjk5LTIuNTQ2NDUxIDMuNzA2MTAyLTIuNjU0MDQ3QzMuMjc1NzE2LTMuMDI0NjU4IDIuOTUyOTI3LTMuMDk2Mzg5IDIuMTYzODg1LTMuMjM5ODUxQzEuODA1MjMtMy4zMTE1ODIgLjkzMjUwMy0zLjQ3ODk1NCAuOTMyNTAzLTQuMTk2MjY0Qy45MzI1MDMtNC41NjY4NzQgMS4xODM1NjItNS4xMTY4MTIgMi4yNTk1MjctNS4xMTY4MTJDMy41NjI2NC01LjExNjgxMiAzLjYzNDM3MS00LjAwNDk4MSAzLjY1ODI4MS0zLjYzNDM3MUMzLjY3MDIzNy0zLjUzODczIDMuNzUzOTIzLTMuNTM4NzMgMy43ODk3ODgtMy41Mzg3M0MzLjkyMTI5NS0zLjUzODczIDMuOTIxMjk1LTMuNTk4NTA2IDMuOTIxMjk1LTMuODEzNjk5Vi01LjA1NzAzNlonLz4KPHBhdGggaWQ9J2cwLTEyMCcgZD0nTTUuNjY2NzUtNC44Nzc3MDlDNS4yODQxODQtNC44MDU5NzggNS4xNDA3MjItNC41MTkwNTQgNS4xNDA3MjItNC4yOTE5MDVDNS4xNDA3MjItNC4wMDQ5ODEgNS4zNjc4Ny0zLjkwOTM0IDUuNTM1MjQzLTMuOTA5MzRDNS44OTM4OTgtMy45MDkzNCA2LjE0NDk1Ni00LjIyMDE3NCA2LjE0NDk1Ni00LjU0Mjk2NEM2LjE0NDk1Ni01LjA0NTA4MSA1LjU3MTEwOC01LjI3MjIyOSA1LjA2ODk5MS01LjI3MjIyOUM0LjMzOTcyNi01LjI3MjIyOSAzLjkzMzI1LTQuNTU0OTE5IDMuODI1NjU0LTQuMzI3NzcxQzMuNTUwNjg1LTUuMjI0NDA4IDIuODA5NDY1LTUuMjcyMjI5IDIuNTk0MjcxLTUuMjcyMjI5QzEuMzc0ODQ0LTUuMjcyMjI5IC43MjkyNjUtMy43MDYxMDIgLjcyOTI2NS0zLjQ0MzA4OEMuNzI5MjY1LTMuMzk1MjY4IC43NzcwODYtMy4zMzU0OTIgLjg2MDc3Mi0zLjMzNTQ5MkMuOTU2NDEzLTMuMzM1NDkyIC45ODAzMjQtMy40MDcyMjMgMS4wMDQyMzQtMy40NTUwNDRDMS40MTA3MS00Ljc4MjA2NyAyLjIxMTcwNi01LjAzMzEyNiAyLjU1ODQwNi01LjAzMzEyNkMzLjA5NjM4OS01LjAzMzEyNiAzLjIwMzk4NS00LjUzMTAwOSAzLjIwMzk4NS00LjI0NDA4NUMzLjIwMzk4NS0zLjk4MTA3MSAzLjEzMjI1NC0zLjcwNjEwMiAyLjk4ODc5Mi0zLjEzMjI1NEwyLjU4MjMxNi0xLjQ5NDM5NkMyLjQwMjk4OS0uNzc3MDg2IDIuMDU2Mjg5LS4xMTk1NTIgMS40MjI2NjUtLjExOTU1MkMxLjM2Mjg4OS0uMTE5NTUyIDEuMDY0MDEtLjExOTU1MiAuODEyOTUxLS4yNzQ5NjlDMS4yNDMzMzctLjM1ODY1NSAxLjMzODk3OS0uNzE3MzEgMS4zMzg5NzktLjg2MDc3MkMxLjMzODk3OS0xLjA5OTg3NSAxLjE1OTY1MS0xLjI0MzMzNyAuOTMyNTAzLTEuMjQzMzM3Qy42NDU1NzktMS4yNDMzMzcgLjMzNDc0NS0uOTkyMjc5IC4zMzQ3NDUtLjYwOTcxNEMuMzM0NzQ1LS4xMDc1OTcgLjg5NjYzOCAuMTE5NTUyIDEuNDEwNzEgLjExOTU1MkMxLjk4NDU1OCAuMTE5NTUyIDIuMzkxMDM0LS4zMzQ3NDUgMi42NDIwOTItLjgyNDkwN0MyLjgzMzM3NS0uMTE5NTUyIDMuNDMxMTMzIC4xMTk1NTIgMy44NzM0NzQgLjExOTU1MkM1LjA5MjkwMiAuMTE5NTUyIDUuNzM4NDgxLTEuNDQ2NTc1IDUuNzM4NDgxLTEuNzA5NTg5QzUuNzM4NDgxLTEuNzY5MzY1IDUuNjkwNjYtMS44MTcxODYgNS42MTg5MjktMS44MTcxODZDNS41MTEzMzMtMS44MTcxODYgNS40OTkzNzctMS43NTc0MSA1LjQ2MzUxMi0xLjY2MTc2OEM1LjE0MDcyMi0uNjA5NzE0IDQuNDQ3MzIzLS4xMTk1NTIgMy45MDkzNC0uMTE5NTUyQzMuNDkwOTA5LS4xMTk1NTIgMy4yNjM3NjEtLjQzMDM4NiAzLjI2Mzc2MS0uOTIwNTQ4QzMuMjYzNzYxLTEuMTgzNTYyIDMuMzExNTgyLTEuMzc0ODQ0IDMuNTAyODY0LTIuMTYzODg1TDMuOTIxMjk1LTMuNzg5Nzg4QzQuMTAwNjIzLTQuNTA3MDk4IDQuNTA3MDk4LTUuMDMzMTI2IDUuMDU3MDM2LTUuMDMzMTI2QzUuMDgwOTQ2LTUuMDMzMTI2IDUuNDE1NjkxLTUuMDMzMTI2IDUuNjY2NzUtNC44Nzc3MDlaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzAtMTIwJy8+Cjx1c2UgeD0nOC42NDQ1ODUnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMTUnLz4KPHVzZSB4PScxMy4yNjE5NDQnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMDUnLz4KPHVzZSB4PScxNi41MTM2MDUnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMTAnLz4KPHVzZSB4PScyMy4wMTY5MjcnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS00MCcvPgo8dXNlIHg9JzI3LjU2OTI1MycgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTEyMCcvPgo8dXNlIHg9JzM0LjIyMTM0JyB5PScwJyB4bGluazpocmVmPScjZzEtNDEnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD00IC0tPg==" alt="x\sin(x)" style="vertical-align: -4px"/> function.</p>
+<p>We will choose the number of learning points, the basis and the covariance model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">from</span> <span class="nn">openturns.viewer</span> <span class="kn">import</span> <span class="n">View</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
+
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="generate-design-of-experiments">
+<h2>Generate design of experiments<a class="headerlink" href="#generate-design-of-experiments" title="Link to this heading">¶</a></h2>
+<p>We create training samples from the function <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNC4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzM4Ljc3MzY2NnB0JyBoZWlnaHQ9JzExLjk1NTE2OHB0JyB2aWV3Qm94PScwIC04Ljk2NjM3NiAzOC43NzM2NjYgMTEuOTU1MTY4Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMS00MCcgZD0nTTMuODg1NDMgMi45MDUxMDZDMy44ODU0MyAyLjg2OTI0IDMuODg1NDMgMi44NDUzMyAzLjY4MjE5MiAyLjY0MjA5MkMyLjQ4NjY3NSAxLjQzNDYyIDEuODE3MTg2LS41Mzc5ODMgMS44MTcxODYtMi45NzY4MzdDMS44MTcxODYtNS4yOTYxMzkgMi4zNzkwNzgtNy4yOTI2NTMgMy43NjU4NzgtOC43MDMzNjJDMy44ODU0My04LjgxMDk1OSAzLjg4NTQzLTguODM0ODY5IDMuODg1NDMtOC44NzA3MzVDMy44ODU0My04Ljk0MjQ2NiAzLjgyNTY1NC04Ljk2NjM3NiAzLjc3NzgzMy04Ljk2NjM3NkMzLjYyMjQxNi04Ljk2NjM3NiAyLjY0MjA5Mi04LjEwNTYwNCAyLjA1NjI4OS02LjkzMzk5OEMxLjQ0NjU3NS01LjcyNjUyNiAxLjE3MTYwNi00LjQ0NzMyMyAxLjE3MTYwNi0yLjk3NjgzN0MxLjE3MTYwNi0xLjkxMjgyNyAxLjMzODk3OS0uNDkwMTYyIDEuOTYwNjQ4IC43ODkwNDFDMi42NjYwMDIgMi4yMjM2NjEgMy42NDYzMjYgMy4wMDA3NDcgMy43Nzc4MzMgMy4wMDA3NDdDMy44MjU2NTQgMy4wMDA3NDcgMy44ODU0MyAyLjk3NjgzNyAzLjg4NTQzIDIuOTA1MTA2WicvPgo8cGF0aCBpZD0nZzEtNDEnIGQ9J00zLjM3MTM1Ny0yLjk3NjgzN0MzLjM3MTM1Ny0zLjg4NTQzIDMuMjUxODA2LTUuMzY3ODcgMi41ODIzMTYtNi43NTQ2N0MxLjg3Njk2MS04LjE4OTI5IC44OTY2MzgtOC45NjYzNzYgLjc2NTEzMS04Ljk2NjM3NkMuNzE3MzEtOC45NjYzNzYgLjY1NzUzNC04Ljk0MjQ2NiAuNjU3NTM0LTguODcwNzM1Qy42NTc1MzQtOC44MzQ4NjkgLjY1NzUzNC04LjgxMDk1OSAuODYwNzcyLTguNjA3NzIxQzIuMDU2Mjg5LTcuNDAwMjQ5IDIuNzI1Nzc4LTUuNDI3NjQ2IDIuNzI1Nzc4LTIuOTg4NzkyQzIuNzI1Nzc4LS42Njk0ODkgMi4xNjM4ODUgMS4zMjcwMjQgLjc3NzA4NiAyLjczNzczM0MuNjU3NTM0IDIuODQ1MzMgLjY1NzUzNCAyLjg2OTI0IC42NTc1MzQgMi45MDUxMDZDLjY1NzUzNCAyLjk3NjgzNyAuNzE3MzEgMy4wMDA3NDcgLjc2NTEzMSAzLjAwMDc0N0MuOTIwNTQ4IDMuMDAwNzQ3IDEuOTAwODcyIDIuMTM5OTc1IDIuNDg2Njc1IC45NjgzNjlDMy4wOTYzODktLjI1MTA1OSAzLjM3MTM1Ny0xLjU0MjIxNyAzLjM3MTM1Ny0yLjk3NjgzN1onLz4KPHBhdGggaWQ9J2cxLTEwNScgZD0nTTIuMDgwMTk5LTcuMzY0Mzg0QzIuMDgwMTk5LTcuNjc1MjE4IDEuODI5MTQxLTcuOTUwMTg3IDEuNDk0Mzk2LTcuOTUwMTg3QzEuMTgzNTYyLTcuOTUwMTg3IC45MjA1NDgtNy42OTkxMjggLjkyMDU0OC03LjM3NjMzOUMuOTIwNTQ4LTcuMDE3Njg0IDEuMjA3NDcyLTYuNzkwNTM1IDEuNDk0Mzk2LTYuNzkwNTM1QzEuODY1MDA2LTYuNzkwNTM1IDIuMDgwMTk5LTcuMTAxMzcgMi4wODAxOTktNy4zNjQzODRaTS40MzAzODYtNS4xNDA3MjJWLTQuNzk0MDIyQzEuMTk1NTE3LTQuNzk0MDIyIDEuMzAzMTEzLTQuNzIyMjkxIDEuMzAzMTEzLTQuMTM2NDg4Vi0uODg0NjgyQzEuMzAzMTEzLS4zNDY3IDEuMTcxNjA2LS4zNDY3IC4zOTQ1MjEtLjM0NjdWMEMuNzI5MjY1LS4wMjM5MSAxLjMwMzExMy0uMDIzOTEgMS42NDk4MTMtLjAyMzkxQzEuNzgxMzItLjAyMzkxIDIuNDc0NzItLjAyMzkxIDIuODgxMTk2IDBWLS4zNDY3QzIuMTA0MTEtLjM0NjcgMi4wNTYyODktLjQwNjQ3NiAyLjA1NjI4OS0uODcyNzI3Vi01LjI3MjIyOUwuNDMwMzg2LTUuMTQwNzIyWicvPgo8cGF0aCBpZD0nZzEtMTEwJyBkPSdNNS4zMjAwNS0yLjkwNTEwNkM1LjMyMDA1LTQuMDE2OTM2IDUuMzIwMDUtNC4zNTE2ODEgNS4wNDUwODEtNC43MzQyNDdDNC42OTgzODEtNS4yMDA0OTggNC4xMzY0ODgtNS4yNzIyMjkgMy43MzAwMTItNS4yNzIyMjlDMi41NzAzNjEtNS4yNzIyMjkgMi4xMTYwNjUtNC4yNzk5NSAyLjAyMDQyMy00LjA0MDg0N0gyLjAwODQ2OFYtNS4yNzIyMjlMLjM4MjU2NS01LjE0MDcyMlYtNC43OTQwMjJDMS4xOTU1MTctNC43OTQwMjIgMS4yOTExNTgtNC43MTAzMzYgMS4yOTExNTgtNC4xMjQ1MzNWLS44ODQ2ODJDMS4yOTExNTgtLjM0NjcgMS4xNTk2NTEtLjM0NjcgLjM4MjU2NS0uMzQ2N1YwQy42OTM0LS4wMjM5MSAxLjMzODk3OS0uMDIzOTEgMS42NzM3MjQtLjAyMzkxQzIuMDIwNDIzLS4wMjM5MSAyLjY2NjAwMi0uMDIzOTEgMi45NzY4MzcgMFYtLjM0NjdDMi4yMTE3MDYtLjM0NjcgMi4wNjgyNDQtLjM0NjcgMi4wNjgyNDQtLjg4NDY4MlYtMy4xMDgzNDRDMi4wNjgyNDQtNC4zNjM2MzYgMi44OTMxNTEtNS4wMzMxMjYgMy42MzQzNzEtNS4wMzMxMjZTNC41NDI5NjQtNC40MjM0MTIgNC41NDI5NjQtMy42OTQxNDdWLS44ODQ2ODJDNC41NDI5NjQtLjM0NjcgNC40MTE0NTctLjM0NjcgMy42MzQzNzEtLjM0NjdWMEMzLjk0NTIwNS0uMDIzOTEgNC41OTA3ODUtLjAyMzkxIDQuOTI1NTI5LS4wMjM5MUM1LjI3MjIyOS0uMDIzOTEgNS45MTc4MDgtLjAyMzkxIDYuMjI4NjQzIDBWLS4zNDY3QzUuNjMwODg0LS4zNDY3IDUuMzMyMDA1LS4zNDY3IDUuMzIwMDUtLjcwNTM1NVYtMi45MDUxMDZaJy8+CjxwYXRoIGlkPSdnMS0xMTUnIGQ9J00zLjkyMTI5NS01LjA1NzAzNkMzLjkyMTI5NS01LjI3MjIyOSAzLjkyMTI5NS01LjMzMjAwNSAzLjgwMTc0My01LjMzMjAwNUMzLjcwNjEwMi01LjMzMjAwNSAzLjQ3ODk1NC01LjA2ODk5MSAzLjM5NTI2OC00Ljk2MTM5NUMzLjAyNDY1OC01LjI2MDI3NCAyLjY1NDA0Ny01LjMzMjAwNSAyLjI3MTQ4Mi01LjMzMjAwNUMuODI0OTA3LTUuMzMyMDA1IC4zOTQ1MjEtNC41NDI5NjQgLjM5NDUyMS0zLjg4NTQzQy4zOTQ1MjEtMy43NTM5MjMgLjM5NDUyMS0zLjMzNTQ5MiAuODQ4ODE3LTIuOTE3MDYxQzEuMjMxMzgyLTIuNTgyMzE2IDEuNjM3ODU4LTIuNDk4NjMgMi4xODc3OTYtMi4zOTEwMzRDMi44NDUzMy0yLjI1OTUyNyAzLjAwMDc0Ny0yLjIyMzY2MSAzLjI5OTYyNi0xLjk4NDU1OEMzLjUxNDgxOS0xLjgwNTIzIDMuNjcwMjM3LTEuNTQyMjE3IDMuNjcwMjM3LTEuMjA3NDcyQzMuNjcwMjM3LS42OTM0IDMuMzcxMzU3LS4xMTk1NTIgMi4zMTkzMDMtLjExOTU1MkMxLjUzMDI2Mi0uMTE5NTUyIC45NTY0MTMtLjU3Mzg0OCAuNjkzNC0xLjc2OTM2NUMuNjQ1NTc5LTEuOTg0NTU4IC42NDU1NzktMS45OTY1MTMgLjYzMzYyNC0yLjAwODQ2OEMuNjA5NzE0LTIuMDU2Mjg5IC41NjE4OTMtMi4wNTYyODkgLjUyNjAyNy0yLjA1NjI4OUMuMzk0NTIxLTIuMDU2Mjg5IC4zOTQ1MjEtMS45OTY1MTMgLjM5NDUyMS0xLjc4MTMyVi0uMTU1NDE3Qy4zOTQ1MjEgLjA1OTc3NiAuMzk0NTIxIC4xMTk1NTIgLjUxNDA3MiAuMTE5NTUyQy41NzM4NDggLjExOTU1MiAuNTg1ODAzIC4xMDc1OTcgLjc4OTA0MS0uMTQzNDYyQy44NDg4MTctLjIyNzE0OCAuODQ4ODE3LS4yNTEwNTkgMS4wMjgxNDQtLjQ0MjM0MUMxLjQ4MjQ0MSAuMTE5NTUyIDIuMTI4MDIgLjExOTU1MiAyLjMzMTI1OCAuMTE5NTUyQzMuNTg2NTUgLjExOTU1MiA0LjIwODIxOS0uNTczODQ4IDQuMjA4MjE5LTEuNTE4MzA2QzQuMjA4MjE5LTIuMTYzODg1IDMuODEzNjk5LTIuNTQ2NDUxIDMuNzA2MTAyLTIuNjU0MDQ3QzMuMjc1NzE2LTMuMDI0NjU4IDIuOTUyOTI3LTMuMDk2Mzg5IDIuMTYzODg1LTMuMjM5ODUxQzEuODA1MjMtMy4zMTE1ODIgLjkzMjUwMy0zLjQ3ODk1NCAuOTMyNTAzLTQuMTk2MjY0Qy45MzI1MDMtNC41NjY4NzQgMS4xODM1NjItNS4xMTY4MTIgMi4yNTk1MjctNS4xMTY4MTJDMy41NjI2NC01LjExNjgxMiAzLjYzNDM3MS00LjAwNDk4MSAzLjY1ODI4MS0zLjYzNDM3MUMzLjY3MDIzNy0zLjUzODczIDMuNzUzOTIzLTMuNTM4NzMgMy43ODk3ODgtMy41Mzg3M0MzLjkyMTI5NS0zLjUzODczIDMuOTIxMjk1LTMuNTk4NTA2IDMuOTIxMjk1LTMuODEzNjk5Vi01LjA1NzAzNlonLz4KPHBhdGggaWQ9J2cwLTEyMCcgZD0nTTUuNjY2NzUtNC44Nzc3MDlDNS4yODQxODQtNC44MDU5NzggNS4xNDA3MjItNC41MTkwNTQgNS4xNDA3MjItNC4yOTE5MDVDNS4xNDA3MjItNC4wMDQ5ODEgNS4zNjc4Ny0zLjkwOTM0IDUuNTM1MjQzLTMuOTA5MzRDNS44OTM4OTgtMy45MDkzNCA2LjE0NDk1Ni00LjIyMDE3NCA2LjE0NDk1Ni00LjU0Mjk2NEM2LjE0NDk1Ni01LjA0NTA4MSA1LjU3MTEwOC01LjI3MjIyOSA1LjA2ODk5MS01LjI3MjIyOUM0LjMzOTcyNi01LjI3MjIyOSAzLjkzMzI1LTQuNTU0OTE5IDMuODI1NjU0LTQuMzI3NzcxQzMuNTUwNjg1LTUuMjI0NDA4IDIuODA5NDY1LTUuMjcyMjI5IDIuNTk0MjcxLTUuMjcyMjI5QzEuMzc0ODQ0LTUuMjcyMjI5IC43MjkyNjUtMy43MDYxMDIgLjcyOTI2NS0zLjQ0MzA4OEMuNzI5MjY1LTMuMzk1MjY4IC43NzcwODYtMy4zMzU0OTIgLjg2MDc3Mi0zLjMzNTQ5MkMuOTU2NDEzLTMuMzM1NDkyIC45ODAzMjQtMy40MDcyMjMgMS4wMDQyMzQtMy40NTUwNDRDMS40MTA3MS00Ljc4MjA2NyAyLjIxMTcwNi01LjAzMzEyNiAyLjU1ODQwNi01LjAzMzEyNkMzLjA5NjM4OS01LjAzMzEyNiAzLjIwMzk4NS00LjUzMTAwOSAzLjIwMzk4NS00LjI0NDA4NUMzLjIwMzk4NS0zLjk4MTA3MSAzLjEzMjI1NC0zLjcwNjEwMiAyLjk4ODc5Mi0zLjEzMjI1NEwyLjU4MjMxNi0xLjQ5NDM5NkMyLjQwMjk4OS0uNzc3MDg2IDIuMDU2Mjg5LS4xMTk1NTIgMS40MjI2NjUtLjExOTU1MkMxLjM2Mjg4OS0uMTE5NTUyIDEuMDY0MDEtLjExOTU1MiAuODEyOTUxLS4yNzQ5NjlDMS4yNDMzMzctLjM1ODY1NSAxLjMzODk3OS0uNzE3MzEgMS4zMzg5NzktLjg2MDc3MkMxLjMzODk3OS0xLjA5OTg3NSAxLjE1OTY1MS0xLjI0MzMzNyAuOTMyNTAzLTEuMjQzMzM3Qy42NDU1NzktMS4yNDMzMzcgLjMzNDc0NS0uOTkyMjc5IC4zMzQ3NDUtLjYwOTcxNEMuMzM0NzQ1LS4xMDc1OTcgLjg5NjYzOCAuMTE5NTUyIDEuNDEwNzEgLjExOTU1MkMxLjk4NDU1OCAuMTE5NTUyIDIuMzkxMDM0LS4zMzQ3NDUgMi42NDIwOTItLjgyNDkwN0MyLjgzMzM3NS0uMTE5NTUyIDMuNDMxMTMzIC4xMTk1NTIgMy44NzM0NzQgLjExOTU1MkM1LjA5MjkwMiAuMTE5NTUyIDUuNzM4NDgxLTEuNDQ2NTc1IDUuNzM4NDgxLTEuNzA5NTg5QzUuNzM4NDgxLTEuNzY5MzY1IDUuNjkwNjYtMS44MTcxODYgNS42MTg5MjktMS44MTcxODZDNS41MTEzMzMtMS44MTcxODYgNS40OTkzNzctMS43NTc0MSA1LjQ2MzUxMi0xLjY2MTc2OEM1LjE0MDcyMi0uNjA5NzE0IDQuNDQ3MzIzLS4xMTk1NTIgMy45MDkzNC0uMTE5NTUyQzMuNDkwOTA5LS4xMTk1NTIgMy4yNjM3NjEtLjQzMDM4NiAzLjI2Mzc2MS0uOTIwNTQ4QzMuMjYzNzYxLTEuMTgzNTYyIDMuMzExNTgyLTEuMzc0ODQ0IDMuNTAyODY0LTIuMTYzODg1TDMuOTIxMjk1LTMuNzg5Nzg4QzQuMTAwNjIzLTQuNTA3MDk4IDQuNTA3MDk4LTUuMDMzMTI2IDUuMDU3MDM2LTUuMDMzMTI2QzUuMDgwOTQ2LTUuMDMzMTI2IDUuNDE1NjkxLTUuMDMzMTI2IDUuNjY2NzUtNC44Nzc3MDlaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzAtMTIwJy8+Cjx1c2UgeD0nOC42NDQ1ODUnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMTUnLz4KPHVzZSB4PScxMy4yNjE5NDQnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMDUnLz4KPHVzZSB4PScxNi41MTM2MDUnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMTAnLz4KPHVzZSB4PScyMy4wMTY5MjcnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS00MCcvPgo8dXNlIHg9JzI3LjU2OTI1MycgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTEyMCcvPgo8dXNlIHg9JzM0LjIyMTM0JyB5PScwJyB4bGluazpocmVmPScjZzEtNDEnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD00IC0tPg==" alt="x\sin(x)" style="vertical-align: -4px"/>. We can change their number and distribution in the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNC4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzI5LjMwNjQ1MnB0JyBoZWlnaHQ9JzExLjk1NTE2OHB0JyB2aWV3Qm94PScwIC04Ljk2NjM3NiAyOS4zMDY0NTIgMTEuOTU1MTY4Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMC00OCcgZD0nTTUuMzU1OTE1LTMuODI1NjU0QzUuMzU1OTE1LTQuODE3OTMzIDUuMjk2MTM5LTUuNzg2MzAxIDQuODY1NzUzLTYuNjk0ODk0QzQuMzc1NTkyLTcuNjg3MTczIDMuNTE0ODE5LTcuOTUwMTg3IDIuOTI5MDE2LTcuOTUwMTg3QzIuMjM1NjE2LTcuOTUwMTg3IDEuMzg2OC03LjYwMzQ4NyAuOTQ0NDU4LTYuNjExMjA4Qy42MDk3MTQtNS44NTgwMzIgLjQ5MDE2Mi01LjExNjgxMiAuNDkwMTYyLTMuODI1NjU0Qy40OTAxNjItMi42NjYwMDIgLjU3Mzg0OC0xLjc5MzI3NSAxLjAwNDIzNC0uOTQ0NDU4QzEuNDcwNDg2LS4wMzU4NjYgMi4yOTUzOTIgLjI1MTA1OSAyLjkxNzA2MSAuMjUxMDU5QzMuOTU3MTYxIC4yNTEwNTkgNC41NTQ5MTktLjM3MDYxIDQuOTAxNjE5LTEuMDY0MDFDNS4zMzIwMDUtMS45NjA2NDggNS4zNTU5MTUtMy4xMzIyNTQgNS4zNTU5MTUtMy44MjU2NTRaTTIuOTE3MDYxIC4wMTE5NTVDMi41MzQ0OTYgLjAxMTk1NSAxLjc1NzQxLS4yMDMyMzggMS41MzAyNjItMS41MDYzNTFDMS4zOTg3NTUtMi4yMjM2NjEgMS4zOTg3NTUtMy4xMzIyNTQgMS4zOTg3NTUtMy45NjkxMTZDMS4zOTg3NTUtNC45NDk0NCAxLjM5ODc1NS01LjgzNDEyMiAxLjU5MDAzNy02LjUzOTQ3N0MxLjc5MzI3NS03LjM0MDQ3MyAyLjQwMjk4OS03LjcxMTA4MyAyLjkxNzA2MS03LjcxMTA4M0MzLjM3MTM1Ny03LjcxMTA4MyA0LjA2NDc1Ny03LjQzNjExNSA0LjI5MTkwNS02LjQwNzk3QzQuNDQ3MzIzLTUuNzI2NTI2IDQuNDQ3MzIzLTQuNzgyMDY3IDQuNDQ3MzIzLTMuOTY5MTE2QzQuNDQ3MzIzLTMuMTY4MTIgNC40NDczMjMtMi4yNTk1MjcgNC4zMTU4MTYtMS41MzAyNjJDNC4wODg2NjctLjIxNTE5MyAzLjMzNTQ5MiAuMDExOTU1IDIuOTE3MDYxIC4wMTE5NTVaJy8+CjxwYXRoIGlkPSdnMC00OScgZD0nTTMuNDQzMDg4LTcuNjYzMjYzQzMuNDQzMDg4LTcuOTM4MjMyIDMuNDQzMDg4LTcuOTUwMTg3IDMuMjAzOTg1LTcuOTUwMTg3QzIuOTE3MDYxLTcuNjI3Mzk3IDIuMzE5MzAzLTcuMTg1MDU2IDEuMDg3OTItNy4xODUwNTZWLTYuODM4MzU2QzEuMzYyODg5LTYuODM4MzU2IDEuOTYwNjQ4LTYuODM4MzU2IDIuNjE4MTgyLTcuMTQ5MTkxVi0uOTIwNTQ4QzIuNjE4MTgyLS40OTAxNjIgMi41ODIzMTYtLjM0NjcgMS41MzAyNjItLjM0NjdIMS4xNTk2NTFWMEMxLjQ4MjQ0MS0uMDIzOTEgMi42NDIwOTItLjAyMzkxIDMuMDM2NjEzLS4wMjM5MVM0LjU3ODgyOS0uMDIzOTEgNC45MDE2MTkgMFYtLjM0NjdINC41MzEwMDlDMy40Nzg5NTQtLjM0NjcgMy40NDMwODgtLjQ5MDE2MiAzLjQ0MzA4OC0uOTIwNTQ4Vi03LjY2MzI2M1onLz4KPHBhdGggaWQ9J2cwLTU5JyBkPSdNMi4xOTk3NTEtNC41Nzg4MjlDMi4xOTk3NTEtNC45MDE2MTkgMS45MjQ3ODItNS4xNTI2NzcgMS42MjU5MDMtNS4xNTI2NzdDMS4yNzkyMDMtNS4xNTI2NzcgMS4wNDAxLTQuODc3NzA5IDEuMDQwMS00LjU3ODgyOUMxLjA0MDEtNC4yMjAxNzQgMS4zMzg5NzktMy45OTMwMjYgMS42MTM5NDgtMy45OTMwMjZDMS45MzY3MzctMy45OTMwMjYgMi4xOTk3NTEtNC4yNDQwODUgMi4xOTk3NTEtNC41Nzg4MjlaTTEuOTk2NTEzLS4xMTk1NTJDMS45OTY1MTMgLjI5ODg3OSAxLjk5NjUxMyAxLjE0NzY5NiAxLjI2NzI0OCAyLjA0NDMzNEMxLjE5NTUxNyAyLjEzOTk3NSAxLjE5NTUxNyAyLjE2Mzg4NSAxLjE5NTUxNyAyLjE4Nzc5NkMxLjE5NTUxNyAyLjI0NzU3MiAxLjI1NTI5MyAyLjMwNzM0NyAxLjMxNTA2OCAyLjMwNzM0N0MxLjM5ODc1NSAyLjMwNzM0NyAyLjIzNTYxNiAxLjQyMjY2NSAyLjIzNTYxNiAuMDIzOTFDMi4yMzU2MTYtLjQxODQzMSAyLjE5OTc1MS0xLjE1OTY1MSAxLjYxMzk0OC0xLjE1OTY1MUMxLjI2NzI0OC0xLjE1OTY1MSAxLjA0MDEtLjg5NjYzOCAxLjA0MDEtLjU4NTgwM0MxLjA0MDEtLjI2MzAxNCAxLjI2NzI0OCAwIDEuNjI1OTAzIDBDMS44NTMwNTEgMCAxLjkzNjczNy0uMDcxNzMxIDEuOTk2NTEzLS4xMTk1NTJaJy8+CjxwYXRoIGlkPSdnMC05MScgZD0nTTIuOTg4NzkyIDIuOTg4NzkyVjIuNTQ2NDUxSDEuODI5MTQxVi04LjUyNDAzNUgyLjk4ODc5MlYtOC45NjYzNzZIMS4zODY4VjIuOTg4NzkySDIuOTg4NzkyWicvPgo8cGF0aCBpZD0nZzAtOTMnIGQ9J00xLjg1MzA1MS04Ljk2NjM3NkguMjUxMDU5Vi04LjUyNDAzNUgxLjQxMDcxVjIuNTQ2NDUxSC4yNTEwNTlWMi45ODg3OTJIMS44NTMwNTFWLTguOTY2Mzc2WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTkxJy8+Cjx1c2UgeD0nMy4yNTE2NjEnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC00OCcvPgo8dXNlIHg9JzkuMTA0NjUyJyB5PScwJyB4bGluazpocmVmPScjZzAtNTknLz4KPHVzZSB4PScxNC4zNDg4MScgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTQ5Jy8+Cjx1c2UgeD0nMjAuMjAxODAxJyB5PScwJyB4bGluazpocmVmPScjZzAtNDgnLz4KPHVzZSB4PScyNi4wNTQ3OTEnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC05MycvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTQgLS0+" alt="[0; 10]" style="vertical-align: -4px"/> range.
+If the <cite>with_error</cite> boolean is <cite>True</cite>, then the data is computed by adding a Gaussian noise to the function values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">xmin</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n_pt</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># number of initial points</span>
+<span class="n">with_error</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># whether to use generation with error</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ref_func_with_error</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;eps&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x * sin(x) + eps&quot;</span><span class="p">])</span>
+<span class="n">ref_func</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">ref_func_with_error</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pt</span><span class="p">))</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">1235</span><span class="p">)</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_pt</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n_pt</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">eps</span>
+<span class="k">if</span> <span class="n">with_error</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func_with_error</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ref_func</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="s2">&quot;Data&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Sample size = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_pt</span><span class="p">))</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_advanced_001.png" srcset="../../_images/sphx_glr_plot_kriging_advanced_001.png" alt="Sample size = 20" class = "sphx-glr-single-img"/></section>
+<section id="create-the-kriging-algorithm">
+<h2>Create the Kriging algorithm<a class="headerlink" href="#create-the-kriging-algorithm" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Basis</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsBool</span><span class="p">(</span>
+    <span class="s2">&quot;GeneralLinearModelAlgorithm-UseAnalyticalAmplitudeEstimate&quot;</span><span class="p">,</span> <span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span>
+
+<span class="c1"># 2. Covariance model</span>
+<span class="n">cov</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">],</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+
+<span class="c1"># 3. Kriging algorithm</span>
+<span class="n">algokriging</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+
+<span class="c1"># error measure</span>
+<span class="c1"># algokriging.setNoise([5*1e-1]*n_pt)</span>
+
+<span class="c1"># 4. Optimization</span>
+<span class="c1"># algokriging.setOptimizationAlgorithm(ot.NLopt(&#39;GN_DIRECT&#39;))</span>
+<span class="n">lhsExperiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1e2</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">algokriging</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">TNC</span><span class="p">(),</span> <span class="n">lhsExperiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()))</span>
+<span class="n">algokriging</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1e2</span><span class="p">]))</span>
+
+<span class="c1"># if we choose not to optimize parameters</span>
+<span class="c1"># algokriging.setOptimizeParameters(False)</span>
+
+<span class="c1"># 5. Run the algorithm</span>
+<span class="n">algokriging</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Basis( [class=LinearEvaluation name=Unnamed center=[0] constant=[1] linear=[[ 0 ]]] )
+MaternModel(scale=[1], amplitude=[2.5], nu=1.5)
+</pre></div>
+</div>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading">¶</a></h2>
+<p>Get some results</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krigingResult</span> <span class="o">=</span> <span class="n">algokriging</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;residual = &quot;</span><span class="p">,</span> <span class="n">krigingResult</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2 = &quot;</span><span class="p">,</span> <span class="n">krigingResult</span><span class="o">.</span><span class="n">getRelativeErrors</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal scale= </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">krigingResult</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getScale</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Optimal amplitude = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">krigingResult</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getAmplitude</span><span class="p">())</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal trend coefficients = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">krigingResult</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>residual =  [5.39875e-16]
+R2 =  [2.99965e-31]
+Optimal scale= [0.818671]
+Optimal amplitude = [4.51225]
+Optimal trend coefficients = [-0.115697]
+</pre></div>
+</div>
+<p>Get the metamodel</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krigingMeta</span> <span class="o">=</span> <span class="n">krigingResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+
+<span class="n">n_pts_plot</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">x_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax1</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax2</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># On the left, the function</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ref_func</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Function&quot;</span><span class="p">])</span>
+<span class="n">graphKriging</span> <span class="o">=</span> <span class="n">krigingMeta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graphKriging</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;green&quot;</span><span class="p">])</span>
+<span class="n">graphKriging</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Kriging&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphKriging</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Data&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax1</span></a><span class="p">])</span>
+
+<span class="c1"># On the right, the conditional Kriging variance</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;Conditional Kriging variance&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1"># Sample for the data</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n_pt</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="c1"># Sample for the variance</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n_pts_plot</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_plot</span>
+<span class="n">variance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">krigingResult</span><span class="o">.</span><span class="n">getConditionalCovariance</span><span class="p">(</span><span class="n">xx</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">x_plot</span><span class="p">]</span>
+<span class="n">sample</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">variance</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax2</span></a><span class="p">])</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.suptitle.html#matplotlib.figure.Figure.suptitle" title="matplotlib.figure.Figure.suptitle" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span></a><span class="p">(</span><span class="s2">&quot;Kriging result&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_advanced_002.png" srcset="../../_images/sphx_glr_plot_kriging_advanced_002.png" alt="Kriging result" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0.98, &#39;Kriging result&#39;)
+</pre></div>
+</div>
+</section>
+<section id="display-the-confidence-interval">
+<h2>Display the confidence interval<a class="headerlink" href="#display-the-confidence-interval" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">level</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">quantile</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">computeQuantile</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">borne_sup</span> <span class="o">=</span> <span class="n">krigingMeta</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">+</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+<span class="n">borne_inf</span> <span class="o">=</span> <span class="n">krigingMeta</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">-</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;ro&quot;</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">borne_sup</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Confidence interval&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">borne_inf</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+<span class="n">graph_ref_func</span> <span class="o">=</span> <span class="n">ref_func</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graph_krigingMeta</span> <span class="o">=</span> <span class="n">krigingMeta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="p">[</span><span class="n">graph_ref_func</span><span class="p">,</span> <span class="n">graph_krigingMeta</span><span class="p">]:</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span><span class="n">graph_ref_func</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span> <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;$x sin(x)$&quot;</span><span class="p">})</span>
+<span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_krigingMeta</span><span class="p">,</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction&quot;</span><span class="p">},</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">legend</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.autoscale.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_advanced_003.png" srcset="../../_images/sphx_glr_plot_kriging_advanced_003.png" alt="plot kriging advanced" class = "sphx-glr-single-img"/></section>
+<section id="generate-conditional-trajectories">
+<h2>Generate conditional trajectories<a class="headerlink" href="#generate-conditional-trajectories" title="Link to this heading">¶</a></h2>
+<p>Support for trajectories with training samples removed</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">values</span> <span class="o">==</span> <span class="n">xx</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">values</span> <span class="o">==</span> <span class="n">xx</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Conditional Gaussian process</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krv</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingRandomVector</span><span class="p">(</span><span class="n">krigingResult</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+<span class="n">krv_sample</span> <span class="o">=</span> <span class="n">krv</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;ro&quot;</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">krv_sample</span><span class="o">.</span><span class="n">getSize</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+            <span class="n">values</span><span class="p">,</span> <span class="n">krv_sample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Conditional trajectories&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">krv_sample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_ref_func</span><span class="p">,</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;$x*sin(x)$&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_krigingMeta</span><span class="p">,</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">legend</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.autoscale.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_advanced_004.png" srcset="../../_images/sphx_glr_plot_kriging_advanced_004.png" alt="plot kriging advanced" class = "sphx-glr-single-img"/></section>
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">n_valid</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x_valid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
+<span class="n">X_valid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">x_valid</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">with_error</span><span class="p">:</span>
+    <span class="n">X_valid</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">))</span>
+    <span class="n">y_valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func_with_error</span><span class="p">(</span><span class="n">X_valid</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">y_valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func</span><span class="p">(</span><span class="n">X_valid</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">krigingMeta</span><span class="p">(</span><span class="n">x_valid</span><span class="p">)</span>
+<span class="n">validation</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">y_valid</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
+<span class="n">validation</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+class=Point name=Unnamed dimension=1 values=[0.861246]
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_advanced_005.png" srcset="../../_images/sphx_glr_plot_kriging_advanced_005.png" alt="Metamodel validation - n = 10" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">getResidualDistribution</span><span class="p">()</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Residuals&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_advanced_006.png" srcset="../../_images/sphx_glr_plot_kriging_advanced_006.png" alt="plot kriging advanced" class = "sphx-glr-single-img"/></section>
+<section id="nugget-effect">
+<h2>Nugget effect<a class="headerlink" href="#nugget-effect" title="Link to this heading">¶</a></h2>
+<p>Let us try again, but this time we optimize the nugget effect.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cov</span><span class="o">.</span><span class="n">activateNuggetFactor</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We have to run the optimization algorithm again.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algokriging_nugget</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algokriging_nugget</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">NLopt</span><span class="p">(</span><span class="s2">&quot;GN_DIRECT&quot;</span><span class="p">))</span>
+<span class="n">algokriging_nugget</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We get the results and the metamodel.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krigingResult_nugget</span> <span class="o">=</span> <span class="n">algokriging_nugget</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;residual = &quot;</span><span class="p">,</span> <span class="n">krigingResult_nugget</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2 = &quot;</span><span class="p">,</span> <span class="n">krigingResult_nugget</span><span class="o">.</span><span class="n">getRelativeErrors</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal scale= </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">krigingResult_nugget</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getScale</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Optimal amplitude = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">krigingResult_nugget</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getAmplitude</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Optimal trend coefficients = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">krigingResult_nugget</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>residual =  [6.52848e-16]
+R2 =  [4.3864e-31]
+Optimal scale= [1.15712]
+Optimal amplitude = [4.67517]
+Optimal trend coefficients = [-0.350133]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krigingMeta_nugget</span> <span class="o">=</span> <span class="n">krigingResult_nugget</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+<span class="n">variance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">krigingResult_nugget</span><span class="o">.</span><span class="n">getConditionalCovariance</span><span class="p">(</span><span class="n">xx</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="n">x_plot</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Plot the confidence interval again. Note that this time, it always contains
+the true value of the function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 7</span>
+<span class="n">borne_sup_nugget</span> <span class="o">=</span> <span class="n">krigingMeta_nugget</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">+</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+<span class="n">borne_inf_nugget</span> <span class="o">=</span> <span class="n">krigingMeta_nugget</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">-</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;ro&quot;</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+    <span class="n">x_plot</span><span class="p">,</span>
+    <span class="n">borne_sup_nugget</span><span class="p">,</span>
+    <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Confidence interval with nugget&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">borne_inf_nugget</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+<span class="n">graph_krigingMeta_nugget</span> <span class="o">=</span> <span class="n">krigingMeta_nugget</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graph_krigingMeta_nugget</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span><span class="n">graph_ref_func</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span> <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;$x sin(x)$&quot;</span><span class="p">})</span>
+<span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_krigingMeta_nugget</span><span class="p">,</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction with nugget&quot;</span><span class="p">},</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_krigingMeta</span><span class="p">,</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s2">&quot;dotted&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction without nugget&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">legend</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.autoscale.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span></a><span class="p">()</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_kriging_advanced_007.png" srcset="../../_images/sphx_glr_plot_kriging_advanced_007.png" alt="plot kriging advanced" class = "sphx-glr-single-img"/><p>We validate the model with the nugget effect:
+its predictivity factor is slightly improved.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">validation_nugget</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">y_valid</span><span class="p">,</span> <span class="n">krigingMeta_nugget</span><span class="p">(</span><span class="n">x_valid</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2 score with nugget: &quot;</span><span class="p">,</span> <span class="n">validation_nugget</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2 score without nugget: &quot;</span><span class="p">,</span> <span class="n">validation</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>R2 score with nugget:  [0.884249]
+R2 score without nugget:  [0.861246]
+</pre></div>
+</div>
+<p>Reset default settings</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">Reload</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-kriging-advanced-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ebe9d05634903e42baf77860bb6dc595/plot_kriging_advanced.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_kriging_advanced.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/b8283c61160e35ec8cba8ec15704e5e8/plot_kriging_advanced.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_kriging_advanced.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ccb6a5f008a8b0e49dd215f9f9164a8a/plot_kriging_advanced.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_kriging_advanced.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_draw_covariance_models.html" title="Kriging : draw covariance models"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_kriging_chose_trend.html" title="Kriging: choose a polynomial trend"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.24 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Kriging metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Advanced Kriging</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 25, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>
