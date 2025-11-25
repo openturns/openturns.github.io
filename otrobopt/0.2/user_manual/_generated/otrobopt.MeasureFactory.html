@@ -1,0 +1,446 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MeasureFactory &#8212; OTRobOpt 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RobustOptimizationAlgorithm" href="otrobopt.RobustOptimizationAlgorithm.html" />
+    <link rel="prev" title="RobustOptimizationProblem" href="otrobopt.RobustOptimizationProblem.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="otrobopt.RobustOptimizationAlgorithm.html" title="RobustOptimizationAlgorithm"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="otrobopt.RobustOptimizationProblem.html" title="RobustOptimizationProblem"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OTRobOpt 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../user_manual.html" accesskey="U">User manual</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="measurefactory">
+<h1>MeasureFactory<a class="headerlink" href="#measurefactory" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="otrobopt.MeasureFactory">
+<em class="property">class </em><code class="descclassname">otrobopt.</code><code class="descname">MeasureFactory</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Discretize a measure function.</p>
+<p>It consists in replacing the distribution <img class="math" src="../../_images/math/9eaf3e9ff357606a0d308ff1b22ae56db1705f67.svg" alt="\cD"/> of the measure by a discrete
+approximation.</p>
+<div class="math">
+<p><img src="../../_images/math/0f7f60b9627c1f532aeab17a15a6e11122c29e05.svg" alt="\cD \rightarrow \sum_{i=1}^N \omega_i \delta_{\theta_i}"/></p>
+</div><p>Where <img class="math" src="../../_images/math/0dfcb68f2eae9d322dd2efbffdcce2ddd4166a4b.svg" alt="\delta_{\theta_i}"/> is the Dirac measure at <img class="math" src="../../_images/math/28a94f25ffae4e1727f7281a9c6a74fb71093e8c.svg" alt="\theta_i"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>experiment</strong> : <a class="reference external" href="http://openturns.github.io/user_manual/_generated/openturns.WeightedExperiment.html#openturns.WeightedExperiment" title="(in OpenTURNS v.)"><code class="xref py py-class docutils literal"><span class="pre">openturns.WeightedExperiment</span></code></a></p>
+<blockquote class="last">
+<div><p>Parameters design of experiment</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>First define a measure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">otrobopt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thetaDist</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f_base</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;theta&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;x*theta&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">f_base</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">measure</span> <span class="o">=</span> <span class="n">otrobopt</span><span class="o">.</span><span class="n">MeanMeasure</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">thetaDist</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then discretize it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">factory</span> <span class="o">=</span> <span class="n">otrobopt</span><span class="o">.</span><span class="n">MeasureFactory</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">discretizedMeasure</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">measure</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Discretize several measures at once:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">coll</span> <span class="o">=</span> <span class="p">[</span><span class="n">otrobopt</span><span class="o">.</span><span class="n">MeanMeasure</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">thetaDist</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">otrobopt</span><span class="o">.</span><span class="n">VarianceMeasure</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">thetaDist</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">discretizedMeasures</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">buildCollection</span><span class="p">(</span><span class="n">coll</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#otrobopt.MeasureFactory.build" title="otrobopt.MeasureFactory.build"><code class="xref py py-obj docutils literal"><span class="pre">build</span></code></a>(*args)</td>
+<td>Discretize a measure.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#otrobopt.MeasureFactory.buildCollection" title="otrobopt.MeasureFactory.buildCollection"><code class="xref py py-obj docutils literal"><span class="pre">buildCollection</span></code></a>(*args)</td>
+<td>Discretize several measures.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#otrobopt.MeasureFactory.getClassName" title="otrobopt.MeasureFactory.getClassName"><code class="xref py py-obj docutils literal"><span class="pre">getClassName</span></code></a>()</td>
+<td>Accessor to the object&#8217;s name.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#otrobopt.MeasureFactory.getId" title="otrobopt.MeasureFactory.getId"><code class="xref py py-obj docutils literal"><span class="pre">getId</span></code></a>()</td>
+<td>Accessor to the object&#8217;s id.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#otrobopt.MeasureFactory.getName" title="otrobopt.MeasureFactory.getName"><code class="xref py py-obj docutils literal"><span class="pre">getName</span></code></a>()</td>
+<td>Accessor to the object&#8217;s name.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#otrobopt.MeasureFactory.getShadowedId" title="otrobopt.MeasureFactory.getShadowedId"><code class="xref py py-obj docutils literal"><span class="pre">getShadowedId</span></code></a>()</td>
+<td>Accessor to the object&#8217;s shadowed id.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#otrobopt.MeasureFactory.getVisibility" title="otrobopt.MeasureFactory.getVisibility"><code class="xref py py-obj docutils literal"><span class="pre">getVisibility</span></code></a>()</td>
+<td>Accessor to the object&#8217;s visibility state.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#otrobopt.MeasureFactory.hasName" title="otrobopt.MeasureFactory.hasName"><code class="xref py py-obj docutils literal"><span class="pre">hasName</span></code></a>()</td>
+<td>Test if the object is named.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#otrobopt.MeasureFactory.hasVisibleName" title="otrobopt.MeasureFactory.hasVisibleName"><code class="xref py py-obj docutils literal"><span class="pre">hasVisibleName</span></code></a>()</td>
+<td>Test if the object has a distinguishable name.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#otrobopt.MeasureFactory.setName" title="otrobopt.MeasureFactory.setName"><code class="xref py py-obj docutils literal"><span class="pre">setName</span></code></a>(*args)</td>
+<td>Accessor to the object&#8217;s name.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#otrobopt.MeasureFactory.setShadowedId" title="otrobopt.MeasureFactory.setShadowedId"><code class="xref py py-obj docutils literal"><span class="pre">setShadowedId</span></code></a>(*args)</td>
+<td>Accessor to the object&#8217;s shadowed id.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#otrobopt.MeasureFactory.setVisibility" title="otrobopt.MeasureFactory.setVisibility"><code class="xref py py-obj docutils literal"><span class="pre">setVisibility</span></code></a>(*args)</td>
+<td>Accessor to the object&#8217;s visibility state.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.build">
+<code class="descname">build</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Discretize a measure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>measure</strong> : <a class="reference internal" href="otrobopt.MeasureEvaluation.html#otrobopt.MeasureEvaluation" title="otrobopt.MeasureEvaluation"><code class="xref py py-class docutils literal"><span class="pre">MeasureEvaluation</span></code></a></p>
+<blockquote>
+<div><p>Measure</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>measure</strong> : <a class="reference internal" href="otrobopt.MeasureEvaluation.html#otrobopt.MeasureEvaluation" title="otrobopt.MeasureEvaluation"><code class="xref py py-class docutils literal"><span class="pre">MeasureEvaluation</span></code></a></p>
+<blockquote class="last">
+<div><p>Discretized measure</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.buildCollection">
+<code class="descname">buildCollection</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.buildCollection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Discretize several measures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>collection</strong> : sequence of <a class="reference internal" href="otrobopt.MeasureEvaluation.html#otrobopt.MeasureEvaluation" title="otrobopt.MeasureEvaluation"><code class="xref py py-class docutils literal"><span class="pre">MeasureEvaluation</span></code></a></p>
+<blockquote>
+<div><p>The measures to discretize.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>measures</strong> : sequence of <a class="reference internal" href="otrobopt.MeasureEvaluation.html#otrobopt.MeasureEvaluation" title="otrobopt.MeasureEvaluation"><code class="xref py py-class docutils literal"><span class="pre">MeasureEvaluation</span></code></a></p>
+<blockquote class="last">
+<div><p>Discretized measures</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.getClassName">
+<code class="descname">getClassName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.getClassName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>class_name</strong> : str</p>
+<blockquote class="last">
+<div><p>The object class name (<cite>object.__class__.__name__</cite>).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.getId">
+<code class="descname">getId</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.getId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>id</strong> : int</p>
+<blockquote class="last">
+<div><p>Internal unique identifier.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.getName">
+<code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.getName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
+<blockquote class="last">
+<div><p>The name of the object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.getShadowedId">
+<code class="descname">getShadowedId</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.getShadowedId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s shadowed id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>id</strong> : int</p>
+<blockquote class="last">
+<div><p>Internal unique identifier.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.getVisibility">
+<code class="descname">getVisibility</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.getVisibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s visibility state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>visible</strong> : bool</p>
+<blockquote class="last">
+<div><p>Visibility flag.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.hasName">
+<code class="descname">hasName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.hasName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the object is named.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>hasName</strong> : bool</p>
+<blockquote class="last">
+<div><p>True if the name is not empty.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.hasVisibleName">
+<code class="descname">hasVisibleName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.hasVisibleName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the object has a distinguishable name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>hasVisibleName</strong> : bool</p>
+<blockquote class="last">
+<div><p>True if the name is not empty and not the default one.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.setName">
+<code class="descname">setName</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.setName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
+<blockquote class="last">
+<div><p>The name of the object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.setShadowedId">
+<code class="descname">setShadowedId</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.setShadowedId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s shadowed id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>id</strong> : int</p>
+<blockquote class="last">
+<div><p>Internal unique identifier.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="otrobopt.MeasureFactory.setVisibility">
+<code class="descname">setVisibility</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#otrobopt.MeasureFactory.setVisibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the object&#8217;s visibility state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>visible</strong> : bool</p>
+<blockquote class="last">
+<div><p>Visibility flag.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="otrobopt.RobustOptimizationProblem.html"
+                        title="previous chapter">RobustOptimizationProblem</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="otrobopt.RobustOptimizationAlgorithm.html"
+                        title="next chapter">RobustOptimizationAlgorithm</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/user_manual/_generated/otrobopt.MeasureFactory.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="otrobopt.RobustOptimizationAlgorithm.html" title="RobustOptimizationAlgorithm"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="otrobopt.RobustOptimizationProblem.html" title="RobustOptimizationProblem"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OTRobOpt 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../user_manual.html" >User manual</a> &#187;</li> 
+      </ul>
+    </div>
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
+  </body>
+</html>

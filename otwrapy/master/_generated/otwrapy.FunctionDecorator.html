@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>otwrapy.FunctionDecorator &#8212; otwrapy  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=712fa57f" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/Icon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="otwrapy.dump_array" href="otwrapy.dump_array.html" />
+    <link rel="prev" title="otwrapy.Debug" href="otwrapy.Debug.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="otwrapy-functiondecorator">
+<h1>otwrapy.FunctionDecorator<a class="headerlink" href="#otwrapy-functiondecorator" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="otwrapy.FunctionDecorator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FunctionDecorator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enableCache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otwrapy.FunctionDecorator" title="Link to this definition">¶</a></dt>
+<dd><p>Convert an OpenTURNSPythonFunction into a Function.</p>
+<p>This class is intended to be used as a decorator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>enableCache</strong><span class="classifier">bool (Optional)</span></dt><dd><p>If True, enable cache of the returned ot.Function</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(wrapper)</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>I wanted this decorator to work also with Wrapper class, but it only works
+with ParallelWrapper for the moment. The problem is that, apparently,
+decorated classes are not picklable, and Wrapper instances must be picklable
+so that they can be easily distributed with <cite>multiprocessing</cite></p>
+<p class="rubric">References</p>
+<p><a class="reference external" href="http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/">http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/</a>
+<a class="reference external" href="http://www.artima.com/weblogs/viewpost.jsp?thread=240808">http://www.artima.com/weblogs/viewpost.jsp?thread=240808</a>
+<a class="reference external" href="http://stackoverflow.com/questions/30714485/why-does-a-decorated-class-looses-its-docstrings">http://stackoverflow.com/questions/30714485/why-does-a-decorated-class-looses-its-docstrings</a>
+<a class="reference external" href="http://stackoverflow.com/questions/30711730/decorated-class-looses-acces-to-its-attributes">http://stackoverflow.com/questions/30711730/decorated-class-looses-acces-to-its-attributes</a></p>
+<p class="rubric">Examples</p>
+<p>In order to always get an ot.Function when instantiating your
+wrapper, decorate it as follows:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">otwrapy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otw</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@otw</span><span class="o">.</span><span class="n">FunctionDecorator</span><span class="p">(</span><span class="n">enableCache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Wrapper</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">OpenTURNSPythonFunction</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Note that a great disadvantage of this decorator is that your wrapper cannot
+be parallelized afterwards. Only use it if you don’t plan to parallelize
+your wrapper or if the wrapper itself is parallelized already. However, if
+you plan to use <a class="reference internal" href="otwrapy.Parallelizer.html#otwrapy.Parallelizer" title="otwrapy.Parallelizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parallelizer</span></code></a>, there is no need to use this decorator !</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="otwrapy.FunctionDecorator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enableCache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#otwrapy.FunctionDecorator.__init__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#otwrapy.FunctionDecorator.__init__" title="otwrapy.FunctionDecorator.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([enableCache, doc])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/LogoPhiHaut.png" alt="Logo" />
+    
+    <h1 class="logo logo-name">otwrapy</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Collection of tools that simplify the task of wrapping external codes in a Python environment. Proudly developed at <b><a href="http://www.phimeca.com">Phimeca</a></b></p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=openturns&repo=otwrapy&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">Documentation of the API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="otwrapy.Parallelizer.html">otwrapy.Parallelizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otwrapy.TempWorkDir.html">otwrapy.TempWorkDir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otwrapy.Debug.html">otwrapy.Debug</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">otwrapy.FunctionDecorator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#otwrapy.FunctionDecorator"><code class="docutils literal notranslate"><span class="pre">FunctionDecorator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="otwrapy.dump_array.html">otwrapy.dump_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otwrapy.load_array.html">otwrapy.load_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otwrapy.safemakedirs.html">otwrapy.safemakedirs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otwrapy.create_logger.html">otwrapy.create_logger</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">Documentation of the API</a><ul>
+      <li>Previous: <a href="otwrapy.Debug.html" title="previous chapter">otwrapy.Debug</a></li>
+      <li>Next: <a href="otwrapy.dump_array.html" title="next chapter">otwrapy.dump_array</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2015-2024 Phimeca.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/_generated/otwrapy.FunctionDecorator.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/openturns/otwrapy" class="github">
+        <img src="../_static/github-banner.svg" alt="Fork me on GitHub" class="github"/>
+    </a>
+    
+
+    
+    <script>
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-76867657-1']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+  </body>
+</html>
