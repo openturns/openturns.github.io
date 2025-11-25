@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Advanced Gaussian process regression &#8212; OpenTURNS 1.26 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sphx_glr.css?v=2ae27345" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=7c73cb4c"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Kriging : draw covariance models" href="plot_draw_covariance_models.html" />
+    <link rel="prev" title="Gaussian Process-based active learning for reliability" href="plot_gpr_active_learning.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_draw_covariance_models.html" title="Kriging : draw covariance models"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_gpr_active_learning.html" title="Gaussian Process-based active learning for reliability"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.26 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Surrogate modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Gaussian Process Regression</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Advanced Gaussian process regression</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Advanced Gaussian process regression</a><ul>
+<li><a class="reference internal" href="#generate-design-of-experiments">Generate design of experiments</a></li>
+<li><a class="reference internal" href="#create-the-gaussian-process-regression-algorithm">Create the Gaussian process regression algorithm</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
+<li><a class="reference internal" href="#display-the-confidence-interval">Display the confidence interval</a></li>
+<li><a class="reference internal" href="#generate-conditional-trajectories">Generate conditional trajectories</a></li>
+<li><a class="reference internal" href="#validation">Validation</a></li>
+<li><a class="reference internal" href="#nugget-effect">Nugget effect</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_gpr_active_learning.html"
+                          title="previous chapter">Gaussian Process-based active learning for reliability</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_draw_covariance_models.html"
+                          title="next chapter">Kriging : draw covariance models</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_surrogate_modeling/gaussian_process_regression/plot_gpr_advanced.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-surrogate-modeling-gaussian-process-regression-plot-gpr-advanced-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="advanced-gaussian-process-regression">
+<span id="sphx-glr-auto-surrogate-modeling-gaussian-process-regression-plot-gpr-advanced-py"></span><h1>Advanced Gaussian process regression<a class="headerlink" href="#advanced-gaussian-process-regression" title="Link to this heading">¶</a></h1>
+<p>In this example we will build a metamodel using Gaussian process regression of the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSczOC43NzM2NjZwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgMzguNzczNjY2IDExLjk1NTE2OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtMTIwJyBkPSdNNS42NjY3NS00Ljg3NzcwOUM1LjI4NDE4NC00LjgwNTk3OCA1LjE0MDcyMi00LjUxOTA1NCA1LjE0MDcyMi00LjI5MTkwNUM1LjE0MDcyMi00LjAwNDk4MSA1LjM2Nzg3LTMuOTA5MzQgNS41MzUyNDMtMy45MDkzNEM1Ljg5Mzg5OC0zLjkwOTM0IDYuMTQ0OTU2LTQuMjIwMTc0IDYuMTQ0OTU2LTQuNTQyOTY0QzYuMTQ0OTU2LTUuMDQ1MDgxIDUuNTcxMTA4LTUuMjcyMjI5IDUuMDY4OTkxLTUuMjcyMjI5QzQuMzM5NzI2LTUuMjcyMjI5IDMuOTMzMjUtNC41NTQ5MTkgMy44MjU2NTQtNC4zMjc3NzFDMy41NTA2ODUtNS4yMjQ0MDggMi44MDk0NjUtNS4yNzIyMjkgMi41OTQyNzEtNS4yNzIyMjlDMS4zNzQ4NDQtNS4yNzIyMjkgLjcyOTI2NS0zLjcwNjEwMiAuNzI5MjY1LTMuNDQzMDg4Qy43MjkyNjUtMy4zOTUyNjggLjc3NzA4Ni0zLjMzNTQ5MiAuODYwNzcyLTMuMzM1NDkyQy45NTY0MTMtMy4zMzU0OTIgLjk4MDMyNC0zLjQwNzIyMyAxLjAwNDIzNC0zLjQ1NTA0NEMxLjQxMDcxLTQuNzgyMDY3IDIuMjExNzA2LTUuMDMzMTI2IDIuNTU4NDA2LTUuMDMzMTI2QzMuMDk2Mzg5LTUuMDMzMTI2IDMuMjAzOTg1LTQuNTMxMDA5IDMuMjAzOTg1LTQuMjQ0MDg1QzMuMjAzOTg1LTMuOTgxMDcxIDMuMTMyMjU0LTMuNzA2MTAyIDIuOTg4NzkyLTMuMTMyMjU0TDIuNTgyMzE2LTEuNDk0Mzk2QzIuNDAyOTg5LS43NzcwODYgMi4wNTYyODktLjExOTU1MiAxLjQyMjY2NS0uMTE5NTUyQzEuMzYyODg5LS4xMTk1NTIgMS4wNjQwMS0uMTE5NTUyIC44MTI5NTEtLjI3NDk2OUMxLjI0MzMzNy0uMzU4NjU1IDEuMzM4OTc5LS43MTczMSAxLjMzODk3OS0uODYwNzcyQzEuMzM4OTc5LTEuMDk5ODc1IDEuMTU5NjUxLTEuMjQzMzM3IC45MzI1MDMtMS4yNDMzMzdDLjY0NTU3OS0xLjI0MzMzNyAuMzM0NzQ1LS45OTIyNzkgLjMzNDc0NS0uNjA5NzE0Qy4zMzQ3NDUtLjEwNzU5NyAuODk2NjM4IC4xMTk1NTIgMS40MTA3MSAuMTE5NTUyQzEuOTg0NTU4IC4xMTk1NTIgMi4zOTEwMzQtLjMzNDc0NSAyLjY0MjA5Mi0uODI0OTA3QzIuODMzMzc1LS4xMTk1NTIgMy40MzExMzMgLjExOTU1MiAzLjg3MzQ3NCAuMTE5NTUyQzUuMDkyOTAyIC4xMTk1NTIgNS43Mzg0ODEtMS40NDY1NzUgNS43Mzg0ODEtMS43MDk1ODlDNS43Mzg0ODEtMS43NjkzNjUgNS42OTA2Ni0xLjgxNzE4NiA1LjYxODkyOS0xLjgxNzE4NkM1LjUxMTMzMy0xLjgxNzE4NiA1LjQ5OTM3Ny0xLjc1NzQxIDUuNDYzNTEyLTEuNjYxNzY4QzUuMTQwNzIyLS42MDk3MTQgNC40NDczMjMtLjExOTU1MiAzLjkwOTM0LS4xMTk1NTJDMy40OTA5MDktLjExOTU1MiAzLjI2Mzc2MS0uNDMwMzg2IDMuMjYzNzYxLS45MjA1NDhDMy4yNjM3NjEtMS4xODM1NjIgMy4zMTE1ODItMS4zNzQ4NDQgMy41MDI4NjQtMi4xNjM4ODVMMy45MjEyOTUtMy43ODk3ODhDNC4xMDA2MjMtNC41MDcwOTggNC41MDcwOTgtNS4wMzMxMjYgNS4wNTcwMzYtNS4wMzMxMjZDNS4wODA5NDYtNS4wMzMxMjYgNS40MTU2OTEtNS4wMzMxMjYgNS42NjY3NS00Ljg3NzcwOVonLz4KPHBhdGggaWQ9J2cxLTQwJyBkPSdNMy44ODU0MyAyLjkwNTEwNkMzLjg4NTQzIDIuODY5MjQgMy44ODU0MyAyLjg0NTMzIDMuNjgyMTkyIDIuNjQyMDkyQzIuNDg2Njc1IDEuNDM0NjIgMS44MTcxODYtLjUzNzk4MyAxLjgxNzE4Ni0yLjk3NjgzN0MxLjgxNzE4Ni01LjI5NjEzOSAyLjM3OTA3OC03LjI5MjY1MyAzLjc2NTg3OC04LjcwMzM2MkMzLjg4NTQzLTguODEwOTU5IDMuODg1NDMtOC44MzQ4NjkgMy44ODU0My04Ljg3MDczNUMzLjg4NTQzLTguOTQyNDY2IDMuODI1NjU0LTguOTY2Mzc2IDMuNzc3ODMzLTguOTY2Mzc2QzMuNjIyNDE2LTguOTY2Mzc2IDIuNjQyMDkyLTguMTA1NjA0IDIuMDU2Mjg5LTYuOTMzOTk4QzEuNDQ2NTc1LTUuNzI2NTI2IDEuMTcxNjA2LTQuNDQ3MzIzIDEuMTcxNjA2LTIuOTc2ODM3QzEuMTcxNjA2LTEuOTEyODI3IDEuMzM4OTc5LS40OTAxNjIgMS45NjA2NDggLjc4OTA0MUMyLjY2NjAwMiAyLjIyMzY2MSAzLjY0NjMyNiAzLjAwMDc0NyAzLjc3NzgzMyAzLjAwMDc0N0MzLjgyNTY1NCAzLjAwMDc0NyAzLjg4NTQzIDIuOTc2ODM3IDMuODg1NDMgMi45MDUxMDZaJy8+CjxwYXRoIGlkPSdnMS00MScgZD0nTTMuMzcxMzU3LTIuOTc2ODM3QzMuMzcxMzU3LTMuODg1NDMgMy4yNTE4MDYtNS4zNjc4NyAyLjU4MjMxNi02Ljc1NDY3QzEuODc2OTYxLTguMTg5MjkgLjg5NjYzOC04Ljk2NjM3NiAuNzY1MTMxLTguOTY2Mzc2Qy43MTczMS04Ljk2NjM3NiAuNjU3NTM0LTguOTQyNDY2IC42NTc1MzQtOC44NzA3MzVDLjY1NzUzNC04LjgzNDg2OSAuNjU3NTM0LTguODEwOTU5IC44NjA3NzItOC42MDc3MjFDMi4wNTYyODktNy40MDAyNDkgMi43MjU3NzgtNS40Mjc2NDYgMi43MjU3NzgtMi45ODg3OTJDMi43MjU3NzgtLjY2OTQ4OSAyLjE2Mzg4NSAxLjMyNzAyNCAuNzc3MDg2IDIuNzM3NzMzQy42NTc1MzQgMi44NDUzMyAuNjU3NTM0IDIuODY5MjQgLjY1NzUzNCAyLjkwNTEwNkMuNjU3NTM0IDIuOTc2ODM3IC43MTczMSAzLjAwMDc0NyAuNzY1MTMxIDMuMDAwNzQ3Qy45MjA1NDggMy4wMDA3NDcgMS45MDA4NzIgMi4xMzk5NzUgMi40ODY2NzUgLjk2ODM2OUMzLjA5NjM4OS0uMjUxMDU5IDMuMzcxMzU3LTEuNTQyMjE3IDMuMzcxMzU3LTIuOTc2ODM3WicvPgo8cGF0aCBpZD0nZzEtMTA1JyBkPSdNMi4wODAxOTktNy4zNjQzODRDMi4wODAxOTktNy42NzUyMTggMS44MjkxNDEtNy45NTAxODcgMS40OTQzOTYtNy45NTAxODdDMS4xODM1NjItNy45NTAxODcgLjkyMDU0OC03LjY5OTEyOCAuOTIwNTQ4LTcuMzc2MzM5Qy45MjA1NDgtNy4wMTc2ODQgMS4yMDc0NzItNi43OTA1MzUgMS40OTQzOTYtNi43OTA1MzVDMS44NjUwMDYtNi43OTA1MzUgMi4wODAxOTktNy4xMDEzNyAyLjA4MDE5OS03LjM2NDM4NFpNLjQzMDM4Ni01LjE0MDcyMlYtNC43OTQwMjJDMS4xOTU1MTctNC43OTQwMjIgMS4zMDMxMTMtNC43MjIyOTEgMS4zMDMxMTMtNC4xMzY0ODhWLS44ODQ2ODJDMS4zMDMxMTMtLjM0NjcgMS4xNzE2MDYtLjM0NjcgLjM5NDUyMS0uMzQ2N1YwQy43MjkyNjUtLjAyMzkxIDEuMzAzMTEzLS4wMjM5MSAxLjY0OTgxMy0uMDIzOTFDMS43ODEzMi0uMDIzOTEgMi40NzQ3Mi0uMDIzOTEgMi44ODExOTYgMFYtLjM0NjdDMi4xMDQxMS0uMzQ2NyAyLjA1NjI4OS0uNDA2NDc2IDIuMDU2Mjg5LS44NzI3MjdWLTUuMjcyMjI5TC40MzAzODYtNS4xNDA3MjJaJy8+CjxwYXRoIGlkPSdnMS0xMTAnIGQ9J001LjMyMDA1LTIuOTA1MTA2QzUuMzIwMDUtNC4wMTY5MzYgNS4zMjAwNS00LjM1MTY4MSA1LjA0NTA4MS00LjczNDI0N0M0LjY5ODM4MS01LjIwMDQ5OCA0LjEzNjQ4OC01LjI3MjIyOSAzLjczMDAxMi01LjI3MjIyOUMyLjU3MDM2MS01LjI3MjIyOSAyLjExNjA2NS00LjI3OTk1IDIuMDIwNDIzLTQuMDQwODQ3SDIuMDA4NDY4Vi01LjI3MjIyOUwuMzgyNTY1LTUuMTQwNzIyVi00Ljc5NDAyMkMxLjE5NTUxNy00Ljc5NDAyMiAxLjI5MTE1OC00LjcxMDMzNiAxLjI5MTE1OC00LjEyNDUzM1YtLjg4NDY4MkMxLjI5MTE1OC0uMzQ2NyAxLjE1OTY1MS0uMzQ2NyAuMzgyNTY1LS4zNDY3VjBDLjY5MzQtLjAyMzkxIDEuMzM4OTc5LS4wMjM5MSAxLjY3MzcyNC0uMDIzOTFDMi4wMjA0MjMtLjAyMzkxIDIuNjY2MDAyLS4wMjM5MSAyLjk3NjgzNyAwVi0uMzQ2N0MyLjIxMTcwNi0uMzQ2NyAyLjA2ODI0NC0uMzQ2NyAyLjA2ODI0NC0uODg0NjgyVi0zLjEwODM0NEMyLjA2ODI0NC00LjM2MzYzNiAyLjg5MzE1MS01LjAzMzEyNiAzLjYzNDM3MS01LjAzMzEyNlM0LjU0Mjk2NC00LjQyMzQxMiA0LjU0Mjk2NC0zLjY5NDE0N1YtLjg4NDY4MkM0LjU0Mjk2NC0uMzQ2NyA0LjQxMTQ1Ny0uMzQ2NyAzLjYzNDM3MS0uMzQ2N1YwQzMuOTQ1MjA1LS4wMjM5MSA0LjU5MDc4NS0uMDIzOTEgNC45MjU1MjktLjAyMzkxQzUuMjcyMjI5LS4wMjM5MSA1LjkxNzgwOC0uMDIzOTEgNi4yMjg2NDMgMFYtLjM0NjdDNS42MzA4ODQtLjM0NjcgNS4zMzIwMDUtLjM0NjcgNS4zMjAwNS0uNzA1MzU1Vi0yLjkwNTEwNlonLz4KPHBhdGggaWQ9J2cxLTExNScgZD0nTTMuOTIxMjk1LTUuMDU3MDM2QzMuOTIxMjk1LTUuMjcyMjI5IDMuOTIxMjk1LTUuMzMyMDA1IDMuODAxNzQzLTUuMzMyMDA1QzMuNzA2MTAyLTUuMzMyMDA1IDMuNDc4OTU0LTUuMDY4OTkxIDMuMzk1MjY4LTQuOTYxMzk1QzMuMDI0NjU4LTUuMjYwMjc0IDIuNjU0MDQ3LTUuMzMyMDA1IDIuMjcxNDgyLTUuMzMyMDA1Qy44MjQ5MDctNS4zMzIwMDUgLjM5NDUyMS00LjU0Mjk2NCAuMzk0NTIxLTMuODg1NDNDLjM5NDUyMS0zLjc1MzkyMyAuMzk0NTIxLTMuMzM1NDkyIC44NDg4MTctMi45MTcwNjFDMS4yMzEzODItMi41ODIzMTYgMS42Mzc4NTgtMi40OTg2MyAyLjE4Nzc5Ni0yLjM5MTAzNEMyLjg0NTMzLTIuMjU5NTI3IDMuMDAwNzQ3LTIuMjIzNjYxIDMuMjk5NjI2LTEuOTg0NTU4QzMuNTE0ODE5LTEuODA1MjMgMy42NzAyMzctMS41NDIyMTcgMy42NzAyMzctMS4yMDc0NzJDMy42NzAyMzctLjY5MzQgMy4zNzEzNTctLjExOTU1MiAyLjMxOTMwMy0uMTE5NTUyQzEuNTMwMjYyLS4xMTk1NTIgLjk1NjQxMy0uNTczODQ4IC42OTM0LTEuNzY5MzY1Qy42NDU1NzktMS45ODQ1NTggLjY0NTU3OS0xLjk5NjUxMyAuNjMzNjI0LTIuMDA4NDY4Qy42MDk3MTQtMi4wNTYyODkgLjU2MTg5My0yLjA1NjI4OSAuNTI2MDI3LTIuMDU2Mjg5Qy4zOTQ1MjEtMi4wNTYyODkgLjM5NDUyMS0xLjk5NjUxMyAuMzk0NTIxLTEuNzgxMzJWLS4xNTU0MTdDLjM5NDUyMSAuMDU5Nzc2IC4zOTQ1MjEgLjExOTU1MiAuNTE0MDcyIC4xMTk1NTJDLjU3Mzg0OCAuMTE5NTUyIC41ODU4MDMgLjEwNzU5NyAuNzg5MDQxLS4xNDM0NjJDLjg0ODgxNy0uMjI3MTQ4IC44NDg4MTctLjI1MTA1OSAxLjAyODE0NC0uNDQyMzQxQzEuNDgyNDQxIC4xMTk1NTIgMi4xMjgwMiAuMTE5NTUyIDIuMzMxMjU4IC4xMTk1NTJDMy41ODY1NSAuMTE5NTUyIDQuMjA4MjE5LS41NzM4NDggNC4yMDgyMTktMS41MTgzMDZDNC4yMDgyMTktMi4xNjM4ODUgMy44MTM2OTktMi41NDY0NTEgMy43MDYxMDItMi42NTQwNDdDMy4yNzU3MTYtMy4wMjQ2NTggMi45NTI5MjctMy4wOTYzODkgMi4xNjM4ODUtMy4yMzk4NTFDMS44MDUyMy0zLjMxMTU4MiAuOTMyNTAzLTMuNDc4OTU0IC45MzI1MDMtNC4xOTYyNjRDLjkzMjUwMy00LjU2Njg3NCAxLjE4MzU2Mi01LjExNjgxMiAyLjI1OTUyNy01LjExNjgxMkMzLjU2MjY0LTUuMTE2ODEyIDMuNjM0MzcxLTQuMDA0OTgxIDMuNjU4MjgxLTMuNjM0MzcxQzMuNjcwMjM3LTMuNTM4NzMgMy43NTM5MjMtMy41Mzg3MyAzLjc4OTc4OC0zLjUzODczQzMuOTIxMjk1LTMuNTM4NzMgMy45MjEyOTUtMy41OTg1MDYgMy45MjEyOTUtMy44MTM2OTlWLTUuMDU3MDM2WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTEyMCcvPgo8dXNlIHg9JzguNjQ0NTg1JyB5PScwJyB4bGluazpocmVmPScjZzEtMTE1Jy8+Cjx1c2UgeD0nMTMuMjYxOTQ0JyB5PScwJyB4bGluazpocmVmPScjZzEtMTA1Jy8+Cjx1c2UgeD0nMTYuNTEzNjA1JyB5PScwJyB4bGluazpocmVmPScjZzEtMTEwJy8+Cjx1c2UgeD0nMjMuMDE2OTI3JyB5PScwJyB4bGluazpocmVmPScjZzEtNDAnLz4KPHVzZSB4PScyNy41NjkyNTMnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMjAnLz4KPHVzZSB4PSczNC4yMjEzNCcgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTQxJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9NCAtLT4=" alt="x\sin(x)" style="vertical-align: -4px"/> function.</p>
+<p>We will choose the number of learning points, the basis and the covariance model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.experimental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otexp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</pre></div>
+</div>
+<section id="generate-design-of-experiments">
+<h2>Generate design of experiments<a class="headerlink" href="#generate-design-of-experiments" title="Link to this heading">¶</a></h2>
+<p>We create training samples from the function <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSczOC43NzM2NjZwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgMzguNzczNjY2IDExLjk1NTE2OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtMTIwJyBkPSdNNS42NjY3NS00Ljg3NzcwOUM1LjI4NDE4NC00LjgwNTk3OCA1LjE0MDcyMi00LjUxOTA1NCA1LjE0MDcyMi00LjI5MTkwNUM1LjE0MDcyMi00LjAwNDk4MSA1LjM2Nzg3LTMuOTA5MzQgNS41MzUyNDMtMy45MDkzNEM1Ljg5Mzg5OC0zLjkwOTM0IDYuMTQ0OTU2LTQuMjIwMTc0IDYuMTQ0OTU2LTQuNTQyOTY0QzYuMTQ0OTU2LTUuMDQ1MDgxIDUuNTcxMTA4LTUuMjcyMjI5IDUuMDY4OTkxLTUuMjcyMjI5QzQuMzM5NzI2LTUuMjcyMjI5IDMuOTMzMjUtNC41NTQ5MTkgMy44MjU2NTQtNC4zMjc3NzFDMy41NTA2ODUtNS4yMjQ0MDggMi44MDk0NjUtNS4yNzIyMjkgMi41OTQyNzEtNS4yNzIyMjlDMS4zNzQ4NDQtNS4yNzIyMjkgLjcyOTI2NS0zLjcwNjEwMiAuNzI5MjY1LTMuNDQzMDg4Qy43MjkyNjUtMy4zOTUyNjggLjc3NzA4Ni0zLjMzNTQ5MiAuODYwNzcyLTMuMzM1NDkyQy45NTY0MTMtMy4zMzU0OTIgLjk4MDMyNC0zLjQwNzIyMyAxLjAwNDIzNC0zLjQ1NTA0NEMxLjQxMDcxLTQuNzgyMDY3IDIuMjExNzA2LTUuMDMzMTI2IDIuNTU4NDA2LTUuMDMzMTI2QzMuMDk2Mzg5LTUuMDMzMTI2IDMuMjAzOTg1LTQuNTMxMDA5IDMuMjAzOTg1LTQuMjQ0MDg1QzMuMjAzOTg1LTMuOTgxMDcxIDMuMTMyMjU0LTMuNzA2MTAyIDIuOTg4NzkyLTMuMTMyMjU0TDIuNTgyMzE2LTEuNDk0Mzk2QzIuNDAyOTg5LS43NzcwODYgMi4wNTYyODktLjExOTU1MiAxLjQyMjY2NS0uMTE5NTUyQzEuMzYyODg5LS4xMTk1NTIgMS4wNjQwMS0uMTE5NTUyIC44MTI5NTEtLjI3NDk2OUMxLjI0MzMzNy0uMzU4NjU1IDEuMzM4OTc5LS43MTczMSAxLjMzODk3OS0uODYwNzcyQzEuMzM4OTc5LTEuMDk5ODc1IDEuMTU5NjUxLTEuMjQzMzM3IC45MzI1MDMtMS4yNDMzMzdDLjY0NTU3OS0xLjI0MzMzNyAuMzM0NzQ1LS45OTIyNzkgLjMzNDc0NS0uNjA5NzE0Qy4zMzQ3NDUtLjEwNzU5NyAuODk2NjM4IC4xMTk1NTIgMS40MTA3MSAuMTE5NTUyQzEuOTg0NTU4IC4xMTk1NTIgMi4zOTEwMzQtLjMzNDc0NSAyLjY0MjA5Mi0uODI0OTA3QzIuODMzMzc1LS4xMTk1NTIgMy40MzExMzMgLjExOTU1MiAzLjg3MzQ3NCAuMTE5NTUyQzUuMDkyOTAyIC4xMTk1NTIgNS43Mzg0ODEtMS40NDY1NzUgNS43Mzg0ODEtMS43MDk1ODlDNS43Mzg0ODEtMS43NjkzNjUgNS42OTA2Ni0xLjgxNzE4NiA1LjYxODkyOS0xLjgxNzE4NkM1LjUxMTMzMy0xLjgxNzE4NiA1LjQ5OTM3Ny0xLjc1NzQxIDUuNDYzNTEyLTEuNjYxNzY4QzUuMTQwNzIyLS42MDk3MTQgNC40NDczMjMtLjExOTU1MiAzLjkwOTM0LS4xMTk1NTJDMy40OTA5MDktLjExOTU1MiAzLjI2Mzc2MS0uNDMwMzg2IDMuMjYzNzYxLS45MjA1NDhDMy4yNjM3NjEtMS4xODM1NjIgMy4zMTE1ODItMS4zNzQ4NDQgMy41MDI4NjQtMi4xNjM4ODVMMy45MjEyOTUtMy43ODk3ODhDNC4xMDA2MjMtNC41MDcwOTggNC41MDcwOTgtNS4wMzMxMjYgNS4wNTcwMzYtNS4wMzMxMjZDNS4wODA5NDYtNS4wMzMxMjYgNS40MTU2OTEtNS4wMzMxMjYgNS42NjY3NS00Ljg3NzcwOVonLz4KPHBhdGggaWQ9J2cxLTQwJyBkPSdNMy44ODU0MyAyLjkwNTEwNkMzLjg4NTQzIDIuODY5MjQgMy44ODU0MyAyLjg0NTMzIDMuNjgyMTkyIDIuNjQyMDkyQzIuNDg2Njc1IDEuNDM0NjIgMS44MTcxODYtLjUzNzk4MyAxLjgxNzE4Ni0yLjk3NjgzN0MxLjgxNzE4Ni01LjI5NjEzOSAyLjM3OTA3OC03LjI5MjY1MyAzLjc2NTg3OC04LjcwMzM2MkMzLjg4NTQzLTguODEwOTU5IDMuODg1NDMtOC44MzQ4NjkgMy44ODU0My04Ljg3MDczNUMzLjg4NTQzLTguOTQyNDY2IDMuODI1NjU0LTguOTY2Mzc2IDMuNzc3ODMzLTguOTY2Mzc2QzMuNjIyNDE2LTguOTY2Mzc2IDIuNjQyMDkyLTguMTA1NjA0IDIuMDU2Mjg5LTYuOTMzOTk4QzEuNDQ2NTc1LTUuNzI2NTI2IDEuMTcxNjA2LTQuNDQ3MzIzIDEuMTcxNjA2LTIuOTc2ODM3QzEuMTcxNjA2LTEuOTEyODI3IDEuMzM4OTc5LS40OTAxNjIgMS45NjA2NDggLjc4OTA0MUMyLjY2NjAwMiAyLjIyMzY2MSAzLjY0NjMyNiAzLjAwMDc0NyAzLjc3NzgzMyAzLjAwMDc0N0MzLjgyNTY1NCAzLjAwMDc0NyAzLjg4NTQzIDIuOTc2ODM3IDMuODg1NDMgMi45MDUxMDZaJy8+CjxwYXRoIGlkPSdnMS00MScgZD0nTTMuMzcxMzU3LTIuOTc2ODM3QzMuMzcxMzU3LTMuODg1NDMgMy4yNTE4MDYtNS4zNjc4NyAyLjU4MjMxNi02Ljc1NDY3QzEuODc2OTYxLTguMTg5MjkgLjg5NjYzOC04Ljk2NjM3NiAuNzY1MTMxLTguOTY2Mzc2Qy43MTczMS04Ljk2NjM3NiAuNjU3NTM0LTguOTQyNDY2IC42NTc1MzQtOC44NzA3MzVDLjY1NzUzNC04LjgzNDg2OSAuNjU3NTM0LTguODEwOTU5IC44NjA3NzItOC42MDc3MjFDMi4wNTYyODktNy40MDAyNDkgMi43MjU3NzgtNS40Mjc2NDYgMi43MjU3NzgtMi45ODg3OTJDMi43MjU3NzgtLjY2OTQ4OSAyLjE2Mzg4NSAxLjMyNzAyNCAuNzc3MDg2IDIuNzM3NzMzQy42NTc1MzQgMi44NDUzMyAuNjU3NTM0IDIuODY5MjQgLjY1NzUzNCAyLjkwNTEwNkMuNjU3NTM0IDIuOTc2ODM3IC43MTczMSAzLjAwMDc0NyAuNzY1MTMxIDMuMDAwNzQ3Qy45MjA1NDggMy4wMDA3NDcgMS45MDA4NzIgMi4xMzk5NzUgMi40ODY2NzUgLjk2ODM2OUMzLjA5NjM4OS0uMjUxMDU5IDMuMzcxMzU3LTEuNTQyMjE3IDMuMzcxMzU3LTIuOTc2ODM3WicvPgo8cGF0aCBpZD0nZzEtMTA1JyBkPSdNMi4wODAxOTktNy4zNjQzODRDMi4wODAxOTktNy42NzUyMTggMS44MjkxNDEtNy45NTAxODcgMS40OTQzOTYtNy45NTAxODdDMS4xODM1NjItNy45NTAxODcgLjkyMDU0OC03LjY5OTEyOCAuOTIwNTQ4LTcuMzc2MzM5Qy45MjA1NDgtNy4wMTc2ODQgMS4yMDc0NzItNi43OTA1MzUgMS40OTQzOTYtNi43OTA1MzVDMS44NjUwMDYtNi43OTA1MzUgMi4wODAxOTktNy4xMDEzNyAyLjA4MDE5OS03LjM2NDM4NFpNLjQzMDM4Ni01LjE0MDcyMlYtNC43OTQwMjJDMS4xOTU1MTctNC43OTQwMjIgMS4zMDMxMTMtNC43MjIyOTEgMS4zMDMxMTMtNC4xMzY0ODhWLS44ODQ2ODJDMS4zMDMxMTMtLjM0NjcgMS4xNzE2MDYtLjM0NjcgLjM5NDUyMS0uMzQ2N1YwQy43MjkyNjUtLjAyMzkxIDEuMzAzMTEzLS4wMjM5MSAxLjY0OTgxMy0uMDIzOTFDMS43ODEzMi0uMDIzOTEgMi40NzQ3Mi0uMDIzOTEgMi44ODExOTYgMFYtLjM0NjdDMi4xMDQxMS0uMzQ2NyAyLjA1NjI4OS0uNDA2NDc2IDIuMDU2Mjg5LS44NzI3MjdWLTUuMjcyMjI5TC40MzAzODYtNS4xNDA3MjJaJy8+CjxwYXRoIGlkPSdnMS0xMTAnIGQ9J001LjMyMDA1LTIuOTA1MTA2QzUuMzIwMDUtNC4wMTY5MzYgNS4zMjAwNS00LjM1MTY4MSA1LjA0NTA4MS00LjczNDI0N0M0LjY5ODM4MS01LjIwMDQ5OCA0LjEzNjQ4OC01LjI3MjIyOSAzLjczMDAxMi01LjI3MjIyOUMyLjU3MDM2MS01LjI3MjIyOSAyLjExNjA2NS00LjI3OTk1IDIuMDIwNDIzLTQuMDQwODQ3SDIuMDA4NDY4Vi01LjI3MjIyOUwuMzgyNTY1LTUuMTQwNzIyVi00Ljc5NDAyMkMxLjE5NTUxNy00Ljc5NDAyMiAxLjI5MTE1OC00LjcxMDMzNiAxLjI5MTE1OC00LjEyNDUzM1YtLjg4NDY4MkMxLjI5MTE1OC0uMzQ2NyAxLjE1OTY1MS0uMzQ2NyAuMzgyNTY1LS4zNDY3VjBDLjY5MzQtLjAyMzkxIDEuMzM4OTc5LS4wMjM5MSAxLjY3MzcyNC0uMDIzOTFDMi4wMjA0MjMtLjAyMzkxIDIuNjY2MDAyLS4wMjM5MSAyLjk3NjgzNyAwVi0uMzQ2N0MyLjIxMTcwNi0uMzQ2NyAyLjA2ODI0NC0uMzQ2NyAyLjA2ODI0NC0uODg0NjgyVi0zLjEwODM0NEMyLjA2ODI0NC00LjM2MzYzNiAyLjg5MzE1MS01LjAzMzEyNiAzLjYzNDM3MS01LjAzMzEyNlM0LjU0Mjk2NC00LjQyMzQxMiA0LjU0Mjk2NC0zLjY5NDE0N1YtLjg4NDY4MkM0LjU0Mjk2NC0uMzQ2NyA0LjQxMTQ1Ny0uMzQ2NyAzLjYzNDM3MS0uMzQ2N1YwQzMuOTQ1MjA1LS4wMjM5MSA0LjU5MDc4NS0uMDIzOTEgNC45MjU1MjktLjAyMzkxQzUuMjcyMjI5LS4wMjM5MSA1LjkxNzgwOC0uMDIzOTEgNi4yMjg2NDMgMFYtLjM0NjdDNS42MzA4ODQtLjM0NjcgNS4zMzIwMDUtLjM0NjcgNS4zMjAwNS0uNzA1MzU1Vi0yLjkwNTEwNlonLz4KPHBhdGggaWQ9J2cxLTExNScgZD0nTTMuOTIxMjk1LTUuMDU3MDM2QzMuOTIxMjk1LTUuMjcyMjI5IDMuOTIxMjk1LTUuMzMyMDA1IDMuODAxNzQzLTUuMzMyMDA1QzMuNzA2MTAyLTUuMzMyMDA1IDMuNDc4OTU0LTUuMDY4OTkxIDMuMzk1MjY4LTQuOTYxMzk1QzMuMDI0NjU4LTUuMjYwMjc0IDIuNjU0MDQ3LTUuMzMyMDA1IDIuMjcxNDgyLTUuMzMyMDA1Qy44MjQ5MDctNS4zMzIwMDUgLjM5NDUyMS00LjU0Mjk2NCAuMzk0NTIxLTMuODg1NDNDLjM5NDUyMS0zLjc1MzkyMyAuMzk0NTIxLTMuMzM1NDkyIC44NDg4MTctMi45MTcwNjFDMS4yMzEzODItMi41ODIzMTYgMS42Mzc4NTgtMi40OTg2MyAyLjE4Nzc5Ni0yLjM5MTAzNEMyLjg0NTMzLTIuMjU5NTI3IDMuMDAwNzQ3LTIuMjIzNjYxIDMuMjk5NjI2LTEuOTg0NTU4QzMuNTE0ODE5LTEuODA1MjMgMy42NzAyMzctMS41NDIyMTcgMy42NzAyMzctMS4yMDc0NzJDMy42NzAyMzctLjY5MzQgMy4zNzEzNTctLjExOTU1MiAyLjMxOTMwMy0uMTE5NTUyQzEuNTMwMjYyLS4xMTk1NTIgLjk1NjQxMy0uNTczODQ4IC42OTM0LTEuNzY5MzY1Qy42NDU1NzktMS45ODQ1NTggLjY0NTU3OS0xLjk5NjUxMyAuNjMzNjI0LTIuMDA4NDY4Qy42MDk3MTQtMi4wNTYyODkgLjU2MTg5My0yLjA1NjI4OSAuNTI2MDI3LTIuMDU2Mjg5Qy4zOTQ1MjEtMi4wNTYyODkgLjM5NDUyMS0xLjk5NjUxMyAuMzk0NTIxLTEuNzgxMzJWLS4xNTU0MTdDLjM5NDUyMSAuMDU5Nzc2IC4zOTQ1MjEgLjExOTU1MiAuNTE0MDcyIC4xMTk1NTJDLjU3Mzg0OCAuMTE5NTUyIC41ODU4MDMgLjEwNzU5NyAuNzg5MDQxLS4xNDM0NjJDLjg0ODgxNy0uMjI3MTQ4IC44NDg4MTctLjI1MTA1OSAxLjAyODE0NC0uNDQyMzQxQzEuNDgyNDQxIC4xMTk1NTIgMi4xMjgwMiAuMTE5NTUyIDIuMzMxMjU4IC4xMTk1NTJDMy41ODY1NSAuMTE5NTUyIDQuMjA4MjE5LS41NzM4NDggNC4yMDgyMTktMS41MTgzMDZDNC4yMDgyMTktMi4xNjM4ODUgMy44MTM2OTktMi41NDY0NTEgMy43MDYxMDItMi42NTQwNDdDMy4yNzU3MTYtMy4wMjQ2NTggMi45NTI5MjctMy4wOTYzODkgMi4xNjM4ODUtMy4yMzk4NTFDMS44MDUyMy0zLjMxMTU4MiAuOTMyNTAzLTMuNDc4OTU0IC45MzI1MDMtNC4xOTYyNjRDLjkzMjUwMy00LjU2Njg3NCAxLjE4MzU2Mi01LjExNjgxMiAyLjI1OTUyNy01LjExNjgxMkMzLjU2MjY0LTUuMTE2ODEyIDMuNjM0MzcxLTQuMDA0OTgxIDMuNjU4MjgxLTMuNjM0MzcxQzMuNjcwMjM3LTMuNTM4NzMgMy43NTM5MjMtMy41Mzg3MyAzLjc4OTc4OC0zLjUzODczQzMuOTIxMjk1LTMuNTM4NzMgMy45MjEyOTUtMy41OTg1MDYgMy45MjEyOTUtMy44MTM2OTlWLTUuMDU3MDM2WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTEyMCcvPgo8dXNlIHg9JzguNjQ0NTg1JyB5PScwJyB4bGluazpocmVmPScjZzEtMTE1Jy8+Cjx1c2UgeD0nMTMuMjYxOTQ0JyB5PScwJyB4bGluazpocmVmPScjZzEtMTA1Jy8+Cjx1c2UgeD0nMTYuNTEzNjA1JyB5PScwJyB4bGluazpocmVmPScjZzEtMTEwJy8+Cjx1c2UgeD0nMjMuMDE2OTI3JyB5PScwJyB4bGluazpocmVmPScjZzEtNDAnLz4KPHVzZSB4PScyNy41NjkyNTMnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMjAnLz4KPHVzZSB4PSczNC4yMjEzNCcgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTQxJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9NCAtLT4=" alt="x\sin(x)" style="vertical-align: -4px"/>. We can change their number and distribution in the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScyOS4zMDY0NTJwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgMjkuMzA2NDUyIDExLjk1NTE2OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtNDgnIGQ9J001LjM1NTkxNS0zLjgyNTY1NEM1LjM1NTkxNS00LjgxNzkzMyA1LjI5NjEzOS01Ljc4NjMwMSA0Ljg2NTc1My02LjY5NDg5NEM0LjM3NTU5Mi03LjY4NzE3MyAzLjUxNDgxOS03Ljk1MDE4NyAyLjkyOTAxNi03Ljk1MDE4N0MyLjIzNTYxNi03Ljk1MDE4NyAxLjM4NjgtNy42MDM0ODcgLjk0NDQ1OC02LjYxMTIwOEMuNjA5NzE0LTUuODU4MDMyIC40OTAxNjItNS4xMTY4MTIgLjQ5MDE2Mi0zLjgyNTY1NEMuNDkwMTYyLTIuNjY2MDAyIC41NzM4NDgtMS43OTMyNzUgMS4wMDQyMzQtLjk0NDQ1OEMxLjQ3MDQ4Ni0uMDM1ODY2IDIuMjk1MzkyIC4yNTEwNTkgMi45MTcwNjEgLjI1MTA1OUMzLjk1NzE2MSAuMjUxMDU5IDQuNTU0OTE5LS4zNzA2MSA0LjkwMTYxOS0xLjA2NDAxQzUuMzMyMDA1LTEuOTYwNjQ4IDUuMzU1OTE1LTMuMTMyMjU0IDUuMzU1OTE1LTMuODI1NjU0Wk0yLjkxNzA2MSAuMDExOTU1QzIuNTM0NDk2IC4wMTE5NTUgMS43NTc0MS0uMjAzMjM4IDEuNTMwMjYyLTEuNTA2MzUxQzEuMzk4NzU1LTIuMjIzNjYxIDEuMzk4NzU1LTMuMTMyMjU0IDEuMzk4NzU1LTMuOTY5MTE2QzEuMzk4NzU1LTQuOTQ5NDQgMS4zOTg3NTUtNS44MzQxMjIgMS41OTAwMzctNi41Mzk0NzdDMS43OTMyNzUtNy4zNDA0NzMgMi40MDI5ODktNy43MTEwODMgMi45MTcwNjEtNy43MTEwODNDMy4zNzEzNTctNy43MTEwODMgNC4wNjQ3NTctNy40MzYxMTUgNC4yOTE5MDUtNi40MDc5N0M0LjQ0NzMyMy01LjcyNjUyNiA0LjQ0NzMyMy00Ljc4MjA2NyA0LjQ0NzMyMy0zLjk2OTExNkM0LjQ0NzMyMy0zLjE2ODEyIDQuNDQ3MzIzLTIuMjU5NTI3IDQuMzE1ODE2LTEuNTMwMjYyQzQuMDg4NjY3LS4yMTUxOTMgMy4zMzU0OTIgLjAxMTk1NSAyLjkxNzA2MSAuMDExOTU1WicvPgo8cGF0aCBpZD0nZzAtNDknIGQ9J00zLjQ0MzA4OC03LjY2MzI2M0MzLjQ0MzA4OC03LjkzODIzMiAzLjQ0MzA4OC03Ljk1MDE4NyAzLjIwMzk4NS03Ljk1MDE4N0MyLjkxNzA2MS03LjYyNzM5NyAyLjMxOTMwMy03LjE4NTA1NiAxLjA4NzkyLTcuMTg1MDU2Vi02LjgzODM1NkMxLjM2Mjg4OS02LjgzODM1NiAxLjk2MDY0OC02LjgzODM1NiAyLjYxODE4Mi03LjE0OTE5MVYtLjkyMDU0OEMyLjYxODE4Mi0uNDkwMTYyIDIuNTgyMzE2LS4zNDY3IDEuNTMwMjYyLS4zNDY3SDEuMTU5NjUxVjBDMS40ODI0NDEtLjAyMzkxIDIuNjQyMDkyLS4wMjM5MSAzLjAzNjYxMy0uMDIzOTFTNC41Nzg4MjktLjAyMzkxIDQuOTAxNjE5IDBWLS4zNDY3SDQuNTMxMDA5QzMuNDc4OTU0LS4zNDY3IDMuNDQzMDg4LS40OTAxNjIgMy40NDMwODgtLjkyMDU0OFYtNy42NjMyNjNaJy8+CjxwYXRoIGlkPSdnMC01OScgZD0nTTIuMTk5NzUxLTQuNTc4ODI5QzIuMTk5NzUxLTQuOTAxNjE5IDEuOTI0NzgyLTUuMTUyNjc3IDEuNjI1OTAzLTUuMTUyNjc3QzEuMjc5MjAzLTUuMTUyNjc3IDEuMDQwMS00Ljg3NzcwOSAxLjA0MDEtNC41Nzg4MjlDMS4wNDAxLTQuMjIwMTc0IDEuMzM4OTc5LTMuOTkzMDI2IDEuNjEzOTQ4LTMuOTkzMDI2QzEuOTM2NzM3LTMuOTkzMDI2IDIuMTk5NzUxLTQuMjQ0MDg1IDIuMTk5NzUxLTQuNTc4ODI5Wk0xLjk5NjUxMy0uMTE5NTUyQzEuOTk2NTEzIC4yOTg4NzkgMS45OTY1MTMgMS4xNDc2OTYgMS4yNjcyNDggMi4wNDQzMzRDMS4xOTU1MTcgMi4xMzk5NzUgMS4xOTU1MTcgMi4xNjM4ODUgMS4xOTU1MTcgMi4xODc3OTZDMS4xOTU1MTcgMi4yNDc1NzIgMS4yNTUyOTMgMi4zMDczNDcgMS4zMTUwNjggMi4zMDczNDdDMS4zOTg3NTUgMi4zMDczNDcgMi4yMzU2MTYgMS40MjI2NjUgMi4yMzU2MTYgLjAyMzkxQzIuMjM1NjE2LS40MTg0MzEgMi4xOTk3NTEtMS4xNTk2NTEgMS42MTM5NDgtMS4xNTk2NTFDMS4yNjcyNDgtMS4xNTk2NTEgMS4wNDAxLS44OTY2MzggMS4wNDAxLS41ODU4MDNDMS4wNDAxLS4yNjMwMTQgMS4yNjcyNDggMCAxLjYyNTkwMyAwQzEuODUzMDUxIDAgMS45MzY3MzctLjA3MTczMSAxLjk5NjUxMy0uMTE5NTUyWicvPgo8cGF0aCBpZD0nZzAtOTEnIGQ9J00yLjk4ODc5MiAyLjk4ODc5MlYyLjU0NjQ1MUgxLjgyOTE0MVYtOC41MjQwMzVIMi45ODg3OTJWLTguOTY2Mzc2SDEuMzg2OFYyLjk4ODc5MkgyLjk4ODc5MlonLz4KPHBhdGggaWQ9J2cwLTkzJyBkPSdNMS44NTMwNTEtOC45NjYzNzZILjI1MTA1OVYtOC41MjQwMzVIMS40MTA3MVYyLjU0NjQ1MUguMjUxMDU5VjIuOTg4NzkySDEuODUzMDUxVi04Ljk2NjM3NlonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC05MScvPgo8dXNlIHg9JzMuMjUxNjYxJyB5PScwJyB4bGluazpocmVmPScjZzAtNDgnLz4KPHVzZSB4PSc5LjEwNDY1MicgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTU5Jy8+Cjx1c2UgeD0nMTQuMzQ4ODEnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC00OScvPgo8dXNlIHg9JzIwLjIwMTgwMScgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTQ4Jy8+Cjx1c2UgeD0nMjYuMDU0NzkxJyB5PScwJyB4bGluazpocmVmPScjZzAtOTMnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD00IC0tPg==" alt="[0; 10]" style="vertical-align: -4px"/> range.
+If the <cite>with_error</cite> boolean is <cite>True</cite>, then the data is computed by adding a Gaussian noise to the function values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">xmin</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n_pt</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># number of initial points</span>
+<span class="n">with_error</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># whether to use generation with error</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ref_func_with_error</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;eps&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x * sin(x) + eps&quot;</span><span class="p">])</span>
+<span class="n">ref_func</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">ref_func_with_error</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pt</span><span class="p">))</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">1235</span><span class="p">)</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_pt</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n_pt</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">eps</span>
+<span class="k">if</span> <span class="n">with_error</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func_with_error</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ref_func</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;bullet&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="s2">&quot;Data&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Sample size = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_pt</span><span class="p">))</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_advanced_001.svg" srcset="../../_images/sphx_glr_plot_gpr_advanced_001.svg" alt="Sample size = 20" class = "sphx-glr-single-img"/></section>
+<section id="create-the-gaussian-process-regression-algorithm">
+<h2>Create the Gaussian process regression algorithm<a class="headerlink" href="#create-the-gaussian-process-regression-algorithm" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Basis</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsBool</span><span class="p">(</span><span class="s2">&quot;GaussianProcessFitter-UseAnalyticalAmplitudeEstimate&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span>
+
+<span class="c1"># 2. Covariance model</span>
+<span class="n">cov</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">],</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+
+<span class="c1"># 3. Gaussian process fitter algorithm</span>
+<span class="n">algogpfitter</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+
+<span class="c1"># 4. Optimization</span>
+<span class="c1"># algogpr.setOptimizationAlgorithm(ot.NLopt(&#39;GN_DIRECT&#39;))</span>
+<span class="n">lhsExperiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1e2</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">algogpfitter</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">TNC</span><span class="p">(),</span> <span class="n">lhsExperiment</span><span class="o">.</span><span class="n">generate</span><span class="p">()))</span>
+
+<span class="c1"># 5. Run the algorithm</span>
+<span class="n">algogpfitter</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">gpfitterResult</span> <span class="o">=</span> <span class="n">algogpfitter</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+
+<span class="c1"># 6. Gaussian process regression algorithm</span>
+<span class="n">algogpr</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">gpfitterResult</span><span class="p">)</span>
+
+<span class="c1"># 7. Run the algorithm</span>
+<span class="n">algogpr</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Basis( [[x0]-&gt;[1]] )
+MaternModel(scale=[1], amplitude=[2.5], nu=1.5)
+</pre></div>
+</div>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading">¶</a></h2>
+<p>Get some results</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult</span> <span class="o">=</span> <span class="n">algogpr</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal scale= </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gprResult</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getScale</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal amplitude = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gprResult</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getAmplitude</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal trend coefficients = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gprResult</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Optimal scale= [0.818671]
+Optimal amplitude = [4.51224]
+Optimal trend coefficients = [-0.115697]
+</pre></div>
+</div>
+<p>Get the metamodel</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprMeta</span> <span class="o">=</span> <span class="n">gprResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+
+<span class="n">n_pts_plot</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">x_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax1</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax2</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># On the left, the function</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ref_func</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Function&quot;</span><span class="p">])</span>
+<span class="n">graphGpr</span> <span class="o">=</span> <span class="n">gprMeta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graphGpr</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;green&quot;</span><span class="p">])</span>
+<span class="n">graphGpr</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Gaussian process regression&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphGpr</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Data&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax1</span></a><span class="p">])</span>
+
+<span class="c1"># On the right, the conditional Gaussian process regression variance</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;Conditional Gaussian process regression variance&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1"># Sample for the data</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n_pt</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="c1"># Sample for the variance</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n_pts_plot</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_plot</span>
+<span class="n">variance</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span>
+    <span class="n">gprResult</span>
+<span class="p">)</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">variance</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax2</span></a><span class="p">])</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.suptitle.html#matplotlib.figure.Figure.suptitle" title="matplotlib.figure.Figure.suptitle" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span></a><span class="p">(</span><span class="s2">&quot;Gaussian process regression result&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_advanced_002.svg" srcset="../../_images/sphx_glr_plot_gpr_advanced_002.svg" alt="Gaussian process regression result" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0.98, &#39;Gaussian process regression result&#39;)
+</pre></div>
+</div>
+</section>
+<section id="display-the-confidence-interval">
+<h2>Display the confidence interval<a class="headerlink" href="#display-the-confidence-interval" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">level</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">quantile</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">computeQuantile</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">borne_sup</span> <span class="o">=</span> <span class="n">gprMeta</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">+</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+<span class="n">borne_inf</span> <span class="o">=</span> <span class="n">gprMeta</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">-</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;ro&quot;</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">borne_sup</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Confidence interval&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">borne_inf</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+<span class="n">graph_ref_func</span> <span class="o">=</span> <span class="n">ref_func</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graph_gprMeta</span> <span class="o">=</span> <span class="n">gprMeta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">graph</span> <span class="ow">in</span> <span class="p">[</span><span class="n">graph_ref_func</span><span class="p">,</span> <span class="n">graph_gprMeta</span><span class="p">]:</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph_ref_func</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span> <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$x\sin(x)$&quot;</span><span class="p">})</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_gprMeta</span><span class="p">,</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction&quot;</span><span class="p">},</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">legend</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.autoscale.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_advanced_003.svg" srcset="../../_images/sphx_glr_plot_gpr_advanced_003.svg" alt="plot gpr advanced" class = "sphx-glr-single-img"/></section>
+<section id="generate-conditional-trajectories">
+<h2>Generate conditional trajectories<a class="headerlink" href="#generate-conditional-trajectories" title="Link to this heading">¶</a></h2>
+<p>Support for trajectories</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">IntervalMesher</span><span class="p">([</span><span class="mi">500</span><span class="p">])</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Conditional Gaussian process</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">krv</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">ConditionedGaussianProcess</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+<span class="n">krv_sample</span> <span class="o">=</span> <span class="n">krv</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x_plot</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;ro&quot;</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">krv_sample</span><span class="o">.</span><span class="n">getSize</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+            <span class="n">values</span><span class="p">,</span>
+            <span class="n">krv_sample</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">asPoint</span><span class="p">(),</span>
+            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Conditional trajectories&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">krv_sample</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">asPoint</span><span class="p">(),</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_ref_func</span><span class="p">,</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$x\sin(x)$&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_gprMeta</span><span class="p">,</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">legend</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.autoscale.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_advanced_004.svg" srcset="../../_images/sphx_glr_plot_gpr_advanced_004.svg" alt="plot gpr advanced" class = "sphx-glr-single-img"/></section>
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">n_valid</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x_valid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">)</span>
+<span class="n">X_valid</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">x_valid</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">with_error</span><span class="p">:</span>
+    <span class="n">X_valid</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_valid</span><span class="p">))</span>
+    <span class="n">y_valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func_with_error</span><span class="p">(</span><span class="n">X_valid</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">y_valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ref_func</span><span class="p">(</span><span class="n">X_valid</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">metamodelPredictions</span> <span class="o">=</span> <span class="n">gprMeta</span><span class="p">(</span><span class="n">x_valid</span><span class="p">)</span>
+<span class="n">validation</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">y_valid</span><span class="p">,</span> <span class="n">metamodelPredictions</span><span class="p">)</span>
+<span class="n">validation</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+class=Point name=Unnamed dimension=1 values=[0.692168]
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">drawValidation</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_advanced_005.svg" srcset="../../_images/sphx_glr_plot_gpr_advanced_005.svg" alt="Metamodel validation - n = 10" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">validation</span><span class="o">.</span><span class="n">getResidualDistribution</span><span class="p">()</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Residuals&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_advanced_006.svg" srcset="../../_images/sphx_glr_plot_gpr_advanced_006.svg" alt="plot gpr advanced" class = "sphx-glr-single-img"/></section>
+<section id="nugget-effect">
+<h2>Nugget effect<a class="headerlink" href="#nugget-effect" title="Link to this heading">¶</a></h2>
+<p>Let us try again, but this time we optimize the nugget effect.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cov</span><span class="o">.</span><span class="n">activateNuggetFactor</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We have to run the optimization algorithm again.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algogpfitter</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algogpfitter</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">NLopt</span><span class="p">(</span><span class="s2">&quot;GN_DIRECT&quot;</span><span class="p">))</span>
+<span class="n">algogpfitter</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">algogpr_nugget</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">algogpfitter</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+<span class="n">algogpr_nugget</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We get the results and the metamodel.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult_nugget</span> <span class="o">=</span> <span class="n">algogpr_nugget</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal scale= </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gprResult_nugget</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getScale</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Optimal amplitude = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">gprResult_nugget</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span><span class="o">.</span><span class="n">getAmplitude</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal trend coefficients = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gprResult_nugget</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Optimal scale= [1.15712]
+Optimal amplitude = [4.67517]
+Optimal trend coefficients = [-0.350133]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprMeta_nugget</span> <span class="o">=</span> <span class="n">gprResult_nugget</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+<span class="n">gpr_conditional_covariance</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span>
+    <span class="n">gprResult_nugget</span>
+<span class="p">)</span>
+<span class="n">variance</span> <span class="o">=</span> <span class="n">gpr_conditional_covariance</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the confidence interval again. Note that this time, it always contains
+the true value of the function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 7</span>
+<span class="n">borne_sup_nugget</span> <span class="o">=</span> <span class="n">gprMeta_nugget</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">+</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+<span class="n">borne_inf_nugget</span> <span class="o">=</span> <span class="n">gprMeta_nugget</span><span class="p">(</span><span class="n">x_plot</span><span class="p">)</span> <span class="o">-</span> <span class="n">quantile</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;ro&quot;</span><span class="p">))</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+    <span class="n">x_plot</span><span class="p">,</span>
+    <span class="n">borne_sup_nugget</span><span class="p">,</span>
+    <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Confidence interval with nugget&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="matplotlib.axes.Axes.plot" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">borne_inf_nugget</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+<span class="n">graph_gprMeta_nugget</span> <span class="o">=</span> <span class="n">gprMeta_nugget</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">n_pts_plot</span><span class="p">)</span>
+<span class="n">graph_gprMeta_nugget</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph_ref_func</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span> <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;$x sin(x)$&quot;</span><span class="p">})</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_gprMeta_nugget</span><span class="p">,</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction with nugget&quot;</span><span class="p">},</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">graph_gprMeta</span><span class="p">,</span>
+    <span class="n">plot_kw</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;linestyle&quot;</span><span class="p">:</span> <span class="s2">&quot;dotted&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;prediction without nugget&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="matplotlib.axes.Axes" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">],</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/legend_api.html#matplotlib.legend.Legend" title="matplotlib.legend.Legend" class="sphx-glr-backref-module-matplotlib-legend sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">legend</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html#matplotlib.axes.Axes.legend" title="matplotlib.axes.Axes.legend" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.autoscale.html#matplotlib.axes.Axes.autoscale" title="matplotlib.axes.Axes.autoscale" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_advanced_007.svg" srcset="../../_images/sphx_glr_plot_gpr_advanced_007.svg" alt="plot gpr advanced" class = "sphx-glr-single-img"/><p>We validate the model with the nugget effect:
+its predictivity factor is slightly improved.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">validation_nugget</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MetaModelValidation</span><span class="p">(</span><span class="n">y_valid</span><span class="p">,</span> <span class="n">gprMeta_nugget</span><span class="p">(</span><span class="n">x_valid</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2 score with nugget: &quot;</span><span class="p">,</span> <span class="n">validation_nugget</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2 score without nugget: &quot;</span><span class="p">,</span> <span class="n">validation</span><span class="o">.</span><span class="n">computeR2Score</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>R2 score with nugget:  [0.737924]
+R2 score without nugget:  [0.692168]
+</pre></div>
+</div>
+<p>Display all figures</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-surrogate-modeling-gaussian-process-regression-plot-gpr-advanced-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/2403132f5945fa85419738b71950181a/plot_gpr_advanced.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gpr_advanced.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/98e10e1508ffff6aa870e702b58a6154/plot_gpr_advanced.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_gpr_advanced.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/ac497994c3defb444030c34f936b144a/plot_gpr_advanced.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_gpr_advanced.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_draw_covariance_models.html" title="Kriging : draw covariance models"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_gpr_active_learning.html" title="Gaussian Process-based active learning for reliability"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.26 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Surrogate modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Gaussian Process Regression</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Advanced Gaussian process regression</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2025 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 24, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+  </body>
+</html>
