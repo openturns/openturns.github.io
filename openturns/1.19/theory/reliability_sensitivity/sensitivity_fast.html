@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sensitivity analysis by Fourier decomposition &#8212; OpenTURNS 1.19 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Importance factors from FORM method" href="importance_form.html" />
+    <link rel="prev" title="Sensivity analysis with correlated inputs" href="sensitivity_ancova.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="importance_form.html" title="Importance factors from FORM method"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sensitivity_ancova.html" title="Sensivity analysis with correlated inputs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sensitivity analysis by Fourier decomposition</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="sensitivity_ancova.html"
+                          title="previous chapter">Sensivity analysis with correlated inputs</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="importance_form.html"
+                          title="next chapter">Importance factors from FORM method</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/reliability_sensitivity/sensitivity_fast.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sensitivity-analysis-by-fourier-decomposition">
+<span id="sensitivity-fast"></span><h1>Sensitivity analysis by Fourier decomposition<a class="headerlink" href="#sensitivity-analysis-by-fourier-decomposition" title="Permalink to this headline">¶</a></h1>
+<p>FAST is a sensitivity analysis method which is based upon the ANOVA
+decomposition of the variance of the model response
+<img class="math" src="../../_images/math/642d751711772d78c64a36aaddacec979c4fc4bb.svg" alt="y = f(\vect{X})"/>, the latter being represented by its Fourier
+expansion. <img class="math" src="../../_images/math/cfecc753e420967e1728cd14c5e8343783d1fa88.svg" alt="\vect{X}=\{X^1,\dots,X^{n_X}\}"/> is an input random
+vector of <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> independent components.</p>
+<div class="line-block">
+<div class="line">The extended FAST method consists in computing
+alternately the first order and the total-effect indices of each
+input. This approach relies upon a Fourier decomposition of the model
+response. Its key idea is to recast this representation as a function
+of a <img class="math" src="../../_images/math/b21f3b1ba509fc8c892d439372878eafbeed8dbd.svg" alt="\mathit{scalar}"/> parameter <img class="math" src="../../_images/math/29350e76247bfe6a307c4a905d5a756c0cd41091.svg" alt="s"/>, by defining
+parametric curves <img class="math" src="../../_images/math/871e9b8dd431ed718c2d2e0b48babab6ba9cf98f.svg" alt="s \mapsto x_i(s)"/>, <img class="math" src="../../_images/math/f8265ce53a9ea521ea8bbef84328abaa21dec6c4.svg" alt="i=1, \dots, n_X"/>
+exploring the support of the input random vector <img class="math" src="../../_images/math/2bcbd5b2b78ef65f3c1a1987095a65863870aa77.svg" alt="\vect{X}"/>.</div>
+<div class="line">For each input, the same procedure is realized in three steps:</div>
+</div>
+<ul>
+<li><p>Sampling:</p>
+<p>Deterministic space-filling paths with random starting points are
+defined, i.e. each input <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> is transformed as follows:</p>
+<div class="math">
+<p><img src="../../_images/math/924f2d25e5f1c7cbf1420f66ef7e019a566b99d2.svg" alt="x^i_j = \frac{1}{2} + \frac{1}{\pi} \arcsin(\sin(\omega_i s_j + \phi_i)),
+    \quad i=1, \dots, n_X, \, j=1, \dots, N"/></p>
+</div><p>where <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> is the number of input variables. <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> is the
+length of the discretization of the s-space, with <img class="math" src="../../_images/math/29350e76247bfe6a307c4a905d5a756c0cd41091.svg" alt="s"/> varying
+in <img class="math" src="../../_images/math/11310f7347af1b49b018738df0a53152a76f27e4.svg" alt="(-\pi, \pi)"/> by step of <img class="math" src="../../_images/math/21d0ba13b06ac56c9ebfcc29f2f8a4dd3dc297f9.svg" alt="2\pi/N"/>. <img class="math" src="../../_images/math/7ffa398a2109f04e25591d01c4f97ec6e97d753f.svg" alt="\phi_i"/> is a
+random phase-shift chosen uniformly in <img class="math" src="../../_images/math/b6bf7ab977fd0b640ce831289de63abadecaf1d0.svg" alt="[0, 2\pi]"/> which
+enables to make the curves start anywhere within the unit hypercube
+<img class="math" src="../../_images/math/c19ed6d3941fd6488ac53423d78749610eacb443.svg" alt="K^{n_X}=(\vect{X}|0\leq x_i\leq1; i=1, \dots, n_X)"/>. The
+selection of the set <img class="math" src="../../_images/math/733abfa87849b25e25a9dd1bcac9ac4d6c65b383.svg" alt="\{\phi_1, \dots, \phi_{n_X}\}"/> induces a
+part of randomness in the procedure. So it can be asked to realize
+the procedure <img class="math" src="../../_images/math/588967cf476b3d5d843c8bc6a8d3eff8ddd98ca3.svg" alt="Nr"/> times and then to calculate the arithmetic
+means of the results over the <img class="math" src="../../_images/math/588967cf476b3d5d843c8bc6a8d3eff8ddd98ca3.svg" alt="Nr"/> estimates. This operation is
+called <img class="math" src="../../_images/math/2a1de917312ec790bc291d9b0188f5dc0997ded0.svg" alt="\mathit{resampling}"/>.</p>
+<p><img class="math" src="../../_images/math/2f3241bf1e54d49b342222844c91bdd7befb0f29.svg" alt="\{\omega_i\}, \forall i=1, \dots, n_X"/> is a set of integer
+frequencies assigned to each input <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/>. The frequency
+associated with the input of interest is set to the maximum
+admissible frequency satisfying the Nyquist criterion (which ensures
+to avoid aliasing effects):</p>
+<div class="math">
+<p><img src="../../_images/math/20915baf51d45c046cefb186dee4874e63db907c.svg" alt="\omega_i = \frac{N - 1}{2M}"/></p>
+</div><p>with <img class="math" src="../../_images/math/68062c5a5ba2a591746f0f2e2efff3786671eea8.svg" alt="M"/> the interference factor usually equal to 4 or higher.
+It corresponds to the truncation level of the Fourier series, i.e.
+the number of harmonics that are retained in the decomposition
+realized in the third step of the procedure.</p>
+<p>In the paper <a class="reference internal" href="../../bibliography.html#saltelli1999" id="id1"><span>[saltelli1999]</span></a>, for high sample size, it is
+suggested that <img class="math" src="../../_images/math/e90fb67d08686af4c60af016e93dd304f38653d3.svg" alt="16 \leq \omega_i/N_r \leq 64"/>.</p>
+<p>And the maximum frequency of the complementary set of frequencies is:</p>
+<div class="math">
+<p><img src="../../_images/math/0aa896ac2933e02c478dc21b00be40c97f7de430.svg" alt="\max(\omega_{-i}) = \frac{\omega_i}{2M} = \frac{N - 1}{4M^2}"/></p>
+</div><p>with the index ’<img class="math" src="../../_images/math/f285215fdb1f90d03b575cad362a409781866991.svg" alt="-i"/>’ which meaning ’all but <img class="math" src="../../_images/math/bc9e0812a00024d261751577fdd3d3b800392b97.svg" alt="i"/>’.</p>
+<p>The other frequencies are distributed uniformly between <img class="math" src="../../_images/math/5b3764f9912ecbd5fdf97780cabaf07efb61c49a.svg" alt="1"/> and
+<img class="math" src="../../_images/math/00ffe4ecc3a69bff69a6dfa322c294db8088d989.svg" alt="\max(\omega_{-i})"/>. The set of frequencies is the same
+whatever the number of resamplings is.</p>
+<p>Let us make an example with eight input factors, <img class="math" src="../../_images/math/c0876ba2515f34cbb7af4a6c2d6c9927166f0a3e.svg" alt="N=513"/> and
+<img class="math" src="../../_images/math/9a487de973cc680aadf7da6e8ac540e53d39a55b.svg" alt="M=4"/> i.e. <img class="math" src="../../_images/math/c43fbad8c14e6aa1feecc8e9480f3d16d0a4a5f6.svg" alt="\omega_i = \frac{N - 1}{2M} = 64"/> and
+<img class="math" src="../../_images/math/45e59ec5b16d7ac7ac95a0cb4a15d42668ba20f5.svg" alt="\max(\omega_{-i}) = \frac{N - 1}{4M^2} = 8"/> with <img class="math" src="../../_images/math/bc9e0812a00024d261751577fdd3d3b800392b97.svg" alt="i"/> the
+index of the input of interest.</p>
+<div class="line-block">
+<div class="line">When computing the sensitivity indices for the first input, the
+considered set of frequencies is :
+<img class="math" src="../../_images/math/dd784b1f948280024d97c8b08eedecf7ee142c0d.svg" alt="\{64, 1, 2, 3, 4, 5, 6, 8\}"/>.</div>
+<div class="line">When computing the sensitivity indices for the second input, the
+considered set of frequencies is :
+<img class="math" src="../../_images/math/59ba13628ffc10f190c55df8a96a939e7b327d53.svg" alt="\{1, 64, 2, 3, 4, 5, 6, 8\}"/>.</div>
+<div class="line">etc.</div>
+</div>
+<p>The transformation defined above provides a uniformly distributed
+sample for the <img class="math" src="../../_images/math/86ce332f0c4f6c3b48fbdd956620fb1996305b14.svg" alt="x_i, \forall i=1, \dots, n_X"/> oscillating
+between <img class="math" src="../../_images/math/919aee1dbe276bb63ee7a88b62487eea3957e41e.svg" alt="0"/> and <img class="math" src="../../_images/math/5b3764f9912ecbd5fdf97780cabaf07efb61c49a.svg" alt="1"/>. In order to take into account the
+real distributions of the inputs, we apply an isoprobabilistic
+transformation on each <img class="math" src="../../_images/math/8796c964f035c17f755797d51f050539a5e75915.svg" alt="x_i"/> before the next step of the
+procedure.</p>
+</li>
+<li><p>Simulations:</p>
+<p>Output is computed such as:
+<img class="math" src="../../_images/math/7a05ff2bb4a325649014cdf6086ffd97ccd64149.svg" alt="y = f(s) = f(x_1(s), \dots, x_{n_X}(s))"/></p>
+<p>Then <img class="math" src="../../_images/math/40d57d21e0de0ba1ef359c116b3e0fe743af16a6.svg" alt="f(s)"/> is expanded onto a Fourier series:</p>
+<div class="math">
+<p><img src="../../_images/math/e106ffa56601d101a0bc0651806804b677c19802.svg" alt="f(s) = \sum_{k \in \Zset^N} A_k \cos(ks) + B_k \sin(ks)"/></p>
+</div><p>where <img class="math" src="../../_images/math/93ad49d78c26bd033797e984ffc11ea46eb3f067.svg" alt="A_k"/> and <img class="math" src="../../_images/math/87c228612d7951483a6a0dee650f648b320fc01b.svg" alt="B_k"/> are Fourier coefficients defined as
+follows:</p>
+<div class="math">
+<p><img src="../../_images/math/925995dfc37f3d676d833232a0f33f7e6c5b2212.svg" alt="\begin{aligned}
+    A_k &amp;=&amp; \frac{1}{2\pi}\int_{-\pi}^{\pi}f(s) \cos(ks) \, ds \\
+    B_k &amp;=&amp; \frac{1}{2\pi}\int_{-\pi}^{\pi}f(s) \sin(ks) \, ds
+  \end{aligned}"/></p>
+</div><p>These coefficients are estimated thanks to the following discrete
+formulations:</p>
+<div class="math">
+<p><img src="../../_images/math/4381a2ec93412659137e28c53956320ee8926249.svg" alt="\begin{aligned}
+    \hat{A}_k &amp;=&amp; \frac{1}{N} \sum_{j=1}^N f(x_j^1,\dots,x_j^{N_X}) cos \left( \frac{2k\pi (j-1)}{N} \right) \quad , \quad -\frac{N}{2} \leq k \leq \frac{N}{2}\\
+    \hat{B}_k &amp;=&amp; \frac{1}{N} \sum_{j=1}^N f(x_j^1,\dots,x_j^{N_X}) sin \left( \frac{2k\pi (j-1)}{N} \right) \quad , \quad -\frac{N}{2} \leq k \leq \frac{N}{2}
+  \end{aligned}"/></p>
+</div></li>
+<li><p>Estimations by frequency analysis:</p>
+<p>The first order indices are estimated as follows:</p>
+<div class="math">
+<p><img src="../../_images/math/fb612d9bbfe1e2c18c9e5528ecfeca232e80e0c8.svg" alt="\hat{S}_i = \frac{\hat{D}_i}{\hat{D}} \\
+              = \frac{\sum_{p=1}^M(\hat{A}_{p\omega_i}^2 + \hat{B}_{p\omega_i}^2)^2}
+                     {\sum_{n=1}^{(N-1)/2}(\hat{A}_n^2 + \hat{B}_n^2)^2}"/></p>
+</div><p>where <img class="math" src="../../_images/math/c2e65bf6345ff8e85d6820c2447312176456d64b.svg" alt="\hat{D}"/> is the total variance and <img class="math" src="../../_images/math/450692c09a4777219c7b194b2aca4e22f771b357.svg" alt="\hat{D}_i"/> the
+portion of <img class="math" src="../../_images/math/1e352767b2810bb261e4ced1d65ba8e1161c8bb1.svg" alt="D"/> arising from the uncertainty of the
+<img class="math" src="../../_images/math/adf11184291fab1a9c74fd516ce96a218b1d2abd.svg" alt="i^{th}"/> input. <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> the size of the sample using to
+compute the Fourier series and <img class="math" src="../../_images/math/68062c5a5ba2a591746f0f2e2efff3786671eea8.svg" alt="M"/> is the interference factor.
+Saltelli et al. (1999) recommended to set <img class="math" src="../../_images/math/68062c5a5ba2a591746f0f2e2efff3786671eea8.svg" alt="M"/> to a value in the
+range <img class="math" src="../../_images/math/f74373013e1452018c5c9b92cbe16e7edef2df5f.svg" alt="[4, 6]"/>.</p>
+<p>The total order indices are estimated as follows:</p>
+<div class="math">
+<p><img src="../../_images/math/5bcab163b81ddc319b7c73e5dc61637a62e0258a.svg" alt="\hat{T}_i = 1 - \frac{\hat{D}_{-i}}{\hat{D}} \\
+              = 1 - \frac{\sum_{k=1}^{\omega_i/2}(\hat{A}_k^2 + \hat{B}_k^2)^2}
+                         {\sum_{n=1}^{(N-1)/2}(\hat{A}_n^2 + \hat{B}_n^2)^2}"/></p>
+</div><p>where <img class="math" src="../../_images/math/0dfb484c91b52c22be7e99d126a245c981cc7462.svg" alt="\hat{D}_{-i}"/> is the part of the variance due to all the
+inputs except the <img class="math" src="../../_images/math/adf11184291fab1a9c74fd516ce96a218b1d2abd.svg" alt="i^{th}"/> input.</p>
+</li>
+</ul>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.FAST.html#openturns.FAST" title="openturns.FAST"><code class="xref py py-class docutils literal notranslate"><span class="pre">FAST</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_reliability_sensitivity/sensitivity_analysis/plot_sensitivity_fast.html"><span class="doc">FAST sensitivity indices</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../bibliography.html#saltelli1999" id="id2"><span>[saltelli1999]</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="importance_form.html" title="Importance factors from FORM method"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sensitivity_ancova.html" title="Sensivity analysis with correlated inputs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sensitivity analysis by Fourier decomposition</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on May 10, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

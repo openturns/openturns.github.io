@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Over-fitting and model selection &#8212; OpenTURNS 1.19 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Apply a transform or inverse transform on your polynomial chaos" href="../polynomial_chaos_metamodel/plot_chaos_distribution_transformation.html" />
+    <link rel="prev" title="Perfom stepwise regression" href="plot_stepwise.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../polynomial_chaos_metamodel/plot_chaos_distribution_transformation.html" title="Apply a transform or inverse transform on your polynomial chaos"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_stepwise.html" title="Perfom stepwise regression"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Over-fitting and model selection</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Over-fitting and model selection</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+<li><a class="reference internal" href="#compute-the-data">Compute the data</a></li>
+<li><a class="reference internal" href="#compute-the-coefficients-of-the-polynomial-decomposition">Compute the coefficients of the polynomial decomposition</a></li>
+<li><a class="reference internal" href="#root-mean-squared-error">Root mean squared error</a></li>
+<li><a class="reference internal" href="#increasing-the-training-set">Increasing the training set</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_stepwise.html"
+                          title="previous chapter">Perfom stepwise regression</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../polynomial_chaos_metamodel/plot_chaos_distribution_transformation.html"
+                          title="next chapter">Apply a transform or inverse transform on your polynomial chaos</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_meta_modeling/general_purpose_metamodels/plot_overfitting_model_selection.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-meta-modeling-general-purpose-metamodels-plot-overfitting-model-selection-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="over-fitting-and-model-selection">
+<span id="sphx-glr-auto-meta-modeling-general-purpose-metamodels-plot-overfitting-model-selection-py"></span><h1>Over-fitting and model selection<a class="headerlink" href="#over-fitting-and-model-selection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>In this notebook, we present the problem of over-fitting a model to data. We consider noisy observations of the sine function. We estimate the coefficients of the univariate polynomial based on linear least squares and show that, when the degree of the polynomial becomes too large, the overall prediction quality decreases.</p>
+<p>This shows why and how model selection can come into play in order to select the degree of the polynomial: there is is a trade-off between fitting the data and preserving the quality of future predictions. In this example, we use cross validation as a model selection method.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Bishop Christopher M., 1995, Neural networks for pattern recognition. Figure 1.4, page 7</p></li>
+</ul>
+</div>
+<div class="section" id="compute-the-data">
+<h2>Compute the data<a class="headerlink" href="#compute-the-data" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we generate noisy observations from the sine function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">RandomGenerator</span><span class="o">.</span><span class="n">SetSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We define the function that we are going to approximate.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;sin(2*pi_*x)&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Polynomial curve fitting&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+<span class="c1"># The &quot;unknown&quot; function</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;green&quot;</span><span class="p">])</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s1">&#39;&quot;Unknown&quot; function&#39;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_overfitting_model_selection_001.png" srcset="../../_images/sphx_glr_plot_overfitting_model_selection_001.png" alt="Polynomial curve fitting" class = "sphx-glr-single-img"/><p>This seems a nice, smooth function to approximate with polynomials.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">linearSample</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">npoints</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a sample created from a regular grid</span>
+<span class="sd">    from xmin to xmax with npoints points.&quot;&quot;&quot;</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">npoints</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">rg</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">vertices</span>
+</pre></div>
+</div>
+<p>We consider 10 observation points in the interval [0,1].</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_train</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Assume that the observations are noisy and that the noise follows a Normal distribution with zero mean and small standard deviation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">noise</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">noiseSample</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following computes the observation as the sum of the function value and of the noise. The couple (<cite>x_train</cite>,`y_train`) is the training set: it is used to compute the coefficients of the polynomial model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y_train</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span> <span class="o">+</span> <span class="n">noiseSample</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Polynomial curve fitting&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+<span class="c1"># The &quot;unknown&quot; function</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;green&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="c1"># Training set</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_overfitting_model_selection_002.png" srcset="../../_images/sphx_glr_plot_overfitting_model_selection_002.png" alt="Polynomial curve fitting" class = "sphx-glr-single-img"/></div>
+<div class="section" id="compute-the-coefficients-of-the-polynomial-decomposition">
+<h2>Compute the coefficients of the polynomial decomposition<a class="headerlink" href="#compute-the-coefficients-of-the-polynomial-decomposition" title="Permalink to this headline">¶</a></h2>
+<p>Let <img class="math" src="../../_images/math/770fefe0a86721ac091b396c04ac8bfdc627aba7.svg" alt="y \in \mathbb{R}^n"/> be a vector of observations.</p>
+<p>The polynomial model is</p>
+<div class="math">
+<p><img src="../../_images/math/a894d2c2f86eb156664ef57e52192f9a51ff8471.svg" alt="P(x) = \beta_0 + \beta_1 x + ... + \beta_p x^p,"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b83fb4ad9f34ff6d0292acb686d86927ce88a006.svg" alt="x\in\mathbb{R}"/>, where <img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p"/> is the polynomial degree and <img class="math" src="../../_images/math/c25e6f95ac56af98bbcb968bfa9dc39334793f79.svg" alt="\beta\in\mathbb{R}^{p+1}"/> is the vector of the coefficients of the model.</p>
+<p>Let <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/> be the training sample size and let <img class="math" src="../../_images/math/b8e2e2ef48132f05d951e6c06926e2adef4495ed.svg" alt="x_1,...,x_n \in \mathbb{R}"/> be the abscissas of the training set.
+The design matrix <img class="math" src="../../_images/math/459c583a571fc28f240daead3c532c6f9d861e81.svg" alt="X \in \mathbb{R}^{n \times (p+1)}"/> is</p>
+<div class="math">
+<p><img src="../../_images/math/2a6d57cad8f5ca7ff487b8d5bb4391277a8d760d.svg" alt="x_{i,j} = x^j_i,"/></p>
+</div><p>for <img class="math" src="../../_images/math/f547f9b5b4447a6ea60f75e19838225adb8f96e6.svg" alt="i=1,...,n"/> and <img class="math" src="../../_images/math/469036054506caa959496518e91ea610bdfdd48c.svg" alt="j=0,...,p"/>.</p>
+<p>The least squares solution is:</p>
+<div class="math">
+<p><img src="../../_images/math/fa071f5703655fe87ab15fe644b2f46a897fdf2a.svg" alt="\beta^\star = \textrm{argmin}_{\beta \in \mathbb{R}^{p+1}} \| X\beta - y\|_2^2."/></p>
+</div><p>In order to approximate the function with polynomials up to degree 4, we create a list of strings containing the associated monomials. We do not include a constant in the polynomial basis, as this constant term is automatically included in the model by the <cite>LinearLeastSquares</cite> class. We perform the loop from 1 up to <cite>total_degree</cite> (but the <cite>range</cite> function takes <cite>total_degree + 1</cite> as its second input argument).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">total_degree</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">polynomialCollection</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x^</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">degree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="n">polynomialCollection</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;x^1&#39;, &#39;x^2&#39;, &#39;x^3&#39;, &#39;x^4&#39;]
+</pre></div>
+</div>
+<p>Given the list of strings, we create a symbolic function which computes the values of the monomials.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">polynomialCollection</span><span class="p">)</span>
+<span class="n">basis</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[x]->[x^1,x^2,x^3,x^4]</p>
+</div>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">designMatrix</span> <span class="o">=</span> <span class="n">basis</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+<span class="n">designMatrix</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<TABLE><TR><TD></TD><TH>y0</TH><TH>y1</TH><TH>y2</TH><TH>y3</TH></TR>
+<TR><TH>0</TH><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD></TR>
+<TR><TH>1</TH><TD>0.1111111</TD><TD>0.01234568</TD><TD>0.001371742</TD><TD>0.0001524158</TD></TR>
+<TR><TH>2</TH><TD>0.2222222</TD><TD>0.04938272</TD><TD>0.01097394</TD><TD>0.002438653</TD></TR>
+<TR><TH>3</TH><TD>0.3333333</TD><TD>0.1111111</TD><TD>0.03703704</TD><TD>0.01234568</TD></TR>
+<TR><TH>4</TH><TD>0.4444444</TD><TD>0.1975309</TD><TD>0.0877915</TD><TD>0.03901844</TD></TR>
+<TR><TH>5</TH><TD>0.5555556</TD><TD>0.308642</TD><TD>0.1714678</TD><TD>0.09525987</TD></TR>
+<TR><TH>6</TH><TD>0.6666667</TD><TD>0.4444444</TD><TD>0.2962963</TD><TD>0.1975309</TD></TR>
+<TR><TH>7</TH><TD>0.7777778</TD><TD>0.6049383</TD><TD>0.4705075</TD><TD>0.3659503</TD></TR>
+<TR><TH>8</TH><TD>0.8888889</TD><TD>0.7901235</TD><TD>0.702332</TD><TD>0.6242951</TD></TR>
+<TR><TH>9</TH><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD></TR>
+</TABLE>
+</div>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">myLeastSquares</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearLeastSquares</span><span class="p">(</span><span class="n">designMatrix</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">myLeastSquares</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">responseSurface</span> <span class="o">=</span> <span class="n">myLeastSquares</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The couple (<cite>x_test</cite>,`y_test`) is the test set: it is used to assess the quality of the polynomial model with points that were not used for training.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_test</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">responseSurface</span><span class="p">(</span><span class="n">basis</span><span class="p">(</span><span class="n">x_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Polynomial curve fitting&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+<span class="c1"># The &quot;unknown&quot; function</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;green&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="c1"># Training set</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="c1"># Predictions</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Polynomial Degree = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_degree</span><span class="p">))</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_overfitting_model_selection_003.png" srcset="../../_images/sphx_glr_plot_overfitting_model_selection_003.png" alt="Polynomial curve fitting" class = "sphx-glr-single-img"/><p>For each observation in the training set, the error is the vertical distance between the model and the observation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+    <span class="s2">&quot;Least squares minimizes the sum of the squares of the vertical bars&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;topright&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># Training set observations</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="c1"># Predictions</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Polynomial Degree = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_degree</span><span class="p">))</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="c1"># Errors</span>
+<span class="n">ypredicted_train</span> <span class="o">=</span> <span class="n">responseSurface</span><span class="p">(</span><span class="n">basis</span><span class="p">(</span><span class="n">x_train</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_train</span><span class="p">):</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="n">x_train</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x_train</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="p">[</span>
+                     <span class="n">y_train</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ypredicted_train</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_overfitting_model_selection_004.png" srcset="../../_images/sphx_glr_plot_overfitting_model_selection_004.png" alt="Least squares minimizes the sum of the squares of the vertical bars" class = "sphx-glr-single-img"/><p>The least squares method minimizes the sum of the squared errors i.e. the sum of the squares of the lengths of the vertical segments.</p>
+<p>We gather the previous computation in two different functions. The <cite>myPolynomialDataFitting</cite> function computes the least squares solution and <cite>myPolynomialCurveFittingGraph</cite> plots the results.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">myPolynomialDataFitting</span><span class="p">(</span><span class="n">total_degree</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the polynomial curve fitting</span>
+<span class="sd">    with given total degree.</span>
+<span class="sd">    This is for learning purposes only: please consider a serious metamodel</span>
+<span class="sd">    for real applications, e.g. polynomial chaos or kriging.&quot;&quot;&quot;</span>
+    <span class="n">polynomialCollection</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x^</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">degree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">polynomialCollection</span><span class="p">)</span>
+    <span class="n">designMatrix</span> <span class="o">=</span> <span class="n">basis</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+    <span class="n">myLeastSquares</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearLeastSquares</span><span class="p">(</span><span class="n">designMatrix</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">myLeastSquares</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">responseSurface</span> <span class="o">=</span> <span class="n">myLeastSquares</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">responseSurface</span><span class="p">,</span> <span class="n">basis</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">myPolynomialCurveFittingGraph</span><span class="p">(</span><span class="n">total_degree</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the graphics for a polynomial curve fitting</span>
+<span class="sd">    with given total degree&quot;&quot;&quot;</span>
+    <span class="n">responseSurface</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="n">myPolynomialDataFitting</span><span class="p">(</span>
+        <span class="n">total_degree</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="c1"># Graphics</span>
+    <span class="n">n_test</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
+    <span class="n">ypredicted_test</span> <span class="o">=</span> <span class="n">responseSurface</span><span class="p">(</span><span class="n">basis</span><span class="p">(</span><span class="n">x_test</span><span class="p">))</span>
+    <span class="c1"># Graphics</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Polynomial curve fitting&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+    <span class="c1"># The &quot;unknown&quot; function</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;green&quot;</span><span class="p">])</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+    <span class="c1"># Training set</span>
+    <span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+    <span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;N=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">getSize</span><span class="p">()))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+    <span class="c1"># Predictions</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">ypredicted_test</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Polynomial Degree = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">total_degree</span><span class="p">))</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graph</span>
+</pre></div>
+</div>
+<p>In order to see the effect of the polynomial degree, we compare the polynomial fit with degrees equal to 0 (constant), 1 (linear), 3 (cubic) and 9 (enneagonic ?).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Polynomial curve fitting&quot;</span><span class="p">)</span>
+<span class="n">ax_1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">myPolynomialCurveFittingGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax_1</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">ax_2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">myPolynomialCurveFittingGraph</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax_2</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">ax_3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">myPolynomialCurveFittingGraph</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax_3</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">ax_4</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">myPolynomialCurveFittingGraph</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax_4</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_overfitting_model_selection_005.png" srcset="../../_images/sphx_glr_plot_overfitting_model_selection_005.png" alt="Polynomial curve fitting" class = "sphx-glr-single-img"/><p>When the polynomial degree is low, the fit is satisfying. The polynomial is close to the observations, although there is still some residual error.</p>
+<p>However, when the polynomial degree is high, it produces large oscillations which significantly deviate from the true function. This is <em>overfitting</em>. This is a pity, given the fact that the polynomial <em>exactly</em> interpolates the observations: the residuals are zeroed.</p>
+<p>If the locations of the x abscissas could be changed, then the oscillations could be made smaller. This is the method used in gaussian quadrature, where the nodes of interpolation are made closer on the left and right bounds. In our situation, we make the asssumption that these abscissas cannot be changed: the most obvious choice is to limit the degree of the polynomial. Another possibility is to include a regularization into the least squares solution.</p>
+</div>
+<div class="section" id="root-mean-squared-error">
+<h2>Root mean squared error<a class="headerlink" href="#root-mean-squared-error" title="Permalink to this headline">¶</a></h2>
+<p>In order to assess the quality of the polynomial fit, we create a second dataset, the <em>test set</em> and compare the value of the polynomial with the test observations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sqrt</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;sqrt(x)&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>In order to see how close the model is to the observations, we compute the root mean square error.</p>
+<p>First, we create a degree 4 polynomial which fits the data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">total_degree</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">responseSurface</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="n">myPolynomialDataFitting</span><span class="p">(</span>
+    <span class="n">total_degree</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we create a test set, with the same method as before.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">createDataset</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">noiseSample</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">noiseSample</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_test</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">createDataset</span><span class="p">(</span><span class="n">n_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On this test set, we evaluate the polynomial.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ypredicted_test</span> <span class="o">=</span> <span class="n">responseSurface</span><span class="p">(</span><span class="n">basis</span><span class="p">(</span><span class="n">x_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The vector of residuals is the vector of the differences between the observations and the predictions.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">residuals</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span> <span class="o">-</span> <span class="n">ypredicted_test</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <cite>normSquare</cite> method computes the square of the Euclidian norm (i.e. the 2-norm). We divide this by the test sample size (so as to compare the error for different sample sizes) and compute the square root of the result (so that the result has the same unit as y).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RMSE</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">([</span><span class="n">residuals</span><span class="o">.</span><span class="n">normSquare</span><span class="p">()</span> <span class="o">/</span> <span class="n">n_test</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">RMSE</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.14464766752910935
+</pre></div>
+</div>
+<p>The following function gathers the RMSE computation to make the experiment easier.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">computeRMSE</span><span class="p">(</span><span class="n">responseSurface</span><span class="p">,</span> <span class="n">basis</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">ypredicted</span> <span class="o">=</span> <span class="n">responseSurface</span><span class="p">(</span><span class="n">basis</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span> <span class="o">-</span> <span class="n">ypredicted</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span>
+    <span class="n">RMSE</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">([</span><span class="n">residuals</span><span class="o">.</span><span class="n">normSquare</span><span class="p">()</span> <span class="o">/</span> <span class="n">n_test</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">RMSE</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">maximum_degree</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">RMSE_train</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">maximum_degree</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">RMSE_test</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">maximum_degree</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">total_degree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maximum_degree</span><span class="p">):</span>
+    <span class="n">responseSurface</span><span class="p">,</span> <span class="n">basis</span> <span class="o">=</span> <span class="n">myPolynomialDataFitting</span><span class="p">(</span>
+        <span class="n">total_degree</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">RMSE_train</span><span class="p">[</span><span class="n">total_degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">computeRMSE</span><span class="p">(</span>
+        <span class="n">responseSurface</span><span class="p">,</span> <span class="n">basis</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">RMSE_test</span><span class="p">[</span><span class="n">total_degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">computeRMSE</span><span class="p">(</span>
+        <span class="n">responseSurface</span><span class="p">,</span> <span class="n">basis</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">degreeSample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">([[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maximum_degree</span><span class="p">)])</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Root mean square error&quot;</span><span class="p">,</span> <span class="s2">&quot;Degree&quot;</span><span class="p">,</span> <span class="s2">&quot;RMSE&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;topright&quot;</span><span class="p">)</span>
+<span class="c1"># Train</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">degreeSample</span><span class="p">,</span> <span class="n">RMSE_train</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="c1"># Test</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">degreeSample</span><span class="p">,</span> <span class="n">RMSE_test</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_overfitting_model_selection_006.png" srcset="../../_images/sphx_glr_plot_overfitting_model_selection_006.png" alt="Root mean square error" class = "sphx-glr-single-img"/><p>We see that the RMSE on the train set continuously decreases, reaching zero when the polynomial degree is so that the number of coefficients is equal to the train dataset sample size. In this extreme situation, the least squares solution is equivalent to solving a linear system of equations: this leads to a zero residual.</p>
+<p>On the test set however, the RMSE decreases, reaches a flat region, then increases dramatically when the degree is equal to 9. Hence, limiting the polynomial degree limits overfitting.</p>
+</div>
+<div class="section" id="increasing-the-training-set">
+<h2>Increasing the training set<a class="headerlink" href="#increasing-the-training-set" title="Permalink to this headline">¶</a></h2>
+<p>We wonder what happens when the training dataset size is increased.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">total_degree</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Polynomial curve fitting&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="n">ax_1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">n_train</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">createDataset</span><span class="p">(</span><span class="n">n_train</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">myPolynomialCurveFittingGraph</span><span class="p">(</span><span class="n">total_degree</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span>
+    <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax_1</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="c1">#</span>
+<span class="n">n_train</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">createDataset</span><span class="p">(</span><span class="n">n_train</span><span class="p">)</span>
+<span class="n">ax_2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span>
+    <span class="n">myPolynomialCurveFittingGraph</span><span class="p">(</span><span class="n">total_degree</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span>
+    <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+    <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax_2</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_overfitting_model_selection_007.png" srcset="../../_images/sphx_glr_plot_overfitting_model_selection_007.png" alt="Polynomial curve fitting" class = "sphx-glr-single-img"/><p>We see that the polynomial oscillates with a dataset with size 11, but does not with the larger dataset: increasing the training dataset mitigates the oscillations.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.846 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-general-purpose-metamodels-plot-overfitting-model-selection-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/47e23ae54d8ef35f4d3871c53334148a/plot_overfitting_model_selection.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_overfitting_model_selection.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/1e4adcd8d8b81e9729c6815af13a891b/plot_overfitting_model_selection.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_overfitting_model_selection.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../polynomial_chaos_metamodel/plot_chaos_distribution_transformation.html" title="Apply a transform or inverse transform on your polynomial chaos"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_stepwise.html" title="Perfom stepwise regression"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Over-fitting and model selection</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on May 10, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

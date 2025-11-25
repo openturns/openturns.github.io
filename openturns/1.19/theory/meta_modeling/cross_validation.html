@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cross validation assessment of PC models &#8212; OpenTURNS 1.19 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reliability, sensitivity" href="../reliability_sensitivity/reliability_sensitivity.html" />
+    <link rel="prev" title="Functional Chaos Expansion" href="functional_chaos.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../reliability_sensitivity/reliability_sensitivity.html" title="Reliability, sensitivity"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="functional_chaos.html" title="Functional Chaos Expansion"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" accesskey="U">Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cross validation assessment of PC models</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="functional_chaos.html"
+                          title="previous chapter">Functional Chaos Expansion</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../reliability_sensitivity/reliability_sensitivity.html"
+                          title="next chapter">Reliability, sensitivity</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/meta_modeling/cross_validation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cross-validation-assessment-of-pc-models">
+<span id="cross-validation"></span><h1>Cross validation assessment of PC models<a class="headerlink" href="#cross-validation-assessment-of-pc-models" title="Permalink to this headline">¶</a></h1>
+<p>Once a polynomial response surface <img class="math" src="../../_images/math/af8f50803b5edecdfd638d9698c937a9bb52f83e.svg" alt="\widehat{h}(\underline{x})"/>
+of the original numerical model <img class="math" src="../../_images/math/294e753078e1522bae688d6f3eb867977991d138.svg" alt="h(\underline{x})"/> has been
+built up, it is crucial to estimate the approximation error, i.e. the
+discrepancy between the response surface and the true model response
+in terms of a suitable norm such as the <img class="math" src="../../_images/math/75c862439289c53466e6e76b2f3cc2808809c485.svg" alt="L_2"/>-norm:</p>
+<div class="math">
+<p><img src="../../_images/math/42e045c26e8557a44133eb3478d1a0144ba38579.svg" alt="Err \, \, = \, \, \left\| h(\underline{x}) \; - \; \widehat{h}(\underline{x}) \right\|_{L_2}^2\, \, = \, \, \int_{\cD} \; \left( h(\underline{x}) \; - \; \widehat{h}(\underline{x}) \right)^2  \; d\underline{x}"/></p>
+</div><p>where <img class="math" src="../../_images/math/f0cad2673764d18c3de844ca2634c60acbd5c744.svg" alt="\cD"/> denotes the support of the input parameters
+<img class="math" src="../../_images/math/640835cf24dcc084232772f56850586d467c0449.svg" alt="\underline{x}"/>. It is worth emphasizing that one tends to
+overestimate the performance of a response surface by training and
+evaluating it on the same data set. For instance, the model might fail
+to predict on new data whereas the validation on the training data
+yields satisfactory performance. To avoid such issue, it is important
+that the model error assessment is conducted on a data set which is
+independent of the training sample. However, any new model evaluation
+may be time- and memory-consuming. Therefore, error estimates which
+are only based on already performed computer experiments are of
+interest. In this context, the so-called <em>cross validation</em> techniques
+are utilized to obtain reliable performance assessment of the response
+surface without additional model evaluations.</p>
+<p>Any cross-validation scheme consists in dividing the data sample (i.e.
+the experimental design) into two sub-samples that are independently and
+identically distributed. A metamodel <img class="math" src="../../_images/math/af8f50803b5edecdfd638d9698c937a9bb52f83e.svg" alt="\widehat{h}(\underline{x})"/>
+is built from one sub-sample, i.e. the <em>training set</em>, and its
+performance is assessed by comparing its predictions to the other
+subset, i.e. the <em>test set</em>. A single split will lead to a validation
+estimate. When several splits are conducted, the cross-validation error
+estimate is obtained by averaging over the splits.</p>
+<p><strong>K-fold cross-validation error estimate</strong></p>
+<p>The <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/>-fold cross-validation technique relies on splitting the
+data set <img class="math" src="../../_images/math/f048ec3777567a42ffb6f845a5e2942d67096cc1.svg" alt="\cX"/> into <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/> mutually exclusive sub-samples
+<img class="math" src="../../_images/math/413ba1018db0adb734619769944bb855fc4b296d.svg" alt="\cX_1, \dots, \cX_K"/> of approximately equal size. A sub-sample
+<img class="math" src="../../_images/math/011b55ffd9d0fa39d0f3528b51c629779a6d1eeb.svg" alt="\cX_i"/>, <img class="math" src="../../_images/math/ecd1a9e037f26b42f539ad1ef8b7638fc56b1eb2.svg" alt="i \in \{ 1, \dots, K\}"/> is set aside, then the
+response surface <img class="math" src="../../_images/math/a9e34a789d5adf15d5eab702ac7bb0982d7a9396.svg" alt="\widehat{h}^{(-\cX_i)}"/> is built on the
+remaining sub-samples <img class="math" src="../../_images/math/5e577bfaa4cc7eb0e11dbe6fc20576e05bea4705.svg" alt="\cX \setminus \cX_i"/>. The approximation
+error is estimated on the set-aside sample <img class="math" src="../../_images/math/011b55ffd9d0fa39d0f3528b51c629779a6d1eeb.svg" alt="\cX_i"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/1382d7d0f91a883a7182d1655f1478d1f7136712.svg" alt="Err^{(i)}  = \dfrac{1}{ |\cX_i|}  \sum\limits_{\underline{x}^{(j)} \in \cX_i} \left[ h(\underline{x}^{(j)}) - \widehat{h}^{(-\cX_i)} {(\underline{x}^{(j)})} \right]^2"/></p>
+</div><p>in which
+<img class="math" src="../../_images/math/0f81d2119198cf1e4cac7f40cdca9d2640ea426e.svg" alt="h(\underline{x}^{(j)}) - \widehat{h}^{(-\cX_i)} {(\underline{x}^{(j)})}"/>
+is the <em>predicted residual</em> defined as the difference between the
+evaluation of <img class="math" src="../../_images/math/a309d7a4d54257be27222e3d1e8e7890bc29779a.svg" alt="h(\cdot)"/> and the prediction with
+<img class="math" src="../../_images/math/34cfdf97cf2dba7f2d249db474fda4eef0c2f139.svg" alt="\widehat{h}^{(-\cX_i)}(\cdot)"/> at <img class="math" src="../../_images/math/5ae922f5bf5bf0a13ac4d6ac11c8dc6160f23173.svg" alt="\underline{x}^{(j)}"/>
+in the sub-sample <img class="math" src="../../_images/math/011b55ffd9d0fa39d0f3528b51c629779a6d1eeb.svg" alt="\cX_i"/> whose cardinality is <img class="math" src="../../_images/math/76a818d5e683fecc183efe61ef62e40aa3f935d2.svg" alt="|\cX_i|"/>.</p>
+<p>The approximation errors <img class="math" src="../../_images/math/aa838831ea056bf3a4b02a9adc454ec5813c73f7.svg" alt="Err^{(i)}"/> are estimated with each of
+the sub-samples <img class="math" src="../../_images/math/011b55ffd9d0fa39d0f3528b51c629779a6d1eeb.svg" alt="\cX_i"/>, <img class="math" src="../../_images/math/ecd1a9e037f26b42f539ad1ef8b7638fc56b1eb2.svg" alt="i \in \{ 1, \dots, K\}"/> being
+used as the validation set whereas the remaining sub-samples
+<img class="math" src="../../_images/math/5e577bfaa4cc7eb0e11dbe6fc20576e05bea4705.svg" alt="\cX \setminus \cX_i"/> being used for training. Finally the
+<img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/>-fold cross-validation error estimate is obtained as the
+average:</p>
+<div class="math">
+<p><img src="../../_images/math/8cd38922f45d45a47caa33e5fcfb6ad5a3818e05.svg" alt="Err_{Kfold} = \dfrac{1}{K} \sum\limits_{i=1}^{K} Err^{(i)}"/></p>
+</div><p>As described above, the <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/>-fold error estimate can be obtained
+with a single split of the data <img class="math" src="../../_images/math/f048ec3777567a42ffb6f845a5e2942d67096cc1.svg" alt="\cX"/> into <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/> folds. It
+is worth noting that one can repeat the cross-validation multiple
+times using different divisions into folds to obtain better Monte
+Carlo estimate. This comes obviously with an additional computational
+cost.</p>
+<p><strong>Classical leave-one-out error estimate</strong></p>
+<p>The <em>leave-one-out</em> (LOO) cross-validation is a special case of
+<img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/>-fold cross-validation where the number of folds <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/> is
+chosen equal to the cardinality <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> of the experimental design
+<img class="math" src="../../_images/math/f048ec3777567a42ffb6f845a5e2942d67096cc1.svg" alt="\cX"/>. It is recalled that a <img class="math" src="../../_images/math/451a3d9a99f2dcc2293b7b30519b42cf46cb38ac.svg" alt="P"/>-term polynomial
+approximation of the model response reads:</p>
+<div class="math">
+<p><img src="../../_images/math/bd346eed0159a433584efd106613ae7ea99f3c1d.svg" alt="\widehat{h}(\underline{x}) \, \, = \, \,  \sum_{j=0}^{P-1} \; \widehat{a}_{j} \; \psi_{j}(\underline{x})"/></p>
+</div><p>where the <img class="math" src="../../_images/math/6999635faccfe2ead1d5ffa40cd42b5d1387a6de.svg" alt="\widehat{a}_{j}"/>’s are estimates of the
+coefficients obtained by a specific method, e.g. least squares.</p>
+<p>Let us denote by <img class="math" src="../../_images/math/6a6bb3d9a2261f8a945fea493e0e7951b5057473.svg" alt="\widehat{h}^{(-i)}"/> the approximation that has
+been built from the experimental design
+<img class="math" src="../../_images/math/35f377a61b62a38716f7b4a84b377eaed127af59.svg" alt="\cX \setminus \{\underline{x}^{(i)}\}"/> with the <img class="math" src="../../_images/math/bc9e0812a00024d261751577fdd3d3b800392b97.svg" alt="i"/>-th
+observation <img class="math" src="../../_images/math/a673396493f9ce1b9fde1466c39d43cea43b35b0.svg" alt="\underline{x}^{(i)}"/> being set aside. The predicted
+residual is defined as the difference between the model evaluation at
+<img class="math" src="../../_images/math/a673396493f9ce1b9fde1466c39d43cea43b35b0.svg" alt="\underline{x}^{(i)}"/> and its prediction based on
+<img class="math" src="../../_images/math/6a6bb3d9a2261f8a945fea493e0e7951b5057473.svg" alt="\widehat{h}^{(-i)}"/>:</p>
+<div class="math" id="equation-4-3-5">
+<p><span class="eqno">(1)<a class="headerlink" href="#equation-4-3-5" title="Permalink to this equation">¶</a></span><img src="../../_images/math/df430a9930702dd2887118bb6da5af105d5c5ebf.svg" alt="\Delta^{(i)} \, \, = \, \,  h(\underline{x}^{(i)}) - \widehat{h}^{(-i)}(\underline{x}^{(i)})"/></p>
+</div><p>By repeating this process for all observations in the experimental
+design, one obtains the predicted residuals
+<img class="math" src="../../_images/math/fa27ded2595694d45de9a5ca5dcd70e9bbd90d9a.svg" alt="\Delta^{(i)}, i = 1, \dots , N"/>. Finally, the LOO error is
+estimated as follows:</p>
+<div class="math" id="equation-4-3-6">
+<p><span class="eqno">(2)<a class="headerlink" href="#equation-4-3-6" title="Permalink to this equation">¶</a></span><img src="../../_images/math/e41d4bf4eff7bc5866831e7e6655c57ba257fcc9.svg" alt="Err_{LOO} \, \, = \, \, \frac{1}{N} \sum_{i=1}^{N} {\Delta^{(i)}}^{2}"/></p>
+</div><p>Due to the linear-in-parameters form of the polynomial chaos
+expansion, the quantity <img class="math" src="../../_images/math/855152a4c0a60a052c916c87afc2bf3789ce9885.svg" alt="Err_{LOO}"/> may be computed without
+performing further regression calculations when the PC coefficients
+have been estimated using the entire experimental design <img class="math" src="../../_images/math/f048ec3777567a42ffb6f845a5e2942d67096cc1.svg" alt="\cX"/>.
+Indeed, the predicted residuals can be obtained analytically as
+follows:</p>
+<div class="math" id="equation-4-3-7">
+<p><span class="eqno">(3)<a class="headerlink" href="#equation-4-3-7" title="Permalink to this equation">¶</a></span><img src="../../_images/math/206173247a35ad64ba3201e04c3155ec523d10fb.svg" alt="\Delta^{(i)} \, = \,
+     \frac{h(\underline{x}^{(i)}) - \widehat{h}(\underline{x}^{(i)})}{1 - h_i}"/></p>
+</div><p>where <img class="math" src="../../_images/math/9ea7683567a9b79c6a2b93f5615631e12470bb11.svg" alt="h_i"/> is the <img class="math" src="../../_images/math/bc9e0812a00024d261751577fdd3d3b800392b97.svg" alt="i"/>-th diagonal term of the matrix
+<img class="math" src="../../_images/math/b9f22182a7a7e8c2333ccd6b7ffeab7fee3aacdf.svg" alt="\underline{\underline{\Psi}} (\underline{\underline{\Psi}}^{\textsf{T}}\underline{\underline{\Psi}})^{-1} \underline{\underline{\Psi}}^{\textsf{T}}"/>
+with <img class="math" src="../../_images/math/bb84c11df9220485e997d219168518d998d5db28.svg" alt="\underline{\underline{\Psi}}"/> being the information
+matrix:</p>
+<blockquote>
+<div><div class="math" id="equation-4-3-7bis">
+<p><span class="eqno">(4)<a class="headerlink" href="#equation-4-3-7bis" title="Permalink to this equation">¶</a></span><img src="../../_images/math/f51085709b3b90de77a03c662267eb0bccd8cdce.svg" alt="\underline{\underline{\Psi}} \, \, = \, \, \left\{ \psi_{j}(\underline{x}^{(i)}) \; , \; i=1,\dots,N \; , \; j = 0,\dots,P-1 \right\}"/></p>
+</div></div></blockquote>
+<p>In practice, one often computes the following normalized LOO error:</p>
+<blockquote>
+<div><div class="math" id="equation-4-3-8bis">
+<p><span class="eqno">(5)<a class="headerlink" href="#equation-4-3-8bis" title="Permalink to this equation">¶</a></span><img src="../../_images/math/f3e56c91aaa63b1176f61e9f7a627a428d6230f3.svg" alt="\varepsilon_{LOO} \, \, \equiv \, \, \frac{Err_{LOO}}{\hat{\Cov{\cY}}}"/></p>
+</div></div></blockquote>
+<p>where <img class="math" src="../../_images/math/9baaf26e0c8f6d4b15f0e598e6c2ed5a296dbb40.svg" alt="\hat{\Cov{\mathcal{Y}}}"/> denotes the empirical
+covariance of the response sample <img class="math" src="../../_images/math/52e2c1f63fdead4308ecbecb4e784e6eb7e044e4.svg" alt="\cY"/>:</p>
+<blockquote>
+<div><div class="math" id="equation-4-3-4bis">
+<p><span class="eqno">(6)<a class="headerlink" href="#equation-4-3-4bis" title="Permalink to this equation">¶</a></span><img src="../../_images/math/b690e271546ce168c8058d278fa9ea2991c62552.svg" alt="\hat{\Cov{\mathcal{Y}}} \, \, \equiv \, \, \frac{1}{N-1} \; \sum_{i=1}^{N} \; \left( y^{(i)} \; - \;   \bar{\mathcal{Y}}  \right)^{2} \quad  \quad , \quad \quad   \bar{\mathcal{Y}} \, \, \equiv \, \, \frac{1}{N} \; \sum_{i=1}^{N} \; y^{(i)}"/></p>
+</div></div></blockquote>
+<p><strong>Corrected leave-one-out error estimate</strong></p>
+<p>A penalized variant of <img class="math" src="../../_images/math/87f89331d867f5aebe869dc11a1a44809cf549f4.svg" alt="\varepsilon_{LOO}"/> may be used in order to
+increase its robustness with respect to overfitting, i.e. to penalize a
+large number of terms in the PC expansion compared to the size of the
+experimental design:</p>
+<div class="math">
+<p><img src="../../_images/math/af8ebafbdaf0562901ae9d75f49c5507ef6be8ef.svg" alt="\varepsilon_{LOO}^{*} \, \, \equiv \, \, \varepsilon_{LOO} \, T(P,N)"/></p>
+</div><p>The penalty factor is defined by:</p>
+<div class="math">
+<p><img src="../../_images/math/aa3b7cde7d57fcb6c757b8e6da45a6aa49c412de.svg" alt="T(P,N) \, \, = \, \,   \frac{N}{N-P}  \; \left(1 \; + \; \frac{\mbox{tr} \left( \underline{\underline{C}}_{emp}^{-1}  \right) }{N} \right)"/></p>
+</div><p>where:</p>
+<div class="math" id="equation-4-3-10bis">
+<p><span class="eqno">(7)<a class="headerlink" href="#equation-4-3-10bis" title="Permalink to this equation">¶</a></span><img src="../../_images/math/aca1062a39a29874241025fc1dd1a94d60f76dc4.svg" alt="\underline{\underline{C}}_{emp} \, \, \equiv \, \, \frac{1}{N}\underline{\underline{\Psi}}^{\textsf{T}}\; \underline{\underline{\Psi}} \quad \quad , \quad \quad
+  \underline{\underline{\Psi}} \, \, = \, \, \left\{ \psi_{j}(\underline{x}^{(i)}) \, \, , \, \, i=1,\dots,N \, \, , \, \, j=0,\dots,P-1 \right\}"/></p>
+</div><p>Leave-one-out cross validation is also known as jackknife in statistics.</p>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.MetaModelValidation.html#openturns.MetaModelValidation" title="openturns.MetaModelValidation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaModelValidation</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../bibliography.html#blatman2009" id="id1"><span>[blatman2009]</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../reliability_sensitivity/reliability_sensitivity.html" title="Reliability, sensitivity"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="functional_chaos.html" title="Functional Chaos Expansion"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" >Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cross validation assessment of PC models</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on May 10, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

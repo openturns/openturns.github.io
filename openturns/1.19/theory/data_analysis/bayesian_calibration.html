@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bayesian calibration &#8212; OpenTURNS 1.19 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Code calibration" href="code_calibration.html" />
+    <link rel="prev" title="Parametric Estimation" href="parametric_estimation.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="code_calibration.html" title="Code calibration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="parametric_estimation.html" title="Parametric Estimation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" accesskey="U">Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Bayesian calibration</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="parametric_estimation.html"
+                          title="previous chapter">Parametric Estimation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="code_calibration.html"
+                          title="next chapter">Code calibration</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/data_analysis/bayesian_calibration.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bayesian-calibration">
+<span id="id1"></span><h1>Bayesian calibration<a class="headerlink" href="#bayesian-calibration" title="Permalink to this headline">¶</a></h1>
+<p>We consider a computer model <img class="math" src="../../_images/math/92cb4c95b7fc9b99a0b22cb07c90a732064db084.svg" alt="h"/> (<em>i.e.</em> a deterministic function)
+to calibrate:</p>
+<div class="math">
+<p><img src="../../_images/math/86aeb4e5d2c55f64d46e63a52369217948abc092.svg" alt="\begin{aligned}
+    \vect{z} = h(\vect{x}, \vect{\theta}_h),
+  \end{aligned}"/></p>
+</div><p>where</p>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/5f8d085ff7a94633b66509c2458ae39062c7a075.svg" alt="\vect{x} \in \Rset^{d_x}"/> is the input vector;</p></li>
+<li><p><img class="math" src="../../_images/math/86f4207749a44bc61ce51b9b5c8013308f3e0a7c.svg" alt="\vect{z} \in \Rset^{d_z}"/> is the output vector;</p></li>
+<li><p><img class="math" src="../../_images/math/bc941c683cd068d41e9d8d07523b6f48b8f199e5.svg" alt="\vect{\theta}_h \in \Rset^{d_h}"/> are the unknown parameters of
+<img class="math" src="../../_images/math/92cb4c95b7fc9b99a0b22cb07c90a732064db084.svg" alt="h"/> to calibrate.</p></li>
+</ul>
+<p>Our goal here is to estimate <img class="math" src="../../_images/math/bd0e37e8f6b61a51d13dbed9009e781c87eb5b3c.svg" alt="\vect{\theta}_h"/>, based on a certain
+set of <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/> inputs <img class="math" src="../../_images/math/6f014500414fb8861bf67896b369604174a1dced.svg" alt="(\vect{x}^1, \ldots, \vect{x}^n)"/> (an
+experimental design) and some associated observations
+<img class="math" src="../../_images/math/aaab746da739cf1afe5dd4ff217d26da10323542.svg" alt="(\vect{y}^1, \ldots, \vect{y}^n)"/> which are regarded as the
+realizations of some random vectors
+<img class="math" src="../../_images/math/d0ceca6b40b3ff91989679e02cc9e29970f7f4a0.svg" alt="(\vect{Y}^1, \ldots, \vect{Y}^n)"/>, such that, for all <img class="math" src="../../_images/math/bc9e0812a00024d261751577fdd3d3b800392b97.svg" alt="i"/>,
+the distribution of <img class="math" src="../../_images/math/7f61202c2b29691419b8dbc1b3e0da6bab101021.svg" alt="\vect{Y}^i"/> depends on
+<img class="math" src="../../_images/math/06331a1e9f5e1b0cf29ceed4b355151361e07600.svg" alt="\vect{z}^i = h(\vect{x}^i, \vect{\theta}_h)"/>. Typically,
+<img class="math" src="../../_images/math/70ac9f776a63815387cce2009469e8f083ca7bd5.svg" alt="\vect{Y}^i = \vect{z}^i + \vect{\varepsilon}^i"/> where
+<img class="math" src="../../_images/math/3c98ec731fa32e9afabcb0c477b07d3a0b98fe1d.svg" alt="\vect{\varepsilon}^i"/> is a random measurement error.</p>
+<p>For the sake of clarity, lower case letters are used for both random
+variables and realizations in the following (the notation does not
+distinguish the two anymore), as usual in the bayesian literature.</p>
+<p>In fact, the bayesian procedure which is implemented allows one to infer
+some unknown parameters <img class="math" src="../../_images/math/46cd1e33242cbc57090c0b39f8949552d984d68a.svg" alt="\vect{\theta}\in\Rset^{d_\theta}"/> from
+some data <img class="math" src="../../_images/math/1c6087b698cb84aab30d0505028d2e9ee3580410.svg" alt="\mat{y} = (\vect{y}^1, \ldots, \vect{y}^n)"/> as soon as
+the conditional distribution of each <img class="math" src="../../_images/math/b898fe6df33fdc4f229174c0078e5e31e13d8003.svg" alt="\vect{y}^i"/> given
+<img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/> is specified. Therefore <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/> can
+be made up with some computer model parameters <img class="math" src="../../_images/math/bd0e37e8f6b61a51d13dbed9009e781c87eb5b3c.svg" alt="\vect{\theta}_h"/>
+together with some others <img class="math" src="../../_images/math/8d8b2c5551b450daf1d086706e247d31534e30b4.svg" alt="\vect{\theta}_\varepsilon"/>:
+<img class="math" src="../../_images/math/f7b1730d9dbf6333e411ee9cb45153638af1aab0.svg" alt="\vect{\theta} = \Tr{(\Tr{\vect{\theta}_h}, \Tr{\vect{\theta}_\varepsilon})}"/>.
+For example, <img class="math" src="../../_images/math/8d8b2c5551b450daf1d086706e247d31534e30b4.svg" alt="\vect{\theta}_\varepsilon"/> may represent the unknown
+standard deviation <img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/> of an additive centered gaussian
+measurement error affecting the data (see the example hereafter).
+Besides the procedure can be used to estimate the parameters of a
+distribution from direct observations (no computer model to calibrate:
+<img class="math" src="../../_images/math/e85a93506d1c05015bdb5f662677c9d27b45d6eb.svg" alt="\vect{\theta} = \vect{\theta}_\varepsilon"/>).</p>
+<p>More formally, the likelihood <img class="math" src="../../_images/math/a52fa8efc0e1c65abfc725f9b68ba26eb3deb46d.svg" alt="L(\mat{y} | \vect{\theta})"/> is
+defined by, firstly, a family
+<img class="math" src="../../_images/math/c9b0927c413afe1adbadd8787c2d77eb18429925.svg" alt="\{\cP_{\vect{w}}, \vect{w} \in \Rset^{d_w}\}"/> of probability
+distributions parametrized by <img class="math" src="../../_images/math/e71bfdfbbd63f79d985d1b19dcbb7a3322743749.svg" alt="\vect{w}"/>, which is specified in
+practice by a conditional distribution <img class="math" src="../../_images/math/ee9204888504db1f8b9544ac3b63143c00328602.svg" alt="f(.|\vect{w})"/> given
+<img class="math" src="../../_images/math/e71bfdfbbd63f79d985d1b19dcbb7a3322743749.svg" alt="\vect{w}"/> (<img class="math" src="../../_images/math/51916a9aa71f574e1426044f0bc2d637b6160cde.svg" alt="f"/> is a PDF or a probability mass function),
+and, secondly, a function
+<img class="math" src="../../_images/math/6a68830e0a0d1923b19a5b6472c03764f5816b86.svg" alt="g:\Rset^{d_\theta} \longrightarrow \Rset^{n\,d_w}"/> such that
+<img class="math" src="../../_images/math/6f78bd51e6dae0fa0a34799ba693a410b33cc6ad.svg" alt="g(\theta) = \Tr{(\Tr{g^1(\vect{\theta})}, \ldots, \Tr{g^n(\vect{\theta})})}"/>
+which enables to express the parameter <img class="math" src="../../_images/math/68a0bdabfb548ee2205c876d5f8c79047e46a05d.svg" alt="\vect{w}^i"/> of the i-th
+observation <img class="math" src="../../_images/math/7cdc9bb42fafcaba80752e85ea2b32de9ad21d7c.svg" alt="\vect{y}^i \sim f(.|\vect{w}^i)"/> in function of
+<img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/>: <img class="math" src="../../_images/math/1b6228ccf4a059a37c82cca5b097862a408e1b79.svg" alt="g^i(\vect{\theta}) = \vect{w}^i"/> thus
+<img class="math" src="../../_images/math/42e62792f8939cd32b43921a25b9ebee0bb2ee33.svg" alt="\vect{y}^i \sim f(.|g^i(\vect{\theta}))"/> and</p>
+<div class="math">
+<p><img src="../../_images/math/f747671324e59924fbedd08c3da45286442cca6d.svg" alt="\begin{aligned}
+    L(\mat{y} | \vect{\theta}) = \prod_{i=1}^n f(\vect{y}^i|g^i(\vect{\theta})).
+  \end{aligned}"/></p>
+</div><p>Considering the issue of the calibration of some computer model
+parameters <img class="math" src="../../_images/math/bd0e37e8f6b61a51d13dbed9009e781c87eb5b3c.svg" alt="\vect{\theta}_h"/>, the full statistical model can be
+seen as a two-level hierarchical model, with a single level of latent
+variables <img class="math" src="../../_images/math/941513b93cec41dd0a260cc6ae6ce462edf907ea.svg" alt="\vect{z}"/>. A classical example is given by the
+nonlinear Gaussian regression model:</p>
+<div class="math">
+<p><img src="../../_images/math/2c700f88eff3d95a91b0bbdf882da16610a7fe05.svg" alt="\begin{aligned}
+    y_i &amp;=&amp; h(\vect{x}_i|\vect{\theta}_h) + \varepsilon_i,
+    \mbox{ where } \varepsilon_i \stackrel{i.i.d.}{\sim} \cN(0, \sigma^2),
+    \quad i = 1,\ldots, n.
+  \end{aligned}"/></p>
+</div><p>It can be implemented with <img class="math" src="../../_images/math/eea667e008e44017e69d1fc34806112cf682f932.svg" alt="f(.|\Tr{(\mu, \sigma)})"/> the PDF of
+the Gaussian distribution <img class="math" src="../../_images/math/3f374ac086f2b34cc2fc6c307afe9ab3f2db5d4f.svg" alt="\cN(\mu, \sigma^2)"/>, with
+<img class="math" src="../../_images/math/1b4c3418459ffd04837789ad2e46f13eb058336f.svg" alt="g^i(\vect{\theta}) = \Tr{(h(\vect{x}^i, \vect{\theta}_h), \:\sigma)}"/>,
+and with <img class="math" src="../../_images/math/0c2371c2fc68e8680cc821874a1e7e82e90851cd.svg" alt="\vect{\theta} = \vect{\theta}_h"/>, respectively
+<img class="math" src="../../_images/math/f43ddf770ac673b24a5bf708cf2cdc5a7ef6a0ee.svg" alt="\vect{\theta} = \Tr{(\Tr{\vect{\theta}_h}, \sigma)}"/>, if
+<img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/> is considered known, respectively unknown.</p>
+<p>Given a distribution modelling the uncertainty on <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/>
+prior to the data, Bayesian inference is used to perform the inference
+of <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/>, hence the name Bayesian calibration.</p>
+<p>Contrary to the maximum likelihood approach described in <a class="reference internal" href="maximum_likelihood.html#maximum-likelihood"><span class="std std-ref">Maximum Likelihood Principle</span></a>, which
+provides a single ‘best estimate’ value <img class="math" src="../../_images/math/93b453baae5c5dfdfa54beec40ded96b04643493.svg" alt="\hat{\vect{\theta}}"/>,
+together with confidence bounds accounting for the uncertainty remaining
+on the true value <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/>, the Bayesian approach derives a
+full distribution of possible values for <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/> given the
+available data <img class="math" src="../../_images/math/7cf0c15ecb63396999adb7318ac6c480726e4738.svg" alt="\mat{y}"/>. Known as the <em>posterior distribution</em> of
+<img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/> given the data <img class="math" src="../../_images/math/7cf0c15ecb63396999adb7318ac6c480726e4738.svg" alt="\mat{y}"/>, its density can be
+expressed according to Bayes’ theorem:</p>
+<div class="math" id="equation-postdistribution">
+<p><span class="eqno">(1)<a class="headerlink" href="#equation-postdistribution" title="Permalink to this equation">¶</a></span><img src="../../_images/math/6941ca4abf885184f299471f3bae88d63b554aca.svg" alt="\begin{aligned}
+     \pi(\vect{\theta} | \mat{y}) &amp;=&amp; \frac{L(\mat{y} | \vect{\theta}) \times \pi(\vect{\theta})}{m(\mat{y})},
+   \end{aligned}"/></p>
+</div><p>where</p>
+<ul>
+<li><p><img class="math" src="../../_images/math/a52fa8efc0e1c65abfc725f9b68ba26eb3deb46d.svg" alt="L(\mat{y} | \vect{\theta})"/> is the (data) likelihood;</p></li>
+<li><p><img class="math" src="../../_images/math/ff30759ee1e0e76e3742bd99291f8787b7bfa51e.svg" alt="\pi(\vect{\theta})"/> is the so-called <em>prior distribution</em> of
+<img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/> (with support <img class="math" src="../../_images/math/7c6e22701159b6cfdd005232ffcd2f040a9744a3.svg" alt="\Theta"/>), which encodes
+all possible <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/> values weighted by their prior
+probabilities, before consideration of any experimental data (this
+allows for instance to incorporate expert information or known
+physical constraints on the calibration parameter)</p></li>
+<li><p><img class="math" src="../../_images/math/c044e499defd8733097b94db2ba441f1930204db.svg" alt="m(\mat{y})"/> is the marginal likelihood:</p>
+<div class="math">
+<p><img src="../../_images/math/2e6dae8046d24037b4af650ec150faca93fdc163.svg" alt="\begin{aligned}
+      m(\mat{y}) &amp;=&amp; \displaystyle\int_{\vect{\theta}\in\Theta} L(\mat{y} | \vect{\theta}) \pi(\vect{\theta}) d\vect{\theta},
+    \end{aligned}"/></p>
+</div></li>
+</ul>
+<p>which is the necessary normalizing constant ensuring that the
+posterior density integrates to <img class="math" src="../../_images/math/5b3764f9912ecbd5fdf97780cabaf07efb61c49a.svg" alt="1"/>.</p>
+<p>Except in very simple cases, <a class="reference internal" href="#equation-postdistribution">(1)</a> has, in general,
+no closed form. Thus, it must be approximated, either using numerical
+integration when the parameter space dimension <img class="math" src="../../_images/math/21051fdb4de8e39320dd9da7e7e546a1a6fbea8e.svg" alt="d_\theta"/> is low,
+or more generally through stochastic sampling techniques known as
+Monte-Carlo Markov-Chain (MCMC) methods. See <a class="reference internal" href="metropolis_hastings.html#metropolis-hastings"><span class="std std-ref">The Metropolis-Hastings Algorithm</span></a>.</p>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.RandomWalkMetropolisHastings.html#openturns.RandomWalkMetropolisHastings" title="openturns.RandomWalkMetropolisHastings"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomWalkMetropolisHastings</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.Gibbs.html#openturns.Gibbs" title="openturns.Gibbs"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gibbs</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.RandomVectorMetropolisHastings.html#openturns.RandomVectorMetropolisHastings" title="openturns.RandomVectorMetropolisHastings"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomVectorMetropolisHastings</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_calibration/bayesian_calibration/plot_bayesian_calibration.html"><span class="doc">Bayesian calibration of a computer code</span></a></p></li>
+<li><p>See <a class="reference internal" href="../../auto_calibration/bayesian_calibration/plot_bayesian_calibration_flooding.html"><span class="doc">Bayesian calibration of the flooding model</span></a></p></li>
+<li><p>See <a class="reference internal" href="../../auto_calibration/bayesian_calibration/plot_rwmh_python_distribution.html"><span class="doc">Posterior sampling using a PythonDistribution</span></a></p></li>
+<li><p>See <a class="reference internal" href="../../auto_calibration/bayesian_calibration/plot_gibbs.html"><span class="doc">Gibbs sampling of the posterior distribution</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p>Berger, J.O. (1985). <em>Statistical Decision Theory and Bayesian Analysis</em>, Springer.</p></li>
+<li><p>Marin J.M. &amp; Robert C.P. (2007) <em>Bayesian Core: A Practical Approach to Computational Bayesian Statistics</em>, Springer.</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="code_calibration.html" title="Code calibration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="parametric_estimation.html" title="Parametric Estimation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" >Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Bayesian calibration</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on May 10, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

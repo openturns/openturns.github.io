@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uncertainty ranking using PRCC &#8212; OpenTURNS 1.19 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Sensitivity analysis using Sobol indices" href="sensitivity_sobol.html" />
+    <link rel="prev" title="Uncertainty ranking: PCC" href="ranking_pcc.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sensitivity_sobol.html" title="Sensitivity analysis using Sobol indices"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ranking_pcc.html" title="Uncertainty ranking: PCC"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Uncertainty ranking using PRCC</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="ranking_pcc.html"
+                          title="previous chapter">Uncertainty ranking: PCC</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="sensitivity_sobol.html"
+                          title="next chapter">Sensitivity analysis using Sobol indices</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/reliability_sensitivity/ranking_prcc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="uncertainty-ranking-using-prcc">
+<span id="ranking-prcc"></span><h1>Uncertainty ranking using PRCC<a class="headerlink" href="#uncertainty-ranking-using-prcc" title="Permalink to this headline">¶</a></h1>
+<p>This method deals with analyzing the influence the random vector
+<img class="math" src="../../_images/math/84dbc9a0d0b3bd88087fb9719c831ad935ec6a58.svg" alt="\vect{X} = \left( X^1,\ldots,X^{n_X} \right)"/> has on the random
+variable <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> which is being studied for uncertainty. Here we
+attempt to measure monotonic relationships that exist between
+<img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> and the different components <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/>.</p>
+<p>The basic method of hierarchical ordering using Spearman’s coefficients
+deals with the case where the variable <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> monotonically
+depends on <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> variables
+<img class="math" src="../../_images/math/0058e3572bc488d8bf0642f8b740313cc22d9106.svg" alt="\left\{ X^1,\ldots,X^{n_X} \right\}"/> but this can be misleading
+when statistical dependencies between the variables <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> exist.
+In such a situation, the partial rank correlation coefficients can be
+more useful in ordering the uncertainty hierarchically: the partial rank
+correlation coefficients <img class="math" src="../../_images/math/acfe44160ee38efd77f106617755b3a0a328e24c.svg" alt="\textrm{PRCC}_{X^i,Y^j}"/> between the
+variables <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> and <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> attempts to measure the residual
+influence of <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> on <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> once influences from all other
+variables <img class="math" src="../../_images/math/ec3817b9e7bfd06e2cd4f81c34095547b56e64eb.svg" alt="X^j"/> have been eliminated.</p>
+<p>The estimation for each partial rank correlation coefficient
+<img class="math" src="../../_images/math/acfe44160ee38efd77f106617755b3a0a328e24c.svg" alt="\textrm{PRCC}_{X^i,Y^j}"/> uses a set made up of <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> values
+<img class="math" src="../../_images/math/bd933c1b674eb36d321dca4cd8ff8a6d7fdd8c8b.svg" alt="\left\{ (y^j1,x_1^1,\ldots,x_1^{n_X}),\ldots,(y^jN,x_N^1,\ldots,x_N^{n_X}) \right\}"/>
+of the vector <img class="math" src="../../_images/math/2f90ffde61183c346c37f30021feee9ddd81e436.svg" alt="(Y^j,X^1,\ldots,X^{n_X})"/>. This requires the
+following three steps to be carried out:</p>
+<ol class="arabic">
+<li><p>Determine the effect of other variables
+<img class="math" src="../../_images/math/e6ad73557e6e61c25199869059e88da6e3ed2e5a.svg" alt="\left\{ X^j,\ j\neq i \right\}"/> on <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> by linear
+regression; when the values of variable
+<img class="math" src="../../_images/math/e6ad73557e6e61c25199869059e88da6e3ed2e5a.svg" alt="\left\{ X^j,\ j\neq i \right\}"/> are known, the average
+forecast for the value of <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> is then available in the form
+of the equation:</p>
+<div class="math">
+<p><img src="../../_images/math/05fe2409638216a67cc46bfc2c66f394a7ace523.svg" alt="\widehat{Y^j} = \sum_{k \neq i,\ 1 \leq k \leq n_X} \widehat{a}_k X^k"/></p>
+</div></li>
+<li><p>Determine the effect of other variables
+<img class="math" src="../../_images/math/e6ad73557e6e61c25199869059e88da6e3ed2e5a.svg" alt="\left\{ X^j,\ j\neq i \right\}"/> on <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> by linear
+regression; when the values of variable
+<img class="math" src="../../_images/math/e6ad73557e6e61c25199869059e88da6e3ed2e5a.svg" alt="\left\{ X^j,\ j\neq i \right\}"/> are known, the average
+forecast for the value of <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/> is then available in the form
+of the equation:</p>
+<div class="math">
+<p><img src="../../_images/math/4b096de309e5812ec22f130d1888c54293ac9f8a.svg" alt="\widehat{X}^i = \sum_{k \neq i,\ 1 \leq k \leq n_X} \widehat{b}_k X^k"/></p>
+</div></li>
+<li><p><img class="math" src="../../_images/math/acfe44160ee38efd77f106617755b3a0a328e24c.svg" alt="\textrm{PRCC}_{X^i,Y^j}"/> is then equal to the Spearman’s
+correlation coefficient
+<img class="math" src="../../_images/math/9d0784e0107d1969c923f0b0df851c22d53047e2.svg" alt="\widehat{\rho}^S_{Y^j-\widehat{Y^j},X^i-\widehat{X}^i}"/>
+estimated for the variables <img class="math" src="../../_images/math/f2c3e066283f9dde317843b415bf7c27e6dca0a4.svg" alt="Y^j-\widehat{Y^j}"/> and
+<img class="math" src="../../_images/math/a90fc7c57af4a6c01ef83d30176be705d9ed9a22.svg" alt="X^i-\widehat{X}^i"/> on the <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/>-sample of simulations.</p></li>
+</ol>
+<p>One can then class the <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> variables <img class="math" src="../../_images/math/d3d204e964f48e9e1f15903087e921ec4a465680.svg" alt="X^1,\ldots, X^{n_X}"/>
+according to the absolute value of the partial rank correlation
+coefficients: the higher the value of
+<img class="math" src="../../_images/math/22086a33784fc13f1d5dfa0084c606d3c032e92c.svg" alt="\left| \textrm{PRCC}_{X^i,Y^j} \right|"/>, the greater the impact
+the variable <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> has on <img class="math" src="../../_images/math/6cfd19de813b227c65339c386f04fe9defc96859.svg" alt="Y^j"/>.</p>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <code class="xref py py-func docutils literal notranslate"><span class="pre">CorrelationAnalysis_PRCC()</span></code></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_data_analysis/manage_data_and_samples/plot_sample_correlation.html"><span class="doc">Estimate correlation coefficients</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p>Saltelli, A., Chan, K., Scott, M. (2000). “Sensitivity Analysis”, John Wiley &amp; Sons publishers, Probability and Statistics series</p></li>
+<li><p>J.C. Helton, F.J. Davis (2003). “Latin Hypercube sampling and the propagation of uncertainty analyses of complex systems”. Reliability Engineering and System Safety 81, p.23-69</p></li>
+<li><p>J.P.C. Kleijnen, J.C. Helton (1999). “Statistical analyses of scatterplots to identify factors in large-scale simulations, part 1 : review and comparison of techniques”. Reliability Engineering and System Safety 65, p.147-185</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sensitivity_sobol.html" title="Sensitivity analysis using Sobol indices"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ranking_pcc.html" title="Uncertainty ranking: PCC"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Uncertainty ranking using PRCC</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on May 10, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sensitivity analysis using Sobol indices &#8212; OpenTURNS 1.19 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Sensivity analysis with correlated inputs" href="sensitivity_ancova.html" />
+    <link rel="prev" title="Uncertainty ranking using PRCC" href="ranking_prcc.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sensitivity_ancova.html" title="Sensivity analysis with correlated inputs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ranking_prcc.html" title="Uncertainty ranking using PRCC"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sensitivity analysis using Sobol indices</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="ranking_prcc.html"
+                          title="previous chapter">Uncertainty ranking using PRCC</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="sensitivity_ancova.html"
+                          title="next chapter">Sensivity analysis with correlated inputs</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/reliability_sensitivity/sensitivity_sobol.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sensitivity-analysis-using-sobol-indices">
+<span id="sensitivity-sobol"></span><h1>Sensitivity analysis using Sobol indices<a class="headerlink" href="#sensitivity-analysis-using-sobol-indices" title="Permalink to this headline">¶</a></h1>
+<p>This method deals with analyzing the influence the random vector
+<img class="math" src="../../_images/math/84dbc9a0d0b3bd88087fb9719c831ad935ec6a58.svg" alt="\vect{X} = \left( X^1,\ldots,X^{n_X} \right)"/> has on a random variable
+<img class="math" src="../../_images/math/8e76591c56ea3665146858b1b5613d3308a48bcf.svg" alt="Y^k"/> which is being studied for uncertainty. Here we attempt to evaluate the
+part of variance of <img class="math" src="../../_images/math/8e76591c56ea3665146858b1b5613d3308a48bcf.svg" alt="Y^k"/> due to the different components <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/>.</p>
+<p>The estimators for the mean of  <img class="math" src="../../_images/math/1d739aafa9a53e9da2c927c8d2311013deb0fb19.svg" alt="m_{Y^j}"/> and the standard deviation
+<img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/> of <img class="math" src="../../_images/math/8e76591c56ea3665146858b1b5613d3308a48bcf.svg" alt="Y^k"/> can be obtained from a first sample, as Sobol
+indices estimation requires two samples of the input variables : <img class="math" src="../../_images/math/70fa83329091d175b8b302e41bc34443c27c806c.svg" alt="(X^1,\ldots,X^{n_X})"/>,
+that is two sets of <em>N</em> vectors of dimension <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/>
+<img class="math" src="../../_images/math/05ade6a451a08679d1d0fce0cba136168f36cf88.svg" alt="(x_{11}^{(1)},\ldots,x_{1n_X})^{(1)},\ldots,(x_{N^1}^{(1)},\ldots,x_{Nn_X}^{(1)})"/>
+and <img class="math" src="../../_images/math/32e0e68cdaf4da26d38cb9d1353adaafc6c5a16f.svg" alt="(x_{11}^{(2)},\ldots,x_{1n_X})^{(2)},\ldots,(x_{N^1}^{(2)},\ldots,x_{Nn_X}^{(2)})"/></p>
+<p>The estimation of sensitivity indices for first order consists in estimating the quantity</p>
+<div class="math">
+<p><img src="../../_images/math/3ad93b83442eca9da16578e5dd4f468d88c32979.svg" alt="V_i = \Var{\Expect{ Y^k \vert X_i}} = \Expect{ \Expect{Y^k \vert X_i}^2}  - \Expect{\Expect{ Y^k \vert X_i }} ^2 = U_i - \Expect{Y^k} ^2"/></p>
+</div><p>Sobol proposes to estimate the quantity <img class="math" src="../../_images/math/34470c0e7a3dc3526901acf24d476d313596674e.svg" alt="U_i = \Expect{\Expect{ Y^k \vert X_i}^2}"/>
+by swapping every variables in the two samples except the variable <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/> between the two calls of the function:</p>
+<div class="math">
+<p><img src="../../_images/math/c0e40803748a25f2617c330959290a4efdd01162.svg" alt="\hat U_i = \frac{1}{N}\sum_{k=1}^N{ Y^k\left( x_{k1}^{(1)},\dots, x_{k(i-1)}^{(1)},x_{ki}^{(1)},x_{k(i+1)}^{(1)},\dots,x_{kn_X}^{(1)}\right) \times Y^k\left( x_{k1}^{(2)},\dots,x_{k(i-1)}^{(2)},x_{ki}^{(1)},x_{k(i+1)}^{(2)},\dots,x_{kn_X}^{(2)}\right)}"/></p>
+</div><p>Then the <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> first order indices are estimated by</p>
+<div class="math">
+<p><img src="../../_images/math/26be36297125de5a423c3b2601993d5011982821.svg" alt="\hat S_i = \frac{\hat V_i}{\hat \sigma^2} = \frac{\hat U_i - m_{Y^k}^2}{\hat \sigma^2}"/></p>
+</div><p>For the second order, the two variables <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/> and <img class="math" src="../../_images/math/cecb28f2afe016c490a962134eb2b1c1893c5ecc.svg" alt="X_j"/> are not swapped to estimate <img class="math" src="../../_images/math/10118868a297c40880a84bdc2e722bc574a76314.svg" alt="U_{ij}"/>,
+and so on for higher orders, assuming that order <img class="math" src="../../_images/math/39ec580cbbfe64a2f7d7afb3470a686b00e0c121.svg" alt="&lt; n_X"/>.
+Then the <img class="math" src="../../_images/math/26fbb6044e4030b4086fbb6ca43c2671470552c5.svg" alt="\binom {n_X}{2}"/> second order indices are estimated by</p>
+<div class="math">
+<p><img src="../../_images/math/557e26b926cfc707c146a8dc8a765989f3ba0bde.svg" alt="\hat S_{ij} = \frac{\hat V_{ij}}{\hat \sigma^2} = \frac{\hat U_{ij} - m_{Y^k}^2 - \hat V_i - \hat V_j}{\hat \sigma^2}"/></p>
+</div><p>For the <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> total order indices <img class="math" src="../../_images/math/f6c3e1d7741065d7e251473d0e8b92613674a081.svg" alt="T_i"/>, we only swap the variable <img class="math" src="../../_images/math/56c02f12d2f1519026c2ada380fc921e0d8a0a69.svg" alt="X_i"/> between the two samples.</p>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.SobolIndicesAlgorithm.html#openturns.SobolIndicesAlgorithm" title="openturns.SobolIndicesAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SobolIndicesAlgorithm</span></code></a> for indices based on sampling</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosSobolIndices.html#openturns.FunctionalChaosSobolIndices" title="openturns.FunctionalChaosSobolIndices"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalChaosSobolIndices</span></code></a> for indices based on chaos expansion</p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_reliability_sensitivity/sensitivity_analysis/plot_sensitivity_sobol.html"><span class="doc">Estimate Sobol’ indices for the Ishigami function by a sampling method: a quick start guide to sensitivity analysis</span></a></p></li>
+<li><p>See <a class="reference internal" href="../../auto_reliability_sensitivity/sensitivity_analysis/plot_functional_chaos_sensitivity.html"><span class="doc">Sobol’ sensitivity indices from chaos</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../bibliography.html#saltelli2002" id="id1"><span>[saltelli2002]</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sensitivity_ancova.html" title="Sensivity analysis with correlated inputs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ranking_prcc.html" title="Uncertainty ranking using PRCC"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sensitivity analysis using Sobol indices</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on May 10, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

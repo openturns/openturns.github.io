@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generate random variates by inverting the CDF &#8212; OpenTURNS 1.19 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Transform a distribution" href="plot_distribution_transformation.html" />
+    <link rel="prev" title="Create and draw multivariate distributions" href="plot_create_draw_multivariate_distributions.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_distribution_transformation.html" title="Transform a distribution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_create_draw_multivariate_distributions.html" title="Create and draw multivariate distributions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Probabilistic modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Generate random variates by inverting the CDF</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Generate random variates by inverting the CDF</a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#the-weibullmin-distribution">The WeibullMin distribution</a></li>
+<li><a class="reference internal" href="#loss-of-accuracy-when-the-probability-is-close-to-1">Loss of accuracy when the probability is close to 1</a></li>
+<li><a class="reference internal" href="#generate-by-inversion-histogram-and-density">Generate by inversion: histogram and density</a></li>
+<li><a class="reference internal" href="#visualization-of-the-quantiles">Visualization of the quantiles</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_create_draw_multivariate_distributions.html"
+                          title="previous chapter">Create and draw multivariate distributions</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_distribution_transformation.html"
+                          title="next chapter">Transform a distribution</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_probabilistic_modeling/distributions/plot_generate_by_inversion.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-probabilistic-modeling-distributions-plot-generate-by-inversion-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="generate-random-variates-by-inverting-the-cdf">
+<span id="sphx-glr-auto-probabilistic-modeling-distributions-plot-generate-by-inversion-py"></span><h1>Generate random variates by inverting the CDF<a class="headerlink" href="#generate-random-variates-by-inverting-the-cdf" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we show how to generate random variates by inversion of the cumulated distribution function. In simple situations, this method is rarely used in practice because of problems with performance, statistical quality of the generated random variates and numerical accuracy of the generated numbers when we use floating point numbers. However, it is an interesting method to know about because it is a building block for other algorithms and can be used to visualize the distribution of the generated numbers.</p>
+</div>
+<div class="section" id="the-weibullmin-distribution">
+<h2>The WeibullMin distribution<a class="headerlink" href="#the-weibullmin-distribution" title="Permalink to this headline">¶</a></h2>
+<p>Let <img class="math" src="../../_images/math/36b3ffa48ba8197c9a51ea075d657483e63b6453.svg" alt="\beta&gt;0"/> and <img class="math" src="../../_images/math/50364318b18df7add87d5897a6eaa33350beb994.svg" alt="\alpha&gt;0"/> be two real parameters: <img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha"/> is a shape parameter and  <img class="math" src="../../_images/math/233b263354a1b8b4463fe36dd42563b01bed21f3.svg" alt="\beta"/> is a scale parameter.</p>
+<p>The cumulated distribution function of the WeibullMin distribution (also referred as <cite>Weibull distribution</cite>) is:</p>
+<div class="math">
+<p><img src="../../_images/math/14935d04a7302b9b6ae5dd8a0567426886fd278b.svg" alt="F(x) = 1 - \exp\left(-\frac{x-\gamma}{\beta}\right)^\alpha,"/></p>
+</div><p>for any <img class="math" src="../../_images/math/3042347bea470cfcad0bdfaa8b2ebd1877a898bf.svg" alt="x\geq \gamma"/>. For the sake of simplicity, we set <img class="math" src="../../_images/math/d480cd56bb0b090e2bd732c1f4a85d115834b2aa.svg" alt="\gamma=0"/></p>
+<p>In some situations, this parameters are denoted by <img class="math" src="../../_images/math/ef0465c06e11707acd72ef2c2c20b0696d4c60ff.svg" alt="k=\beta"/> and <img class="math" src="../../_images/math/be8bf60345356f457e5683f20258d8bb2492660e.svg" alt="\lambda=\alpha"/>.</p>
+<p>The inverse of the CDF is:</p>
+<div class="math">
+<p><img src="../../_images/math/9471a7ce50d46caedd950e3f73b293696fd96e01.svg" alt="F^{-1}(x) = \beta \left(-\log(1-p)\right)^{\frac{1}{\alpha}}"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b20a0de06484c6d1fc9c1dc285ed77bfb18d45c5.svg" alt="x\geq 0"/>.</p>
+<p>This is the <em>quantile</em> function, because it computes the quantile <img class="math" src="../../_images/math/9e54991ae27e91517d5a19d4a16366a2f56d86c5.svg" alt="F^{-1}(x)"/> depending on an outcome <img class="math" src="../../_images/math/865f48ab61e258cd6e57c005da1578de4b22f440.svg" alt="x"/>.</p>
+</div>
+<div class="section" id="loss-of-accuracy-when-the-probability-is-close-to-1">
+<h2>Loss of accuracy when the probability is close to 1<a class="headerlink" href="#loss-of-accuracy-when-the-probability-is-close-to-1" title="Permalink to this headline">¶</a></h2>
+<p>In practice, if the probability <img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p"/> is <em>very</em> close to 1, then the complementary probability <img class="math" src="../../_images/math/c62aea98fe79d5ab0ba541e2a0f28256133c067e.svg" alt="1-p"/> is close to zero. This can lead to a significant loss of accuracy when we evaluate the subtraction <img class="math" src="../../_images/math/c62aea98fe79d5ab0ba541e2a0f28256133c067e.svg" alt="1-p"/> with floating point numbers because <img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p"/> and 1 have lots of common digits. This is called a <em>loss of accuracy by catastrophic cancellation</em>, a problem which is common in extreme events.</p>
+<p>We can use the <img class="math" src="../../_images/math/f8eb740a7f7effaeec5927c95067b580632e6900.svg" alt="\textrm{expm1}"/> function, defined by the equation:</p>
+<div class="math">
+<p><img src="../../_images/math/ee213fcaae0d19f6a0e0d0c0885793b5e286189f.svg" alt="\textrm{expm1}(x) = \exp(x)-1,"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b83fb4ad9f34ff6d0292acb686d86927ce88a006.svg" alt="x\in\mathbb{R}"/>. This is <em>not</em> numerically equivalent to computing <cite>exp</cite> and then subtracting 1. Indeed, the <cite>expm1</cite> function is more accurate when its argument <cite>x</cite> is close to zero.</p>
+<p>The CDF is then:</p>
+<div class="math">
+<p><img src="../../_images/math/d20ffa62fc5e388a66761966b4d7b7960a74ae43.svg" alt="F(x) = -\textrm{expm1} \left(\left(-\frac{x}{\beta}\right)^\alpha\right),"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b20a0de06484c6d1fc9c1dc285ed77bfb18d45c5.svg" alt="x\geq 0"/>.</p>
+<p>For the quantile function, we can use the <img class="math" src="../../_images/math/0e0ef0d5dbc850cf9c144532c66df4a57d22b9ee.svg" alt="\textrm{log1p}"/> function, defined by the equation:</p>
+<div class="math">
+<p><img src="../../_images/math/07e021b70cf19651e58ca43cb1c231b4efa5c775.svg" alt="\textrm{log1p}(x) = \log(1+x)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/70d0478dfcf66e7fa225e737e6f7898c1630ec82.svg" alt="x&gt;-1"/>.</p>
+<p>Therefore, the quantile function is:</p>
+<div class="math">
+<p><img src="../../_images/math/f778616a8b02a2969394ef74e7789015856ac1bc.svg" alt="x = \beta \left(-\textrm{log1p}(-p)\right)^{\frac{1}{\alpha}}"/></p>
+</div><p>for <img class="math" src="../../_images/math/b20a0de06484c6d1fc9c1dc285ed77bfb18d45c5.svg" alt="x\geq 0"/>.</p>
+<p>Note that for <img class="math" src="../../_images/math/e7c75c108941122e08032eb632103300fd5a2fb1.svg" alt="\gamma &gt; 0"/>, the quantile function writes:</p>
+<div class="math">
+<p><img src="../../_images/math/06363fb500e2592b4709ce25597c018288500b17.svg" alt="x = \gamma + \beta \left(-\textrm{log1p}(-p)\right)^{\frac{1}{\alpha}}"/></p>
+</div><p>with <img class="math" src="../../_images/math/3042347bea470cfcad0bdfaa8b2ebd1877a898bf.svg" alt="x\geq \gamma"/>.</p>
+<p>In the following, we will not use these robust equations and this issue will not be taken into account.</p>
+</div>
+<div class="section" id="generate-by-inversion-histogram-and-density">
+<h2>Generate by inversion: histogram and density<a class="headerlink" href="#generate-by-inversion-histogram-and-density" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following function defines the quantile function of the <cite>WeibullMin</cite> distribution. (Of course, we could use the <cite>computeQuantile</cite> method of the <cite>WeibullMin</cite> class as well. This would create a simpler, but less interesting example: this is a trade off that we accept in order to better understand the algorithm.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weibullQ</span><span class="p">(</span><span class="n">argument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    WeibullMin quantile function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="n">argument</span>
+    <span class="n">quantile</span> <span class="o">=</span> <span class="n">beta</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">quantile</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">quantileFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weibullQ</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We define the parameters of the Weibull distribution and create the parametric function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">quantile</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">quantileFunction</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">])</span>
+<span class="n">quantile</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>ParametricEvaluation(class=PythonEvaluation name=OpenTURNSPythonFunction, parameters positions=[1,2], parameters=[x1 : 10, x2 : 1], input positions=[0])</p>
+</div>
+<br />
+<br /><p>In the library, the uniform distribution is by default over the <img class="math" src="../../_images/math/604c36c065689c2cc20e761c907bcb4fa035aeba.svg" alt="[-1,1]"/> interval. To obtain a uniform distribution over <img class="math" src="../../_images/math/35553d8536d15adad653d39e5b507dbb08b6b885.svg" alt="[0,1]"/>, we need to set the bounds explicitly.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">U</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we generate a sample of size 1000 from the uniform distribution.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">uniformSample</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To generate the numbers, we evaluate the quantile function on the uniform numbers.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">weibullSample</span> <span class="o">=</span> <span class="n">quantile</span><span class="p">(</span><span class="n">uniformSample</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to compare the results, we use the <cite>WeibullMin</cite> class (using the default value of the location parameter <img class="math" src="../../_images/math/d480cd56bb0b090e2bd732c1f4a85d115834b2aa.svg" alt="\gamma=0"/>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">W</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">WeibullMin</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">histo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">weibullSample</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">histo</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Weibull alpha=</span><span class="si">%s</span><span class="s2">, beta=</span><span class="si">%s</span><span class="s2">, n=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">histo</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Sample&quot;</span><span class="p">])</span>
+<span class="n">wpdf</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">wpdf</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">])</span>
+<span class="n">wpdf</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Weibull&quot;</span><span class="p">])</span>
+<span class="n">histo</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">wpdf</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">histo</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_generate_by_inversion_001.png" srcset="../../_images/sphx_glr_plot_generate_by_inversion_001.png" alt="Weibull alpha=10.0, beta=1.0, n=1000" class = "sphx-glr-single-img"/><p>We see that the empirical histogram of the generated outcomes is close to the exact density of the Weibull distribution.</p>
+</div>
+<div class="section" id="visualization-of-the-quantiles">
+<h2>Visualization of the quantiles<a class="headerlink" href="#visualization-of-the-quantiles" title="Permalink to this headline">¶</a></h2>
+<p>We now want to understand the details of the algorithm. To do this, we need to compare the distribution of the uniform numbers with the distribution of the generated points.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">uniformSample</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">weibullSample</span> <span class="o">=</span> <span class="n">quantile</span><span class="p">(</span><span class="n">uniformSample</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We sort the sample by increasing order.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">weibullSample</span>
+<span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">uniformSample</span>
+<span class="n">data</span><span class="o">.</span><span class="n">setDescription</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">())</span>
+<span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:]</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<TABLE><TR><TD></TD><TH>x</TH><TH>p</TH></TR>
+<TR><TH>0</TH><TD>0.664436</TD><TD>0.01663011</TD></TR>
+<TR><TH>1</TH><TD>0.6706435</TD><TD>0.01823588</TD></TR>
+<TR><TH>2</TH><TD>0.6978243</TD><TD>0.02701024</TD></TR>
+<TR><TH>3</TH><TD>0.7032741</TD><TD>0.02916321</TD></TR>
+<TR><TH>4</TH><TD>0.7193206</TD><TD>0.03640797</TD></TR>
+</TABLE>
+</div>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">weibullSample</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">uniformSample</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Weibull alpha=</span><span class="si">%s</span><span class="s2">, beta=</span><span class="si">%s</span><span class="s2">, n=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+                 <span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Add the CDF plot</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">drawCDF</span><span class="p">()</span>
+<span class="n">curve</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="c1"># Plot dashed horizontal &amp; vertical lines</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="n">weibullSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">weibullSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="p">[</span>
+                     <span class="n">uniformSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">uniformSample</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">0.</span><span class="p">])</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_generate_by_inversion_002.png" srcset="../../_images/sphx_glr_plot_generate_by_inversion_002.png" alt="Weibull alpha=10.0, beta=1.0, n=50" class = "sphx-glr-single-img"/><p>This graphics must be read from the U axis on the left to the blue curve (representing the CDF), and down to the X axis. We see that the horizontal lines on the U axis follow the uniform distribution. On the other hand, the vertical lines (on the X axis) follow the Weibull distribution.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.176 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-probabilistic-modeling-distributions-plot-generate-by-inversion-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/e14a00ed4018d13d012114054f8c6b02/plot_generate_by_inversion.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_generate_by_inversion.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/87e364507433d3e2ece889fd85fbd702/plot_generate_by_inversion.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_generate_by_inversion.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_distribution_transformation.html" title="Transform a distribution"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_create_draw_multivariate_distributions.html" title="Create and draw multivariate distributions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.19 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Probabilistic modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Generate random variates by inverting the CDF</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on May 10, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>
