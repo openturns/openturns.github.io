@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Linear regression &#8212; OpenTURNS 1.18rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Estimating a quantile by Wilks’ method" href="quantile_estimation_wilks.html" />
+    <link rel="prev" title="Chi-squared test for independence" href="chi2_independence_test.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="quantile_estimation_wilks.html" title="Estimating a quantile by Wilks’ method"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chi2_independence_test.html" title="Chi-squared test for independence"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" accesskey="U">Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Linear regression</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chi2_independence_test.html"
+                        title="previous chapter">Chi-squared test for independence</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="quantile_estimation_wilks.html"
+                        title="next chapter">Estimating a quantile by Wilks’ method</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/data_analysis/linear_regression.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="linear-regression">
+<span id="id1"></span><h1>Linear regression<a class="headerlink" href="#linear-regression" title="Permalink to this headline">¶</a></h1>
+<p>This method deals with the parametric modelling of a probability
+distribution for a random vector
+<img class="math" src="../../_images/math/84dbc9a0d0b3bd88087fb9719c831ad935ec6a58.svg" alt="\vect{X} = \left( X^1,\ldots,X^{n_X} \right)"/>. It aims to measure
+a type of dependence (here a linear relation) which may exist between a
+component <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> and other uncertain variables <img class="math" src="../../_images/math/ec3817b9e7bfd06e2cd4f81c34095547b56e64eb.svg" alt="X^j"/>.</p>
+<p>The principle of the multiple linear regression model is to find the
+function that links the variable <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> to other variables
+<img class="math" src="../../_images/math/70f6e235f9524fc68dbf244f1845f3f9ffd8eab9.svg" alt="X^{j_1}"/>,…,<img class="math" src="../../_images/math/9feda4e7e9dac029c4ffa41779260e898023fc4f.svg" alt="X^{j_K}"/> by means of a linear model:</p>
+<div class="math">
+<p><img src="../../_images/math/70a9e86d9407812031d80f0ca242c70ce730fc00.svg" alt="\begin{aligned}
+   X^i = a_0 + \sum_{j \in \{ j_1,\ldots,j_K \} } a_j X^j + \varepsilon
+ \end{aligned}"/></p>
+</div><p>where <img class="math" src="../../_images/math/1d9ab772a68d781a9a73c08e7953f063cd668479.svg" alt="\varepsilon"/> describes a random variable with zero mean
+and standard deviation <img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/> independent of the input variables
+<img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/>. For given values of <img class="math" src="../../_images/math/70f6e235f9524fc68dbf244f1845f3f9ffd8eab9.svg" alt="X^{j_1}"/>,…,<img class="math" src="../../_images/math/9feda4e7e9dac029c4ffa41779260e898023fc4f.svg" alt="X^{j_K}"/>,
+the average forecast of <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> is denoted by <img class="math" src="../../_images/math/edb651ba39cac4660b6915e27fe8497b7131b2ff.svg" alt="\widehat{X}^i"/>
+and is defined as:</p>
+<div class="math">
+<p><img src="../../_images/math/eaf76fe5d8315e97eb9dfc8e2928b8f864a62069.svg" alt="\begin{aligned}
+   \widehat{X}^i = a_0 + \sum_{j \in \{ j_1,\ldots,j_K \} } a_j X^j
+ \end{aligned}"/></p>
+</div><p>The estimators for the regression coefficients
+<img class="math" src="../../_images/math/7192f6298d9c10a4a252476ce1a5d71e909ab062.svg" alt="\widehat{a}_0,\widehat{a}_1,\ldots,\widehat{a}_{K}"/>, and the
+standard deviation <img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/> are obtained from a sample of
+<img class="math" src="../../_images/math/c9224f3868e636bca2550961d84e1d961a79a2f2.svg" alt="(X^i,X^{j_1},\ldots,X^{j_K})"/>, that is a set of <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> values
+<img class="math" src="../../_images/math/7cfc99907b3f2411073b42223365c26835e2a742.svg" alt="(x^i_1,x_1^{j_1},\ldots,x_1^{j_K})"/>,…,<img class="math" src="../../_images/math/5298b731158d04ed4985cf0d5e99f9b30fa00901.svg" alt="(x^i_n,x_n^{j_1},\ldots,x_n^{j_K})"/>.
+They are determined via the least-squares method:</p>
+<div class="math">
+<p><img src="../../_images/math/078bdae702b00373b707251329f908fac23c9f8c.svg" alt="\begin{aligned}
+   \left\{ \widehat{a}_0,\widehat{a}_1,\ldots,\widehat{a}_{K} \right\} = \textrm{argmin} \sum_{k=1}^n \left[ x^i_k - a_0 - \sum_{j \in \{ j_1,\ldots,j_K \} } a_j x^j_k \right]^2
+ \end{aligned}"/></p>
+</div><p>In other words, the principle is to minimize the total quadratic
+distance between the observations <img class="math" src="../../_images/math/e17cc0d7bb985f3ff99a937eed450eb2faa63cc1.svg" alt="x^i_k"/> and the linear forecast
+<img class="math" src="../../_images/math/e2f463a0ac9bab0b90094e9ad26dc471ebdcb7a4.svg" alt="\widehat{x}^i_k"/>.</p>
+<p>Some estimated coefficient <img class="math" src="../../_images/math/e371151a3eba8e05468fd80a3c6d5591ce55d0db.svg" alt="\widehat{a}_\ell"/> may be close to
+zero, which may indicate that the variable <img class="math" src="../../_images/math/21a6c00dd7e79635d06f235943c251390522b15b.svg" alt="X^{j_\ell}"/> does not
+bring valuable information to forecast <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/>. A classical statistical
+test to identify such situations is available: Fisher’s test.
+For each estimated coefficient <img class="math" src="../../_images/math/e371151a3eba8e05468fd80a3c6d5591ce55d0db.svg" alt="\widehat{a}_\ell"/>, an important
+characteristic is the so-called “<img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p"/>-value” of Fisher’s test. The
+coefficient is said to be “significant” if and only if
+<img class="math" src="../../_images/math/f37582577ca5020d9d3a2f1d0fab7f991f3109fa.svg" alt="\alpha_{\ell \textrm{lim}}"/> is greater than a value
+<img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha"/> chosen by the user (typically 5% or 10%). The higher the
+<img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p"/>-value, the more significant the coefficient.</p>
+<p>Another important characteristic of the adjusted linear model is the
+coefficient of determination <img class="math" src="../../_images/math/74bf8ec277db9728f4352f2e31f787c36f76e658.svg" alt="R^2"/>. This quantity indicates the
+part of the variance of <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> that is explained by the linear
+model:</p>
+<div class="math">
+<p><img src="../../_images/math/16212710577bc44f8129d4b4c410d03524f7f162.svg" alt="\begin{aligned}
+   R^2 = \frac{ \displaystyle \sum_{k=1}^n \left( x^i_k - \overline{x}^i \right)^2 - \sum_{k=1}^n \left( x^i_k - \widehat{x}_k^i \right)^2 }{ \sum_{k=1}^n \left( x^i_k - \overline{x}^i \right)^2 }
+ \end{aligned}"/></p>
+</div><p>where <img class="math" src="../../_images/math/4593c89adf08a2a26632830a6ac2fcf51d035dc6.svg" alt="\overline{x}^i"/> denotes the empirical mean of the sample
+<img class="math" src="../../_images/math/1546dc3633b8ce1ddc394cbf80edc6292a9d937c.svg" alt="\left\{ x^i_1,\ldots,x^i_n  \right\}"/>.</p>
+<p>Thus, <img class="math" src="../../_images/math/6210102182d894033eafabd9bd01e21b64e8f536.svg" alt="0 \leq R^2 \leq 1"/>. A value close to 1 indicates a good fit
+of the linear model, whereas a value close to 0 indicates that the
+linear model does not provide a relevant forecast. A statistical test
+allows to detect significant values of <img class="math" src="../../_images/math/74bf8ec277db9728f4352f2e31f787c36f76e658.svg" alt="R^2"/>. Again, a
+<img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p"/>-value is provided: the higher the <img class="math" src="../../_images/math/17b12496a489ee11edbaa2998e911d495fddf5be.svg" alt="p"/>-value, the more
+significant the coefficient of determination.</p>
+<p>By definition, the multiple regression model is only relevant for linear
+relationships, as in the following simple example where
+<img class="math" src="../../_images/math/c96489090516c224c65e4031962ef12b1bbcf9dc.svg" alt="X^2 = a_0 + a_1 X^1"/>.</p>
+<p>(<a class="reference external" href="../../theory/data_analysis/linear_regression-1.py">Source code</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-1.png">png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-1.hires.png">hires.png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-1.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../../_images/linear_regression-1.png" class="plot-directive" src="../../_images/linear_regression-1.png" />
+</figure>
+<p>In this second example (still in dimension 1), the linear model is not
+relevant because of the exponential shape of the relation. But a linear
+approach would be useful on the transformed problem
+<img class="math" src="../../_images/math/1c6d70f6165ad0b3116b06388b51c25167c5ce3b.svg" alt="X^2 = a_0 + a_1 \exp X^1"/>. In other words, what is important is
+that the relationships between <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> and the variables
+<img class="math" src="../../_images/math/70f6e235f9524fc68dbf244f1845f3f9ffd8eab9.svg" alt="X^{j_1}"/>,…,<img class="math" src="../../_images/math/9feda4e7e9dac029c4ffa41779260e898023fc4f.svg" alt="X^{j_K}"/> is linear with respect to the
+regression coefficients <img class="math" src="../../_images/math/47e2d641b7973018c16e4c989edc2c726fd8eb93.svg" alt="a_j"/>.</p>
+<p>(<a class="reference external" href="../../theory/data_analysis/linear_regression-2.py">Source code</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-2.png">png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-2.hires.png">hires.png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-2.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../../_images/linear_regression-2.png" class="plot-directive" src="../../_images/linear_regression-2.png" />
+</figure>
+<p>The value of <img class="math" src="../../_images/math/74bf8ec277db9728f4352f2e31f787c36f76e658.svg" alt="R^2"/> is a good indication of the goodness-of fit of
+the linear model. However, several other verifications have to be
+carried out before concluding that the linear model is satisfactory. For
+instance, one has to pay attentions to the “residuals”
+<img class="math" src="../../_images/math/d40761c160e27ac838dfdeefd88d8d2fc3e0d91c.svg" alt="\{ u_1,\ldots,u_N \}"/> of the regression:</p>
+<div class="math">
+<p><img src="../../_images/math/9447b5de33e9be2bd0e0425cbf11312fe533f29c.svg" alt="\begin{aligned}
+   u_j = x^i - \widehat{x}^i
+ \end{aligned}"/></p>
+</div><p>A residual is thus equal to the difference between the observed value
+of <img class="math" src="../../_images/math/497c30a1a2a6c10d87566cbee88c618eb6336b81.svg" alt="X^i"/> and the average forecast provided by the linear model. A
+key-assumption for the robustness of the model is that the
+characteristics of the residuals do not depend on the value of
+<img class="math" src="../../_images/math/3922e77e5de1b86e293122a2098ffa487bd693db.svg" alt="X^i,X^{j_1},\dots,X^{j_K}"/>: the mean value should be close
+to 0 and the standard deviation should be constant. Thus, plotting the
+residuals versus these variables can fruitful.</p>
+<p>In the following example, the behavior of the residuals is
+satisfactory: no particular trend can be detected neither in the mean
+nor in he standard deviation.</p>
+<p>(<a class="reference external" href="../../theory/data_analysis/linear_regression-3.py">Source code</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-3.png">png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-3.hires.png">hires.png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-3.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../../_images/linear_regression-3.png" class="plot-directive" src="../../_images/linear_regression-3.png" />
+</figure>
+<p>The next example illustrates a less favorable situation: the mean value
+of the residuals seems to be close to 0 but the standard deviation tends
+to increase with <img class="math" src="../../_images/math/ea775056706c0642a79ca7b47cbc53cd1a63fc8d.svg" alt="X"/>. In such a situation, the linear model should
+be abandoned, or at least used very cautiously.</p>
+<p>(<a class="reference external" href="../../theory/data_analysis/linear_regression-4.py">Source code</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-4.png">png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-4.hires.png">hires.png</a>, <a class="reference external" href="../../theory/data_analysis/linear_regression-4.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../../_images/linear_regression-4.png" class="plot-directive" src="../../_images/linear_regression-4.png" />
+</figure>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LinearModelAlgorithm.html#openturns.LinearModelAlgorithm" title="openturns.LinearModelAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearModelAlgorithm</span></code></a> to build a linear model</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LinearModelResult.html#openturns.LinearModelResult" title="openturns.LinearModelResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearModelResult</span></code></a> for the associated results</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.VisualTest_DrawLinearModel.html#openturns.VisualTest_DrawLinearModel" title="openturns.VisualTest_DrawLinearModel"><code class="xref py py-func docutils literal notranslate"><span class="pre">VisualTest_DrawLinearModel()</span></code></a> to draw a linear model</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.VisualTest_DrawLinearModelResidual.html#openturns.VisualTest_DrawLinearModelResidual" title="openturns.VisualTest_DrawLinearModelResidual"><code class="xref py py-func docutils literal notranslate"><span class="pre">VisualTest_DrawLinearModelResidual()</span></code></a> to draw the residual</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.LinearModelTest_LinearModelFisher.html#openturns.LinearModelTest_LinearModelFisher" title="openturns.LinearModelTest_LinearModelFisher"><code class="xref py py-func docutils literal notranslate"><span class="pre">LinearModelTest_LinearModelFisher()</span></code></a> to assess the nullity of the coefficients</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.LinearModelTest_LinearModelResidualMean.html#openturns.LinearModelTest_LinearModelResidualMean" title="openturns.LinearModelTest_LinearModelResidualMean"><code class="xref py py-func docutils literal notranslate"><span class="pre">LinearModelTest_LinearModelResidualMean()</span></code></a> to assess the mean residual</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.LinearModelTest_LinearModelHarrisonMcCabe.html#openturns.LinearModelTest_LinearModelHarrisonMcCabe" title="openturns.LinearModelTest_LinearModelHarrisonMcCabe"><code class="xref py py-func docutils literal notranslate"><span class="pre">LinearModelTest_LinearModelHarrisonMcCabe()</span></code></a> to assess the homoscedasticity of the residual</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.LinearModelTest_LinearModelBreuschPagan.html#openturns.LinearModelTest_LinearModelBreuschPagan" title="openturns.LinearModelTest_LinearModelBreuschPagan"><code class="xref py py-func docutils literal notranslate"><span class="pre">LinearModelTest_LinearModelBreuschPagan()</span></code></a> to assess the homoscedasticity of the residual</p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.LinearModelTest_LinearModelDurbinWatson.html#openturns.LinearModelTest_LinearModelDurbinWatson" title="openturns.LinearModelTest_LinearModelDurbinWatson"><code class="xref py py-func docutils literal notranslate"><span class="pre">LinearModelTest_LinearModelDurbinWatson()</span></code></a> to assess the autocorrelation of the residual</p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_data_analysis/manage_data_and_samples/plot_linear_regression.html"><span class="doc">Build and validate a linear model</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../bibliography.html#saporta1990" id="id2"><span>[saporta1990]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#dixon1983" id="id3"><span>[dixon1983]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#nisthandbook" id="id4"><span>[nisthandbook]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#dagostino1986" id="id5"><span>[dagostino1986]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#bhattacharyya1997" id="id6"><span>[bhattacharyya1997]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#sprent2001" id="id7"><span>[sprent2001]</span></a></p></li>
+<li><p><a class="reference internal" href="../../bibliography.html#burnham2002" id="id8"><span>[burnham2002]</span></a></p></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="quantile_estimation_wilks.html" title="Estimating a quantile by Wilks’ method"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chi2_independence_test.html" title="Chi-squared test for independence"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" >Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Linear regression</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

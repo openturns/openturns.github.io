@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>The Metropolis-Hastings Algorithm &#8212; OpenTURNS 1.18rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Graphical goodness-of-fit tests" href="graphical_fitting_test.html" />
+    <link rel="prev" title="Gaussian calibration" href="gaussian_calibration.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="graphical_fitting_test.html" title="Graphical goodness-of-fit tests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gaussian_calibration.html" title="Gaussian calibration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" accesskey="U">Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Metropolis-Hastings Algorithm</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gaussian_calibration.html"
+                        title="previous chapter">Gaussian calibration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="graphical_fitting_test.html"
+                        title="next chapter">Graphical goodness-of-fit tests</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/data_analysis/metropolis_hastings.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="the-metropolis-hastings-algorithm">
+<span id="metropolis-hastings"></span><h1>The Metropolis-Hastings Algorithm<a class="headerlink" href="#the-metropolis-hastings-algorithm" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line"><strong>Markov chain.</strong> Considering a <img class="math" src="../../_images/math/c407acdc527ca1937ae333fa8475cb95384c8087.svg" alt="\sigma"/>-algebra <img class="math" src="../../_images/math/9a51199a6717b552e691a39e3dcd9046d36f1904.svg" alt="\cA"/> on
+<img class="math" src="../../_images/math/c4b87a3c119cb12359cccaf934364db42db3eb09.svg" alt="\Omega"/>, a Markov chain is a process
+<img class="math" src="../../_images/math/e42850d66c81ae588860b1ca40597e5eebcf6e23.svg" alt="{(X_k)}_{k\in\Nset}"/> such that</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/edbb14f7e6a4b044958b5ed21d868e00b8088a97.svg" alt="\begin{aligned}
+    \forall{}(A,x_0,\ldots,x_{k-1})\in\cA\times\Omega^k
+    \quad \Prob{X_k\in A \,|\, X_0=x_0, \ldots, X_{k-1}=x_{k-1}}
+    = \Prob{X_k\in A \,|\, X_{k-1}=x_{k-1}}.
+  \end{aligned}"/></p>
+</div></div></blockquote>
+<p>An example is the <em>random walk</em> for which
+<img class="math" src="../../_images/math/a7fb30b30ac0b2db46d42ba1d4054a473b810280.svg" alt="X_k = X_{k-1} + \varepsilon_k"/> where the steps
+<img class="math" src="../../_images/math/c6d7186445eb413c43dbd558d8690234ae494c46.svg" alt="\varepsilon_k"/> are independent and identically distributed.</p>
+<div class="line-block">
+<div class="line"><strong>Transition kernel.</strong> A transition kernel on <img class="math" src="../../_images/math/6aba421b4ebd5f1b16a45993ca0fb991a6d83c44.svg" alt="(\Omega, \cA)"/> is
+a mapping <img class="math" src="../../_images/math/bcabd1c0157654915638b9fe7dcd6564839937c6.svg" alt="K: (\Omega, \cA) \rightarrow [0, 1]"/> such that</div>
+</div>
+<ul>
+<li><p><img class="math" src="../../_images/math/6c016adecbc5cb6f357164271d06ce7a2a1ee8c9.svg" alt="\forall{}A\in\cA \quad K(., A)"/> is measurable;</p></li>
+<li><div class="line-block">
+<div class="line"><img class="math" src="../../_images/math/bdc2f213bfb5036f45ae3d2245494ee370fe6a69.svg" alt="\forall{}x\in\Omega \quad K(x, .)"/> is a probability
+distribution on <img class="math" src="../../_images/math/6aba421b4ebd5f1b16a45993ca0fb991a6d83c44.svg" alt="(\Omega, \cA)"/>.</div>
+</div>
+</li>
+</ul>
+<p>The kernel <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/> has density <img class="math" src="../../_images/math/14feef167e3dd938706565e34c0c9ac19065a615.svg" alt="k"/> if
+<img class="math" src="../../_images/math/0833a0c43962722e01fcbd97ed77e2748342cf30.svg" alt="\forall(x,A)\in\Omega\times\cA \quad K(x, A) = \displaystyle\int_A \: k(x, y) \mbox{d}y"/>.</p>
+<div class="line-block">
+<div class="line"><img class="math" src="../../_images/math/e42850d66c81ae588860b1ca40597e5eebcf6e23.svg" alt="{(X_k)}_{k\in\Nset}"/> is a homogeneous Markov Chain of
+transition <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/> if
+<img class="math" src="../../_images/math/8af80a361cab1402d1bc420aff0a8dc81c6dfbf1.svg" alt="\forall(A,x)\in\cA\times\Omega \quad \Prob{X_k\in{}A | X_{k-1}=x} = K(x, A)"/>.</div>
+<div class="line"><strong>Some Notations.</strong> Let <img class="math" src="../../_images/math/e42850d66c81ae588860b1ca40597e5eebcf6e23.svg" alt="{(X_k)}_{k\in\Nset}"/> be a homogeneous
+Markov Chain of transition <img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/> on <img class="math" src="../../_images/math/6aba421b4ebd5f1b16a45993ca0fb991a6d83c44.svg" alt="(\Omega, \cA)"/> with
+initial distribution <img class="math" src="../../_images/math/45bc5b23a1507ae9dc517d85a584c4cfc5c3d8ab.svg" alt="\nu"/> (that is <img class="math" src="../../_images/math/9503de37e18276274b3bb64ca5aef318dacf8321.svg" alt="X_0 \sim \nu"/>):</div>
+</div>
+<ul>
+<li><p><img class="math" src="../../_images/math/68cc303ba5d1fc580c182672ece5ce48230e4df5.svg" alt="K_\nu"/> denotes the probability distribution of the Markov
+Chain <img class="math" src="../../_images/math/e42850d66c81ae588860b1ca40597e5eebcf6e23.svg" alt="{(X_k)}_{k\in\Nset}"/>;</p></li>
+<li><p><img class="math" src="../../_images/math/622b0142cc2224b8a322a285afabffaf1eda1440.svg" alt="\nu{}K^k"/> denotes the probability distribution of <img class="math" src="../../_images/math/4394acaf9636e03e33fb9c9a027ad91bb35bdc98.svg" alt="X_k"/>
+(<img class="math" src="../../_images/math/504afc9ab080d3b656617d56ec0c31817d6c3592.svg" alt="X_k \sim \nu{}K^k"/>);</p></li>
+<li><div class="line-block">
+<div class="line"><img class="math" src="../../_images/math/6f2984d552f5de9a96f8497e9b2a774f2388037f.svg" alt="K^k"/> denotes the mapping defined by
+<img class="math" src="../../_images/math/394fa58256ec00df2848197c2d76e5e2cef6e12e.svg" alt="K^k(x,A) = \Prob{X_k\in{}A|X_0=x}"/> for all
+<img class="math" src="../../_images/math/0df1aab7fc8974d81f42df0890fa3c19dac2d13a.svg" alt="(x,A)\in\Omega\times\cA"/>.</div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><strong>Total variation convergence.</strong> A Markov Chain of distribution
+<img class="math" src="../../_images/math/68cc303ba5d1fc580c182672ece5ce48230e4df5.svg" alt="K_\nu"/> is said to converge in total variation distance towards
+the distribution <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> if</div>
+</div>
+<blockquote>
+<div><div class="math">
+<p><img src="../../_images/math/f87d395483d7ec4b6c3a553637dad7fe5008b9fa.svg" alt="\begin{aligned}
+    \lim_{k\to+\infty} \sup_{A\in\cA} \left|
+    \nu{}K^k(A) - t(A)
+    \right| = 0.
+  \end{aligned}"/></p>
+</div></div></blockquote>
+<p>Then the notation used here is <img class="math" src="../../_images/math/b588b5be5ef5368a16b40e78b40966239fd52841.svg" alt="\nu{}K^k \rightarrow_{TV} t"/>.</p>
+<div class="line-block">
+<div class="line"><strong>Some interesting properties.</strong> Let <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> be a (target)
+distribution on <img class="math" src="../../_images/math/6aba421b4ebd5f1b16a45993ca0fb991a6d83c44.svg" alt="(\Omega, \cA)"/>, then a transition kernel
+<img class="math" src="../../_images/math/c55b41eac82c4e5a8d7c5ae98795f4beb74baad1.svg" alt="K"/> is said to be:</div>
+</div>
+<ul class="simple">
+<li><p><img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>-invariant if <img class="math" src="../../_images/math/c388ef95bd4fc2688f305dd16d6b39ed95f0dbfc.svg" alt="t{}K = t"/>;</p></li>
+<li><p><img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>-irreducible if, <img class="math" src="../../_images/math/ad2cdcb5cff07732c6605ba1a148a742c34cb2de.svg" alt="\forall(A,x)\in\Omega\times\cA"/> such
+that <img class="math" src="../../_images/math/4ae0d13582866073e7558644dc39c59e9a011f98.svg" alt="t(A)&gt;0"/>, <img class="math" src="../../_images/math/0af7c88e93338de120233869d83d03259d1d5509.svg" alt="\exists{}k\in\cN^* \quad {}K^k(x, A) &gt; 0"/>
+holds.</p></li>
+</ul>
+<p>Markov Chain Monte-Carlo techniques allows to sample and integrate
+according to a distribution <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> which is only known up to a
+multiplicative constant. This situation is common in Bayesian statistics
+where the “target” distribution, the posterior one
+<img class="math" src="../../_images/math/1ecea34838ac8d9577beb8f744a274f15b50609f.svg" alt="t(\vect{\theta})=\pi(\vect{\theta} | \mat{y})"/>, is proportional
+to the product of prior and likelihood: see equation <a class="reference internal" href="bayesian_calibration.html#equation-postdistribution">(1)</a>.</p>
+<p>In particular, given a “target” distribution <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> and a
+<img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>-irreducible kernel transition <img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/>, the
+Metropolis-Hastings algorithm produces a Markov chain
+<img class="math" src="../../_images/math/e42850d66c81ae588860b1ca40597e5eebcf6e23.svg" alt="{(X_k)}_{k\in\Nset}"/> of distribution <img class="math" src="../../_images/math/68cc303ba5d1fc580c182672ece5ce48230e4df5.svg" alt="K_\nu"/> with the
+following properties:</p>
+<ul>
+<li><p>the transition kernel of the Markov chain is <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>-invariant;</p></li>
+<li><p><img class="math" src="../../_images/math/b588b5be5ef5368a16b40e78b40966239fd52841.svg" alt="\nu{}K^k \rightarrow_{TV} t"/>;</p></li>
+<li><p>the Markov chain satisfies the <em>ergodic theorem</em>: let <img class="math" src="../../_images/math/6d353192a782c86b102a50240f5691b8b7cb88a3.svg" alt="\phi"/> be
+a real-valued function such that
+<img class="math" src="../../_images/math/3c66e16621d7bcf80364bfb9dd37e5e6240065fa.svg" alt="\mathbb{E}_{X\sim{}t}\left[ |\phi(X)| \right] &lt;+\infty"/>, then, whatever the
+initial distribution <img class="math" src="../../_images/math/45bc5b23a1507ae9dc517d85a584c4cfc5c3d8ab.svg" alt="\nu"/> is:</p>
+<div class="math">
+<p><img src="../../_images/math/be0eff3470c394b7c6b13fb3e4a01870a35a1288.svg" alt="\begin{aligned}
+      \displaystyle\frac{1}{n} \sum_{k=1}^n \: \phi(X_k) \tendto{k}{+\infty} \mathbb{E}_{X\sim{}t}\left[ |\phi(X)| \right]
+      \mbox{ almost surely}.
+    \end{aligned}"/></p>
+</div></li>
+</ul>
+<p>In that sense, simulating <img class="math" src="../../_images/math/e42850d66c81ae588860b1ca40597e5eebcf6e23.svg" alt="{(X_k)}_{k\in\Nset}"/> amounts to
+sampling according to <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> and can be used to integrate relatively
+to the probability measure <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>. Let us remark that the ergodic
+theorem implies that
+<img class="math" src="../../_images/math/c16f14cafd29fa96efd235a41a51af648b7b6a03.svg" alt="\displaystyle\frac{1}{n} \sum_{k=1}^n \: \fcar{A}{X_k} \tendto{k}{+\infty} \ProbCond{X\sim{}t}{X\in{}A}"/> almost surely.</p>
+<p>By abusing the notation, <img class="math" src="../../_images/math/7fbb841b1bcd6dad222535508388a7e3a91f9f10.svg" alt="t(x)"/> represents, in the remainder of
+this section, a function of <img class="math" src="../../_images/math/865f48ab61e258cd6e57c005da1578de4b22f440.svg" alt="x"/> which is proportional to the PDF
+of the target distribution <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>. Given a transition kernel
+<img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/> of density <img class="math" src="../../_images/math/0673f3d4e1420605f352372985b6a22266d58cd4.svg" alt="q"/>, the scheme of the Metropolis-Hastings
+algorithm is the following (lower case letters are used hereafter for
+both random variables and realizations as usual in the Bayesian
+literature):</p>
+<ol class="arabic simple" start="0">
+<li><p>Draw <img class="math" src="../../_images/math/31b5b011c600493ec1769c6d6ae8a8d88bd96485.svg" alt="x_0 \sim \nu"/> and set <img class="math" src="../../_images/math/ade68a3ba7059e0065499f6a36c379f58e2ed0df.svg" alt="k = 1"/>.</p></li>
+<li><p>Draw a candidate for <img class="math" src="../../_images/math/690bbc271a78378ed5c5f1fb8b315d0fe5052004.svg" alt="x_k"/> according to the given transition
+kernel <img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/>: <img class="math" src="../../_images/math/f2f0111a7dfe4f15da07ce4ee0c8377ebcb7a367.svg" alt="\tilde{x} \sim Q(x_{k-1}, .)"/>.</p></li>
+<li><p>Compute the ratio
+<img class="math" src="../../_images/math/834089b381175bc8dc406751e4cf39d8d427dcdc.svg" alt="\rho = \displaystyle\frac{t(\tilde{x})/q(x_{k-1},\tilde{x})} {t(x_{k-1})/q(\tilde{x},x_{k-1})}"/>.</p></li>
+<li><p>Draw <img class="math" src="../../_images/math/570626971b8298f79011c191037606241a498d89.svg" alt="u \sim \cU([0, 1])"/>; if <img class="math" src="../../_images/math/72a5f741f8fd589d6b98d551ab1b63bfe8c22972.svg" alt="u \leq \rho"/> then set
+<img class="math" src="../../_images/math/8324cb520a7f78c362fd3bda813c202e278834e1.svg" alt="x_k = \tilde{x}"/>, otherwise set <img class="math" src="../../_images/math/d4ae1765da06e53aa0f82c8e6bc115adc84ca6d5.svg" alt="x_k = x_{k-1}"/>.</p></li>
+<li><p>Set <img class="math" src="../../_images/math/bf3c98eef3cdd8a8f6477e8c3ea17b5c2c187a9a.svg" alt="k=k+1"/> and go back to 1).</p></li>
+</ol>
+<p>Of course, if <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> is replaced by a different function of <img class="math" src="../../_images/math/865f48ab61e258cd6e57c005da1578de4b22f440.svg" alt="x"/>
+which is proportional to it, the algorithm keeps unchanged, since
+<img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> only takes part in the latter in the ratio
+<img class="math" src="../../_images/math/4ef49a082f64d087a4ac6b98ba12a9106b4e15ed.svg" alt="\frac{t(\tilde{x})}{t(x_{k-1})}"/>. Moreover, if <img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/> proposes
+some candidates in a uniform manner (constant density <img class="math" src="../../_images/math/0673f3d4e1420605f352372985b6a22266d58cd4.svg" alt="q"/>), the
+candidate <img class="math" src="../../_images/math/d2e9bf8ed0d9820524f6a82b9404b65fc1c5e2c0.svg" alt="\tilde{x}"/> is accepted according to a ratio
+<img class="math" src="../../_images/math/09820a9ba8f1a0ddc3447517995f320d383df448.svg" alt="\rho"/> which reduces to the previous “natural” ratio
+<img class="math" src="../../_images/math/4ef49a082f64d087a4ac6b98ba12a9106b4e15ed.svg" alt="\frac{t(\tilde{x})}{t(x_{k-1})}"/> of PDF. The introduction of
+<img class="math" src="../../_images/math/0673f3d4e1420605f352372985b6a22266d58cd4.svg" alt="q"/> in the ratio <img class="math" src="../../_images/math/09820a9ba8f1a0ddc3447517995f320d383df448.svg" alt="\rho"/> prevents from the bias of a
+non-uniform proposition of candidates which would favor some areas of
+<img class="math" src="../../_images/math/c4b87a3c119cb12359cccaf934364db42db3eb09.svg" alt="\Omega"/>.</p>
+<p>The <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>-invariance is ensured by the symmetry of the expression of
+<img class="math" src="../../_images/math/09820a9ba8f1a0ddc3447517995f320d383df448.svg" alt="\rho"/> (<img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>-reversibility).</p>
+<p>In practice, <img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/> is specified as a random walk
+(<img class="math" src="../../_images/math/65bcbed277b8693fb8c2e402060059960564d9bb.svg" alt="\exists{}q_{RW}"/> such that <img class="math" src="../../_images/math/6b243191e0092b63206a7d781211138f2861e3d7.svg" alt="q(x,y)=q_{RW}(x-y)"/>) or as a
+independent sampling (<img class="math" src="../../_images/math/734b76ed137d392fce3f0a3d6bd10953fc8ea973.svg" alt="\exists{}q_{IS}"/> such that
+<img class="math" src="../../_images/math/341020dc4b6385fffbc0582dd6afe6e309c1eac9.svg" alt="q(x,y)=q_{IS}(y)"/>), or as a mixture of random walk and
+independent sampling.</p>
+<div class="line-block">
+<div class="line">The important property the practitioner have to keep in mind when
+choosing the transition kernel <img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/> is the
+<img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/>-irreducibility. Moreover, for efficient convergence,
+<img class="math" src="../../_images/math/2e719bfa618fbb4fc4698366967a264fbba46dd4.svg" alt="Q"/> has to be chosen so as to explore quickly the whole support
+of <img class="math" src="../../_images/math/3f28684e3688ea9352c095d52ef651d78b793c72.svg" alt="t"/> without conducting to a too small acceptance ratio (the
+ratio of accepted candidates <img class="math" src="../../_images/math/d2e9bf8ed0d9820524f6a82b9404b65fc1c5e2c0.svg" alt="\tilde{x}"/> ). It is usually
+recommended that this latter ratio is about <img class="math" src="../../_images/math/063ccab33fe1ef95493d970dfce86be0d0b686de.svg" alt="0.2"/> but such a
+ratio is neither a warranty of efficiency, nor a substitute to a
+convergence diagnosis.</div>
+</div>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.RandomWalkMetropolisHastings.html#openturns.RandomWalkMetropolisHastings" title="openturns.RandomWalkMetropolisHastings"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomWalkMetropolisHastings</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_calibration/bayesian_calibration/plot_bayesian_calibration.html"><span class="doc">Bayesian calibration of a computer code</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p>Robert, C.P. and Casella, G. (2004). <em>Monte Carlo Statistical Methods</em> (Second Edition), Springer.</p></li>
+<li><p>Meyn, S. and Tweedie R.L. (2009). <em>Markov Chains and Stochastic Stability</em> (Second Edition), Cambridge University Press.</p></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="graphical_fitting_test.html" title="Graphical goodness-of-fit tests"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gaussian_calibration.html" title="Gaussian calibration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="data_analysis.html" >Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Metropolis-Hastings Algorithm</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Bandwidth sensitivity in kernel smoothing &#8212; OpenTURNS 1.18rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Fit an extreme value distribution" href="plot_fit_extreme_value_distribution.html" />
+    <link rel="prev" title="Get the asymptotic distribution of the estimators" href="plot_asymptotic_estimators_distribution.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_fit_extreme_value_distribution.html" title="Fit an extreme value distribution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_asymptotic_estimators_distribution.html" title="Get the asymptotic distribution of the estimators"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" accesskey="U">Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Bandwidth sensitivity in kernel smoothing</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Bandwidth sensitivity in kernel smoothing</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+<li><a class="reference internal" href="#generate-the-mixture-by-merging-two-samples">Generate the mixture by merging two samples</a></li>
+<li><a class="reference internal" href="#simulation-based-on-a-mixture">Simulation based on a mixture</a></li>
+<li><a class="reference internal" href="#sensitivity-to-the-bandwidth">Sensitivity to the bandwidth</a></li>
+<li><a class="reference internal" href="#sensitivity-to-the-bandwidth-rule">Sensitivity to the bandwidth rule</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="plot_asymptotic_estimators_distribution.html"
+                        title="previous chapter">Get the asymptotic distribution of the estimators</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plot_fit_extreme_value_distribution.html"
+                        title="next chapter">Fit an extreme value distribution</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_data_analysis/distribution_fitting/plot_smoothing_mixture.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-data-analysis-distribution-fitting-plot-smoothing-mixture-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="bandwidth-sensitivity-in-kernel-smoothing">
+<span id="sphx-glr-auto-data-analysis-distribution-fitting-plot-smoothing-mixture-py"></span><h1>Bandwidth sensitivity in kernel smoothing<a class="headerlink" href="#bandwidth-sensitivity-in-kernel-smoothing" title="Permalink to this headline">¶</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>We consider the distribution</p>
+<div class="math">
+<p><img src="../../_images/math/c54034284385076d0385a3ff3c16df82a58b9fb7.svg" alt="f_1(x) = w_1 f_A(x) + w_2 f_B(x)"/></p>
+</div><p>for any <img class="math" src="../../_images/math/b83fb4ad9f34ff6d0292acb686d86927ce88a006.svg" alt="x\in\mathbb{R}"/> where <img class="math" src="../../_images/math/771873b4ae457d9528110a3e616050812c406622.svg" alt="f_A"/> is the density of the Normal distribution
+<img class="math" src="../../_images/math/2f5268924064e231ae416bfe9fa223b5c205e4b9.svg" alt="\mathcal{N}(0,1)"/>, <img class="math" src="../../_images/math/16f7dd903d75e9d358895b02b9033f69b521811b.svg" alt="f_B"/> is the density of the Normal distribution
+<img class="math" src="../../_images/math/83b32fde1419e6ed89c61d88f328caeb34be3173.svg" alt="\mathcal{N}(3/2,(1/3)^2)"/> and the weights are <img class="math" src="../../_images/math/3547c51b67d38eb160229449f4a05fcfbaf1ecb9.svg" alt="w_1 = \frac{3}{4}"/> and <img class="math" src="../../_images/math/3a0e10849fda6d77ed63b34828b8b26b74e04fee.svg" alt="w_2 = \frac{1}{4}"/>.</p>
+<p>This is a mixture of two Normal distributions: 1/4th of the observations have the <img class="math" src="../../_images/math/2f5268924064e231ae416bfe9fa223b5c205e4b9.svg" alt="\mathcal{N}(0,1)"/>
+distribution and 3/4th of the observations have the <img class="math" src="../../_images/math/83b32fde1419e6ed89c61d88f328caeb34be3173.svg" alt="\mathcal{N}(3/2,(1/3)^2)"/> distribution.
+This example is considered in (Wand, Jones, 1994), page 14, Figure 2.3.</p>
+<p>We consider a sample generated from independent realizations of <img class="math" src="../../_images/math/872014b9b4628ae8dd181b7f8cc73a9e022cc08e.svg" alt="f_1"/> and
+want to approximate the distribution from kernel smoothing.
+More precisely, we want to observe the sensitivity of the resulting density to the
+bandwidth.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>“Kernel Smoothing”, M.P.Wand, M.C.Jones. Chapman and Hall / CRC (1994).</p></li>
+</ul>
+</section>
+<section id="generate-the-mixture-by-merging-two-samples">
+<h2>Generate the mixture by merging two samples<a class="headerlink" href="#generate-the-mixture-by-merging-two-samples" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we show that a mixture of two Normal distributions is nothing more than the merged sample of two independent Normal distributions. In order to generate a sample with size <img class="math" src="../../_images/math/80b394abd4fb264a3879675f92f191c3e346c3a0.svg" alt="n"/>, we sample <img class="math" src="../../_images/math/7323045ae2b48e43aa249f9f866b8ecf16d928c5.svg" alt="\lfloor w_1 n\rfloor"/> points from the first Normal distribution <img class="math" src="../../_images/math/771873b4ae457d9528110a3e616050812c406622.svg" alt="f_A"/> and <img class="math" src="../../_images/math/440cd9266f77b53c31834fb93c6d9f964237f51e.svg" alt="\lfloor w_2 n\rfloor"/> points from the second Normal distribution <img class="math" src="../../_images/math/16f7dd903d75e9d358895b02b9033f69b521811b.svg" alt="f_B"/>. Then we merge the two samples.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">otv</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>We choose a rather large sample size: <img class="math" src="../../_images/math/4753fbcfc3cb7d73ee862cd0b7f901f7aa6ab724.svg" alt="n=1000"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+</pre></div>
+</div>
+<p>Then we define the two Normal distributions and their parameters.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">w1</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">w1</span>
+<span class="n">distribution1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">distribution2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We generate two independent sub-samples from the two Normal distributions.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample1</span> <span class="o">=</span> <span class="n">distribution1</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">w1</span> <span class="o">*</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">sample2</span> <span class="o">=</span> <span class="n">distribution2</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">w2</span> <span class="o">*</span> <span class="n">n</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Then we merge the sub-samples into a larger one with the <cite>add</cite> method of the <cite>Sample</cite> class.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">(</span><span class="n">sample1</span><span class="p">)</span>
+<span class="n">sample</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sample2</span><span class="p">)</span>
+<span class="n">sample</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1000
+</pre></div>
+</div>
+<p>In order to see the result, we build a kernel smoothing approximation on the sample. In order to keep it simple, let us use the default bandwidth selection rule.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_smoothing_mixture_001.png" srcset="../../_images/sphx_glr_plot_smoothing_mixture_001.png" alt="plot smoothing mixture" class = "sphx-glr-single-img"/><p>We see that the distribution of the merged sample has two modes. However, these modes are not clearly distinct. To distinguish them, we could increase the sample size. However, it might be interesting to see if the bandwidth selection rule can be better chosen: this is the purpose of the next section.</p>
+</section>
+<section id="simulation-based-on-a-mixture">
+<h2>Simulation based on a mixture<a class="headerlink" href="#simulation-based-on-a-mixture" title="Permalink to this headline">¶</a></h2>
+<p>Since the distribution that we approximate is a mixture, it will be more convenient to create it from the <cite>Mixture</cite> class. It takes as input argument a list of distributions and a list of weights.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Mixture</span><span class="p">([</span><span class="n">distribution1</span><span class="p">,</span> <span class="n">distribution2</span><span class="p">],</span> <span class="p">[</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Then we generate a sample from it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KernelSmoothing</span><span class="p">()</span>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span><span class="o">.</span><span class="n">getBandwidth</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[0.208514]</p>
+</div>
+<br />
+<br /><p>We see that the default bandwidth is close to 0.17.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;dodgerblue3&quot;</span><span class="p">,</span> <span class="s2">&quot;darkorange1&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Mixture&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel smoothing&quot;</span><span class="p">])</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_smoothing_mixture_002.png" srcset="../../_images/sphx_glr_plot_smoothing_mixture_002.png" alt="plot smoothing mixture" class = "sphx-glr-single-img"/><p>We see that the result of the kernel smoothing approximation of the mixture is similar to the previous one and could be improved.</p>
+</section>
+<section id="sensitivity-to-the-bandwidth">
+<h2>Sensitivity to the bandwidth<a class="headerlink" href="#sensitivity-to-the-bandwidth" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we observe the sensitivity of the kernel smoothing to the bandwidth. We consider the three following bandwidths: the small bandwidth 0.05, the large bandwidth 0.54 and 0.18 which is in-between. For each bandwidth, we use the second optional argument of the <cite>build</cite> method in order to select a specific bandwidth value.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hArray</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.54</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">]</span>
+<span class="n">nLen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">hArray</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLen</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="p">[</span><span class="n">hArray</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;dodgerblue3&quot;</span><span class="p">])</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;h=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hArray</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+    <span class="n">exact</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">exact</span><span class="o">.</span><span class="n">getDrawable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;darkorange1&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Mixture&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># Common y-range</span>
+
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_smoothing_mixture_003.png" srcset="../../_images/sphx_glr_plot_smoothing_mixture_003.png" alt="plot smoothing mixture" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_smoothing_mixture_004.png" srcset="../../_images/sphx_glr_plot_smoothing_mixture_004.png" alt="plot smoothing mixture" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p>We see that when the bandwidth is too small, the resulting kernel smoothing has many more modes than the distribution it is supposed to approximate. When the bandwidth is too large, the approximated distribution is too smooth and has only one mode instead of the expected two modes which are in the mixture distribution. When the bandwidth is equal to 0.18, the two modes are correctly represented.</p>
+</section>
+<section id="sensitivity-to-the-bandwidth-rule">
+<h2>Sensitivity to the bandwidth rule<a class="headerlink" href="#sensitivity-to-the-bandwidth-rule" title="Permalink to this headline">¶</a></h2>
+<p>The library provides three different rules to compute the bandwidth. In this section, we compare the results that we can get with them.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">h1</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">computeSilvermanBandwidth</span><span class="p">(</span><span class="n">sample</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">h1</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.3445636453391276
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">h2</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">computePluginBandwidth</span><span class="p">(</span><span class="n">sample</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">h2</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.2021709523195656
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">h3</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">computeMixedBandwidth</span><span class="p">(</span><span class="n">sample</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">h3</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.20851397168332242
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span><span class="o">.</span><span class="n">getBandwidth</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.18
+</pre></div>
+</div>
+<p>We see that the default rule is the “Mixed” rule. This is because the sample is in dimension 1 and the sample size is quite large. For a small sample in 1 dimension, the “Plugin” rule would have been used.</p>
+<p>The following script compares the results produced by the three rules.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hArray</span> <span class="o">=</span> <span class="p">[</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">,</span> <span class="n">h3</span><span class="p">]</span>
+<span class="n">legends</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Silverman&quot;</span><span class="p">,</span> <span class="s2">&quot;Plugin&quot;</span><span class="p">,</span> <span class="s2">&quot;Mixed&quot;</span><span class="p">]</span>
+<span class="n">nLen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">hArray</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLen</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="p">[</span><span class="n">hArray</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;dodgerblue3&quot;</span><span class="p">])</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;h=</span><span class="si">%.4f</span><span class="s2">, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hArray</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">legends</span><span class="p">[</span><span class="n">i</span><span class="p">])])</span>
+    <span class="n">exact</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">exact</span><span class="o">.</span><span class="n">getDrawable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;darkorange1&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Mixture&quot;</span><span class="p">)</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># Common y-range</span>
+
+<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+<span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_smoothing_mixture_005.png" srcset="../../_images/sphx_glr_plot_smoothing_mixture_005.png" alt="plot smoothing mixture" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_smoothing_mixture_006.png" srcset="../../_images/sphx_glr_plot_smoothing_mixture_006.png" alt="plot smoothing mixture" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p>We see that the bandwidth produced by Silverman’s rule is too large, leading to an oversmoothed distribution. The results produced by the Plugin and Mixed rules are comparable in this case.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.204 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-data-analysis-distribution-fitting-plot-smoothing-mixture-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/2242e461c01f576f8cea78922bdc5863/plot_smoothing_mixture.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_smoothing_mixture.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9abdf96bf7d89bdfb64b04dd1dd9d2bf/plot_smoothing_mixture.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_smoothing_mixture.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_fit_extreme_value_distribution.html" title="Fit an extreme value distribution"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_asymptotic_estimators_distribution.html" title="Get the asymptotic distribution of the estimators"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Data analysis</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Bandwidth sensitivity in kernel smoothing</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

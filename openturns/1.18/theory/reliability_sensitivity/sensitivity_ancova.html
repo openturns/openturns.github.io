@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Sensivity analysis with correlated inputs &#8212; OpenTURNS 1.18rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Sensitivity analysis by Fourier decomposition" href="sensitivity_fast.html" />
+    <link rel="prev" title="Sensitivity analysis using Sobol indices" href="sensitivity_sobol.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sensitivity_fast.html" title="Sensitivity analysis by Fourier decomposition"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sensitivity_sobol.html" title="Sensitivity analysis using Sobol indices"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sensivity analysis with correlated inputs</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sensitivity_sobol.html"
+                        title="previous chapter">Sensitivity analysis using Sobol indices</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sensitivity_fast.html"
+                        title="next chapter">Sensitivity analysis by Fourier decomposition</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/reliability_sensitivity/sensitivity_ancova.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="sensivity-analysis-with-correlated-inputs">
+<span id="sensitivity-ancova"></span><h1>Sensivity analysis with correlated inputs<a class="headerlink" href="#sensivity-analysis-with-correlated-inputs" title="Permalink to this headline">¶</a></h1>
+<p>The ANCOVA (ANalysis of COVAriance) method, is a variance-based method
+generalizing the ANOVA (ANalysis Of VAriance) decomposition for models
+with correlated input parameters.</p>
+<p>Let us consider a model <img class="math" src="../../_images/math/8774c856197f522138d77ade32419c76ab7e6c76.svg" alt="Y = h(\vect{X})"/> without making any
+hypothesis on the dependence structure of
+<img class="math" src="../../_images/math/097a0d89011a94a914bc9d1989952bd1b18fa36e.svg" alt="\vect{X} = \{X^1, \ldots, X^{n_X}\}"/>, a <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/>-dimensional
+random vector. The covariance decomposition requires a functional
+decomposition of the model. Thus the model response <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/> is
+expanded as a sum of functions of increasing dimension as follows:</p>
+<div class="math" id="equation-model">
+<p><span class="eqno">(1)<a class="headerlink" href="#equation-model" title="Permalink to this equation">¶</a></span><img src="../../_images/math/6df0a800babc6b4f689aafc57a9bebfe4a9dfba5.svg" alt="h(\vect{X}) = h_0 + \sum_{u\subseteq\{1,\dots,n_X\}} h_u(X_u)"/></p>
+</div><p><img class="math" src="../../_images/math/c76faeb4fe2f77d408aa9e3658f71327df346d9b.svg" alt="h_0"/> is the mean of <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>. Each function <img class="math" src="../../_images/math/30630bd464978a9b157ebd5555e8f6436f46fa54.svg" alt="h_u"/>
+represents, for any non empty set <img class="math" src="../../_images/math/c580efe3140010968f5befeac7bd3fcda1ceb68b.svg" alt="u\subseteq\{1, \dots, n_X\}"/>,
+the combined contribution of the variables <img class="math" src="../../_images/math/6dc2b64f88443e037bd588c3a81fe0830458d6e4.svg" alt="X_u"/> to <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>.</p>
+<p>Using the properties of the covariance, the variance of <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/> can be
+decomposed into a variance part and a covariance part as follows:</p>
+<div class="math">
+<p><img src="../../_images/math/544c78c229a232ad16bc8b34c7d9341346fd1854.svg" alt="\begin{aligned}
+    Var[Y] &amp;=&amp; Cov\left[h_0 + \sum_{u\subseteq\{1,\dots,n_X\}} h_u(X_u), h_0 + \sum_{u\subseteq\{1,\dots,n\}} h_u(X_u)\right] \\
+           &amp;=&amp; \sum_{u\subseteq\{1,\dots,n_X\}} Cov\left[h_u(X_u), \sum_{u\subseteq\{1,\dots,n_X\}} h_u(X_u)\right] \\
+           &amp;=&amp; \sum_{u\subseteq\{1,\dots,n_X\}} \left[Var[h_u(X_u)] + Cov[h_u(X_u), \sum_{v\subseteq\{1,\dots,n_X\}, v\cap u=\varnothing} h_v(X_v)]\right]
+  \end{aligned}"/></p>
+</div><p>The total part of variance of <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/> due to <img class="math" src="../../_images/math/6dc2b64f88443e037bd588c3a81fe0830458d6e4.svg" alt="X_u"/> reads:</p>
+<div class="math">
+<p><img src="../../_images/math/016f4567ea1df635a2feb8289e9dcd54747da9a9.svg" alt="S_u = \frac{Cov[Y, h_u(X_u)]}{Var[Y]}"/></p>
+</div><p>The variance formula described above enables to define each sensitivity
+measure <img class="math" src="../../_images/math/9ee7f82607b1965eda1c455d9a555ee7f1a5ea7f.svg" alt="S_u"/> as the sum of a <img class="math" src="../../_images/math/0d39528e2d57d529f4da82ed0d94aab2a4f8eed3.svg" alt="\mathit{physical}"/> (or
+<img class="math" src="../../_images/math/7a2e9b0ae0826254504bc53874ef4f38d1decbea.svg" alt="\mathit{uncorrelated}"/>) part and a <img class="math" src="../../_images/math/a998fa0e68e293955be9a98dafbb3d50b9846f1b.svg" alt="\mathit{correlated}"/>
+part such as:</p>
+<div class="math">
+<p><img src="../../_images/math/6b4bfca35e2dc7db45b9baa49df12c92342a6bc8.svg" alt="S_u = S_u^U + S_u^C"/></p>
+</div><p>where <img class="math" src="../../_images/math/852317838675da3008a987745ddf53c454285b18.svg" alt="S_u^U"/> is the uncorrelated part of variance of <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/>
+due to <img class="math" src="../../_images/math/6dc2b64f88443e037bd588c3a81fe0830458d6e4.svg" alt="X_u"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/5168dcab6715cb5d3ee24c9530f3d69f60df952a.svg" alt="S_u^U = \frac{Var[h_u(X_u)]}{Var[Y]}"/></p>
+</div><p>and <img class="math" src="../../_images/math/176146ec17daa3667919f4ea3a345528b3275618.svg" alt="S_u^C"/> is the contribution of the correlation of <img class="math" src="../../_images/math/6dc2b64f88443e037bd588c3a81fe0830458d6e4.svg" alt="X_u"/>
+with the other parameters:</p>
+<div class="math">
+<p><img src="../../_images/math/161afc834a9c9ce010b9f6f457942b3796a0b74d.svg" alt="S_u^C = \frac{Cov[h_u(X_u), \displaystyle \sum_{v\subseteq\{1,\dots,n_X\}, v\cap u=\varnothing} h_v(X_v)]}{Var[Y]}"/></p>
+</div><p>As the computational cost of the indices with the numerical model
+<img class="math" src="../../_images/math/92cb4c95b7fc9b99a0b22cb07c90a732064db084.svg" alt="h"/> can be very high, it is suggested to approximate the model
+response with a polynomial chaos expansion. However, for the sake of
+computational simplicity, the latter is constructed considering
+<img class="math" src="../../_images/math/2488f6bcb1ad7fb6bbc1fc1c4e28ce822dede490.svg" alt="\mathit{independent}"/> components <img class="math" src="../../_images/math/759420abab4401e9385b74b916d2e6d601128064.svg" alt="\{X^1,\dots,X^{n_X}\}"/>.
+Thus the chaos basis is not orthogonal with respect to the correlated
+inputs under consideration, and it is only used as a metamodel to
+generate approximated evaluations of the model response and its summands
+in <a class="reference internal" href="#equation-model">(1)</a>.</p>
+<div class="math">
+<p><img src="../../_images/math/0e523a778a35c9ad84c3070673f1c4e53e708cb9.svg" alt="Y \simeq \hat{h} = \sum_{j=0}^{P-1} \alpha_j \Psi_j(x)"/></p>
+</div><p>Then one may identify the component functions. For instance, for
+<img class="math" src="../../_images/math/017d31493e59c34c61a73b12ca05ec3de516739e.svg" alt="u = \{1\}"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/5340b72b3b2a26246d7c408a9fa81cc6103a32f8.svg" alt="h_1(X_1) = \sum_{\alpha | \alpha_1 \neq 0, \alpha_{i \neq 1} = 0} y_{\alpha} \Psi_{\alpha}(\vect{X})"/></p>
+</div><p>where <img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha"/> is a set of degrees associated to the <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/>
+univariate polynomial <img class="math" src="../../_images/math/e95cd20cd7c132104b618af58a3731221fa7023b.svg" alt="\psi_i^{\alpha_i}(X_i)"/>.</p>
+<p>Then the model response <img class="math" src="../../_images/math/d58d4863379b3eb734fd9d329f850fe196c3abc5.svg" alt="Y"/> is evaluated using a sample
+<img class="math" src="../../_images/math/3e5c17efc4c0891550856c84d70e10d4ebe9c405.svg" alt="X=\{x_k, k=1,\dots,N\}"/> of the correlated joint distribution.
+Finally, the several indices are computed using the model response and
+its component functions that have been identified on the polynomial
+chaos.</p>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.ANCOVA.html#openturns.ANCOVA" title="openturns.ANCOVA"><code class="xref py py-class docutils literal notranslate"><span class="pre">ANCOVA</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_reliability_sensitivity/sensitivity_analysis/plot_sensitivity_ancova.html"><span class="doc">Use the ANCOVA indices</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../bibliography.html#caniou2012" id="id1"><span>[caniou2012]</span></a></p></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sensitivity_fast.html" title="Sensitivity analysis by Fourier decomposition"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sensitivity_sobol.html" title="Sensitivity analysis using Sobol indices"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sensivity analysis with correlated inputs</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

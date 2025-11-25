@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Sparse least squares polynomial metamodel &#8212; OpenTURNS 1.18rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Kriging" href="kriging.html" />
+    <link rel="prev" title="Least squares polynomial response surface" href="polynomial_least_squares.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="kriging.html" title="Kriging"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="polynomial_least_squares.html" title="Least squares polynomial response surface"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" accesskey="U">Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sparse least squares polynomial metamodel</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="polynomial_least_squares.html"
+                        title="previous chapter">Least squares polynomial response surface</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="kriging.html"
+                        title="next chapter">Kriging</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/meta_modeling/polynomial_sparse_least_squares.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="sparse-least-squares-polynomial-metamodel">
+<span id="polynomial-sparse-least-squares"></span><h1>Sparse least squares polynomial metamodel<a class="headerlink" href="#sparse-least-squares-polynomial-metamodel" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line">The response of the model under consideration may be globally
+approximated by a multivariate polynomial. In this setup, the response
+is characterized by a finite number of coefficients which have to be
+estimated. This may be achieved by least squares. However, this
+method cannot be applied if the number of unknown coefficients is of
+similar size to the number of model evaluations, or even possibly
+greater. Indeed, the resulting underdetermined least squares problem
+would be ill-posed.</div>
+<div class="line">To overcome this difficulty, <em>sparse least squares</em> schemes may be
+employed (they are also known as <em>variable selection</em> techniques in
+statistics). These methods are aimed at identifying a small set of
+significant coefficients in the model response approximation.
+Eventually, a <em>sparse</em> polynomial response surface, i.e. a polynomial
+which only contains a low number of non-zero coefficients, is obtained
+by means of a reduced number of possibly costly model evaluations. In
+the sequel, we focus on sparse regression schemes based on
+<img class="math" src="../../_images/math/bda1e91fb5a52c15458cecdf6a9fe02ab57b02f5.svg" alt="L_1"/>-penalization.</div>
+<div class="line">Actually the proposed approaches do not provide only one
+approximation, but a <em>collection</em> of less and less sparse
+approximations. Eventually an optimal approximation may be retained
+with regard to a given criterion.</div>
+</div>
+<p><strong>Context</strong></p>
+<p>Consider the mathematical model <img class="math" src="../../_images/math/92cb4c95b7fc9b99a0b22cb07c90a732064db084.svg" alt="h"/> of a physical system depending
+on <img class="math" src="../../_images/math/5ac9d70eac0f1684fa94289372de8f83888492f7.svg" alt="n_X"/> input parameters
+<img class="math" src="../../_images/math/b2ac960a60af860722a78b89e4b44ff540ea5b90.svg" alt="\underline{x} = (x_{1},\dots,x_{n_X})^{\textsf{T}}"/>. Note that
+these input variables are assumed to be deterministic in this section.
+The model response may be approximated by a polynomial as follows:</p>
+<div class="math" id="equation-5-2-1">
+<p><span class="eqno">(1)<a class="headerlink" href="#equation-5-2-1" title="Permalink to this equation">¶</a></span><img src="../../_images/math/c222211c8bddd52147c80fb7dfe1f68eaaa21a1f.svg" alt="h(\underline{X}) \, \, \approx \, \, \widehat{h}(\underline{x}) \, \, = \, \, \sum_{j=0}^{P-1} \; a_{j} \; \psi_{j}(\underline{x})"/></p>
+</div><div class="line-block">
+<div class="line">Let us consider a set of values taken by the input vector (i.e. an
+experimental design)
+<img class="math" src="../../_images/math/181fe39aff2d30a61a8a697e134a9be75799801d.svg" alt="\underline{\underline{\cX}} = (\underline{x}^{(1)},\dots,\underline{x}^{(N)})^{\textsf{T}}"/>
+as well as the vector
+<img class="math" src="../../_images/math/587ec5aa01609c6343d4111afe02ad36425f4366.svg" alt="\underline{\cY} = (h(\underline{x}^{(1)}),\dots,h(\underline{x}^{(N)}))^{\textsf{T}} =  (y^{(1)},\dots,y^{(N)})^{\textsf{T}}"/>
+of the corresponding model evaluations. It is assumed that the number
+of terms <img class="math" src="../../_images/math/451a3d9a99f2dcc2293b7b30519b42cf46cb38ac.svg" alt="P"/> in the polynomial basis is of similar size to
+<img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/>, or even possibly significantly larger than <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/>. In
+such a situation it is not possible to compute the polynomial
+coefficients by ordinary least squares, since the corresponding system
+is ill-posed. Methods that may be employed as an alternative are
+outlined in the sequel.</div>
+<div class="line"><strong>LASSO</strong></div>
+</div>
+<div class="line-block">
+<div class="line">The so-called <em>LASSO</em> (for <em>Least absolute shrinkage and selection
+operator</em>) method is based on a <img class="math" src="../../_images/math/9d4b4ea774ec6181891bdc5c5ead2c54c09f6777.svg" alt="\cL^{1}"/>-penalized regression
+as follows:</div>
+</div>
+<blockquote>
+<div><div class="math" id="equation-5-2-5">
+<p><span class="eqno">(2)<a class="headerlink" href="#equation-5-2-5" title="Permalink to this equation">¶</a></span><img src="../../_images/math/49fff8d16e7f6432eb86c63f6b59975608c2c8d4.svg" alt="\textrm{Minimize} \quad \quad \sum_{i=1}^{N} \; \left( h(\underline{x}^{(i)}) \; - \; \underline{a}^{\textsf{T}} \underline{\psi}(\underline{x}^{(i)})  \right)^{2}
+     \, + \,  C \; \|\underline{a}\|_{1}^{2}"/></p>
+</div><p>where <img class="math" src="../../_images/math/56143328fb4fb482db67f5ff942c52abe895b430.svg" alt="\|\underline{a}\|_{1} = \sum_{j=0}^{P-1} |a_{j}|"/> and
+<img class="math" src="../../_images/math/3b3be2405d41848960032b917a9b3d6e64e3ea81.svg" alt="C"/> is a non negative constant. A nice feature of LASSO is that
+it provides a <em>sparse</em> metamodel, i.e. it discards insignificant
+variables from the set of predictors. The obtained response surface is
+all the sparser since the value of the tuning parameter <img class="math" src="../../_images/math/3b3be2405d41848960032b917a9b3d6e64e3ea81.svg" alt="C"/> is
+high.</p>
+</div></blockquote>
+<div class="line-block">
+<div class="line">For a given <img class="math" src="../../_images/math/09fbaae8d8132279a3be6ba6710fcb69179624f8.svg" alt="C\geq 0"/>, the solving procedure may be implemented
+via quadratic programming. Obtaining the whole set of coefficient
+estimates for <img class="math" src="../../_images/math/3b3be2405d41848960032b917a9b3d6e64e3ea81.svg" alt="C"/> varying from 0 to a maximum value may be
+computationally expensive though since it requires solving the
+optimization problem for a fine grid of values of <img class="math" src="../../_images/math/3b3be2405d41848960032b917a9b3d6e64e3ea81.svg" alt="C"/>.</div>
+<div class="line"><strong>Forward stagewise regression</strong></div>
+</div>
+<p>Another procedure, known as <em>forward stagewise regression</em>, appears to
+be different from LASSO, but turns out to provide similar results. The
+procedure first picks the predictor that is most correlated with the
+vector of observations. However, the value of the corresponding
+coefficient is only increased by a small amount. Then the predictor with
+largest correlation with the current residual (possible the same term as
+in the previous step) is picked, and so on. Let us introduce the vector
+notation:</p>
+<div class="math">
+<p><img src="../../_images/math/4e387f2d69b0debabdf96b961eb84a1780f1ba31.svg" alt="\underline{\psi}_{j} \, \, = \, \, (\psi_{j}(\underline{x}^{(1)}) , \dots, \psi_{j}(\underline{x}^{(N)}) )^{\textsf{T}}"/></p>
+</div><p>The forward stagewise algorithm is outlined below:</p>
+<ol class="arabic simple">
+<li><p>Start with <img class="math" src="../../_images/math/5d5c3c4698912ef630d9aa99fa1748052f060b31.svg" alt="\underline{R} = \cY"/> and
+<img class="math" src="../../_images/math/ad0d85b6b7fb292e0ba8808e8fe24324b8d30e75.svg" alt="a_{0} = \dots = a_{P-1} = 0"/>.</p></li>
+<li><p>Find the predictor <img class="math" src="../../_images/math/7f46e65a5ebd57dbc651c3bdb9a470842efd589f.svg" alt="\underline{\psi}_{j}"/> that is most
+correlated with <img class="math" src="../../_images/math/004c27f23225bb26376efc6b7c61f737df0c3d9d.svg" alt="\underline{R}"/>.</p></li>
+<li><p>Update <img class="math" src="../../_images/math/2f1113c93589ef846a7e1fce1bef2841e9cb0df4.svg" alt="\hat{a}_{j} = \hat{a}_{j} + \delta_{j}"/>, where
+<img class="math" src="../../_images/math/0a6b1fdc212a23c62931c6f2b9ee56f97cd4cb32.svg" alt="\delta_{j} = \varepsilon \cdot \mbox{sign}(\underline{\psi}_{j}^{\textsf{T}} \underline{R} )"/>.</p></li>
+<li><p>Update
+<img class="math" src="../../_images/math/d9b3f211f6fe338d756de270bb19cb4a4beda0ea.svg" alt="\underline{R} =  \underline{R} - \delta_{j} \underline{\psi}_{j}"/>
+and repeats Steps 2 and 3 until no predictor has any correlation with
+<img class="math" src="../../_images/math/004c27f23225bb26376efc6b7c61f737df0c3d9d.svg" alt="\underline{R}"/>.</p></li>
+</ol>
+<div class="line-block">
+<div class="line">Note that parameter <img class="math" src="../../_images/math/1d9ab772a68d781a9a73c08e7953f063cd668479.svg" alt="\varepsilon"/> has to be set equal to a small
+value in practice, say <img class="math" src="../../_images/math/170d12da29aaae8dd9175c435787967d1cdf410e.svg" alt="\varepsilon=0.01"/>. This procedure is
+known to be more stable than traditional stepwise regression.</div>
+<div class="line"><strong>Least Angle Regression</strong></div>
+</div>
+<p><em>Least Angle Regression</em> (LAR) may be viewed as a version of forward
+stagewise that uses mathematical derivations to speed up the
+computations. Indeed, instead of taking many small steps with the basis
+term most correlated with current residual <img class="math" src="../../_images/math/004c27f23225bb26376efc6b7c61f737df0c3d9d.svg" alt="\underline{R}"/>, the
+related coefficient is directly increased up to the point where some
+other basis predictor has as much correlation with
+<img class="math" src="../../_images/math/004c27f23225bb26376efc6b7c61f737df0c3d9d.svg" alt="\underline{R}"/>. Then the new predictor is entered, and the
+procedure is continued. The LARS algorithm is detailed below:</p>
+<ol class="arabic simple">
+<li><p>Initialize the coefficients to <img class="math" src="../../_images/math/9933c7962087acc2c6dddfd261d6f5c594337259.svg" alt="a_{0},\dots,a_{P-1} = 0"/>. Set
+the initial residual equal to the vector of observations <img class="math" src="../../_images/math/52e2c1f63fdead4308ecbecb4e784e6eb7e044e4.svg" alt="\cY"/>.</p></li>
+<li><p>Find the vector <img class="math" src="../../_images/math/7f46e65a5ebd57dbc651c3bdb9a470842efd589f.svg" alt="\underline{\psi}_{j}"/> which is most correlated
+with the current residual.</p></li>
+<li><p>Move <img class="math" src="../../_images/math/37e4886d8fc0ce0bb879b1cc2ef7d91a9fc002fc.svg" alt="a_{j}"/> from 0 toward the least-square coefficient of the
+current residual on <img class="math" src="../../_images/math/7f46e65a5ebd57dbc651c3bdb9a470842efd589f.svg" alt="\underline{\psi}_{j}"/>, until some other
+predictor <img class="math" src="../../_images/math/c659feb50014cc082daa009d8a2bcc1c78c87af3.svg" alt="\underline{\psi}_{k}"/> has as much correlation with
+the current residual as does <img class="math" src="../../_images/math/7f46e65a5ebd57dbc651c3bdb9a470842efd589f.svg" alt="\underline{\psi}_{j}"/>.</p></li>
+<li><p>Move jointly <img class="math" src="../../_images/math/65d789bb5c5232015f9a1b1e72e93a69e78082aa.svg" alt="(a_{j} , a_{k})^{\textsf{T}}"/> in the direction
+defined by their joint least-square coefficient of the current
+residual on <img class="math" src="../../_images/math/06bf002322816a91f9a53899b85be38eb6af3382.svg" alt="(\underline{\psi}_{j},\underline{\psi}_{k})"/>,
+until some other predictor <img class="math" src="../../_images/math/971764df3e68625dd053fcd0fbde709267b88a9b.svg" alt="\underline{\psi}_{l}"/> has as much
+correlation with the current residual.</p></li>
+<li><p>Continue this way until <img class="math" src="../../_images/math/79505ad3d0399354c6a24b43a2c1c0062ae17348.svg" alt="m = \min(P,N-1)"/> predictors have been
+entered.</p></li>
+</ol>
+<div class="line-block">
+<div class="line">Steps 2 and 3 correspond to a “move” of the <em>active</em> coefficients
+toward their least-square value. It corresponds to an updating of the
+form
+<img class="math" src="../../_images/math/6aa379d21e354721516899326e65c4cc0e645431.svg" alt="\hat{\underline{a}}^{(k+1)} = \hat{\underline{a}}^{(k)} + \gamma^{(k)} \tilde{\underline{w}}^{(k)}"/>.
+Vector <img class="math" src="../../_images/math/807b37b015346b10ecc212a3b2f76e8bb80e0376.svg" alt="\tilde{\underline{w}}^{(k)}"/> and coefficient
+<img class="math" src="../../_images/math/8669806b7509726afc6462a3003659706e525ab7.svg" alt="\gamma^{(k)}"/> are referred to as the LARS <em>descent direction</em>
+and <em>step</em>, respectively. Both quantities may be derived
+algebraically.</div>
+<div class="line">Note that if <img class="math" src="../../_images/math/2919645abbf6da109ec48ff7077866ee5094053b.svg" alt="N \geq P"/>, then the last step of LARS provides the
+ordinary least-square solution. It is shown that LARS is noticeably
+efficient since it only requires the computational cost of ordinary
+least-square regression on <img class="math" src="../../_images/math/451a3d9a99f2dcc2293b7b30519b42cf46cb38ac.svg" alt="P"/> predictors for producing a
+<em>collection</em> of <img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m"/> metamodels.</div>
+<div class="line"><strong>LASSO and Forward Stagewise as variants of LARS</strong></div>
+</div>
+<p>It has been shown that with only one modification, the LARS procedure
+provides in one shot the entire paths of LASSO solution coefficients as
+the tuning parameter <img class="math" src="../../_images/math/3b3be2405d41848960032b917a9b3d6e64e3ea81.svg" alt="C"/> in <a class="reference internal" href="#equation-5-2-5">(2)</a> is increased from 0 up
+to a maximum value. The modified algorithm is as follows:</p>
+<ul class="simple">
+<li><p>Run the LARS procedure from Steps 1 to 4.</p></li>
+<li><p>If a non zero coefficient hits zero, discard it from the current
+metamodel and recompute the current joint least-square direction.</p></li>
+<li><p>Continue this way until <img class="math" src="../../_images/math/79505ad3d0399354c6a24b43a2c1c0062ae17348.svg" alt="m = \min(P,N-1)"/> predictors have been
+entered.</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Note that the LAR-based LASSO procedure may take more than <img class="math" src="../../_images/math/2f6d6292800bff652850ddd85bc4d6c2e83fa513.svg" alt="m"/>
+steps since the predictors are allowed to be discarded and introduced
+later again into the metamodel. In a similar fashion, a limiting
+version of the forward stagewise method when <img class="math" src="../../_images/math/0dbc1e5fa144db57935dc6422ae4690519b0d4d9.svg" alt="\varepsilon \to 0"/>
+may be obtained by slightly modifying the original LARS algorithm. In
+the literature, one commonly uses the label LARS when referring to all
+these LAR-based algorithms (with <em>S</em> referring to <em>Stagewise</em> and
+<em>LASSO</em>).</div>
+<div class="line"><strong>Selection of the optimal LARS solution</strong></div>
+</div>
+<p>The LAR-based approaches (i.e. original LAR, LASSO and forward
+stagewise) provide a <em>collection</em> of less and less sparse PC
+approximations. The accuracy of each PC metamodel may be assessed by
+cross validation. Eventually the PC representation associated with the
+lowest error estimate is retained.</p>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LARS.html#openturns.LARS" title="openturns.LARS"><code class="xref py py-class docutils literal notranslate"><span class="pre">LARS</span></code></a></p></li>
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.FunctionalChaosAlgorithm.html#openturns.FunctionalChaosAlgorithm" title="openturns.FunctionalChaosAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalChaosAlgorithm</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_meta_modeling/fields_metamodels/plot_fieldfunction_metamodel.html"><span class="doc">Metamodel of a field function</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><ol class="upperalpha simple" start="2">
+<li><p>Efron, T. Hastie, I. Johnstone, and R. Tibshirani, 2004, “Least angle regression”, Annals of Statistics 32, 407–499.</p></li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="20">
+<li><p>Hastie, J. Taylor, R. Tibshirani, and G. Walther, 2007, “Forward stagewise regression and the monotone Lasso”, Electronic J. Stat. 1, 1–29.</p></li>
+</ol>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="kriging.html" title="Kriging"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="polynomial_least_squares.html" title="Least squares polynomial response surface"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" >Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sparse least squares polynomial metamodel</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Estimating moments with Monte Carlo &#8212; OpenTURNS 1.18rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Taylor decomposition importance factors" href="taylor_importance_factors.html" />
+    <link rel="prev" title="Taylor variance decomposition" href="taylor_moments.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="taylor_importance_factors.html" title="Taylor decomposition importance factors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="taylor_moments.html" title="Taylor variance decomposition"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" accesskey="U">Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Estimating moments with Monte Carlo</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="taylor_moments.html"
+                        title="previous chapter">Taylor variance decomposition</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="taylor_importance_factors.html"
+                        title="next chapter">Taylor decomposition importance factors</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/reliability_sensitivity/monte_carlo_moments.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="estimating-moments-with-monte-carlo">
+<span id="monte-carlo-moments"></span><h1>Estimating moments with Monte Carlo<a class="headerlink" href="#estimating-moments-with-monte-carlo" title="Permalink to this headline">¶</a></h1>
+<p>Let us denote
+<img class="math" src="../../_images/math/7c541cb9adc0efdafc4216d4173e5a84ddba697c.svg" alt="\vect{Y} = h\left( \vect{X},\vect{d} \right) = \left( Y^1,\ldots,Y^{n_Y} \right)"/>,
+where <img class="math" src="../../_images/math/e7468327c5e8d71f9f3d2ef170119f815a876096.svg" alt="\vect{X}= \left( X^1,\ldots,X^{n_X} \right)"/> is a random
+vector, and <img class="math" src="../../_images/math/a1ae8c28e58e75a2e9965451ebd4488136d3c7f7.svg" alt="\vect{d}"/> a deterministic vector. We seek here to
+evaluate, the characteristics of the central part (central tendency and
+spread i.e. mean and variance) of the probability distribution of a
+variable <img class="math" src="../../_images/math/aadfb8ac6ea8e1b994b556bfbbe62d9a357a7e0b.svg" alt="Y^i"/>, using the probability distribution of the random
+vector <img class="math" src="../../_images/math/2bcbd5b2b78ef65f3c1a1987095a65863870aa77.svg" alt="\vect{X}"/>.</p>
+<p>The Monte Carlo method is a numerical integration method using sampling,
+which can be used, for example, to determine the mean and standard
+deviation of a random variable <img class="math" src="../../_images/math/aadfb8ac6ea8e1b994b556bfbbe62d9a357a7e0b.svg" alt="Y^i"/> (if these quantities exist,
+which is not the case for all probability distributions):</p>
+<div class="math">
+<p><img src="../../_images/math/544507fc4fa05774fec0a4c1d72a4d45772fde30.svg" alt="\begin{aligned}
+    m_{Y^i} = \int u \, f_{Y^i}(u) \, du,\ \sigma_{Y^i} = \sqrt{\int \left( u-m_{Y^i} \right)^2 \, f_{Y^i}(u) \, du}
+  \end{aligned}"/></p>
+</div><p>where <img class="math" src="../../_images/math/2a3cd45d969ab50fdef699b835444805fad85136.svg" alt="f_{Y^i}"/> represents the probability density function of
+<img class="math" src="../../_images/math/aadfb8ac6ea8e1b994b556bfbbe62d9a357a7e0b.svg" alt="Y^i"/>.</p>
+<p>Suppose now that we have the sample
+<img class="math" src="../../_images/math/18b2a5e4ed407aae069e4f7b3814d6310df291e9.svg" alt="\left\{ y^i_1,\ldots,y^i_N \right\}"/> of <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> values randomly
+and independently sampled from the probability distribution
+<img class="math" src="../../_images/math/2a3cd45d969ab50fdef699b835444805fad85136.svg" alt="f_{Y^i}"/>; this sample can be obtained by drawing a <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/>
+sample <img class="math" src="../../_images/math/329826eb39e1139fd4d5383e4003867554d04d13.svg" alt="\left\{ \vect{x}_1,\ldots,\vect{x}_N \right\}"/> of the
+random vector <img class="math" src="../../_images/math/2bcbd5b2b78ef65f3c1a1987095a65863870aa77.svg" alt="\vect{X}"/> (the distribution of which is known) and
+by computing
+<img class="math" src="../../_images/math/672f755d5f399098c8fcc1954075b6809b61abb4.svg" alt="\vect{y}_j = h \left( \vect{x}_j,\vect{d} \right) \ \forall 1 \leq j \leq N"/>.
+Then, the Monte-Carlo estimations for the mean and standard deviation
+are the empirical mean and standard deviations of the sample:</p>
+<div class="math">
+<p><img src="../../_images/math/98dbf7b68aebfb5a168c968660310f0ecd341f20.svg" alt="\begin{aligned}
+    \widehat{m}_{Y^i} = \frac{1}{N} \sum_{j=1}^N y^i_j,\ \widehat{\sigma}_{Y^i} = \sqrt{\frac{1}{N} \sum_{j=1}^N \left( y^i_j - \widehat{m}_{Y^i} \right)^2}
+  \end{aligned}"/></p>
+</div><p>These are just estimations, but by the law of large numbers their
+convergence to the real values <img class="math" src="../../_images/math/fba55e5df45366230caf7397c5ce1a0e2fcee693.svg" alt="m_{Y^i}"/> and <img class="math" src="../../_images/math/6bcafd99bb5e5b230f8432cf9877fd567eccce2e.svg" alt="\sigma_{Y^i}"/>
+is assured as the sample size <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> tends to infinity. The Central
+Limit Theorem enables the difference between the estimated value and the
+sought value to be controlled by means of a confidence interval
+(especially if <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> is sufficiently large, typically <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> &gt; a few
+dozens even if there is now way to say for sure if the asymptotic
+behavior is reached). For a probability <img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha"/> strictly between
+<img class="math" src="../../_images/math/919aee1dbe276bb63ee7a88b62487eea3957e41e.svg" alt="0"/> and <img class="math" src="../../_images/math/5b3764f9912ecbd5fdf97780cabaf07efb61c49a.svg" alt="1"/> chosen by the user, one can, for example, be sure with a
+confidence <img class="math" src="../../_images/math/586e8e332570955fa6dfcb1ba54f5ce2823c0fb7.svg" alt="\alpha"/>, that the true value of <img class="math" src="../../_images/math/fba55e5df45366230caf7397c5ce1a0e2fcee693.svg" alt="m_{Y^i}"/> is
+between <img class="math" src="../../_images/math/d2c6677d79c115eafc45c36ecdf642b9bef62fd2.svg" alt="\widehat{m}_{i,\inf}"/> and <img class="math" src="../../_images/math/e835f9916d7504221fffb9120d48f6fa5e2c6072.svg" alt="\widehat{m}_{i,\sup}"/>
+calculated analytically from simple formulae. To illustrate, for
+<img class="math" src="../../_images/math/303169a8df98266e3e5d1e5b8b0d484cc9c1aafa.svg" alt="\alpha = 0.95"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/4fe93eab9da38273cc2367e8b14205cefb31ed74.svg" alt="\begin{aligned}
+    \widehat{m}_{i,\inf} = \widehat{m}_{Y^i} - 1.96 \frac{\displaystyle \widehat{\sigma}_{Y^i}}{\displaystyle \sqrt{N}},\ \widehat{m}_{i,\sup} = \widehat{m}_{Y^i} + 1.96 \frac{\widehat{\sigma}_{Y^i}}{\sqrt{N}},\ \textrm{that is to say}\ \textrm{Pr} \left(  \widehat{m}_{i,\inf} \leq m_{Y^i} \leq \widehat{m}_{i,\sup} \right) = 0.95
+  \end{aligned}"/></p>
+</div><p>The size of the confidence interval, which represents the uncertainty
+of this mean estimation, decreases as <img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> increases but more
+gradually (the rate is proportional to <img class="math" src="../../_images/math/c6e117af804b2c4b5aac957389bc809d5c667487.svg" alt="\sqrt{N}"/>: multiplying
+<img class="math" src="../../_images/math/6bed8a44f63e1eb8e61608a5c93374a505943eec.svg" alt="N"/> by <img class="math" src="../../_images/math/f38c30d4cb42dfcb684d4eaa010745cd956f2c16.svg" alt="100"/> reduces the length of the confidence interval
+<img class="math" src="../../_images/math/b9f7f1ebbe522d989b28b206b5be66ba68564864.svg" alt="\left| \widehat{m}_{i,\inf}-\widehat{m}_{i,\sup} \right|"/> by a
+factor <img class="math" src="../../_images/math/d0ace541ba5740bf18f92e375cc534f9a7b5ceeb.svg" alt="10"/>).</p>
+<p>This method is also referred to as Direct sampling, crude Monte Carlo method, Classical Monte Carlo
+integration.</p>
+<p>(<a class="reference external" href="../../theory/reliability_sensitivity/monte_carlo_moments-1.py">Source code</a>, <a class="reference external" href="../../theory/reliability_sensitivity/monte_carlo_moments-1.png">png</a>, <a class="reference external" href="../../theory/reliability_sensitivity/monte_carlo_moments-1.hires.png">hires.png</a>, <a class="reference external" href="../../theory/reliability_sensitivity/monte_carlo_moments-1.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../../_images/monte_carlo_moments-1.png" class="plot-directive" src="../../_images/monte_carlo_moments-1.png" />
+</figure>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sample</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_data_analysis/manage_data_and_samples/plot_estimate_moments.html"><span class="doc">Estimate moments from sample</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p>Robert C.P., Casella G. (2004). “Monte Carlo Statistical Methods”, Springer, ISBN 0-387-21239-6, 2nd ed.</p></li>
+<li><p>Rubinstein R.Y. (1981). “Simulation and The Monte Carlo methods”, John Wiley &amp; Sons</p></li>
+<li><p>“Guide to the expression of Uncertainty in Measurements (GUM)”, ISO publication</p></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="taylor_importance_factors.html" title="Taylor decomposition importance factors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="taylor_moments.html" title="Taylor variance decomposition"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reliability_sensitivity.html" >Reliability, sensitivity</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Estimating moments with Monte Carlo</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

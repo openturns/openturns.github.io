@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Kriging &#8212; OpenTURNS 1.18rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Orthogonal polynomials" href="orthogonal_polynomials.html" />
+    <link rel="prev" title="Sparse least squares polynomial metamodel" href="polynomial_sparse_least_squares.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="orthogonal_polynomials.html" title="Orthogonal polynomials"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="polynomial_sparse_least_squares.html" title="Sparse least squares polynomial metamodel"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" accesskey="U">Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Kriging</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="polynomial_sparse_least_squares.html"
+                        title="previous chapter">Sparse least squares polynomial metamodel</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="orthogonal_polynomials.html"
+                        title="next chapter">Orthogonal polynomials</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/theory/meta_modeling/kriging.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="kriging">
+<span id="id1"></span><h1>Kriging<a class="headerlink" href="#kriging" title="Permalink to this headline">¶</a></h1>
+<p>Kriging (also known as Gaussian process regression) is a Bayesian
+technique that aim at approximating functions (most often in order to
+surrogate it because it is expensive to evaluate). In the following it
+is assumed we aim at creating a surrogate model of a scalar-valued model
+<img class="math" src="../../_images/math/ba1b67eb6a84e156e8fb804f9cd7992e91e7209c.svg" alt="\cM: \vect{x} \mapsto y"/>. Note the implementation of
+Kriging deals with vector-valued functions
+(<img class="math" src="../../_images/math/94776d02f23155e12d4ee87b4dd8924a57c74ee6.svg" alt="\cM: \vect{x} \mapsto \vect{y}"/>), without simply looping over
+each output. It is also assumed the model is obtained over a design of
+experiments in order to produce a set of observations gathered in the
+following dataset:
+<img class="math" src="../../_images/math/be7e5271b79cff133ea42f60ee59fb5489ee2d54.svg" alt="\left(\left(\vect{x}^{(i)}, y^{(i)}\right), i = 1, \ldots, m\right)"/>.
+Ultimately Kriging aims at producing a predictor (also known as a
+response surface or metamodel) denoted as <img class="math" src="../../_images/math/905c7448ab82f92167bd4432153b5c3ee09ea58e.svg" alt="\tilde{\cM}"/>.</p>
+<p>We put the following Gaussian process prior on the model <img class="math" src="../../_images/math/dfa3284963d408e246926d7652086c4422d5de59.svg" alt="\cM"/>:</p>
+<div class="math">
+<p><img src="../../_images/math/2469ab58f80705b8864c9d892a8834a59a3f6b53.svg" alt="Y(\vect{x}) = \Tr{\vect{f}(\vect{x})} \vect{\beta} + Z(\vect{x})"/></p>
+</div><p>where:</p>
+<ul>
+<li><p><img class="math" src="../../_images/math/ffaf10fda4fc8c888d17a9a148ef2ed93302cee7.svg" alt="\Tr{\vect{f}(\vect{x})} \vect{\beta}"/> is a generalized linear
+model based upon a functional basis
+<img class="math" src="../../_images/math/ac9f67dd84619d1e9cf523f762157bb0c9209c0e.svg" alt="\vect{f} = \left(f_j, j = 1, \ldots, p\right)"/> and a vector of
+coefficients
+<img class="math" src="../../_images/math/f663572d26cbfdb11a0942a9a621401512c2e7be.svg" alt="\vect{\beta} = \left(\beta_j, j = 1, \ldots, p\right)"/>,</p></li>
+<li><p><img class="math" src="../../_images/math/cc91179189738c9223d552e868c802f621878744.svg" alt="Z"/> is a zero-mean stationary Gaussian process whose covariance
+function reads:</p>
+<div class="math">
+<p><img src="../../_images/math/9e327362ae2646be98becd50029af31a569def4f.svg" alt="\mathbb{E}[Z(\vect{x})\,Z(\vect{x'})] = \sigma^2 R(\vect{x} - \vect{x'}, \vect{\theta})"/></p>
+</div><p>where <img class="math" src="../../_images/math/0c83b19b440f49e6e63d490678024bad5898618f.svg" alt="\sigma^2 &gt; 0"/> is the variance and <img class="math" src="../../_images/math/ddc35335d91f00501b1be972e341ffcba6893269.svg" alt="R"/> is the
+correlation function that solely depends on the Manhattan distance
+between input points <img class="math" src="../../_images/math/c7239b7c14ec2f81a0cc82eab356e57f31a40f40.svg" alt="\vect{x} - \vect{x'}"/> and a vector of
+parameters <img class="math" src="../../_images/math/b9e2fbf5d9be1bba5510d431d4eeb05ccc0cf190.svg" alt="\vect{\theta} \in \Rset^{n_\theta}"/>.</p>
+</li>
+</ul>
+<p>Under the Gaussian process prior assumption, the observations
+<img class="math" src="../../_images/math/2e520ca722caf2233c4246d7eb1a32fc3c3b4ac2.svg" alt="\vect{Y} = \left(Y_i, i = 1, \ldots, m\right)"/> and a prediction
+<img class="math" src="../../_images/math/92b5984b5a1933ccf322c41f3fa12c461ca08b42.svg" alt="Y(\vect{x})"/> at some unobserved input <img class="math" src="../../_images/math/8b7ee9a80df5460444f07ca8491ea7ca3ae29f33.svg" alt="\vect{x}"/> are
+jointly normally distributed:</p>
+<div class="math">
+<p><img src="../../_images/math/5e24e208e1648a1439e2554d589d3d8be1530d1f.svg" alt="\begin{pmatrix}
+      \vect{Y} \\
+      Y(\vect{x})
+    \end{pmatrix}
+    \thicksim
+    \cN_{m + 1}\left(
+      \begin{pmatrix}
+        \mat{F} \vect{\beta} \\
+        \Tr{\vect{f}(\vect{x})} \vect{\beta}
+      \end{pmatrix}
+      ,\,\sigma^2
+      \begin{pmatrix}
+        \mat{R} &amp; \vect{r}(\vect{x}) \\
+        \vect{r}(\vect{x})^t &amp; 1
+      \end{pmatrix}
+    \right)"/></p>
+</div><p>where:</p>
+<div class="math">
+<p><img src="../../_images/math/44ce30e57ec5c99d067978fd7f57a539a520ee13.svg" alt="\mat{F} = \left[f_j\left(\vect{x}^{(i)}\right), i = 1, \ldots, m, j = 1, \ldots, p\right]"/></p>
+</div><p>is the regression matrix,</p>
+<div class="math">
+<p><img src="../../_images/math/bbbbcb745c89331f13523bc9aa4f073eaf2acdea.svg" alt="\mat{R} = \left[R\left(\vect{x}^{(i)} - \vect{x}^{(j)}, \vect{\theta}\right), i,\,j = 1, \ldots, m\right]"/></p>
+</div><p>is the observations’ correlation matrix, and:</p>
+<div class="math">
+<p><img src="../../_images/math/1201bbbd243028a2359fdcc84ec5c1c798eac404.svg" alt="\vect{r}(\vect{x}) = \Tr{\left(R\left(\vect{x} - \vect{x}^{(i)}, \vect{\theta}\right), i = 1, \ldots, m\right)}"/></p>
+</div><p>is the vector of cross-correlations between the prediction and the
+observations.</p>
+<p>As such, the Kriging predictor is defined as the following conditional
+distribution:</p>
+<div class="math">
+<p><img src="../../_images/math/16ad7b1552958293eead4d15d84b5fdc644650c4.svg" alt="\tilde{Y}(\vect{x}) = \left[Y(\vect{x}) \mid \vect{Y} = \vect{y}, \vect{\theta}=\vect{\theta}^*, \sigma^2=(\sigma^2)^*\right]"/></p>
+</div><p>where <img class="math" src="../../_images/math/15d5bced3d198a950cb8e90fb341a8ba73e19f2b.svg" alt="\vect{\theta}^*"/> and <img class="math" src="../../_images/math/60fbf77f4adb0ef3eb2a87d04e741c8f9e04524d.svg" alt="(\sigma^2)^*"/> are the maximum
+likelihood estimates of the correlation parameters <img class="math" src="../../_images/math/5d535616eeb941f4cf5f21fee2588427aaece1ed.svg" alt="\vect{\theta}"/>
+and variance <img class="math" src="../../_images/math/7dabcde7325f224a1ec280df7ac76466686c4959.svg" alt="\sigma^2"/> (see references).</p>
+<p>It can be shown (see references) that the predictor
+<img class="math" src="../../_images/math/604258640f3d43ad5a916bdb83986f88723a906c.svg" alt="\tilde{Y}(\vect{x})"/> is also Gaussian:</p>
+<div class="math">
+<p><img src="../../_images/math/9f3d5df9873d4f8a398a90531c7b746be91593f4.svg" alt="\tilde{Y}(\vect{x}) = \cN_1\left(\mu_{\tilde{Y}}(\vect{x}), \sigma^2_{\tilde{Y}}(\vect{x})\right)"/></p>
+</div><ul>
+<li><p>with mean:</p>
+<div class="math">
+<p><img src="../../_images/math/d2c3cc8fb68a367675c0493563eb7e4b93ab1a5b.svg" alt="\mu_{\tilde{Y}}(\vect{x}) = \Tr{\vect{f}(\vect{x})} \tilde{\vect{\beta}} + \Tr{\vect{r}(\vect{x})} \vect{\gamma}"/></p>
+</div><p>where <img class="math" src="../../_images/math/efd3ff8c1c8328a1e1b9cbb56f9ecfcb1405fbd6.svg" alt="\underline{\tilde{\beta}}"/> is the generalized least
+squares solution of the underlying linear regression problem:</p>
+<div class="math">
+<p><img src="../../_images/math/6ac31ee3834ad6fd918de79b7c6870984a292068.svg" alt="\tilde{\vect{\beta}} = \left(\Tr{\mat{F}} \mat{R}^{-1} \mat{F}\right)^{-1} \Tr{\mat{F}} \mat{R}^{-1} \vect{y}
+
+and"/></p>
+</div><div class="math">
+<p><img src="../../_images/math/8436835a1f72c90e63a291293aa78a2c0a16033d.svg" alt="\vect{\gamma} = \mat{R}^{-1} \left(\vect{y} - \mat{F} \tilde{\vect{\beta}}\right)"/></p>
+</div></li>
+<li><p>and variance:</p>
+<div class="math">
+<p><img src="../../_images/math/3aaad93f257566bb9df7e08843ddf5226ed3a9df.svg" alt="\sigma^2_{\tilde{Y}}(\vect{x}) =
+        \sigma^2 \left[1 -
+            \Tr{\vect{r}(\vect{x})} \mat{R}^{-1} \vect{r}(\vect{x})
+            + \Tr{\vect{u}(\vect{x})} \left(\Tr{\mat{F}} \mat{R}^{-1} \mat{F}\right)^{-1} \vect{u}(\vect{x})
+            \right]"/></p>
+</div><p>where:</p>
+<div class="math">
+<p><img src="../../_images/math/625b92160574718e0cfa0561ea1fa2677fd7c96f.svg" alt="\vect{u}(\vect{x}) = \Tr{\mat{F}} \mat{R}^{-1} \vect{r}(\vect{x}) - \vect{f}(\vect{x})"/></p>
+</div></li>
+</ul>
+<p>Kriging may also be referred to as <em>Gaussian process regression</em>.</p>
+<div class="topic">
+<p class="topic-title">API:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.KrigingAlgorithm.html#openturns.KrigingAlgorithm" title="openturns.KrigingAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">KrigingAlgorithm</span></code></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">Examples:</p>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="../../auto_meta_modeling/kriging_metamodel/plot_kriging.html"><span class="doc">Kriging : multiple input dimensions</span></a></p></li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title">References:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../bibliography.html#dubourg2011" id="id2"><span>[dubourg2011]</span></a></p></li>
+<li><ol class="upperalpha simple" start="19">
+<li><p>Lophaven, H. Nielsen and J. Sondergaard, 2002, “DACE, A Matlab kriging toolbox”, Technichal University of Denmark. <a class="reference external" href="http://www2.imm.dtu.dk/projects/dace/">http://www2.imm.dtu.dk/projects/dace/</a></p></li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="20">
+<li><p>Santner, B. Williams and W. Notz, 2003. “The design and analysis of computer experiments”, Springer, New York.</p></li>
+</ol>
+</li>
+<li><ol class="upperalpha simple" start="3">
+<li><p>Rasmussen and C. Williams, 2006, T. Dietterich (Ed.), “Gaussian processes for machine learning”, MIT Press.</p></li>
+</ol>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="orthogonal_polynomials.html" title="Orthogonal polynomials"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="polynomial_sparse_least_squares.html" title="Sparse least squares polynomial metamodel"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.18rc1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../theory.html" >Theory</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="meta_modeling.html" >Meta modeling</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Kriging</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2021 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Nov 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>
