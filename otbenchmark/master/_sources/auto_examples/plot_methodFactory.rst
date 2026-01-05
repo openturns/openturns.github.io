@@ -179,7 +179,7 @@ We can compare the previous estimate with the exact probability.
  .. code-block:: none
 
 
-    0.0007897927545597477
+    0.0007897927545598118
 
 
 
@@ -235,7 +235,7 @@ The `SORM` class creates a `SORM` object.
  .. code-block:: none
 
 
-    0.000783711312874782
+    0.0007837113128747817
 
 
 
@@ -331,7 +331,7 @@ Create a LHS algorithm
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.819 seconds)
+   **Total running time of the script:** (0 minutes 1.612 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_methodFactory.py:

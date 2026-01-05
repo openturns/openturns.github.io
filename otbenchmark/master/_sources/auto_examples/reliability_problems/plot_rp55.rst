@@ -365,8 +365,8 @@ Perform Monte-Carlo simulation
  .. code-block:: none
 
     Number of function calls = 43704
-    Failure Probability = 0.5510
-    95.0 % confidence interval :[0.5202,0.5818] 
+    Failure Probability = 0.5690
+    95.0 % confidence interval :[0.5383,0.5997] 
 
 
 
@@ -516,7 +516,7 @@ With Quasi-Monte-Carlo
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.461 seconds)
+   **Total running time of the script:** (0 minutes 3.513 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp55.py:

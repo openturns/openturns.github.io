@@ -52,7 +52,7 @@ Benchmark the NLOscillator test function
  .. code-block:: none
 
     name = N.L. Oscillator
-    distribution = ComposedDistribution(class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=21.5 sigma=2.15 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=3.06308 sigmaLog=0.0997513 gamma=0, class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=1.5 sigma=0.15 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=0.40049 sigmaLog=0.0997513 gamma=0, class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=0.01 sigma=0.001 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=-4.61015 sigmaLog=0.0997513 gamma=0, class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=1 sigma=0.2 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=-0.0196104 sigmaLog=0.198042 gamma=0, class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=0.01 sigma=0.002 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=-4.62478 sigmaLog=0.198042 gamma=0, class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=0.05 sigma=0.02 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=-3.06994 sigmaLog=0.385253 gamma=0, class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=0.02 sigma=0.01 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=-4.02359 sigmaLog=0.472381 gamma=0, class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=100 sigma=10 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=4.6002 sigmaLog=0.0997513 gamma=0, IndependentCopula(dimension = 8))
+    distribution = ComposedDistribution(ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 21.5, sigma = 2.15, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 1.5, sigma = 0.15, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.01, sigma = 0.001, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 1, sigma = 0.2, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.01, sigma = 0.002, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.05, sigma = 0.02, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.02, sigma = 0.01, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 100, sigma = 10, gamma = 0)), IndependentCopula(dimension = 8))
     function = class=PythonEvaluation name=OpenTURNSPythonFunction
     firstOrderIndices = [0.4,0.03,0.09,0.18,0.12,0.05,0.05,0]
     totalOrderIndices = [0.4,0.04,0.1,0.23,0.16,0.07,0.06,0.01]
@@ -277,9 +277,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.366841,0.0321862,0.075108,0.176081,0.108141,0.0422779,0.0290906,0.00195959]
+    Computed first order =  [0.375093,0.0353727,0.0889049,0.17513,0.116545,0.0498364,0.0415787,0.00698915]
     Exact first order =  [0.4,0.03,0.09,0.18,0.12,0.05,0.05,0]
-    Computed total order =  [0.379633,0.0734962,0.130833,0.262576,0.202452,0.0649898,0.0547967,0.00605193]
+    Computed total order =  [0.374448,0.0757221,0.129792,0.272108,0.212897,0.065201,0.0561997,0.00716611]
     Exact total order =  [0.4,0.04,0.1,0.23,0.16,0.07,0.06,0.01]
 
 
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.541 seconds)
+   **Total running time of the script:** (0 minutes 5.645 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_nloscillator_sensitivity.py:

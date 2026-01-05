@@ -56,7 +56,7 @@ In this example, we present the RP8 problem of BBRC 2019 using the FORM SORM met
 
     name = RP8
     event = class=ThresholdEventImplementation antecedent=class=CompositeRandomVector function=class=Function name=Unnamed implementation=class=FunctionImplementation name=Unnamed description=[x1,x2,x3,x4,x5,x6,y0] evaluationImplementation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x1,x2,x3,x4,x5,x6] outputVariablesNames=[y0] formulas=[x1 + 2 * x2 + 2 * x3 + x4 - 5 * x5 - 5 * x6] gradientImplementation=class=SymbolicGradient name=Unnamed evaluation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x1,x2,x3,x4,x5,x6] outputVariablesNames=[y0] formulas=[x1 + 2 * x2 + 2 * x3 + x4 - 5 * x5 - 5 * x6] hessianImplementation=class=SymbolicHessian name=Unnamed evaluation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x1,x2,x3,x4,x5,x6] outputVariablesNames=[y0] formulas=[x1 + 2 * x2 + 2 * x3 + x4 - 5 * x5 - 5 * x6] antecedent=class=UsualRandomVector distribution=class=JointDistribution name=JointDistribution dimension=6 copula=class=IndependentCopula name=IndependentCopula dimension=6 marginal[0]=class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=120 sigma=12 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=4.78252 sigmaLog=0.0997513 gamma=0 marginal[1]=class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=120 sigma=12 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=4.78252 sigmaLog=0.0997513 gamma=0 marginal[2]=class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=120 sigma=12 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=4.78252 sigmaLog=0.0997513 gamma=0 marginal[3]=class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=120 sigma=12 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=4.78252 sigmaLog=0.0997513 gamma=0 marginal[4]=class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=50 sigma=10 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=3.89241 sigmaLog=0.198042 gamma=0 marginal[5]=class=ParametrizedDistribution parameters=class=LogNormalMuSigma name=Unnamed mu=40 sigma=8 gamma=0 distribution=class=LogNormal name=LogNormal dimension=1 muLog=3.66927 sigmaLog=0.198042 gamma=0 operator=class=Less name=Unnamed threshold=0
-    probability = 0.0007897927545597477
+    probability = 0.0007897927545598118
 
 
 
@@ -321,7 +321,7 @@ of the PDF of the conditional distribution.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.751 seconds)
+   **Total running time of the script:** (0 minutes 8.547 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp8.py:

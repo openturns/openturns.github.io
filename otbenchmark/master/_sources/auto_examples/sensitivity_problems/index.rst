@@ -32,18 +32,18 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Dirichlet test function">
 
 .. only:: html
 
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_ishigami_sensitivity_thumb.png
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_dirichlet_sensitivity_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py`
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
+      <div class="sphx-glr-thumbnail-title">Benchmark the Dirichlet test function</div>
     </div>
 
 
@@ -66,18 +66,18 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Dirichlet test function">
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
 
 .. only:: html
 
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_dirichlet_sensitivity_thumb.png
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_ishigami_sensitivity_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py`
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Benchmark the Dirichlet test function</div>
+      <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
     </div>
 
 
@@ -211,9 +211,9 @@ Sensitivity problems
    :hidden:
 
    /auto_examples/sensitivity_problems/plot_flood_sensitivity
-   /auto_examples/sensitivity_problems/plot_ishigami_sensitivity
-   /auto_examples/sensitivity_problems/plot_borgonovo_sensitivity
    /auto_examples/sensitivity_problems/plot_dirichlet_sensitivity
+   /auto_examples/sensitivity_problems/plot_borgonovo_sensitivity
+   /auto_examples/sensitivity_problems/plot_ishigami_sensitivity
    /auto_examples/sensitivity_problems/plot_borehole_sensitivity
    /auto_examples/sensitivity_problems/plot_nloscillator_sensitivity
    /auto_examples/sensitivity_problems/plot_gaussian_sum

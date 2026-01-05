@@ -289,9 +289,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.302745,0.460846,0.0066916]
+    Computed first order =  [0.31427,0.444138,0.00146169]
     Exact first order =  [0.313905,0.442411,0]
-    Computed total order =  [0.574996,0.427126,0.256689]
+    Computed total order =  [0.557129,0.443124,0.243082]
     Exact total order =  [0.557589,0.442411,0.243684]
 
 

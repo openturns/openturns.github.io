@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:19.739** total execution time for 5 files **from auto_examples/reliability_methods**:
+**00:17.861** total execution time for 6 files **from auto_examples/reliability_methods**:
 
 .. container::
 
@@ -33,16 +33,19 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_reliability_methods_plot_reliability_benchmark_table.py` (``plot_reliability_benchmark_table.py``)
-     - 00:12.457
+     - 00:11.011
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_methods_plot_compute_reference_rp55_pf.py` (``plot_compute_reference_rp55_pf.py``)
-     - 00:03.538
+     - 00:03.692
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_methods_plot_reliability_compute_reference_proba.py` (``plot_reliability_compute_reference_proba.py``)
-     - 00:02.725
+     - 00:01.573
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_methods_plot_reliability_benchmark.py` (``plot_reliability_benchmark.py``)
-     - 00:01.015
+     - 00:01.567
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_reliability_methods_plot_new_reliability_problem.py` (``plot_new_reliability_problem.py``)
+     - 00:00.014
      - 0.0
    * - :ref:`sphx_glr_auto_examples_reliability_methods_plot_print_reliability_benchmark.py` (``plot_print_reliability_benchmark.py``)
      - 00:00.004

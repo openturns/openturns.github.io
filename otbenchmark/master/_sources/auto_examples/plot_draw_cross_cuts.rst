@@ -359,7 +359,7 @@ See https://github.com/mbaudin47/otbenchmark/issues/47 for details.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.697 seconds)
+   **Total running time of the script:** (0 minutes 8.052 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_draw_cross_cuts.py:

@@ -49,6 +49,23 @@ Reliability methods
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Create a new reliability problem">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_methods/images/thumb/sphx_glr_plot_new_reliability_problem_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_methods_plot_new_reliability_problem.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Create a new reliability problem</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark on a given set of problems">
 
 .. only:: html
@@ -110,6 +127,7 @@ Reliability methods
 
    /auto_examples/reliability_methods/plot_print_reliability_benchmark
    /auto_examples/reliability_methods/plot_reliability_compute_reference_proba
+   /auto_examples/reliability_methods/plot_new_reliability_problem
    /auto_examples/reliability_methods/plot_reliability_benchmark
    /auto_examples/reliability_methods/plot_compute_reference_rp55_pf
    /auto_examples/reliability_methods/plot_reliability_benchmark_table

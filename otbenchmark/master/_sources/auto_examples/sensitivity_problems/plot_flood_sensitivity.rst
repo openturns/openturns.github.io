@@ -328,7 +328,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.504 seconds)
+   **Total running time of the script:** (0 minutes 2.181 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_flood_sensitivity.py:

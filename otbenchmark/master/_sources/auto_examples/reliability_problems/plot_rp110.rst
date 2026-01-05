@@ -57,30 +57,12 @@ We also present graphic elements for the visualization of the limit state surfac
  .. code-block:: none
 
     name = RP110
-    event = class=ThresholdEventImplementation antecedent=class=CompositeRandomVector function=class=Function name=Unnamed implementation=class=FunctionImplementation name=Unnamed description=[x0,x1,gsys] evaluationImplementation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x0,x1] outputVariablesNames=[gsys] formulas=[if (x0 <= 3.5)
-    var g1 := 0.85 - 0.1 * x0;
-    else
-      g1 := 4 - x0;
-    if (x1 <= 2.0)
-      var g2 := 2.3 - x1;
-    else
-      g2 := 0.5 - 0.1 * x1;
-    gsys := min(g1, g2);] gradientImplementation=class=SymbolicGradient name=Unnamed evaluation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x0,x1] outputVariablesNames=[gsys] formulas=[if (x0 <= 3.5)
-    var g1 := 0.85 - 0.1 * x0;
-    else
-      g1 := 4 - x0;
-    if (x1 <= 2.0)
-      var g2 := 2.3 - x1;
-    else
-      g2 := 0.5 - 0.1 * x1;
-    gsys := min(g1, g2);] hessianImplementation=class=SymbolicHessian name=Unnamed evaluation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x0,x1] outputVariablesNames=[gsys] formulas=[if (x0 <= 3.5)
-    var g1 := 0.85 - 0.1 * x0;
-    else
-      g1 := 4 - x0;
-    if (x1 <= 2.0)
-      var g2 := 2.3 - x1;
-    else
-      g2 := 0.5 - 0.1 * x1;
+    event = class=ThresholdEventImplementation antecedent=class=CompositeRandomVector function=class=Function name=Unnamed implementation=class=FunctionImplementation name=Unnamed description=[x0,x1,gsys] evaluationImplementation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x0,x1] outputVariablesNames=[gsys] formulas=[var g1 := (x0 <= 3.5) ? 0.85 - 0.1 * x0 : 4 - x0;
+    var g2 := (x1 <= 2.0) ? 2.3 - x1 : 0.5 - 0.1 * x1;
+    gsys := min(g1, g2);] gradientImplementation=class=SymbolicGradient name=Unnamed evaluation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x0,x1] outputVariablesNames=[gsys] formulas=[var g1 := (x0 <= 3.5) ? 0.85 - 0.1 * x0 : 4 - x0;
+    var g2 := (x1 <= 2.0) ? 2.3 - x1 : 0.5 - 0.1 * x1;
+    gsys := min(g1, g2);] hessianImplementation=class=SymbolicHessian name=Unnamed evaluation=class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x0,x1] outputVariablesNames=[gsys] formulas=[var g1 := (x0 <= 3.5) ? 0.85 - 0.1 * x0 : 4 - x0;
+    var g2 := (x1 <= 2.0) ? 2.3 - x1 : 0.5 - 0.1 * x1;
     gsys := min(g1, g2);] antecedent=class=UsualRandomVector distribution=class=JointDistribution name=JointDistribution dimension=2 copula=class=IndependentCopula name=IndependentCopula dimension=2 marginal[0]=class=Normal name=Normal dimension=1 mean=class=Point name=Unnamed dimension=1 values=[0] sigma=class=Point name=Unnamed dimension=1 values=[1] correlationMatrix=class=CorrelationMatrix dimension=1 implementation=class=MatrixImplementation name=Unnamed rows=1 columns=1 values=[1] marginal[1]=class=Normal name=Normal dimension=1 mean=class=Point name=Unnamed dimension=1 values=[0] sigma=class=Point name=Unnamed dimension=1 values=[1] correlationMatrix=class=CorrelationMatrix dimension=1 implementation=class=MatrixImplementation name=Unnamed rows=1 columns=1 values=[1] operator=class=Less name=Unnamed threshold=0
     probability = 3.19e-05
 
@@ -380,7 +362,7 @@ Draw the limit state surface
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.983 seconds)
+   **Total running time of the script:** (0 minutes 1.898 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp110.py:

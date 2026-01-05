@@ -277,9 +277,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.166136,0.157381,0.623798]
+    Computed first order =  [0.157603,0.15728,0.631181]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.207054,0.2159,0.623765]
+    Computed total order =  [0.21068,0.210519,0.632092]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.270 seconds)
+   **Total running time of the script:** (0 minutes 0.950 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py:

@@ -96,7 +96,7 @@ We present the BBRC test cases using the otbenchmark module.
 
  .. code-block:: none
 
-    # 0 : RP8  : pf =  0.0007897927545597477 , dimension= 6
+    # 0 : RP8  : pf =  0.0007897927545598118 , dimension= 6
     # 1 : RP14  : pf =  0.00077285 , dimension= 5
     # 2 : RP22  : pf =  0.004207305511299618 , dimension= 2
     # 3 : RP24  : pf =  0.00286 , dimension= 2
@@ -196,7 +196,7 @@ The FORM method
  .. code-block:: none
 
 
-    'computedProbability = 0.000659887791408224\nexactProbability = 0.0007897927545597477\nabsoluteError = 0.00012990496315152373\nnumberOfCorrectDigits = 0.7838874012130279\nnumberOfFunctionEvaluations = 8\nnumberOfDigitsPerEvaluation = 0.09798592515162849'
+    'computedProbability = 0.000659887791408224\nexactProbability = 0.0007897927545598118\nabsoluteError = 0.0001299049631515878\nnumberOfCorrectDigits = 0.7838874012128489\nnumberOfFunctionEvaluations = 8\nnumberOfDigitsPerEvaluation = 0.09798592515160612'
 
 
 
@@ -221,7 +221,7 @@ The SORM method
  .. code-block:: none
 
 
-    'computedProbability = 0.0007838036444007651\nexactProbability = 0.0007897927545597477\nabsoluteError = 5.989110158982603e-06\nnumberOfCorrectDigits = 2.120150844037516\nnumberOfFunctionEvaluations = 8\nnumberOfDigitsPerEvaluation = 0.2650188555046895'
+    'computedProbability = 0.0007838036444007648\nexactProbability = 0.0007897927545598118\nabsoluteError = 5.9891101590470045e-06\nnumberOfCorrectDigits = 2.120150844032881\nnumberOfFunctionEvaluations = 8\nnumberOfDigitsPerEvaluation = 0.26501885550411014'
 
 
 
@@ -246,7 +246,7 @@ The LHS method
  .. code-block:: none
 
 
-    'computedProbability = 0.0006000000000000008\nexactProbability = 0.0007897927545597477\nabsoluteError = 0.00018979275455974687\nnumberOfCorrectDigits = 0.619233516283543\nnumberOfFunctionEvaluations = 10000\nnumberOfDigitsPerEvaluation = 6.192335162835429e-05'
+    'computedProbability = 0.0006999999999999989\nexactProbability = 0.0007897927545598118\nabsoluteError = 8.979275455981285e-05\nnumberOfCorrectDigits = 0.9442718507109262\nnumberOfFunctionEvaluations = 10000\nnumberOfDigitsPerEvaluation = 9.442718507109263e-05'
 
 
 
@@ -271,7 +271,7 @@ The MonteCarloSampling method
  .. code-block:: none
 
 
-    'computedProbability = 0.0011000000000000025\nexactProbability = 0.0007897927545597477\nabsoluteError = 0.00031020724544025477\nnumberOfCorrectDigits = 0.4058612079526372\nnumberOfFunctionEvaluations = 10000\nnumberOfDigitsPerEvaluation = 4.058612079526372e-05'
+    'computedProbability = 0.0012000000000000016\nexactProbability = 0.0007897927545598118\nabsoluteError = 0.00041020724544018987\nnumberOfCorrectDigits = 0.28450981827622557\nnumberOfFunctionEvaluations = 10000\nnumberOfDigitsPerEvaluation = 2.8450981827622558e-05'
 
 
 
@@ -296,7 +296,7 @@ The FORM - Importance Sampling method
  .. code-block:: none
 
 
-    'computedProbability = 0.0008436477812777311\nexactProbability = 0.0007897927545597477\nabsoluteError = 5.385502671798341e-05\nnumberOfCorrectDigits = 1.166286899582285\nnumberOfFunctionEvaluations = 579\nnumberOfDigitsPerEvaluation = 0.0020143124345117186'
+    'computedProbability = 0.0007227711138055919\nexactProbability = 0.0007897927545598118\nabsoluteError = 6.702164075421987e-05\nnumberOfCorrectDigits = 1.0712980896904378\nnumberOfFunctionEvaluations = 494\nnumberOfDigitsPerEvaluation = 0.002168619614757971'
 
 
 
@@ -321,7 +321,7 @@ The Subset method
  .. code-block:: none
 
 
-    'computedProbability = 0.0007970000000000018\nexactProbability = 0.0007897927545597477\nabsoluteError = 7.207245440254127e-06\nnumberOfCorrectDigits = 2.039743833206516\nnumberOfFunctionEvaluations = 4000\nnumberOfDigitsPerEvaluation = 0.000509935958301629'
+    'computedProbability = 0.0005800000000000007\nexactProbability = 0.0007897927545598118\nabsoluteError = 0.0002097927545598111\nnumberOfCorrectDigits = 0.5757226600219719\nnumberOfFunctionEvaluations = 4000\nnumberOfDigitsPerEvaluation = 0.000143930665005493'
 
 
 
@@ -447,13 +447,13 @@ In addition, it returns the performance of these methods.
 
  .. code-block:: none
 
-    Exact probability: 0.0007897927545597477
+    Exact probability: 0.0007897927545598118
     ------------------------------------------------------------------
     SubsetSampling
-    Estimated probability: 0.0005326200000000005
-    Number of function calls: 4000
-    Number of correct digits=0.5
-    Performance=1.22e-04 (correct digits/evaluation)
+    Estimated probability: 0.00216
+    Number of function calls: 3000
+    Number of correct digits=0.0
+    Performance=0.00e+00 (correct digits/evaluation)
     ------------------------------------------------------------------
     FORM
     Estimated probability: 0.000659887791408224
@@ -462,42 +462,42 @@ In addition, it returns the performance of these methods.
     Performance=9.80e-02 (correct digits/evaluation)
     ------------------------------------------------------------------
     SORM
-    Estimated probability: 0.0007838036444007651
+    Estimated probability: 0.0007838036444007648
     Number of function calls: 8
     Number of correct digits=2.1
     Performance=2.65e-01 (correct digits/evaluation)
     ------------------------------------------------------------------
     FORM-IS
-    Estimated probability: 0.0007668609830580631
-    Number of function calls: 382
-    Number of correct digits=1.5
-    Performance=4.02e-03 (correct digits/evaluation)
+    Estimated probability: 0.0006636229068221355
+    Number of function calls: 475
+    Number of correct digits=0.8
+    Performance=1.68e-03 (correct digits/evaluation)
     ------------------------------------------------------------------
     MonteCarloSampling
-    Estimated probability: 0.0009000000000000016
+    Estimated probability: 0.0006000000000000008
     Number of function calls: 10000
-    Number of correct digits=0.9
-    Performance=8.55e-05 (correct digits/evaluation)
+    Number of correct digits=0.6
+    Performance=6.19e-05 (correct digits/evaluation)
     ------------------------------------------------------------------
     LHS
-    Estimated probability: 0.0
+    Estimated probability: 0.001999999999999997
     Number of function calls: 1000
     Number of correct digits=0.0
     Performance=0.00e+00 (correct digits/evaluation)
     ------------------------------------------------------------------------
     Scoring by number of correct digits
+    0 : SubsetSampling (0.0)
     5 : LHS (0.0)
-    0 : SubsetSampling (0.5)
+    4 : MonteCarloSampling (0.6)
     1 : FORM (0.8)
-    4 : MonteCarloSampling (0.9)
-    3 : FORM-IS (1.5)
+    3 : FORM-IS (0.8)
     2 : SORM (2.1)
     ------------------------------------------------------------------------
     Scoring by performance (digits/evaluation)
+    0 : SubsetSampling (0.0e+00)
     5 : LHS (0.0e+00)
-    4 : MonteCarloSampling (8.6e-05)
-    0 : SubsetSampling (1.2e-04)
-    3 : FORM-IS (4.0e-03)
+    4 : MonteCarloSampling (6.2e-05)
+    3 : FORM-IS (1.7e-03)
     1 : FORM (9.8e-02)
     2 : SORM (2.7e-01)
 
@@ -518,7 +518,7 @@ Remarks
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.015 seconds)
+   **Total running time of the script:** (0 minutes 1.567 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_methods_plot_reliability_benchmark.py:

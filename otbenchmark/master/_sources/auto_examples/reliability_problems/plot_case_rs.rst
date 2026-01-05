@@ -438,7 +438,7 @@ Fill the event domain with a color
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.404 seconds)
+   **Total running time of the script:** (0 minutes 3.171 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_case_rs.py:

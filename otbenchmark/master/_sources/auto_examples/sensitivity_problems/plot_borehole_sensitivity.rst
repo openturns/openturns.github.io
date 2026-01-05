@@ -53,7 +53,7 @@ Benchmark the Borehole test function
 
     name = Borehole
     distribution = ComposedDistribution(Normal(mu = 0.1, sigma = 0.0161812), LogNormal(muLog = 7.71, sigmaLog = 1.0056, gamma = 0), Uniform(a = 63070, b = 115600), Uniform(a = 990, b = 1110), Uniform(a = 63.1, b = 116), Uniform(a = 700, b = 820), Uniform(a = 1120, b = 1680), Uniform(a = 9855, b = 12045), IndependentCopula(dimension = 8))
-    function = [rw,r,Tu,Hu,Tl,Hl,L,Kw]->[(2*pi_*Tu*(Hu-Hl))/(ln(r/rw)*(1+(2*L*Tu)/(ln(r/rw)*rw^2*Kw)+Tu/Tl))]
+    function = [rw,r,Tu,Hu,Tl,Hl,L,Kw]->[(2 * pi_ * Tu * (Hu - Hl)) / (ln(r / rw) * (1 + (2 * L * Tu) / (ln(r / rw) * rw^2 * Kw) + Tu / Tl))]
     firstOrderIndices = [0.66,0,0,0.09,0,0.09,0.09,0.02]
     totalOrderIndices = [0.69,0,0,0.11,0,0.11,0.1,0.02]
 
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.359 seconds)
+   **Total running time of the script:** (0 minutes 2.121 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_borehole_sensitivity.py:

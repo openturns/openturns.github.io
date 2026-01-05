@@ -82,7 +82,7 @@ The goal of this document is to make this selection clearer.
  .. code-block:: none
 
 
-    '1.24'
+    '1.26'
 
 
 
@@ -453,7 +453,7 @@ This corresponds to the following code and comments:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.217 seconds)
+   **Total running time of the script:** (0 minutes 0.260 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_lognormal_bbrc.py:

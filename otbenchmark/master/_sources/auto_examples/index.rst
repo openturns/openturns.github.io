@@ -248,6 +248,23 @@ Reliability methods
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Create a new reliability problem">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_methods/images/thumb/sphx_glr_plot_new_reliability_problem_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_methods_plot_new_reliability_problem.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Create a new reliability problem</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark on a given set of problems">
 
 .. only:: html
@@ -724,18 +741,18 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Dirichlet test function">
 
 .. only:: html
 
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_ishigami_sensitivity_thumb.png
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_dirichlet_sensitivity_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py`
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
+      <div class="sphx-glr-thumbnail-title">Benchmark the Dirichlet test function</div>
     </div>
 
 
@@ -758,18 +775,18 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Dirichlet test function">
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Ishigami test function">
 
 .. only:: html
 
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_dirichlet_sensitivity_thumb.png
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_ishigami_sensitivity_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py`
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Benchmark the Dirichlet test function</div>
+      <div class="sphx-glr-thumbnail-title">Benchmark the Ishigami test function</div>
     </div>
 
 

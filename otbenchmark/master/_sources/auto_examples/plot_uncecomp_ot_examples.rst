@@ -157,7 +157,7 @@ Generate a sample of each joint distribution
 
  .. code-block:: none
 
-    150
+    151
 
 
 
@@ -491,7 +491,7 @@ ThresholdEvent
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 40.049 seconds)
+   **Total running time of the script:** (1 minutes 42.626 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_uncecomp_ot_examples.py:

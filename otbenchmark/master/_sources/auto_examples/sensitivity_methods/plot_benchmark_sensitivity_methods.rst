@@ -172,9 +172,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.156823,0.161461,0.634277]
+    Computed first order =  [0.156356,0.150228,0.634876]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.209326,0.214636,0.639424]
+    Computed total order =  [0.207763,0.205055,0.639286]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -274,9 +274,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  500
-    Computed first order =  [0.156823,0.161461,0.634277]
+    Computed first order =  [0.156356,0.150228,0.634876]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.209326,0.214636,0.639424]
+    Computed total order =  [0.207763,0.205055,0.639286]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -352,17 +352,17 @@ Loop over the estimators
 
     Monte-Carlo sampling
     SaltelliSensitivityAlgorithm
-        S =  [0.143836,0.16279,0.54157]
-        T =  [0.236648,0.281946,0.562707]
+        S =  [0.14465,0.0999962,0.625487]
+        T =  [0.24804,0.217538,0.674237]
     MartinezSensitivityAlgorithm
-        S =  [0.099833,0.120081,0.706197]
-        T =  [0.229993,0.214,0.649706]
+        S =  [0.168487,0.119565,0.651924]
+        T =  [0.21305,0.22557,0.628727]
     JansenSensitivityAlgorithm
-        S =  [0.177528,0.164591,0.586526]
-        T =  [0.195121,0.180157,0.68538]
+        S =  [0.187849,0.238909,0.728889]
+        T =  [0.217937,0.229321,0.513397]
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.160346,0.16923,0.548474]
-        T =  [0.229613,0.246127,0.62042]
+        S =  [0.183941,0.167166,0.817777]
+        T =  [0.200823,0.206945,0.684744]
 
 
 
@@ -447,9 +447,10 @@ Loop over the estimators
 Define the metric
 -----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-164
+.. GENERATED FROM PYTHON SOURCE LINES 154-165
 
 We consider the following accuracy metrics:
+
 * the vector or log relative errors for a given index (first order or total order),
 * the mean log relative error, as the mean of the LRE vector (first order or total order),
 * the average mean log relative error, as the mean of the first and total order mean log relative error.
@@ -460,7 +461,7 @@ The first order (resp. total order) mean LRE represents the mean number of digit
 of the first order indices (resp. total order indices).
 The average mean LRE represents the mean LRE for both first and total order indices.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-176
+.. GENERATED FROM PYTHON SOURCE LINES 167-177
 
 .. code-block:: Python
 
@@ -481,7 +482,7 @@ The average mean LRE represents the mean LRE for both first and total order indi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-180
+.. GENERATED FROM PYTHON SOURCE LINES 178-181
 
 .. code-block:: Python
 
@@ -496,13 +497,13 @@ The average mean LRE represents the mean LRE for both first and total order indi
 
  .. code-block:: none
 
-    LRE S =  [14.7136,14.5509,15.153]
-    LRE T =  [15.0349,14.8008,15.153]
+    LRE S =  [15.056,14.755,15.153]
+    LRE T =  [15.5789,15.0349,15.153]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-188
+.. GENERATED FROM PYTHON SOURCE LINES 182-189
 
 .. code-block:: Python
 
@@ -521,18 +522,18 @@ The average mean LRE represents the mean LRE for both first and total order indi
 
  .. code-block:: none
 
-    Mean LRE S = 14.81
-    Mean LRE T = 15.00
-    Mean LRE = 14.90
+    Mean LRE S = 14.99
+    Mean LRE T = 15.26
+    Mean LRE = 15.12
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-190
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
 
 The digit per point ratio measure the number of digits relatively to the sample size. A greater value is prefered.
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-192
+.. GENERATED FROM PYTHON SOURCE LINES 191-193
 
 .. code-block:: Python
 
@@ -546,7 +547,7 @@ The digit per point ratio measure the number of digits relatively to the sample 
 
  .. code-block:: none
 
-    Digit / point = 2.980e-02
+    Digit / point = 3.024e-02
 
 
 
@@ -554,7 +555,7 @@ The digit per point ratio measure the number of digits relatively to the sample 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.044 seconds)
+   **Total running time of the script:** (0 minutes 0.030 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_methods_plot_benchmark_sensitivity_methods.py:

@@ -171,7 +171,7 @@ For each problem in the benchmark, print the problem name and the exact Sobol' i
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.112 seconds)
+   **Total running time of the script:** (0 minutes 0.278 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_methods_plot_print_problems.py:
