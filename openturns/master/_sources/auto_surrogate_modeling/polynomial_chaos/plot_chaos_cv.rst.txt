@@ -205,87 +205,9 @@ into a training set and a test set.
 
 .. GENERATED FROM PYTHON SOURCE LINES 156-157
 
-The next function computes the mean squared error by K-Fold.
-
-.. GENERATED FROM PYTHON SOURCE LINES 160-223
-
-.. code-block:: Python
-
-    def computeMSENaiveKFold(
-        inputSample,
-        outputSample,
-        multivariateBasis,
-        totalDegree,
-        distribution,
-        kParameter=5,
-    ):
-        """
-        Compute mean squared error by (naive) KFold.
-
-        Parameters
-        ----------
-        inputSample : Sample(size, input_dimension)
-            The inputSample dataset.
-        outputSample : Sample(size, output_dimension)
-            The outputSample dataset.
-        multivariateBasis : multivariateBasis
-            The multivariate chaos multivariateBasis.
-        totalDegree : int
-            The total degree of the chaos polynomial.
-        distribution : Distribution.
-            The distribution of the input variable.
-        kParameter : int, in (2, sampleSize)
-            The parameter K.
-
-        Returns
-        -------
-        mse : Point(output_dimension)
-            The mean squared error.
-        """
-        #
-        sampleSize = inputSample.getSize()
-        outputDimension = outputSample.getDimension()
-        splitter = ot.KFoldSplitter(sampleSize, kParameter)
-        squaredResiduals = ot.Sample(sampleSize, outputDimension)
-        for indicesTrain, indicesTest in splitter:
-            inputSampleTrain, inputSampleTest = (
-                inputSample[indicesTrain],
-                inputSample[indicesTest],
-            )
-            outputSampleTrain, outputSampleTest = (
-                outputSample[indicesTrain],
-                outputSample[indicesTest],
-            )
-            chaosResultKFold = compute_sparse_least_squares_chaos(
-                inputSampleTrain,
-                outputSampleTrain,
-                multivariateBasis,
-                totalDegree,
-                distribution,
-            )
-            metamodelKFold = chaosResultKFold.getMetaModel()
-            predictionsKFold = metamodelKFold(inputSampleTest)
-            residualsKFold = outputSampleTest - predictionsKFold
-            foldSize = indicesTest.getSize()
-            for j in range(outputDimension):
-                for i in range(foldSize):
-                    squaredResiduals[indicesTest[i], j] = residualsKFold[i, j] ** 2
-        mse = squaredResiduals.computeMean()
-        return mse
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 224-225
-
 The next function computes the :math:`R^2` score by K-Fold.
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-275
+.. GENERATED FROM PYTHON SOURCE LINES 157-220
 
 .. code-block:: Python
 
@@ -319,23 +241,36 @@ The next function computes the :math:`R^2` score by K-Fold.
 
         Returns
         -------
-        r2Score : float
-            The R2 score.
+        r2Score : Point(outputDimension)
+            The R2 score for each output dimension.
         """
         #
-        mse = computeMSENaiveKFold(
-            inputSample,
-            outputSample,
-            multivariateBasis,
-            totalDegree,
-            distribution,
-            kParameter,
-        )
-        sampleVariance = outputSample.computeCentralMoment(2)
+        sampleSize = inputSample.getSize()
         outputDimension = outputSample.getDimension()
-        r2Score = ot.Point(outputDimension)
-        for i in range(outputDimension):
-            r2Score[i] = 1.0 - mse[i] / sampleVariance[i]
+        splitter = ot.KFoldSplitter(sampleSize, kParameter)
+        r2_score_sample = ot.Sample(0, outputDimension)
+        for indicesTrain, indicesTest in splitter:
+            inputSampleTrain, inputSampleTest = (
+                inputSample[indicesTrain],
+                inputSample[indicesTest],
+            )
+            outputSampleTrain, outputSampleTest = (
+                outputSample[indicesTrain],
+                outputSample[indicesTest],
+            )
+            chaosResultKFold = compute_sparse_least_squares_chaos(
+                inputSampleTrain,
+                outputSampleTrain,
+                multivariateBasis,
+                totalDegree,
+                distribution,
+            )
+            metamodelKFold = chaosResultKFold.getMetaModel()
+            predictionsKFold = metamodelKFold(inputSampleTest)
+            val = ot.MetaModelValidation(outputSampleTest, predictionsKFold)
+            r2_local = val.computeR2Score()
+            r2_score_sample.add(r2_local)
+        r2Score = r2_score_sample.computeMean()
         return r2Score
 
 
@@ -346,16 +281,16 @@ The next function computes the :math:`R^2` score by K-Fold.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 276-278
+.. GENERATED FROM PYTHON SOURCE LINES 221-223
 
 Define the training data set
 ----------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-281
+.. GENERATED FROM PYTHON SOURCE LINES 225-226
 
-We start by generating the input and output samples. We use a sample size equal to 1000.
+We start by generating the input and output samples. We use a sample size equal to 200.
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-293
+.. GENERATED FROM PYTHON SOURCE LINES 229-238
 
 .. code-block:: Python
 
@@ -363,7 +298,7 @@ We start by generating the input and output samples. We use a sample size equal 
     im.distribution.setDescription(["X0", "X1", "X2"])
     im.model.setOutputDescription(["$Y$"])
     ot.RandomGenerator.SetSeed(0)
-    sample_size = 500
+    sample_size = 200
     X = im.distribution.getSample(sample_size)
     print("Input sample:")
     X[:5]
@@ -384,17 +319,17 @@ We start by generating the input and output samples. We use a sample size equal 
     <div class="output_subarea output_html rendered_html output_result">
     <table>
       <tr><td></td><th>X0</th><th>X1</th><th>X2</th></tr>
-      <tr><th>0</th><td>0.8160385</td><td>-1.546951</td><td>2.67553</td></tr>
-      <tr><th>1</th><td>2.405236</td><td>-0.4441351</td><td>-2.192122</td></tr>
-      <tr><th>2</th><td>-2.291626</td><td>-3.013204</td><td>1.30032</td></tr>
-      <tr><th>3</th><td>-2.937372</td><td>0.0734501</td><td>-0.7336488</td></tr>
-      <tr><th>4</th><td>-0.960969</td><td>-0.1161257</td><td>-0.4336099</td></tr>
+      <tr><th>0</th><td>0.8160385</td><td>-2.330971</td><td>-3.109507</td></tr>
+      <tr><th>1</th><td>2.405236</td><td>2.666819</td><td>-2.4011</td></tr>
+      <tr><th>2</th><td>-2.291626</td><td>0.1521727</td><td>0.9360676</td></tr>
+      <tr><th>3</th><td>-2.937372</td><td>3.049181</td><td>-1.678219</td></tr>
+      <tr><th>4</th><td>-0.960969</td><td>3.070939</td><td>-1.723471</td></tr>
     </table>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-300
+.. GENERATED FROM PYTHON SOURCE LINES 239-245
 
 .. code-block:: Python
 
@@ -420,23 +355,23 @@ We start by generating the input and output samples. We use a sample size equal 
     <div class="output_subarea output_html rendered_html output_result">
     <table>
       <tr><td></td><th>Y</th></tr>
-      <tr><th>0</th><td>11.45723</td></tr>
-      <tr><th>1</th><td>3.514782</td></tr>
-      <tr><th>2</th><td>-0.8512832</td></tr>
-      <tr><th>3</th><td>-0.170983</td></tr>
-      <tr><th>4</th><td>-0.728672</td></tr>
+      <tr><th>0</th><td>11.21511</td></tr>
+      <tr><th>1</th><td>4.366688</td></tr>
+      <tr><th>2</th><td>-0.6480888</td></tr>
+      <tr><th>3</th><td>-0.3040638</td></tr>
+      <tr><th>4</th><td>-1.508123</td></tr>
     </table>
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 301-304
+.. GENERATED FROM PYTHON SOURCE LINES 246-249
 
 We compute a polynomial chaos decomposition with a total degree equal to 5.
 In order to reduce the number of coefficients, the `compute_sparse_least_squares_chaos`
 function creates a sparse chaos using regression and the LARS method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 306-316
+.. GENERATED FROM PYTHON SOURCE LINES 251-261
 
 .. code-block:: Python
 
@@ -466,7 +401,7 @@ function creates a sparse chaos using regression and the LARS method.
       <li>transformation: 3 -> 3</li>
       <li>inverse transformation: 3 -> 3</li>
       <li>orthogonal basis dimension: 3</li>
-      <li>indices size: 12</li>
+      <li>indices size: 9</li>
     </ul>
     <table>
       <tr>
@@ -477,62 +412,47 @@ function creates a sparse chaos using regression and the LARS method.
       <tr>
         <th>0</th>
         <td>[0,0,0]</td>
-        <td>3.661918</td>
+        <td>3.475101</td>
       </tr>
       <tr>
         <th>1</th>
         <td>[1,0,0]</td>
-        <td>1.599859</td>
+        <td>1.551054</td>
       </tr>
       <tr>
         <th>2</th>
-        <td>[1,0,1]</td>
-        <td>-0.1517826</td>
+        <td>[0,2,0]</td>
+        <td>-0.41845</td>
       </tr>
       <tr>
         <th>3</th>
-        <td>[0,2,0]</td>
-        <td>-0.616015</td>
+        <td>[0,0,2]</td>
+        <td>-0.2137106</td>
       </tr>
       <tr>
         <th>4</th>
-        <td>[0,0,2]</td>
-        <td>-0.1429231</td>
+        <td>[3,0,0]</td>
+        <td>-1.33112</td>
       </tr>
       <tr>
         <th>5</th>
-        <td>[3,0,0]</td>
-        <td>-1.21482</td>
+        <td>[1,0,2]</td>
+        <td>1.279321</td>
       </tr>
       <tr>
         <th>6</th>
-        <td>[1,0,2]</td>
-        <td>1.421431</td>
+        <td>[0,4,0]</td>
+        <td>-1.821065</td>
       </tr>
       <tr>
         <th>7</th>
-        <td>[0,4,0]</td>
-        <td>-1.983213</td>
+        <td>[3,0,2]</td>
+        <td>-1.133543</td>
       </tr>
       <tr>
         <th>8</th>
-        <td>[5,0,0]</td>
-        <td>0.161996</td>
-      </tr>
-      <tr>
-        <th>9</th>
-        <td>[4,1,0]</td>
-        <td>0.1837313</td>
-      </tr>
-      <tr>
-        <th>10</th>
-        <td>[3,0,2]</td>
-        <td>-1.165708</td>
-      </tr>
-      <tr>
-        <th>11</th>
         <td>[1,0,4]</td>
-        <td>0.3744418</td>
+        <td>0.5781101</td>
       </tr>
     </table>
 
@@ -540,11 +460,11 @@ function creates a sparse chaos using regression and the LARS method.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 317-318
+.. GENERATED FROM PYTHON SOURCE LINES 262-263
 
 Get the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 320-322
+.. GENERATED FROM PYTHON SOURCE LINES 265-267
 
 .. code-block:: Python
 
@@ -557,17 +477,17 @@ Get the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-325
+.. GENERATED FROM PYTHON SOURCE LINES 268-270
 
 Validate the metamodel from a test set
 --------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 327-329
+.. GENERATED FROM PYTHON SOURCE LINES 272-274
 
 In order to validate our polynomial chaos, we generate an extra pair of
 input / output samples and use the :class:`~openturns.MetaModelValidation` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 329-340
+.. GENERATED FROM PYTHON SOURCE LINES 274-285
 
 .. code-block:: Python
 
@@ -586,7 +506,7 @@ input / output samples and use the :class:`~openturns.MetaModelValidation` class
 
 
 .. image-sg:: /auto_surrogate_modeling/polynomial_chaos/images/sphx_glr_plot_chaos_cv_001.svg
-   :alt: R2=0.84, n=200
+   :alt: R2=0.87, n=200
    :srcset: /auto_surrogate_modeling/polynomial_chaos/images/sphx_glr_plot_chaos_cv_001.svg
    :class: sphx-glr-single-img
 
@@ -594,7 +514,7 @@ input / output samples and use the :class:`~openturns.MetaModelValidation` class
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 341-359
+.. GENERATED FROM PYTHON SOURCE LINES 286-304
 
 The plot shows that the score is relatively high and might be satisfactory for some purposes.
 There are however several issues with the previous procedure:
@@ -615,16 +535,16 @@ There are however several issues with the previous procedure:
 The K-Fold validation aims at solving some of these issues, so that all the
 available data is used in order to estimate the :math:`R^2` score.
 
-.. GENERATED FROM PYTHON SOURCE LINES 361-363
+.. GENERATED FROM PYTHON SOURCE LINES 306-308
 
 Compute the R2 score from a test set
 ------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 365-366
+.. GENERATED FROM PYTHON SOURCE LINES 310-311
 
 In the following script, we compute the :math:`R^2` score associated with each polynomial degree from 1 to 10.
 
-.. GENERATED FROM PYTHON SOURCE LINES 366-380
+.. GENERATED FROM PYTHON SOURCE LINES 311-325
 
 .. code-block:: Python
 
@@ -651,21 +571,21 @@ In the following script, we compute the :math:`R^2` score associated with each p
  .. code-block:: none
 
     Split cross-validation, with 75% for training
-    Degree = 1, score = 0.1861
-    Degree = 2, score = 0.1861
-    Degree = 3, score = 0.4948
-    Degree = 4, score = 0.7338
-    Degree = 5, score = 0.8272
-    Degree = 6, score = 0.9772
-    Degree = 7, score = 0.9889
-    Degree = 8, score = 0.9994
+    Degree = 1, score = 0.2696
+    Degree = 2, score = 0.2219
+    Degree = 3, score = 0.5912
+    Degree = 4, score = 0.7729
+    Degree = 5, score = 0.8002
+    Degree = 6, score = 0.9751
+    Degree = 7, score = 0.9890
+    Degree = 8, score = 0.9995
     Degree = 9, score = 0.9997
     Degree = 10, score = 1.0000
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-391
+.. GENERATED FROM PYTHON SOURCE LINES 326-336
 
 .. code-block:: Python
 
@@ -691,12 +611,12 @@ In the following script, we compute the :math:`R^2` score associated with each p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 392-394
+.. GENERATED FROM PYTHON SOURCE LINES 337-339
 
 We see that the polynomial degree may be increased up to degree 7,
 after which the :math:`R^2` score does not increase much.
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-403
+.. GENERATED FROM PYTHON SOURCE LINES 341-348
 
 Compute the R2 score from K-Fold cross-validation
 -------------------------------------------------
@@ -706,7 +626,7 @@ One limitation of the previous method is that the estimate of the
 The following script uses 5-Fold cross validation to estimate the
 :math:`R^2` score.
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-415
+.. GENERATED FROM PYTHON SOURCE LINES 350-360
 
 .. code-block:: Python
 
@@ -729,13 +649,13 @@ The following script uses 5-Fold cross validation to estimate the
  .. code-block:: none
 
     5-Fold cross-validation
-    Degree = 1, score = 0.1511
-    Degree = 2, score = 0.1552
-    Degree = 3, score = 0.4496
-    Degree = 4, score = 0.7144
-    Degree = 5, score = 0.8329
-    Degree = 6, score = 0.9793
-    Degree = 7, score = 0.9898
+    Degree = 1, score = 0.2347
+    Degree = 2, score = 0.2110
+    Degree = 3, score = 0.4674
+    Degree = 4, score = 0.7316
+    Degree = 5, score = 0.8296
+    Degree = 6, score = 0.9777
+    Degree = 7, score = 0.9893
     Degree = 8, score = 0.9995
     Degree = 9, score = 0.9998
     Degree = 10, score = 1.0000
@@ -743,7 +663,7 @@ The following script uses 5-Fold cross validation to estimate the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 416-423
+.. GENERATED FROM PYTHON SOURCE LINES 361-368
 
 .. code-block:: Python
 
@@ -766,15 +686,15 @@ The following script uses 5-Fold cross validation to estimate the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 424-425
+.. GENERATED FROM PYTHON SOURCE LINES 369-370
 
 The conclusion is similar to the previous method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 427-428
+.. GENERATED FROM PYTHON SOURCE LINES 372-373
 
 Compare the two cross-validation methods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 428-443
+.. GENERATED FROM PYTHON SOURCE LINES 373-388
 
 .. code-block:: Python
 
@@ -805,7 +725,7 @@ Compare the two cross-validation methods.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 444-458
+.. GENERATED FROM PYTHON SOURCE LINES 389-403
 
 Conclusion
 ----------
@@ -822,7 +742,7 @@ In [muller2016]_, chapter 5, page 269, the authors advocate the split of the dat
 When selecting the best parameters, the validation set is used.
 When estimating the :math:`R^2` score with the best parameters, the test set is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 460-461
+.. GENERATED FROM PYTHON SOURCE LINES 405-406
 
 .. code-block:: Python
 
