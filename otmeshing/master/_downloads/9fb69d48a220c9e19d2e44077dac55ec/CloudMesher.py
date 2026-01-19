@@ -3,7 +3,7 @@ import openturns.viewer as otv
 import otmeshing
 
 points = ot.JointDistribution([ot.Uniform()] * 2).getSample(15)
-mesher = otmeshing.CloudMesher()
+mesher = otmeshing.CloudMesher(otmeshing.CloudMesher.DELAUNAY)
 
 triangulation = mesher.build(points)
 graph = triangulation.draw()
