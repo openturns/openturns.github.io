@@ -79,7 +79,7 @@ view = otv.View(graph2)
 
 # %%
 # Compute the intersection, we know both meshes are convex by definition
-inter12 = otm.IntersectionMesher().buildConvex(mesh1, mesh2)
+inter12 = otm.IntersectionMesher().buildConvex([mesh1, mesh2])
 
 # %%
 # Plot intersection
