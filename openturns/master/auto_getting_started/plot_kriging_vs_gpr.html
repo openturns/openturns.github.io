@@ -82,8 +82,7 @@
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#activating-nugget-factor">Activating nugget factor</a></li>
 <li><a class="reference internal" href="#compute-confidence-bounds">Compute confidence bounds</a></li>
-<li><a class="reference internal" href="#gaussian-process-regression-with-fixed-trend">Gaussian Process Regression with fixed trend</a></li>
-<li><a class="reference internal" href="#gaussian-process-regression-with-heteroscedastic-noise">Gaussian Process Regression with heteroscedastic noise</a><ul>
+<li><a class="reference internal" href="#gaussian-process-regression-with-fixed-trend">Gaussian Process Regression with fixed trend</a><ul>
 <li><a class="reference internal" href="#summary-of-features">Summary of features</a></li>
 </ul>
 </li>
@@ -591,38 +590,6 @@ First we set the known parameters (covariance, trend)</p>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_plot_kriging_vs_gpr_006.svg" srcset="../_images/sphx_glr_plot_kriging_vs_gpr_006.svg" alt="GPR with known trend" class = "sphx-glr-single-img"/><p>The given GPR matches with the data as expected !</p>
-</section>
-<section id="gaussian-process-regression-with-heteroscedastic-noise">
-<h2>Gaussian Process Regression with heteroscedastic noise<a class="headerlink" href="#gaussian-process-regression-with-heteroscedastic-noise" title="Link to this heading">¶</a></h2>
-<p>The objective is to estimate a Gaussian process regression accounting for a noise (known noise).
-Unfortunately the feature is unavailable with the new API. The objective is to have it in the next releases
-using different ways.
-The only workaround until now is to rely on the old API. Here an example of how using such a feature.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">noise</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span>
-<span class="n">kriging_algo_hsn</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">KrigingAlgorithm</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
-<span class="n">kriging_algo_hsn</span><span class="o">.</span><span class="n">setNoise</span><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">asPoint</span><span class="p">())</span>
-<span class="n">kriging_algo_hsn</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="n">kriging_result_hsn</span> <span class="o">=</span> <span class="n">kriging_algo_hsn</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
-<span class="n">krigingMM_hsn</span> <span class="o">=</span> <span class="n">kriging_result_hsn</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Plot the result</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Kriging with known noise&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-    <span class="n">plot_1d_data</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;Exact&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">plot_1d_data</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Cloud&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;Data&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">))</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-    <span class="n">plot_1d_data</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">krigingMM_hsn</span><span class="p">(</span><span class="n">x_test</span><span class="p">),</span> <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;Kriging+noise&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">)</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</pre></div>
-</div>
-<img src="../_images/sphx_glr_plot_kriging_vs_gpr_007.svg" srcset="../_images/sphx_glr_plot_kriging_vs_gpr_007.svg" alt="Kriging with known noise" class = "sphx-glr-single-img"/><p>The result is slightly different from the previous ones. We take into account that each output <cite>y_train</cite> is potentially “random”.</p>
 <section id="summary-of-features">
 <h3>Summary of features<a class="headerlink" href="#summary-of-features" title="Link to this heading">¶</a></h3>
 <p>We illustrated some the features of both old/new API, making a comparison in terms of usage and result.
@@ -632,7 +599,6 @@ We can summarize the main differences hereafter (old API / new API):</p>
 <li><p>Conditional covariance : <cite>KrigingResult.getConditionalCovariance</cite>/ <a class="reference internal" href="../user_manual/_generated/openturns.GaussianProcessConditionalCovariance.html#openturns.GaussianProcessConditionalCovariance.getConditionalCovariance" title="openturns.GaussianProcessConditionalCovariance.getConditionalCovariance"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getConditionalCovariance()</span></code></a></p></li>
 <li><p>Known trend : no / yes (see : <a class="reference internal" href="../user_manual/_generated/openturns.GaussianProcessRegression.html#openturns.GaussianProcessRegression" title="openturns.GaussianProcessRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessRegression</span></code></a> )</p></li>
 <li><p>Nugget factor : yes / yes</p></li>
-<li><p>Heteroscedastic noise : <cite>KrigingAlgorithm.setNoise</cite> / no</p></li>
 <li><p>Fit the model : <cite>KrigingAlgorithm.run</cite> / <a class="reference internal" href="../user_manual/_generated/openturns.GaussianProcessFitter.html#openturns.GaussianProcessFitter.run" title="openturns.GaussianProcessFitter.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> + <a class="reference internal" href="../user_manual/_generated/openturns.GaussianProcessRegression.html#openturns.GaussianProcessRegression.run" title="openturns.GaussianProcessRegression.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a></p></li>
 </ul>
 <p>Display all figures</p>
