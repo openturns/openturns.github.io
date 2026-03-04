@@ -20,9 +20,9 @@ ax = fig.add_subplot(111)
 for i in range(n_functions):
     plt.plot(meshed_support,
              [functions[i](x) for x in meshed_support], lw=1.5,
-             label=fr"$\phi_(x)$")
+             label=r"$\varphi_" + str(i) + "(x)$")
 plt.xlabel(r"$x$")
-plt.ylabel(r"$\phi_i(x)$")
+plt.ylabel(r"$\varphi_i(x)$")
 plt.xlim(x_min, x_max)
 plt.grid()
 box = ax.get_position()
