@@ -1,0 +1,17 @@
+import openturns as ot
+from matplotlib import pyplot as plt
+import openturns.viewer as otv
+
+filteringWindow = ot.Hann()
+numPoints = 512
+data = ot.Sample(numPoints, 2)
+for i in range(numPoints):
+    x = -0.1 + (1.2 * i) / (numPoints - 1.0)
+    data[i, 0] = x
+    data[i, 1] = filteringWindow(x)
+graph = ot.Graph(str(filteringWindow), '$tau$', 'W', True)
+graph.add(ot.Curve(data))
+graph.setColors(['red'])
+fig = plt.figure(figsize=(10, 4))
+filtering_axis = fig.add_subplot(111)
+otv.View(graph, figure=fig, axes=[filtering_axis], add_legend=False)

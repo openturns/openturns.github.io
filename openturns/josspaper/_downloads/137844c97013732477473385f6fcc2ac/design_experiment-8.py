@@ -1,0 +1,10 @@
+import openturns as ot
+import openturns.viewer as otv
+
+# GaussProduct
+d = ot.GaussProductExperiment(ot.JointDistribution([ot.Uniform()]*3), [4,6,8])
+s = d.generate()
+s.setDescription(["X1", "X2", "X3"])
+g = ot.VisualTest.DrawPairs(s)
+g.setTitle("Gauss product experiment")
+otv.View(g)

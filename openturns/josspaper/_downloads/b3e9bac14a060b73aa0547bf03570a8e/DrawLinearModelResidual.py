@@ -1,0 +1,21 @@
+import openturns as ot
+import openturns.viewer as otv
+
+
+dimension = 2
+R = ot.CorrelationMatrix(dimension)
+R[0, 1] = 0.8
+distribution = ot.Normal([3.0] * dimension, [2.0] * dimension, R)
+size = 100
+sample = distribution.getSample(size)
+firstSample = ot.Sample(size, 1)
+secondSample = ot.Sample(size, 1)
+for i in range(size):
+    firstSample[i] = ot.Point(1, sample[i, 0])
+    secondSample[i] = ot.Point(1, sample[i, 1])
+
+lmtest = ot.LinearModelAlgorithm(firstSample, secondSample).getResult()
+
+drawLinearModelResidual = ot.VisualTest.DrawLinearModelResidual(lmtest)
+
+otv.View(drawLinearModelResidual, figure_kw={"figsize": (5, 5)})

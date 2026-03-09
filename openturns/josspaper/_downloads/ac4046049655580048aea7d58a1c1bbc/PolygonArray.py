@@ -1,0 +1,15 @@
+import openturns as ot
+import openturns.viewer as otv
+
+generator = ot.Normal(2)
+size = 5
+array = []
+palette = ot.Drawable.BuildDefaultPalette(size)
+for i in range(size):
+    vertices = generator.getSample(3)
+    array.append(ot.Polygon(vertices, palette[i], palette[size - i - 1]))
+
+graph = ot.Graph("PolygonArray example", "x1", "x2", True)
+graph.add(ot.PolygonArray(array))
+
+otv.View(graph, figure_kw={"figsize": (4, 4)})

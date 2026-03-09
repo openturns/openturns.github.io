@@ -1,0 +1,33 @@
+#!/usr/bin/env python
+
+import openturns as ot
+from openturns.usecases import ishigami_function
+import openturns.viewer as otv
+
+# data
+im = ishigami_function.IshigamiModel()
+N = 1000
+g = im.model
+x = im.distribution.getSample(N)
+P = x.getDimension()
+marginals = [im.distribution.getMarginal(i) for i in range(P)]
+y = g(x)
+
+# polynomial chaos
+q, totalDegree = 0.4, 5
+enumerateFunction = ot.HyperbolicAnisotropicEnumerateFunction(P, q)
+productBasis = ot.OrthogonalProductPolynomialFactory(marginals, enumerateFunction)
+approximationAlgorithm = ot.LeastSquaresMetaModelSelectionFactory(
+    ot.LARS(), ot.CorrectedLeaveOneOut()
+)
+adaptiveStrategy = ot.FixedStrategy(
+    productBasis, enumerateFunction.getStrataCumulatedCardinal(totalDegree)
+)
+projectionStrategy = ot.LeastSquaresStrategy(approximationAlgorithm)
+algo = ot.FunctionalChaosAlgorithm(
+    x, y, im.distribution, adaptiveStrategy, projectionStrategy
+)
+algo.run()
+result = algo.getResult()
+graph = result.drawSelectionHistory()
+otv.View(graph)
