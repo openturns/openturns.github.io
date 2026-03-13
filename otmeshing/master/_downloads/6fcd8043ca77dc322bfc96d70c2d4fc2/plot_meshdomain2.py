@@ -74,9 +74,8 @@ def levelSetIntersectionMeshing(mesh1, mesh2, n=20):
 
     f = ot.PythonFunction(dim, 1, _exec)
     levelSet = ot.LevelSet(f, ot.LessOrEqual(), 0.0)
-    # ot.ResourceMap.SetAsBool("LevelSetMesher-SolveEquation", False)
     mesher = ot.LevelSetMesher([n] * dim)
-    mesh = mesher.build(levelSet, bbox)
+    mesh = mesher.build(levelSet, bbox, False)
     return mesh
 
 
