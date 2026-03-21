@@ -11,6 +11,7 @@ API Reference
     ConvexHullMesher
     ConvexDecompositionMesher
     Cylinder
+    FunctionGraphMesher
     IntersectionMesher
     MeshDomain2
     PolygonMesher
