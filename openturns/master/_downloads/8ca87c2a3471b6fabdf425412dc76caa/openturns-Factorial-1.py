@@ -10,7 +10,7 @@ experiment = ot.Factorial(center, levels)
 sample = experiment.generate()
 
 # Create the graph
-graph = ot.Graph(sample.getName(), "x1", "x2", True, "")
+graph = ot.Graph(sample.getName(), "x1", "x2")
 cloud = ot.Cloud(sample, "blue", "fsquare", "")
 graph.add(cloud)
 

@@ -7,7 +7,7 @@ sequence = ot.FaureSequence(2)
 sample = sequence.generate(1000)
 
 # Create the graph
-graph = ot.Graph("Sequence of 1000 points", "x1", "x2", True, "")
+graph = ot.Graph("Sequence of 1000 points", "x1", "x2")
 cloud = ot.Cloud(sample)
 graph.add(cloud)
 

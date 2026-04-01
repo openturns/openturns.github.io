@@ -9,7 +9,7 @@ experiment = ot.LowDiscrepancyExperiment(ot.SobolSequence(), fm.distribution, sa
 inputSample = experiment.generate()
 outputSample = fm.model(inputSample)
 
-graph = ot.Graph("Scenario: dyke is low", "S", "C", True)
+graph = ot.Graph("Scenario: dyke is low", "S", "C")
 cloud = ot.Cloud(outputSample[:, 1], outputSample[:, 2])
 graph.add(cloud)
 otv.View(graph)
