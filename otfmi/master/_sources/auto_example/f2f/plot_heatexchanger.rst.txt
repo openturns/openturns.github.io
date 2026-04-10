@@ -118,18 +118,20 @@ For this example, We keep the time defined in the FMU.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-62
+.. GENERATED FROM PYTHON SOURCE LINES 58-63
 
 Define the time grid
 ~~~~~~~~~~~~~~~~~~~~
-The first work consists in defining the time grid on which the model will be evaluated.
-You can recover the time grid defined in the model.
+The first work consists in defining the time grids on which the model
+will be evaluated (for both input and output fields).
+You can recover the default time grids defined in the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-64
+.. GENERATED FROM PYTHON SOURCE LINES 63-66
 
 .. code-block:: Python
 
     input_mesh = HX_model.getInputMesh()
+    output_mesh = HX_model.getOutputMesh()
 
 
 
@@ -138,12 +140,12 @@ You can recover the time grid defined in the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-67
+.. GENERATED FROM PYTHON SOURCE LINES 67-69
 
 If you want to override this with your own timegrid,
 you can use :py:class:`openturns.RegularGrid`
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-82
+.. GENERATED FROM PYTHON SOURCE LINES 71-84
 
 Define the inputs
 ~~~~~~~~~~~~~~~~~
@@ -159,7 +161,7 @@ You can change the frequency (Hz). The phase is randomly set.
   model. If you try to change parameters, it won't work.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-109
+.. GENERATED FROM PYTHON SOURCE LINES 84-113
 
 .. code-block:: Python
 
@@ -176,7 +178,7 @@ You can change the frequency (Hz). The phase is randomly set.
 
     graph_in = ot.Graph("Inlet Temperatures evolution",
                         "FMU simulation time (s)",
-                        "Temperature (°C)", True, "")
+                        "Temperature (°C)", True)
 
     curve_TairIn = ot.Curve(input_mesh.getVertices(), input_timeseries[:, 0])
     curve_TairIn.setColor("green")
@@ -187,8 +189,10 @@ You can change the frequency (Hz). The phase is randomly set.
     graph_in.add(curve_TcoolIn)
 
     graph_in.setIntegerXTick(True)
+    graph_in.setLegends(inputs_vars)
+    graph_in.setLegendPosition("center right")
+
     view = otv.View(graph_in)
-    view.show()
 
 
 
@@ -202,11 +206,11 @@ You can change the frequency (Hz). The phase is randomly set.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+.. GENERATED FROM PYTHON SOURCE LINES 114-115
 
 Run the simulation
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-114
+.. GENERATED FROM PYTHON SOURCE LINES 115-118
 
 .. code-block:: Python
 
@@ -231,31 +235,37 @@ Run the simulation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-116
+.. GENERATED FROM PYTHON SOURCE LINES 119-120
 
 See results
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-128
+.. GENERATED FROM PYTHON SOURCE LINES 120-138
 
 .. code-block:: Python
 
-    graph = ot.Graph("Outlet Air Temperature evolution",
-                     "FMU simulation time (s)",
-                     "Temperature (°C)", True, "")
+    graph_out = ot.Graph("Outlet Temperature evolution",
+                         "FMU simulation time (s)",
+                         "Temperature (°C)", True)
 
-    curve = ot.Curve(input_mesh.getVertices(),
-                     outlet_temperatures.getMarginal(0))
-    curve.setColor("red")
-    graph.add(curve)
-    graph.setIntegerXTick(True)
-    view = otv.View(graph)
-    view.show()
+    curveTairOut = ot.Curve(output_mesh.getVertices(), outlet_temperatures[:, 0])
+    curveTairOut.setColor("red")
+    graph_out.add(curveTairOut)
+
+    curveTcoolOut = ot.Curve(output_mesh.getVertices(), outlet_temperatures[:, 1])
+    curveTcoolOut.setColor("orange")
+    graph_out.add(curveTcoolOut)
+
+    graph_out.setIntegerXTick(True)
+    graph_out.setLegends(outputs_vars)
+    graph_out.setLegendPosition("center right")
+
+    view = otv.View(graph_out)
 
 
 
 
 .. image-sg:: /auto_example/f2f/images/sphx_glr_plot_heatexchanger_002.png
-   :alt: Outlet Air Temperature evolution
+   :alt: Outlet Temperature evolution
    :srcset: /auto_example/f2f/images/sphx_glr_plot_heatexchanger_002.png
    :class: sphx-glr-single-img
 
@@ -263,7 +273,7 @@ See results
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-135
+.. GENERATED FROM PYTHON SOURCE LINES 139-145
 
 Alternative : Define the `FMUFieldToPointFunction`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -272,7 +282,7 @@ If you are interested in only a scalar output, OTFMI offers a
 variant :class:`~otfmi.FMUFieldToPointFunction`, to get only and directly
 the output at the last timestep.
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-140
+.. GENERATED FROM PYTHON SOURCE LINES 145-150
 
 .. code-block:: Python
 
@@ -288,16 +298,17 @@ the output at the last timestep.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-142
+.. GENERATED FROM PYTHON SOURCE LINES 151-152
 
 Run the simulation
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-144
+.. GENERATED FROM PYTHON SOURCE LINES 152-155
 
 .. code-block:: Python
 
     outlet_temperatures = HX_model(input_timeseries)
     print(outlet_temperatures)
+
 
 
 
@@ -311,10 +322,22 @@ Run the simulation
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 156-157
+
+.. code-block:: Python
+
+    otv.View.ShowAll()
+
+
+
+
+
+
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.245 seconds)
+   **Total running time of the script:** (0 minutes 0.271 seconds)
 
 
 .. _sphx_glr_download_auto_example_f2f_plot_heatexchanger.py:
