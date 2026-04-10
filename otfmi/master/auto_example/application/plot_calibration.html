@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Calibration example" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="auto_example/application/plot_calibration.html" />
+<meta property="og:site_name" content="otfmi" />
+<meta property="og:description" content="The objective of this example is to define a physical model using the otfmi library and to calibrate its parameters to fit the observed data. This uses the openturns.NonLinearLeastSquaresCalibratio..." />
+<meta property="og:image:width" content="1146" />
+<meta property="og:image:height" content="600" />
+<meta property="og:image" content="_images/social_previews/summary_auto_example_application_plot_calibration_009c6d7e.png" />
+<meta property="og:image:alt" content="The objective of this example is to define a physical model using the otfmi library and to calibrate its parameters to fit the observed data. This uses the openturns.NonLinearLeastSquaresCalibratio..." />
+<meta name="description" content="The objective of this example is to define a physical model using the otfmi library and to calibrate its parameters to fit the observed data. This uses the openturns.NonLinearLeastSquaresCalibratio..." />
+<meta name="twitter:card" content="summary_large_image" />
+<title>Calibration example - otfmi documentation</title><link rel="icon" href="../../_static/Icon.ico"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="Sensitivity analysis with Persalys" href="../../examples/persalys/use_persalys.html"><link rel="prev" title="Metamodel a FMU time-dependent output" href="plot_metamodel.html"><script data-cfasync="false">(function(){
+    const m = localStorage.getItem("breeze-mode") || "auto";
+    const d = document.documentElement.dataset;
+    d.mode = m;
+    d.theme = m === "auto"
+      ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      : m;
+  })();
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" /><link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" /><link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" /><link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" /><link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" /><link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" /><link rel="stylesheet" type="text/css" href="../../_static/sphxglr.css?v=f3f73712" /><link rel="stylesheet" type="text/css" href="../../_static/custom_download_button.css?v=3024f39f" /><link rel="stylesheet" type="text/css" href="../../_static/custom_breeze.css?v=fd39c1a6" /><link rel="stylesheet" type="text/css" href="../../_static/styles/breeze.css?v=7c62c100" /><script defer="defer" src="../../_static/scripts/breeze.js?v=dac9f8c6"></script></head>
+<body>
+  
+  
+  <div class="bz-skip-to-content"><a href="#bz-main-content">Skip to main content</a></div><header class="bz-header-main">
+  <div class="bz-header-start"><a class="bz-header-brand" href="../../index.html">
+  
+  
+  <span>otfmi  documentation</span>
+</a>
+  </div>
+  <div class="bz-header-end"><div id="docsearch" class="bz-search-button">
+  <a
+    href="../../search.html#q"
+    aria-label="Search the docs"
+    data-tooltip="Search the docs"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 -1 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+      />
+    </svg>
+    <span>Search</span>
+    <kbd>Ctrl+K</kbd>
+  </a>
+</div><div class="bz-theme-switcher">
+  <button aria-label="Switch theme" data-tooltip="Switch theme">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="only-light" fill="currentColor">
+      <path d="M8 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-1.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm5.657-8.157a.75.75 0 0 1 0 1.061l-1.061 1.06a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0ZM3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8Zm13 0a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8Zm-8 5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13Zm3.536-1.464a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061ZM2.343 2.343a.75.75 0 0 1 1.061 0l1.06 1.061a.751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018l-1.06-1.06a.75.75 0 0 1 0-1.06Z"></path>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="only-dark" fill="currentColor">
+      <path d="M9.598 1.591a.749.749 0 0 1 .785-.175 7.001 7.001 0 1 1-8.967 8.967.75.75 0 0 1 .961-.96 5.5 5.5 0 0 0 7.046-7.046.75.75 0 0 1 .175-.786Zm1.616 1.945a7 7 0 0 1-7.678 7.678 5.499 5.499 0 1 0 7.678-7.678Z"></path>
+    </svg>
+  </button>
+</div>
+  </div>
+</header><nav class="bz-header-tabs" aria-label="Primary Navigation"><label
+  class="bz-sidebar-primary-toggle"
+  for="bz-sidebar-primary"
+  role="button"
+  tabindex="0"
+  aria-label="Toggle site navigation"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h12.5"
+    />
+  </svg>
+</label><ul><li class="toctree-l1"><a class="reference internal" href="../../why_otfmi.html">Why OTFMI ?</a></li><li class="toctree-l1"><a class="reference internal" href="../../terminology.html">Terminology</a></li><li class="toctree-l1 current"><a class="reference internal" href="../../examples/index.html">Example Galleries</a></li><li class="toctree-l1"><a class="reference internal" href="../../api.html">API documentation</a></li></ul><div class="bz-dropdown">
+    <button aria-haspopup="true" aria-expanded="false">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <g
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="1" />
+          <circle cx="19" cy="12" r="1" />
+          <circle cx="5" cy="12" r="1" />
+        </g>
+      </svg>
+    </button>
+    <ul role="menu" aria-hidden="true"></ul>
+  </div>
+</nav><hr class="bz-header-hr">
+  <div class="bz-content"><aside class="bz-sidebar-primary" data-drawer="bz-sidebar-primary">
+  
+  
+    <nav class="bz-sidebar-nav" aria-label="Section Navigation"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../p2f/index.html">Run simulations with time-independent inputs</a>
+<details><summary aria-label="Toggle submenu"></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../p2f/beam/index.html">The cantilever beam</a>
+<details><summary aria-label="Toggle submenu"></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../p2f/beam/plot_lowlevel.html">Load an FMU</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../p2f/beam/plot_simulation.html">Run simulations with FMUPointToFieldFunction</a></li>
+</ul></details></li>
+<li class="toctree-l2"><a class="reference internal" href="../p2f/epid/index.html">The epidemiological model</a>
+<details><summary aria-label="Toggle submenu"></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../p2f/epid/plot_dyn_set.html">Set FMU simulation parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../p2f/epid/plot_dyn_basics.html">FMUPointToFieldFunction basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../p2f/epid/plot_dyn_init.html">Initialize FMUPointToFieldFunction</a></li>
+</ul></details></li>
+</ul></details></li>
+<li class="toctree-l1"><a class="reference internal" href="../f2f/index.html">Run simulations with time-independent inputs</a>
+<details><summary aria-label="Toggle submenu"></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../f2f/plot_heatexchanger.html">Run simulations with FMUFieldFunction</a></li>
+</ul></details></li>
+<li class="toctree-l1"><a class="reference internal" href="../export/index.html">From OpenTURNS to FMI</a>
+<details><summary aria-label="Toggle submenu"></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../export/plot_fmu_exporter.html">Export a function as FMU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../export/plot_model_exporter.html">Export a function as Modelica model</a></li>
+</ul></details></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Applications</a>
+<details open=""><summary aria-label="Toggle submenu"></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_reliability.html">Estimate the probability of a threshold exceedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_metamodel.html">Metamodel a FMU time-dependent output</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Calibration example</a></li>
+</ul></details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/persalys/use_persalys.html">Sensitivity analysis with Persalys</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/model_description.html">Models description</a></li>
+</ul>
+</nav>
+  
+
+</aside><main id="bz-main-content"><header class="bz-article-header">
+  
+  
+    <nav class="bz-breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li class="bz-breadcrumbs-home">
+      <a href="../../index.html" aria-label="Home">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8.543 2.232a.75.75 0 0 0-1.085 0l-5.25 5.5A.75.75 0 0 0 2.75 9H4v4a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1a1 1 0 1 1 2 0v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V9h1.25a.75.75 0 0 0 .543-1.268l-5.25-5.5Z" />
+        </svg>
+      </a>
+    </li><li class="bz-breadcrumbs-parent">
+      <a href="../../examples/index.html">Example Galleries</a>
+    </li><li class="bz-breadcrumbs-parent">
+      <a href="index.html">Applications</a>
+    </li><li class="bz-breadcrumbs-current">
+      <span>Calibration example</span>
+    </li>
+  </ol>
+</nav>
+  
+<label
+  class="bz-sidebar-secondary-toggle"
+  for="bz-sidebar-secondary"
+  role="button"
+  tabindex="0"
+  aria-label="Toggle table of contents"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M3.75 6.75H20.25 M11.25 12H20.25 M7.75 17.25H20.25"
+    />
+  </svg>
+</label></header><article class="bz-article-main" role="main"><div class="bz-page-actions" role="group" aria-label="Page actions">
+  <button data-copy-source="../../_sources/auto_example/application/plot_calibration.rst.txt">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M7.024 3.75c0-.966.784-1.75 1.75-1.75H20.25c.966 0 1.75.784 1.75 1.75v11.498a1.75 1.75 0 0 1-1.75 1.75H8.774a1.75 1.75 0 0 1-1.75-1.75Zm1.75-.25a.25.25 0 0 0-.25.25v11.498c0 .139.112.25.25.25H20.25a.25.25 0 0 0 .25-.25V3.75a.25.25 0 0 0-.25-.25Z"></path><path d="M1.995 10.749a1.75 1.75 0 0 1 1.75-1.751H5.25a.75.75 0 1 1 0 1.5H3.745a.25.25 0 0 0-.25.25L3.5 20.25c0 .138.111.25.25.25h9.5a.25.25 0 0 0 .25-.25v-1.51a.75.75 0 1 1 1.5 0v1.51A1.75 1.75 0 0 1 13.25 22h-9.5A1.75 1.75 0 0 1 2 20.25l-.005-9.501Z"></path></svg>
+    <span>Copy page</span>
+  </button>
+  <div class="bz-dropdown">
+    <button
+      aria-label="More actions"
+      aria-haspopup="true"
+      aria-expanded="false"
+    ></button>
+    <ul role="menu" aria-hidden="true">
+      <li>
+        <a href="#" role="menuitem" data-copy-source="../../_sources/auto_example/application/plot_calibration.rst.txt">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M7.024 3.75c0-.966.784-1.75 1.75-1.75H20.25c.966 0 1.75.784 1.75 1.75v11.498a1.75 1.75 0 0 1-1.75 1.75H8.774a1.75 1.75 0 0 1-1.75-1.75Zm1.75-.25a.25.25 0 0 0-.25.25v11.498c0 .139.112.25.25.25H20.25a.25.25 0 0 0 .25-.25V3.75a.25.25 0 0 0-.25-.25Z"></path><path d="M1.995 10.749a1.75 1.75 0 0 1 1.75-1.751H5.25a.75.75 0 1 1 0 1.5H3.745a.25.25 0 0 0-.25.25L3.5 20.25c0 .138.111.25.25.25h9.5a.25.25 0 0 0 .25-.25v-1.51a.75.75 0 1 1 1.5 0v1.51A1.75 1.75 0 0 1 13.25 22h-9.5A1.75 1.75 0 0 1 2 20.25l-.005-9.501Z"></path></svg>
+          <span>Copy page</span>
+        </a>
+      </li>
+      <li>
+        <a href="../../_sources/auto_example/application/plot_calibration.rst.txt" role="menuitem" class="bz-page-actions-external" target="_blank" rel="noopener">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3a2 2 0 0 1 2-2h9.982a2 2 0 0 1 1.414.586l4.018 4.018A2 2 0 0 1 21 7.018V21a2 2 0 0 1-2 2H4.75a.75.75 0 0 1 0-1.5H19a.5.5 0 0 0 .5-.5V8.5h-4a2 2 0 0 1-2-2v-4H5a.5.5 0 0 0-.5.5v6.25a.75.75 0 0 1-1.5 0Zm12-.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 0-.146-.336l-4.018-4.018A.5.5 0 0 0 15 2.5Z"></path><path d="M4.53 12.24a.75.75 0 0 1-.039 1.06l-2.639 2.45 2.64 2.45a.75.75 0 1 1-1.022 1.1l-3.23-3a.75.75 0 0 1 0-1.1l3.23-3a.75.75 0 0 1 1.06.04Zm3.979 1.06a.75.75 0 1 1 1.02-1.1l3.231 3a.75.75 0 0 1 0 1.1l-3.23 3a.75.75 0 1 1-1.021-1.1l2.639-2.45-2.64-2.45Z"></path></svg>
+          <span>View source</span>
+        </a>
+      </li></ul>
+  </div>
+</div><div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-example-application-plot-calibration-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="calibration-example">
+<span id="sphx-glr-auto-example-application-plot-calibration-py"></span><h1>Calibration example<a class="headerlink" href="#calibration-example" title="Link to this heading">#</a></h1>
+<p>The objective of this example is to define a physical model using the otfmi library
+and to calibrate its parameters to fit the observed data.
+This uses the <a class="reference external" href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration" title="(in OpenTURNS v1.26)"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.NonLinearLeastSquaresCalibration</span></code></a> class.
+The data is sourced from <a class="reference internal" href="../../examples/model_description.html#anonymous1978" id="id1"><span>[anonymous1978]</span></a>, who describes an influenza epidemic within a school setting.</p>
+<p>Meaning of variables:</p>
+<ul class="simple">
+<li><p>infection_rate (or “beta”): average number of contacts per person per time, multiplied by the
+probability of disease transmission in a contact between a susceptible and an infectious subject</p></li>
+<li><p>healing_rate (unit : 1/day) (or “gamma”): rate at which infected individuals transition from the Infected (I)
+category to the Recovered (R) category.</p></li>
+</ul>
+<p>Other variables:</p>
+<ul class="simple">
+<li><p>D : average duration of infection (unit : days)
+D = 1 / gamma</p></li>
+<li><p>R0 : number of contacts by an infectious individual with others before the
+infectious has been removed
+R0 = beta / gamma</p></li>
+</ul>
+<section id="setup-finite-difference-step">
+<h2>Setup finite difference step<a class="headerlink" href="#setup-finite-difference-step" title="Link to this heading">#</a></h2>
+<p>There is no scaling issue with the healing rate, which value is close to 0.5.
+The problem is that the infection rate has an order of magnitude close to 10^{-3}.
+This can cause problems in the optimization step, if the
+optimization algorithm uses the gradient (which is far more efficient).
+Indeed, the finite different method may use a wrong differentiation
+step which can produce inaccurate gradients.</p>
+<p>In the current code, we use the near to optimal values of the step.
+These values were computed using numericalderivative, a Python
+package which computes the near to optimal differentiation
+step of a computer code (see <a class="reference external" href="https://github.com/mbaudin47/numericalderivative">https://github.com/mbaudin47/numericalderivative</a>).
+Another method would be to scale up the infection rate so that
+its order of magnitude is close to 1.</p>
+</section>
+<section id="cache-memory">
+<h2>Cache memory<a class="headerlink" href="#cache-memory" title="Link to this heading">#</a></h2>
+<p>The problem is that the PointToFieldFunction has no MemoizeFunction:
+<a class="reference external" href="https://github.com/openturns/openturns/issues/2802">https://github.com/openturns/openturns/issues/2802</a>
+The current code implements its own cache.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Girard2024: OtFMI: interfacing OpenTURNS with the leading standard for model exchange
+14th June 2024, Sylvain Girard (<a class="reference external" href="mailto:girard&#37;&#52;&#48;phimeca&#46;com">girard<span>&#64;</span>phimeca<span>&#46;</span>com</a>), Pascal Borel (<a class="reference external" href="mailto:pascal&#46;borel&#37;&#52;&#48;edf&#46;fr">pascal<span>&#46;</span>borel<span>&#64;</span>edf<span>&#46;</span>fr</a>)</p></li>
+<li><p>Girard2019: S. Girard, “A probabilistic take on system modeling with Modelica and Python”,
+Février 2019, <a class="reference external" href="https://sylvaingirard.net/pdf/girard17-probabilistic_modelica_python.pdf">https://sylvaingirard.net/pdf/girard17-probabilistic_modelica_python.pdf</a></p></li>
+<li><p><a class="reference internal" href="../../examples/model_description.html#anonymous1978" id="id2"><span>[anonymous1978]</span></a></p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">otfmi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">otfmi.example.utility</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyfmi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ResourceMap.html#openturns.ResourceMap.SetAsString" title="openturns.ResourceMap.SetAsString" class="sphx-glr-backref-module-openturns-ResourceMap sphx-glr-backref-type-py-method"><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsString</span></a><span class="p">(</span><span class="s2">&quot;Contour-DefaultColorMap&quot;</span><span class="p">,</span> <span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Define bounds for parameters</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">infection_rate_min</span> <span class="o">=</span> <span class="mf">1.0e-3</span>  <span class="c1"># beta</span>
+<span class="n">infection_rate_max</span> <span class="o">=</span> <span class="mf">10.0e-3</span>
+<span class="n">healing_rate_min</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># gamma</span>
+<span class="n">healing_rate_max</span> <span class="o">=</span> <span class="mf">0.9</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">infection_rate</span> <span class="o">=</span> <span class="mf">7.0e-3</span>  <span class="c1"># beta (/ day)</span>
+<span class="n">healing_rate</span> <span class="o">=</span> <span class="mf">0.3</span>  <span class="c1"># gamma (/ day)</span>
+<span class="n">total_population</span> <span class="o">=</span> <span class="mf">763.0</span>
+<span class="n">reference_parameters</span> <span class="o">=</span> <span class="p">[</span><span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;References parameters = &quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;infection_rate = </span><span class="si">{</span><span class="n">infection_rate</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;healing_rate = </span><span class="si">{</span><span class="n">healing_rate</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>References parameters =
+infection_rate = 0.007
+healing_rate = 0.3
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">average_infection_duration</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">healing_rate</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;average_infection_duration = </span><span class="si">{</span><span class="n">average_infection_duration</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (days)&quot;</span><span class="p">)</span>
+<span class="n">R0</span> <span class="o">=</span> <span class="n">infection_rate</span> <span class="o">/</span> <span class="n">healing_rate</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R0 = </span><span class="si">{</span><span class="n">R0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>average_infection_duration = 3.3333 (days)
+R0 = 0.0233
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">final_time</span> <span class="o">=</span> <span class="mf">13.0</span>
+<span class="n">number_of_time_steps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">final_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">number_of_time_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RegularGrid.html#openturns.RegularGrid" title="openturns.RegularGrid" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">time_mesh</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RegularGrid.html#openturns.RegularGrid" title="openturns.RegularGrid" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span></a><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">number_of_time_steps</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vertices</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RegularGrid.html#openturns.RegularGrid.getVertices" title="openturns.RegularGrid.getVertices" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">time_mesh</span><span class="o">.</span><span class="n">getVertices</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<p>Select the FMU</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">path_fmu</span> <span class="o">=</span> <span class="n">otfmi</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">get_path_fmu</span><span class="p">(</span><span class="s2">&quot;epid&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;path_fmu = </span><span class="si">{</span><span class="n">path_fmu</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>path_fmu = /tmp/otfmi/example/file/fmu/linux-x86_64/epid.fmu
+</pre></div>
+</div>
+<p>Inspect variables</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">check_model</span> <span class="o">=</span> <span class="n">pyfmi</span><span class="o">.</span><span class="n">load_fmu</span><span class="p">(</span><span class="n">path_fmu</span><span class="p">)</span>
+<span class="n">list_of_variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">check_model</span><span class="o">.</span><span class="n">get_model_variables</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_variables</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variable #</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_variables</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">list_of_variables</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Variable #0 / 9 = infected
+Variable #1 / 9 = removed
+Variable #2 / 9 = susceptible
+Variable #3 / 9 = der(infected)
+Variable #4 / 9 = der(removed)
+Variable #5 / 9 = der(susceptible)
+Variable #6 / 9 = healing_rate
+Variable #7 / 9 = infection_rate
+Variable #8 / 9 = total_pop
+</pre></div>
+</div>
+<p>Create function</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.PointToFieldFunction.html#openturns.PointToFieldFunction" title="openturns.PointToFieldFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p2f</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.PointToFieldFunction.html#openturns.PointToFieldFunction" title="openturns.PointToFieldFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">otfmi</span><span class="o">.</span><span class="n">FMUPointToFieldFunction</span></a><span class="p">(</span>
+    <span class="n">path_fmu</span><span class="p">,</span>
+    <span class="n">mesh</span><span class="o">=</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RegularGrid.html#openturns.RegularGrid" title="openturns.RegularGrid" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">time_mesh</span></a><span class="p">,</span>
+    <span class="n">inputs_fmu</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;infection_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;healing_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;total_pop&quot;</span><span class="p">],</span>
+    <span class="n">outputs_fmu</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;infected&quot;</span><span class="p">],</span>
+    <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span>
+    <span class="n">final_time</span><span class="o">=</span><span class="n">final_time</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Evaluate model</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.PointToFieldFunction.html#openturns.PointToFieldFunction" title="openturns.PointToFieldFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p2f</span></a><span class="p">([</span><span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span><span class="p">,</span> <span class="n">total_population</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Graph</span></a><span class="p">(</span><span class="s2">&quot;SIR model&quot;</span><span class="p">,</span> <span class="s2">&quot;Time (days)&quot;</span><span class="p">,</span> <span class="s2">&quot;Infected&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Curve.html#openturns.Curve" title="openturns.Curve" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">curve</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Curve.html#openturns.Curve" title="openturns.Curve" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Curve</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vertices</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.add" title="openturns.GridLayout.add" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Curve.html#openturns.Curve" title="openturns.Curve" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">curve</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_001.png" srcset="../../_images/sphx_glr_plot_calibration_001.png" alt="SIR model" class = "sphx-glr-single-img"/><p>Get the number of infected</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">infected</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">]</span>
+<span class="n">infected</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[1.0, 0.9621144526886833, 0.9256640819317842, 0.8905945256819641, 0.8568534808389988]
+</pre></div>
+</div>
+<p>Data (time, confined, convalescent)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span></a><span class="p">([</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">223</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">294</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">259</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">237</span><span class="p">,</span> <span class="mi">161</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">174</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">163</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">89</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">44</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>Select the number of observations to consider
+full dataset : number_of_observations = 14</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_observations</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="c1"># number_of_observations = 5</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;number_of_observations = </span><span class="si">{</span><span class="n">number_of_observations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">[:</span><span class="n">number_of_observations</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>number_of_observations = 14
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeObservations</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeObservations</span></a>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<table>
+  <tr><td></td><th>v0</th></tr>
+  <tr><th>0</th><td>0</td></tr>
+  <tr><th>1</th><td>1</td></tr>
+  <tr><th>2</th><td>2</td></tr>
+  <tr><th>3</th><td>3</td></tr>
+  <tr><th>4</th><td>4</td></tr>
+  <tr><th>5</th><td>5</td></tr>
+  <tr><th>6</th><td>6</td></tr>
+  <tr><th>7</th><td>7</td></tr>
+  <tr><th>8</th><td>8</td></tr>
+  <tr><th>9</th><td>9</td></tr>
+  <tr><th>10</th><td>10</td></tr>
+  <tr><th>11</th><td>11</td></tr>
+  <tr><th>12</th><td>12</td></tr>
+  <tr><th>13</th><td>13</td></tr>
+</table>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationObservations</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationObservations</span></a>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<table>
+  <tr><td></td><th>v1</th></tr>
+  <tr><th>0</th><td>1</td></tr>
+  <tr><th>1</th><td>7</td></tr>
+  <tr><th>2</th><td>27</td></tr>
+  <tr><th>3</th><td>74</td></tr>
+  <tr><th>4</th><td>223</td></tr>
+  <tr><th>5</th><td>294</td></tr>
+  <tr><th>6</th><td>259</td></tr>
+  <tr><th>7</th><td>237</td></tr>
+  <tr><th>8</th><td>192</td></tr>
+  <tr><th>9</th><td>125</td></tr>
+  <tr><th>10</th><td>69</td></tr>
+  <tr><th>11</th><td>27</td></tr>
+  <tr><th>12</th><td>11</td></tr>
+  <tr><th>13</th><td>4</td></tr>
+</table>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Graph</span></a><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Observations, n = </span><span class="si">{</span><span class="n">number_of_observations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Time (days)&quot;</span><span class="p">,</span> <span class="s2">&quot;Infected&quot;</span><span class="p">,</span> <span class="kc">True</span>
+<span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cloud</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeObservations</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationObservations</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud.setPointStyle" title="openturns.Cloud.setPointStyle" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span></a><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.add" title="openturns.GridLayout.add" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cloud</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_002.png" srcset="../../_images/sphx_glr_plot_calibration_002.png" alt="Observations, n = 14" class = "sphx-glr-single-img"/><p>Create an epidemiological model, evaluated at one single time.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SIRModelPointwise</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.OpenTURNSPythonFunction.html#openturns.OpenTURNSPythonFunction" title="openturns.OpenTURNSPythonFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">OpenTURNSPythonFunction</span></a><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">path_fmu</span><span class="p">,</span>
+        <span class="n">total_pop</span><span class="o">=</span><span class="mf">763.0</span><span class="p">,</span>
+        <span class="n">parameter_threshold</span><span class="o">=</span><span class="mf">1.0e-14</span><span class="p">,</span>
+        <span class="n">start_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">step</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">number_of_time_steps</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create an epidemiological model</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_fmu : str</span>
+<span class="sd">            The path to the FMU file.</span>
+<span class="sd">        total_pop : float, &gt; 0</span>
+<span class="sd">            The total population.</span>
+<span class="sd">        parameter_threshold : float, &gt; 0, close to zero</span>
+<span class="sd">            If two vectors of parameters have an Euclidian distance lower</span>
+<span class="sd">            than parameter_threshold, then these two parameters are considered equal.</span>
+<span class="sd">            If a parameter vector is to be evaluated and is different from the</span>
+<span class="sd">            previous one, then it is actually evaluated using the FMU model.</span>
+<span class="sd">            In this case, the value of current_infected is updated.</span>
+<span class="sd">            Otherwise, the value of current_infected is returned.</span>
+<span class="sd">        start_time : float</span>
+<span class="sd">            The initial time of the time interval.</span>
+<span class="sd">        step : float, &gt; 0</span>
+<span class="sd">            The time step.</span>
+<span class="sd">        number_of_time_steps : int</span>
+<span class="sd">            The number of time values to be considered.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_fmu</span> <span class="o">=</span> <span class="n">path_fmu</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setInputDescription</span><span class="p">([</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;Infection_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;Healing_rate&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setOutputDescription</span><span class="p">([</span><span class="s2">&quot;Infected&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_infected</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_threshold</span> <span class="o">=</span> <span class="n">parameter_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_pop</span> <span class="o">=</span> <span class="n">total_pop</span>
+        <span class="c1"># Create mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_time_steps</span> <span class="o">=</span> <span class="n">number_of_time_steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="p">(</span><span class="n">number_of_time_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;start_time = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;step = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;number_of_time_steps = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_time_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;final_time = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">final_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RegularGrid.html#openturns.RegularGrid" title="openturns.RegularGrid" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">time_mesh</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RegularGrid.html#openturns.RegularGrid" title="openturns.RegularGrid" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span></a><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">number_of_time_steps</span><span class="p">)</span>
+        <span class="c1"># Create model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FMUmodel</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.PointToFieldFunction.html#openturns.PointToFieldFunction" title="openturns.PointToFieldFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">otfmi</span><span class="o">.</span><span class="n">FMUPointToFieldFunction</span></a><span class="p">(</span>
+            <span class="n">path_fmu</span><span class="p">,</span>
+            <span class="n">mesh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.RegularGrid.html#openturns.RegularGrid" title="openturns.RegularGrid" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">time_mesh</span></a><span class="p">,</span>
+            <span class="n">inputs_fmu</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;infection_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;healing_rate&quot;</span><span class="p">,</span> <span class="s2">&quot;total_pop&quot;</span><span class="p">],</span>
+            <span class="n">outputs_fmu</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;infected&quot;</span><span class="p">],</span>
+            <span class="n">start_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
+            <span class="n">final_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">final_time</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the FMU model</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : ot.Point(3)</span>
+<span class="sd">            The variables (t, infection_rate, healing_rate)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Y : ot.Point(1)</span>
+<span class="sd">            The number of infected at time t.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t</span><span class="p">,</span> <span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="c1"># See if parameters are different from the previous ones</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">is_parameter_different</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_parameters</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Point</span></a><span class="p">([</span><span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span><span class="p">])</span>
+            <span class="n">change_parameter</span> <span class="o">=</span> <span class="n">current_parameters</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span>
+            <span class="n">is_parameter_different</span> <span class="o">=</span> <span class="n">change_parameter</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_threshold</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Is parameter different? </span><span class="si">{</span><span class="n">is_parameter_different</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Update the number of infected, if necessary</span>
+        <span class="k">if</span> <span class="n">is_parameter_different</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Point</span></a><span class="p">([</span><span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span><span class="p">])</span>
+            <span class="n">current_input</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Point</span></a><span class="p">([</span><span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_pop</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_infected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FMUmodel</span><span class="p">(</span><span class="n">current_input</span><span class="p">)</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;New parameters! Update number of infected.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;current_parameters = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_parameters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;current_infected = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_infected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Get the number of infected corresponding to the given time</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_time</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Time t = </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2"> is not in time range [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">final_time</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Calcul direct de l&#39;indice le plus proche.</span>
+        <span class="c1"># Actuellement, les données sont disponibles au pas de temps</span>
+        <span class="c1"># égal à 1 seconde.</span>
+        <span class="c1"># C&#39;est la raison pour laquelle la discrétisation utilise</span>
+        <span class="c1"># également une seconde.</span>
+        <span class="c1"># Si le pas de temps est différent de 1, alors le calcul de l&#39;indice</span>
+        <span class="c1"># correspondant est un peu plus compliqué.</span>
+        <span class="c1"># Nous utilisons la fonction round pour obtenir l&#39;entier le plus</span>
+        <span class="c1"># proche du ratio.</span>
+        <span class="n">relative_time_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span>
+        <span class="n">time_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">relative_time_step</span><span class="p">))</span>
+
+        <span class="c1"># Sécurité pour ne pas dépasser la taille du vecteur current_infected.</span>
+        <span class="n">time_index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">time_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_time_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">current_infected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_infected</span><span class="p">[</span><span class="n">time_index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time = </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">, index = </span><span class="si">{</span><span class="n">time_index</span><span class="si">}</span><span class="s2">, infected = </span><span class="si">{</span><span class="n">current_infected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">current_infected</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">epidemiologicModel</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.OpenTURNSPythonFunction.html#openturns.OpenTURNSPythonFunction" title="openturns.OpenTURNSPythonFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">SIRModelPointwise</span></a><span class="p">(</span>
+    <span class="n">path_fmu</span><span class="p">,</span> <span class="n">number_of_time_steps</span><span class="o">=</span><span class="n">number_of_observations</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">epidemiologicModel</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>OpenTURNSPythonFunction( [&#39;t&#39;, &#39;Infection_rate&#39;, &#39;Healing_rate&#39;] #3 ) -&gt; [&#39;Infected&#39;] #1
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Function</span></a><span class="p">(</span><span class="n">epidemiologicModel</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Setup finite difference step.
+This is crucial here because infection rate has a scale close to
+10^{-3}.
+An alternative would be to scale up the infection rate so that
+its order of magnitude is close to 1.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ConstantStep.html#openturns.ConstantStep" title="openturns.ConstantStep" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gradStep</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ConstantStep.html#openturns.ConstantStep" title="openturns.ConstantStep" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">ConstantStep</span></a><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.335e-08</span><span class="p">,</span> <span class="mf">5.722e-07</span><span class="p">])</span>  <span class="c1"># Constant gradient step</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function.setGradient" title="openturns.Function.setGradient" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">model</span><span class="o">.</span><span class="n">setGradient</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CenteredFiniteDifferenceGradient.html#openturns.CenteredFiniteDifferenceGradient" title="openturns.CenteredFiniteDifferenceGradient" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">CenteredFiniteDifferenceGradient</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ConstantStep.html#openturns.ConstantStep" title="openturns.ConstantStep" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gradStep</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function.getEvaluation" title="openturns.Function.getEvaluation" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">model</span><span class="o">.</span><span class="n">getEvaluation</span></a><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Physical Model Inputs:&quot;</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function.getInputDescription" title="openturns.Function.getInputDescription" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">model</span><span class="o">.</span><span class="n">getInputDescription</span></a><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Physical Model Parameters:&quot;</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function.getParameterDescription" title="openturns.Function.getParameterDescription" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">model</span><span class="o">.</span><span class="n">getParameterDescription</span></a><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Physical Model Inputs: [t,Infection_rate,Healing_rate]
+Physical Model Parameters: []
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">infection_rate</span> <span class="o">=</span> <span class="mf">0.007</span>
+<span class="n">healing_rate</span> <span class="o">=</span> <span class="mf">0.3</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaPrior</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span><span class="p">]</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ParametricFunction.html#openturns.ParametricFunction" title="openturns.ParametricFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epidParametric</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ParametricFunction.html#openturns.ParametricFunction" title="openturns.ParametricFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model</span></a><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaPrior</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parametric Model Inputs:&quot;</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ParametricFunction.html#openturns.ParametricFunction.getInputDescription" title="openturns.ParametricFunction.getInputDescription" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">epidParametric</span><span class="o">.</span><span class="n">getInputDescription</span></a><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parametric Model Parameters:&quot;</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ParametricFunction.html#openturns.ParametricFunction.getParameterDescription" title="openturns.ParametricFunction.getParameterDescription" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">epidParametric</span><span class="o">.</span><span class="n">getParameterDescription</span></a><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Parametric Model Inputs: [t]
+Parametric Model Parameters: [Infection_rate,Healing_rate]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationPredicted</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ParametricFunction.html#openturns.ParametricFunction" title="openturns.ParametricFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epidParametric</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeObservations</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationPredicted</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>     [ Infected  ]
+ 0 : [ 1         ]
+ 1 : [ 0.745184  ]
+ 2 : [ 0.555293  ]
+ 3 : [ 0.413794  ]
+ 4 : [ 0.30835   ]
+ 5 : [ 0.229776  ]
+ 6 : [ 0.171224  ]
+ 7 : [ 0.127593  ]
+ 8 : [ 0.0950794 ]
+ 9 : [ 0.070851  ]
+10 : [ 0.0527968 ]
+11 : [ 0.0393429 ]
+12 : [ 0.0293176 ]
+13 : [ 0.0218467 ]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Graph</span></a><span class="p">(</span><span class="s2">&quot;Before calibration&quot;</span><span class="p">,</span> <span class="s2">&quot;Time (days)&quot;</span><span class="p">,</span> <span class="s2">&quot;Infected&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="c1"># Observations</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cloud</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeObservations</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationObservations</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud.setLegend" title="openturns.Cloud.setLegend" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span></a><span class="p">(</span><span class="s2">&quot;Observations&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud.setPointStyle" title="openturns.Cloud.setPointStyle" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span></a><span class="p">(</span>
+    <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ResourceMap.html#openturns.ResourceMap.GetAsString" title="openturns.ResourceMap.GetAsString" class="sphx-glr-backref-module-openturns-ResourceMap sphx-glr-backref-type-py-method"><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">GetAsString</span></a><span class="p">(</span><span class="s2">&quot;CalibrationResult-ObservationPointStyle&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.add" title="openturns.GridLayout.add" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cloud</span></a><span class="p">)</span>
+<span class="c1"># Predictions</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cloud</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeObservations</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationPredicted</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud.setLegend" title="openturns.Cloud.setLegend" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">cloud</span><span class="o">.</span><span class="n">setLegend</span></a><span class="p">(</span><span class="s2">&quot;Predictions&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud.setPointStyle" title="openturns.Cloud.setPointStyle" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">cloud</span><span class="o">.</span><span class="n">setPointStyle</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ResourceMap.html#openturns.ResourceMap.GetAsString" title="openturns.ResourceMap.GetAsString" class="sphx-glr-backref-module-openturns-ResourceMap sphx-glr-backref-type-py-method"><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">GetAsString</span></a><span class="p">(</span><span class="s2">&quot;CalibrationResult-PriorPointStyle&quot;</span><span class="p">))</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.add" title="openturns.GridLayout.add" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Cloud.html#openturns.Cloud" title="openturns.Cloud" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cloud</span></a><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setLegendPosition" title="openturns.GridLayout.setLegendPosition" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span></a><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setLegendCorner" title="openturns.GridLayout.setLegendCorner" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setLegendCorner</span></a><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span><span class="o">.</span><span class="n">setIntegerXTick</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">view</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_003.png" srcset="../../_images/sphx_glr_plot_calibration_003.png" alt="Before calibration" class = "sphx-glr-single-img"/><p>Evaluate the model at a single time</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationPredicted</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ParametricFunction.html#openturns.ParametricFunction" title="openturns.ParametricFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epidParametric</span></a><span class="p">([</span><span class="mf">2.0</span><span class="p">])</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationPredicted</span></a>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+class=Point name=Unnamed dimension=1 values=[0.555293]
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plotDistributionGridPDF</span><span class="p">(</span><span class="n">distribution</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot the marginal and bi-dimensional iso-PDF on a grid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    distribution : ot.Distribution</span>
+<span class="sd">        The distribution.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    grid : ot.GridLayout(dimension, dimension)</span>
+<span class="sd">        The grid of plots.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dimension</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+    <span class="n">grid</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">GridLayout</span></a><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">dimension</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">distributionI</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="n">i</span><span class="p">])</span>
+                <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <span class="n">distributionI</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">distributionJI</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">([</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+                <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <span class="n">distributionJI</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+            <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span><span class="o">.</span><span class="n">setLegends</span></a><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+            <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setTitle" title="openturns.GridLayout.setTitle" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span></a><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dimension</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span></a><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span></a><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">grid</span><span class="o">.</span><span class="n">setGraph</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">)</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Iso-PDF values&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">grid</span>
+</pre></div>
+</div>
+<p>Calibration with non linear least squares
+Check that we can evaluate the parametric function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ResourceMap.html#openturns.ResourceMap.SetAsUnsignedInteger" title="openturns.ResourceMap.SetAsUnsignedInteger" class="sphx-glr-backref-module-openturns-ResourceMap sphx-glr-backref-type-py-method"><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span></a><span class="p">(</span><span class="s2">&quot;NonLinearLeastSquaresCalibration-BootstrapSize&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># ot.ResourceMap.SetAsUnsignedInteger(</span>
+<span class="c1">#     &quot;NonLinearLeastSquaresCalibration-MultiStartSize&quot;, 10</span>
+<span class="c1"># )</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration" title="openturns.NonLinearLeastSquaresCalibration" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">calibrationAlgorithm</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration" title="openturns.NonLinearLeastSquaresCalibration" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">NonLinearLeastSquaresCalibration</span></a><span class="p">(</span>
+    <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ParametricFunction.html#openturns.ParametricFunction" title="openturns.ParametricFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epidParametric</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeObservations</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">populationObservations</span></a><span class="p">,</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaPrior</span></a>
+<span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration.setOptimizationAlgorithm" title="openturns.NonLinearLeastSquaresCalibration.setOptimizationAlgorithm" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationAlgorithm</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CMinpack.html#openturns.CMinpack" title="openturns.CMinpack" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">CMinpack</span></a><span class="p">())</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration.run" title="openturns.NonLinearLeastSquaresCalibration.run" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationAlgorithm</span><span class="o">.</span><span class="n">run</span></a><span class="p">()</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult" title="openturns.CalibrationResult" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">calibrationResult</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration.getResult" title="openturns.NonLinearLeastSquaresCalibration.getResult" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationAlgorithm</span><span class="o">.</span><span class="n">getResult</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 14400, in __call__
+    Y = self._exec(pt)
+  File &quot;/tmp/otfmi/otfmi.py&quot;, line 598, in _exec
+    return self.base.simulate(value_input=value_input, **kwargs)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/tmp/otfmi/otfmi.py&quot;, line 294, in simulate
+    simulation = fmi.simulate(
+        self._model,
+    ...&lt;3 lines&gt;...
+        **kwargs_simulate
+    )
+  File &quot;/tmp/otfmi/fmi.py&quot;, line 82, in simulate
+    return model.simulate(**kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 4130, in pyfmi.fmi2.FMUModelCS2.simulate
+  File &quot;src/pyfmi/fmi_base.pyx&quot;, line 214, in pyfmi.fmi_base.ModelBase._exec_simulate_algorithm
+  File &quot;/usr/lib/python3.14/site-packages/pyfmi/fmi_algorithm_drivers.py&quot;, line 1074, in solve
+    self.result_handler.integration_point()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File &quot;/usr/lib/python3.14/site-packages/pyfmi/common/io.py&quot;, line 1931, in integration_point
+    self.real_sol += [model.get_real(self.real_var_ref)]
+                      ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 691, in pyfmi.fmi2.FMUModelBase2.get_real
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 724, in pyfmi.fmi2.FMUModelBase2.get_real
+pyfmi.exceptions.FMUException: Failed to get the Real values.
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 10861, in _exec_sample
+    return [self._exec(point) for point in X]
+            ~~~~~~~~~~^^^^^^^
+  File &quot;/tmp/doc/examples/application/plot_calibration.py&quot;, line 283, in _exec
+    self.current_infected = self.FMUmodel(current_input).asPoint()
+                            ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 14117, in __call__
+    return _func.PointToFieldFunction___call__(self, *args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+RuntimeError: InternalException : Python exception: &lt;class &#39;pyfmi.exceptions.FMUException&#39;&gt;: Failed to get the Real values.
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 14400, in __call__
+    Y = self._exec(pt)
+  File &quot;/tmp/otfmi/otfmi.py&quot;, line 598, in _exec
+    return self.base.simulate(value_input=value_input, **kwargs)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/tmp/otfmi/otfmi.py&quot;, line 294, in simulate
+    simulation = fmi.simulate(
+        self._model,
+    ...&lt;3 lines&gt;...
+        **kwargs_simulate
+    )
+  File &quot;/tmp/otfmi/fmi.py&quot;, line 82, in simulate
+    return model.simulate(**kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 4130, in pyfmi.fmi2.FMUModelCS2.simulate
+  File &quot;src/pyfmi/fmi_base.pyx&quot;, line 214, in pyfmi.fmi_base.ModelBase._exec_simulate_algorithm
+  File &quot;/usr/lib/python3.14/site-packages/pyfmi/fmi_algorithm_drivers.py&quot;, line 1074, in solve
+    self.result_handler.integration_point()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File &quot;/usr/lib/python3.14/site-packages/pyfmi/common/io.py&quot;, line 1931, in integration_point
+    self.real_sol += [model.get_real(self.real_var_ref)]
+                      ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 691, in pyfmi.fmi2.FMUModelBase2.get_real
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 724, in pyfmi.fmi2.FMUModelBase2.get_real
+pyfmi.exceptions.FMUException: Failed to get the Real values.
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 10861, in _exec_sample
+    return [self._exec(point) for point in X]
+            ~~~~~~~~~~^^^^^^^
+  File &quot;/tmp/doc/examples/application/plot_calibration.py&quot;, line 283, in _exec
+    self.current_infected = self.FMUmodel(current_input).asPoint()
+                            ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 14117, in __call__
+    return _func.PointToFieldFunction___call__(self, *args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+RuntimeError: InternalException : Python exception: &lt;class &#39;pyfmi.exceptions.FMUException&#39;&gt;: Failed to get the Real values.
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 14400, in __call__
+    Y = self._exec(pt)
+  File &quot;/tmp/otfmi/otfmi.py&quot;, line 598, in _exec
+    return self.base.simulate(value_input=value_input, **kwargs)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &quot;/tmp/otfmi/otfmi.py&quot;, line 294, in simulate
+    simulation = fmi.simulate(
+        self._model,
+    ...&lt;3 lines&gt;...
+        **kwargs_simulate
+    )
+  File &quot;/tmp/otfmi/fmi.py&quot;, line 82, in simulate
+    return model.simulate(**kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 4130, in pyfmi.fmi2.FMUModelCS2.simulate
+  File &quot;src/pyfmi/fmi_base.pyx&quot;, line 214, in pyfmi.fmi_base.ModelBase._exec_simulate_algorithm
+  File &quot;/usr/lib/python3.14/site-packages/pyfmi/fmi_algorithm_drivers.py&quot;, line 1074, in solve
+    self.result_handler.integration_point()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File &quot;/usr/lib/python3.14/site-packages/pyfmi/common/io.py&quot;, line 1931, in integration_point
+    self.real_sol += [model.get_real(self.real_var_ref)]
+                      ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 691, in pyfmi.fmi2.FMUModelBase2.get_real
+  File &quot;src/pyfmi/fmi2.pyx&quot;, line 724, in pyfmi.fmi2.FMUModelBase2.get_real
+pyfmi.exceptions.FMUException: Failed to get the Real values.
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 10861, in _exec_sample
+    return [self._exec(point) for point in X]
+            ~~~~~~~~~~^^^^^^^
+  File &quot;/tmp/doc/examples/application/plot_calibration.py&quot;, line 283, in _exec
+    self.current_infected = self.FMUmodel(current_input).asPoint()
+                            ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File &quot;/usr/lib/python3.14/site-packages/openturns/func.py&quot;, line 14117, in __call__
+    return _func.PointToFieldFunction___call__(self, *args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+RuntimeError: InternalException : Python exception: &lt;class &#39;pyfmi.exceptions.FMUException&#39;&gt;: Failed to get the Real values.
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_observations</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.getInputObservations" title="openturns.CalibrationResult.getInputObservations" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getInputObservations</span></a><span class="p">()</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="c1"># Print theta</span>
+<span class="n">infection_rate_factor</span> <span class="o">=</span> <span class="mf">1.0e3</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analyse calibration : n.obs.= </span><span class="si">{</span><span class="n">number_of_observations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaPrior</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.getParameterPrior" title="openturns.CalibrationResult.getParameterPrior" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPrior</span></a><span class="p">()</span><span class="o">.</span><span class="n">getMean</span><span class="p">()</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaMAP</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.getParameterMAP" title="openturns.CalibrationResult.getParameterMAP" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span></a><span class="p">()</span>
+<span class="n">infection_rate_prior</span><span class="p">,</span> <span class="n">healing_rate_prior</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaPrior</span></a>
+<span class="n">infection_rate_MAP</span><span class="p">,</span> <span class="n">healing_rate_MAP</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaMAP</span></a>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;- theta Before = [</span><span class="si">{</span><span class="n">infection_rate_prior</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">, &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">healing_rate_prior</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;- theta After = [</span><span class="si">{</span><span class="n">infection_rate_MAP</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">, &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">healing_rate_MAP</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Analyse calibration : n.obs.= 14
+- theta Before = [7.000 * 1.0e-03, 0.3000]
+- theta After = [1979.327 * 1.0e-03, 0.4755]
+</pre></div>
+</div>
+<p>Compute confidence interval of theta</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaPosterior</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.getParameterPosterior" title="openturns.CalibrationResult.getParameterPosterior" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span></a><span class="p">()</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.95</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Interval.html#openturns.Interval" title="openturns.Interval" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">interval</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.computeBilateralConfidenceIntervalWithMarginalProbability" title="openturns.Distribution.computeBilateralConfidenceIntervalWithMarginalProbability" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">thetaPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span></a><span class="p">(</span>
+    <span class="n">alpha</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lower_bound</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Interval.html#openturns.Interval.getLowerBound" title="openturns.Interval.getLowerBound" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">interval</span><span class="o">.</span><span class="n">getLowerBound</span></a><span class="p">()</span>
+<span class="n">upper_bound</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Interval.html#openturns.Interval.getUpperBound" title="openturns.Interval.getUpperBound" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">interval</span><span class="o">.</span><span class="n">getUpperBound</span></a><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confidence interval with level </span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;- infection_rate in [</span><span class="si">{</span><span class="n">lower_bound</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="se">\</span>
+<span class="s2">                           </span><span class="si">{</span><span class="n">upper_bound</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">] * </span><span class="si">{</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- healing_rate in [</span><span class="si">{</span><span class="n">lower_bound</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">upper_bound</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Confidence interval with level 0.95
+- infection_rate in [1901.607,                            2057.046] * 1.0e-03
+- healing_rate in [0.4322, 0.5188]
+</pre></div>
+</div>
+<p>Print optimum parameters</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">infection_rate</span><span class="p">,</span> <span class="n">healing_rate</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaMAP</span></a>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimum parameters = &quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;- infection_rate = </span><span class="si">{</span><span class="n">infection_rate</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">infection_rate_factor</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- healing_rate = </span><span class="si">{</span><span class="n">healing_rate</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Other parameters :&quot;</span><span class="p">)</span>
+<span class="n">average_infection_duration</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">healing_rate</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- average_infection_duration = </span><span class="si">{</span><span class="n">average_infection_duration</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (days)&quot;</span><span class="p">)</span>
+<span class="n">R0</span> <span class="o">=</span> <span class="n">infection_rate</span> <span class="o">/</span> <span class="n">healing_rate</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- R0 = </span><span class="si">{</span><span class="n">R0</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Optimum parameters =
+- infection_rate = 1979.327 * 1.0e-03
+- healing_rate = 0.4755
+Other parameters :
+- average_infection_duration = 2.103 (days)
+- R0 = 4.162639
+</pre></div>
+</div>
+<p>Compute confidence interval of the residuals</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaMAP</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.getParameterMAP" title="openturns.CalibrationResult.getParameterMAP" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span></a><span class="p">()</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">residual</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.getResidualFunction" title="openturns.CalibrationResult.getResidualFunction" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getResidualFunction</span></a><span class="p">()</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">residualMAP</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample.BuildFromPoint" title="openturns.Sample.BuildFromPoint" class="sphx-glr-backref-module-openturns-Sample sphx-glr-backref-type-py-method"><span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="o">.</span><span class="n">BuildFromPoint</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">residual</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">thetaMAP</span></a><span class="p">))</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">normalResidual</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.NormalFactory.html#openturns.NormalFactory" title="openturns.NormalFactory" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class"><span class="n">ot</span><span class="o">.</span><span class="n">NormalFactory</span></a><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">residualMAP</span></a><span class="p">)</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.95</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Interval.html#openturns.Interval" title="openturns.Interval" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">residualInterval</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution.computeBilateralConfidenceInterval" title="openturns.Distribution.computeBilateralConfidenceInterval" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">normalResidual</span><span class="o">.</span><span class="n">computeBilateralConfidenceInterval</span></a><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">lower_bound</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Interval.html#openturns.Interval.getLowerBound" title="openturns.Interval.getLowerBound" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">residualInterval</span><span class="o">.</span><span class="n">getLowerBound</span></a><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">upper_bound</span> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Interval.html#openturns.Interval.getUpperBound" title="openturns.Interval.getUpperBound" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">residualInterval</span><span class="o">.</span><span class="n">getUpperBound</span></a><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual, Normal </span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2"> C.I. : [</span><span class="si">{</span><span class="n">lower_bound</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">upper_bound</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Residual, Normal 0.95 C.I. : [-39.67, 39.17]
+</pre></div>
+</div>
+<p>Draw observations vs predictions</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.ResourceMap.html#openturns.ResourceMap.SetAsUnsignedInteger" title="openturns.ResourceMap.SetAsUnsignedInteger" class="sphx-glr-backref-module-openturns-ResourceMap sphx-glr-backref-type-py-method"><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">SetAsUnsignedInteger</span></a><span class="p">(</span><span class="s2">&quot;Distribution-DefaultPointNumber&quot;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.drawObservationsVsInputs" title="openturns.CalibrationResult.drawObservationsVsInputs" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span></a><span class="p">()</span><span class="o">.</span><span class="n">getGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setLegendPosition" title="openturns.GridLayout.setLegendPosition" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span></a><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setLegendCorner" title="openturns.GridLayout.setLegendCorner" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setLegendCorner</span></a><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span><span class="o">.</span><span class="n">setIntegerXTick</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setTitle" title="openturns.GridLayout.setTitle" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nb. obs. = </span><span class="si">{</span><span class="n">number_of_observations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_004.png" srcset="../../_images/sphx_glr_plot_calibration_004.png" alt="nb. obs. = 14" class = "sphx-glr-single-img"/><p>Draw residuals</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.drawResiduals" title="openturns.CalibrationResult.drawResiduals" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span></a><span class="p">()</span><span class="o">.</span><span class="n">getGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setLegendPosition" title="openturns.GridLayout.setLegendPosition" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span></a><span class="p">(</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setLegendCorner" title="openturns.GridLayout.setLegendCorner" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setLegendCorner</span></a><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setTitle" title="openturns.GridLayout.setTitle" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nb. obs. = </span><span class="si">{</span><span class="n">number_of_observations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_005.png" srcset="../../_images/sphx_glr_plot_calibration_005.png" alt="nb. obs. = 14" class = "sphx-glr-single-img"/><p>Plot parameters distributions</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.drawParameterDistributions" title="openturns.CalibrationResult.drawParameterDistributions" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span></a><span class="p">()</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout.setTitle" title="openturns.GridLayout.setTitle" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nb. obs. = </span><span class="si">{</span><span class="n">number_of_observations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span>
+    <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.GridLayout.html#openturns.GridLayout" title="openturns.GridLayout" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">graph</span></a><span class="p">,</span>
+    <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)},</span>
+    <span class="n">legend_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;bbox_to_anchor&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="s2">&quot;loc&quot;</span><span class="p">:</span> <span class="s2">&quot;upper left&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_006.png" srcset="../../_images/sphx_glr_plot_calibration_006.png" alt="nb. obs. = 14" class = "sphx-glr-single-img"/><p>Plot parameters distributions</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">parameterDistribution</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.CalibrationResult.html#openturns.CalibrationResult.getParameterPosterior" title="openturns.CalibrationResult.getParameterPosterior" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method"><span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span></a><span class="p">()</span>
+<span class="k">if</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># disabled temporarily because of pybind11/contourpy bug</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">plotDistributionGridPDF</span><span class="p">(</span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.Distribution.html#openturns.Distribution" title="openturns.Distribution" class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">parameterDistribution</span></a><span class="p">)</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nb. obs. = </span><span class="si">{</span><span class="n">number_of_observations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View" class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">figure_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)})</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://openturns.github.io/openturns/latest/user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View.ShowAll" title="openturns.viewer.View.ShowAll" class="sphx-glr-backref-module-openturns-viewer-View sphx-glr-backref-type-py-method"><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 17.818 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-example-application-plot-calibration-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/f7df2df7d068e3410b9b60f52e87aa17/plot_calibration.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_calibration.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/28e8239417eccdc5ff95bc2c2d92b36a/plot_calibration.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_calibration.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/5ba9cf55dcb0ab9afbbb8d8882165001/plot_calibration.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_calibration.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+</article><footer class="bz-article-footer">
+  
+  
+    <nav class="bz-related-pages" aria-label="Related pages navigation"><a class="bz-related-pages-previous" href="plot_metamodel.html" rel="prev">
+    <span>Previous</span><span class="bz-related-pages-title">Metamodel a FMU time-dependent output</span></a><a class="bz-related-pages-next" href="../../examples/persalys/use_persalys.html" rel="next">
+    <span>Next</span>
+    <span class="bz-related-pages-title">Sensitivity analysis with Persalys</span>
+  </a></nav>
+  
+
+</footer><aside class="bz-sidebar-secondary" data-drawer="bz-sidebar-secondary">
+  
+  
+    <nav class="bz-sidebar-toc" aria-label="Table of contents">
+  <p>On this page</p><ul>
+<li><a class="reference internal" href="#setup-finite-difference-step">Setup finite difference step</a></li>
+<li><a class="reference internal" href="#cache-memory">Cache memory</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul></nav>
+  
+    
+
+
+  
+    
+  
+    
+  
+
+</aside></main>
+  </div>
+<footer class="bz-footer">
+  <div class="bz-footer-copyright"><p class="bz-copyright">© Copyright 2017-2025 EDF-Phimeca</p><p>
+    
+    
+    
+      Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://github.com/aksiome/breeze">Breeze theme</a>.
+    
+  </p>
+</div>
+</footer><a href="#" class="bz-back-to-top">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>
+    </svg>
+    <span>Back to top</span>
+  </a>
+  <label class="bz-overlay bz-overlay-primary" for="bz-sidebar-primary"></label>
+  <label class="bz-overlay bz-overlay-secondary" for="bz-sidebar-secondary"></label>
+  <input type="checkbox" name="bz-sidebar-primary" id="bz-sidebar-primary" aria-label="Toggle section navigation">
+  <input type="checkbox" name="bz-sidebar-secondary" id="bz-sidebar-secondary" aria-label="Toggle table of contents"><script src="../../_static/documentation_options.js?v=5929fcd5"></script><script src="../../_static/doctools.js?v=fd6eb6e6"></script><script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script><script src="../../_static/design-tabs.js?v=f930bc37"></script></body>
+</html>
