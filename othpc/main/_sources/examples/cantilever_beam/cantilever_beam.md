@@ -1,0 +1,172 @@
+# Cantilever beam tutorial
+
+The simple example of the cantilever beam allows us to illustrate how to use the `SubmitFunction` class. This example is based on a quick numerical model, which was proposed in the [documentation of the otwrapy OpenTURNS module](https://openturns.github.io/otwrapy/master/beam_wrapper.html).
+
+In this case, the numerical model is an executable that computes the deviation of a beam under bending stress according to the following expression:  
+```{math}
+y = \frac{FL^3}{3EI}
+```
+where E is the Young modulus (Pa),
+F is the Loading (N),
+L is the Length of beam (m)
+and I is the Moment of inertia (m^4).
+
+```{image} beam.png
+:class: bg-primary
+:width: 400px
+:align: center
+```
+
+To evaluate this numerical model, one can run the following shell command: 
+```
+$ beam -x beam_input.xml
+```
+where `beam_input.xml` is the input file containing the four parameter. Note that an example of this file can be created by manually replacing the tokens `@F@, @E@, @L@, @I@` by numerical values in the file `template/beam_input_template.xml`. The output of the code is an xml file `_beam_outputs_.xml` containing the deviation and its derivates.
+
+## 1- Prepare your environment on the cluster
+
+The following commands are designed for users who have access to one of the clusters owned by EDF (in the following the cluster is name CRONOS).
+
+Connect to CRONOS, create your Python environment called `myenv` using conda-forge:
+```
+NNI@dspxxxxxxx:~$ ssh cronos
+[NNI-crfront1-pts48] ~ $ module load Miniforge3
+[NNI-crfront1-pts48] ~ $ conda create -n myenv othpc
+```
+The creation of your environment (last line), does not need to be repeated at each connection.
+
+## 2- Files required for the cantilever beam
+
+In the following, we use the `CantileverBeam` class, which is available from the `othpc.example` module. You may have a look at [its code](https://github.com/openturns/othpc/blob/main/othpc/example/cantilever_beam/cantilever_beam.py) for an example of how to wrap a simulation model within a child class of `OpenTURNSPythonFunction`.
+
+To run this example, you will need to clone the `othpc` repository either from [GitHub](https://github.com/openturns/othpc) (if you do not work at EDF) or from the [EDF GitLab instance](https://gitlab.pleiade.edf.fr/projet-incertitudes/openturns/openturns/actions-openturns/othpc) (if you work at EDF) and copy the [`othpc/example/cantilever_beam`](https://github.com/openturns/othpc/blob/main/othpc/example/cantilever_beam) folder to, for example, a `cantilever_beam` folder within your home folder.
+
+The `cantilever_beam` folder includes:
+
+- Template input file (here, `template/beam_input_template.xml`);
+
+- Executable file (here, `template/beam`);
+
+- Input design of experiments to be evaluated (here, `input_doe/doe.csv`).
+
+- Output folder for my results (here, `my_results`)
+
+It is organized as follows:
+```
+├── cantilever_beam
+|   ├── input_doe
+|   |    ├── doe.csv 
+|   ├── template
+|   |    ├── beam.exe
+|   |    ├── beam_input_template.xml
+|   ├── my_results 
+```
+
+## 3- Write an `othpc` script
+
+In the context of this example, the Python working directoy must be the `cantilever_beam` folder. You can check the Python working directory by running the `os.getcwd()` Python command.
+
+### Define the simulation model
+
+To be able to use `othpc` you will need to encapsulate your simulation model within an OpenTURNS `Function` object,
+usually implemented as a child class of [OpenTURNSPythonFunction](https://openturns.github.io/openturns/master/user_manual/_generated/openturns.OpenTURNSPythonFunction.html).
+
+```Python
+import othpc
+import openturns as ot
+from othpc.example import CantileverBeam
+
+my_results_directory = "my_results"
+cb = CantileverBeam(my_results_directory)
+```
+
+### Define a SubmitFunction to distribute its evaluations on the cluster
+
+```Python
+sf = othpc.SubmitFunction(cb, ntasks_per_node=2, nodes_per_job=1, cpus_per_task=1, timeout_per_job=5)
+f = ot.Function(sf)
+```
+Here, every SLURM job is asked to perform up to 2 tasks (since 2 tasks are created per node and there is only 1 node).
+In the `SubmitFunction` context, a task means an evalutation of the simulation model, so this means that every job will be able to perform 2 evaluations of `cb`.
+
+When `f` or `sf` is applied to a sample of input points, it submits as many jobs as necessary to SLURM in order to apply `cb` to each point.
+For example, if `f` or `sf` is applied to a 10-point sample, it will submit 5 jobs with 2 tasks (meaning 2 calls to `cb`).
+If `f`or `sf` is applied to an 11-point sample, it will submit 5 jobs with 2 tasks and 1 job with 1 task.
+
+It is also possible to control the number of CPUs allocated to a single task with `cpus_per_task`, which can be useful for multi-threaded simulation code.
+In the `CantileverBeam` case however, each evaluation only requires one CPU so `cpus_per_task=1`.
+
+### Define an input design of experiments with size `N=10` and evaluate it on the HPC
+
+```Python
+X = ot.Sample.ImportFromCSVFile("input_doe/doe.csv", ",")
+Y = f(X)
+print(Y)
+```
+
+### Optional: create a summary table gathering inputs and corresponding evaluated outputs
+
+If your `Function` uses the `othpc.make_report_file` utility (like `CantileverBeam` does [here](https://github.com/openturns/othpc/blob/1981badf0328a1c354b32b08ba6a96b4be69a03e/othpc/example/cantilever_beam/cantilever_beam.py#L138)), then you can
+gather all your results in a single summary file.
+
+
+```Python
+othpc.make_summary_file("my_results", summary_file="summary_table.csv")
+```
+
+## 4- Run the script
+
+Assuming the script containing the commands described in the previous section is called `run_cantilever_beam.py`, then it can be run on the cluster using the command:
+
+```
+(myenv) [NNI-crfront1-pts48] ~/cantilever_beam $ python run_cantilever_beam.py
+```
+
+However, the downside of this simple command is that it requires the terminal to be kept open in order to keep running. This means that if the connection to the cluster is lost, the command stops running prematurely.
+
+A simple solution is to use the [`nohup` command](https://www.digitalocean.com/community/tutorials/nohup-command-in-linux):
+
+```
+(myenv) [NNI-crfront1-pts48] ~/cantilever_beam $ nohup python run_cantilever_beam.py &
+```
+
+This will keep the Python process alive even if the connection to the cluster is lost. This way results can be retrieved at a later date. Please note that the `nohup` command will print a process ID (for example `2565`). Write it down so you can kill the process if you need to:
+
+```
+(myenv) [NNI-crfront1-pts48] ~/cantilever_beam $ kill 2565
+```
+
+A possible alternative to `nohup`, which has the advantage of also working if you are running an interactive Python process, is the [`tmux` terminal multiplexer](https://hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/).
+
+## 5- Resulting file tree
+
+After running the Python script, one gets the following file-tree results. 
+In the folder `my_results`, 10 subfolders have been created with a unique hash, corresponding to each evaluation. 
+In the `logs` folder, 5 subfolders were created, corresponding to all the SLURM jobs submitted (since `ntasks_per_node=2` and `nodes_per_job=1` were passed as argument to the `SubmitFunction`).
+
+```
+  ├── cantilever_beam
+  |   ├── input_doe
+  |   |    ├── doe.csv 
+  |   ├── template
+  |   |    ├── beam.exe
+  |   |    ├── beam_input_template.xml
+  |   ├── logs
+  |   │   ├── 54474902
+  |   │   ├── 54474903
+  |   │   ├── 54474904
+  |   │   ├── 54474906
+  |   │   └── 54474907
+  |   ├── my_results
+  |   │   ├── simu_2025-05-13_17-37_69us6w9c
+  |   │   ├── simu_2025-05-13_17-37_71krv2ic
+  |   │   ├── simu_2025-05-13_17-37_ejk7pqsl
+  |   │   ├── simu_2025-05-13_17-37_p4jyjbp2
+  |   │   ├── simu_2025-05-13_17-37_t687ohjt
+  |   │   ├── simu_2025-05-13_17-37_xv_pbjmo
+  |   │   ├── simu_2025-05-13_17-38_0ueo2xry
+  |   │   ├── simu_2025-05-13_17-38_95e6rhvd
+  |   │   ├── simu_2025-05-13_17-38_q0czcyr3
+  |   │   ├── simu_2025-05-13_17-38_qombpgv0
+  |   │   └── summary_table.csv
+```

@@ -1,0 +1,578 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Calibration of the Chaboche mechanical model &#8212; OpenTURNS 1.20 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/mysearchtools.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Calibration of the flooding model" href="plot_calibration_flooding.html" />
+    <link rel="prev" title="Calibration of the logistic model" href="plot_calibration_logistic.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_calibration_flooding.html" title="Calibration of the flooding model"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_calibration_logistic.html" title="Calibration of the logistic model"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Calibration</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Least squares and gaussian calibration</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Calibration of the Chaboche mechanical model</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Calibration of the Chaboche mechanical model</a><ul>
+<li><a class="reference internal" href="#set-the-calibration-parameters">Set the calibration parameters</a></li>
+<li><a class="reference internal" href="#calibration-with-linear-least-squares">Calibration with linear least squares</a></li>
+<li><a class="reference internal" href="#analysis-of-the-results">Analysis of the results</a></li>
+<li><a class="reference internal" href="#calibration-with-nonlinear-least-squares">Calibration with nonlinear least squares</a></li>
+<li><a class="reference internal" href="#id1">Analysis of the results</a></li>
+<li><a class="reference internal" href="#gaussian-calibration-parameters">Gaussian calibration parameters</a></li>
+<li><a class="reference internal" href="#gaussian-linear-calibration">Gaussian linear calibration</a></li>
+<li><a class="reference internal" href="#id2">Analysis of the results</a></li>
+<li><a class="reference internal" href="#gaussian-nonlinear-calibration">Gaussian nonlinear calibration</a></li>
+<li><a class="reference internal" href="#id3">Analysis of the results</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_calibration_logistic.html"
+                          title="previous chapter">Calibration of the logistic model</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_calibration_flooding.html"
+                          title="next chapter">Calibration of the flooding model</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_calibration/least_squares_and_gaussian_calibration/plot_calibration_chaboche.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-chaboche-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="calibration-of-the-chaboche-mechanical-model">
+<span id="sphx-glr-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-chaboche-py"></span><h1>Calibration of the Chaboche mechanical model<a class="headerlink" href="#calibration-of-the-chaboche-mechanical-model" title="Permalink to this heading">¶</a></h1>
+<p>In this example we present calibration methods on the Chaboche model. A detailed explanation of this mechanical law is presented <a class="reference internal" href="../../usecases/use_case_chaboche.html#use-case-chaboche"><span class="std std-ref">here</span></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.viewer</span> <span class="k">as</span> <span class="nn">viewer</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">openturns.usecases</span> <span class="kn">import</span> <span class="n">chaboche_model</span>
+
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Load the Chaboche data structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <span class="n">chaboche_model</span><span class="o">.</span><span class="n">ChabocheModel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We get the Chaboche model and the joint input distribution :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">model</span>
+<span class="n">inputDistribution</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">inputDistribution</span>
+</pre></div>
+</div>
+<p>Create the Monte-Carlo sample.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">inputSample</span> <span class="o">=</span> <span class="n">inputDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)</span>
+<span class="n">outputStress</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+<span class="n">outputStress</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<TABLE><TR><TD></TD><TH>y0</TH></TR>
+<TR><TH>0</TH><TD>7.601227e+08</TD></TR>
+<TR><TH>1</TH><TD>8.596645e+08</TD></TR>
+<TR><TH>2</TH><TD>7.530982e+08</TD></TR>
+<TR><TH>3</TH><TD>8.597423e+08</TD></TR>
+<TR><TH>4</TH><TD>8.375939e+08</TD></TR>
+</TABLE>
+</div>
+<br />
+<br /><p>Plot the histogram of the output.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">histoGraph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">HistogramFactory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">outputStress</span> <span class="o">/</span> <span class="mf">1.0e6</span><span class="p">)</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">histoGraph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Histogram of the sample stress&quot;</span><span class="p">)</span>
+<span class="n">histoGraph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;Stress (MPa)&quot;</span><span class="p">)</span>
+<span class="n">histoGraph</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">histoGraph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_001.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_001.png" alt="Histogram of the sample stress" class = "sphx-glr-single-img"/><p>Generate observation noise.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stressObservationNoiseSigma</span> <span class="o">=</span> <span class="mf">10.0e6</span>  <span class="c1"># (Pa)</span>
+<span class="n">noiseSigma</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">stressObservationNoiseSigma</span><span class="p">)</span>
+<span class="n">sampleNoiseH</span> <span class="o">=</span> <span class="n">noiseSigma</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)</span>
+<span class="n">observedStress</span> <span class="o">=</span> <span class="n">outputStress</span> <span class="o">+</span> <span class="n">sampleNoiseH</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">observedStrain</span> <span class="o">=</span> <span class="n">inputSample</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;Observations&quot;</span><span class="p">,</span> <span class="s2">&quot;Strain&quot;</span><span class="p">,</span> <span class="s2">&quot;Stress (MPa)&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">cloud</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span> <span class="o">/</span> <span class="mf">1.0e6</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloud</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_002.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_002.png" alt="Observations" class = "sphx-glr-single-img"/><section id="set-the-calibration-parameters">
+<h2>Set the calibration parameters<a class="headerlink" href="#set-the-calibration-parameters" title="Permalink to this heading">¶</a></h2>
+<p>Define the value of the reference values of the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPg==" alt="\theta"/> parameter. In the bayesian framework, this is called the mean of the <em>prior</em> gaussian distribution. In the data assimilation framework, this is called the <em>background</em>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="mf">700e6</span>  <span class="c1"># Exact : 750e6</span>
+<span class="n">C</span> <span class="o">=</span> <span class="mf">2500e6</span>  <span class="c1"># Exact : 2750e6</span>
+<span class="n">Gamma</span> <span class="o">=</span> <span class="mf">8.0</span>  <span class="c1"># Exact : 10</span>
+<span class="n">thetaPrior</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Gamma</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The following statement create the calibrated function from the model. The calibrated parameters <cite>R</cite>, <cite>C</cite>, <cite>Gamma</cite> are at indices 1, 2, 3 in the inputs arguments of the model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibratedIndices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">mycf</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ParametricFunction</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">calibratedIndices</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="calibration-with-linear-least-squares">
+<h2>Calibration with linear least squares<a class="headerlink" href="#calibration-with-linear-least-squares" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>LinearLeastSquaresCalibration</cite> class performs the linear least squares calibration by linearizing the model in the neighbourhood of the reference point.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearLeastSquaresCalibration</span><span class="p">(</span>
+    <span class="n">mycf</span><span class="p">,</span> <span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">,</span> <span class="s2">&quot;SVD&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>run</cite> method computes the solution of the problem.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibrationResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="analysis-of-the-results">
+<h2>Analysis of the results<a class="headerlink" href="#analysis-of-the-results" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPg==" alt="\theta"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaMAP</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
+<span class="n">thetaMAP</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.50932e+08,2.68658e+09,9.17074]</p>
+</div>
+<br />
+<br /><p>We can compute a 95% confidence interval of the parameter <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMC4wMTQ1MjRwdCcgaGVpZ2h0PSc4LjMwMjE5MXB0JyB2aWV3Qm94PScwIC04LjMwMjE5MSAxMC4wMTQ1MjQgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTYzJyBkPSdNMy45NDUyMDUtMi4yNzk0NTJDNC4wNTY3ODctMi4zMzUyNDMgNC4wOTY2MzgtMi4zNTExODMgNC4wOTY2MzgtMi40MjI5MTRDNC4wOTY2MzgtMi40NzA3MzUgNC4wNDg4MTctMi41MjY1MjYgMy45ODUwNTYtMi41MjY1MjZDMy45NjkxMTYtMi41MjY1MjYgMy43NTM5MjMtMi40ODY2NzUgMy42MzQzNzEtMi40NjI3NjVMMi40MTQ5NDQtMi4yMjM2NjFMMi4yMzk2MDEtMy42OTAxNjJDMi4yMjM2NjEtMy44MTc2ODQgMi4xOTk3NTEtMy44OTczODUgMi4xMTIwOC0zLjg5NzM4NUMyLjAxNjQzOC0zLjg5NzM4NSAyLjAwODQ2OC0zLjgzMzYyNCAxLjk5MjUyOC0zLjY5MDE2MkwxLjgxNzE4Ni0yLjIyMzY2MUwuMzUwNjg1LTIuNTEwNTg1TC4yMzkxMDMtMi41MjY1MjZDLjE3NTM0Mi0yLjUyNjUyNiAuMTI3NTIyLTIuNDcwNzM1IC4xMjc1MjItMi40MjI5MTRDLjEyNzUyMi0yLjM0MzIxMyAuMTkxMjgzLTIuMzExMzMzIC4yNzA5ODQtMi4yNzk0NTJMMS42MzM4NzMtMS42NTc3ODNMMS4wMDQyMzQtLjUzMzk5OEMuOTQ4NDQzLS40MzAzODYgLjg0NDgzMi0uMjM5MTAzIC44NDQ4MzItLjIxNTE5M0MuODQ0ODMyLS4xNjczNzIgLjg3NjcxMi0uMTAzNjExIC45NTY0MTMtLjEwMzYxMUMuOTcyMzU0LS4xMDM2MTEgLjk5NjI2NC0uMTAzNjExIDEuMDQ0MDg1LS4xNDM0NjJDMS4xMDc4NDYtLjIwNzIyMyAxLjI1OTI3OC0uMzgyNTY1IDEuMzIzMDM5LS40NDYzMjZMMi4xMTIwOC0xLjI5OTEyOEwyLjk4ODc5Mi0uMzU4NjU1QzMuMDIwNjcyLS4zMTg4MDQgMy4xMDgzNDQtLjIyMzE2MyAzLjE0ODE5NC0uMTkxMjgzQzMuMjI3ODk1LS4xMTE1ODIgMy4yMzU4NjYtLjEwMzYxMSAzLjI2Nzc0Ni0uMTAzNjExQzMuMzQ3NDQ3LS4xMDM2MTEgMy4zNzkzMjgtLjE2NzM3MiAzLjM3OTMyOC0uMjE1MTkzQzMuMzc5MzI4LS4yNzA5ODQgMi42ODU5MjgtMS40OTA0MTEgMi41OTAyODYtMS42NDk4MTNMMy45NDUyMDUtMi4yNzk0NTJaJy8+CjxwYXRoIGlkPSdnMS0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xOCcvPgo8dXNlIHg9JzUuNzgwMzQxJyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMC02MycvPgo8L2c+Cjwvc3ZnPg==" alt="\theta^\star"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
+<span class="n">thetaPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.43518e+08, 7.58346e+08]<br>
+[2.18991e+09, 3.18325e+09]<br>
+[-487.552, 505.893]</p>
+</div>
+<br />
+<br /><p>We can see that the <cite>Gamma</cite> parameter has a large confidence interval : even the sign of the parameter is unknown.
+The parameter which is calibrated with the smallest confidence
+interval is <cite>R</cite>, which confidence interval is [708.3,780.0] (MPa).
+This is why this parameter seems the most important in this case.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_003.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_003.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_004.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_004.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+<span class="n">observationError</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>Normal(mu = 0, sigma = 9.77968e+06)</p>
+</div>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_005.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_005.png" alt=", Residual analysis" class = "sphx-glr-single-img"/><p>The analysis of the residuals shows that the distribution is centered on zero and symmetric. This indicates that the calibration performed well.</p>
+<p>Moreover, the distribution of the residuals is close to being gaussian.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_006.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_006.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/></section>
+<section id="calibration-with-nonlinear-least-squares">
+<h2>Calibration with nonlinear least squares<a class="headerlink" href="#calibration-with-nonlinear-least-squares" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>NonLinearLeastSquaresCalibration</cite> class performs the non linear least squares calibration by minimizing the squared euclidian norm between the predictions and the observations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NonLinearLeastSquaresCalibration</span><span class="p">(</span>
+    <span class="n">mycf</span><span class="p">,</span> <span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">,</span> <span class="n">thetaPrior</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>run</cite> method computes the solution of the problem.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibrationResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2>Analysis of the results<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPg==" alt="\theta"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaMAP</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
+<span class="n">thetaMAP</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.52607e+08,2.55463e+09,7.74755]</p>
+</div>
+<br />
+<br /><p>We can compute a 95% confidence interval of the parameter <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMC4wMTQ1MjRwdCcgaGVpZ2h0PSc4LjMwMjE5MXB0JyB2aWV3Qm94PScwIC04LjMwMjE5MSAxMC4wMTQ1MjQgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTYzJyBkPSdNMy45NDUyMDUtMi4yNzk0NTJDNC4wNTY3ODctMi4zMzUyNDMgNC4wOTY2MzgtMi4zNTExODMgNC4wOTY2MzgtMi40MjI5MTRDNC4wOTY2MzgtMi40NzA3MzUgNC4wNDg4MTctMi41MjY1MjYgMy45ODUwNTYtMi41MjY1MjZDMy45NjkxMTYtMi41MjY1MjYgMy43NTM5MjMtMi40ODY2NzUgMy42MzQzNzEtMi40NjI3NjVMMi40MTQ5NDQtMi4yMjM2NjFMMi4yMzk2MDEtMy42OTAxNjJDMi4yMjM2NjEtMy44MTc2ODQgMi4xOTk3NTEtMy44OTczODUgMi4xMTIwOC0zLjg5NzM4NUMyLjAxNjQzOC0zLjg5NzM4NSAyLjAwODQ2OC0zLjgzMzYyNCAxLjk5MjUyOC0zLjY5MDE2MkwxLjgxNzE4Ni0yLjIyMzY2MUwuMzUwNjg1LTIuNTEwNTg1TC4yMzkxMDMtMi41MjY1MjZDLjE3NTM0Mi0yLjUyNjUyNiAuMTI3NTIyLTIuNDcwNzM1IC4xMjc1MjItMi40MjI5MTRDLjEyNzUyMi0yLjM0MzIxMyAuMTkxMjgzLTIuMzExMzMzIC4yNzA5ODQtMi4yNzk0NTJMMS42MzM4NzMtMS42NTc3ODNMMS4wMDQyMzQtLjUzMzk5OEMuOTQ4NDQzLS40MzAzODYgLjg0NDgzMi0uMjM5MTAzIC44NDQ4MzItLjIxNTE5M0MuODQ0ODMyLS4xNjczNzIgLjg3NjcxMi0uMTAzNjExIC45NTY0MTMtLjEwMzYxMUMuOTcyMzU0LS4xMDM2MTEgLjk5NjI2NC0uMTAzNjExIDEuMDQ0MDg1LS4xNDM0NjJDMS4xMDc4NDYtLjIwNzIyMyAxLjI1OTI3OC0uMzgyNTY1IDEuMzIzMDM5LS40NDYzMjZMMi4xMTIwOC0xLjI5OTEyOEwyLjk4ODc5Mi0uMzU4NjU1QzMuMDIwNjcyLS4zMTg4MDQgMy4xMDgzNDQtLjIyMzE2MyAzLjE0ODE5NC0uMTkxMjgzQzMuMjI3ODk1LS4xMTE1ODIgMy4yMzU4NjYtLjEwMzYxMSAzLjI2Nzc0Ni0uMTAzNjExQzMuMzQ3NDQ3LS4xMDM2MTEgMy4zNzkzMjgtLjE2NzM3MiAzLjM3OTMyOC0uMjE1MTkzQzMuMzc5MzI4LS4yNzA5ODQgMi42ODU5MjgtMS40OTA0MTEgMi41OTAyODYtMS42NDk4MTNMMy45NDUyMDUtMi4yNzk0NTJaJy8+CjxwYXRoIGlkPSdnMS0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xOCcvPgo8dXNlIHg9JzUuNzgwMzQxJyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMC02MycvPgo8L2c+Cjwvc3ZnPg==" alt="\theta^\star"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
+<span class="n">thetaPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.41551e+08, 7.6616e+08]<br>
+[1.73663e+09, 3.25998e+09]<br>
+[-1.48291, 14.4063]</p>
+</div>
+<br />
+<br /><p>We can see that all three parameters are estimated with a large confidence interval.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_007.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_007.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_008.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_008.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+<span class="n">observationError</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>Normal(mu = -2501.22, sigma = 9.71764e+06)</p>
+</div>
+<br />
+<br /><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">observationError</span><span class="o">.</span><span class="n">drawPDF</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_009.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_009.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_010.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_010.png" alt=", Residual analysis" class = "sphx-glr-single-img"/><p>The analysis of the residuals shows that the distribution is centered on zero and symmetric. This indicates that the calibration performed well.</p>
+<p>Moreover, the distribution of the residuals is close to being gaussian. This indicates that the observation error might be gaussian.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_011.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_011.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/></section>
+<section id="gaussian-calibration-parameters">
+<h2>Gaussian calibration parameters<a class="headerlink" href="#gaussian-calibration-parameters" title="Permalink to this heading">¶</a></h2>
+<p>The standard deviation of the observations errors.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigmaStress</span> <span class="o">=</span> <span class="mf">1.0e7</span>  <span class="c1"># (Pa)</span>
+</pre></div>
+</div>
+<p>Define the covariance matrix of the output Y of the model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">errorCovariance</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">errorCovariance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaStress</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>Define the covariance matrix of the parameters <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPg==" alt="\theta"/> to calibrate.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigmaR</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">R</span>
+<span class="n">sigmaC</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">C</span>
+<span class="n">sigmaGamma</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">Gamma</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CovarianceMatrix</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">sigma</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaR</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">sigma</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaC</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">sigma</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigmaGamma</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">sigma</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[[ 4.9e+15  0        0        ]<br>
+ [ 0        6.25e+16 0        ]<br>
+ [ 0        0        0.64     ]]</p>
+</div>
+<br />
+<br /></section>
+<section id="gaussian-linear-calibration">
+<h2>Gaussian linear calibration<a class="headerlink" href="#gaussian-linear-calibration" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>GaussianLinearCalibration</cite> class performs the gaussian linear calibration by linearizing the model in the neighbourhood of the prior.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianLinearCalibration</span><span class="p">(</span>
+    <span class="n">mycf</span><span class="p">,</span> <span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">errorCovariance</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>run</cite> method computes the solution of the problem.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibrationResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>Analysis of the results<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPg==" alt="\theta"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaMAP</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
+<span class="n">thetaMAP</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.52048e+08,2.58853e+09,8.04591]</p>
+</div>
+<br />
+<br /><p>We can compute a 95% confidence interval of the parameter <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMC4wMTQ1MjRwdCcgaGVpZ2h0PSc4LjMwMjE5MXB0JyB2aWV3Qm94PScwIC04LjMwMjE5MSAxMC4wMTQ1MjQgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTYzJyBkPSdNMy45NDUyMDUtMi4yNzk0NTJDNC4wNTY3ODctMi4zMzUyNDMgNC4wOTY2MzgtMi4zNTExODMgNC4wOTY2MzgtMi40MjI5MTRDNC4wOTY2MzgtMi40NzA3MzUgNC4wNDg4MTctMi41MjY1MjYgMy45ODUwNTYtMi41MjY1MjZDMy45NjkxMTYtMi41MjY1MjYgMy43NTM5MjMtMi40ODY2NzUgMy42MzQzNzEtMi40NjI3NjVMMi40MTQ5NDQtMi4yMjM2NjFMMi4yMzk2MDEtMy42OTAxNjJDMi4yMjM2NjEtMy44MTc2ODQgMi4xOTk3NTEtMy44OTczODUgMi4xMTIwOC0zLjg5NzM4NUMyLjAxNjQzOC0zLjg5NzM4NSAyLjAwODQ2OC0zLjgzMzYyNCAxLjk5MjUyOC0zLjY5MDE2MkwxLjgxNzE4Ni0yLjIyMzY2MUwuMzUwNjg1LTIuNTEwNTg1TC4yMzkxMDMtMi41MjY1MjZDLjE3NTM0Mi0yLjUyNjUyNiAuMTI3NTIyLTIuNDcwNzM1IC4xMjc1MjItMi40MjI5MTRDLjEyNzUyMi0yLjM0MzIxMyAuMTkxMjgzLTIuMzExMzMzIC4yNzA5ODQtMi4yNzk0NTJMMS42MzM4NzMtMS42NTc3ODNMMS4wMDQyMzQtLjUzMzk5OEMuOTQ4NDQzLS40MzAzODYgLjg0NDgzMi0uMjM5MTAzIC44NDQ4MzItLjIxNTE5M0MuODQ0ODMyLS4xNjczNzIgLjg3NjcxMi0uMTAzNjExIC45NTY0MTMtLjEwMzYxMUMuOTcyMzU0LS4xMDM2MTEgLjk5NjI2NC0uMTAzNjExIDEuMDQ0MDg1LS4xNDM0NjJDMS4xMDc4NDYtLjIwNzIyMyAxLjI1OTI3OC0uMzgyNTY1IDEuMzIzMDM5LS40NDYzMjZMMi4xMTIwOC0xLjI5OTEyOEwyLjk4ODc5Mi0uMzU4NjU1QzMuMDIwNjcyLS4zMTg4MDQgMy4xMDgzNDQtLjIyMzE2MyAzLjE0ODE5NC0uMTkxMjgzQzMuMjI3ODk1LS4xMTE1ODIgMy4yMzU4NjYtLjEwMzYxMSAzLjI2Nzc0Ni0uMTAzNjExQzMuMzQ3NDQ3LS4xMDM2MTEgMy4zNzkzMjgtLjE2NzM3MiAzLjM3OTMyOC0uMjE1MTkzQzMuMzc5MzI4LS4yNzA5ODQgMi42ODU5MjgtMS40OTA0MTEgMi41OTAyODYtMS42NDk4MTNMMy45NDUyMDUtMi4yNzk0NTJaJy8+CjxwYXRoIGlkPSdnMS0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xOCcvPgo8dXNlIHg9JzUuNzgwMzQxJyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMC02MycvPgo8L2c+Cjwvc3ZnPg==" alt="\theta^\star"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
+<span class="n">thetaPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.46471e+08, 7.57625e+08]<br>
+[2.38992e+09, 2.78714e+09]<br>
+[6.33812, 9.7537]</p>
+</div>
+<br />
+<br /><p>We can see that all three parameters are estimated with a large confidence interval.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_012.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_012.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_013.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_013.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
+<p>The observation error is predicted by linearizing the problem at the prior.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+<span class="n">observationError</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>Normal(mu = 0, sigma = 1e+07)</p>
+</div>
+<br />
+<br /><p>This can be compared to the residuals distribution, which is computed at the posterior.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_014.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_014.png" alt=", Residual analysis" class = "sphx-glr-single-img"/><p>The analysis of the gaussian distribution (the blue line) of the observation errors is close to the posterior distribution of the residuals (the green line). Moreover, the posterior distribution is centered. These information indicate that the calibration performed well.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_015.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_015.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>For the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc5LjAwODUxNXB0JyBoZWlnaHQ9JzguMTY5MzY2cHQnIHZpZXdCb3g9JzAgLTguMTY5MzY2IDkuMDA4NTE1IDguMTY5MzY2Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMC04MicgZD0nTTQuMzk5NTAyLTcuMzUyNDI4QzQuNTA3MDk4LTcuNzk0NzcgNC41NTQ5MTktNy44MTg2OCA1LjAyMTE3MS03LjgxODY4SDUuODgxOTQzQzYuOTEwMDg3LTcuODE4NjggNy42NzUyMTgtNy41MDc4NDYgNy42NzUyMTgtNi41NzUzNDJDNy42NzUyMTgtNS45NjU2MjkgNy4zNjQzODQtNC4yMDgyMTkgNC45NjEzOTUtNC4yMDgyMTlIMy42MTA0NjFMNC4zOTk1MDItNy4zNTI0MjhaTTYuMDYxMjctNC4wNjQ3NTdDNy41NDM3MTEtNC4zODc1NDcgOC43MDMzNjItNS4zNDM5NiA4LjcwMzM2Mi02LjM3MjEwNUM4LjcwMzM2Mi03LjMwNDYwOCA3Ljc1ODkwNC04LjE2NTM4IDYuMDk3MTM2LTguMTY1MzhIMi44NTcyODVDMi42MTgxODItOC4xNjUzOCAyLjUxMDU4NS04LjE2NTM4IDIuNTEwNTg1LTcuOTM4MjMyQzIuNTEwNTg1LTcuODE4NjggMi41OTQyNzEtNy44MTg2OCAyLjgyMTQyLTcuODE4NjhDMy41Mzg3My03LjgxODY4IDMuNTM4NzMtNy43MjMwMzkgMy41Mzg3My03LjU5MTUzMkMzLjUzODczLTcuNTY3NjIxIDMuNTM4NzMtNy40OTU4OSAzLjQ5MDkwOS03LjMxNjU2M0wxLjg3Njk2MS0uODg0NjgyQzEuNzY5MzY1LS40NjYyNTIgMS43NDU0NTUtLjM0NjcgLjkyMDU0OC0uMzQ2N0MuNjQ1NTc5LS4zNDY3IC41NjE4OTMtLjM0NjcgLjU2MTg5My0uMTE5NTUyQy41NjE4OTMgMCAuNjkzNCAwIC43MjkyNjUgMEMuOTQ0NDU4IDAgMS4xOTU1MTctLjAyMzkxIDEuNDIyNjY1LS4wMjM5MUgyLjgzMzM3NUMzLjA0ODU2OC0uMDIzOTEgMy4yOTk2MjYgMCAzLjUxNDgxOSAwQzMuNjEwNDYxIDAgMy43NDE5NjggMCAzLjc0MTk2OC0uMjI3MTQ4QzMuNzQxOTY4LS4zNDY3IDMuNjM0MzcxLS4zNDY3IDMuNDU1MDQ0LS4zNDY3QzIuNzI1Nzc4LS4zNDY3IDIuNzI1Nzc4LS40NDIzNDEgMi43MjU3NzgtLjU2MTg5M0MyLjcyNTc3OC0uNTczODQ4IDIuNzI1Nzc4LS42NTc1MzQgMi43NDk2ODktLjc1MzE3NkwzLjU1MDY4NS0zLjk2OTExNkg0Ljk4NTMwNUM2LjEyMTA0Ni0zLjk2OTExNiA2LjMzNjIzOS0zLjI1MTgwNiA2LjMzNjIzOS0yLjg1NzI4NUM2LjMzNjIzOS0yLjY3Nzk1OCA2LjIxNjY4Ny0yLjIxMTcwNiA2LjEzMzAwMS0xLjkwMDg3MkM2LjAwMTQ5NC0xLjM1MDkzNCA1Ljk2NTYyOS0xLjIxOTQyNyA1Ljk2NTYyOS0uOTkyMjc5QzUuOTY1NjI5LS4xNDM0NjIgNi42NTkwMjkgLjI1MTA1OSA3LjQ2MDAyNSAuMjUxMDU5QzguNDI4Mzk0IC4yNTEwNTkgOC44NDY4MjQtLjkzMjUwMyA4Ljg0NjgyNC0xLjA5OTg3NUM4Ljg0NjgyNC0xLjE4MzU2MiA4Ljc4NzA0OS0xLjIxOTQyNyA4LjcxNTMxOC0xLjIxOTQyN0M4LjYxOTY3Ni0xLjIxOTQyNyA4LjU5NTc2Ni0xLjE0NzY5NiA4LjU3MTg1Ni0xLjA1MjA1NUM4LjI4NDkzMi0uMjAzMjM4IDcuNzk0NzcgLjAxMTk1NSA3LjQ5NTg5IC4wMTE5NTVTNy4wMDU3MjktLjExOTU1MiA3LjAwNTcyOS0uNjU3NTM0QzcuMDA1NzI5LS45NDQ0NTggNy4xNDkxOTEtMi4wMzIzNzkgNy4xNjExNDYtMi4wOTIxNTRDNy4yMjA5MjItMi41MzQ0OTYgNy4yMjA5MjItMi41ODIzMTYgNy4yMjA5MjItMi42Nzc5NThDNy4yMjA5MjItMy41NTA2ODUgNi41MTU1NjctMy45MjEyOTUgNi4wNjEyNy00LjA2NDc1N1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8L2c+Cjwvc3ZnPg==" alt="R"/> variable, the observations are much more important than the prior: this is shown by the fact that the posterior and prior distribution of the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc5LjAwODUxNXB0JyBoZWlnaHQ9JzguMTY5MzY2cHQnIHZpZXdCb3g9JzAgLTguMTY5MzY2IDkuMDA4NTE1IDguMTY5MzY2Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMC04MicgZD0nTTQuMzk5NTAyLTcuMzUyNDI4QzQuNTA3MDk4LTcuNzk0NzcgNC41NTQ5MTktNy44MTg2OCA1LjAyMTE3MS03LjgxODY4SDUuODgxOTQzQzYuOTEwMDg3LTcuODE4NjggNy42NzUyMTgtNy41MDc4NDYgNy42NzUyMTgtNi41NzUzNDJDNy42NzUyMTgtNS45NjU2MjkgNy4zNjQzODQtNC4yMDgyMTkgNC45NjEzOTUtNC4yMDgyMTlIMy42MTA0NjFMNC4zOTk1MDItNy4zNTI0MjhaTTYuMDYxMjctNC4wNjQ3NTdDNy41NDM3MTEtNC4zODc1NDcgOC43MDMzNjItNS4zNDM5NiA4LjcwMzM2Mi02LjM3MjEwNUM4LjcwMzM2Mi03LjMwNDYwOCA3Ljc1ODkwNC04LjE2NTM4IDYuMDk3MTM2LTguMTY1MzhIMi44NTcyODVDMi42MTgxODItOC4xNjUzOCAyLjUxMDU4NS04LjE2NTM4IDIuNTEwNTg1LTcuOTM4MjMyQzIuNTEwNTg1LTcuODE4NjggMi41OTQyNzEtNy44MTg2OCAyLjgyMTQyLTcuODE4NjhDMy41Mzg3My03LjgxODY4IDMuNTM4NzMtNy43MjMwMzkgMy41Mzg3My03LjU5MTUzMkMzLjUzODczLTcuNTY3NjIxIDMuNTM4NzMtNy40OTU4OSAzLjQ5MDkwOS03LjMxNjU2M0wxLjg3Njk2MS0uODg0NjgyQzEuNzY5MzY1LS40NjYyNTIgMS43NDU0NTUtLjM0NjcgLjkyMDU0OC0uMzQ2N0MuNjQ1NTc5LS4zNDY3IC41NjE4OTMtLjM0NjcgLjU2MTg5My0uMTE5NTUyQy41NjE4OTMgMCAuNjkzNCAwIC43MjkyNjUgMEMuOTQ0NDU4IDAgMS4xOTU1MTctLjAyMzkxIDEuNDIyNjY1LS4wMjM5MUgyLjgzMzM3NUMzLjA0ODU2OC0uMDIzOTEgMy4yOTk2MjYgMCAzLjUxNDgxOSAwQzMuNjEwNDYxIDAgMy43NDE5NjggMCAzLjc0MTk2OC0uMjI3MTQ4QzMuNzQxOTY4LS4zNDY3IDMuNjM0MzcxLS4zNDY3IDMuNDU1MDQ0LS4zNDY3QzIuNzI1Nzc4LS4zNDY3IDIuNzI1Nzc4LS40NDIzNDEgMi43MjU3NzgtLjU2MTg5M0MyLjcyNTc3OC0uNTczODQ4IDIuNzI1Nzc4LS42NTc1MzQgMi43NDk2ODktLjc1MzE3NkwzLjU1MDY4NS0zLjk2OTExNkg0Ljk4NTMwNUM2LjEyMTA0Ni0zLjk2OTExNiA2LjMzNjIzOS0zLjI1MTgwNiA2LjMzNjIzOS0yLjg1NzI4NUM2LjMzNjIzOS0yLjY3Nzk1OCA2LjIxNjY4Ny0yLjIxMTcwNiA2LjEzMzAwMS0xLjkwMDg3MkM2LjAwMTQ5NC0xLjM1MDkzNCA1Ljk2NTYyOS0xLjIxOTQyNyA1Ljk2NTYyOS0uOTkyMjc5QzUuOTY1NjI5LS4xNDM0NjIgNi42NTkwMjkgLjI1MTA1OSA3LjQ2MDAyNSAuMjUxMDU5QzguNDI4Mzk0IC4yNTEwNTkgOC44NDY4MjQtLjkzMjUwMyA4Ljg0NjgyNC0xLjA5OTg3NUM4Ljg0NjgyNC0xLjE4MzU2MiA4Ljc4NzA0OS0xLjIxOTQyNyA4LjcxNTMxOC0xLjIxOTQyN0M4LjYxOTY3Ni0xLjIxOTQyNyA4LjU5NTc2Ni0xLjE0NzY5NiA4LjU3MTg1Ni0xLjA1MjA1NUM4LjI4NDkzMi0uMjAzMjM4IDcuNzk0NzcgLjAxMTk1NSA3LjQ5NTg5IC4wMTE5NTVTNy4wMDU3MjktLjExOTU1MiA3LjAwNTcyOS0uNjU3NTM0QzcuMDA1NzI5LS45NDQ0NTggNy4xNDkxOTEtMi4wMzIzNzkgNy4xNjExNDYtMi4wOTIxNTRDNy4yMjA5MjItMi41MzQ0OTYgNy4yMjA5MjItMi41ODIzMTYgNy4yMjA5MjItMi42Nzc5NThDNy4yMjA5MjItMy41NTA2ODUgNi41MTU1NjctMy45MjEyOTUgNi4wNjEyNy00LjA2NDc1N1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC04MicvPgo8L2c+Cjwvc3ZnPg==" alt="R"/> variable are very different.</p>
+<p>We see that the prior and posterior distribution are close to each other for the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc2LjcyMjIyOHB0JyBoZWlnaHQ9JzcuNDcxOThwdCcgdmlld0JveD0nMCAtNS4xNDczNzMgNi43MjIyMjggNy40NzE5OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtMTMnIGQ9J000LjUxOTA1NC0xLjQ1ODUzMUM0LjQ5NTE0My0yLjA0NDMzNCA0LjQ3MTIzMy0yLjk2NDg4MiA0LjAxNjkzNi00LjA0MDg0N0MzLjc3NzgzMy00LjYzODYwNSAzLjM3MTM1Ny01LjI3MjIyOSAyLjQ5ODYzLTUuMjcyMjI5QzEuMDI4MTQ0LTUuMjcyMjI5IC4yMjcxNDgtMy4zOTUyNjggLjIyNzE0OC0zLjA4NDQzM0MuMjI3MTQ4LTIuOTc2ODM3IC4zMTA4MzQtMi45NzY4MzcgLjM0NjctMi45NzY4MzdDLjQ1NDI5Ni0yLjk3NjgzNyAuNDU0Mjk2LTMuMDAwNzQ3IC41MTQwNzItMy4xNTYxNjRDLjc2NTEzMS0zLjg5NzM4NSAxLjUzMDI2Mi00LjQ4MzE4OCAyLjM1NTE2OC00LjQ4MzE4OEM0LjAxNjkzNi00LjQ4MzE4OCA0LjI1NjA0LTIuNjMwMTM3IDQuMjU2MDQtMS40NDY1NzVDNC4yNTYwNC0uNjkzNCA0LjE3MjM1NC0uNDQyMzQxIDQuMTAwNjIzLS4yMDMyMzhDMy44NzM0NzQgLjUzNzk4MyAzLjQ3ODk1NCAyLjAyMDQyMyAzLjQ3ODk1NCAyLjM1NTE2OEMzLjQ3ODk1NCAyLjQ1MDgwOSAzLjUxNDgxOSAyLjU1ODQwNiAzLjYxMDQ2MSAyLjU1ODQwNkMzLjc4OTc4OCAyLjU1ODQwNiAzLjg5NzM4NSAyLjE2Mzg4NSA0LjAyODg5MiAxLjY4NTY3OUM0LjMxNTgxNiAuNjMzNjI0IDQuMzg3NTQ3IC4xMDc1OTcgNC40NDczMjMtLjM3MDYxQzQuNDgzMTg4LS42NTc1MzQgNS4xNjQ2MzMtMi42MzAxMzcgNi4xMDkwOTEtNC41MDcwOThDNi4xOTI3NzctNC42OTgzODEgNi4zNjAxNDktNS4wMjExNzEgNi4zNjAxNDktNS4wNTcwMzZDNi4zNjAxNDktNS4wNjg5OTEgNi4zNDgxOTQtNS4xNTI2NzcgNi4yNDA1OTgtNS4xNTI2NzdDNi4yMTY2ODctNS4xNTI2NzcgNi4xNTY5MTItNS4xNTI2NzcgNi4xMzMwMDEtNS4xMDQ4NTdDNi4xMDkwOTEtNS4wODA5NDYgNS42OTA2Ni00LjI2Nzk5NSA1LjMzMjAwNS0zLjQ1NTA0NEM1LjE1MjY3Ny0zLjA0ODU2OCA0LjkxMzU3NC0yLjUxMDU4NSA0LjUxOTA1NC0xLjQ1ODUzMVonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMycvPgo8L2c+Cjwvc3ZnPg==" alt="\gamma"/> variable: the observations did not convey much information for this variable.</p>
+</section>
+<section id="gaussian-nonlinear-calibration">
+<h2>Gaussian nonlinear calibration<a class="headerlink" href="#gaussian-nonlinear-calibration" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>GaussianNonLinearCalibration</cite> class performs the gaussian nonlinear calibration.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GaussianNonLinearCalibration</span><span class="p">(</span>
+    <span class="n">mycf</span><span class="p">,</span> <span class="n">observedStrain</span><span class="p">,</span> <span class="n">observedStress</span><span class="p">,</span> <span class="n">thetaPrior</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">errorCovariance</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>run</cite> method computes the solution of the problem.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibrationResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>Analysis of the results<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
+<p>The <cite>getParameterMAP</cite> method returns the maximum of the posterior distribution of <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPg==" alt="\theta"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaMAP</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterMAP</span><span class="p">()</span>
+<span class="n">thetaMAP</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.52932e+08,2.54883e+09,7.82095]</p>
+</div>
+<br />
+<br /><p>We can compute a 95% confidence interval of the parameter <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMC4wMTQ1MjRwdCcgaGVpZ2h0PSc4LjMwMjE5MXB0JyB2aWV3Qm94PScwIC04LjMwMjE5MSAxMC4wMTQ1MjQgOC4zMDIxOTEnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTYzJyBkPSdNMy45NDUyMDUtMi4yNzk0NTJDNC4wNTY3ODctMi4zMzUyNDMgNC4wOTY2MzgtMi4zNTExODMgNC4wOTY2MzgtMi40MjI5MTRDNC4wOTY2MzgtMi40NzA3MzUgNC4wNDg4MTctMi41MjY1MjYgMy45ODUwNTYtMi41MjY1MjZDMy45NjkxMTYtMi41MjY1MjYgMy43NTM5MjMtMi40ODY2NzUgMy42MzQzNzEtMi40NjI3NjVMMi40MTQ5NDQtMi4yMjM2NjFMMi4yMzk2MDEtMy42OTAxNjJDMi4yMjM2NjEtMy44MTc2ODQgMi4xOTk3NTEtMy44OTczODUgMi4xMTIwOC0zLjg5NzM4NUMyLjAxNjQzOC0zLjg5NzM4NSAyLjAwODQ2OC0zLjgzMzYyNCAxLjk5MjUyOC0zLjY5MDE2MkwxLjgxNzE4Ni0yLjIyMzY2MUwuMzUwNjg1LTIuNTEwNTg1TC4yMzkxMDMtMi41MjY1MjZDLjE3NTM0Mi0yLjUyNjUyNiAuMTI3NTIyLTIuNDcwNzM1IC4xMjc1MjItMi40MjI5MTRDLjEyNzUyMi0yLjM0MzIxMyAuMTkxMjgzLTIuMzExMzMzIC4yNzA5ODQtMi4yNzk0NTJMMS42MzM4NzMtMS42NTc3ODNMMS4wMDQyMzQtLjUzMzk5OEMuOTQ4NDQzLS40MzAzODYgLjg0NDgzMi0uMjM5MTAzIC44NDQ4MzItLjIxNTE5M0MuODQ0ODMyLS4xNjczNzIgLjg3NjcxMi0uMTAzNjExIC45NTY0MTMtLjEwMzYxMUMuOTcyMzU0LS4xMDM2MTEgLjk5NjI2NC0uMTAzNjExIDEuMDQ0MDg1LS4xNDM0NjJDMS4xMDc4NDYtLjIwNzIyMyAxLjI1OTI3OC0uMzgyNTY1IDEuMzIzMDM5LS40NDYzMjZMMi4xMTIwOC0xLjI5OTEyOEwyLjk4ODc5Mi0uMzU4NjU1QzMuMDIwNjcyLS4zMTg4MDQgMy4xMDgzNDQtLjIyMzE2MyAzLjE0ODE5NC0uMTkxMjgzQzMuMjI3ODk1LS4xMTE1ODIgMy4yMzU4NjYtLjEwMzYxMSAzLjI2Nzc0Ni0uMTAzNjExQzMuMzQ3NDQ3LS4xMDM2MTEgMy4zNzkzMjgtLjE2NzM3MiAzLjM3OTMyOC0uMjE1MTkzQzMuMzc5MzI4LS4yNzA5ODQgMi42ODU5MjgtMS40OTA0MTEgMi41OTAyODYtMS42NDk4MTNMMy45NDUyMDUtMi4yNzk0NTJaJy8+CjxwYXRoIGlkPSdnMS0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xOCcvPgo8dXNlIHg9JzUuNzgwMzQxJyB5PSctNC4zMzg0MzcnIHhsaW5rOmhyZWY9JyNnMC02MycvPgo8L2c+Cjwvc3ZnPg==" alt="\theta^\star"/>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaPosterior</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getParameterPosterior</span><span class="p">()</span>
+<span class="n">thetaPosterior</span><span class="o">.</span><span class="n">computeBilateralConfidenceIntervalWithMarginalProbability</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>[7.46344e+08, 7.58328e+08]<br>
+[2.40036e+09, 2.75072e+09]<br>
+[7.22426, 8.31639]</p>
+</div>
+<br />
+<br /><p>We can see that all three parameters are estimated with a large confidence interval.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsInputs</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;topleft&quot;</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_016.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_016.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a good fit after calibration, since the predictions after calibration (i.e. the green crosses) are close to the observations (i.e. the blue crosses).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawObservationsVsPredictions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_017.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_017.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that there is a much better fit after calibration, since the predictions are close to the diagonal of the graphics.</p>
+<p>The observation error is predicted by bootstraping the problem at the posterior.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">observationError</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">getObservationsError</span><span class="p">()</span>
+<span class="n">observationError</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<p>Normal(mu = -15449.5, sigma = 1e+07)</p>
+</div>
+<br />
+<br /><p>This can be compared to the residuals distribution, which is computed at the posterior.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawResiduals</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_018.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_018.png" alt=", Residual analysis" class = "sphx-glr-single-img"/><p>The analysis is very similar to the linear calibration.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">calibrationResult</span><span class="o">.</span><span class="n">drawParameterDistributions</span><span class="p">()</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_calibration_chaboche_019.png" srcset="../../_images/sphx_glr_plot_calibration_chaboche_019.png" alt="plot calibration chaboche" class = "sphx-glr-single-img"/><p>We see that the prior and posterior distribution for the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc2LjcyMjIyOHB0JyBoZWlnaHQ9JzcuNDcxOThwdCcgdmlld0JveD0nMCAtNS4xNDczNzMgNi43MjIyMjggNy40NzE5OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtMTMnIGQ9J000LjUxOTA1NC0xLjQ1ODUzMUM0LjQ5NTE0My0yLjA0NDMzNCA0LjQ3MTIzMy0yLjk2NDg4MiA0LjAxNjkzNi00LjA0MDg0N0MzLjc3NzgzMy00LjYzODYwNSAzLjM3MTM1Ny01LjI3MjIyOSAyLjQ5ODYzLTUuMjcyMjI5QzEuMDI4MTQ0LTUuMjcyMjI5IC4yMjcxNDgtMy4zOTUyNjggLjIyNzE0OC0zLjA4NDQzM0MuMjI3MTQ4LTIuOTc2ODM3IC4zMTA4MzQtMi45NzY4MzcgLjM0NjctMi45NzY4MzdDLjQ1NDI5Ni0yLjk3NjgzNyAuNDU0Mjk2LTMuMDAwNzQ3IC41MTQwNzItMy4xNTYxNjRDLjc2NTEzMS0zLjg5NzM4NSAxLjUzMDI2Mi00LjQ4MzE4OCAyLjM1NTE2OC00LjQ4MzE4OEM0LjAxNjkzNi00LjQ4MzE4OCA0LjI1NjA0LTIuNjMwMTM3IDQuMjU2MDQtMS40NDY1NzVDNC4yNTYwNC0uNjkzNCA0LjE3MjM1NC0uNDQyMzQxIDQuMTAwNjIzLS4yMDMyMzhDMy44NzM0NzQgLjUzNzk4MyAzLjQ3ODk1NCAyLjAyMDQyMyAzLjQ3ODk1NCAyLjM1NTE2OEMzLjQ3ODk1NCAyLjQ1MDgwOSAzLjUxNDgxOSAyLjU1ODQwNiAzLjYxMDQ2MSAyLjU1ODQwNkMzLjc4OTc4OCAyLjU1ODQwNiAzLjg5NzM4NSAyLjE2Mzg4NSA0LjAyODg5MiAxLjY4NTY3OUM0LjMxNTgxNiAuNjMzNjI0IDQuMzg3NTQ3IC4xMDc1OTcgNC40NDczMjMtLjM3MDYxQzQuNDgzMTg4LS42NTc1MzQgNS4xNjQ2MzMtMi42MzAxMzcgNi4xMDkwOTEtNC41MDcwOThDNi4xOTI3NzctNC42OTgzODEgNi4zNjAxNDktNS4wMjExNzEgNi4zNjAxNDktNS4wNTcwMzZDNi4zNjAxNDktNS4wNjg5OTEgNi4zNDgxOTQtNS4xNTI2NzcgNi4yNDA1OTgtNS4xNTI2NzdDNi4yMTY2ODctNS4xNTI2NzcgNi4xNTY5MTItNS4xNTI2NzcgNi4xMzMwMDEtNS4xMDQ4NTdDNi4xMDkwOTEtNS4wODA5NDYgNS42OTA2Ni00LjI2Nzk5NSA1LjMzMjAwNS0zLjQ1NTA0NEM1LjE1MjY3Ny0zLjA0ODU2OCA0LjkxMzU3NC0yLjUxMDU4NSA0LjUxOTA1NC0xLjQ1ODUzMVonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMycvPgo8L2c+Cjwvc3ZnPg==" alt="\gamma"/> parameter are close to each other, but not superimposed: the observations significantly brought information to the variable <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDIuMTMuMyAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc2LjcyMjIyOHB0JyBoZWlnaHQ9JzcuNDcxOThwdCcgdmlld0JveD0nMCAtNS4xNDczNzMgNi43MjIyMjggNy40NzE5OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtMTMnIGQ9J000LjUxOTA1NC0xLjQ1ODUzMUM0LjQ5NTE0My0yLjA0NDMzNCA0LjQ3MTIzMy0yLjk2NDg4MiA0LjAxNjkzNi00LjA0MDg0N0MzLjc3NzgzMy00LjYzODYwNSAzLjM3MTM1Ny01LjI3MjIyOSAyLjQ5ODYzLTUuMjcyMjI5QzEuMDI4MTQ0LTUuMjcyMjI5IC4yMjcxNDgtMy4zOTUyNjggLjIyNzE0OC0zLjA4NDQzM0MuMjI3MTQ4LTIuOTc2ODM3IC4zMTA4MzQtMi45NzY4MzcgLjM0NjctMi45NzY4MzdDLjQ1NDI5Ni0yLjk3NjgzNyAuNDU0Mjk2LTMuMDAwNzQ3IC41MTQwNzItMy4xNTYxNjRDLjc2NTEzMS0zLjg5NzM4NSAxLjUzMDI2Mi00LjQ4MzE4OCAyLjM1NTE2OC00LjQ4MzE4OEM0LjAxNjkzNi00LjQ4MzE4OCA0LjI1NjA0LTIuNjMwMTM3IDQuMjU2MDQtMS40NDY1NzVDNC4yNTYwNC0uNjkzNCA0LjE3MjM1NC0uNDQyMzQxIDQuMTAwNjIzLS4yMDMyMzhDMy44NzM0NzQgLjUzNzk4MyAzLjQ3ODk1NCAyLjAyMDQyMyAzLjQ3ODk1NCAyLjM1NTE2OEMzLjQ3ODk1NCAyLjQ1MDgwOSAzLjUxNDgxOSAyLjU1ODQwNiAzLjYxMDQ2MSAyLjU1ODQwNkMzLjc4OTc4OCAyLjU1ODQwNiAzLjg5NzM4NSAyLjE2Mzg4NSA0LjAyODg5MiAxLjY4NTY3OUM0LjMxNTgxNiAuNjMzNjI0IDQuMzg3NTQ3IC4xMDc1OTcgNC40NDczMjMtLjM3MDYxQzQuNDgzMTg4LS42NTc1MzQgNS4xNjQ2MzMtMi42MzAxMzcgNi4xMDkwOTEtNC41MDcwOThDNi4xOTI3NzctNC42OTgzODEgNi4zNjAxNDktNS4wMjExNzEgNi4zNjAxNDktNS4wNTcwMzZDNi4zNjAxNDktNS4wNjg5OTEgNi4zNDgxOTQtNS4xNTI2NzcgNi4yNDA1OTgtNS4xNTI2NzdDNi4yMTY2ODctNS4xNTI2NzcgNi4xNTY5MTItNS4xNTI2NzcgNi4xMzMwMDEtNS4xMDQ4NTdDNi4xMDkwOTEtNS4wODA5NDYgNS42OTA2Ni00LjI2Nzk5NSA1LjMzMjAwNS0zLjQ1NTA0NEM1LjE1MjY3Ny0zLjA0ODU2OCA0LjkxMzU3NC0yLjUxMDU4NSA0LjUxOTA1NC0xLjQ1ODUzMVonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMycvPgo8L2c+Cjwvc3ZnPg==" alt="\gamma"/> during the calibration.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.345 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-calibration-least-squares-and-gaussian-calibration-plot-calibration-chaboche-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/df6875357182d9cc3a184cf8a65a89a4/plot_calibration_chaboche.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_calibration_chaboche.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/eace64ef90ce50019c2cac3df8f0b461/plot_calibration_chaboche.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_calibration_chaboche.ipynb</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_calibration_flooding.html" title="Calibration of the flooding model"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_calibration_logistic.html" title="Calibration of the logistic model"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.20 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Calibration</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Least squares and gaussian calibration</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Calibration of the Chaboche mechanical model</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2022 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Mar 22, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

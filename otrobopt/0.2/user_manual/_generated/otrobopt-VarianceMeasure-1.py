@@ -1,0 +1,63 @@
+import openturns as ot
+import otrobopt
+from matplotlib import pyplot as plt
+from openturns.viewer import View
+
+thetaDist = ot.Normal(2.0, 0.1)
+if 'VarianceMeasure' == 'WorstCaseMeasure':
+    thetaDist = ot.Uniform(-1.0, 4.0)
+elif 'ChanceMeasure' in 'VarianceMeasure':
+    thetaDist = ot.Normal(1.0, 1.0)
+
+f_base = ot.Function(['x', 'theta'], ['y'], ['x*theta'])
+f = ot.Function(f_base, [1], thetaDist.getMean())
+
+if 'VarianceMeasure' == 'JointChanceMeasure':
+    measure = otrobopt.JointChanceMeasure(f, thetaDist, ot.GreaterOrEqual(), 0.95)
+elif 'VarianceMeasure' == 'IndividualChanceMeasure':
+    measure = otrobopt.IndividualChanceMeasure(f,thetaDist, ot.GreaterOrEqual(), [0.95])
+elif 'VarianceMeasure' == 'MeanStandardDeviationTradeoffMeasure':
+    measure =  otrobopt.MeanStandardDeviationTradeoffMeasure(f, thetaDist, [0.8])
+elif 'VarianceMeasure' == 'QuantileMeasure':
+    measure =  otrobopt.QuantileMeasure(f, thetaDist, 0.99)
+else:
+    measure = otrobopt.VarianceMeasure(f, thetaDist)
+
+N = 10
+experiment = ot.LHSExperiment(N)
+factory = otrobopt.MeasureFactory(experiment)
+discretizedMeasure = factory.build(measure)
+
+continuous_measure = otrobopt.MeasureFunction(measure)
+discretized_measure = otrobopt.MeasureFunction(discretizedMeasure)
+
+x_min = -2.0
+x_max = 2.0
+n_points = 128
+
+parametric_graph = f.draw(x_min, x_max, n_points)
+continuous_graph = continuous_measure.draw(x_min, x_max, n_points)
+discretized_graph = discretized_measure.draw(x_min, x_max, n_points)
+
+parametric_curve = parametric_graph.getDrawable(0)
+discretized_curve = discretized_graph.getDrawable(0)
+
+left_graph = ot.Graph(continuous_graph)
+left_graph.add(parametric_curve)
+#left_graph.setLegends(['measure', 'parametric function'])
+#left_graph.setLegendPosition('topright')
+left_graph.setColors(['blue', 'red'])
+
+right_graph = ot.Graph(continuous_graph)
+right_graph.add(discretized_curve)
+#right_graph.setLegends(['measure', 'discretized measure'])
+#right_graph.setLegendPosition('topright')
+right_graph.setColors(['blue', 'red'])
+
+fig = plt.figure(figsize=(10, 4))
+plt.suptitle(str(measure))
+left_axis = fig.add_subplot(121)
+right_axis = fig.add_subplot(122)
+
+View(left_graph, figure=fig, axes=[left_axis], add_legend=False)
+View(right_graph, figure=fig, axes=[right_axis], add_legend=False)

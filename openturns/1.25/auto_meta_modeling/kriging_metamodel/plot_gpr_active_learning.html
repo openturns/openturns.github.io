@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gaussian Process-based active learning for reliability &#8212; OpenTURNS 1.25.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sphx_glr.css?v=2ae27345" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=d41f9ef8"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Advanced Gaussian process regression" href="plot_gpr_advanced.html" />
+    <link rel="prev" title="Gaussian process fitter: configure the optimization solver" href="plot_gpr_hyperparameters_optimization.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_gpr_advanced.html" title="Advanced Gaussian process regression"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_gpr_hyperparameters_optimization.html" title="Gaussian process fitter: configure the optimization solver"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.25.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Gaussian Process Regression metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Gaussian Process-based active learning for reliability</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Gaussian Process-based active learning for reliability</a><ul>
+<li><a class="reference internal" href="#create-the-function-and-the-design-of-experiments">Create the function and the design of experiments</a></li>
+<li><a class="reference internal" href="#define-the-reliability-analysis">Define the reliability analysis</a></li>
+<li><a class="reference internal" href="#create-the-algorithms">Create the algorithms</a></li>
+<li><a class="reference internal" href="#active-learning-gaussian-process-regressor-to-sequentially-add-new-points">Active learning Gaussian Process Regressor to sequentially add new points</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_gpr_hyperparameters_optimization.html"
+                          title="previous chapter">Gaussian process fitter: configure the optimization solver</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_gpr_advanced.html"
+                          title="next chapter">Advanced Gaussian process regression</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_meta_modeling/kriging_metamodel/plot_gpr_active_learning.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-gpr-active-learning-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="gaussian-process-based-active-learning-for-reliability">
+<span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-gpr-active-learning-py"></span><h1>Gaussian Process-based active learning for reliability<a class="headerlink" href="#gaussian-process-based-active-learning-for-reliability" title="Link to this heading">¶</a></h1>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 13</span>
+</pre></div>
+</div>
+<p>In this example, we show how to sequentially add new points to a Gaussian Progress Regression model (GPR).
+The goal is to improve the predictivity of the surrogate model for reliability estimation.
+This kind of strategy is called “active learning”.
+In order to create simple graphs, we consider a 1-d function.</p>
+<section id="create-the-function-and-the-design-of-experiments">
+<h2>Create the function and the design of experiments<a class="headerlink" href="#create-the-function-and-the-design-of-experiments" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.experimental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otexp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="kn">import</span> <span class="n">viewer</span>
+</pre></div>
+</div>
+<p>Define the function, the threshold above which the system is considered in failure, and the input probability distribution.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;0.5*x^2 + sin(5*x)&quot;</span><span class="p">])</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">1.25</span>
+<span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create the design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">DoESize</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">xMin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span>
+<span class="n">xMax</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">X_distr</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">X_distr</span><span class="p">,</span> <span class="n">DoESize</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We plot the limit state function, the initial design of experiments and the failure threshold.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">thresholdFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">],</span> <span class="p">[</span><span class="n">threshold</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+<span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setLineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Failure threshold&quot;</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Design of Experiments&quot;</span><span class="p">)</span>
+
+<span class="n">graphFunction</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
+<span class="n">graphFunction</span><span class="o">.</span><span class="n">setColors</span><span class="p">([</span><span class="s2">&quot;magenta&quot;</span><span class="p">])</span>
+<span class="n">graphFunction</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;Limit state function&quot;</span><span class="p">])</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphFunction</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">thresholdFunction</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_active_learning_001.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_001.svg" alt="plot gpr active learning" class = "sphx-glr-single-img"/></section>
+<section id="define-the-reliability-analysis">
+<h2>Define the reliability analysis<a class="headerlink" href="#define-the-reliability-analysis" title="Link to this heading">¶</a></h2>
+<p>We define the event and estimate the reference failure probability with Monte-Carlo algorithm.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vect</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RandomVector</span><span class="p">(</span><span class="n">distribution</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CompositeRandomVector</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">vect</span><span class="p">)</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ThresholdEvent</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">Greater</span><span class="p">(),</span> <span class="n">threshold</span><span class="p">)</span>
+
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MonteCarloExperiment</span><span class="p">()</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ProbabilitySimulationAlgorithm</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">experiment</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumCoefficientOfVariation</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setMaximumOuterSampling</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">))</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">probability</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getProbabilityEstimate</span><span class="p">()</span>
+<span class="n">sampleX</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">getInputHistory</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reference probability on the real function =&quot;</span><span class="p">,</span> <span class="n">probability</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Reference probability on the real function = 0.016759776536312866
+</pre></div>
+</div>
+</section>
+<section id="create-the-algorithms">
+<h2>Create the algorithms<a class="headerlink" href="#create-the-algorithms" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">createMyBasicGPR</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a Gaussian Process from a pair of X and Y samples.</span>
+<span class="sd">    We use a 3/2 Matérn covariance model and a constant trend.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+    <span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MaternModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">fitter</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+    <span class="n">fitter</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessRegression</span><span class="p">(</span><span class="n">fitter</span><span class="o">.</span><span class="n">getResult</span><span class="p">())</span>
+    <span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">gprResult</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">gprResult</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">linearSample</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">npoints</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a sample created from a regular grid</span>
+<span class="sd">    from xmin to xmax with npoints points.&quot;&quot;&quot;</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">npoints</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">rg</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">RegularGrid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">vertices</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plotMyBasicGPR</span><span class="p">(</span>
+    <span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">sampleX</span><span class="p">,</span> <span class="n">refProbability</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.95</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a gaussian process result, plot the data, the GP metamodel</span>
+<span class="sd">    and a confidence interval.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">gprResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+    <span class="n">graphKriging</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">)</span>
+    <span class="n">graphKriging</span><span class="o">.</span><span class="n">setLegends</span><span class="p">([</span><span class="s2">&quot;GPR&quot;</span><span class="p">])</span>
+    <span class="c1"># Create a grid of points and evaluate the function and the kriging</span>
+    <span class="n">nbpoints</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">xGrid</span> <span class="o">=</span> <span class="n">linearSample</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">nbpoints</span><span class="p">)</span>
+    <span class="n">yFunction</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="n">yKrig</span> <span class="o">=</span> <span class="n">meta</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="c1"># Compute the conditional covariance</span>
+
+    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">getOperator</span><span class="p">()</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">proba</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gprResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()(</span><span class="n">sampleX</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">event</span><span class="o">.</span><span class="n">getThreshold</span><span class="p">())</span>
+            <span class="o">/</span> <span class="n">sampleX</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">proba</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gprResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()(</span><span class="n">sampleX</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">event</span><span class="o">.</span><span class="n">getThreshold</span><span class="p">())</span>
+            <span class="o">/</span> <span class="n">sampleX</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="n">gpcc</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span><span class="n">gprResult</span><span class="p">)</span>
+    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">gpcc</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">xGrid</span><span class="p">)</span>
+    <span class="n">conditionalSigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">conditionalVariance</span><span class="p">)</span>
+    <span class="c1"># Compute the quantile of the Normal distribution</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">quantileAlpha</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">DistFunc</span><span class="o">.</span><span class="n">qNormal</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="c1"># Draw the bounds</span>
+    <span class="n">dataLower</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">dataUpper</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">yKrig</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">quantileAlpha</span> <span class="o">*</span> <span class="n">conditionalSigma</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbpoints</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="c1"># Compute the Polygon graphics</span>
+    <span class="n">boundsPoly</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Polygon</span><span class="o">.</span><span class="n">FillBetween</span><span class="p">(</span><span class="n">xGrid</span><span class="o">.</span><span class="n">asPoint</span><span class="p">(),</span> <span class="n">dataLower</span><span class="p">,</span> <span class="n">dataUpper</span><span class="p">)</span>
+    <span class="n">boundsPoly</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;95% bounds&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Plot the function</span>
+    <span class="n">graphFonction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="n">xGrid</span><span class="p">,</span> <span class="n">yFunction</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;magenta&quot;</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setLineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">graphFonction</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Function&quot;</span><span class="p">)</span>
+
+    <span class="n">thresholdFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Curve</span><span class="p">([</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">],</span> <span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">getThreshold</span><span class="p">()]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setLineStyle</span><span class="p">(</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setLineWidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">thresholdFunction</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Threshold&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Draw the X and Y observed</span>
+    <span class="n">cloudDOE</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Cloud</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">cloudDOE</span><span class="o">.</span><span class="n">setPointStyle</span><span class="p">(</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
+    <span class="n">cloudDOE</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">cloudDOE</span><span class="o">.</span><span class="n">setLegend</span><span class="p">(</span><span class="s2">&quot;Data&quot;</span><span class="p">)</span>
+    <span class="c1"># Assemble the graph</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">boundsPoly</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphFonction</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">thresholdFunction</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cloudDOE</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">graphKriging</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setLegendPosition</span><span class="p">(</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setAxes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setGrid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span>
+        <span class="s2">&quot;Estimated probability = </span><span class="si">%f</span><span class="s2">, Reference probability =  </span><span class="si">%f</span><span class="s2">&quot;</span>
+        <span class="o">%</span> <span class="p">(</span><span class="n">proba</span><span class="p">,</span> <span class="n">refProbability</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setXTitle</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">setYTitle</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graph</span>
+</pre></div>
+</div>
+<p>We start by creating the initial Gaussian Process Regressor model <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxNC4zNTY5NjJwdCcgaGVpZ2h0PScxMS4zMjQxNjlwdCcgdmlld0JveD0nMCAtMTEuMzI0MTY5IDE0LjM1Njk2MiAxMS4zMjQxNjknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTc3JyBkPSdNNC42MDI3NC02LjY4MjkzOUM0LjkyNTUyOS01LjEyODc2NyA1LjQ1MTU1Ny0yLjU3MDM2MSA2LjEzMzAwMS0xLjE4MzU2MkM2LjM5NjAxNS0uNjY5NDg5IDYuNTI3NTIyLS40MDY0NzYgNi42NDcwNzMtLjQwNjQ3NkM2LjY5NDg5NC0uNDA2NDc2IDYuNzE4ODA0LS40MDY0NzYgNi45MzM5OTgtLjYyMTY2OUM3Ljg0MjU5LTEuNDk0Mzk2IDguNDY0MjU5LTIuMTg3Nzk2IDkuMzAxMTIxLTMuMTQ0MjA5TDExLjkxOTMwMy02LjE5Mjc3N0MxMS43NTE5My01LjE3NjU4OCAxMS4zMjE1NDQtMi40ODY2NzUgMTEuMzIxNTQ0LTEuMDg3OTJDMTEuMzIxNTQ0LS43NjUxMzEgMTEuMzMzNDk5LS40NTQyOTYgMTEuMzY5MzY1LS4xMzE1MDdDMTEuMzgxMzIgMCAxMS40MjkxNDEgLjM0NjcgMTEuOTMxMjU4IC4zNDY3UzEzLjM0MTk2OC0uMTc5MzI4IDEzLjM0MTk2OC0uNDE4NDMxQzEzLjM0MTk2OC0uNDkwMTYyIDEzLjI3MDIzNy0uNTAyMTE3IDEzLjIzNDM3MS0uNTAyMTE3QzEzLjA3ODk1NC0uNTAyMTE3IDEyLjgzOTg1MS0uMzk0NTIxIDEyLjcwODM0NC0uMzEwODM0QzEyLjQyMTQyLS4zNDY3IDEyLjM5NzUwOS0uNTM3OTgzIDEyLjM3MzU5OS0uODEyOTUxQzEyLjMzNzczMy0xLjE5NTUxNyAxMi4zMzc3MzMtMS41NTQxNzIgMTIuMzM3NzMzLTEuNjAxOTkzQzEyLjMzNzczMy0yLjkyOTAxNiAxMi44NjM3NjEtNi41NTE0MzIgMTMuMjEwNDYxLTguMDMzODczQzEzLjIyMjQxNi04LjExNzU1OSAxMy4yMzQzNzEtOC4xNDE0NjkgMTMuMjM0MzcxLTguMjM3MTExQzEzLjIzNDM3MS04LjI4NDkzMiAxMy4yMjI0MTYtOC40MTY0MzggMTMuMTM4NzMtOC40MTY0MzhDMTMuMDkwOTA5LTguNDE2NDM4IDEzLjA3ODk1NC04LjQwNDQ4MyAxMi44NTE4MDYtOC4xNDE0NjlDMTEuNzI4MDItNi43Nzg1OCA4LjIzNzExMS0yLjU5NDI3MSA3LjA1MzU0OS0xLjU5MDAzN0M2Ljc1NDY3LTIuMjIzNjYxIDYuNTM5NDc3LTIuNjc3OTU4IDYuMTIxMDQ2LTQuMzUxNjgxQzUuNzc0MzQ2LTUuNzAyNjE1IDUuNTcxMTA4LTYuNjk0ODk0IDUuMzY3ODctNy44NTQ1NDVDNS4zMzIwMDUtOC4wMjE5MTggNS4yNzIyMjktOC4zNDQ3MDcgNS4yNzIyMjktOC4zNjg2MThDNS4yMzYzNjQtOC40MjgzOTQgNS4xNzY1ODgtOC40MjgzOTQgNS4xNDA3MjItOC40MjgzOTRDNC45MjU1MjktOC40MjgzOTQgNC40MjM0MTItOC4xNjUzOCA0LjM4NzU0Ny03LjkxNDMyMUM0LjI0NDA4NS02LjkxMDA4NyA0LjAwNDk4MS01LjMzMjAwNSAzLjE2ODEyLTMuMDQ4NTY4QzIuMjExNzA2LS41MDIxMTcgMS45NDg2OTItLjUwMjExNyAxLjcyMTU0NC0uNTAyMTE3QzEuNTY2MTI3LS41MDIxMTcgMS4xMjM3ODYtLjU5Nzc1OCAuODYwNzcyLS44MzY4NjJDLjgwMDk5Ni0uODk2NjM4IC43NzcwODYtLjg5NjYzOCAuNzUzMTc2LS44OTY2MzhDLjU4NTgwMy0uODk2NjM4IC4zMjI3OS0uMzU4NjU1IC4zMjI3OS0uMDIzOTFDLjMyMjc5IC4wODM2ODYgLjMyMjc5IC4yMjcxNDggLjcwNTM1NSAuNDMwMzg2QzEuMDA0MjM0IC41ODU4MDMgMS4yOTExNTggLjU5Nzc1OCAxLjM1MDkzNCAuNTk3NzU4QzIuMDkyMTU0IC41OTc3NTggMi43OTc1MDktMS4xMTE4MzEgMy4wMzY2MTMtMS43MjE1NDRDMy41OTg1MDYtMy4wNzI0NzggNC4yNjc5OTUtNC45NjEzOTUgNC42MDI3NC02LjY4MjkzOVonLz4KPHBhdGggaWQ9J2cxLTk0JyBkPSdNMi45MjkwMTYtOC4yOTY4ODdMMS4zNjI4ODktNi42NzA5ODRMMS41NTQxNzItNi40OTE2NTZMMi45MTcwNjEtNy43MjMwMzlMNC4yOTE5MDUtNi40OTE2NTZMNC40ODMxODgtNi42NzA5ODRMMi45MjkwMTYtOC4yOTY4ODdaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PSc1LjkxMjQ3NScgeT0nLTMuMDIxOTc4JyB4bGluazpocmVmPScjZzEtOTQnLz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzAtNzcnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD0wIC0tPg==" alt="\hat{\mathcal{M}}" style="vertical-align: 0px"/> on the 4 points in the design of experiments.
+We estimate the probability on this surrogate model and compare with the reference probability computed on the real limit state function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicGPR</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicGPR</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">sampleX</span><span class="p">,</span> <span class="n">probability</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_active_learning_002.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_002.svg" alt="Estimated probability = 0.017606, Reference probability =  0.016760" class = "sphx-glr-single-img"/></section>
+<section id="active-learning-gaussian-process-regressor-to-sequentially-add-new-points">
+<h2>Active learning Gaussian Process Regressor to sequentially add new points<a class="headerlink" href="#active-learning-gaussian-process-regressor-to-sequentially-add-new-points" title="Link to this heading">¶</a></h2>
+<p>To sequentially add the new points, the “U criterion” is used.
+It consists in finding the new point as the sample <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc3LjA5ODM4MXB0JyBoZWlnaHQ9JzUuMzEzMzk5cHQnIHZpZXdCb3g9JzAgLTUuMzEzMzk5IDcuMDk4MzgxIDUuMzEzMzk5Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xMjAnIGQ9J000LjAyODg5Mi0yLjk1MjkyN0w1LjQxNTY5MS00LjU0Mjk2NEM1LjU0NzE5OC00LjY5ODM4MSA1LjY1NDc5NS00Ljc5NDAyMiA2LjY0NzA3My00Ljc5NDAyMlYtNS4zMDgwOTVDNS45Nzc1ODQtNS4yODQxODQgNS45NTM2NzQtNS4yODQxODQgNS41NDcxOTgtNS4yODQxODRDNS4yMDA0OTgtNS4yODQxODQgNC42ODY0MjYtNS4yODQxODQgNC4zNTE2ODEtNS4zMDgwOTVWLTQuNzk0MDIyQzQuNTc4ODI5LTQuNzk0MDIyIDQuODI5ODg4LTQuNzM0MjQ3IDQuODI5ODg4LTQuNjUwNTZDNC44Mjk4ODgtNC42MjY2NSA0Ljc3MDExMi00LjU0Mjk2NCA0Ljc0NjIwMi00LjUxOTA1NEwzLjcwNjEwMi0zLjM0NzQ0N0wyLjUyMjU0LTQuNzk0MDIySDMuMDI0NjU4Vi01LjMwODA5NUMyLjc0OTY4OS01LjI4NDE4NCAxLjkzNjczNy01LjI4NDE4NCAxLjYxMzk0OC01LjI4NDE4NEMxLjI1NTI5My01LjI4NDE4NCAuNjA5NzE0LTUuMjg0MTg0IC4yNzQ5NjktNS4zMDgwOTVWLTQuNzk0MDIySDEuMTIzNzg2TDIuOTg4NzkyLTIuNTIyNTRMMS40MzQ2Mi0uNzY1MTMxQzEuMjkxMTU4LS41OTc3NTggMS4yMDc0NzItLjUxNDA3MiAuMjE1MTkzLS41MTQwNzJWMEMuOTMyNTAzLS4wMjM5MSAuOTU2NDEzLS4wMjM5MSAxLjMyNzAyNC0uMDIzOTFDMS42NzM3MjQtLjAyMzkxIDIuMTc1ODQxLS4wMjM5MSAyLjUxMDU4NSAwVi0uNTE0MDcyQzIuMjgzNDM3LS41MTQwNzIgMi4wMzIzNzktLjU3Mzg0OCAyLjAzMjM3OS0uNjU3NTM0QzIuMDMyMzc5LS42Njk0ODkgMi4wMzIzNzktLjY4MTQ0NSAyLjExNjA2NS0uNzc3MDg2TDMuMzExNTgyLTIuMTI4MDJMNC42Mzg2MDUtLjUxNDA3Mkg0LjEzNjQ4OFYwQzQuNDIzNDEyLS4wMjM5MSA1LjIyNDQwOC0uMDIzOTEgNS41NTkxNTMtLjAyMzkxQzUuOTE3ODA4LS4wMjM5MSA2LjU1MTQzMi0uMDIzOTEgNi44ODYxNzcgMFYtLjUxNDA3Mkg2LjA0OTMxNUw0LjAyODg5Mi0yLjk1MjkyN1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMjAnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD0wIC0tPg==" alt="\mathbf{x}" style="vertical-align: 0px"/> in the Monte-Carlo experiment that minimizes  the following expression:
+<img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc0MS4xNTI0NzFwdCcgaGVpZ2h0PScyMS43NzY0MDFwdCcgdmlld0JveD0nMS4xOTU1MTQgLTE1LjY2MTI0MSA0MS4xNTI0NzEgMjEuNzc2NDAxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xMjAnIGQ9J00yLjk2NDg4Mi0xLjk0NDcwN0wzLjk3NzA4Ni0yLjk4ODc5MkM0LjEwNDYwOC0zLjEyNDI4NCA0LjM0MzcxMS0zLjEyNDI4NCA0Ljc1ODE1Ny0zLjEyNDI4NFYtMy41Mzg3M0M0LjUxOTA1NC0zLjUxNDgxOSA0LjE2MDM5OS0zLjUxNDgxOSA0LjAwMDk5Ni0zLjUxNDgxOUMzLjkyOTI2NS0zLjUxNDgxOSAzLjQ2Njk5OS0zLjUxNDgxOSAzLjE4ODA0NS0zLjUzODczVi0zLjEyNDI4NEMzLjI2Nzc0Ni0zLjEyNDI4NCAzLjQwMzIzOC0zLjEwMDM3NCAzLjQwMzIzOC0zLjA1MjU1M0MzLjQwMzIzOC0zLjAyODY0MyAzLjM1NTQxNy0yLjk4MDgyMiAzLjM0NzQ0Ny0yLjk3Mjg1MkwyLjY2OTk4OC0yLjI3MTQ4MkwxLjg4MDk0Ni0zLjEyNDI4NEgyLjEyMDA1Vi0zLjUzODczQzEuNjU3NzgzLTMuNTE0ODE5IDEuNTU0MTcyLTMuNTE0ODE5IDEuMTYzNjM2LTMuNTE0ODE5QzEuMDIwMTc0LTMuNTE0ODE5IC41NDk5MzgtMy41MTQ4MTkgLjI3MDk4NC0zLjUzODczVi0zLjEyNDI4NEguODI4ODkyTDIuMTI4MDItMS43MTM1NzRMMS4wMjAxNzQtLjU1NzkwOEMuOTMyNTAzLS40NzAyMzcgLjg1MjgwMi0uNDE0NDQ2IC4zNTg2NTUtLjQxNDQ0NkguMjIzMTYzVjBDLjQ3MDIzNy0uMDIzOTEgLjgzNjg2Mi0uMDIzOTEgLjk4MDMyNC0uMDIzOTFDMS4wMjgxNDQtLjAyMzkxIDEuNTIyMjkxLS4wMjM5MSAxLjgwMTI0NSAwVi0uNDE0NDQ2QzEuNjQ5ODEzLS40MTQ0NDYgMS42MDk5NjMtLjQ1NDI5NiAxLjU3MDExMi0uNDg2MTc3TDIuNDMwODg0LTEuMzg2OEwzLjMyMzUzNy0uNDE0NDQ2SDMuMDg0NDMzVjBDMy41NDY3LS4wMjM5MSAzLjY1MDMxMS0uMDIzOTEgNC4wNDA4NDctLjAyMzkxQzQuMTYwMzk5LS4wMjM5MSA0LjY1NDU0NS0uMDIzOTEgNC45MzM0OTkgMFYtLjQxNDQ0Nkg0LjM3NTU5MkwyLjk2NDg4Mi0xLjk0NDcwN1onLz4KPHBhdGggaWQ9J2cxLTAnIGQ9J001LjU3MTEwOC0xLjgwOTIxNUM1LjY5ODYzLTEuODA5MjE1IDUuODczOTczLTEuODA5MjE1IDUuODczOTczLTEuOTkyNTI4UzUuNjk4NjMtMi4xNzU4NDEgNS41NzExMDgtMi4xNzU4NDFIMS4wMDQyMzRDLjg3NjcxMi0yLjE3NTg0MSAuNzAxMzctMi4xNzU4NDEgLjcwMTM3LTEuOTkyNTI4Uy44NzY3MTItMS44MDkyMTUgMS4wMDQyMzQtMS44MDkyMTVINS41NzExMDhaJy8+CjxwYXRoIGlkPSdnMS03NycgZD0nTTMuMTg4MDQ1LTQuNDM5MzUyQzMuODY1NTA0LTEuNTYyMTQyIDQuMjI0MTU5LS45NTY0MTMgNC41NDI5NjQtLjQzODM1NkM0LjY0NjU3NS0uMjc4OTU0IDQuNjU0NTQ1LS4yNzA5ODQgNC43MTAzMzYtLjI3MDk4NEM0Ljc1ODE1Ny0uMjcwOTg0IDQuNzc0MDk3LS4yODY5MjQgNC44NDU4MjgtLjM1ODY1NUM1LjcyMjU0LTEuMTM5NzI2IDYuMTY4ODY3LTEuNjMzODczIDguMzkyNTI4LTQuMTEyNTc4QzguMjgwOTQ2LTMuMzcxMzU3IDguMDI1OTAzLTEuNjg5NjY0IDguMDI1OTAzLS44MjA5MjJDOC4wMjU5MDMtLjU4OTc4OCA4LjA0MTg0My0uMzEwODM0IDguMDY1NzUzLS4xMDM2MTFDOC4xMDU2MDQgLjE1MTQzMiA4LjI4ODkxNyAuMjIzMTYzIDguNDY0MjU5IC4yMjMxNjNDOC44MjI5MTQgLjIyMzE2MyA5LjQ0NDU4My0uMTI3NTIyIDkuNDQ0NTgzLS4zMDI4NjRDOS40NDQ1ODMtLjM1ODY1NSA5LjM4MDgyMi0uMzU4NjU1IDkuMzU2OTEyLS4zNTg2NTVDOS4yMTM0NS0uMzU4NjU1IDkuMDkzODk4LS4yNzg5NTQgOS4wMjIxNjctLjIzOTEwM0M4Ljc5OTAwNC0uMjU1MDQ0IDguNzgzMDY0LS4zOTg1MDYgOC43NjcxMjMtLjYwNTcyOUM4LjczNTI0My0uODkyNjUzIDguNzM1MjQzLTEuMDgzOTM1IDguNzM1MjQzLTEuMTcxNjA2QzguNzM1MjQzLTEuOTM2NzM3IDkuMDE0MTk3LTQuMTUyNDI4IDkuMjc3MjEtNS4zNDc5NDVDOS4yODUxODEtNS4zNzk4MjYgOS4yOTMxNTEtNS40NDM1ODcgOS4yOTMxNTEtNS40NzU0NjdTOS4yODUxODEtNS42MDI5ODkgOS4yMjkzOS01LjYwMjk4OUM5LjE4MTU2OS01LjYwMjk4OSA5LjEyNTc3OC01LjUzOTIyOCA5LjAzODEwNy01LjQ0MzU4N0M4LjIyNTE1Ni00LjQ4NzE3MyA3LjM5NjI2NC0zLjUzODczIDYuNTM1NDkyLTIuNjIyMTY3QzUuNTM5MjI4LTEuNTYyMTQyIDUuMjM2MzY0LTEuMjk5MTI4IDQuOTg5MjktMS4wNzU5NjVDNC43MTAzMzYtMS41OTQwMjIgNC41NjY4NzQtMS45OTI1MjggNC4zNTk2NTEtMi42ODU5MjhDNC4wNDA4NDctMy43Mzc5ODMgMy44NDk1NjQtNC41NzQ4NDQgMy42OTAxNjItNS4zNTU5MTVDMy42NTAzMTEtNS41NTUxNjggMy42NTAzMTEtNS41NzExMDggMy42MzQzNzEtNS41ODcwNDlDMy42MTA0NjEtNS42MTA5NTkgMy41NzA2MS01LjYxMDk1OSAzLjU1NDY3LTUuNjEwOTU5QzMuNDU5MDI5LTUuNjEwOTU5IDMuMjkxNjU2LTUuNTM5MjI4IDMuMTY0MTM0LTUuNDQzNTg3QzMuMDM2NjEzLTUuMzM5OTc1IDMuMDI4NjQzLTUuMzAwMTI1IDMuMDEyNzAyLTUuMTMyNzUyQzIuNjc3OTU4LTIuNzAxODY4IDEuNzM3NDg0LS44Njg3NDIgMS42MDk5NjMtLjY2MTUxOUMxLjQ3NDQ3MS0uNDQ2MzI2IDEuMzU0OTE5LS4zNTg2NTUgMS4yMzUzNjctLjM1ODY1NUMuOTk2MjY0LS4zNTg2NTUgLjcxNzMxLS40NjIyNjcgLjU0OTkzOC0uNjM3NjA5Qy40NzAyMzctLjU5Nzc1OCAuNDA2NDc2LS41NzM4NDggLjMyNjc3NS0uMzgyNTY1Qy4yNzA5ODQtLjI3MDk4NCAuMjMxMTMzLS4xNDM0NjIgLjIzMTEzMy0uMDE1OTRDLjIzMTEzMyAuMDc5NzAxIC4yMzExMzMgLjE1MTQzMiAuNTE4MDU3IC4yOTQ4OTRDLjcwOTM0IC4zOTA1MzUgLjk0MDQ3MyAuNDA2NDc2IC45NzIzNTQgLjQwNjQ3NkMxLjUzMDI2MiAuNDA2NDc2IDIuMDQ4MzE5LS45MDA2MjMgMi4yNzE0ODItMS40NTA1NkMyLjY1NDA0Ny0yLjQyMjkxNCAyLjk5Njc2Mi0zLjQxMTIwOCAzLjE4ODA0NS00LjQzOTM1MlonLz4KPHBhdGggaWQ9J2cyLTEwNicgZD0nTTEuOTAwODcyLTguNTM1OTlDMS45MDA4NzItOC43NTExODMgMS45MDA4NzItOC45NjYzNzYgMS42NjE3NjgtOC45NjYzNzZTMS40MjI2NjUtOC43NTExODMgMS40MjI2NjUtOC41MzU5OVYyLjU1ODQwNkMxLjQyMjY2NSAyLjc3MzU5OSAxLjQyMjY2NSAyLjk4ODc5MiAxLjY2MTc2OCAyLjk4ODc5MlMxLjkwMDg3MiAyLjc3MzU5OSAxLjkwMDg3MiAyLjU1ODQwNlYtOC41MzU5OVonLz4KPHBhdGggaWQ9J2czLTI3JyBkPSdNNC4zNzU1OTItMi45MDkwOTFDNC41MTkwNTQtMi45MDkwOTEgNC41NzQ4NDQtMi45MDkwOTEgNC42NzA0ODYtMi45NzI4NTJDNC43NTgxNTctMy4wNDQ1ODMgNC43OTAwMzctMy4xNTYxNjQgNC43OTAwMzctMy4yMTE5NTVDNC43OTAwMzctMy40MzUxMTggNC41OTA3ODUtMy40MzUxMTggNC40NTUyOTMtMy40MzUxMThIMi40OTQ2NDVDMS4yNjcyNDgtMy40MzUxMTggLjMyNjc3NS0yLjE3NTg0MSAuMzI2Nzc1LTEuMjExNDU3Qy4zMjY3NzUtLjQzMDM4NiAuODg0NjgyIC4wNzk3MDEgMS42MjU5MDMgLjA3OTcwMUMyLjYzMDEzNyAuMDc5NzAxIDMuNzIyMDQyLS44ODQ2ODIgMy43MjIwNDItMi4wNzIyMjlDMy43MjIwNDItMi41MDI2MTUgMy41NzA2MS0yLjc1NzY1OSAzLjQ4MjkzOS0yLjkwOTA5MUg0LjM3NTU5MlpNMS42MzM4NzMtLjE0MzQ2MkMxLjIzNTM2Ny0uMTQzNDYyIC44ODQ2ODItLjQwNjQ3NiAuODg0NjgyLS45ODgyOTRDLjg4NDY4Mi0xLjMyMzAzOSAxLjA4MzkzNS0yLjkwOTA5MSAyLjM2NzEyMy0yLjkwOTA5MUMzLjE0MDIyNC0yLjkwOTA5MSAzLjE0MDIyNC0yLjMxOTMwMyAzLjE0MDIyNC0yLjE1MTkzQzMuMTQwMjI0LTEuMzMxMDA5IDIuNTc0MzQ2LS4xNDM0NjIgMS42MzM4NzMtLjE0MzQ2MlonLz4KPHBhdGggaWQ9J2czLTg0JyBkPSdNMy42MDI0OTEtNC44MjE5MThDMy42NzQyMjItNS4xMDg4NDIgMy42ODIxOTItNS4xMjQ3ODIgNC4wMDg5NjYtNS4xMjQ3ODJINC42MTQ2OTVDNS40NDM1ODctNS4xMjQ3ODIgNS41MzkyMjgtNC44NjE3NjggNS41MzkyMjgtNC40NjMyNjNDNS41MzkyMjgtNC4yNjQwMSA1LjQ5MTQwNy0zLjkyMTI5NSA1LjQ4MzQzNy0zLjg4MTQ0NUM1LjQ2NzQ5Ny0zLjc5Mzc3MyA1LjQ1OTUyNy0zLjcyMjA0MiA1LjQ1OTUyNy0zLjcwNjEwMkM1LjQ1OTUyNy0zLjYwMjQ5MSA1LjUzMTI1OC0zLjU3ODU4IDUuNTc5MDc4LTMuNTc4NThDNS42NjY3NS0zLjU3ODU4IDUuNjk4NjMtMy42MjY0MDEgNS43MjI1NC0zLjc3NzgzM0w1LjkzNzczMy01LjI3NjIxNEM1LjkzNzczMy01LjM4Nzc5NiA1Ljg0MjA5Mi01LjM4Nzc5NiA1LjY5ODYzLTUuMzg3Nzk2SDEuMDA0MjM0Qy44MDQ5ODEtNS4zODc3OTYgLjc4OTA0MS01LjM4Nzc5NiAuNzMzMjUtNS4yMjA0MjNMLjI0NzA3My0zLjg0MTU5NEMuMjMxMTMzLTMuODAxNzQzIC4yMDcyMjMtMy43Mzc5ODMgLjIwNzIyMy0zLjY5MDE2MkMuMjA3MjIzLTMuNjI2NDAxIC4yNjMwMTQtMy41Nzg1OCAuMzI2Nzc1LTMuNTc4NThDLjQxNDQ0Ni0zLjU3ODU4IC40MzAzODYtMy42MTg0MzEgLjQ3ODIwNy0zLjc1MzkyM0MuOTMyNTAzLTUuMDI5MTQxIDEuMTYzNjM2LTUuMTI0NzgyIDIuMzc1MDkzLTUuMTI0NzgySDIuNjg1OTI4QzIuOTI1MDMxLTUuMTI0NzgyIDIuOTMzMDAxLTUuMTE2ODEyIDIuOTMzMDAxLTUuMDUzMDUxQzIuOTMzMDAxLTUuMDI5MTQxIDIuOTAxMTIxLTQuODY5NzM4IDIuODkzMTUxLTQuODM3ODU4TDEuODQxMDk2LS42NTM1NDlDMS43NjkzNjUtLjM1MDY4NSAxLjc0NTQ1NS0uMjYzMDE0IC45MTY1NjMtLjI2MzAxNEMuNjYxNTE5LS4yNjMwMTQgLjU4MTgxOC0uMjYzMDE0IC41ODE4MTgtLjExMTU4MkMuNTgxODE4LS4xMDM2MTEgLjU4MTgxOCAwIC43MTczMSAwQy45MzI1MDMgMCAxLjQ4MjQ0MS0uMDIzOTEgMS42OTc2MzQtLjAyMzkxSDIuMzc1MDkzQzIuNTk4MjU3LS4wMjM5MSAzLjE1NjE2NCAwIDMuMzc5MzI4IDBDMy40NDMwODggMCAzLjU2MjY0IDAgMy41NjI2NC0uMTUxNDMyQzMuNTYyNjQtLjI2MzAxNCAzLjQ3NDk2OS0uMjYzMDE0IDMuMjU5Nzc2LS4yNjMwMTRDMy4wNjg0OTMtLjI2MzAxNCAzLjAwNDczMi0uMjYzMDE0IDIuNzk3NTA5LS4yNzg5NTRDMi41NDI0NjYtLjMwMjg2NCAyLjUxMDU4NS0uMzM0NzQ1IDIuNTEwNTg1LS40MzgzNTZDMi41MTA1ODUtLjQ3MDIzNyAyLjUxODU1NS0uNTAyMTE3IDIuNTQyNDY2LS41ODE4MThMMy42MDI0OTEtNC44MjE5MThaJy8+CjxwYXRoIGlkPSdnNC00MCcgZD0nTTIuNjU0MDQ3IDEuOTkyNTI4QzIuNzE3ODA4IDEuOTkyNTI4IDIuODEzNDUgMS45OTI1MjggMi44MTM0NSAxLjg5Njg4N0MyLjgxMzQ1IDEuODY1MDA2IDIuODA1NDc5IDEuODU3MDM2IDIuNzAxODY4IDEuNzUzNDI1QzEuNjA5OTYzIC43MjUyOCAxLjMzODk3OS0uNzU3MTYxIDEuMzM4OTc5LTEuOTkyNTI4QzEuMzM4OTc5LTQuMjg3OTIgMi4yODc0MjItNS4zNjM4ODUgMi42OTM4OTgtNS43MzA1MTFDMi44MDU0NzktNS44MzQxMjIgMi44MTM0NS01Ljg0MjA5MiAyLjgxMzQ1LTUuODgxOTQzUzIuNzgxNTY5LTUuOTc3NTg0IDIuNzAxODY4LTUuOTc3NTg0QzIuNTc0MzQ2LTUuOTc3NTg0IDIuMTc1ODQxLTUuNTcxMTA4IDIuMTEyMDgtNS40OTkzNzdDMS4wNDQwODUtNC4zODM1NjIgLjgyMDkyMi0yLjk0ODk0MSAuODIwOTIyLTEuOTkyNTI4Qy44MjA5MjItLjIwNzIyMyAxLjU3MDExMiAxLjIyNzM5NyAyLjY1NDA0NyAxLjk5MjUyOFonLz4KPHBhdGggaWQ9J2c0LTQxJyBkPSdNMi40NjI3NjUtMS45OTI1MjhDMi40NjI3NjUtMi43NDk2ODkgMi4zMzUyNDMtMy42NTgyODEgMS44NDEwOTYtNC41OTg3NTVDMS40NTA1Ni01LjMzMjAwNSAuNzI1MjgtNS45Nzc1ODQgLjU4MTgxOC01Ljk3NzU4NEMuNTAyMTE3LTUuOTc3NTg0IC40NzgyMDctNS45MjE3OTMgLjQ3ODIwNy01Ljg4MTk0M0MuNDc4MjA3LTUuODUwMDYyIC40NzgyMDctNS44MzQxMjIgLjU3Mzg0OC01LjczODQ4MUMxLjY4OTY2NC00LjY3ODQ1NiAxLjk0NDcwNy0zLjIxOTkyNSAxLjk0NDcwNy0xLjk5MjUyOEMxLjk0NDcwNyAuMjk0ODk0IC45OTYyNjQgMS4zNzg4MjkgLjU4OTc4OCAxLjc0NTQ1NUMuNDg2MTc3IDEuODQ5MDY2IC40NzgyMDcgMS44NTcwMzYgLjQ3ODIwNyAxLjg5Njg4N1MuNTAyMTE3IDEuOTkyNTI4IC41ODE4MTggMS45OTI1MjhDLjcwOTM0IDEuOTkyNTI4IDEuMTA3ODQ2IDEuNTg2MDUyIDEuMTcxNjA2IDEuNTE0MzIxQzIuMjM5NjAxIC4zOTg1MDYgMi40NjI3NjUtMS4wMzYxMTUgMi40NjI3NjUtMS45OTI1MjhaJy8+CjxwYXRoIGlkPSdnNC05NCcgZD0nTTIuMTEyMDgtNS41MzEyNThMLjk4MDMyNC00LjQ2MzI2M0wxLjEzOTcyNi00LjI3MTk4TDIuMTEyMDgtNS4wNjEwMjFMMy4wODQ0MzMtNC4yNzE5OEwzLjI0MzgzNi00LjQ1NTI5M0wyLjExMjA4LTUuNTMxMjU4WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMS4xOTU1MTQnIHk9Jy02LjY5NDg2NScgeGxpbms6aHJlZj0nI2cyLTEwNicvPgo8dXNlIHg9JzQuNTE2NDA0JyB5PSctNy42OTExMjknIHhsaW5rOmhyZWY9JyNnMy04NCcvPgo8dXNlIHg9JzEwLjYyMjc2MicgeT0nLTcuNjkxMTI5JyB4bGluazpocmVmPScjZzEtMCcvPgo8dXNlIHg9JzIxLjMwNzUzMycgeT0nLTkuNzA1NzkxJyB4bGluazpocmVmPScjZzQtOTQnLz4KPHVzZSB4PScxNy4yMDkyNjknIHk9Jy03LjY5MTEyOScgeGxpbms6aHJlZj0nI2cxLTc3Jy8+Cjx1c2UgeD0nMjcuMjg3NjQnIHk9Jy03LjY5MTEyOScgeGxpbms6aHJlZj0nI2c0LTQwJy8+Cjx1c2UgeD0nMzAuNTgwODk0JyB5PSctNy42OTExMjknIHhsaW5rOmhyZWY9JyNnMC0xMjAnLz4KPHVzZSB4PSczNS43MzM4NDInIHk9Jy03LjY5MTEyOScgeGxpbms6aHJlZj0nI2c0LTQxJy8+Cjx1c2UgeD0nMzkuMDI3MDk1JyB5PSctNi42OTQ4NjUnIHhsaW5rOmhyZWY9JyNnMi0xMDYnLz4KPHJlY3QgeD0nMS4xOTU1MTQnIHk9Jy0zLjIyNzg4NicgaGVpZ2h0PScuNDc4MTg3JyB3aWR0aD0nNDEuMTUyNDcxJy8+Cjx1c2UgeD0nMTMuNzg0OTQ2JyB5PSc0LjEyMjYzMicgeGxpbms6aHJlZj0nI2c0LTk0Jy8+Cjx1c2UgeD0nMTMuMzM5MzgyJyB5PSc0LjEyMjYzMicgeGxpbms6aHJlZj0nI2czLTI3Jy8+Cjx1c2UgeD0nMTguNDY0Njc4JyB5PSc0LjEyMjYzMicgeGxpbms6aHJlZj0nI2c0LTQwJy8+Cjx1c2UgeD0nMjEuNzU3OTMxJyB5PSc0LjEyMjYzMicgeGxpbms6aHJlZj0nI2cwLTEyMCcvPgo8dXNlIHg9JzI2LjkxMDg3OScgeT0nNC4xMjI2MzInIHhsaW5rOmhyZWY9JyNnNC00MScvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTggLS0+" alt="\frac{ \left| T - \hat{\mathcal{M}} ( \mathbf{x}) \right|}{\hat{\sigma}(\mathbf{x})}" style="vertical-align: -8px"/>
+with <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScyMy4yODU0MzdwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgMjMuMjg1NDM3IDExLjk1NTE2OCc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtMTIwJyBkPSdNNC4wMjg4OTItMi45NTI5MjdMNS40MTU2OTEtNC41NDI5NjRDNS41NDcxOTgtNC42OTgzODEgNS42NTQ3OTUtNC43OTQwMjIgNi42NDcwNzMtNC43OTQwMjJWLTUuMzA4MDk1QzUuOTc3NTg0LTUuMjg0MTg0IDUuOTUzNjc0LTUuMjg0MTg0IDUuNTQ3MTk4LTUuMjg0MTg0QzUuMjAwNDk4LTUuMjg0MTg0IDQuNjg2NDI2LTUuMjg0MTg0IDQuMzUxNjgxLTUuMzA4MDk1Vi00Ljc5NDAyMkM0LjU3ODgyOS00Ljc5NDAyMiA0LjgyOTg4OC00LjczNDI0NyA0LjgyOTg4OC00LjY1MDU2QzQuODI5ODg4LTQuNjI2NjUgNC43NzAxMTItNC41NDI5NjQgNC43NDYyMDItNC41MTkwNTRMMy43MDYxMDItMy4zNDc0NDdMMi41MjI1NC00Ljc5NDAyMkgzLjAyNDY1OFYtNS4zMDgwOTVDMi43NDk2ODktNS4yODQxODQgMS45MzY3MzctNS4yODQxODQgMS42MTM5NDgtNS4yODQxODRDMS4yNTUyOTMtNS4yODQxODQgLjYwOTcxNC01LjI4NDE4NCAuMjc0OTY5LTUuMzA4MDk1Vi00Ljc5NDAyMkgxLjEyMzc4NkwyLjk4ODc5Mi0yLjUyMjU0TDEuNDM0NjItLjc2NTEzMUMxLjI5MTE1OC0uNTk3NzU4IDEuMjA3NDcyLS41MTQwNzIgLjIxNTE5My0uNTE0MDcyVjBDLjkzMjUwMy0uMDIzOTEgLjk1NjQxMy0uMDIzOTEgMS4zMjcwMjQtLjAyMzkxQzEuNjczNzI0LS4wMjM5MSAyLjE3NTg0MS0uMDIzOTEgMi41MTA1ODUgMFYtLjUxNDA3MkMyLjI4MzQzNy0uNTE0MDcyIDIuMDMyMzc5LS41NzM4NDggMi4wMzIzNzktLjY1NzUzNEMyLjAzMjM3OS0uNjY5NDg5IDIuMDMyMzc5LS42ODE0NDUgMi4xMTYwNjUtLjc3NzA4NkwzLjMxMTU4Mi0yLjEyODAyTDQuNjM4NjA1LS41MTQwNzJINC4xMzY0ODhWMEM0LjQyMzQxMi0uMDIzOTEgNS4yMjQ0MDgtLjAyMzkxIDUuNTU5MTUzLS4wMjM5MUM1LjkxNzgwOC0uMDIzOTEgNi41NTE0MzItLjAyMzkxIDYuODg2MTc3IDBWLS41MTQwNzJINi4wNDkzMTVMNC4wMjg4OTItMi45NTI5MjdaJy8+CjxwYXRoIGlkPSdnMS0yNycgZD0nTTYuMDczMjI1LTQuNTA3MDk4QzYuMjI4NjQzLTQuNTA3MDk4IDYuNjIzMTYzLTQuNTA3MDk4IDYuNjIzMTYzLTQuODg5NjY0QzYuNjIzMTYzLTUuMTUyNjc3IDYuMzk2MDE1LTUuMTUyNjc3IDYuMTgwODIyLTUuMTUyNjc3SDMuNTM4NzNDMS43NDU0NTUtNS4xNTI2NzcgLjQ1NDI5Ni0zLjE1NjE2NCAuNDU0Mjk2LTEuNzQ1NDU1Qy40NTQyOTYtLjcyOTI2NSAxLjExMTgzMSAuMTE5NTUyIDIuMTg3Nzk2IC4xMTk1NTJDMy41OTg1MDYgLjExOTU1MiA1LjE0MDcyMi0xLjM5ODc1NSA1LjE0MDcyMi0zLjE5MjAzQzUuMTQwNzIyLTMuNjU4MjgxIDUuMDMzMTI2LTQuMTEyNTc4IDQuNzQ2MjAyLTQuNTA3MDk4SDYuMDczMjI1Wk0yLjE5OTc1MS0uMTE5NTUyQzEuNTkwMDM3LS4xMTk1NTIgMS4xNDc2OTYtLjU4NTgwMyAxLjE0NzY5Ni0xLjQxMDcxQzEuMTQ3Njk2LTIuMTI4MDIgMS41NzgwODItNC41MDcwOTggMy4zMzU0OTItNC41MDcwOThDMy44NDk1NjQtNC41MDcwOTggNC40MjM0MTItNC4yNTYwNCA0LjQyMzQxMi0zLjMzNTQ5MkM0LjQyMzQxMi0yLjkxNzA2MSA0LjIzMjEzLTEuOTEyODI3IDMuODEzNjk5LTEuMjE5NDI3QzMuMzgzMzEzLS41MTQwNzIgMi43Mzc3MzMtLjExOTU1MiAyLjE5OTc1MS0uMTE5NTUyWicvPgo8cGF0aCBpZD0nZzItNDAnIGQ9J00zLjg4NTQzIDIuOTA1MTA2QzMuODg1NDMgMi44NjkyNCAzLjg4NTQzIDIuODQ1MzMgMy42ODIxOTIgMi42NDIwOTJDMi40ODY2NzUgMS40MzQ2MiAxLjgxNzE4Ni0uNTM3OTgzIDEuODE3MTg2LTIuOTc2ODM3QzEuODE3MTg2LTUuMjk2MTM5IDIuMzc5MDc4LTcuMjkyNjUzIDMuNzY1ODc4LTguNzAzMzYyQzMuODg1NDMtOC44MTA5NTkgMy44ODU0My04LjgzNDg2OSAzLjg4NTQzLTguODcwNzM1QzMuODg1NDMtOC45NDI0NjYgMy44MjU2NTQtOC45NjYzNzYgMy43Nzc4MzMtOC45NjYzNzZDMy42MjI0MTYtOC45NjYzNzYgMi42NDIwOTItOC4xMDU2MDQgMi4wNTYyODktNi45MzM5OThDMS40NDY1NzUtNS43MjY1MjYgMS4xNzE2MDYtNC40NDczMjMgMS4xNzE2MDYtMi45NzY4MzdDMS4xNzE2MDYtMS45MTI4MjcgMS4zMzg5NzktLjQ5MDE2MiAxLjk2MDY0OCAuNzg5MDQxQzIuNjY2MDAyIDIuMjIzNjYxIDMuNjQ2MzI2IDMuMDAwNzQ3IDMuNzc3ODMzIDMuMDAwNzQ3QzMuODI1NjU0IDMuMDAwNzQ3IDMuODg1NDMgMi45NzY4MzcgMy44ODU0MyAyLjkwNTEwNlonLz4KPHBhdGggaWQ9J2cyLTQxJyBkPSdNMy4zNzEzNTctMi45NzY4MzdDMy4zNzEzNTctMy44ODU0MyAzLjI1MTgwNi01LjM2Nzg3IDIuNTgyMzE2LTYuNzU0NjdDMS44NzY5NjEtOC4xODkyOSAuODk2NjM4LTguOTY2Mzc2IC43NjUxMzEtOC45NjYzNzZDLjcxNzMxLTguOTY2Mzc2IC42NTc1MzQtOC45NDI0NjYgLjY1NzUzNC04Ljg3MDczNUMuNjU3NTM0LTguODM0ODY5IC42NTc1MzQtOC44MTA5NTkgLjg2MDc3Mi04LjYwNzcyMUMyLjA1NjI4OS03LjQwMDI0OSAyLjcyNTc3OC01LjQyNzY0NiAyLjcyNTc3OC0yLjk4ODc5MkMyLjcyNTc3OC0uNjY5NDg5IDIuMTYzODg1IDEuMzI3MDI0IC43NzcwODYgMi43Mzc3MzNDLjY1NzUzNCAyLjg0NTMzIC42NTc1MzQgMi44NjkyNCAuNjU3NTM0IDIuOTA1MTA2Qy42NTc1MzQgMi45NzY4MzcgLjcxNzMxIDMuMDAwNzQ3IC43NjUxMzEgMy4wMDA3NDdDLjkyMDU0OCAzLjAwMDc0NyAxLjkwMDg3MiAyLjEzOTk3NSAyLjQ4NjY3NSAuOTY4MzY5QzMuMDk2Mzg5LS4yNTEwNTkgMy4zNzEzNTctMS41NDIyMTcgMy4zNzEzNTctMi45NzY4MzdaJy8+CjxwYXRoIGlkPSdnMi05NCcgZD0nTTIuOTI5MDE2LTguMjk2ODg3TDEuMzYyODg5LTYuNjcwOTg0TDEuNTU0MTcyLTYuNDkxNjU2TDIuOTE3MDYxLTcuNzIzMDM5TDQuMjkxOTA1LTYuNDkxNjU2TDQuNDgzMTg4LTYuNjcwOTg0TDIuOTI5MDE2LTguMjk2ODg3WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nLjYxNDcxNCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTk0Jy8+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTI3Jy8+Cjx1c2UgeD0nNy4wODI0MDQnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00MCcvPgo8dXNlIHg9JzExLjYzNDczJyB5PScwJyB4bGluazpocmVmPScjZzAtMTIwJy8+Cjx1c2UgeD0nMTguNzMzMTExJyB5PScwJyB4bGluazpocmVmPScjZzItNDEnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD00IC0tPg==" alt="\hat{\sigma}(\mathbf{x})" style="vertical-align: -4px"/> the square root of the marginal covariance of the Gaussian Process evaluated on <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc3LjA5ODM4MXB0JyBoZWlnaHQ9JzUuMzEzMzk5cHQnIHZpZXdCb3g9JzAgLTUuMzEzMzk5IDcuMDk4MzgxIDUuMzEzMzk5Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xMjAnIGQ9J000LjAyODg5Mi0yLjk1MjkyN0w1LjQxNTY5MS00LjU0Mjk2NEM1LjU0NzE5OC00LjY5ODM4MSA1LjY1NDc5NS00Ljc5NDAyMiA2LjY0NzA3My00Ljc5NDAyMlYtNS4zMDgwOTVDNS45Nzc1ODQtNS4yODQxODQgNS45NTM2NzQtNS4yODQxODQgNS41NDcxOTgtNS4yODQxODRDNS4yMDA0OTgtNS4yODQxODQgNC42ODY0MjYtNS4yODQxODQgNC4zNTE2ODEtNS4zMDgwOTVWLTQuNzk0MDIyQzQuNTc4ODI5LTQuNzk0MDIyIDQuODI5ODg4LTQuNzM0MjQ3IDQuODI5ODg4LTQuNjUwNTZDNC44Mjk4ODgtNC42MjY2NSA0Ljc3MDExMi00LjU0Mjk2NCA0Ljc0NjIwMi00LjUxOTA1NEwzLjcwNjEwMi0zLjM0NzQ0N0wyLjUyMjU0LTQuNzk0MDIySDMuMDI0NjU4Vi01LjMwODA5NUMyLjc0OTY4OS01LjI4NDE4NCAxLjkzNjczNy01LjI4NDE4NCAxLjYxMzk0OC01LjI4NDE4NEMxLjI1NTI5My01LjI4NDE4NCAuNjA5NzE0LTUuMjg0MTg0IC4yNzQ5NjktNS4zMDgwOTVWLTQuNzk0MDIySDEuMTIzNzg2TDIuOTg4NzkyLTIuNTIyNTRMMS40MzQ2Mi0uNzY1MTMxQzEuMjkxMTU4LS41OTc3NTggMS4yMDc0NzItLjUxNDA3MiAuMjE1MTkzLS41MTQwNzJWMEMuOTMyNTAzLS4wMjM5MSAuOTU2NDEzLS4wMjM5MSAxLjMyNzAyNC0uMDIzOTFDMS42NzM3MjQtLjAyMzkxIDIuMTc1ODQxLS4wMjM5MSAyLjUxMDU4NSAwVi0uNTE0MDcyQzIuMjgzNDM3LS41MTQwNzIgMi4wMzIzNzktLjU3Mzg0OCAyLjAzMjM3OS0uNjU3NTM0QzIuMDMyMzc5LS42Njk0ODkgMi4wMzIzNzktLjY4MTQ0NSAyLjExNjA2NS0uNzc3MDg2TDMuMzExNTgyLTIuMTI4MDJMNC42Mzg2MDUtLjUxNDA3Mkg0LjEzNjQ4OFYwQzQuNDIzNDEyLS4wMjM5MSA1LjIyNDQwOC0uMDIzOTEgNS41NTkxNTMtLjAyMzkxQzUuOTE3ODA4LS4wMjM5MSA2LjU1MTQzMi0uMDIzOTEgNi44ODYxNzcgMFYtLjUxNDA3Mkg2LjA0OTMxNUw0LjAyODg5Mi0yLjk1MjkyN1onLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMjAnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD0wIC0tPg==" alt="\mathbf{x}" style="vertical-align: 0px"/>, and <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc4LjQ4NjgzNnB0JyBoZWlnaHQ9JzguMTY5MzY2cHQnIHZpZXdCb3g9JzAgLTguMTY5MzY2IDguNDg2ODM2IDguMTY5MzY2Jz4KPGRlZnM+CjxwYXRoIGlkPSdnMC04NCcgZD0nTTQuOTg1MzA1LTcuMjkyNjUzQzUuMDU3MDM2LTcuNTc5NTc3IDUuMDgwOTQ2LTcuNjg3MTczIDUuMjYwMjc0LTcuNzM0OTk0QzUuMzU1OTE1LTcuNzU4OTA0IDUuNzUwNDM2LTcuNzU4OTA0IDYuMDAxNDk0LTcuNzU4OTA0QzcuMTk3MDExLTcuNzU4OTA0IDcuNzU4OTA0LTcuNzExMDgzIDcuNzU4OTA0LTYuNzc4NThDNy43NTg5MDQtNi41OTkyNTMgNy43MTEwODMtNi4xNDQ5NTYgNy42MzkzNTItNS43MDI2MTVMNy42MjczOTctNS41NTkxNTNDNy42MjczOTctNS41MTEzMzMgNy42NzUyMTgtNS40Mzk2MDEgNy43NDY5NDktNS40Mzk2MDFDNy44NjY1MDEtNS40Mzk2MDEgNy44NjY1MDEtNS40OTkzNzcgNy45MDIzNjYtNS42OTA2Nkw4LjI0OTA2Ni03LjgwNjcyNUM4LjI3Mjk3Ni03LjkxNDMyMSA4LjI3Mjk3Ni03LjkzODIzMiA4LjI3Mjk3Ni03Ljk3NDA5N0M4LjI3Mjk3Ni04LjEwNTYwNCA4LjIwMTI0NS04LjEwNTYwNCA3Ljk2MjE0Mi04LjEwNTYwNEgxLjQyMjY2NUMxLjE0NzY5Ni04LjEwNTYwNCAxLjEzNTc0MS04LjA5MzY0OSAxLjA2NDAxLTcuODc4NDU2TC4zMzQ3NDUtNS43MjY1MjZDLjMyMjc5LTUuNzAyNjE1IC4yODY5MjQtNS41NzExMDggLjI4NjkyNC01LjU1OTE1M0MuMjg2OTI0LTUuNDk5Mzc3IC4zMzQ3NDUtNS40Mzk2MDEgLjQwNjQ3Ni01LjQzOTYwMUMuNTAyMTE3LTUuNDM5NjAxIC41MjYwMjctNS40ODc0MjIgLjU3Mzg0OC01LjY0MjgzOUMxLjA3NTk2NS03LjA4OTQxNSAxLjMyNzAyNC03Ljc1ODkwNCAyLjkxNzA2MS03Ljc1ODkwNEgzLjcxODA1N0M0LjAwNDk4MS03Ljc1ODkwNCA0LjEyNDUzMy03Ljc1ODkwNCA0LjEyNDUzMy03LjYyNzM5N0M0LjEyNDUzMy03LjU5MTUzMiA0LjEyNDUzMy03LjU2NzYyMSA0LjA2NDc1Ny03LjM1MjQyOEwyLjQ2Mjc2NS0uOTMyNTAzQzIuMzQzMjEzLS40NjYyNTIgMi4zMTkzMDMtLjM0NjcgMS4wNTIwNTUtLjM0NjdDLjc1MzE3Ni0uMzQ2NyAuNjY5NDg5LS4zNDY3IC42Njk0ODktLjExOTU1MkMuNjY5NDg5IDAgLjgwMDk5NiAwIC44NjA3NzIgMEMxLjE1OTY1MSAwIDEuNDcwNDg2LS4wMjM5MSAxLjc2OTM2NS0uMDIzOTFIMy42MzQzNzFDMy45MzMyNS0uMDIzOTEgNC4yNTYwNCAwIDQuNTU0OTE5IDBDNC42ODY0MjYgMCA0LjgwNTk3OCAwIDQuODA1OTc4LS4yMjcxNDhDNC44MDU5NzgtLjM0NjcgNC43MjIyOTEtLjM0NjcgNC40MTE0NTctLjM0NjdDMy4zMzU0OTItLjM0NjcgMy4zMzU0OTItLjQ1NDI5NiAzLjMzNTQ5Mi0uNjMzNjI0QzMuMzM1NDkyLS42NDU1NzkgMy4zMzU0OTItLjcyOTI2NSAzLjM4MzMxMy0uOTIwNTQ4TDQuOTg1MzA1LTcuMjkyNjUzWicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTg0Jy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MCAtLT4=" alt="T" style="vertical-align: 0px"/> the event threshold (here 1.5)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">getNewPoint</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a new point to be added to the design of experiments.</span>
+<span class="sd">    This point maximizes the U criterion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gpcc</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessConditionalCovariance</span><span class="p">(</span><span class="n">gprResult</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">gprResult</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">conditionalVariance</span> <span class="o">=</span> <span class="n">gpcc</span><span class="o">.</span><span class="n">getConditionalMarginalVariance</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="n">criterion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+        <span class="n">ot</span><span class="o">.</span><span class="n">Sample</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="n">event</span><span class="o">.</span><span class="n">getThreshold</span><span class="p">()])]</span> <span class="o">*</span> <span class="n">X</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span> <span class="o">-</span> <span class="n">response</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">conditionalVariance</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">)</span>
+
+    <span class="n">iMaxU</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">criterion</span><span class="p">))</span>
+    <span class="n">xNew</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">iMaxU</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">xNew</span>
+</pre></div>
+</div>
+<p>We first call <cite>getNewPoint</cite> to get a point to add to the design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">sampleX</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">getThreshold</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.821871]
+</pre></div>
+</div>
+<p>Then we evaluate the function on the new point and add it to the training design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">yNew</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+<span class="n">X</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">yNew</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We now plot the updated Gaussian Process Regressor.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicGPR</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicGPR</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">sampleX</span><span class="p">,</span> <span class="n">probability</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">viewer</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_gpr_active_learning_003.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_003.svg" alt="Estimated probability = 0.000000, Reference probability =  0.016760" class = "sphx-glr-single-img"/><p>The algorithm added in the domain.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">GPRStep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">xNew</span> <span class="o">=</span> <span class="n">getNewPoint</span><span class="p">(</span><span class="n">sampleX</span><span class="p">,</span> <span class="n">gprResult</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+    <span class="n">yNew</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+    <span class="n">X</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">xNew</span><span class="p">)</span>
+    <span class="n">Y</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">yNew</span><span class="p">)</span>
+    <span class="n">gprResult</span> <span class="o">=</span> <span class="n">createMyBasicGPR</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">plotMyBasicGPR</span><span class="p">(</span><span class="n">gprResult</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">sampleX</span><span class="p">,</span> <span class="n">probability</span><span class="p">)</span>
+    <span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_004.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_004.svg" alt="Estimated probability = 0.000339, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_005.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_005.svg" alt="Estimated probability = 0.000339, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_006.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_006.svg" alt="Estimated probability = 0.000339, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_007.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_007.svg" alt="Estimated probability = 0.000339, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_008.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_008.svg" alt="Estimated probability = 0.000339, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_009.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_009.svg" alt="Estimated probability = 0.005248, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_010.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_010.svg" alt="Estimated probability = 0.012020, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_011.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_011.svg" alt="Estimated probability = 0.016083, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_012.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_012.svg" alt="Estimated probability = 0.016760, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+<li><img src="../../_images/sphx_glr_plot_gpr_active_learning_013.svg" srcset="../../_images/sphx_glr_plot_gpr_active_learning_013.svg" alt="Estimated probability = 0.016760, Reference probability =  0.016760" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p>We can see that the metamodel only needs to be accurate near the event threshold to retrieve a precise estimation probability of failure.
+With only 10 points evaluated on the real limit state function, the metamodel accuracy is sufficient to estimate the failure probability.
+Indeed, the estimated probability is very close to the reference probability.
+This kind of active learning strategies allows one to save a large number of simulations.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
+<p>The current example presents the naive implementation on the creation of a sequential design of experiments (active learning) based on GPR for failure probability estimation.
+See <a class="reference external" href="https://github.com/openturns/openturns/wiki/Modules">Modules</a> for module <cite>ot-ak</cite> that implements active learning algorithms for reliability.
+More practical algorithms are presented in the following references.</p>
+<ul class="simple">
+<li><p>Echard, B., Gayton, N., &amp; Lemaire, M. (2011). AK-MCS: an active learning reliability method combining Kriging and Monte Carlo simulation. Structural Safety, 33(2), 145-154.</p></li>
+<li><p>Echard, B. (2012). Assessment by kriging of the reliability of structures subjected to fatigue stress, Université Blaise Pascal, PhD thesis</p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-gpr-active-learning-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9d37b75a6cebdb49c10dd2d1900f6413/plot_gpr_active_learning.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gpr_active_learning.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/c461908d8357aa59c088a50bdc6ea2b6/plot_gpr_active_learning.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_gpr_active_learning.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/b1a2044fd4dee9f29723d897f5d1fe97/plot_gpr_active_learning.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_gpr_active_learning.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_gpr_advanced.html" title="Advanced Gaussian process regression"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_gpr_hyperparameters_optimization.html" title="Gaussian process fitter: configure the optimization solver"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.25.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Gaussian Process Regression metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Gaussian Process-based active learning for reliability</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2025 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Sep 26, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+  </body>
+</html>

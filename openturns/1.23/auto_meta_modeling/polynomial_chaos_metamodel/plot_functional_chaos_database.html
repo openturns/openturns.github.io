@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Create a full or sparse polynomial chaos expansion &#8212; OpenTURNS 1.23 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=890937b7" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=247a55f2"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Create a polynomial chaos metamodel by integration on the cantilever beam" href="plot_chaos_cantilever_beam_integration.html" />
+    <link rel="prev" title="Validate a polynomial chaos" href="plot_chaos_draw_validation.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_chaos_cantilever_beam_integration.html" title="Create a polynomial chaos metamodel by integration on the cantilever beam"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_chaos_draw_validation.html" title="Validate a polynomial chaos"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Polynomial chaos metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Create a full or sparse polynomial chaos expansion</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Create a full or sparse polynomial chaos expansion</a><ul>
+<li><a class="reference internal" href="#define-the-model">Define the model</a></li>
+<li><a class="reference internal" href="#create-a-training-sample">Create a training sample</a></li>
+<li><a class="reference internal" href="#build-the-orthogonal-basis">Build the orthogonal basis</a></li>
+<li><a class="reference internal" href="#create-a-full-pce">Create a full PCE</a></li>
+<li><a class="reference internal" href="#use-the-pce">Use the PCE</a></li>
+<li><a class="reference internal" href="#create-a-sparse-pce">Create a sparse PCE</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_chaos_draw_validation.html"
+                          title="previous chapter">Validate a polynomial chaos</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_chaos_cantilever_beam_integration.html"
+                          title="next chapter">Create a polynomial chaos metamodel by integration on the cantilever beam</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_meta_modeling/polynomial_chaos_metamodel/plot_functional_chaos_database.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-functional-chaos-database-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="create-a-full-or-sparse-polynomial-chaos-expansion">
+<span id="sphx-glr-auto-meta-modeling-polynomial-chaos-metamodel-plot-functional-chaos-database-py"></span><h1>Create a full or sparse polynomial chaos expansion<a class="headerlink" href="#create-a-full-or-sparse-polynomial-chaos-expansion" title="Link to this heading">¶</a></h1>
+<p>In this example we create a global approximation of a model using
+polynomial chaos expansion based on a design of experiment.
+The goal of this example is to show how we can create a full or
+sparse polynomial chaos expansion depending on our needs
+and depending on the number of observations we have.
+In general, we should have more observations than parameters to estimate.
+This is why a sparse polynomial chaos may be interesting:
+by carefully selecting the coefficients we estimate,
+we may reduce overfitting and increase the predictions of the
+metamodel.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+
+<span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">Log</span><span class="o">.</span><span class="n">NONE</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="define-the-model">
+<h2>Define the model<a class="headerlink" href="#define-the-model" title="Link to this heading">¶</a></h2>
+<p>Create the function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">myModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="s2">&quot;x3&quot;</span><span class="p">,</span> <span class="s2">&quot;x4&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;1 + x1 * x2 + 2 * x3^2 + x4^4&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Create a multivariate distribution.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">distribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Gamma</span><span class="p">(</span><span class="mf">2.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to create the PCE, we can specify the distribution of the
+input parameters.
+If not known, statistical inference can be used to select a possible
+candidate, and fitting tests can validate such an hypothesis.
+Please read <a class="reference internal" href="plot_chaos_build_distribution.html"><span class="doc">Fit a distribution from an input sample</span></a>
+for an example of this method.</p>
+</section>
+<section id="create-a-training-sample">
+<h2>Create a training sample<a class="headerlink" href="#create-a-training-sample" title="Link to this heading">¶</a></h2>
+<p>Create a pair of input and output samples.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">inputSample</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize</span><span class="p">)</span>
+<span class="n">outputSample</span> <span class="o">=</span> <span class="n">myModel</span><span class="p">(</span><span class="n">inputSample</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="build-the-orthogonal-basis">
+<h2>Build the orthogonal basis<a class="headerlink" href="#build-the-orthogonal-basis" title="Link to this heading">¶</a></h2>
+<p>In the next cell, we create the univariate orthogonal polynomial basis
+for each marginal.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">inputDimension</span> <span class="o">=</span> <span class="n">inputSample</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">coll</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ot</span><span class="o">.</span><span class="n">StandardDistributionPolynomialFactory</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">enumerateFunction</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LinearEnumerateFunction</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">)</span>
+<span class="n">productBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span><span class="n">coll</span><span class="p">,</span> <span class="n">enumerateFunction</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can achieve the same result using <a class="reference internal" href="../../user_manual/_generated/openturns.OrthogonalProductPolynomialFactory.html#openturns.OrthogonalProductPolynomialFactory" title="openturns.OrthogonalProductPolynomialFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrthogonalProductPolynomialFactory</span></code></a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">marginalDistributionCollection</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">distribution</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inputDimension</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">multivariateBasis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">OrthogonalProductPolynomialFactory</span><span class="p">(</span>
+    <span class="n">marginalDistributionCollection</span>
+<span class="p">)</span>
+<span class="n">multivariateBasis</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<ul>
+  <li>dimension: 4</li>
+  <li>enumerate function: class=LinearEnumerateFunction dimension=4</li>
+</ul>
+
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Name</th>
+    <th>Distribution</th>
+    <th>Univariate polynomial</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>X0</td>
+    <td>Normal</td>
+    <td>HermiteFactory</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>X1</td>
+    <td>Uniform</td>
+    <td>LegendreFactory</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>X2</td>
+    <td>Gamma</td>
+    <td>LaguerreFactory</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>X3</td>
+    <td>Beta</td>
+    <td>JacobiFactory</td>
+  </tr>
+</table>
+
+</div>
+<br />
+<br /></section>
+<section id="create-a-full-pce">
+<h2>Create a full PCE<a class="headerlink" href="#create-a-full-pce" title="Link to this heading">¶</a></h2>
+<p>Create the algorithm.
+We compute the basis size from the total degree.
+The next lines use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LeastSquaresStrategy.html#openturns.LeastSquaresStrategy" title="openturns.LeastSquaresStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeastSquaresStrategy</span></code></a> class
+with default parameters (the default is the
+<a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.PenalizedLeastSquaresAlgorithmFactory.html#openturns.PenalizedLeastSquaresAlgorithmFactory" title="openturns.PenalizedLeastSquaresAlgorithmFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">PenalizedLeastSquaresAlgorithmFactory</span></code></a> class).
+This creates a full polynomial chaos expansion, i.e.
+we keep all the candidate coefficients produced by the enumeration
+rule.
+In order to create a sparse polynomial chaos expansion, we
+must use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LeastSquaresMetaModelSelectionFactory.html#openturns.LeastSquaresMetaModelSelectionFactory" title="openturns.LeastSquaresMetaModelSelectionFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeastSquaresMetaModelSelectionFactory</span></code></a>
+class instead.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">candidateBasisSize</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getBasisSizeFromTotalDegree</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Candidate basis size = &quot;</span><span class="p">,</span> <span class="n">candidateBasisSize</span><span class="p">)</span>
+<span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">productBasis</span><span class="p">,</span> <span class="n">candidateBasisSize</span><span class="p">)</span>
+<span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">()</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+    <span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
+<span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">result</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Candidate basis size =  35
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+FunctionalChaosResult
+<ul>
+  <li>input dimension: 4</li>
+  <li>output dimension: 1</li>
+  <li>distribution dimension: 4</li>
+  <li>transformation: 4 -> 4</li>
+  <li>inverse transformation: 4 -> 4</li>
+  <li>orthogonal basis dimension: 4</li>
+  <li>indices size: 35</li>
+  <li>relative errors: [3.25754e-05]</li>
+  <li>residuals: [0.010775]</li>
+</ul>
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Multi-index</th>
+    <th>Coeff.</th>
+  </tr>
+  <tr>
+    <th>0</th>
+    <td>[0,0,0,0]</td>
+    <td>26.10131</td>
+  </tr>
+  <tr>
+    <th>1</th>
+    <td>[1,0,0,0]</td>
+    <td>0.01833501</td>
+  </tr>
+  <tr>
+    <th>2</th>
+    <td>[0,1,0,0]</td>
+    <td>0.02643858</td>
+  </tr>
+  <tr>
+    <th>3</th>
+    <td>[0,0,1,0]</td>
+    <td>24.89616</td>
+  </tr>
+  <tr>
+    <th>4</th>
+    <td>[0,0,0,1]</td>
+    <td>3.998141</td>
+  </tr>
+  <tr>
+    <th>5</th>
+    <td>[2,0,0,0]</td>
+    <td>-0.007498848</td>
+  </tr>
+  <tr>
+    <th>6</th>
+    <td>[1,1,0,0]</td>
+    <td>0.5836605</td>
+  </tr>
+  <tr>
+    <th>7</th>
+    <td>[1,0,1,0]</td>
+    <td>0.0008685963</td>
+  </tr>
+  <tr>
+    <th>8</th>
+    <td>[1,0,0,1]</td>
+    <td>-0.01786958</td>
+  </tr>
+  <tr>
+    <th>9</th>
+    <td>[0,2,0,0]</td>
+    <td>0.005226953</td>
+  </tr>
+  <tr>
+    <th>10</th>
+    <td>[0,1,1,0]</td>
+    <td>0.02195566</td>
+  </tr>
+  <tr>
+    <th>11</th>
+    <td>[0,1,0,1]</td>
+    <td>-0.06375109</td>
+  </tr>
+  <tr>
+    <th>12</th>
+    <td>[0,0,2,0]</td>
+    <td>9.063002</td>
+  </tr>
+  <tr>
+    <th>13</th>
+    <td>[0,0,1,1]</td>
+    <td>-0.02439593</td>
+  </tr>
+  <tr>
+    <th>14</th>
+    <td>[0,0,0,2]</td>
+    <td>2.366967</td>
+  </tr>
+  <tr>
+    <th>15</th>
+    <td>[3,0,0,0]</td>
+    <td>0.003033619</td>
+  </tr>
+  <tr>
+    <th>16</th>
+    <td>[2,1,0,0]</td>
+    <td>-0.01237667</td>
+  </tr>
+  <tr>
+    <th>17</th>
+    <td>[2,0,1,0]</td>
+    <td>-0.01342518</td>
+  </tr>
+  <tr>
+    <th>18</th>
+    <td>[2,0,0,1]</td>
+    <td>0.01335615</td>
+  </tr>
+  <tr>
+    <th>19</th>
+    <td>[1,2,0,0]</td>
+    <td>-0.009671841</td>
+  </tr>
+  <tr>
+    <th>20</th>
+    <td>[1,1,1,0]</td>
+    <td>0.004816446</td>
+  </tr>
+  <tr>
+    <th>21</th>
+    <td>[1,1,0,1]</td>
+    <td>-0.02295916</td>
+  </tr>
+  <tr>
+    <th>22</th>
+    <td>[1,0,2,0]</td>
+    <td>-0.01663346</td>
+  </tr>
+  <tr>
+    <th>23</th>
+    <td>[1,0,1,1]</td>
+    <td>0.007606394</td>
+  </tr>
+  <tr>
+    <th>24</th>
+    <td>[1,0,0,2]</td>
+    <td>0.03900244</td>
+  </tr>
+  <tr>
+    <th>25</th>
+    <td>[0,3,0,0]</td>
+    <td>0.02087256</td>
+  </tr>
+  <tr>
+    <th>26</th>
+    <td>[0,2,1,0]</td>
+    <td>-0.01402968</td>
+  </tr>
+  <tr>
+    <th>27</th>
+    <td>[0,2,0,1]</td>
+    <td>-0.04129633</td>
+  </tr>
+  <tr>
+    <th>28</th>
+    <td>[0,1,2,0]</td>
+    <td>-0.01182831</td>
+  </tr>
+  <tr>
+    <th>29</th>
+    <td>[0,1,1,1]</td>
+    <td>-0.01354742</td>
+  </tr>
+  <tr>
+    <th>30</th>
+    <td>[0,1,0,2]</td>
+    <td>0.09136447</td>
+  </tr>
+  <tr>
+    <th>31</th>
+    <td>[0,0,3,0]</td>
+    <td>0.02163227</td>
+  </tr>
+  <tr>
+    <th>32</th>
+    <td>[0,0,2,1]</td>
+    <td>0.02992845</td>
+  </tr>
+  <tr>
+    <th>33</th>
+    <td>[0,0,1,2]</td>
+    <td>0.04678639</td>
+  </tr>
+  <tr>
+    <th>34</th>
+    <td>[0,0,0,3]</td>
+    <td>1.057842</td>
+  </tr>
+</table>
+
+</div>
+<br />
+<br /><p>Get the number of coefficients in the PCE.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">selectedBasisSizeFull</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getIndices</span><span class="p">()</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selected basis size = &quot;</span><span class="p">,</span> <span class="n">selectedBasisSizeFull</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Selected basis size =  35
+</pre></div>
+</div>
+<p>We see that the number of coefficients in the selected basis is
+equal to the number of coefficients in the candidate basis.
+This is, indeed, a <em>full</em> PCE.</p>
+</section>
+<section id="use-the-pce">
+<h2>Use the PCE<a class="headerlink" href="#use-the-pce" title="Link to this heading">¶</a></h2>
+<p>Get the metamodel function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">metamodel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getMetaModel</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In order to evaluate the metamodel on a single point, we just
+use it as any other <a class="reference internal" href="../../user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">openturns.Function</span></code></a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">xPoint</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">getMean</span><span class="p">()</span>
+<span class="n">yPoint</span> <span class="o">=</span> <span class="n">metamodel</span><span class="p">(</span><span class="n">xPoint</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Value at &quot;</span><span class="p">,</span> <span class="n">xPoint</span><span class="p">,</span> <span class="s2">&quot; is &quot;</span><span class="p">,</span> <span class="n">yPoint</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Value at  [0,0,2.75,1.14286]  is  [17.7455]
+</pre></div>
+</div>
+<p>Print residuals.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getResiduals</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+class=Point name=Unnamed dimension=1 values=[0.010775]
+</div>
+<br />
+<br /><p>Based on these results, we may want to validate our metamodel.
+More details on this topic are presented in
+<a class="reference internal" href="plot_chaos_draw_validation.html"><span class="doc">Validate a polynomial chaos</span></a>.</p>
+</section>
+<section id="create-a-sparse-pce">
+<h2>Create a sparse PCE<a class="headerlink" href="#create-a-sparse-pce" title="Link to this heading">¶</a></h2>
+<p>In order to create a sparse polynomial chaos expansion, we
+use the <a class="reference internal" href="../../user_manual/response_surface/_generated/openturns.LeastSquaresMetaModelSelectionFactory.html#openturns.LeastSquaresMetaModelSelectionFactory" title="openturns.LeastSquaresMetaModelSelectionFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeastSquaresMetaModelSelectionFactory</span></code></a>
+class instead.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">totalDegree</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">candidateBasisSize</span> <span class="o">=</span> <span class="n">enumerateFunction</span><span class="o">.</span><span class="n">getBasisSizeFromTotalDegree</span><span class="p">(</span><span class="n">totalDegree</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Candidate basis size = &quot;</span><span class="p">,</span> <span class="n">candidateBasisSize</span><span class="p">)</span>
+<span class="n">adaptiveStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FixedStrategy</span><span class="p">(</span><span class="n">productBasis</span><span class="p">,</span> <span class="n">candidateBasisSize</span><span class="p">)</span>
+<span class="n">selectionAlgorithm</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresMetaModelSelectionFactory</span><span class="p">()</span>
+<span class="n">projectionStrategy</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LeastSquaresStrategy</span><span class="p">(</span><span class="n">selectionAlgorithm</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">FunctionalChaosAlgorithm</span><span class="p">(</span>
+    <span class="n">inputSample</span><span class="p">,</span> <span class="n">outputSample</span><span class="p">,</span> <span class="n">distribution</span><span class="p">,</span> <span class="n">adaptiveStrategy</span><span class="p">,</span> <span class="n">projectionStrategy</span>
+<span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">result</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Candidate basis size =  210
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+FunctionalChaosResult
+<ul>
+  <li>input dimension: 4</li>
+  <li>output dimension: 1</li>
+  <li>distribution dimension: 4</li>
+  <li>transformation: 4 -> 4</li>
+  <li>inverse transformation: 4 -> 4</li>
+  <li>orthogonal basis dimension: 4</li>
+  <li>indices size: 24</li>
+  <li>relative errors: [3.16988e-07]</li>
+  <li>residuals: [0.0102016]</li>
+</ul>
+<table>
+  <tr>
+    <th>Index</th>
+    <th>Multi-index</th>
+    <th>Coeff.</th>
+  </tr>
+  <tr>
+    <th>0</th>
+    <td>[0,0,0,0]</td>
+    <td>26.07564</td>
+  </tr>
+  <tr>
+    <th>1</th>
+    <td>[1,0,0,0]</td>
+    <td>-0.003290232</td>
+  </tr>
+  <tr>
+    <th>2</th>
+    <td>[0,0,1,0]</td>
+    <td>24.86277</td>
+  </tr>
+  <tr>
+    <th>3</th>
+    <td>[0,0,0,1]</td>
+    <td>4.00878</td>
+  </tr>
+  <tr>
+    <th>4</th>
+    <td>[1,1,0,0]</td>
+    <td>0.5800043</td>
+  </tr>
+  <tr>
+    <th>5</th>
+    <td>[1,0,1,0]</td>
+    <td>0.005553137</td>
+  </tr>
+  <tr>
+    <th>6</th>
+    <td>[0,1,0,1]</td>
+    <td>-0.03536237</td>
+  </tr>
+  <tr>
+    <th>7</th>
+    <td>[0,0,2,0]</td>
+    <td>9.006102</td>
+  </tr>
+  <tr>
+    <th>8</th>
+    <td>[0,0,0,2]</td>
+    <td>2.32328</td>
+  </tr>
+  <tr>
+    <th>9</th>
+    <td>[2,0,1,0]</td>
+    <td>-0.01830508</td>
+  </tr>
+  <tr>
+    <th>10</th>
+    <td>[1,1,1,0]</td>
+    <td>-0.001079013</td>
+  </tr>
+  <tr>
+    <th>11</th>
+    <td>[1,0,2,0]</td>
+    <td>-0.01280951</td>
+  </tr>
+  <tr>
+    <th>12</th>
+    <td>[0,1,0,2]</td>
+    <td>0.07909247</td>
+  </tr>
+  <tr>
+    <th>13</th>
+    <td>[0,0,0,3]</td>
+    <td>1.0497</td>
+  </tr>
+  <tr>
+    <th>14</th>
+    <td>[0,2,0,2]</td>
+    <td>0.03390499</td>
+  </tr>
+  <tr>
+    <th>15</th>
+    <td>[0,0,2,2]</td>
+    <td>-0.09301932</td>
+  </tr>
+  <tr>
+    <th>16</th>
+    <td>[2,3,0,0]</td>
+    <td>0.006792632</td>
+  </tr>
+  <tr>
+    <th>17</th>
+    <td>[2,2,1,0]</td>
+    <td>-0.001824762</td>
+  </tr>
+  <tr>
+    <th>18</th>
+    <td>[1,0,1,3]</td>
+    <td>-0.00731192</td>
+  </tr>
+  <tr>
+    <th>19</th>
+    <td>[0,1,0,4]</td>
+    <td>0.04903297</td>
+  </tr>
+  <tr>
+    <th>20</th>
+    <td>[0,4,2,0]</td>
+    <td>0.01100148</td>
+  </tr>
+  <tr>
+    <th>21</th>
+    <td>[0,2,2,2]</td>
+    <td>0.04061781</td>
+  </tr>
+  <tr>
+    <th>22</th>
+    <td>[0,1,1,4]</td>
+    <td>-0.01867403</td>
+  </tr>
+  <tr>
+    <th>23</th>
+    <td>[0,0,2,4]</td>
+    <td>-0.09888105</td>
+  </tr>
+</table>
+
+</div>
+<br />
+<br /><p>Get the number of coefficients in the PCE.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">selectedBasisSizeSparse</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getIndices</span><span class="p">()</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selected basis size = &quot;</span><span class="p">,</span> <span class="n">selectedBasisSizeSparse</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Selected basis size =  24
+</pre></div>
+</div>
+<p>We see that the number of selected coefficients is lower than
+the number of candidate coefficients.
+This may reduce overfitting and can produce a PCE with more
+accurate predictions.</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-polynomial-chaos-metamodel-plot-functional-chaos-database-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/4bad5eb03eda58932cc7c0ee48367350/plot_functional_chaos_database.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_functional_chaos_database.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/62833f7bafdc5be5ed7016740377dc5f/plot_functional_chaos_database.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_functional_chaos_database.py</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_chaos_cantilever_beam_integration.html" title="Create a polynomial chaos metamodel by integration on the cantilever beam"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_chaos_draw_validation.html" title="Validate a polynomial chaos"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.23 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Polynomial chaos metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Create a full or sparse polynomial chaos expansion</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2024 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Jun 05, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

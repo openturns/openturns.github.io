@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gaussian process fitter: configure the optimization solver &#8212; OpenTURNS 1.25.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=4652c2b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sphx_glr.css?v=2ae27345" />
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=d41f9ef8"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../../_static/js/mysearchtools.js?v=a003391d"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Gaussian Process-based active learning for reliability" href="plot_gpr_active_learning.html" />
+    <link rel="prev" title="Sequentially adding new points to a Gaussian Process metamodel" href="plot_kriging_sequential.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../../install.html">Get it</a></li>
+    <li><a href="../../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../../index.html">
+    <h1>
+      <img src="../../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plot_gpr_active_learning.html" title="Gaussian Process-based active learning for reliability"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plot_kriging_sequential.html" title="Sequentially adding new points to a Gaussian Process metamodel"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.25.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" accesskey="U">Gaussian Process Regression metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Gaussian process fitter: configure the optimization solver</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Gaussian process fitter: configure the optimization solver</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#definition-of-the-model">Definition of the model</a></li>
+<li><a class="reference internal" href="#create-the-design-of-experiments">Create the design of experiments</a></li>
+<li><a class="reference internal" href="#create-the-metamodel">Create the metamodel</a></li>
+<li><a class="reference internal" href="#get-the-optimizer-algorithm">Get the optimizer algorithm</a></li>
+<li><a class="reference internal" href="#configure-the-starting-point-of-the-optimization">Configure the starting point of the optimization</a></li>
+<li><a class="reference internal" href="#disabling-the-optimization">Disabling the optimization</a></li>
+<li><a class="reference internal" href="#reuse-the-parameters-from-a-previous-optimization">Reuse the parameters from a previous optimization</a></li>
+<li><a class="reference internal" href="#configure-the-local-optimization-solver">Configure the local optimization solver</a></li>
+<li><a class="reference internal" href="#configure-the-global-optimization-solver">Configure the global optimization solver</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="plot_kriging_sequential.html"
+                          title="previous chapter">Sequentially adding new points to a Gaussian Process metamodel</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="plot_gpr_active_learning.html"
+                          title="next chapter">Gaussian Process-based active learning for reliability</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/auto_meta_modeling/kriging_metamodel/plot_gpr_hyperparameters_optimization.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-gpr-hyperparameters-optimization-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="gaussian-process-fitter-configure-the-optimization-solver">
+<span id="sphx-glr-auto-meta-modeling-kriging-metamodel-plot-gpr-hyperparameters-optimization-py"></span><h1>Gaussian process fitter: configure the optimization solver<a class="headerlink" href="#gaussian-process-fitter-configure-the-optimization-solver" title="Link to this heading">¶</a></h1>
+<p>The goal of this example is to show how to fine-tune the optimization solver used to estimate the hyperparameters of the covariance model of the Gaussian process regression.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>In a Gaussian process regression, there are various types of parameters which are estimated from the data.</p>
+<ul class="simple">
+<li><p>The parameters <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc3LjI3MTI4MnB0JyBoZWlnaHQ9JzEwLjYyNjc5OHB0JyB2aWV3Qm94PScwIC04LjMwMjE5MSA3LjI3MTI4MiAxMC42MjY3OTgnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTEyJyBkPSdNNi43NjY2MjUtNi45NTc5MDhDNi43NjY2MjUtNy42NzUyMTggNi4xNTY5MTItOC40MjgzOTQgNS4wNjg5OTEtOC40MjgzOTRDMy41MjY3NzUtOC40MjgzOTQgMi41NDY0NTEtNi41Mzk0NzcgMi4yMzU2MTYtNS4yOTYxMzlMLjM0NjcgMi4xOTk3NTFDLjMyMjc5IDIuMjk1MzkyIC4zOTQ1MjEgMi4zMTkzMDMgLjQ1NDI5NiAyLjMxOTMwM0MuNTM3OTgzIDIuMzE5MzAzIC41OTc3NTggMi4zMDczNDcgLjYwOTcxNCAyLjI0NzU3MkwxLjQ0NjU3NS0xLjA5OTg3NUMxLjU2NjEyNy0uNDMwMzg2IDIuMjIzNjYxIC4xMTk1NTIgMi45MjkwMTYgLjExOTU1MkM0LjYzODYwNSAuMTE5NTUyIDYuMjUyNTUzLTEuMjE5NDI3IDYuMjUyNTUzLTMuMDAwNzQ3QzYuMjUyNTUzLTMuNDU1MDQ0IDYuMTQ0OTU2LTMuOTA5MzQgNS44OTM4OTgtNC4yOTE5MDVDNS43NTA0MzYtNC41MTkwNTQgNS41NzExMDgtNC42ODY0MjYgNS4zNzk4MjYtNC44Mjk4ODhDNi4yNDA1OTgtNS4yODQxODQgNi43NjY2MjUtNi4wMTM0NSA2Ljc2NjYyNS02Ljk1NzkwOFpNNC42ODY0MjYtNC44NDE4NDNDNC40OTUxNDMtNC43NzAxMTIgNC4zMDM4NjEtNC43NDYyMDIgNC4wNzY3MTItNC43NDYyMDJDMy45MDkzNC00Ljc0NjIwMiAzLjc1MzkyMy00LjczNDI0NyAzLjUzODczLTQuODA1OTc4QzMuNjU4MjgxLTQuODg5NjY0IDMuODM3NjA5LTQuOTEzNTc0IDQuMDg4NjY3LTQuOTEzNTc0QzQuMzAzODYxLTQuOTEzNTc0IDQuNTE5MDU0LTQuODg5NjY0IDQuNjg2NDI2LTQuODQxODQzWk02LjE0NDk1Ni03LjA2NTUwNEM2LjE0NDk1Ni02LjQwNzk3IDUuODIyMTY3LTUuNDUxNTU3IDUuMDQ1MDgxLTUuMDA5MjE1QzQuODE3OTMzLTUuMDkyOTAyIDQuNTA3MDk4LTUuMTUyNjc3IDQuMjQ0MDg1LTUuMTUyNjc3QzMuOTkzMDI2LTUuMTUyNjc3IDMuMjc1NzE2LTUuMTc2NTg4IDMuMjc1NzE2LTQuNzk0MDIyQzMuMjc1NzE2LTQuNDcxMjMzIDMuOTMzMjUtNC41MDcwOTggNC4xMzY0ODgtNC41MDcwOThDNC40NDczMjMtNC41MDcwOTggNC43MjIyOTEtNC41Nzg4MjkgNS4wMDkyMTUtNC42NjI1MTZDNS4zOTE3ODEtNC4zNTE2ODEgNS41NTkxNTMtMy45NDUyMDUgNS41NTkxNTMtMy4zNDc0NDdDNS41NTkxNTMtMi42NTQwNDcgNS4zNjc4Ny0yLjA5MjE1NCA1LjE0MDcyMi0xLjU3ODA4MkM0Ljc0NjIwMi0uNjkzNCAzLjgxMzY5OS0uMTE5NTUyIDIuOTg4NzkyLS4xMTk1NTJDMi4xMTYwNjUtLjExOTU1MiAxLjY2MTc2OC0uODEyOTUxIDEuNjYxNzY4LTEuNjI1OTAzQzEuNjYxNzY4LTEuNzMzNDk5IDEuNjYxNzY4LTEuODg4OTE3IDEuNzA5NTg5LTIuMDY4MjQ0TDIuNDg2Njc1LTUuMjEyNDUzQzIuODgxMTk2LTYuNzc4NTggMy44ODU0My04LjE4OTI5IDUuMDQ1MDgxLTguMTg5MjlDNS45MDU4NTMtOC4xODkyOSA2LjE0NDk1Ni03LjU5MTUzMiA2LjE0NDk1Ni03LjA2NTUwNFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xMicvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTMgLS0+" alt="{\bf \beta}" style="vertical-align: -3px"/> associated with the deterministic trend. These parameters are computed based on linear least squares.</p></li>
+<li><p>The parameters of the covariance model.</p></li>
+</ul>
+<p>The covariance model has two types of parameters.</p>
+<ul class="simple">
+<li><p>The amplitude parameter <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMS4zMTY1ODdwdCcgaGVpZ2h0PSc5LjQ3NDczOXB0JyB2aWV3Qm94PScwIC05LjQ3NDczOSAxMS4zMTY1ODcgOS40NzQ3MzknPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTI3JyBkPSdNNi4wNzMyMjUtNC41MDcwOThDNi4yMjg2NDMtNC41MDcwOTggNi42MjMxNjMtNC41MDcwOTggNi42MjMxNjMtNC44ODk2NjRDNi42MjMxNjMtNS4xNTI2NzcgNi4zOTYwMTUtNS4xNTI2NzcgNi4xODA4MjItNS4xNTI2NzdIMy41Mzg3M0MxLjc0NTQ1NS01LjE1MjY3NyAuNDU0Mjk2LTMuMTU2MTY0IC40NTQyOTYtMS43NDU0NTVDLjQ1NDI5Ni0uNzI5MjY1IDEuMTExODMxIC4xMTk1NTIgMi4xODc3OTYgLjExOTU1MkMzLjU5ODUwNiAuMTE5NTUyIDUuMTQwNzIyLTEuMzk4NzU1IDUuMTQwNzIyLTMuMTkyMDNDNS4xNDA3MjItMy42NTgyODEgNS4wMzMxMjYtNC4xMTI1NzggNC43NDYyMDItNC41MDcwOThINi4wNzMyMjVaTTIuMTk5NzUxLS4xMTk1NTJDMS41OTAwMzctLjExOTU1MiAxLjE0NzY5Ni0uNTg1ODAzIDEuMTQ3Njk2LTEuNDEwNzFDMS4xNDc2OTYtMi4xMjgwMiAxLjU3ODA4Mi00LjUwNzA5OCAzLjMzNTQ5Mi00LjUwNzA5OEMzLjg0OTU2NC00LjUwNzA5OCA0LjQyMzQxMi00LjI1NjA0IDQuNDIzNDEyLTMuMzM1NDkyQzQuNDIzNDEyLTIuOTE3MDYxIDQuMjMyMTMtMS45MTI4MjcgMy44MTM2OTktMS4yMTk0MjdDMy4zODMzMTMtLjUxNDA3MiAyLjczNzczMy0uMTE5NTUyIDIuMTk5NzUxLS4xMTk1NTJaJy8+CjxwYXRoIGlkPSdnMS01MCcgZD0nTTIuMjQ3NTcyLTEuNjI1OTAzQzIuMzc1MDkzLTEuNzQ1NDU1IDIuNzA5ODM4LTIuMDA4NDY4IDIuODM3MzYtMi4xMjAwNUMzLjMzMTUwNy0yLjU3NDM0NiAzLjgwMTc0My0zLjAxMjcwMiAzLjgwMTc0My0zLjczNzk4M0MzLjgwMTc0My00LjY4NjQyNiAzLjAwNDczMi01LjMwMDEyNSAyLjAwODQ2OC01LjMwMDEyNUMxLjA1MjA1NS01LjMwMDEyNSAuNDIyNDE2LTQuNTc0ODQ0IC40MjI0MTYtMy44NjU1MDRDLjQyMjQxNi0zLjQ3NDk2OSAuNzMzMjUtMy40MTkxNzggLjg0NDgzMi0zLjQxOTE3OEMxLjAxMjIwNC0zLjQxOTE3OCAxLjI1OTI3OC0zLjUzODczIDEuMjU5Mjc4LTMuODQxNTk0QzEuMjU5Mjc4LTQuMjU2MDQgLjg2MDc3Mi00LjI1NjA0IC43NjUxMzEtNC4yNTYwNEMuOTk2MjY0LTQuODM3ODU4IDEuNTMwMjYyLTUuMDM3MTExIDEuOTIwNzk3LTUuMDM3MTExQzIuNjYyMDE3LTUuMDM3MTExIDMuMDQ0NTgzLTQuNDA3NDcyIDMuMDQ0NTgzLTMuNzM3OTgzQzMuMDQ0NTgzLTIuOTA5MDkxIDIuNDYyNzY1LTIuMzAzMzYyIDEuNTIyMjkxLTEuMzM4OTc5TC41MTgwNTctLjMwMjg2NEMuNDIyNDE2LS4yMTUxOTMgLjQyMjQxNi0uMTk5MjUzIC40MjI0MTYgMEgzLjU3MDYxTDMuODAxNzQzLTEuNDI2NjVIMy41NTQ2N0MzLjUzMDc2LTEuMjY3MjQ4IDMuNDY2OTk5LS44Njg3NDIgMy4zNzEzNTctLjcxNzMxQzMuMzIzNTM3LS42NTM1NDkgMi43MTc4MDgtLjY1MzU0OSAyLjU5MDI4Ni0uNjUzNTQ5SDEuMTcxNjA2TDIuMjQ3NTcyLTEuNjI1OTAzWicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTI3Jy8+Cjx1c2UgeD0nNy4wODI0MDQnIHk9Jy00LjMzODQzNycgeGxpbms6aHJlZj0nI2cxLTUwJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MCAtLT4=" alt="\sigma^2" style="vertical-align: 0px"/> is estimated from the data.
+If the output dimension is equal to one, this parameter is estimated using
+the analytic variance estimator which maximizes the likelihood.
+Otherwise, if output dimension is greater than one or analytical sigma disabled,
+this parameter is estimated from numerical optimization.</p></li>
+<li><p>The other parameters <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSczMy4zODM3NjhwdCcgaGVpZ2h0PScxMC4zNDA2NTlwdCcgdmlld0JveD0nMCAtOS44NzMyMzggMzMuMzgzNzY4IDEwLjM0MDY1OSc+CjxkZWZzPgo8cGF0aCBpZD0nZzAtODInIGQ9J00zLjIwMzk4NS0zLjc1MzkyM0gzLjYzNDM3MUw1LjQyNzY0Ni0uOTgwMzI0QzUuNTQ3MTk4LS43ODkwNDEgNS44MzQxMjItLjMyMjc5IDUuOTY1NjI5LS4xNDM0NjJDNi4wNDkzMTUgMCA2LjA4NTE4MSAwIDYuMzYwMTQ5IDBIOC4wMDk5NjNDOC4yMjUxNTYgMCA4LjQwNDQ4MyAwIDguNDA0NDgzLS4yMTUxOTNDOC40MDQ0ODMtLjMxMDgzNCA4LjMzMjc1Mi0uMzk0NTIxIDguMjI1MTU2LS40MTg0MzFDNy43ODI4MTQtLjUxNDA3MiA3LjE5NzAxMS0xLjMwMzExMyA2LjkxMDA4Ny0xLjY4NTY3OUM2LjgyNjQwMS0xLjgwNTIzIDYuMjI4NjQzLTIuNTk0MjcxIDUuNDI3NjQ2LTMuODg1NDNDNi40OTE2NTYtNC4wNzY3MTIgNy41MTk4MDEtNC41MzEwMDkgNy41MTk4MDEtNS45NTM2NzRDNy41MTk4MDEtNy42MTU0NDIgNS43NjIzOTEtOC4xODkyOSA0LjM1MTY4MS04LjE4OTI5SC41OTc3NThDLjM4MjU2NS04LjE4OTI5IC4xOTEyODMtOC4xODkyOSAuMTkxMjgzLTcuOTc0MDk3Qy4xOTEyODMtNy43NzA4NTkgLjQxODQzMS03Ljc3MDg1OSAuNTE0MDcyLTcuNzcwODU5QzEuMTk1NTE3LTcuNzcwODU5IDEuMjU1MjkzLTcuNjg3MTczIDEuMjU1MjkzLTcuMDg5NDE1Vi0xLjA5OTg3NUMxLjI1NTI5My0uNTAyMTE3IDEuMTk1NTE3LS40MTg0MzEgLjUxNDA3Mi0uNDE4NDMxQy40MTg0MzEtLjQxODQzMSAuMTkxMjgzLS40MTg0MzEgLjE5MTI4My0uMjE1MTkzQy4xOTEyODMgMCAuMzgyNTY1IDAgLjU5Nzc1OCAwSDMuODczNDc0QzQuMDg4NjY3IDAgNC4yNjc5OTUgMCA0LjI2Nzk5NS0uMjE1MTkzQzQuMjY3OTk1LS40MTg0MzEgNC4wNjQ3NTctLjQxODQzMSAzLjkzMzI1LS40MTg0MzFDMy4yNTE4MDYtLjQxODQzMSAzLjIwMzk4NS0uNTE0MDcyIDMuMjAzOTg1LTEuMDk5ODc1Vi0zLjc1MzkyM1pNNS41MTEzMzMtNC4zMzk3MjZDNS44NDYwNzctNC43ODIwNjcgNS44ODE5NDMtNS40MTU2OTEgNS44ODE5NDMtNS45NDE3MTlDNS44ODE5NDMtNi41MTU1NjcgNS44MTAyMTItNy4xNDkxOTEgNS40Mjc2NDYtNy42MzkzNTJDNS45MTc4MDgtNy41MzE3NTYgNy4xMDEzNy03LjE2MTE0NiA3LjEwMTM3LTUuOTUzNjc0QzcuMTAxMzctNS4xNzY1ODggNi43NDI3MTUtNC41NjY4NzQgNS41MTEzMzMtNC4zMzk3MjZaTTMuMjAzOTg1LTcuMTI1MjhDMy4yMDM5ODUtNy4zNzYzMzkgMy4yMDM5ODUtNy43NzA4NTkgMy45NDUyMDUtNy43NzA4NTlDNC45NjEzOTUtNy43NzA4NTkgNS40NjM1MTItNy4zNTI0MjggNS40NjM1MTItNS45NDE3MTlDNS40NjM1MTItNC4zOTk1MDIgNS4wOTI5MDItNC4xNzIzNTQgMy4yMDM5ODUtNC4xNzIzNTRWLTcuMTI1MjhaTTEuNTc4MDgyLS40MTg0MzFDMS42NzM3MjQtLjYzMzYyNCAxLjY3MzcyNC0uOTY4MzY5IDEuNjczNzI0LTEuMDc1OTY1Vi03LjExMzMyNUMxLjY3MzcyNC03LjIzMjg3NyAxLjY3MzcyNC03LjU1NTY2NiAxLjU3ODA4Mi03Ljc3MDg1OUgyLjk0MDk3MUMyLjc4NTU1NC03LjU3OTU3NyAyLjc4NTU1NC03LjM0MDQ3MyAyLjc4NTU1NC03LjE2MTE0NlYtMS4wNzU5NjVDMi43ODU1NTQtLjk1NjQxMyAyLjc4NTU1NC0uNjMzNjI0IDIuODgxMTk2LS40MTg0MzFIMS41NzgwODJaTTQuMTI0NTMzLTMuNzUzOTIzQzQuMjA4MjE5LTMuNzY1ODc4IDQuMjU2MDQtMy43Nzc4MzMgNC4zNTE2ODEtMy43Nzc4MzNDNC41MzEwMDktMy43Nzc4MzMgNC43OTQwMjItMy44MDE3NDMgNC45NzMzNS0zLjgyNTY1NEM1LjE1MjY3Ny0zLjUzODczIDYuNDQzODM2LTEuNDEwNzEgNy40MzYxMTUtLjQxODQzMUg2LjI3NjQ2M0w0LjEyNDUzMy0zLjc1MzkyM1onLz4KPHBhdGggaWQ9J2cxLTUwJyBkPSdNNi41NTE0MzItMi43NDk2ODlDNi43NTQ2Ny0yLjc0OTY4OSA2Ljk2OTg2My0yLjc0OTY4OSA2Ljk2OTg2My0yLjk4ODc5MlM2Ljc1NDY3LTMuMjI3ODk1IDYuNTUxNDMyLTMuMjI3ODk1SDEuNDgyNDQxQzEuNjI1OTAzLTQuODI5ODg4IDMuMDAwNzQ3LTUuOTc3NTg0IDQuNjg2NDI2LTUuOTc3NTg0SDYuNTUxNDMyQzYuNzU0NjctNS45Nzc1ODQgNi45Njk4NjMtNS45Nzc1ODQgNi45Njk4NjMtNi4yMTY2ODdTNi43NTQ2Ny02LjQ1NTc5MSA2LjU1MTQzMi02LjQ1NTc5MUg0LjY2MjUxNkMyLjYxODE4Mi02LjQ1NTc5MSAuOTkyMjc5LTQuOTAxNjE5IC45OTIyNzktMi45ODg3OTJTMi42MTgxODIgLjQ3ODIwNyA0LjY2MjUxNiAuNDc4MjA3SDYuNTUxNDMyQzYuNzU0NjcgLjQ3ODIwNyA2Ljk2OTg2MyAuNDc4MjA3IDYuOTY5ODYzIC4yMzkxMDNTNi43NTQ2NyAwIDYuNTUxNDMyIDBINC42ODY0MjZDMy4wMDA3NDcgMCAxLjYyNTkwMy0xLjE0NzY5NiAxLjQ4MjQ0MS0yLjc0OTY4OUg2LjU1MTQzMlonLz4KPHBhdGggaWQ9J2cyLTEwMCcgZD0nTTQuMjg3OTItNS4yOTIxNTRDNC4yOTU4OS01LjMwODA5NSA0LjMxOTgwMS01LjQxMTcwNiA0LjMxOTgwMS01LjQxOTY3NkM0LjMxOTgwMS01LjQ1OTUyNyA0LjI4NzkyLTUuNTMxMjU4IDQuMTkyMjc5LTUuNTMxMjU4QzQuMTYwMzk5LTUuNTMxMjU4IDMuOTEzMzI1LTUuNTA3MzQ3IDMuNzMwMDEyLTUuNDkxNDA3TDMuMjgzNjg2LTUuNDU5NTI3QzMuMTA4MzQ0LTUuNDQzNTg3IDMuMDI4NjQzLTUuNDM1NjE2IDMuMDI4NjQzLTUuMjkyMTU0QzMuMDI4NjQzLTUuMTgwNTczIDMuMTQwMjI0LTUuMTgwNTczIDMuMjM1ODY2LTUuMTgwNTczQzMuNjE4NDMxLTUuMTgwNTczIDMuNjE4NDMxLTUuMTMyNzUyIDMuNjE4NDMxLTUuMDYxMDIxQzMuNjE4NDMxLTUuMDEzMiAzLjU1NDY3LTQuNzUwMTg3IDMuNTE0ODE5LTQuNTkwNzg1TDMuMTI0Mjg0LTMuMDM2NjEzQzMuMDUyNTUzLTMuMTcyMTA1IDIuODIxNDItMy41MTQ4MTkgMi4zMzUyNDMtMy41MTQ4MTlDMS4zODY4LTMuNTE0ODE5IC4zNDI3MTUtMi40MDY5NzQgLjM0MjcxNS0xLjIyNzM5N0MuMzQyNzE1LS4zOTg1MDYgLjg3NjcxMiAuMDc5NzAxIDEuNDkwNDExIC4wNzk3MDFDMi4wMDA0OTggLjA3OTcwMSAyLjQzODg1NC0uMzI2Nzc1IDIuNTgyMzE2LS40ODYxNzdDMi43MjU3NzggLjA2Mzc2MSAzLjI2Nzc0NiAuMDc5NzAxIDMuMzYzMzg3IC4wNzk3MDFDMy43MzAwMTIgLjA3OTcwMSAzLjkxMzMyNS0uMjIzMTYzIDMuOTc3MDg2LS4zNTg2NTVDNC4xMzY0ODgtLjY0NTU3OSA0LjI0ODA3LTEuMTA3ODQ2IDQuMjQ4MDctMS4xMzk3MjZDNC4yNDgwNy0xLjE4NzU0NyA0LjIxNjE4OS0xLjI0MzMzNyA0LjEyMDU0OC0xLjI0MzMzN1M0LjAwODk2Ni0xLjE5NTUxNyAzLjk2MTE0Ni0uOTk2MjY0QzMuODQ5NTY0LS41NTc5MDggMy42OTgxMzItLjE0MzQ2MiAzLjM4NzI5OC0uMTQzNDYyQzMuMjAzOTg1LS4xNDM0NjIgMy4xMzIyNTQtLjI5NDg5NCAzLjEzMjI1NC0uNTE4MDU3QzMuMTMyMjU0LS42Njk0ODkgMy4xNTYxNjQtLjc1NzE2MSAzLjE4MDA3NS0uODYwNzcyTDQuMjg3OTItNS4yOTIxNTRaTTIuNTgyMzE2LS44NjA3NzJDMi4xODM4MTEtLjMxMDgzNCAxLjc2OTM2NS0uMTQzNDYyIDEuNTE0MzIxLS4xNDM0NjJDMS4xNDc2OTYtLjE0MzQ2MiAuOTY0Mzg0LS40NzgyMDcgLjk2NDM4NC0uODkyNjUzQy45NjQzODQtMS4yNjcyNDggMS4xNzk1NzctMi4xMjAwNSAxLjM1NDkxOS0yLjQ3MDczNUMxLjU4NjA1Mi0yLjk1NjkxMiAxLjk3NjU4OC0zLjI5MTY1NiAyLjM0MzIxMy0zLjI5MTY1NkMyLjg2MTI3LTMuMjkxNjU2IDMuMDEyNzAyLTIuNzA5ODM4IDMuMDEyNzAyLTIuNjE0MTk3QzMuMDEyNzAyLTIuNTgyMzE2IDIuODEzNDUtMS44MDEyNDUgMi43NjU2MjktMS41OTQwMjJDMi42NjIwMTctMS4yMTk0MjcgMi42NjIwMTctMS4yMDM0ODcgMi41ODIzMTYtLjg2MDc3MlonLz4KPHBhdGggaWQ9J2czLTE4JyBkPSdNNS4yOTYxMzktNi4wMTM0NUM1LjI5NjEzOS03LjIzMjg3NyA0LjkxMzU3NC04LjQxNjQzOCAzLjkzMzI1LTguNDE2NDM4QzIuMjU5NTI3LTguNDE2NDM4IC40NzgyMDctNC45MTM1NzQgLjQ3ODIwNy0yLjI4MzQzN0MuNDc4MjA3LTEuNzMzNDk5IC41OTc3NTggLjExOTU1MiAxLjg1MzA1MSAuMTE5NTUyQzMuNDc4OTU0IC4xMTk1NTIgNS4yOTYxMzktMy4yOTk2MjYgNS4yOTYxMzktNi4wMTM0NVpNMS42NzM3MjQtNC4zMjc3NzFDMS44NTMwNTEtNS4wMzMxMjYgMi4xMDQxMS02LjAzNzM2IDIuNTgyMzE2LTYuODg2MTc3QzIuOTc2ODM3LTcuNjAzNDg3IDMuMzk1MjY4LTguMTc3MzM1IDMuOTIxMjk1LTguMTc3MzM1QzQuMzE1ODE2LTguMTc3MzM1IDQuNTc4ODI5LTcuODQyNTkgNC41Nzg4MjktNi42OTQ4OTRDNC41Nzg4MjktNi4yNjQ1MDggNC41NDI5NjQtNS42NjY3NSA0LjE5NjI2NC00LjMyNzc3MUgxLjY3MzcyNFpNNC4xMTI1NzgtMy45NjkxMTZDMy44MTM2OTktMi43OTc1MDkgMy41NjI2NC0yLjA0NDMzNCAzLjEzMjI1NC0xLjI5MTE1OEMyLjc4NTU1NC0uNjgxNDQ1IDIuMzY3MTIzLS4xMTk1NTIgMS44NjUwMDYtLjExOTU1MkMxLjQ5NDM5Ni0uMTE5NTUyIDEuMTk1NTE3LS40MDY0NzYgMS4xOTU1MTctMS41OTAwMzdDMS4xOTU1MTctMi4zNjcxMjMgMS4zODY4LTMuMTgwMDc1IDEuNTc4MDgyLTMuOTY5MTE2SDQuMTEyNTc4WicvPgo8L2RlZnM+CjxnIGlkPSdwYWdlMSc+Cjx1c2UgeD0nMCcgeT0nMCcgeGxpbms6aHJlZj0nI2czLTE4Jy8+Cjx1c2UgeD0nOS4xMDExNycgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTUwJy8+Cjx1c2UgeD0nMjAuMzkyMTM4JyB5PScwJyB4bGluazpocmVmPScjZzAtODInLz4KPHVzZSB4PScyOS4wMjY0NScgeT0nLTQuMzM4NDM3JyB4bGluazpocmVmPScjZzItMTAwJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MSAtLT4=" alt="{\bf \theta}\in\mathbb{R}^d" style="vertical-align: -1px"/> where <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc2LjA4MjY5M3B0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDYuMDgyNjkzIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xMDAnIGQ9J002LjAxMzQ1LTcuOTk4MDA3QzYuMDI1NDA1LTguMDQ1ODI4IDYuMDQ5MzE1LTguMTE3NTU5IDYuMDQ5MzE1LTguMTc3MzM1QzYuMDQ5MzE1LTguMjk2ODg3IDUuOTI5NzYzLTguMjk2ODg3IDUuOTA1ODUzLTguMjk2ODg3QzUuODkzODk4LTguMjk2ODg3IDUuMzA4MDk1LTguMjQ5MDY2IDUuMjQ4MzE5LTguMjM3MTExQzUuMDQ1MDgxLTguMjI1MTU2IDQuODY1NzUzLTguMjAxMjQ1IDQuNjUwNTYtOC4xODkyOUM0LjM1MTY4MS04LjE2NTM4IDQuMjY3OTk1LTguMTUzNDI1IDQuMjY3OTk1LTcuOTM4MjMyQzQuMjY3OTk1LTcuODE4NjggNC4zNjM2MzYtNy44MTg2OCA0LjUzMTAwOS03LjgxODY4QzUuMTE2ODEyLTcuODE4NjggNS4xMjg3NjctNy43MTEwODMgNS4xMjg3NjctNy41OTE1MzJDNS4xMjg3NjctNy41MTk4MDEgNS4xMDQ4NTctNy40MjQxNTkgNS4wOTI5MDItNy4zODgyOTRMNC4zNjM2MzYtNC40ODMxODhDNC4yMzIxMy00Ljc5NDAyMiAzLjkwOTM0LTUuMjcyMjI5IDMuMjg3NjcxLTUuMjcyMjI5QzEuOTM2NzM3LTUuMjcyMjI5IC40NzgyMDctMy41MjY3NzUgLjQ3ODIwNy0xLjc1NzQxQy40NzgyMDctLjU3Mzg0OCAxLjE3MTYwNiAuMTE5NTUyIDEuOTg0NTU4IC4xMTk1NTJDMi42NDIwOTIgLjExOTU1MiAzLjIwMzk4NS0uMzk0NTIxIDMuNTM4NzMtLjc4OTA0MUMzLjY1ODI4MS0uMDgzNjg2IDQuMjIwMTc0IC4xMTk1NTIgNC41Nzg4MjkgLjExOTU1MlM1LjIyNDQwOC0uMDk1NjQxIDUuNDM5NjAxLS41MjYwMjdDNS42MzA4ODQtLjkzMjUwMyA1Ljc5ODI1Ny0xLjY2MTc2OCA1Ljc5ODI1Ny0xLjcwOTU4OUM1Ljc5ODI1Ny0xLjc2OTM2NSA1Ljc1MDQzNi0xLjgxNzE4NiA1LjY3ODcwNS0xLjgxNzE4NkM1LjU3MTEwOC0xLjgxNzE4NiA1LjU1OTE1My0xLjc1NzQxIDUuNTExMzMzLTEuNTc4MDgyQzUuMzMyMDA1LS44NzI3MjcgNS4xMDQ4NTctLjExOTU1MiA0LjYxNDY5NS0uMTE5NTUyQzQuMjY3OTk1LS4xMTk1NTIgNC4yNDQwODUtLjQzMDM4NiA0LjI0NDA4NS0uNjY5NDg5QzQuMjQ0MDg1LS43MTczMSA0LjI0NDA4NS0uOTY4MzY5IDQuMzI3NzcxLTEuMzAzMTEzTDYuMDEzNDUtNy45OTgwMDdaTTMuNTk4NTA2LTEuNDIyNjY1QzMuNTM4NzMtMS4yMTk0MjcgMy41Mzg3My0xLjE5NTUxNyAzLjM3MTM1Ny0uOTY4MzY5QzMuMTA4MzQ0LS42MzM2MjQgMi41ODIzMTYtLjExOTU1MiAyLjAyMDQyMy0uMTE5NTUyQzEuNTMwMjYyLS4xMTk1NTIgMS4yNTUyOTMtLjU2MTg5MyAxLjI1NTI5My0xLjI2NzI0OEMxLjI1NTI5My0xLjkyNDc4MiAxLjYyNTkwMy0zLjI2Mzc2MSAxLjg1MzA1MS0zLjc2NTg3OEMyLjI1OTUyNy00LjYwMjc0IDIuODIxNDItNS4wMzMxMjYgMy4yODc2NzEtNS4wMzMxMjZDNC4wNzY3MTItNS4wMzMxMjYgNC4yMzIxMy00LjA1MjgwMiA0LjIzMjEzLTMuOTU3MTYxQzQuMjMyMTMtMy45NDUyMDUgNC4xOTYyNjQtMy43ODk3ODggNC4xODQzMDktMy43NjU4NzhMMy41OTg1MDYtMS40MjI2NjVaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzAtMTAwJy8+CjwvZz4KPC9zdmc+CjwhLS0gREVQVEg9MCAtLT4=" alt="d" style="vertical-align: 0px"/> is
+the spatial dimension of the covariance model.
+Often, the parameter <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="{\bf \theta}" style="vertical-align: 0px"/> is a scale parameter.
+This step involves an optimization algorithm.</p></li>
+</ul>
+<p>All these parameters are estimated with the <a class="reference internal" href="../../user_manual/_generated/openturns.GeneralLinearModelAlgorithm.html#openturns.GeneralLinearModelAlgorithm" title="openturns.GeneralLinearModelAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeneralLinearModelAlgorithm</span></code></a> class.</p>
+<p>The estimation of the <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="{\bf \theta}" style="vertical-align: 0px"/> parameters is the step which has the highest CPU cost.
+Moreover, the maximization of likelihood may be associated with difficulties e.g. many local maximums or even the non convergence of the optimization algorithm.
+In this case, it might be useful to fine tune the optimization algorithm so that the convergence of the optimization algorithm is, hopefully, improved.</p>
+<p>Furthermore, there are several situations in which the optimization can be initialized or completely bypassed.
+Suppose for example that we have already created an initial Gaussian process regression with <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScxMC42MjI2MTRwdCcgaGVpZ2h0PSc4LjE2OTM2NnB0JyB2aWV3Qm94PScwIC04LjE2OTM2NiAxMC42MjI2MTQgOC4xNjkzNjYnPgo8ZGVmcz4KPHBhdGggaWQ9J2cwLTc4JyBkPSdNOC44NDY4MjQtNi45MTAwODdDOC45NzgzMzEtNy40MjQxNTkgOS4xNjk2MTQtNy43ODI4MTQgMTAuMDc4MjA3LTcuODE4NjhDMTAuMTE0MDcyLTcuODE4NjggMTAuMjU3NTM0LTcuODMwNjM1IDEwLjI1NzUzNC04LjAzMzg3M0MxMC4yNTc1MzQtOC4xNjUzOCAxMC4xNDk5MzgtOC4xNjUzOCAxMC4xMDIxMTctOC4xNjUzOEM5Ljg2MzAxNC04LjE2NTM4IDkuMjUzMy04LjE0MTQ2OSA5LjAxNDE5Ny04LjE0MTQ2OUg4LjQ0MDM0OUM4LjI3Mjk3Ni04LjE0MTQ2OSA4LjA1Nzc4My04LjE2NTM4IDcuODkwNDExLTguMTY1MzhDNy44MTg2OC04LjE2NTM4IDcuNjc1MjE4LTguMTY1MzggNy42NzUyMTgtNy45MzgyMzJDNy42NzUyMTgtNy44MTg2OCA3Ljc3MDg1OS03LjgxODY4IDcuODU0NTQ1LTcuODE4NjhDOC41NzE4NTYtNy43OTQ3NyA4LjYxOTY3Ni03LjUxOTgwMSA4LjYxOTY3Ni03LjMwNDYwOEM4LjYxOTY3Ni03LjE5NzAxMSA4LjYwNzcyMS03LjE2MTE0NiA4LjU3MTg1Ni02Ljk5Mzc3M0w3LjIyMDkyMi0xLjYwMTk5M0w0LjY2MjUxNi03Ljk2MjE0MkM0LjU3ODgyOS04LjE1MzQyNSA0LjU2Njg3NC04LjE2NTM4IDQuMzAzODYxLTguMTY1MzhIMi44NDUzM0MyLjYwNjIyNy04LjE2NTM4IDIuNDk4NjMtOC4xNjUzOCAyLjQ5ODYzLTcuOTM4MjMyQzIuNDk4NjMtNy44MTg2OCAyLjU4MjMxNi03LjgxODY4IDIuODA5NDY1LTcuODE4NjhDMi44NjkyNC03LjgxODY4IDMuNTc0NTk1LTcuODE4NjggMy41NzQ1OTUtNy43MTEwODNDMy41NzQ1OTUtNy42ODcxNzMgMy41NTA2ODUtNy41OTE1MzIgMy41Mzg3My03LjU1NTY2NkwxLjk0ODY5Mi0xLjIxOTQyN0MxLjgwNTIzLS42MzM2MjQgMS41MTgzMDYtLjM4MjU2NSAuNzI5MjY1LS4zNDY3Qy42Njk0ODktLjM0NjcgLjU0OTkzOC0uMzM0NzQ1IC41NDk5MzgtLjExOTU1MkMuNTQ5OTM4IDAgLjY2OTQ4OSAwIC43MDUzNTUgMEMuOTQ0NDU4IDAgMS41NTQxNzItLjAyMzkxIDEuNzkzMjc1LS4wMjM5MUgyLjM2NzEyM0MyLjUzNDQ5Ni0uMDIzOTEgMi43Mzc3MzMgMCAyLjkwNTEwNiAwQzIuOTg4NzkyIDAgMy4xMjAyOTkgMCAzLjEyMDI5OS0uMjI3MTQ4QzMuMTIwMjk5LS4zMzQ3NDUgMy4wMDA3NDctLjM0NjcgMi45NTI5MjctLjM0NjdDMi41NTg0MDYtLjM1ODY1NSAyLjE3NTg0MS0uNDMwMzg2IDIuMTc1ODQxLS44NjA3NzJDMi4xNzU4NDEtLjk1NjQxMyAyLjE5OTc1MS0xLjA2NDAxIDIuMjIzNjYxLTEuMTU5NjUxTDMuODM3NjA5LTcuNTU1NjY2QzMuOTA5MzQtNy40MzYxMTUgMy45MDkzNC03LjQxMjIwNCAzLjk1NzE2MS03LjMwNDYwOEw2LjgwMjQ5MS0uMjE1MTkzQzYuODYyMjY3LS4wNzE3MzEgNi44ODYxNzcgMCA2Ljk5Mzc3MyAwQzcuMTEzMzI1IDAgNy4xMjUyOC0uMDM1ODY2IDcuMTczMTAxLS4yMzkxMDNMOC44NDY4MjQtNi45MTAwODdaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzAtNzgnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD0wIC0tPg==" alt="N" style="vertical-align: 0px"/> points and we want to add a single new point.</p>
+<ul class="simple">
+<li><p>It might be interesting to initialize the optimization algorithm with the optimum found for the previous Gaussian process regression:
+this may reduce the number of iterations required to maximize the likelihood.</p></li>
+<li><p>We may as well completely bypass the optimization step: if the previous covariance model was correctly estimated,
+the update of the parameters may or may not significantly improve the estimates.</p></li>
+</ul>
+<p>This is why the goal of this example is to see how to configure the optimization of the hyperparameters of a Gaussian process regression.</p>
+</section>
+<section id="definition-of-the-model">
+<h2>Definition of the model<a class="headerlink" href="#definition-of-the-model" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.experimental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otexp</span>
+</pre></div>
+</div>
+<p>We define the symbolic function which evaluates the output <cite>Y</cite> depending on the inputs <cite>E</cite>, <cite>F</cite>, <cite>L</cite> and <cite>I</cite>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;F*L^3/(3*E*I)&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Then we define the distribution of the input random vector.</p>
+<p>Young’s modulus <cite>E</cite></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">E</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.27</span><span class="p">,</span> <span class="mf">2.5e7</span><span class="p">,</span> <span class="mf">5.0e7</span><span class="p">)</span>  <span class="c1"># in N/m^2</span>
+<span class="n">E</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">)</span>
+<span class="c1"># Load F</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LogNormal</span><span class="p">()</span>  <span class="c1"># in N</span>
+<span class="n">F</span><span class="o">.</span><span class="n">setParameter</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">LogNormalMuSigma</span><span class="p">()([</span><span class="mf">30.0e3</span><span class="p">,</span> <span class="mf">9e3</span><span class="p">,</span> <span class="mf">15.0e3</span><span class="p">]))</span>
+<span class="n">F</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+<span class="c1"># Length L</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">250.0</span><span class="p">,</span> <span class="mf">260.0</span><span class="p">)</span>  <span class="c1"># in cm</span>
+<span class="n">L</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
+<span class="c1"># Moment of inertia I</span>
+<span class="n">II</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Beta</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">450</span><span class="p">)</span>  <span class="c1"># in cm^4</span>
+<span class="n">II</span><span class="o">.</span><span class="n">setDescription</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we define the dependency using a <a class="reference internal" href="../../user_manual/_generated/openturns.NormalCopula.html#openturns.NormalCopula" title="openturns.NormalCopula"><code class="xref py py-class docutils literal notranslate"><span class="pre">NormalCopula</span></code></a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># number of inputs</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CorrelationMatrix</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">R</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span>
+<span class="n">myCopula</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="p">(</span><span class="n">ot</span><span class="o">.</span><span class="n">NormalCopula</span><span class="o">.</span><span class="n">GetCorrelationFromSpearmanCorrelation</span><span class="p">(</span><span class="n">R</span><span class="p">))</span>
+<span class="n">myDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span><span class="p">([</span><span class="n">E</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">II</span><span class="p">],</span> <span class="n">myCopula</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-the-design-of-experiments">
+<h2>Create the design of experiments<a class="headerlink" href="#create-the-design-of-experiments" title="Link to this heading">¶</a></h2>
+<p>We consider a simple Monte-Carlo sampling as a design of experiments.
+This is why we generate an input sample using the <cite>getSample</cite> method of the distribution.
+Then we evaluate the output using the <cite>model</cite> function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize_train</span><span class="p">)</span>
+<span class="n">Y_train</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-the-metamodel">
+<h2>Create the metamodel<a class="headerlink" href="#create-the-metamodel" title="Link to this heading">¶</a></h2>
+<p>In order to create the Gaussian process regression, we first select a constant trend with the <a class="reference internal" href="../../user_manual/_generated/openturns.ConstantBasisFactory.html#openturns.ConstantBasisFactory" title="openturns.ConstantBasisFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantBasisFactory</span></code></a> class.
+Then we use a squared exponential covariance model.
+Finally, we use the <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter" title="openturns.experimental.GaussianProcessFitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianProcessFitter</span></code></a> class to calibrate a covariance model for a Gaussian process regression,
+taking the training sample, the covariance model and the trend basis as input arguments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="c1"># Trick B, v2</span>
+<span class="n">x_range</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMax</span><span class="p">()</span> <span class="o">-</span> <span class="n">X_train</span><span class="o">.</span><span class="n">getMin</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x_range:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x_range</span><span class="p">)</span>
+<span class="n">scale_max_factor</span> <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># Must be &gt; 1, tune this to match your problem</span>
+<span class="n">scale_min_factor</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Must be &lt; 1, tune this to match your problem</span>
+<span class="n">maximum_scale_bounds</span> <span class="o">=</span> <span class="n">scale_max_factor</span> <span class="o">*</span> <span class="n">x_range</span>
+<span class="n">minimum_scale_bounds</span> <span class="o">=</span> <span class="n">scale_min_factor</span> <span class="o">*</span> <span class="n">x_range</span>
+<span class="n">scaleOptimizationBounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="n">minimum_scale_bounds</span><span class="p">,</span> <span class="n">maximum_scale_bounds</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;scaleOptimizationBounds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
+
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>x_range:
+[1.31501e+07,13652.8,8.1952,63.8489]
+scaleOptimizationBounds
+[1.31501e+06, 5.26006e+07]
+[1365.28, 54611.3]
+[0.81952, 32.7808]
+[6.38489, 255.395]
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter.run" title="openturns.experimental.GaussianProcessFitter.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> method has optimized the hyperparameters of the metamodel.</p>
+<p>We can then print the constant trend of the metamodel, which have been
+estimated using the least squares method.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+class=Point name=Unnamed dimension=1 values=[25.4634]
+</div>
+<br />
+<br /><p>We can also print the hyperparameters of the covariance model, which have been estimated by maximizing the likelihood.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">basic_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">basic_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[5.26006e+07,54523.6,32.7808,255.395], amplitude=[18.9295])
+</pre></div>
+</div>
+</section>
+<section id="get-the-optimizer-algorithm">
+<h2>Get the optimizer algorithm<a class="headerlink" href="#get-the-optimizer-algorithm" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter.getOptimizationAlgorithm" title="openturns.experimental.GaussianProcessFitter.getOptimizationAlgorithm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getOptimizationAlgorithm()</span></code></a> method
+returns the optimization algorithm used to optimize the
+<img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuNSAtLT4KPHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPSc1Ljc4MDM0MXB0JyBoZWlnaHQ9JzguMzAyMTkxcHQnIHZpZXdCb3g9JzAgLTguMzAyMTkxIDUuNzgwMzQxIDguMzAyMTkxJz4KPGRlZnM+CjxwYXRoIGlkPSdnMC0xOCcgZD0nTTUuMjk2MTM5LTYuMDEzNDVDNS4yOTYxMzktNy4yMzI4NzcgNC45MTM1NzQtOC40MTY0MzggMy45MzMyNS04LjQxNjQzOEMyLjI1OTUyNy04LjQxNjQzOCAuNDc4MjA3LTQuOTEzNTc0IC40NzgyMDctMi4yODM0MzdDLjQ3ODIwNy0xLjczMzQ5OSAuNTk3NzU4IC4xMTk1NTIgMS44NTMwNTEgLjExOTU1MkMzLjQ3ODk1NCAuMTE5NTUyIDUuMjk2MTM5LTMuMjk5NjI2IDUuMjk2MTM5LTYuMDEzNDVaTTEuNjczNzI0LTQuMzI3NzcxQzEuODUzMDUxLTUuMDMzMTI2IDIuMTA0MTEtNi4wMzczNiAyLjU4MjMxNi02Ljg4NjE3N0MyLjk3NjgzNy03LjYwMzQ4NyAzLjM5NTI2OC04LjE3NzMzNSAzLjkyMTI5NS04LjE3NzMzNUM0LjMxNTgxNi04LjE3NzMzNSA0LjU3ODgyOS03Ljg0MjU5IDQuNTc4ODI5LTYuNjk0ODk0QzQuNTc4ODI5LTYuMjY0NTA4IDQuNTQyOTY0LTUuNjY2NzUgNC4xOTYyNjQtNC4zMjc3NzFIMS42NzM3MjRaTTQuMTEyNTc4LTMuOTY5MTE2QzMuODEzNjk5LTIuNzk3NTA5IDMuNTYyNjQtMi4wNDQzMzQgMy4xMzIyNTQtMS4yOTExNThDMi43ODU1NTQtLjY4MTQ0NSAyLjM2NzEyMy0uMTE5NTUyIDEuODY1MDA2LS4xMTk1NTJDMS40OTQzOTYtLjExOTU1MiAxLjE5NTUxNy0uNDA2NDc2IDEuMTk1NTE3LTEuNTkwMDM3QzEuMTk1NTE3LTIuMzY3MTIzIDEuMzg2OC0zLjE4MDA3NSAxLjU3ODA4Mi0zLjk2OTExNkg0LjExMjU3OFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMC0xOCcvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTAgLS0+" alt="{\bf \theta}" style="vertical-align: 0px"/> parameters of the
+<a class="reference internal" href="../../user_manual/_generated/openturns.SquaredExponential.html#openturns.SquaredExponential" title="openturns.SquaredExponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">SquaredExponential</span></code></a> covariance model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">solver</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getOptimizationAlgorithm</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Get the default optimizer.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">solverImplementation</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">getImplementation</span><span class="p">()</span>
+<span class="n">solverImplementation</span><span class="o">.</span><span class="n">getClassName</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;Cobyla&#39;
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter.getOptimizationBounds" title="openturns.experimental.GaussianProcessFitter.getOptimizationBounds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getOptimizationBounds()</span></code></a> method
+returns the bounds.
+The dimension of these bounds correspond to the spatial dimension of
+the covariance model.
+In the metamodeling context, this correspond to the input dimension of the model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">bounds</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getOptimizationBounds</span><span class="p">()</span>
+<span class="n">bounds</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>4
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lbounds</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">getLowerBound</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lbounds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lbounds</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>lbounds
+[1.31501e+06,1365.28,0.81952,6.38489]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ubounds</span> <span class="o">=</span> <span class="n">bounds</span><span class="o">.</span><span class="n">getUpperBound</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ubounds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ubounds</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>ubounds
+[5.26006e+07,54611.3,32.7808,255.395]
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter.getOptimizeParameters" title="openturns.experimental.GaussianProcessFitter.getOptimizeParameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getOptimizeParameters()</span></code></a> method returns <cite>True</cite> if these parameters are to be optimized.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">isOptimize</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getOptimizeParameters</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">isOptimize</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</section>
+<section id="configure-the-starting-point-of-the-optimization">
+<h2>Configure the starting point of the optimization<a class="headerlink" href="#configure-the-starting-point-of-the-optimization" title="Link to this heading">¶</a></h2>
+<p>The starting point of the optimization is based on the parameters of the covariance model.
+In the following example, we configure the parameters of the covariance model to
+the arbitrary values <cite>[12.0, 34.0, 56.0, 78.0]</cite>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">34.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">78.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">new_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">new_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[5.26006e+07,54523.6,32.7808,255.395], amplitude=[18.9295])
+</pre></div>
+</div>
+<p>In order to see the difference with the default optimization, we print the previous optimized covariance model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">basic_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[5.26006e+07,54523.6,32.7808,255.395], amplitude=[18.9295])
+</pre></div>
+</div>
+<p>We observe that this does not change much the values of the parameters in this case.</p>
+</section>
+<section id="disabling-the-optimization">
+<h2>Disabling the optimization<a class="headerlink" href="#disabling-the-optimization" title="Link to this heading">¶</a></h2>
+<p>It is sometimes useful to completely disable the optimization of the parameters.
+In order to see the effect of this, we first initialize the parameters of
+the covariance model with the arbitrary values <cite>[12.0, 34.0, 56.0, 78.0]</cite>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">34.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">78.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">91.0</span><span class="p">])</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../../user_manual/_generated/openturns.experimental.GaussianProcessFitter.html#openturns.experimental.GaussianProcessFitter.setOptimizeParameters" title="openturns.experimental.GaussianProcessFitter.setOptimizeParameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setOptimizeParameters()</span></code></a> method can be
+used to disable the optimization of the parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">setOptimizeParameters</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we run the algorithm and get the result.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We observe that the covariance model is unchanged:
+the parameters have not been optimized, as required.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">updated_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">updated_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[12,34,56,78], amplitude=[91])
+</pre></div>
+</div>
+<p>The trend, however, is still optimized, using linear least squares.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">getTrendCoefficients</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+class=Point name=Unnamed dimension=1 values=[11.607]
+</div>
+<br />
+<br /></section>
+<section id="reuse-the-parameters-from-a-previous-optimization">
+<h2>Reuse the parameters from a previous optimization<a class="headerlink" href="#reuse-the-parameters-from-a-previous-optimization" title="Link to this heading">¶</a></h2>
+<p>In this example, we show how to reuse the optimized parameters of a previous Gaussian process fit and configure a new one.
+Furthermore, we disable the optimization so that the parameters of the covariance model are not updated.
+This make the process of adding a new point very fast:
+it improves the quality by adding a new point in the design of experiments without paying the price of the update of the covariance model.</p>
+<p>Step 1: Run a first Gaussian process fitter algorithm.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dimension</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">ConstantBasisFactory</span><span class="p">(</span><span class="n">dimension</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">covarianceModel</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[5.26006e+07,54523.6,32.7808,255.395], amplitude=[18.9295])
+</pre></div>
+</div>
+<p>Step 2: Create a new point and add it to the previous training design.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_new</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">Y_new</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>
+<span class="n">X_train</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>30
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y_train</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Y_new</span><span class="p">)</span>
+<span class="n">Y_train</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>30
+</pre></div>
+</div>
+<p>Step 3: Create an updated Gaussian process fit, using the new point with the old covariance parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizeParameters</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">notUpdatedCovarianceModel</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">notUpdatedCovarianceModel</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[5.26006e+07,54523.6,32.7808,255.395], amplitude=[18.9295])
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">printCovarianceParameterChange</span><span class="p">(</span><span class="n">covarianceModel1</span><span class="p">,</span> <span class="n">covarianceModel2</span><span class="p">):</span>
+    <span class="n">parameters1</span> <span class="o">=</span> <span class="n">covarianceModel1</span><span class="o">.</span><span class="n">getFullParameter</span><span class="p">()</span>
+    <span class="n">parameters2</span> <span class="o">=</span> <span class="n">covarianceModel2</span><span class="o">.</span><span class="n">getFullParameter</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">parameters1</span><span class="o">.</span><span class="n">getDimension</span><span class="p">()):</span>
+        <span class="n">deltai</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">parameters1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">parameters2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Change in the parameter #</span><span class="si">%d</span><span class="s2"> = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">deltai</span><span class="p">))</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">printCovarianceParameterChange</span><span class="p">(</span><span class="n">covarianceModel</span><span class="p">,</span> <span class="n">notUpdatedCovarianceModel</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Change in the parameter #0 = 0.0
+Change in the parameter #1 = 0.0
+Change in the parameter #2 = 0.0
+Change in the parameter #3 = 0.0
+Change in the parameter #4 = 0.0
+Change in the parameter #5 = 0.0
+</pre></div>
+</div>
+<p>We see that the parameters did not change <em>at all</em>: disabling the optimization allows one to keep a constant covariance model.
+In a practical algorithm, we may, for example, add a block of 10 new points before updating the parameters of the covariance model.
+At this point, we may reuse the previous covariance model so that the optimization starts from a better point, compared to the parameters default values.
+This will reduce the cost of the optimization.</p>
+</section>
+<section id="configure-the-local-optimization-solver">
+<h2>Configure the local optimization solver<a class="headerlink" href="#configure-the-local-optimization-solver" title="Link to this heading">¶</a></h2>
+<p>The following example shows how to set the local optimization solver.
+We choose the <cite>SLSQP</cite> algorithm from <a class="reference internal" href="../../user_manual/_generated/openturns.NLopt.html#openturns.NLopt" title="openturns.NLopt"><code class="xref py py-class docutils literal notranslate"><span class="pre">NLopt</span></code></a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">problem</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">getProblem</span><span class="p">()</span>
+<span class="n">local_solver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NLopt</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="s2">&quot;LD_SLSQP&quot;</span><span class="p">)</span>
+<span class="n">covarianceModel</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SquaredExponential</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dimension</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">covarianceModel</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">maximum_scale_bounds</span><span class="p">)</span>  <span class="c1"># Trick A</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">local_solver</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">finetune_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[5.26006e+07,54523.6,32.7808,255.395], amplitude=[18.9295])
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">printCovarianceParameterChange</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">,</span> <span class="n">basic_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Change in the parameter #0 = 0.0
+Change in the parameter #1 = 0.0
+Change in the parameter #2 = 0.0
+Change in the parameter #3 = 0.0
+Change in the parameter #4 = 0.0
+Change in the parameter #5 = 0.0
+</pre></div>
+</div>
+</section>
+<section id="configure-the-global-optimization-solver">
+<h2>Configure the global optimization solver<a class="headerlink" href="#configure-the-global-optimization-solver" title="Link to this heading">¶</a></h2>
+<p>The following example checks the robustness of the optimization of the
+Gaussian process fitter with respect to the optimization of the likelihood
+function in the covariance model parameters estimation.
+We use a <a class="reference internal" href="../../user_manual/_generated/openturns.MultiStart.html#openturns.MultiStart" title="openturns.MultiStart"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiStart</span></code></a> algorithm in order to avoid to be trapped by a local minimum.
+Furthermore, we generate the design of experiments using a
+<a class="reference internal" href="../../user_manual/_generated/openturns.LHSExperiment.html#openturns.LHSExperiment" title="openturns.LHSExperiment"><code class="xref py py-class docutils literal notranslate"><span class="pre">LHSExperiment</span></code></a>, which guarantees that the points
+will fill the space.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sampleSize_train</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">myDistribution</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="n">sampleSize_train</span><span class="p">)</span>
+<span class="n">Y_train</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First, we create a multivariate distribution, based on independent
+<a class="reference internal" href="../../user_manual/_generated/openturns.Uniform.html#openturns.Uniform" title="openturns.Uniform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Uniform</span></code></a> marginals which have the bounds required
+by the covariance model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">distributions</span> <span class="o">=</span> <span class="p">[</span><span class="n">ot</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">lbounds</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ubounds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+<span class="n">boundedDistribution</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">JointDistribution</span><span class="p">(</span><span class="n">distributions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We first generate a Latin Hypercube Sampling (LHS) design made of 25 points in the sample space.
+This LHS is optimized so as to fill the space.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">=</span> <span class="mi">25</span>  <span class="c1"># design size</span>
+<span class="n">LHS</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">LHSExperiment</span><span class="p">(</span><span class="n">boundedDistribution</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+<span class="n">LHS</span><span class="o">.</span><span class="n">setAlwaysShuffle</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SA_profile</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">GeometricProfile</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
+<span class="n">LHS_optimization_algo</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SimulatedAnnealingLHS</span><span class="p">(</span><span class="n">LHS</span><span class="p">,</span> <span class="n">ot</span><span class="o">.</span><span class="n">SpaceFillingC2</span><span class="p">(),</span> <span class="n">SA_profile</span><span class="p">)</span>
+<span class="n">LHS_optimization_algo</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">LHS_design</span> <span class="o">=</span> <span class="n">LHS_optimization_algo</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="n">starting_points</span> <span class="o">=</span> <span class="n">LHS_design</span><span class="o">.</span><span class="n">getOptimalDesign</span><span class="p">()</span>
+<span class="n">starting_points</span><span class="o">.</span><span class="n">getSize</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>25
+</pre></div>
+</div>
+<p>We can check that the minimum and maximum in the sample correspond to the
+bounds of the design of experiments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">lbounds</span><span class="p">,</span> <span class="n">ubounds</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[1.31501e+06,1365.28,0.81952,6.38489] [5.26006e+07,54611.3,32.7808,255.395]
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">starting_points</span><span class="o">.</span><span class="n">getMin</span><span class="p">(),</span> <span class="n">starting_points</span><span class="o">.</span><span class="n">getMax</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(class=Point name=Unnamed dimension=4 values=[1.38853e+06,2267.63,1.05604,16.2769], class=Point name=Unnamed dimension=4 values=[5.17739e+07,54488.1,32.6317,252.779])
+</pre></div>
+</div>
+<p>Then we create a <a class="reference internal" href="../../user_manual/_generated/openturns.MultiStart.html#openturns.MultiStart" title="openturns.MultiStart"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiStart</span></code></a> algorithm based on the LHS starting points.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">solver</span><span class="o">.</span><span class="n">setMaximumIterationNumber</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">multiStartSolver</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MultiStart</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">starting_points</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we configure the optimization algorithm so as to use the <a class="reference internal" href="../../user_manual/_generated/openturns.MultiStart.html#openturns.MultiStart" title="openturns.MultiStart"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiStart</span></code></a> algorithm.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">GaussianProcessFitter</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">covarianceModel</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationBounds</span><span class="p">(</span><span class="n">scaleOptimizationBounds</span><span class="p">)</span>  <span class="c1"># Trick B</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">setOptimizationAlgorithm</span><span class="p">(</span><span class="n">multiStartSolver</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">finetune_covariance_model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">getCovarianceModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SquaredExponential(scale=[5.26006e+07,54523.6,32.7808,255.395], amplitude=[18.9295])
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">printCovarianceParameterChange</span><span class="p">(</span><span class="n">finetune_covariance_model</span><span class="p">,</span> <span class="n">basic_covariance_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Change in the parameter #0 = 0.0
+Change in the parameter #1 = 0.0
+Change in the parameter #2 = 0.0
+Change in the parameter #3 = 0.0
+Change in the parameter #4 = 0.0
+Change in the parameter #5 = 0.0
+</pre></div>
+</div>
+<p>We see that there are no changes in the estimated parameters. This shows that the first optimization of the parameters worked fine.</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-meta-modeling-kriging-metamodel-plot-gpr-hyperparameters-optimization-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/63860754fecab41ee8f499eea80769bc/plot_gpr_hyperparameters_optimization.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_gpr_hyperparameters_optimization.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/0cec8ee6ed4387d19e90bb4cd18d8d75/plot_gpr_hyperparameters_optimization.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_gpr_hyperparameters_optimization.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/bb441f22fb740fbc29019a2ed49d63fa/plot_gpr_hyperparameters_optimization.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_gpr_hyperparameters_optimization.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plot_gpr_active_learning.html" title="Gaussian Process-based active learning for reliability"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plot_kriging_sequential.html" title="Sequentially adding new points to a Gaussian Process metamodel"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">OpenTURNS 1.25.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../examples/examples.html" >Examples</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../index.html" >Meta modeling</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="index.html" >Gaussian Process Regression metamodel</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Gaussian process fitter: configure the optimization solver</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2005-2025 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Sep 26, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Wrapper development &#8212; OpenTURNS 1.21.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Git workflow" href="git_workflow.html" />
+    <link rel="prev" title="Module development" href="module_development.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../install.html">Get it</a></li>
+    <li><a href="../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../index.html">
+    <h1>
+      <img src="../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="git_workflow.html" title="Git workflow"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_development.html" title="Module development"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="developer_guide.html" accesskey="U">Contribute</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Wrapper development</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Wrapper development</a><ul>
+<li><a class="reference internal" href="#pure-python-wrappers">Pure python wrappers</a><ul>
+<li><a class="reference internal" href="#pythonfunction">PythonFunction</a></li>
+<li><a class="reference internal" href="#external-code-coupling-tools">External code coupling tools</a><ul>
+<li><a class="reference internal" href="#simple-example">Simple example</a></li>
+<li><a class="reference internal" href="#more-examples">More examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#performance-considerations">Performance considerations</a><ul>
+<li><a class="reference internal" href="#symbolic-formula">Symbolic formula</a><ul>
+<li><a class="reference internal" href="#benchmark-sources">Benchmark sources</a></li>
+<li><a class="reference internal" href="#benchmark-results">Benchmark results</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#external-process">External process</a><ul>
+<li><a class="reference internal" href="#normal-program">Normal program</a></li>
+<li><a class="reference internal" href="#tiny-program">Tiny program</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="module_development.html"
+                          title="previous chapter">Module development</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="git_workflow.html"
+                          title="next chapter">Git workflow</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/developer_guide/wrapper_development.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="wrapper-development">
+<h1>Wrapper development<a class="headerlink" href="#wrapper-development" title="Permalink to this heading">¶</a></h1>
+<section id="pure-python-wrappers">
+<h2>Pure python wrappers<a class="headerlink" href="#pure-python-wrappers" title="Permalink to this heading">¶</a></h2>
+<p>Python wrappers aim to be an easy way for wrapping external code. The
+external code can be a mathematical formula or a coupling
+involving several computational codes dedicated to the resolution of a
+very complex physical problem.</p>
+<p>Python wrappers are not the best solution if your external code last
+less than a microseconds and if you need to resolve billions of points.
+In that case, for better performance, consider using a compiled wrapper.
+In any other cases, a Python wrapper is the recommended choice.</p>
+<section id="pythonfunction">
+<h3>PythonFunction<a class="headerlink" href="#pythonfunction" title="Permalink to this heading">¶</a></h3>
+<p>The <a class="reference internal" href="../user_manual/_generated/openturns.PythonFunction.html#openturns.PythonFunction" title="openturns.PythonFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonFunction</span></code></a> is a <a class="reference internal" href="../user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a> which
+execution is done in a Python context.</p>
+<p>Here is an example of how to use it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+
+<span class="k">def</span> <span class="nf">compute_point</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">E</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">X</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">E</span> <span class="o">*</span> <span class="n">F</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">Y</span><span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">compute_point</span><span class="p">)</span>
+<span class="n">out_sample</span> <span class="o">=</span> <span class="n">model</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">gradient</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Some explanations of the code :</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">compute_point</span></code> function constructs the out point from the in
+point. The in and out array size must correspond to the sizes set in
+the PythonFunction constructor. In this example, X will be an array
+of size 2 and Y must be an array of size 1. The output point can be a
+Python list, an  Point or a Numpy array.</p></li>
+</ul>
+<p>The evaluation can be done on several points to benefit from vectorization.
+It receives an input sample and must return an output sample. Here is an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">exec_sample</span><span class="p">(</span><span class="n">Xs</span><span class="p">):</span>
+    <span class="c1"># speedup using numpy</span>
+    <span class="n">XsT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">XsT</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">XsT</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">func_sample</span><span class="o">=</span><span class="n">exec_sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output sample can be a Sample, a Python list of list or a
+Numpy array of array. This argument is optional. If <code class="docutils literal notranslate"><span class="pre">func_sample</span></code> is
+not provided and must compute a sample, the <code class="docutils literal notranslate"><span class="pre">func</span></code> function is
+called several time: once for each point of the sample. On contrary, if
+only <code class="docutils literal notranslate"><span class="pre">func_sample</span></code> is given and a point must be computed, the point
+is inserted in a sample of size 1, and extracted from the result sample.</p>
+<p>The PythonFunction is quite simple to use. When used with
+coupling_tools module, it can wrap external program easily too.</p>
+</section>
+<section id="external-code-coupling-tools">
+<h3>External code coupling tools<a class="headerlink" href="#external-code-coupling-tools" title="Permalink to this heading">¶</a></h3>
+<section id="simple-example">
+<h4>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this heading">¶</a></h4>
+<p>Here is a simple example of wrapper where compute is made in an external
+program with the help of openturns.coupling_tools module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+<span class="kn">import</span> <span class="nn">openturns.coupling_tools</span> <span class="k">as</span> <span class="nn">ct</span>
+
+<span class="n">external_program</span> <span class="o">=</span> <span class="s1">&#39;python external_program.py&#39;</span>
+
+<span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="c1"># create input file</span>
+    <span class="n">in_file</span> <span class="o">=</span> <span class="s1">&#39;input.py&#39;</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;input_template.py&#39;</span><span class="p">,</span> <span class="n">in_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;@E&#39;</span><span class="p">,</span> <span class="s1">&#39;@F&#39;</span><span class="p">],</span> <span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># compute</span>
+    <span class="n">ct</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">external_program</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">in_file</span><span class="p">)</span>
+
+    <span class="c1"># parse output file</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output.py&#39;</span><span class="p">,</span> <span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Z=&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">Y</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">exec</span><span class="p">)</span>
+<span class="n">out_sample</span> <span class="o">=</span> <span class="n">model</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out_sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Some explanations of the code :</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.replace.html#openturns.coupling_tools.replace" title="openturns.coupling_tools.replace"><code class="xref py py-meth docutils literal notranslate"><span class="pre">replace()</span></code></a> replace <code class="docutils literal notranslate"><span class="pre">&#64;E</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;F</span></code> occurrence found
+in <code class="docutils literal notranslate"><span class="pre">input_template.py</span></code> file and write the result to <code class="docutils literal notranslate"><span class="pre">infile</span></code>
+file. <code class="docutils literal notranslate"><span class="pre">X[0]</span></code> value will replace <code class="docutils literal notranslate"><span class="pre">'&#64;E'</span></code> token and <code class="docutils literal notranslate"><span class="pre">X[1]</span></code> will
+replace <code class="docutils literal notranslate"><span class="pre">'&#64;F'</span></code> token.</p></li>
+<li><p>The external program is launched with <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.execute.html#openturns.coupling_tools.execute" title="openturns.coupling_tools.execute"><code class="xref py py-meth docutils literal notranslate"><span class="pre">execute()</span></code></a>.
+The input filename is passed by parameters to the program.</p></li>
+<li><p><a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.get.html#openturns.coupling_tools.get" title="openturns.coupling_tools.get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code></a> get the value following <code class="docutils literal notranslate"><span class="pre">'Z='</span></code> token in
+<code class="docutils literal notranslate"><span class="pre">output.py</span></code> file.</p></li>
+</ul>
+<p>Template file example <code class="docutils literal notranslate"><span class="pre">input_template.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">E</span><span class="o">=</span><span class="nd">@E</span>
+<span class="n">F</span><span class="o">=</span><span class="nd">@F</span>
+</pre></div>
+</div>
+<p>External program example <code class="docutils literal notranslate"><span class="pre">external_program.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="c1"># get input</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">inFile</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">exec</span><span class="p">(</span><span class="nb">compile</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">inFile</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">))</span>
+
+<span class="c1"># compute</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">F</span> <span class="o">*</span> <span class="n">E</span>
+
+<span class="c1"># write output</span>
+<span class="n">h</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;output.py&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Z=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Z</span><span class="p">))</span>
+<span class="n">h</span><span class="o">.</span><span class="n">close</span>
+</pre></div>
+</div>
+<p>Output file example <code class="docutils literal notranslate"><span class="pre">output.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span><span class="o">=</span><span class="mf">42.0</span>
+</pre></div>
+</div>
+</section>
+<section id="more-examples">
+<h4>More examples<a class="headerlink" href="#more-examples" title="Permalink to this heading">¶</a></h4>
+<p>The replace <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.replace.html#openturns.coupling_tools.replace" title="openturns.coupling_tools.replace"><code class="xref py py-meth docutils literal notranslate"><span class="pre">replace()</span></code></a> function
+can edit file in place. It can format values in anyway. Actually, values
+can be of type “string”, if not, they are converted using str() Python
+function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">replace</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;input_template.py&#39;</span><span class="p">,</span> <span class="n">infile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;@E&#39;</span><span class="p">,</span> <span class="s1">&#39;@F&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="mf">5.2569</span><span class="p">,</span> <span class="s1">&#39;toto&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">replace</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="s1">&#39;input_template.py&#39;</span><span class="p">,</span> <span class="n">infile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;@E&#39;</span><span class="p">,</span> <span class="s1">&#39;@F&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="mf">5.2569</span><span class="p">,</span> <span class="s1">&#39;toto&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The input_template.py file will then be modify like this :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">E</span><span class="o">=</span><span class="mf">5.25</span>
+<span class="n">F</span><span class="o">=</span><span class="n">toto</span>
+</pre></div>
+</div>
+<p>Be careful with overlapping tokens:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># if input_template.py = &#39;E=@E EE=@EE&#39;)</span>
+<span class="n">replace</span><span class="p">(</span><span class="n">infile</span><span class="o">=</span><span class="s2">&quot;input_template.py&quot;</span><span class="p">,</span>
+<span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span>
+<span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;@E&quot;</span><span class="p">,</span> <span class="s2">&quot;@EE&quot;</span><span class="p">],</span>
+<span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="c1"># =&gt; raise exception!! -&gt; @EE token not found!</span>
+<span class="c1"># (this is due to the first pass with token &quot;@E&quot; that modify</span>
+<span class="c1"># &quot;input_template.py&quot; like this : &#39;E=1 EE=1E&#39;)</span>
+</pre></div>
+</div>
+<p>Solution to overlapping tokens: put longest tokens first:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># template.in = &#39;E=@E EE=@EE&#39;)</span>
+<span class="n">replace</span><span class="p">(</span><span class="n">infile</span><span class="o">=</span><span class="s2">&quot;template.in&quot;</span><span class="p">,</span>
+<span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;prgm_data.in&quot;</span><span class="p">,</span>
+<span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;@EE&quot;</span><span class="p">,</span> <span class="s2">&quot;@E&quot;</span><span class="p">],</span>
+<span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="c1"># =&gt; prgm_data.in = &#39;E=1 EE=2&#39;)</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.execute.html#openturns.coupling_tools.execute" title="openturns.coupling_tools.execute"><code class="xref py py-meth docutils literal notranslate"><span class="pre">execute()</span></code></a> function
+can launch an external code.</p>
+<p>The <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.get_value.html#openturns.coupling_tools.get_value" title="openturns.coupling_tools.get_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_value()</span></code></a> function
+can deal with several type of output file.</p>
+<ul>
+<li><p>content of the results.out file used for the following examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>  <span class="mi">2</span>  <span class="mi">3</span>  <span class="mi">04</span>  <span class="mi">5</span>  <span class="mi">6</span>
+<span class="mi">7</span>  <span class="mi">8</span>  <span class="mi">9</span>  <span class="mi">10</span>
+<span class="mi">11</span> <span class="mi">12</span> <span class="mi">13</span> <span class="mi">14</span>
+
+<span class="nd">@Y1</span><span class="o">=</span> <span class="mf">11.11</span><span class="n">celcius</span>
+<span class="nd">@Y2</span><span class="o">=</span> <span class="o">-</span><span class="mf">0.89</span>
+<span class="nd">@Y1</span><span class="o">=</span> <span class="mf">22.22</span>
+<span class="nd">@Y1</span><span class="o">=</span> <span class="mf">33.33</span>
+
+<span class="n">line1</span><span class="p">:</span> <span class="mi">100</span> <span class="mi">101</span> <span class="mi">102</span>
+<span class="n">line2</span><span class="p">:</span> <span class="mi">200</span> <span class="mi">201</span> <span class="mi">202</span>
+<span class="n">line3</span><span class="p">:</span> <span class="mi">300</span> <span class="mi">301</span> <span class="mi">302</span>
+</pre></div>
+</div>
+</li>
+<li><p>search token, the value right after the token is returned:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s1">&#39;@Y1=&#39;</span><span class="p">)</span> <span class="c1"># 11.11</span>
+</pre></div>
+</div>
+</li>
+<li><p>skip lines and columns (useful for array search):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">skip_line</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 9</span>
+</pre></div>
+</div>
+</li>
+<li><p>skip lines and columns backward (be careful: if there is an empty
+line at the end of the file, it is taken into account. i.e. this
+last empty line will be reached using skip_line=-1):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">skip_line</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">skip_col</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 201</span>
+</pre></div>
+</div>
+</li>
+<li><p>search the 3rd appearance of the token:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s1">&#39;@Y1=&#39;</span><span class="p">,</span> <span class="n">skip_token</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 33.33</span>
+</pre></div>
+</div>
+</li>
+<li><p>search the 2nd appearance of the token from the end of the file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s1">&#39;@Y1=&#39;</span><span class="p">,</span> <span class="n">skip_token</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 22.22</span>
+</pre></div>
+</div>
+</li>
+<li><p>search a token and then skip lines and columns from this token:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s1">&#39;@Y1=&#39;</span><span class="p">,</span> <span class="n">skip_line</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">skip_col</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 101</span>
+</pre></div>
+</div>
+</li>
+<li><p>search the 2nd token and then skip lines and columns from this
+token:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s1">&#39;@Y1=&#39;</span><span class="p">,</span> <span class="n">skip_token</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_line</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">skip_col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 300</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.get.html#openturns.coupling_tools.get" title="openturns.coupling_tools.get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code></a> function
+works actually the same way the get_value function do,
+but on several parameters:</p>
+<p>The <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.get_regex.html#openturns.coupling_tools.get_regex" title="openturns.coupling_tools.get_regex"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_regex()</span></code></a> function
+parses output files. It is provided for backward compatibility:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">get_regex</span><span class="p">(</span><span class="s1">&#39;results.out&#39;</span><span class="p">,</span> <span class="n">patterns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;@Y2=(\R)&#39;</span><span class="p">])</span> <span class="c1"># -0.89</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="performance-considerations">
+<h2>Performance considerations<a class="headerlink" href="#performance-considerations" title="Permalink to this heading">¶</a></h2>
+<p>Two different cases can be encounter when wrapping code: the wrapping
+code is a mathematical formula or it is an external code (an external process).</p>
+<section id="symbolic-formula">
+<h3>Symbolic formula<a class="headerlink" href="#symbolic-formula" title="Permalink to this heading">¶</a></h3>
+<p>A benchmark involving the different wrapping methods available from
+has been done using a dummy symbolic formula.</p>
+<section id="benchmark-sources">
+<h4>Benchmark sources<a class="headerlink" href="#benchmark-sources" title="Permalink to this heading">¶</a></h4>
+<p>Optimizations of any parts of this benchmark are welcome.</p>
+<ul>
+<li><p>Benchmark of PythonFunction using _exec function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">big_sample</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">getSample</span><span class="p">(</span><span class="mi">1000</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">openturns</span> <span class="k">as</span> <span class="nn">ot</span>
+
+<span class="k">def</span> <span class="nf">_exec</span><span class="p">(</span> <span class="n">X</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_exec</span><span class="p">)</span>
+    <span class="c1"># start timer</span>
+    <span class="n">out_sample</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span> <span class="n">big_sample</span> <span class="p">)</span>
+    <span class="c1"># stop timer</span>
+</pre></div>
+</div>
+</li>
+<li><p>Benchmark of PythonFunction using _exec_sample function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_exec_sample</span><span class="p">(</span> <span class="n">Xs</span> <span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">XsT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">xT</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xT</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">func_sample</span><span class="o">=</span><span class="n">_exec_sample</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Benchmark of symbolic (muParser) function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span><span class="s1">&#39;x1&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;cos((x0+1)^2) - sin(x1)&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The benchmark is done on a bi XEON E5520 (Nehalem 16*2.27GHz, HT
+activated) with 12Go RAM.</p>
+</section>
+<section id="benchmark-results">
+<h4>Benchmark results<a class="headerlink" href="#benchmark-results" title="Permalink to this heading">¶</a></h4>
+<p>The sample containing 1 million of points is allocated in 0.282s.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>wrapper type</p></td>
+<td><p>time</p></td>
+<td><p>comparison with fastest wrapper</p></td>
+</tr>
+<tr class="row-even"><td><p>PythonFunction _exec</p></td>
+<td><p>7.1s</p></td>
+<td><p>x157</p></td>
+</tr>
+<tr class="row-odd"><td><p>PythonFunction _exec_sample</p></td>
+<td><p>1.3s</p></td>
+<td><p>x30</p></td>
+</tr>
+<tr class="row-even"><td><p>Symbolic (muParser)</p></td>
+<td><p>0.43s</p></td>
+<td><p>x10</p></td>
+</tr>
+</tbody>
+</table>
+<p>The previous results are linear to the size of the sample.</p>
+<ul>
+<li><p>muParser is the 2nd fastest (10 times slower than the first).</p>
+<p>The muParser library used is not multithreaded. Embedding a
+parallel version of muParser could give better results.</p>
+</li>
+<li><p>Using an optimized _exec_sample python function through numpy gives
+better results (6x faster) than a simple _exec python function, but
+it is still much slower than the compiled library (30 times slower).</p>
+<p>Note that neither Python nor NumPy are multithreaded.</p>
+</li>
+</ul>
+</section>
+<section id="conclusion">
+<h4>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h4>
+<p>PythonFunction is the easiest and more adaptable wrapper but it’s the
+slowest too. So, if you need to compute samples containing less than a
+million of points, PythonFunction is the good choice as the speed
+difference between wrappers will not be noticeable: every wrappers will
+compute the sample in less than a second. Otherwise choose muParser.</p>
+</section>
+</section>
+<section id="external-process">
+<h3>External process<a class="headerlink" href="#external-process" title="Permalink to this heading">¶</a></h3>
+<section id="normal-program">
+<h4>Normal program<a class="headerlink" href="#normal-program" title="Permalink to this heading">¶</a></h4>
+<p>For usual program (compute time of 1s and above), inner wrapper
+complexity/overhead are not an issue cause the external program compute
+time will be the main part of the whole compute time. Sample can be
+computed faster by launching this external program in parallel.</p>
+<ul class="simple">
+<li><p>PythonFunction can not launch the _exec function in parallel.</p></li>
+<li><p>the DistributedPythonFunction from otdistfunc module can launch
+external program on each core of the local Machine or on each core of
+several remote machine.</p></li>
+</ul>
+<p>The DistributedPythonFunction is the best choice as it combine the ease
+of use of Python with the ability to deploy compute on a cluster of
+computers.</p>
+</section>
+<section id="tiny-program">
+<h4>Tiny program<a class="headerlink" href="#tiny-program" title="Permalink to this heading">¶</a></h4>
+<p>If the external process compute time is really fast (&lt; 0.1s),  wrapper
+point’s launch time (overhead) becomes important.</p>
+<p>If performance are an issue, one should first consider that the external
+process is perhaps fast because it does something simple: can it be
+easily reimplemented in Python? If the code is not too complex, execute
+Python code inside a PythonFunction is usually much faster than the time
+to start the external process ( 1000x). Here is a naive example of
+external process (scilab) vs PythonFunction.</p>
+<ul>
+<li><p>The following scilab script takes 0.07s per point:</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">scilab</span> <span class="pre">-nb</span> <span class="pre">-nwni</span> <span class="pre">-f</span> <span class="pre">code.sce</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">code</span><span class="o">.</span><span class="n">sce</span>
+<span class="n">exec</span><span class="p">(</span><span class="s2">&quot;input.data&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">mopen</span><span class="p">(</span><span class="s2">&quot;result.data&quot;</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">);</span>
+<span class="n">mfprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;y = </span><span class="si">%.20e</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="n">file</span><span class="p">(</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+<span class="n">quit</span>
+</pre></div>
+</div>
+</li>
+<li><p>Conversion to Python of the scilab script. It takes now 0.00001s per
+point:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_exec</span><span class="p">(</span> <span class="n">X</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_exec</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>If you still need to launch tiny external process, slow overhead and
+parallel ability are the important factors of the wrapper. Comparison of
+the different wrapper compute time with a sample of size 1000 and an
+external code that last 0.07s per point on a 8 cores computer:</p>
+<ul>
+<li><p>PythonFunction overhead is really slow (0.000004s) but can not launch
+the _exec function in parallel.</p>
+<p><img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzE2NS4zMjk2OThwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgMTY1LjMyOTY5OCAxMS45NTUxNjgnPgo8ZGVmcz4KPHBhdGggaWQ9J2cxLTU4JyBkPSdNMi4xOTk3NTEtLjU3Mzg0OEMyLjE5OTc1MS0uOTIwNTQ4IDEuOTEyODI3LTEuMTU5NjUxIDEuNjI1OTAzLTEuMTU5NjUxQzEuMjc5MjAzLTEuMTU5NjUxIDEuMDQwMS0uODcyNzI3IDEuMDQwMS0uNTg1ODAzQzEuMDQwMS0uMjM5MTAzIDEuMzI3MDI0IDAgMS42MTM5NDggMEMxLjk2MDY0OCAwIDIuMTk5NzUxLS4yODY5MjQgMi4xOTk3NTEtLjU3Mzg0OFonLz4KPHBhdGggaWQ9J2cxLTYyJyBkPSdNNy44Nzg0NTYtMi43MjU3NzhDOC4xMDU2MDQtMi44MzMzNzUgOC4xMTc1NTktMi45MDUxMDYgOC4xMTc1NTktMi45ODg3OTJDOC4xMTc1NTktMy4wNjA1MjMgOC4wOTM2NDktMy4xNDQyMDkgNy44Nzg0NTYtMy4yMzk4NTFMMS40MTA3MS02LjIxNjY4N0MxLjI1NTI5My02LjI4ODQxOCAxLjIzMTM4Mi02LjMwMDM3NCAxLjIwNzQ3Mi02LjMwMDM3NEMxLjA2NDAxLTYuMzAwMzc0IC45ODAzMjQtNi4xODA4MjIgLjk4MDMyNC02LjA4NTE4MUMuOTgwMzI0LTUuOTQxNzE5IDEuMDc1OTY1LTUuODkzODk4IDEuMjMxMzgyLTUuODIyMTY3TDcuMzc2MzM5LTIuOTg4NzkyTDEuMjE5NDI3LS4xNDM0NjJDLjk4MDMyNC0uMDM1ODY2IC45ODAzMjQgLjA0NzgyMSAuOTgwMzI0IC4xMTk1NTJDLjk4MDMyNCAuMjE1MTkzIDEuMDY0MDEgLjMzNDc0NSAxLjIwNzQ3MiAuMzM0NzQ1QzEuMjMxMzgyIC4zMzQ3NDUgMS4yNDMzMzcgLjMyMjc5IDEuNDEwNzEgLjI1MTA1OUw3Ljg3ODQ1Ni0yLjcyNTc3OFonLz4KPHBhdGggaWQ9J2cxLTExNScgZD0nTTIuNzI1Nzc4LTIuMzkxMDM0QzIuOTI5MDE2LTIuMzU1MTY4IDMuMjUxODA2LTIuMjgzNDM3IDMuMzIzNTM3LTIuMjcxNDgyQzMuNDc4OTU0LTIuMjIzNjYxIDQuMDE2OTM2LTIuMDMyMzc5IDQuMDE2OTM2LTEuNDU4NTMxQzQuMDE2OTM2LTEuMDg3OTIgMy42ODIxOTItLjExOTU1MiAyLjI5NTM5Mi0uMTE5NTUyQzIuMDQ0MzM0LS4xMTk1NTIgMS4xNDc2OTYtLjE1NTQxNyAuOTA4NTkzLS44MTI5NTFDMS4zODY4LS43NTMxNzYgMS42MjU5MDMtMS4xMjM3ODYgMS42MjU5MDMtMS4zODY4QzEuNjI1OTAzLTEuNjM3ODU4IDEuNDU4NTMxLTEuNzY5MzY1IDEuMjE5NDI3LTEuNzY5MzY1Qy45NTY0MTMtMS43NjkzNjUgLjYwOTcxNC0xLjU2NjEyNyAuNjA5NzE0LTEuMDI4MTQ0Qy42MDk3MTQtLjMyMjc5IDEuMzI3MDI0IC4xMTk1NTIgMi4yODM0MzcgLjExOTU1MkM0LjEwMDYyMyAuMTE5NTUyIDQuNjM4NjA1LTEuMjE5NDI3IDQuNjM4NjA1LTEuODQxMDk2QzQuNjM4NjA1LTIuMDIwNDIzIDQuNjM4NjA1LTIuMzU1MTY4IDQuMjU2MDQtMi43Mzc3MzNDMy45NTcxNjEtMy4wMjQ2NTggMy42NzAyMzctMy4wODQ0MzMgMy4wMjQ2NTgtMy4yMTU5NEMyLjcwMTg2OC0zLjI4NzY3MSAyLjE4Nzc5Ni0zLjM5NTI2OCAyLjE4Nzc5Ni0zLjkzMzI1QzIuMTg3Nzk2LTQuMTcyMzU0IDIuNDAyOTg5LTUuMDMzMTI2IDMuNTM4NzMtNS4wMzMxMjZDNC4wNDA4NDctNS4wMzMxMjYgNC41MzEwMDktNC44NDE4NDMgNC42NTA1Ni00LjQxMTQ1N0M0LjEyNDUzMy00LjQxMTQ1NyA0LjEwMDYyMy0zLjk1NzE2MSA0LjEwMDYyMy0zLjk0NTIwNUM0LjEwMDYyMy0zLjY5NDE0NyA0LjMyNzc3MS0zLjYyMjQxNiA0LjQzNTM2Ny0zLjYyMjQxNkM0LjYwMjc0LTMuNjIyNDE2IDQuOTM3NDg0LTMuNzUzOTIzIDQuOTM3NDg0LTQuMjU2MDRTNC40ODMxODgtNS4yNzIyMjkgMy41NTA2ODUtNS4yNzIyMjlDMS45ODQ1NTgtNS4yNzIyMjkgMS41NjYxMjctNC4wNDA4NDcgMS41NjYxMjctMy41NTA2ODVDMS41NjYxMjctMi42NDIwOTIgMi40NTA4MDktMi40NTA4MDkgMi43MjU3NzgtMi4zOTEwMzRaJy8+CjxwYXRoIGlkPSdnMC0zJyBkPSdNMy4yODc2NzEtNS4xMDQ4NTdDMy4yOTk2MjYtNS4yNzIyMjkgMy4yOTk2MjYtNS41NTkxNTMgMi45ODg3OTItNS41NTkxNTNDMi43OTc1MDktNS41NTkxNTMgMi42NDIwOTItNS40MDM3MzYgMi42Nzc5NTgtNS4yNDgzMTlWLTUuMDkyOTAyTDIuODQ1MzMtMy4yMzk4NTFMMS4zMTUwNjgtNC4zNTE2ODFDMS4yMDc0NzItNC40MTE0NTcgMS4xODM1NjItNC40MzUzNjcgMS4wOTk4NzUtNC40MzUzNjdDLjkzMjUwMy00LjQzNTM2NyAuNzc3MDg2LTQuMjY3OTk1IC43NzcwODYtNC4xMDA2MjNDLjc3NzA4Ni0zLjkwOTM0IC44OTY2MzgtMy44NjE1MTkgMS4wMTYxODktMy44MDE3NDNMMi43MTM4MjMtMi45ODg3OTJMMS4wNjQwMS0yLjE4Nzc5NkMuODcyNzI3LTIuMDkyMTU0IC43NzcwODYtMi4wNDQzMzQgLjc3NzA4Ni0xLjg2NTAwNlMuOTMyNTAzLTEuNTMwMjYyIDEuMDk5ODc1LTEuNTMwMjYyQzEuMTgzNTYyLTEuNTMwMjYyIDEuMjA3NDcyLTEuNTMwMjYyIDEuNTA2MzUxLTEuNzU3NDFMMi44NDUzMy0yLjcyNTc3OEwyLjY2NjAwMi0uNzE3MzFDMi42NjYwMDItLjQ2NjI1MiAyLjg4MTE5Ni0uNDA2NDc2IDIuOTc2ODM3LS40MDY0NzZDMy4xMjAyOTktLjQwNjQ3NiAzLjI5OTYyNi0uNDkwMTYyIDMuMjk5NjI2LS43MTczMUwzLjEyMDI5OS0yLjcyNTc3OEw0LjY1MDU2LTEuNjEzOTQ4QzQuNzU4MTU3LTEuNTU0MTcyIDQuNzgyMDY3LTEuNTMwMjYyIDQuODY1NzUzLTEuNTMwMjYyQzUuMDMzMTI2LTEuNTMwMjYyIDUuMTg4NTQzLTEuNjk3NjM0IDUuMTg4NTQzLTEuODY1MDA2QzUuMTg4NTQzLTIuMDQ0MzM0IDUuMDgwOTQ2LTIuMTA0MTEgNC45Mzc0ODQtMi4xNzU4NDFDNC4yMjAxNzQtMi41MzQ0OTYgNC4xOTYyNjQtMi41MzQ0OTYgMy4yNTE4MDYtMi45NzY4MzdMNC45MDE2MTktMy43Nzc4MzNDNS4wOTI5MDItMy44NzM0NzQgNS4xODg1NDMtMy45MjEyOTUgNS4xODg1NDMtNC4xMDA2MjNTNS4wMzMxMjYtNC40MzUzNjcgNC44NjU3NTMtNC40MzUzNjdDNC43ODIwNjctNC40MzUzNjcgNC43NTgxNTctNC40MzUzNjcgNC40NTkyNzgtNC4yMDgyMTlMMy4xMjAyOTktMy4yMzk4NTFMMy4yODc2NzEtNS4xMDQ4NTdaJy8+CjxwYXRoIGlkPSdnMi00MCcgZD0nTTMuODg1NDMgMi45MDUxMDZDMy44ODU0MyAyLjg2OTI0IDMuODg1NDMgMi44NDUzMyAzLjY4MjE5MiAyLjY0MjA5MkMyLjQ4NjY3NSAxLjQzNDYyIDEuODE3MTg2LS41Mzc5ODMgMS44MTcxODYtMi45NzY4MzdDMS44MTcxODYtNS4yOTYxMzkgMi4zNzkwNzgtNy4yOTI2NTMgMy43NjU4NzgtOC43MDMzNjJDMy44ODU0My04LjgxMDk1OSAzLjg4NTQzLTguODM0ODY5IDMuODg1NDMtOC44NzA3MzVDMy44ODU0My04Ljk0MjQ2NiAzLjgyNTY1NC04Ljk2NjM3NiAzLjc3NzgzMy04Ljk2NjM3NkMzLjYyMjQxNi04Ljk2NjM3NiAyLjY0MjA5Mi04LjEwNTYwNCAyLjA1NjI4OS02LjkzMzk5OEMxLjQ0NjU3NS01LjcyNjUyNiAxLjE3MTYwNi00LjQ0NzMyMyAxLjE3MTYwNi0yLjk3NjgzN0MxLjE3MTYwNi0xLjkxMjgyNyAxLjMzODk3OS0uNDkwMTYyIDEuOTYwNjQ4IC43ODkwNDFDMi42NjYwMDIgMi4yMjM2NjEgMy42NDYzMjYgMy4wMDA3NDcgMy43Nzc4MzMgMy4wMDA3NDdDMy44MjU2NTQgMy4wMDA3NDcgMy44ODU0MyAyLjk3NjgzNyAzLjg4NTQzIDIuOTA1MTA2WicvPgo8cGF0aCBpZD0nZzItNDEnIGQ9J00zLjM3MTM1Ny0yLjk3NjgzN0MzLjM3MTM1Ny0zLjg4NTQzIDMuMjUxODA2LTUuMzY3ODcgMi41ODIzMTYtNi43NTQ2N0MxLjg3Njk2MS04LjE4OTI5IC44OTY2MzgtOC45NjYzNzYgLjc2NTEzMS04Ljk2NjM3NkMuNzE3MzEtOC45NjYzNzYgLjY1NzUzNC04Ljk0MjQ2NiAuNjU3NTM0LTguODcwNzM1Qy42NTc1MzQtOC44MzQ4NjkgLjY1NzUzNC04LjgxMDk1OSAuODYwNzcyLTguNjA3NzIxQzIuMDU2Mjg5LTcuNDAwMjQ5IDIuNzI1Nzc4LTUuNDI3NjQ2IDIuNzI1Nzc4LTIuOTg4NzkyQzIuNzI1Nzc4LS42Njk0ODkgMi4xNjM4ODUgMS4zMjcwMjQgLjc3NzA4NiAyLjczNzczM0MuNjU3NTM0IDIuODQ1MzMgLjY1NzUzNCAyLjg2OTI0IC42NTc1MzQgMi45MDUxMDZDLjY1NzUzNCAyLjk3NjgzNyAuNzE3MzEgMy4wMDA3NDcgLjc2NTEzMSAzLjAwMDc0N0MuOTIwNTQ4IDMuMDAwNzQ3IDEuOTAwODcyIDIuMTM5OTc1IDIuNDg2Njc1IC45NjgzNjlDMy4wOTYzODktLjI1MTA1OSAzLjM3MTM1Ny0xLjU0MjIxNyAzLjM3MTM1Ny0yLjk3NjgzN1onLz4KPHBhdGggaWQ9J2cyLTQzJyBkPSdNNC43NzAxMTItMi43NjE2NDRIOC4wNjk3MzhDOC4yMzcxMTEtMi43NjE2NDQgOC40NTIzMDQtMi43NjE2NDQgOC40NTIzMDQtMi45NzY4MzdDOC40NTIzMDQtMy4yMDM5ODUgOC4yNDkwNjYtMy4yMDM5ODUgOC4wNjk3MzgtMy4yMDM5ODVINC43NzAxMTJWLTYuNTAzNjExQzQuNzcwMTEyLTYuNjcwOTg0IDQuNzcwMTEyLTYuODg2MTc3IDQuNTU0OTE5LTYuODg2MTc3QzQuMzI3NzcxLTYuODg2MTc3IDQuMzI3NzcxLTYuNjgyOTM5IDQuMzI3NzcxLTYuNTAzNjExVi0zLjIwMzk4NUgxLjAyODE0NEMuODYwNzcyLTMuMjAzOTg1IC42NDU1NzktMy4yMDM5ODUgLjY0NTU3OS0yLjk4ODc5MkMuNjQ1NTc5LTIuNzYxNjQ0IC44NDg4MTctMi43NjE2NDQgMS4wMjgxNDQtMi43NjE2NDRINC4zMjc3NzFWLjUzNzk4M0M0LjMyNzc3MSAuNzA1MzU1IDQuMzI3NzcxIC45MjA1NDggNC41NDI5NjQgLjkyMDU0OEM0Ljc3MDExMiAuOTIwNTQ4IDQuNzcwMTEyIC43MTczMSA0Ljc3MDExMiAuNTM3OTgzVi0yLjc2MTY0NFonLz4KPHBhdGggaWQ9J2cyLTQ4JyBkPSdNNS4zNTU5MTUtMy44MjU2NTRDNS4zNTU5MTUtNC44MTc5MzMgNS4yOTYxMzktNS43ODYzMDEgNC44NjU3NTMtNi42OTQ4OTRDNC4zNzU1OTItNy42ODcxNzMgMy41MTQ4MTktNy45NTAxODcgMi45MjkwMTYtNy45NTAxODdDMi4yMzU2MTYtNy45NTAxODcgMS4zODY4LTcuNjAzNDg3IC45NDQ0NTgtNi42MTEyMDhDLjYwOTcxNC01Ljg1ODAzMiAuNDkwMTYyLTUuMTE2ODEyIC40OTAxNjItMy44MjU2NTRDLjQ5MDE2Mi0yLjY2NjAwMiAuNTczODQ4LTEuNzkzMjc1IDEuMDA0MjM0LS45NDQ0NThDMS40NzA0ODYtLjAzNTg2NiAyLjI5NTM5MiAuMjUxMDU5IDIuOTE3MDYxIC4yNTEwNTlDMy45NTcxNjEgLjI1MTA1OSA0LjU1NDkxOS0uMzcwNjEgNC45MDE2MTktMS4wNjQwMUM1LjMzMjAwNS0xLjk2MDY0OCA1LjM1NTkxNS0zLjEzMjI1NCA1LjM1NTkxNS0zLjgyNTY1NFpNMi45MTcwNjEgLjAxMTk1NUMyLjUzNDQ5NiAuMDExOTU1IDEuNzU3NDEtLjIwMzIzOCAxLjUzMDI2Mi0xLjUwNjM1MUMxLjM5ODc1NS0yLjIyMzY2MSAxLjM5ODc1NS0zLjEzMjI1NCAxLjM5ODc1NS0zLjk2OTExNkMxLjM5ODc1NS00Ljk0OTQ0IDEuMzk4NzU1LTUuODM0MTIyIDEuNTkwMDM3LTYuNTM5NDc3QzEuNzkzMjc1LTcuMzQwNDczIDIuNDAyOTg5LTcuNzExMDgzIDIuOTE3MDYxLTcuNzExMDgzQzMuMzcxMzU3LTcuNzExMDgzIDQuMDY0NzU3LTcuNDM2MTE1IDQuMjkxOTA1LTYuNDA3OTdDNC40NDczMjMtNS43MjY1MjYgNC40NDczMjMtNC43ODIwNjcgNC40NDczMjMtMy45NjkxMTZDNC40NDczMjMtMy4xNjgxMiA0LjQ0NzMyMy0yLjI1OTUyNyA0LjMxNTgxNi0xLjUzMDI2MkM0LjA4ODY2Ny0uMjE1MTkzIDMuMzM1NDkyIC4wMTE5NTUgMi45MTcwNjEgLjAxMTk1NVonLz4KPHBhdGggaWQ9J2cyLTQ5JyBkPSdNMy40NDMwODgtNy42NjMyNjNDMy40NDMwODgtNy45MzgyMzIgMy40NDMwODgtNy45NTAxODcgMy4yMDM5ODUtNy45NTAxODdDMi45MTcwNjEtNy42MjczOTcgMi4zMTkzMDMtNy4xODUwNTYgMS4wODc5Mi03LjE4NTA1NlYtNi44MzgzNTZDMS4zNjI4ODktNi44MzgzNTYgMS45NjA2NDgtNi44MzgzNTYgMi42MTgxODItNy4xNDkxOTFWLS45MjA1NDhDMi42MTgxODItLjQ5MDE2MiAyLjU4MjMxNi0uMzQ2NyAxLjUzMDI2Mi0uMzQ2N0gxLjE1OTY1MVYwQzEuNDgyNDQxLS4wMjM5MSAyLjY0MjA5Mi0uMDIzOTEgMy4wMzY2MTMtLjAyMzkxUzQuNTc4ODI5LS4wMjM5MSA0LjkwMTYxOSAwVi0uMzQ2N0g0LjUzMTAwOUMzLjQ3ODk1NC0uMzQ2NyAzLjQ0MzA4OC0uNDkwMTYyIDMuNDQzMDg4LS45MjA1NDhWLTcuNjYzMjYzWicvPgo8cGF0aCBpZD0nZzItNTInIGQ9J000LjMxNTgxNi03Ljc4MjgxNEM0LjMxNTgxNi04LjAwOTk2MyA0LjMxNTgxNi04LjA2OTczOCA0LjE0ODQ0My04LjA2OTczOEM0LjA1MjgwMi04LjA2OTczOCA0LjAxNjkzNi04LjA2OTczOCAzLjkyMTI5NS03LjkyNjI3NkwuMzIyNzktMi4zNDMyMTNWLTEuOTk2NTEzSDMuNDY2OTk5Vi0uOTA4NTkzQzMuNDY2OTk5LS40NjYyNTIgMy40NDMwODgtLjM0NjcgMi41NzAzNjEtLjM0NjdIMi4zMzEyNThWMEMyLjYwNjIyNy0uMDIzOTEgMy41NTA2ODUtLjAyMzkxIDMuODg1NDMtLjAyMzkxUzUuMTc2NTg4LS4wMjM5MSA1LjQ1MTU1NyAwVi0uMzQ2N0g1LjIxMjQ1M0M0LjM1MTY4MS0uMzQ2NyA0LjMxNTgxNi0uNDY2MjUyIDQuMzE1ODE2LS45MDg1OTNWLTEuOTk2NTEzSDUuNTIzMjg4Vi0yLjM0MzIxM0g0LjMxNTgxNlYtNy43ODI4MTRaTTMuNTI2Nzc1LTYuODUwMzExVi0yLjM0MzIxM0guNjIxNjY5TDMuNTI2Nzc1LTYuODUwMzExWicvPgo8cGF0aCBpZD0nZzItNTUnIGQ9J001LjY3ODcwNS03LjQyNDE1OVYtNy42OTkxMjhIMi43OTc1MDlDMS4zNTA5MzQtNy42OTkxMjggMS4zMjcwMjQtNy44NTQ1NDUgMS4yNzkyMDMtOC4wODE2OTRIMS4wMTYxODlMLjY0NTU3OS01LjY5MDY2SC45MDg1OTNDLjk0NDQ1OC01LjkwNTg1MyAxLjA1MjA1NS02LjY0NzA3MyAxLjIwNzQ3Mi02Ljc3ODU4QzEuMzAzMTEzLTYuODUwMzExIDIuMTk5NzUxLTYuODUwMzExIDIuMzY3MTIzLTYuODUwMzExSDQuOTAxNjE5TDMuNjM0MzcxLTUuMDMzMTI2QzMuMzExNTgyLTQuNTY2ODc0IDIuMTA0MTEtMi42MDYyMjcgMi4xMDQxMS0uMzU4NjU1QzIuMTA0MTEtLjIyNzE0OCAyLjEwNDExIC4yNTEwNTkgMi41OTQyNzEgLjI1MTA1OUMzLjA5NjM4OSAuMjUxMDU5IDMuMDk2Mzg5LS4yMTUxOTMgMy4wOTYzODktLjM3MDYxVi0uOTY4MzY5QzMuMDk2Mzg5LTIuNzQ5Njg5IDMuMzgzMzEzLTQuMTM2NDg4IDMuOTQ1MjA1LTQuOTM3NDg0TDUuNjc4NzA1LTcuNDI0MTU5WicvPgo8cGF0aCBpZD0nZzItNjEnIGQ9J004LjA2OTczOC0zLjg3MzQ3NEM4LjIzNzExMS0zLjg3MzQ3NCA4LjQ1MjMwNC0zLjg3MzQ3NCA4LjQ1MjMwNC00LjA4ODY2N0M4LjQ1MjMwNC00LjMxNTgxNiA4LjI0OTA2Ni00LjMxNTgxNiA4LjA2OTczOC00LjMxNTgxNkgxLjAyODE0NEMuODYwNzcyLTQuMzE1ODE2IC42NDU1NzktNC4zMTU4MTYgLjY0NTU3OS00LjEwMDYyM0MuNjQ1NTc5LTMuODczNDc0IC44NDg4MTctMy44NzM0NzQgMS4wMjgxNDQtMy44NzM0NzRIOC4wNjk3MzhaTTguMDY5NzM4LTEuNjQ5ODEzQzguMjM3MTExLTEuNjQ5ODEzIDguNDUyMzA0LTEuNjQ5ODEzIDguNDUyMzA0LTEuODY1MDA2QzguNDUyMzA0LTIuMDkyMTU0IDguMjQ5MDY2LTIuMDkyMTU0IDguMDY5NzM4LTIuMDkyMTU0SDEuMDI4MTQ0Qy44NjA3NzItMi4wOTIxNTQgLjY0NTU3OS0yLjA5MjE1NCAuNjQ1NTc5LTEuODc2OTYxQy42NDU1NzktMS42NDk4MTMgLjg0ODgxNy0xLjY0OTgxMyAxLjAyODE0NC0xLjY0OTgxM0g4LjA2OTczOFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00MCcvPgo8dXNlIHg9JzQuNTUyMzI2JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PScxMC40MDUzMTYnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS01OCcvPgo8dXNlIHg9JzEzLjY1Njk3NycgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nMTkuNTA5OTY4JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PScyNS4zNjI5NTgnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzMxLjIxNTk0OCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nMzcuMDY4OTM4JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PSc0Mi45MjE5MjknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi01MicvPgo8dXNlIHg9JzUxLjQzMTU4MicgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQzJy8+Cjx1c2UgeD0nNjMuMTkyODk3JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PSc2OS4wNDU4ODcnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS01OCcvPgo8dXNlIHg9JzcyLjI5NzU0OScgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nNzguMTUwNTM5JyB5PScwJyB4bGluazpocmVmPScjZzItNTUnLz4KPHVzZSB4PSc4NC4wMDM1MjknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00MScvPgo8dXNlIHg9JzkxLjIxMjUxOCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTMnLz4KPHVzZSB4PSc5OS44NDY3ODknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OScvPgo8dXNlIHg9JzEwNS42OTk3NzknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzExMS41NTI3NjknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzExNy40MDU3NicgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nMTI2LjU3OTU3OScgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTYxJy8+Cjx1c2UgeD0nMTM1LjY4NDIzMScgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTYyJy8+Cjx1c2UgeD0nMTQ4LjEwOTcxMicgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTU1Jy8+Cjx1c2UgeD0nMTUzLjk2MjcwMicgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nMTU5LjgxNTY5MicgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTExNScvPgo8L2c+Cjwvc3ZnPgo8IS0tIERFUFRIPTQgLS0+" alt="(0.000004+0.07)*1000 =&gt; 70s" style="vertical-align: -4px"/></p>
+</li>
+<li><p>DistributedPythonFunction overhead is near 0.05s and can launch
+external program in parallel.</p>
+<p><img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzE4NC40MTk3MDhwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgMTg0LjQxOTcwOCAxMS45NTUxNjgnPgo8ZGVmcz4KPHBhdGggaWQ9J2cxLTU4JyBkPSdNMi4xOTk3NTEtLjU3Mzg0OEMyLjE5OTc1MS0uOTIwNTQ4IDEuOTEyODI3LTEuMTU5NjUxIDEuNjI1OTAzLTEuMTU5NjUxQzEuMjc5MjAzLTEuMTU5NjUxIDEuMDQwMS0uODcyNzI3IDEuMDQwMS0uNTg1ODAzQzEuMDQwMS0uMjM5MTAzIDEuMzI3MDI0IDAgMS42MTM5NDggMEMxLjk2MDY0OCAwIDIuMTk5NzUxLS4yODY5MjQgMi4xOTk3NTEtLjU3Mzg0OFonLz4KPHBhdGggaWQ9J2cxLTYxJyBkPSdNNS4xMjg3NjctOC41MjQwMzVDNS4xMjg3NjctOC41MzU5OSA1LjIwMDQ5OC04LjcxNTMxOCA1LjIwMDQ5OC04LjczOTIyOEM1LjIwMDQ5OC04Ljg4MjY5IDUuMDgwOTQ2LTguOTY2Mzc2IDQuOTg1MzA1LTguOTY2Mzc2QzQuOTI1NTI5LTguOTY2Mzc2IDQuODE3OTMzLTguOTY2Mzc2IDQuNzIyMjkxLTguNzAzMzYyTC43MTczMSAyLjU0NjQ1MUMuNzE3MzEgMi41NTg0MDYgLjY0NTU3OSAyLjczNzczMyAuNjQ1NTc5IDIuNzYxNjQ0Qy42NDU1NzkgMi45MDUxMDYgLjc2NTEzMSAyLjk4ODc5MiAuODYwNzcyIDIuOTg4NzkyQy45MzI1MDMgMi45ODg3OTIgMS4wNDAxIDIuOTc2ODM3IDEuMTIzNzg2IDIuNzI1Nzc4TDUuMTI4NzY3LTguNTI0MDM1WicvPgo8cGF0aCBpZD0nZzEtNjInIGQ9J003Ljg3ODQ1Ni0yLjcyNTc3OEM4LjEwNTYwNC0yLjgzMzM3NSA4LjExNzU1OS0yLjkwNTEwNiA4LjExNzU1OS0yLjk4ODc5MkM4LjExNzU1OS0zLjA2MDUyMyA4LjA5MzY0OS0zLjE0NDIwOSA3Ljg3ODQ1Ni0zLjIzOTg1MUwxLjQxMDcxLTYuMjE2Njg3QzEuMjU1MjkzLTYuMjg4NDE4IDEuMjMxMzgyLTYuMzAwMzc0IDEuMjA3NDcyLTYuMzAwMzc0QzEuMDY0MDEtNi4zMDAzNzQgLjk4MDMyNC02LjE4MDgyMiAuOTgwMzI0LTYuMDg1MTgxQy45ODAzMjQtNS45NDE3MTkgMS4wNzU5NjUtNS44OTM4OTggMS4yMzEzODItNS44MjIxNjdMNy4zNzYzMzktMi45ODg3OTJMMS4yMTk0MjctLjE0MzQ2MkMuOTgwMzI0LS4wMzU4NjYgLjk4MDMyNCAuMDQ3ODIxIC45ODAzMjQgLjExOTU1MkMuOTgwMzI0IC4yMTUxOTMgMS4wNjQwMSAuMzM0NzQ1IDEuMjA3NDcyIC4zMzQ3NDVDMS4yMzEzODIgLjMzNDc0NSAxLjI0MzMzNyAuMzIyNzkgMS40MTA3MSAuMjUxMDU5TDcuODc4NDU2LTIuNzI1Nzc4WicvPgo8cGF0aCBpZD0nZzEtOTknIGQ9J000LjY3NDQ3MS00LjQ5NTE0M0M0LjQ0NzMyMy00LjQ5NTE0MyA0LjMzOTcyNi00LjQ5NTE0MyA0LjE3MjM1NC00LjM1MTY4MUM0LjEwMDYyMy00LjI5MTkwNSAzLjk2OTExNi00LjExMjU3OCAzLjk2OTExNi0zLjkyMTI5NUMzLjk2OTExNi0zLjY4MjE5MiA0LjE0ODQ0My0zLjUzODczIDQuMzc1NTkyLTMuNTM4NzNDNC42NjI1MTYtMy41Mzg3MyA0Ljk4NTMwNS0zLjc3NzgzMyA0Ljk4NTMwNS00LjI1NjA0QzQuOTg1MzA1LTQuODI5ODg4IDQuNDM1MzY3LTUuMjcyMjI5IDMuNjEwNDYxLTUuMjcyMjI5QzIuMDQ0MzM0LTUuMjcyMjI5IC40NzgyMDctMy41NjI2NCAuNDc4MjA3LTEuODY1MDA2Qy40NzgyMDctLjgyNDkwNyAxLjEyMzc4NiAuMTE5NTUyIDIuMzQzMjEzIC4xMTk1NTJDMy45NjkxMTYgLjExOTU1MiA0Ljk5NzI2LTEuMTQ3Njk2IDQuOTk3MjYtMS4zMDMxMTNDNC45OTcyNi0xLjM3NDg0NCA0LjkyNTUyOS0xLjQzNDYyIDQuODc3NzA5LTEuNDM0NjJDNC44NDE4NDMtMS40MzQ2MiA0LjgyOTg4OC0xLjQyMjY2NSA0LjcyMjI5MS0xLjMxNTA2OEMzLjk1NzE2MS0uMjk4ODc5IDIuODIxNDItLjExOTU1MiAyLjM2NzEyMy0uMTE5NTUyQzEuNTQyMjE3LS4xMTk1NTIgMS4yNzkyMDMtLjgzNjg2MiAxLjI3OTIwMy0xLjQzNDYyQzEuMjc5MjAzLTEuODUzMDUxIDEuNDgyNDQxLTMuMDEyNzAyIDEuOTEyODI3LTMuODI1NjU0QzIuMjIzNjYxLTQuMzg3NTQ3IDIuODY5MjQtNS4wMzMxMjYgMy42MjI0MTYtNS4wMzMxMjZDMy43Nzc4MzMtNS4wMzMxMjYgNC40MzUzNjctNS4wMDkyMTUgNC42NzQ0NzEtNC40OTUxNDNaJy8+CjxwYXRoIGlkPSdnMS0xMDEnIGQ9J00yLjEzOTk3NS0yLjc3MzU5OUMyLjQ2Mjc2NS0yLjc3MzU5OSAzLjI3NTcxNi0yLjc5NzUwOSAzLjg0OTU2NC0zLjAxMjcwMkM0Ljc1ODE1Ny0zLjM1OTQwMiA0Ljg0MTg0My00LjA1MjgwMiA0Ljg0MTg0My00LjI2Nzk5NUM0Ljg0MTg0My00Ljc5NDAyMiA0LjM4NzU0Ny01LjI3MjIyOSAzLjU5ODUwNi01LjI3MjIyOUMyLjM0MzIxMy01LjI3MjIyOSAuNTM3OTgzLTQuMTM2NDg4IC41Mzc5ODMtMi4wMDg0NjhDLjUzNzk4My0uNzUzMTc2IDEuMjU1MjkzIC4xMTk1NTIgMi4zNDMyMTMgLjExOTU1MkMzLjk2OTExNiAuMTE5NTUyIDQuOTk3MjYtMS4xNDc2OTYgNC45OTcyNi0xLjMwMzExM0M0Ljk5NzI2LTEuMzc0ODQ0IDQuOTI1NTI5LTEuNDM0NjIgNC44Nzc3MDktMS40MzQ2MkM0Ljg0MTg0My0xLjQzNDYyIDQuODI5ODg4LTEuNDIyNjY1IDQuNzIyMjkxLTEuMzE1MDY4QzMuOTU3MTYxLS4yOTg4NzkgMi44MjE0Mi0uMTE5NTUyIDIuMzY3MTIzLS4xMTk1NTJDMS42ODU2NzktLjExOTU1MiAxLjMyNzAyNC0uNjU3NTM0IDEuMzI3MDI0LTEuNTQyMjE3QzEuMzI3MDI0LTEuNzA5NTg5IDEuMzI3MDI0LTIuMDA4NDY4IDEuNTA2MzUxLTIuNzczNTk5SDIuMTM5OTc1Wk0xLjU2NjEyNy0zLjAxMjcwMkMyLjA4MDE5OS00Ljg1Mzc5OCAzLjIxNTk0LTUuMDMzMTI2IDMuNTk4NTA2LTUuMDMzMTI2QzQuMTI0NTMzLTUuMDMzMTI2IDQuNDgzMTg4LTQuNzIyMjkxIDQuNDgzMTg4LTQuMjY3OTk1QzQuNDgzMTg4LTMuMDEyNzAyIDIuNTcwMzYxLTMuMDEyNzAyIDIuMDY4MjQ0LTMuMDEyNzAySDEuNTY2MTI3WicvPgo8cGF0aCBpZD0nZzEtMTExJyBkPSdNNS40NTE1NTctMy4yODc2NzFDNS40NTE1NTctNC40MjM0MTIgNC43MTAzMzYtNS4yNzIyMjkgMy42MjI0MTYtNS4yNzIyMjlDMi4wNDQzMzQtNS4yNzIyMjkgLjQ5MDE2Mi0zLjU1MDY4NSAuNDkwMTYyLTEuODY1MDA2Qy40OTAxNjItLjcyOTI2NSAxLjIzMTM4MiAuMTE5NTUyIDIuMzE5MzAzIC4xMTk1NTJDMy45MDkzNCAuMTE5NTUyIDUuNDUxNTU3LTEuNjAxOTkzIDUuNDUxNTU3LTMuMjg3NjcxWk0yLjMzMTI1OC0uMTE5NTUyQzEuNzMzNDk5LS4xMTk1NTIgMS4yOTExNTgtLjU5Nzc1OCAxLjI5MTE1OC0xLjQzNDYyQzEuMjkxMTU4LTEuOTg0NTU4IDEuNTc4MDgyLTMuMjAzOTg1IDEuOTEyODI3LTMuODAxNzQzQzIuNDUwODA5LTQuNzIyMjkxIDMuMTIwMjk5LTUuMDMzMTI2IDMuNjEwNDYxLTUuMDMzMTI2QzQuMTk2MjY0LTUuMDMzMTI2IDQuNjUwNTYtNC41NTQ5MTkgNC42NTA1Ni0zLjcxODA1N0M0LjY1MDU2LTMuMjM5ODUxIDQuMzk5NTAyLTEuOTYwNjQ4IDMuOTQ1MjA1LTEuMjMxMzgyQzMuNDU1MDQ0LS40MzAzODYgMi43OTc1MDktLjExOTU1MiAyLjMzMTI1OC0uMTE5NTUyWicvPgo8cGF0aCBpZD0nZzEtMTE0JyBkPSdNNC42NTA1Ni00Ljg4OTY2NEM0LjI3OTk1LTQuODE3OTMzIDQuMDg4NjY3LTQuNTU0OTE5IDQuMDg4NjY3LTQuMjkxOTA1QzQuMDg4NjY3LTQuMDA0OTgxIDQuMzE1ODE2LTMuOTA5MzQgNC40ODMxODgtMy45MDkzNEM0LjgxNzkzMy0zLjkwOTM0IDUuMDkyOTAyLTQuMTk2MjY0IDUuMDkyOTAyLTQuNTU0OTE5QzUuMDkyOTAyLTQuOTM3NDg0IDQuNzIyMjkxLTUuMjcyMjI5IDQuMTI0NTMzLTUuMjcyMjI5QzMuNjQ2MzI2LTUuMjcyMjI5IDMuMDk2Mzg5LTUuMDU3MDM2IDIuNTk0MjcxLTQuMzI3NzcxQzIuNTEwNTg1LTQuOTYxMzk1IDIuMDMyMzc5LTUuMjcyMjI5IDEuNTU0MTcyLTUuMjcyMjI5QzEuMDg3OTItNS4yNzIyMjkgLjg0ODgxNy00LjkxMzU3NCAuNzA1MzU1LTQuNjUwNTZDLjUwMjExNy00LjIyMDE3NCAuMzIyNzktMy41MDI4NjQgLjMyMjc5LTMuNDQzMDg4Qy4zMjI3OS0zLjM5NTI2OCAuMzcwNjEtMy4zMzU0OTIgLjQ1NDI5Ni0zLjMzNTQ5MkMuNTQ5OTM4LTMuMzM1NDkyIC41NjE4OTMtMy4zNDc0NDcgLjYzMzYyNC0zLjYyMjQxNkMuODEyOTUxLTQuMzM5NzI2IDEuMDQwMS01LjAzMzEyNiAxLjUxODMwNi01LjAzMzEyNkMxLjgwNTIzLTUuMDMzMTI2IDEuODg4OTE3LTQuODI5ODg4IDEuODg4OTE3LTQuNDgzMTg4QzEuODg4OTE3LTQuMjIwMTc0IDEuNzY5MzY1LTMuNzUzOTIzIDEuNjg1Njc5LTMuMzgzMzEzTDEuMzUwOTM0LTIuMDkyMTU0QzEuMzAzMTEzLTEuODY1MDA2IDEuMTcxNjA2LTEuMzI3MDI0IDEuMTExODMxLTEuMTExODMxQzEuMDI4MTQ0LS44MDA5OTYgLjg5NjYzOC0uMjM5MTAzIC44OTY2MzgtLjE3OTMyOEMuODk2NjM4LS4wMTE5NTUgMS4wMjgxNDQgLjExOTU1MiAxLjIwNzQ3MiAuMTE5NTUyQzEuMzM4OTc5IC4xMTk1NTIgMS41NjYxMjcgLjAzNTg2NiAxLjYzNzg1OC0uMjAzMjM4QzEuNjczNzI0LS4yOTg4NzkgMi4xMTYwNjUtMi4xMDQxMSAyLjE4Nzc5Ni0yLjM3OTA3OEMyLjI0NzU3Mi0yLjY0MjA5MiAyLjMxOTMwMy0yLjg5MzE1MSAyLjM3OTA3OC0zLjE1NjE2NEMyLjQyNjg5OS0zLjMyMzUzNyAyLjQ3NDcyLTMuNTE0ODE5IDIuNTEwNTg1LTMuNjcwMjM3QzIuNTQ2NDUxLTMuNzc3ODMzIDIuODY5MjQtNC4zNjM2MzYgMy4xNjgxMi00LjYyNjY1QzMuMzExNTgyLTQuNzU4MTU3IDMuNjIyNDE2LTUuMDMzMTI2IDQuMTEyNTc4LTUuMDMzMTI2QzQuMzAzODYxLTUuMDMzMTI2IDQuNDk1MTQzLTQuOTk3MjYgNC42NTA1Ni00Ljg4OTY2NFonLz4KPHBhdGggaWQ9J2cxLTExNScgZD0nTTIuNzI1Nzc4LTIuMzkxMDM0QzIuOTI5MDE2LTIuMzU1MTY4IDMuMjUxODA2LTIuMjgzNDM3IDMuMzIzNTM3LTIuMjcxNDgyQzMuNDc4OTU0LTIuMjIzNjYxIDQuMDE2OTM2LTIuMDMyMzc5IDQuMDE2OTM2LTEuNDU4NTMxQzQuMDE2OTM2LTEuMDg3OTIgMy42ODIxOTItLjExOTU1MiAyLjI5NTM5Mi0uMTE5NTUyQzIuMDQ0MzM0LS4xMTk1NTIgMS4xNDc2OTYtLjE1NTQxNyAuOTA4NTkzLS44MTI5NTFDMS4zODY4LS43NTMxNzYgMS42MjU5MDMtMS4xMjM3ODYgMS42MjU5MDMtMS4zODY4QzEuNjI1OTAzLTEuNjM3ODU4IDEuNDU4NTMxLTEuNzY5MzY1IDEuMjE5NDI3LTEuNzY5MzY1Qy45NTY0MTMtMS43NjkzNjUgLjYwOTcxNC0xLjU2NjEyNyAuNjA5NzE0LTEuMDI4MTQ0Qy42MDk3MTQtLjMyMjc5IDEuMzI3MDI0IC4xMTk1NTIgMi4yODM0MzcgLjExOTU1MkM0LjEwMDYyMyAuMTE5NTUyIDQuNjM4NjA1LTEuMjE5NDI3IDQuNjM4NjA1LTEuODQxMDk2QzQuNjM4NjA1LTIuMDIwNDIzIDQuNjM4NjA1LTIuMzU1MTY4IDQuMjU2MDQtMi43Mzc3MzNDMy45NTcxNjEtMy4wMjQ2NTggMy42NzAyMzctMy4wODQ0MzMgMy4wMjQ2NTgtMy4yMTU5NEMyLjcwMTg2OC0zLjI4NzY3MSAyLjE4Nzc5Ni0zLjM5NTI2OCAyLjE4Nzc5Ni0zLjkzMzI1QzIuMTg3Nzk2LTQuMTcyMzU0IDIuNDAyOTg5LTUuMDMzMTI2IDMuNTM4NzMtNS4wMzMxMjZDNC4wNDA4NDctNS4wMzMxMjYgNC41MzEwMDktNC44NDE4NDMgNC42NTA1Ni00LjQxMTQ1N0M0LjEyNDUzMy00LjQxMTQ1NyA0LjEwMDYyMy0zLjk1NzE2MSA0LjEwMDYyMy0zLjk0NTIwNUM0LjEwMDYyMy0zLjY5NDE0NyA0LjMyNzc3MS0zLjYyMjQxNiA0LjQzNTM2Ny0zLjYyMjQxNkM0LjYwMjc0LTMuNjIyNDE2IDQuOTM3NDg0LTMuNzUzOTIzIDQuOTM3NDg0LTQuMjU2MDRTNC40ODMxODgtNS4yNzIyMjkgMy41NTA2ODUtNS4yNzIyMjlDMS45ODQ1NTgtNS4yNzIyMjkgMS41NjYxMjctNC4wNDA4NDcgMS41NjYxMjctMy41NTA2ODVDMS41NjYxMjctMi42NDIwOTIgMi40NTA4MDktMi40NTA4MDkgMi43MjU3NzgtMi4zOTEwMzRaJy8+CjxwYXRoIGlkPSdnMC0zJyBkPSdNMy4yODc2NzEtNS4xMDQ4NTdDMy4yOTk2MjYtNS4yNzIyMjkgMy4yOTk2MjYtNS41NTkxNTMgMi45ODg3OTItNS41NTkxNTNDMi43OTc1MDktNS41NTkxNTMgMi42NDIwOTItNS40MDM3MzYgMi42Nzc5NTgtNS4yNDgzMTlWLTUuMDkyOTAyTDIuODQ1MzMtMy4yMzk4NTFMMS4zMTUwNjgtNC4zNTE2ODFDMS4yMDc0NzItNC40MTE0NTcgMS4xODM1NjItNC40MzUzNjcgMS4wOTk4NzUtNC40MzUzNjdDLjkzMjUwMy00LjQzNTM2NyAuNzc3MDg2LTQuMjY3OTk1IC43NzcwODYtNC4xMDA2MjNDLjc3NzA4Ni0zLjkwOTM0IC44OTY2MzgtMy44NjE1MTkgMS4wMTYxODktMy44MDE3NDNMMi43MTM4MjMtMi45ODg3OTJMMS4wNjQwMS0yLjE4Nzc5NkMuODcyNzI3LTIuMDkyMTU0IC43NzcwODYtMi4wNDQzMzQgLjc3NzA4Ni0xLjg2NTAwNlMuOTMyNTAzLTEuNTMwMjYyIDEuMDk5ODc1LTEuNTMwMjYyQzEuMTgzNTYyLTEuNTMwMjYyIDEuMjA3NDcyLTEuNTMwMjYyIDEuNTA2MzUxLTEuNzU3NDFMMi44NDUzMy0yLjcyNTc3OEwyLjY2NjAwMi0uNzE3MzFDMi42NjYwMDItLjQ2NjI1MiAyLjg4MTE5Ni0uNDA2NDc2IDIuOTc2ODM3LS40MDY0NzZDMy4xMjAyOTktLjQwNjQ3NiAzLjI5OTYyNi0uNDkwMTYyIDMuMjk5NjI2LS43MTczMUwzLjEyMDI5OS0yLjcyNTc3OEw0LjY1MDU2LTEuNjEzOTQ4QzQuNzU4MTU3LTEuNTU0MTcyIDQuNzgyMDY3LTEuNTMwMjYyIDQuODY1NzUzLTEuNTMwMjYyQzUuMDMzMTI2LTEuNTMwMjYyIDUuMTg4NTQzLTEuNjk3NjM0IDUuMTg4NTQzLTEuODY1MDA2QzUuMTg4NTQzLTIuMDQ0MzM0IDUuMDgwOTQ2LTIuMTA0MTEgNC45Mzc0ODQtMi4xNzU4NDFDNC4yMjAxNzQtMi41MzQ0OTYgNC4xOTYyNjQtMi41MzQ0OTYgMy4yNTE4MDYtMi45NzY4MzdMNC45MDE2MTktMy43Nzc4MzNDNS4wOTI5MDItMy44NzM0NzQgNS4xODg1NDMtMy45MjEyOTUgNS4xODg1NDMtNC4xMDA2MjNTNS4wMzMxMjYtNC40MzUzNjcgNC44NjU3NTMtNC40MzUzNjdDNC43ODIwNjctNC40MzUzNjcgNC43NTgxNTctNC40MzUzNjcgNC40NTkyNzgtNC4yMDgyMTlMMy4xMjAyOTktMy4yMzk4NTFMMy4yODc2NzEtNS4xMDQ4NTdaJy8+CjxwYXRoIGlkPSdnMi00MCcgZD0nTTMuODg1NDMgMi45MDUxMDZDMy44ODU0MyAyLjg2OTI0IDMuODg1NDMgMi44NDUzMyAzLjY4MjE5MiAyLjY0MjA5MkMyLjQ4NjY3NSAxLjQzNDYyIDEuODE3MTg2LS41Mzc5ODMgMS44MTcxODYtMi45NzY4MzdDMS44MTcxODYtNS4yOTYxMzkgMi4zNzkwNzgtNy4yOTI2NTMgMy43NjU4NzgtOC43MDMzNjJDMy44ODU0My04LjgxMDk1OSAzLjg4NTQzLTguODM0ODY5IDMuODg1NDMtOC44NzA3MzVDMy44ODU0My04Ljk0MjQ2NiAzLjgyNTY1NC04Ljk2NjM3NiAzLjc3NzgzMy04Ljk2NjM3NkMzLjYyMjQxNi04Ljk2NjM3NiAyLjY0MjA5Mi04LjEwNTYwNCAyLjA1NjI4OS02LjkzMzk5OEMxLjQ0NjU3NS01LjcyNjUyNiAxLjE3MTYwNi00LjQ0NzMyMyAxLjE3MTYwNi0yLjk3NjgzN0MxLjE3MTYwNi0xLjkxMjgyNyAxLjMzODk3OS0uNDkwMTYyIDEuOTYwNjQ4IC43ODkwNDFDMi42NjYwMDIgMi4yMjM2NjEgMy42NDYzMjYgMy4wMDA3NDcgMy43Nzc4MzMgMy4wMDA3NDdDMy44MjU2NTQgMy4wMDA3NDcgMy44ODU0MyAyLjk3NjgzNyAzLjg4NTQzIDIuOTA1MTA2WicvPgo8cGF0aCBpZD0nZzItNDEnIGQ9J00zLjM3MTM1Ny0yLjk3NjgzN0MzLjM3MTM1Ny0zLjg4NTQzIDMuMjUxODA2LTUuMzY3ODcgMi41ODIzMTYtNi43NTQ2N0MxLjg3Njk2MS04LjE4OTI5IC44OTY2MzgtOC45NjYzNzYgLjc2NTEzMS04Ljk2NjM3NkMuNzE3MzEtOC45NjYzNzYgLjY1NzUzNC04Ljk0MjQ2NiAuNjU3NTM0LTguODcwNzM1Qy42NTc1MzQtOC44MzQ4NjkgLjY1NzUzNC04LjgxMDk1OSAuODYwNzcyLTguNjA3NzIxQzIuMDU2Mjg5LTcuNDAwMjQ5IDIuNzI1Nzc4LTUuNDI3NjQ2IDIuNzI1Nzc4LTIuOTg4NzkyQzIuNzI1Nzc4LS42Njk0ODkgMi4xNjM4ODUgMS4zMjcwMjQgLjc3NzA4NiAyLjczNzczM0MuNjU3NTM0IDIuODQ1MzMgLjY1NzUzNCAyLjg2OTI0IC42NTc1MzQgMi45MDUxMDZDLjY1NzUzNCAyLjk3NjgzNyAuNzE3MzEgMy4wMDA3NDcgLjc2NTEzMSAzLjAwMDc0N0MuOTIwNTQ4IDMuMDAwNzQ3IDEuOTAwODcyIDIuMTM5OTc1IDIuNDg2Njc1IC45NjgzNjlDMy4wOTYzODktLjI1MTA1OSAzLjM3MTM1Ny0xLjU0MjIxNyAzLjM3MTM1Ny0yLjk3NjgzN1onLz4KPHBhdGggaWQ9J2cyLTQzJyBkPSdNNC43NzAxMTItMi43NjE2NDRIOC4wNjk3MzhDOC4yMzcxMTEtMi43NjE2NDQgOC40NTIzMDQtMi43NjE2NDQgOC40NTIzMDQtMi45NzY4MzdDOC40NTIzMDQtMy4yMDM5ODUgOC4yNDkwNjYtMy4yMDM5ODUgOC4wNjk3MzgtMy4yMDM5ODVINC43NzAxMTJWLTYuNTAzNjExQzQuNzcwMTEyLTYuNjcwOTg0IDQuNzcwMTEyLTYuODg2MTc3IDQuNTU0OTE5LTYuODg2MTc3QzQuMzI3NzcxLTYuODg2MTc3IDQuMzI3NzcxLTYuNjgyOTM5IDQuMzI3NzcxLTYuNTAzNjExVi0zLjIwMzk4NUgxLjAyODE0NEMuODYwNzcyLTMuMjAzOTg1IC42NDU1NzktMy4yMDM5ODUgLjY0NTU3OS0yLjk4ODc5MkMuNjQ1NTc5LTIuNzYxNjQ0IC44NDg4MTctMi43NjE2NDQgMS4wMjgxNDQtMi43NjE2NDRINC4zMjc3NzFWLjUzNzk4M0M0LjMyNzc3MSAuNzA1MzU1IDQuMzI3NzcxIC45MjA1NDggNC41NDI5NjQgLjkyMDU0OEM0Ljc3MDExMiAuOTIwNTQ4IDQuNzcwMTEyIC43MTczMSA0Ljc3MDExMiAuNTM3OTgzVi0yLjc2MTY0NFonLz4KPHBhdGggaWQ9J2cyLTQ4JyBkPSdNNS4zNTU5MTUtMy44MjU2NTRDNS4zNTU5MTUtNC44MTc5MzMgNS4yOTYxMzktNS43ODYzMDEgNC44NjU3NTMtNi42OTQ4OTRDNC4zNzU1OTItNy42ODcxNzMgMy41MTQ4MTktNy45NTAxODcgMi45MjkwMTYtNy45NTAxODdDMi4yMzU2MTYtNy45NTAxODcgMS4zODY4LTcuNjAzNDg3IC45NDQ0NTgtNi42MTEyMDhDLjYwOTcxNC01Ljg1ODAzMiAuNDkwMTYyLTUuMTE2ODEyIC40OTAxNjItMy44MjU2NTRDLjQ5MDE2Mi0yLjY2NjAwMiAuNTczODQ4LTEuNzkzMjc1IDEuMDA0MjM0LS45NDQ0NThDMS40NzA0ODYtLjAzNTg2NiAyLjI5NTM5MiAuMjUxMDU5IDIuOTE3MDYxIC4yNTEwNTlDMy45NTcxNjEgLjI1MTA1OSA0LjU1NDkxOS0uMzcwNjEgNC45MDE2MTktMS4wNjQwMUM1LjMzMjAwNS0xLjk2MDY0OCA1LjM1NTkxNS0zLjEzMjI1NCA1LjM1NTkxNS0zLjgyNTY1NFpNMi45MTcwNjEgLjAxMTk1NUMyLjUzNDQ5NiAuMDExOTU1IDEuNzU3NDEtLjIwMzIzOCAxLjUzMDI2Mi0xLjUwNjM1MUMxLjM5ODc1NS0yLjIyMzY2MSAxLjM5ODc1NS0zLjEzMjI1NCAxLjM5ODc1NS0zLjk2OTExNkMxLjM5ODc1NS00Ljk0OTQ0IDEuMzk4NzU1LTUuODM0MTIyIDEuNTkwMDM3LTYuNTM5NDc3QzEuNzkzMjc1LTcuMzQwNDczIDIuNDAyOTg5LTcuNzExMDgzIDIuOTE3MDYxLTcuNzExMDgzQzMuMzcxMzU3LTcuNzExMDgzIDQuMDY0NzU3LTcuNDM2MTE1IDQuMjkxOTA1LTYuNDA3OTdDNC40NDczMjMtNS43MjY1MjYgNC40NDczMjMtNC43ODIwNjcgNC40NDczMjMtMy45NjkxMTZDNC40NDczMjMtMy4xNjgxMiA0LjQ0NzMyMy0yLjI1OTUyNyA0LjMxNTgxNi0xLjUzMDI2MkM0LjA4ODY2Ny0uMjE1MTkzIDMuMzM1NDkyIC4wMTE5NTUgMi45MTcwNjEgLjAxMTk1NVonLz4KPHBhdGggaWQ9J2cyLTQ5JyBkPSdNMy40NDMwODgtNy42NjMyNjNDMy40NDMwODgtNy45MzgyMzIgMy40NDMwODgtNy45NTAxODcgMy4yMDM5ODUtNy45NTAxODdDMi45MTcwNjEtNy42MjczOTcgMi4zMTkzMDMtNy4xODUwNTYgMS4wODc5Mi03LjE4NTA1NlYtNi44MzgzNTZDMS4zNjI4ODktNi44MzgzNTYgMS45NjA2NDgtNi44MzgzNTYgMi42MTgxODItNy4xNDkxOTFWLS45MjA1NDhDMi42MTgxODItLjQ5MDE2MiAyLjU4MjMxNi0uMzQ2NyAxLjUzMDI2Mi0uMzQ2N0gxLjE1OTY1MVYwQzEuNDgyNDQxLS4wMjM5MSAyLjY0MjA5Mi0uMDIzOTEgMy4wMzY2MTMtLjAyMzkxUzQuNTc4ODI5LS4wMjM5MSA0LjkwMTYxOSAwVi0uMzQ2N0g0LjUzMTAwOUMzLjQ3ODk1NC0uMzQ2NyAzLjQ0MzA4OC0uNDkwMTYyIDMuNDQzMDg4LS45MjA1NDhWLTcuNjYzMjYzWicvPgo8cGF0aCBpZD0nZzItNTMnIGQ9J00xLjUzMDI2Mi02Ljg1MDMxMUMyLjA0NDMzNC02LjY4MjkzOSAyLjQ2Mjc2NS02LjY3MDk4NCAyLjU5NDI3MS02LjY3MDk4NEMzLjk0NTIwNS02LjY3MDk4NCA0LjgwNTk3OC03LjY2MzI2MyA0LjgwNTk3OC03LjgzMDYzNUM0LjgwNTk3OC03Ljg3ODQ1NiA0Ljc4MjA2Ny03LjkzODIzMiA0LjcxMDMzNi03LjkzODIzMkM0LjY4NjQyNi03LjkzODIzMiA0LjY2MjUxNi03LjkzODIzMiA0LjU1NDkxOS03Ljg5MDQxMUMzLjg4NTQzLTcuNjAzNDg3IDMuMzExNTgyLTcuNTY3NjIxIDMuMDAwNzQ3LTcuNTY3NjIxQzIuMjExNzA2LTcuNTY3NjIxIDEuNjQ5ODEzLTcuODA2NzI1IDEuNDIyNjY1LTcuOTAyMzY2QzEuMzM4OTc5LTcuOTM4MjMyIDEuMzE1MDY4LTcuOTM4MjMyIDEuMzAzMTEzLTcuOTM4MjMyQzEuMjA3NDcyLTcuOTM4MjMyIDEuMjA3NDcyLTcuODY2NTAxIDEuMjA3NDcyLTcuNjc1MjE4Vi00LjEyNDUzM0MxLjIwNzQ3Mi0zLjkwOTM0IDEuMjA3NDcyLTMuODM3NjA5IDEuMzUwOTM0LTMuODM3NjA5QzEuNDEwNzEtMy44Mzc2MDkgMS40MjI2NjUtMy44NDk1NjQgMS41NDIyMTctMy45OTMwMjZDMS44NzY5NjEtNC40ODMxODggMi40Mzg4NTQtNC43NzAxMTIgMy4wMzY2MTMtNC43NzAxMTJDMy42NzAyMzctNC43NzAxMTIgMy45ODEwNzEtNC4xODQzMDkgNC4wNzY3MTItMy45ODEwNzFDNC4yNzk5NS0zLjUxNDgxOSA0LjI5MTkwNS0yLjkyOTAxNiA0LjI5MTkwNS0yLjQ3NDcyUzQuMjkxOTA1LTEuMzM4OTc5IDMuOTU3MTYxLS44MDA5OTZDMy42OTQxNDctLjM3MDYxIDMuMjI3ODk1LS4wNzE3MzEgMi43MDE4NjgtLjA3MTczMUMxLjkxMjgyNy0uMDcxNzMxIDEuMTM1NzQxLS42MDk3MTQgLjkyMDU0OC0xLjQ4MjQ0MUMuOTgwMzI0LTEuNDU4NTMxIDEuMDUyMDU1LTEuNDQ2NTc1IDEuMTExODMxLTEuNDQ2NTc1QzEuMzE1MDY4LTEuNDQ2NTc1IDEuNjM3ODU4LTEuNTY2MTI3IDEuNjM3ODU4LTEuOTcyNjAzQzEuNjM3ODU4LTIuMzA3MzQ3IDEuNDEwNzEtMi40OTg2MyAxLjExMTgzMS0yLjQ5ODYzQy44OTY2MzgtMi40OTg2MyAuNTg1ODAzLTIuMzkxMDM0IC41ODU4MDMtMS45MjQ3ODJDLjU4NTgwMy0uOTA4NTkzIDEuMzk4NzU1IC4yNTEwNTkgMi43MjU3NzggLjI1MTA1OUM0LjA3NjcxMiAuMjUxMDU5IDUuMjYwMjc0LS44ODQ2ODIgNS4yNjAyNzQtMi40MDI5ODlDNS4yNjAyNzQtMy44MjU2NTQgNC4zMDM4NjEtNS4wMDkyMTUgMy4wNDg1NjgtNS4wMDkyMTVDMi4zNjcxMjMtNS4wMDkyMTUgMS44NDEwOTYtNC43MTAzMzYgMS41MzAyNjItNC4zNzU1OTJWLTYuODUwMzExWicvPgo8cGF0aCBpZD0nZzItNTUnIGQ9J001LjY3ODcwNS03LjQyNDE1OVYtNy42OTkxMjhIMi43OTc1MDlDMS4zNTA5MzQtNy42OTkxMjggMS4zMjcwMjQtNy44NTQ1NDUgMS4yNzkyMDMtOC4wODE2OTRIMS4wMTYxODlMLjY0NTU3OS01LjY5MDY2SC45MDg1OTNDLjk0NDQ1OC01LjkwNTg1MyAxLjA1MjA1NS02LjY0NzA3MyAxLjIwNzQ3Mi02Ljc3ODU4QzEuMzAzMTEzLTYuODUwMzExIDIuMTk5NzUxLTYuODUwMzExIDIuMzY3MTIzLTYuODUwMzExSDQuOTAxNjE5TDMuNjM0MzcxLTUuMDMzMTI2QzMuMzExNTgyLTQuNTY2ODc0IDIuMTA0MTEtMi42MDYyMjcgMi4xMDQxMS0uMzU4NjU1QzIuMTA0MTEtLjIyNzE0OCAyLjEwNDExIC4yNTEwNTkgMi41OTQyNzEgLjI1MTA1OUMzLjA5NjM4OSAuMjUxMDU5IDMuMDk2Mzg5LS4yMTUxOTMgMy4wOTYzODktLjM3MDYxVi0uOTY4MzY5QzMuMDk2Mzg5LTIuNzQ5Njg5IDMuMzgzMzEzLTQuMTM2NDg4IDMuOTQ1MjA1LTQuOTM3NDg0TDUuNjc4NzA1LTcuNDI0MTU5WicvPgo8cGF0aCBpZD0nZzItNTYnIGQ9J00zLjU2MjY0LTQuMzE1ODE2QzQuMTYwMzk5LTQuNjM4NjA1IDUuMDMzMTI2LTUuMTg4NTQzIDUuMDMzMTI2LTYuMTkyNzc3QzUuMDMzMTI2LTcuMjMyODc3IDQuMDI4ODkyLTcuOTUwMTg3IDIuOTI5MDE2LTcuOTUwMTg3QzEuNzQ1NDU1LTcuOTUwMTg3IC44MTI5NTEtNy4wNzc0NiAuODEyOTUxLTUuOTg5NTM5Qy44MTI5NTEtNS41ODMwNjQgLjkzMjUwMy01LjE3NjU4OCAxLjI2NzI0OC00Ljc3MDExMkMxLjM5ODc1NS00LjYxNDY5NSAxLjQxMDcxLTQuNjAyNzQgMi4yNDc1NzItNC4wMTY5MzZDMS4wODc5Mi0zLjQ3ODk1NCAuNDkwMTYyLTIuNjc3OTU4IC40OTAxNjItMS44MDUyM0MuNDkwMTYyLS41Mzc5ODMgMS42OTc2MzQgLjI1MTA1OSAyLjkxNzA2MSAuMjUxMDU5QzQuMjQ0MDg1IC4yNTEwNTkgNS4zNTU5MTUtLjcyOTI2NSA1LjM1NTkxNS0xLjk4NDU1OEM1LjM1NTkxNS0zLjIwMzk4NSA0LjQ5NTE0My0zLjc0MTk2OCAzLjU2MjY0LTQuMzE1ODE2Wk0xLjkzNjczNy01LjM5MTc4MUMxLjc4MTMyLTUuNDk5Mzc3IDEuMzAzMTEzLTUuODEwMjEyIDEuMzAzMTEzLTYuMzk2MDE1QzEuMzAzMTEzLTcuMTczMTAxIDIuMTE2MDY1LTcuNjYzMjYzIDIuOTE3MDYxLTcuNjYzMjYzQzMuNzc3ODMzLTcuNjYzMjYzIDQuNTQyOTY0LTcuMDQxNTk0IDQuNTQyOTY0LTYuMTgwODIyQzQuNTQyOTY0LTUuNDUxNTU3IDQuMDE2OTM2LTQuODY1NzUzIDMuMzIzNTM3LTQuNDgzMTg4TDEuOTM2NzM3LTUuMzkxNzgxWk0yLjQ5ODYzLTMuODQ5NTY0TDMuOTQ1MjA1LTIuOTA1MTA2QzQuMjU2MDQtMi43MDE4NjggNC44MDU5NzgtMi4zMzEyNTggNC44MDU5NzgtMS42MDE5OTNDNC44MDU5NzgtLjY5MzQgMy44ODU0My0uMDcxNzMxIDIuOTI5MDE2LS4wNzE3MzFDMS45MTI4MjctLjA3MTczMSAxLjA0MDEtLjgxMjk1MSAxLjA0MDEtMS44MDUyM0MxLjA0MDEtMi43Mzc3MzMgMS43MjE1NDQtMy40OTA5MDkgMi40OTg2My0zLjg0OTU2NFonLz4KPHBhdGggaWQ9J2cyLTYxJyBkPSdNOC4wNjk3MzgtMy44NzM0NzRDOC4yMzcxMTEtMy44NzM0NzQgOC40NTIzMDQtMy44NzM0NzQgOC40NTIzMDQtNC4wODg2NjdDOC40NTIzMDQtNC4zMTU4MTYgOC4yNDkwNjYtNC4zMTU4MTYgOC4wNjk3MzgtNC4zMTU4MTZIMS4wMjgxNDRDLjg2MDc3Mi00LjMxNTgxNiAuNjQ1NTc5LTQuMzE1ODE2IC42NDU1NzktNC4xMDA2MjNDLjY0NTU3OS0zLjg3MzQ3NCAuODQ4ODE3LTMuODczNDc0IDEuMDI4MTQ0LTMuODczNDc0SDguMDY5NzM4Wk04LjA2OTczOC0xLjY0OTgxM0M4LjIzNzExMS0xLjY0OTgxMyA4LjQ1MjMwNC0xLjY0OTgxMyA4LjQ1MjMwNC0xLjg2NTAwNkM4LjQ1MjMwNC0yLjA5MjE1NCA4LjI0OTA2Ni0yLjA5MjE1NCA4LjA2OTczOC0yLjA5MjE1NEgxLjAyODE0NEMuODYwNzcyLTIuMDkyMTU0IC42NDU1NzktMi4wOTIxNTQgLjY0NTU3OS0xLjg3Njk2MUMuNjQ1NTc5LTEuNjQ5ODEzIC44NDg4MTctMS42NDk4MTMgMS4wMjgxNDQtMS42NDk4MTNIOC4wNjk3MzhaJy8+CjwvZGVmcz4KPGcgaWQ9J3BhZ2UxJz4KPHVzZSB4PScwJyB5PScwJyB4bGluazpocmVmPScjZzItNDAnLz4KPHVzZSB4PSc0LjU1MjMyNicgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nMTAuNDA1MzE2JyB5PScwJyB4bGluazpocmVmPScjZzEtNTgnLz4KPHVzZSB4PScxMy42NTY5NzcnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzE5LjUwOTk2OCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTUzJy8+Cjx1c2UgeD0nMjguMDE5NjIxJyB5PScwJyB4bGluazpocmVmPScjZzItNDMnLz4KPHVzZSB4PSczOS43ODA5MzYnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzQ1LjYzMzkyNicgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTU4Jy8+Cjx1c2UgeD0nNDguODg1NTg4JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PSc1NC43Mzg1NzgnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi01NScvPgo8dXNlIHg9JzYwLjU5MTU2OCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQxJy8+Cjx1c2UgeD0nNjcuODAwNTU3JyB5PScwJyB4bGluazpocmVmPScjZzAtMycvPgo8dXNlIHg9Jzc2LjQzNDgyOCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ5Jy8+Cjx1c2UgeD0nODIuMjg3ODE4JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PSc4OC4xNDA4MDgnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzkzLjk5Mzc5OScgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nOTkuODQ2Nzg5JyB5PScwJyB4bGluazpocmVmPScjZzItNDAnLz4KPHVzZSB4PScxMDQuMzk5MTE1JyB5PScwJyB4bGluazpocmVmPScjZzEtNjEnLz4KPHVzZSB4PScxMTAuMjUyMTA1JyB5PScwJyB4bGluazpocmVmPScjZzItNTYnLz4KPHVzZSB4PScxMTYuMTA1MDk1JyB5PScwJyB4bGluazpocmVmPScjZzEtOTknLz4KPHVzZSB4PScxMjEuMTQzMDg0JyB5PScwJyB4bGluazpocmVmPScjZzEtMTExJy8+Cjx1c2UgeD0nMTI2Ljc3MDUyMScgeT0nMCcgeGxpbms6aHJlZj0nI2cxLTExNCcvPgo8dXNlIHg9JzEzMi4zNzA5OTUnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMDEnLz4KPHVzZSB4PScxMzcuNzk2NDM1JyB5PScwJyB4bGluazpocmVmPScjZzItNDEnLz4KPHVzZSB4PScxNDUuNjY5NTknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi02MScvPgo8dXNlIHg9JzE1NC43NzQyNDEnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS02MicvPgo8dXNlIHg9JzE2Ny4xOTk3MjInIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OScvPgo8dXNlIHg9JzE3My4wNTI3MTInIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi01MycvPgo8dXNlIHg9JzE3OC45MDU3MDMnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMTUnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD00IC0tPg==" alt="(0.05+0.07)*1000 (/8core) =&gt; 15s" style="vertical-align: -4px"/></p>
+</li>
+<li><p>PythonFunction that reimplement the external program.</p>
+<p><img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPCEtLSBUaGlzIGZpbGUgd2FzIGdlbmVyYXRlZCBieSBkdmlzdmdtIDMuMS4yIC0tPgo8c3ZnIHZlcnNpb249JzEuMScgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzEzMy4zNTI3NDlwdCcgaGVpZ2h0PScxMS45NTUxNjhwdCcgdmlld0JveD0nMCAtOC45NjYzNzYgMTMzLjM1Mjc0OSAxMS45NTUxNjgnPgo8ZGVmcz4KPHBhdGggaWQ9J2cxLTU4JyBkPSdNMi4xOTk3NTEtLjU3Mzg0OEMyLjE5OTc1MS0uOTIwNTQ4IDEuOTEyODI3LTEuMTU5NjUxIDEuNjI1OTAzLTEuMTU5NjUxQzEuMjc5MjAzLTEuMTU5NjUxIDEuMDQwMS0uODcyNzI3IDEuMDQwMS0uNTg1ODAzQzEuMDQwMS0uMjM5MTAzIDEuMzI3MDI0IDAgMS42MTM5NDggMEMxLjk2MDY0OCAwIDIuMTk5NzUxLS4yODY5MjQgMi4xOTk3NTEtLjU3Mzg0OFonLz4KPHBhdGggaWQ9J2cxLTYyJyBkPSdNNy44Nzg0NTYtMi43MjU3NzhDOC4xMDU2MDQtMi44MzMzNzUgOC4xMTc1NTktMi45MDUxMDYgOC4xMTc1NTktMi45ODg3OTJDOC4xMTc1NTktMy4wNjA1MjMgOC4wOTM2NDktMy4xNDQyMDkgNy44Nzg0NTYtMy4yMzk4NTFMMS40MTA3MS02LjIxNjY4N0MxLjI1NTI5My02LjI4ODQxOCAxLjIzMTM4Mi02LjMwMDM3NCAxLjIwNzQ3Mi02LjMwMDM3NEMxLjA2NDAxLTYuMzAwMzc0IC45ODAzMjQtNi4xODA4MjIgLjk4MDMyNC02LjA4NTE4MUMuOTgwMzI0LTUuOTQxNzE5IDEuMDc1OTY1LTUuODkzODk4IDEuMjMxMzgyLTUuODIyMTY3TDcuMzc2MzM5LTIuOTg4NzkyTDEuMjE5NDI3LS4xNDM0NjJDLjk4MDMyNC0uMDM1ODY2IC45ODAzMjQgLjA0NzgyMSAuOTgwMzI0IC4xMTk1NTJDLjk4MDMyNCAuMjE1MTkzIDEuMDY0MDEgLjMzNDc0NSAxLjIwNzQ3MiAuMzM0NzQ1QzEuMjMxMzgyIC4zMzQ3NDUgMS4yNDMzMzcgLjMyMjc5IDEuNDEwNzEgLjI1MTA1OUw3Ljg3ODQ1Ni0yLjcyNTc3OFonLz4KPHBhdGggaWQ9J2cxLTExNScgZD0nTTIuNzI1Nzc4LTIuMzkxMDM0QzIuOTI5MDE2LTIuMzU1MTY4IDMuMjUxODA2LTIuMjgzNDM3IDMuMzIzNTM3LTIuMjcxNDgyQzMuNDc4OTU0LTIuMjIzNjYxIDQuMDE2OTM2LTIuMDMyMzc5IDQuMDE2OTM2LTEuNDU4NTMxQzQuMDE2OTM2LTEuMDg3OTIgMy42ODIxOTItLjExOTU1MiAyLjI5NTM5Mi0uMTE5NTUyQzIuMDQ0MzM0LS4xMTk1NTIgMS4xNDc2OTYtLjE1NTQxNyAuOTA4NTkzLS44MTI5NTFDMS4zODY4LS43NTMxNzYgMS42MjU5MDMtMS4xMjM3ODYgMS42MjU5MDMtMS4zODY4QzEuNjI1OTAzLTEuNjM3ODU4IDEuNDU4NTMxLTEuNzY5MzY1IDEuMjE5NDI3LTEuNzY5MzY1Qy45NTY0MTMtMS43NjkzNjUgLjYwOTcxNC0xLjU2NjEyNyAuNjA5NzE0LTEuMDI4MTQ0Qy42MDk3MTQtLjMyMjc5IDEuMzI3MDI0IC4xMTk1NTIgMi4yODM0MzcgLjExOTU1MkM0LjEwMDYyMyAuMTE5NTUyIDQuNjM4NjA1LTEuMjE5NDI3IDQuNjM4NjA1LTEuODQxMDk2QzQuNjM4NjA1LTIuMDIwNDIzIDQuNjM4NjA1LTIuMzU1MTY4IDQuMjU2MDQtMi43Mzc3MzNDMy45NTcxNjEtMy4wMjQ2NTggMy42NzAyMzctMy4wODQ0MzMgMy4wMjQ2NTgtMy4yMTU5NEMyLjcwMTg2OC0zLjI4NzY3MSAyLjE4Nzc5Ni0zLjM5NTI2OCAyLjE4Nzc5Ni0zLjkzMzI1QzIuMTg3Nzk2LTQuMTcyMzU0IDIuNDAyOTg5LTUuMDMzMTI2IDMuNTM4NzMtNS4wMzMxMjZDNC4wNDA4NDctNS4wMzMxMjYgNC41MzEwMDktNC44NDE4NDMgNC42NTA1Ni00LjQxMTQ1N0M0LjEyNDUzMy00LjQxMTQ1NyA0LjEwMDYyMy0zLjk1NzE2MSA0LjEwMDYyMy0zLjk0NTIwNUM0LjEwMDYyMy0zLjY5NDE0NyA0LjMyNzc3MS0zLjYyMjQxNiA0LjQzNTM2Ny0zLjYyMjQxNkM0LjYwMjc0LTMuNjIyNDE2IDQuOTM3NDg0LTMuNzUzOTIzIDQuOTM3NDg0LTQuMjU2MDRTNC40ODMxODgtNS4yNzIyMjkgMy41NTA2ODUtNS4yNzIyMjlDMS45ODQ1NTgtNS4yNzIyMjkgMS41NjYxMjctNC4wNDA4NDcgMS41NjYxMjctMy41NTA2ODVDMS41NjYxMjctMi42NDIwOTIgMi40NTA4MDktMi40NTA4MDkgMi43MjU3NzgtMi4zOTEwMzRaJy8+CjxwYXRoIGlkPSdnMC0zJyBkPSdNMy4yODc2NzEtNS4xMDQ4NTdDMy4yOTk2MjYtNS4yNzIyMjkgMy4yOTk2MjYtNS41NTkxNTMgMi45ODg3OTItNS41NTkxNTNDMi43OTc1MDktNS41NTkxNTMgMi42NDIwOTItNS40MDM3MzYgMi42Nzc5NTgtNS4yNDgzMTlWLTUuMDkyOTAyTDIuODQ1MzMtMy4yMzk4NTFMMS4zMTUwNjgtNC4zNTE2ODFDMS4yMDc0NzItNC40MTE0NTcgMS4xODM1NjItNC40MzUzNjcgMS4wOTk4NzUtNC40MzUzNjdDLjkzMjUwMy00LjQzNTM2NyAuNzc3MDg2LTQuMjY3OTk1IC43NzcwODYtNC4xMDA2MjNDLjc3NzA4Ni0zLjkwOTM0IC44OTY2MzgtMy44NjE1MTkgMS4wMTYxODktMy44MDE3NDNMMi43MTM4MjMtMi45ODg3OTJMMS4wNjQwMS0yLjE4Nzc5NkMuODcyNzI3LTIuMDkyMTU0IC43NzcwODYtMi4wNDQzMzQgLjc3NzA4Ni0xLjg2NTAwNlMuOTMyNTAzLTEuNTMwMjYyIDEuMDk5ODc1LTEuNTMwMjYyQzEuMTgzNTYyLTEuNTMwMjYyIDEuMjA3NDcyLTEuNTMwMjYyIDEuNTA2MzUxLTEuNzU3NDFMMi44NDUzMy0yLjcyNTc3OEwyLjY2NjAwMi0uNzE3MzFDMi42NjYwMDItLjQ2NjI1MiAyLjg4MTE5Ni0uNDA2NDc2IDIuOTc2ODM3LS40MDY0NzZDMy4xMjAyOTktLjQwNjQ3NiAzLjI5OTYyNi0uNDkwMTYyIDMuMjk5NjI2LS43MTczMUwzLjEyMDI5OS0yLjcyNTc3OEw0LjY1MDU2LTEuNjEzOTQ4QzQuNzU4MTU3LTEuNTU0MTcyIDQuNzgyMDY3LTEuNTMwMjYyIDQuODY1NzUzLTEuNTMwMjYyQzUuMDMzMTI2LTEuNTMwMjYyIDUuMTg4NTQzLTEuNjk3NjM0IDUuMTg4NTQzLTEuODY1MDA2QzUuMTg4NTQzLTIuMDQ0MzM0IDUuMDgwOTQ2LTIuMTA0MTEgNC45Mzc0ODQtMi4xNzU4NDFDNC4yMjAxNzQtMi41MzQ0OTYgNC4xOTYyNjQtMi41MzQ0OTYgMy4yNTE4MDYtMi45NzY4MzdMNC45MDE2MTktMy43Nzc4MzNDNS4wOTI5MDItMy44NzM0NzQgNS4xODg1NDMtMy45MjEyOTUgNS4xODg1NDMtNC4xMDA2MjNTNS4wMzMxMjYtNC40MzUzNjcgNC44NjU3NTMtNC40MzUzNjdDNC43ODIwNjctNC40MzUzNjcgNC43NTgxNTctNC40MzUzNjcgNC40NTkyNzgtNC4yMDgyMTlMMy4xMjAyOTktMy4yMzk4NTFMMy4yODc2NzEtNS4xMDQ4NTdaJy8+CjxwYXRoIGlkPSdnMi00MCcgZD0nTTMuODg1NDMgMi45MDUxMDZDMy44ODU0MyAyLjg2OTI0IDMuODg1NDMgMi44NDUzMyAzLjY4MjE5MiAyLjY0MjA5MkMyLjQ4NjY3NSAxLjQzNDYyIDEuODE3MTg2LS41Mzc5ODMgMS44MTcxODYtMi45NzY4MzdDMS44MTcxODYtNS4yOTYxMzkgMi4zNzkwNzgtNy4yOTI2NTMgMy43NjU4NzgtOC43MDMzNjJDMy44ODU0My04LjgxMDk1OSAzLjg4NTQzLTguODM0ODY5IDMuODg1NDMtOC44NzA3MzVDMy44ODU0My04Ljk0MjQ2NiAzLjgyNTY1NC04Ljk2NjM3NiAzLjc3NzgzMy04Ljk2NjM3NkMzLjYyMjQxNi04Ljk2NjM3NiAyLjY0MjA5Mi04LjEwNTYwNCAyLjA1NjI4OS02LjkzMzk5OEMxLjQ0NjU3NS01LjcyNjUyNiAxLjE3MTYwNi00LjQ0NzMyMyAxLjE3MTYwNi0yLjk3NjgzN0MxLjE3MTYwNi0xLjkxMjgyNyAxLjMzODk3OS0uNDkwMTYyIDEuOTYwNjQ4IC43ODkwNDFDMi42NjYwMDIgMi4yMjM2NjEgMy42NDYzMjYgMy4wMDA3NDcgMy43Nzc4MzMgMy4wMDA3NDdDMy44MjU2NTQgMy4wMDA3NDcgMy44ODU0MyAyLjk3NjgzNyAzLjg4NTQzIDIuOTA1MTA2WicvPgo8cGF0aCBpZD0nZzItNDEnIGQ9J00zLjM3MTM1Ny0yLjk3NjgzN0MzLjM3MTM1Ny0zLjg4NTQzIDMuMjUxODA2LTUuMzY3ODcgMi41ODIzMTYtNi43NTQ2N0MxLjg3Njk2MS04LjE4OTI5IC44OTY2MzgtOC45NjYzNzYgLjc2NTEzMS04Ljk2NjM3NkMuNzE3MzEtOC45NjYzNzYgLjY1NzUzNC04Ljk0MjQ2NiAuNjU3NTM0LTguODcwNzM1Qy42NTc1MzQtOC44MzQ4NjkgLjY1NzUzNC04LjgxMDk1OSAuODYwNzcyLTguNjA3NzIxQzIuMDU2Mjg5LTcuNDAwMjQ5IDIuNzI1Nzc4LTUuNDI3NjQ2IDIuNzI1Nzc4LTIuOTg4NzkyQzIuNzI1Nzc4LS42Njk0ODkgMi4xNjM4ODUgMS4zMjcwMjQgLjc3NzA4NiAyLjczNzczM0MuNjU3NTM0IDIuODQ1MzMgLjY1NzUzNCAyLjg2OTI0IC42NTc1MzQgMi45MDUxMDZDLjY1NzUzNCAyLjk3NjgzNyAuNzE3MzEgMy4wMDA3NDcgLjc2NTEzMSAzLjAwMDc0N0MuOTIwNTQ4IDMuMDAwNzQ3IDEuOTAwODcyIDIuMTM5OTc1IDIuNDg2Njc1IC45NjgzNjlDMy4wOTYzODktLjI1MTA1OSAzLjM3MTM1Ny0xLjU0MjIxNyAzLjM3MTM1Ny0yLjk3NjgzN1onLz4KPHBhdGggaWQ9J2cyLTQ4JyBkPSdNNS4zNTU5MTUtMy44MjU2NTRDNS4zNTU5MTUtNC44MTc5MzMgNS4yOTYxMzktNS43ODYzMDEgNC44NjU3NTMtNi42OTQ4OTRDNC4zNzU1OTItNy42ODcxNzMgMy41MTQ4MTktNy45NTAxODcgMi45MjkwMTYtNy45NTAxODdDMi4yMzU2MTYtNy45NTAxODcgMS4zODY4LTcuNjAzNDg3IC45NDQ0NTgtNi42MTEyMDhDLjYwOTcxNC01Ljg1ODAzMiAuNDkwMTYyLTUuMTE2ODEyIC40OTAxNjItMy44MjU2NTRDLjQ5MDE2Mi0yLjY2NjAwMiAuNTczODQ4LTEuNzkzMjc1IDEuMDA0MjM0LS45NDQ0NThDMS40NzA0ODYtLjAzNTg2NiAyLjI5NTM5MiAuMjUxMDU5IDIuOTE3MDYxIC4yNTEwNTlDMy45NTcxNjEgLjI1MTA1OSA0LjU1NDkxOS0uMzcwNjEgNC45MDE2MTktMS4wNjQwMUM1LjMzMjAwNS0xLjk2MDY0OCA1LjM1NTkxNS0zLjEzMjI1NCA1LjM1NTkxNS0zLjgyNTY1NFpNMi45MTcwNjEgLjAxMTk1NUMyLjUzNDQ5NiAuMDExOTU1IDEuNzU3NDEtLjIwMzIzOCAxLjUzMDI2Mi0xLjUwNjM1MUMxLjM5ODc1NS0yLjIyMzY2MSAxLjM5ODc1NS0zLjEzMjI1NCAxLjM5ODc1NS0zLjk2OTExNkMxLjM5ODc1NS00Ljk0OTQ0IDEuMzk4NzU1LTUuODM0MTIyIDEuNTkwMDM3LTYuNTM5NDc3QzEuNzkzMjc1LTcuMzQwNDczIDIuNDAyOTg5LTcuNzExMDgzIDIuOTE3MDYxLTcuNzExMDgzQzMuMzcxMzU3LTcuNzExMDgzIDQuMDY0NzU3LTcuNDM2MTE1IDQuMjkxOTA1LTYuNDA3OTdDNC40NDczMjMtNS43MjY1MjYgNC40NDczMjMtNC43ODIwNjcgNC40NDczMjMtMy45NjkxMTZDNC40NDczMjMtMy4xNjgxMiA0LjQ0NzMyMy0yLjI1OTUyNyA0LjMxNTgxNi0xLjUzMDI2MkM0LjA4ODY2Ny0uMjE1MTkzIDMuMzM1NDkyIC4wMTE5NTUgMi45MTcwNjEgLjAxMTk1NVonLz4KPHBhdGggaWQ9J2cyLTQ5JyBkPSdNMy40NDMwODgtNy42NjMyNjNDMy40NDMwODgtNy45MzgyMzIgMy40NDMwODgtNy45NTAxODcgMy4yMDM5ODUtNy45NTAxODdDMi45MTcwNjEtNy42MjczOTcgMi4zMTkzMDMtNy4xODUwNTYgMS4wODc5Mi03LjE4NTA1NlYtNi44MzgzNTZDMS4zNjI4ODktNi44MzgzNTYgMS45NjA2NDgtNi44MzgzNTYgMi42MTgxODItNy4xNDkxOTFWLS45MjA1NDhDMi42MTgxODItLjQ5MDE2MiAyLjU4MjMxNi0uMzQ2NyAxLjUzMDI2Mi0uMzQ2N0gxLjE1OTY1MVYwQzEuNDgyNDQxLS4wMjM5MSAyLjY0MjA5Mi0uMDIzOTEgMy4wMzY2MTMtLjAyMzkxUzQuNTc4ODI5LS4wMjM5MSA0LjkwMTYxOSAwVi0uMzQ2N0g0LjUzMTAwOUMzLjQ3ODk1NC0uMzQ2NyAzLjQ0MzA4OC0uNDkwMTYyIDMuNDQzMDg4LS45MjA1NDhWLTcuNjYzMjYzWicvPgo8cGF0aCBpZD0nZzItNjEnIGQ9J004LjA2OTczOC0zLjg3MzQ3NEM4LjIzNzExMS0zLjg3MzQ3NCA4LjQ1MjMwNC0zLjg3MzQ3NCA4LjQ1MjMwNC00LjA4ODY2N0M4LjQ1MjMwNC00LjMxNTgxNiA4LjI0OTA2Ni00LjMxNTgxNiA4LjA2OTczOC00LjMxNTgxNkgxLjAyODE0NEMuODYwNzcyLTQuMzE1ODE2IC42NDU1NzktNC4zMTU4MTYgLjY0NTU3OS00LjEwMDYyM0MuNjQ1NTc5LTMuODczNDc0IC44NDg4MTctMy44NzM0NzQgMS4wMjgxNDQtMy44NzM0NzRIOC4wNjk3MzhaTTguMDY5NzM4LTEuNjQ5ODEzQzguMjM3MTExLTEuNjQ5ODEzIDguNDUyMzA0LTEuNjQ5ODEzIDguNDUyMzA0LTEuODY1MDA2QzguNDUyMzA0LTIuMDkyMTU0IDguMjQ5MDY2LTIuMDkyMTU0IDguMDY5NzM4LTIuMDkyMTU0SDEuMDI4MTQ0Qy44NjA3NzItMi4wOTIxNTQgLjY0NTU3OS0yLjA5MjE1NCAuNjQ1NTc5LTEuODc2OTYxQy42NDU1NzktMS42NDk4MTMgLjg0ODgxNy0xLjY0OTgxMyAxLjAyODE0NC0xLjY0OTgxM0g4LjA2OTczOFonLz4KPC9kZWZzPgo8ZyBpZD0ncGFnZTEnPgo8dXNlIHg9JzAnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00MCcvPgo8dXNlIHg9JzQuNTUyMzI2JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PScxMC40MDUzMTYnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS01OCcvPgo8dXNlIHg9JzEzLjY1Njk3NycgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nMTkuNTA5OTY4JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PScyNS4zNjI5NTgnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzMxLjIxNTk0OCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nMzcuMDY4OTM4JyB5PScwJyB4bGluazpocmVmPScjZzItNDknLz4KPHVzZSB4PSc0Mi45MjE5MjknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00MScvPgo8dXNlIHg9JzUwLjEzMDkxOCcgeT0nMCcgeGxpbms6aHJlZj0nI2cwLTMnLz4KPHVzZSB4PSc1OC43NjUxODgnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OScvPgo8dXNlIHg9JzY0LjYxODE3OCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTQ4Jy8+Cjx1c2UgeD0nNzAuNDcxMTY5JyB5PScwJyB4bGluazpocmVmPScjZzItNDgnLz4KPHVzZSB4PSc3Ni4zMjQxNTknIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9Jzg1LjQ5Nzk3OCcgeT0nMCcgeGxpbms6aHJlZj0nI2cyLTYxJy8+Cjx1c2UgeD0nOTQuNjAyNjMnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS02MicvPgo8dXNlIHg9JzEwNy4wMjgxMTEnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzExMi44ODExMDEnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS01OCcvPgo8dXNlIHg9JzExNi4xMzI3NjInIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OCcvPgo8dXNlIHg9JzEyMS45ODU3NTMnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMi00OScvPgo8dXNlIHg9JzEyNy44Mzg3NDMnIHk9JzAnIHhsaW5rOmhyZWY9JyNnMS0xMTUnLz4KPC9nPgo8L3N2Zz4KPCEtLSBERVBUSD00IC0tPg==" alt="(0.00001)*1000 =&gt; 0.01s" style="vertical-align: -4px"/></p>
+</li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="git_workflow.html" title="Git workflow"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_development.html" title="Module development"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="developer_guide.html" >Contribute</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Wrapper development</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2023 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Dec 04, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

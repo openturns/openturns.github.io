@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Architecture &#8212; OpenTURNS 1.21.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/openturns.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/mysearchtools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Library development" href="library_development.html" />
+    <link rel="prev" title="Contribute" href="developer_guide.html" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700'
+          rel='stylesheet' type='text/css' />
+ 
+
+  </head><body>
+<div class="pageheader">
+  <ul>
+    <li><a href="http://www.openturns.org/">Home</a></li>
+    <li><a href="../install.html">Get it</a></li>
+    <li><a href="../contents.html">Doc</a></li>
+    <li><a href="https://openturns.discourse.group/">Forum</a></li>
+    <li><a href="https://gitter.im/openturns/community">Chat</a></li>
+    <li><a href="https://github.com/openturns/openturns/wiki/Modules">Modules</a></li>
+    <li><a href="https://github.com/openturns">Code</a></li>
+    <li><a href="https://github.com/openturns/openturns/issues">Bugs</a></li>
+  </ul>
+  <a href="../index.html">
+    <h1>
+      <img src="../_static/logo-openturns-wo-bg.png" alt="" width=100px height=100px />
+      OpenTURNS
+    </h1>
+    <h2> An Open source initiative for the Treatment of Uncertainties, Risks'N Statistics</h2>
+  </a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="library_development.html" title="Library development"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Contribute"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="developer_guide.html" accesskey="U">Contribute</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Architecture</a></li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Architecture</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#the-c-library">The C++ library</a><ul>
+<li><a class="reference internal" href="#a-multi-layered-library">A multi-layered library</a></li>
+<li><a class="reference internal" href="#resource-management">Resource management</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-python-module">The Python module</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#software-environment">Software environment</a><ul>
+<li><a class="reference internal" href="#target-platforms">Target platforms</a></li>
+<li><a class="reference internal" href="#external-dependencies">External dependencies</a></li>
+<li><a class="reference internal" href="#internal-dependencies">Internal dependencies</a></li>
+<li><a class="reference internal" href="#compilation-infrastructure">Compilation infrastructure</a></li>
+<li><a class="reference internal" href="#version-control">Version control</a></li>
+<li><a class="reference internal" href="#continuous-integration">Continuous integration</a></li>
+<li><a class="reference internal" href="#packaging">Packaging</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#design-patterns">Design patterns</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#bridge-pattern">Bridge pattern</a></li>
+<li><a class="reference internal" href="#singleton-pattern">Singleton pattern</a></li>
+<li><a class="reference internal" href="#factory-pattern">Factory pattern</a></li>
+<li><a class="reference internal" href="#strategy-pattern">Strategy pattern</a></li>
+<li><a class="reference internal" href="#composite-pattern">Composite pattern</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="developer_guide.html"
+                          title="previous chapter">Contribute</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="library_development.html"
+                          title="next chapter">Library development</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/developer_guide/architecture.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading">¶</a></h1>
+<p>The project is an open source project. It aims at developing a
+computational platform designed to carry out industrial studies on
+uncertainty processing and risk analysis.</p>
+<p>This platform is intended to be released as an open source contribution
+to a wide audience whose technical skills are very diverse. Another goal
+of the project is to make the community of users ultimately responsible
+for the platform and its evolution by contributing to its maintenance
+and developing new functions.</p>
+<p>This architecture specifications document therefore serves two purposes:</p>
+<ul class="simple">
+<li><p>to provide the design principles that govern the platform, in order
+to guide the development teams in their development process;</p></li>
+<li><p>to inform external users about the platform’s architecture and its
+design, in order to facilitate their first steps with the platform.</p></li>
+</ul>
+<p>To address these questions, the  platform needs to be:</p>
+<ul class="simple">
+<li><p><em>portable</em>: the ability to build, execute and validate the
+application in different environments (operating system, hardware
+platform as well as software environment) based on a single set of
+source code files.</p></li>
+<li><p><em>extensible</em>: the possibility to add new functions to the application
+with a minimal impact on the existing code.</p></li>
+<li><p><em>upgradable</em>: the ability to control the impact of a replacement or a
+change on the technical architecture, following an upgrade of the
+technical infrastructure (such as the replacement of one tool by
+another or the use of a new storage format).</p></li>
+<li><p><em>durable</em>: the technical choices must have a lifespan comparable to
+the application’s while relying on standard and/or open source
+solutions.</p></li>
+</ul>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>This chapter will describe the general design of and a few design models
+that are widely used within the platform.</p>
+<p>The core of the platform is a C++ library made of about 800
+classes of various size.</p>
+<p>The main user interface is a python module, automatically generated from
+the C++ library using the wrapping software SWIG.
+It allows for a usage through python scripts of any level of complexity.</p>
+<p>The library relies on few mandatory dependencies (LAPACK),
+the other being optional.</p>
+<p>Several GUIs have already been built on top of the C++ library or the
+Python module.</p>
+<p>A service of modules is provided in order to extend the capabilities of
+the platform from the outside.</p>
+<figure class="align-default" id="id2">
+<img alt="Software architecture overview" src="../_images/architecture.png" />
+<figcaption>
+<p><span class="caption-text">Software architecture overview</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="the-c-library">
+<h3>The C++ library<a class="headerlink" href="#the-c-library" title="Permalink to this heading">¶</a></h3>
+<section id="a-multi-layered-library">
+<h4>A multi-layered library<a class="headerlink" href="#a-multi-layered-library" title="Permalink to this heading">¶</a></h4>
+<p>The library has a multi-layered architecture materialized by the source
+tree. The two main layers in the C++ library are the Base layer and the
+Uncertainty layer.</p>
+<ul class="simple">
+<li><p>Base layer: it contains all the classes not related to the
+probabilistic concepts. It covers the elementary data types (vectors
+as Point, samples as Samples), the concept of
+models (Function), the linear algebra (Matrix, Tensor)
+and the general interest classes (memory management, resource
+management);</p></li>
+<li><p>Uncertainty layer: it contains all the classes that deal with
+probabilistic concepts. It covers the probabilistic modelling
+(Distribution, RandomVector), the stochastic algorithms (MonteCarlo,
+FORM), the statistical estimation (DistributionFactory), the
+statistical testing (FittingTest)</p></li>
+</ul>
+<p>A class in the Uncertainty layer can use any class in the Base or the
+Uncertainty layer. A class in the Base layer can ONLY USE classes in the
+Base layer.</p>
+</section>
+<section id="resource-management">
+<h4>Resource management<a class="headerlink" href="#resource-management" title="Permalink to this heading">¶</a></h4>
+<p>OpenTURNS uses extensively dynamic memory allocation. In order to tie to
+the Resource Acquisition Is Initialization (RAII) paradigm, all the
+memory management is delegated to smart pointers (the Pointer class).
+The benefits of this approach are:</p>
+<ul class="simple">
+<li><p>An easy to implement copy on write mechanism, that permit a
+significant reduction of the memory footprint by allowing for a large
+data sharing between objects;</p></li>
+<li><p>No C-like pointers in members of classes, which permits an automatic
+generation of the copy constructor, the assignment operator and the
+destructor of almost all the classes: there is no problem of deep
+copy versus reference copy;</p></li>
+<li><p>The resource is released automatically when the objects are outside
+of the current scope and there is no more reference on the allocated
+memory;</p></li>
+<li><p>There is a unique point where to prevent concurrent access in a
+parallel context, which is a key property for parallelism.</p></li>
+</ul>
+</section>
+</section>
+<section id="the-python-module">
+<h3>The Python module<a class="headerlink" href="#the-python-module" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">The binding of the library is done almost automatically by SWIG
+(Simplified Wrapper Interface Generator) through a set of SWIG
+interface files (.i).</div>
+<div class="line">The main target language is python. These swig files contain some
+specific ’glue code’ to each class for the target script language.
+SWIG parses the library headers and theses swig interface files to
+generates the corresponding module source yet to be compiled to
+produce a binary python module, see [fig:swig]. The process is shared
+between several modules for modularity and to speed up compilation
+time with parallel builds.</div>
+</div>
+<figure class="align-default" id="id3">
+<img alt="Python module generation process" src="../_images/swig.png" />
+<figcaption>
+<p><span class="caption-text">Python module generation process</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="software-environment">
+<h2>Software environment<a class="headerlink" href="#software-environment" title="Permalink to this heading">¶</a></h2>
+<p>This section details the technical elements required by the OpenTURNS
+platform, namely the system requirements, the tools and the development
+environment of the project.</p>
+<section id="target-platforms">
+<h3>Target platforms<a class="headerlink" href="#target-platforms" title="Permalink to this heading">¶</a></h3>
+<p>The OpenTURNS platform is meant to carry out uncertainty treatment
+studies in a scientific environment. Most of the scientific codes being
+available on Unix platforms, OpenTURNS is naturally designed to run on
+this family of systems. Unix being a standard with multiple
+implementations, available on different architectures, this gives a wide
+choice of target platforms.</p>
+<p>Linux is currently the most attractive Unix system for the OpenTURNS
+project, it was chosen as the main target system for the project’s
+development as well as for the delivery of the different versions.</p>
+<p>The partners involved in the project have each chosen different Linux
+distributions, for technical and historical reasons. Therefore, it was
+decided to support several distributions, a choice that should not be
+seen as final or minimal. The distributions considered here include for
+example this list:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Distribution</strong></p></th>
+<th class="head"><p><strong>Version</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Debian</p></td>
+<td><p>9 “Stretch”</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ubuntu</p></td>
+<td><p>18.04 “Bionic”</p></td>
+</tr>
+<tr class="row-even"><td><p>Windows</p></td>
+<td><p>10</p></td>
+</tr>
+</tbody>
+</table>
+<p>The primary development platform is Linux, and is known to work on
+various other distributions.</p>
+<p>The Windows version is obtained by cross-compilation using MinGW-w64.</p>
+</section>
+<section id="external-dependencies">
+<span id="dependencies"></span><h3>External dependencies<a class="headerlink" href="#external-dependencies" title="Permalink to this heading">¶</a></h3>
+<p>The tools chosen for the development of the platform are:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Category</strong></p></th>
+<th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>Version</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Configuration</p></td>
+<td><p><a class="reference external" href="https://cmake.org/">CMake</a></p></td>
+<td><p>3.13</p></td>
+</tr>
+<tr class="row-odd"><td><p>C/C++ compiler (C99/C++11)</p></td>
+<td><p><a class="reference external" href="https://gcc.gnu.org/">GCC</a></p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>Linear algebra</p></td>
+<td><p><a class="reference external" href="http://www.netlib.org/blas/">BLAS</a></p></td>
+<td><p>3.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Linear algebra</p></td>
+<td><p><a class="reference external" href="http://www.netlib.org/lapack/">LAPACK</a></p></td>
+<td><p>3.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Linear algebra (optional)</p></td>
+<td><p><a class="reference external" href="https://github.com/jeromerobert/hmat-oss">HMat</a></p></td>
+<td><p>1.7</p></td>
+</tr>
+<tr class="row-odd"><td><p>Linear algebra (optional)</p></td>
+<td><p><a class="reference external" href="https://spectralib.org/">Spectra</a></p></td>
+<td><p>1.0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Legacy analytical parser (optional)</p></td>
+<td><p><a class="reference external" href="https://beltoforion.de/en/muparser/">muParser</a></p></td>
+<td><p>2.2.3</p></td>
+</tr>
+<tr class="row-odd"><td><p>Prime numbers (optional)</p></td>
+<td><p><a class="reference external" href="https://primesieve.org/">primesieve</a></p></td>
+<td><p>7.5</p></td>
+</tr>
+<tr class="row-even"><td><p>Special functions (optional)</p></td>
+<td><p><a class="reference external" href="http://www.boost.org/">Boost</a></p></td>
+<td><p>1.46</p></td>
+</tr>
+<tr class="row-odd"><td><p>Special functions (optional)</p></td>
+<td><p><a class="reference external" href="https://www.mpfr.org/">MPFR</a></p></td>
+<td><p>4.0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Special functions (optional)</p></td>
+<td><p><a class="reference external" href="http://www.multiprecision.org/mpc">MPC</a></p></td>
+<td><p>1.1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Optimization (optional)</p></td>
+<td><p><a class="reference external" href="http://ab-initio.mit.edu/nlopt">NLopt</a></p></td>
+<td><p>2.4</p></td>
+</tr>
+<tr class="row-even"><td><p>Optimization (optional)</p></td>
+<td><p><a class="reference external" href="http://devernay.free.fr/hacks/cminpack/">CMinpack</a></p></td>
+<td><p>1.3</p></td>
+</tr>
+<tr class="row-odd"><td><p>Optimization (optional)</p></td>
+<td><p><a class="reference external" href="http://ceres-solver.org">Ceres Solver</a></p></td>
+<td><p>1.11</p></td>
+</tr>
+<tr class="row-even"><td><p>Optimization (optional)</p></td>
+<td><p><a class="reference external" href="http://dlib.net/">Dlib</a></p></td>
+<td><p>18.18</p></td>
+</tr>
+<tr class="row-odd"><td><p>Optimization (optional)</p></td>
+<td><p><a class="reference external" href="https://projects.coin-or.org/Bonmin">Bonmin</a></p></td>
+<td><p>1.8.7</p></td>
+</tr>
+<tr class="row-even"><td><p>Optimization (optional)</p></td>
+<td><p><a class="reference external" href="https://coin-or.github.io/Ipopt/">Ipopt</a></p></td>
+<td><p>3.11.9</p></td>
+</tr>
+<tr class="row-odd"><td><p>Optimization (optional)</p></td>
+<td><p><a class="reference external" href="https://esa.github.io/pagmo2/">Pagmo</a></p></td>
+<td><p>2.12.0</p></td>
+</tr>
+<tr class="row-even"><td><p>CSV parser (optional)</p></td>
+<td><p><a class="reference external" href="https://github.com/westes/flex">Flex</a></p></td>
+<td><p>2.5.33</p></td>
+</tr>
+<tr class="row-odd"><td><p>CSV parser (optional)</p></td>
+<td><p><a class="reference external" href="https://www.gnu.org/software/bison/">Bison</a></p></td>
+<td><p>2.4</p></td>
+</tr>
+<tr class="row-even"><td><p>XML support (optional)</p></td>
+<td><p><a class="reference external" href="http://xmlsoft.org/">LibXml2</a></p></td>
+<td><p>2.6.27</p></td>
+</tr>
+<tr class="row-odd"><td><p>HDF5 support (optional)</p></td>
+<td><p><a class="reference external" href="https://github.com/HDFGroup/hdf5">hdf5</a></p></td>
+<td><p>1.10</p></td>
+</tr>
+<tr class="row-even"><td><p>Multithreading (optional)</p></td>
+<td><p><a class="reference external" href="http://www.threadingbuildingblocks.org/">TBB</a></p></td>
+<td><p>2017</p></td>
+</tr>
+<tr class="row-odd"><td><p>Python support</p></td>
+<td><p><a class="reference external" href="http://www.python.org/">Python</a></p></td>
+<td><p>3.5</p></td>
+</tr>
+<tr class="row-even"><td><p>Plotting library (optional)</p></td>
+<td><p><a class="reference external" href="http://matplotlib.org/">Matplotlib</a></p></td>
+<td><p>1.3.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>C++/Python wrapper</p></td>
+<td><p><a class="reference external" href="http://www.swig.org/">SWIG</a></p></td>
+<td><p>3.0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Version control</p></td>
+<td><p><a class="reference external" href="https://git-scm.com/">Git</a></p></td>
+<td><p>2.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>ReSt to HTML (optional for doc)</p></td>
+<td><p><a class="reference external" href="http://sphinx-doc.org/">Sphinx</a></p></td>
+<td><p>1.8</p></td>
+</tr>
+<tr class="row-even"><td><p>Sphinx extension (optional for doc)</p></td>
+<td><p><a class="reference external" href="https://github.com/numpy/numpydoc/">Numpydoc</a></p></td>
+<td><p>0.9.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sphinx extension (optional for doc)</p></td>
+<td><p><a class="reference external" href="https://sphinx-gallery.github.io/stable/index.html">Sphinx-Gallery</a></p></td>
+<td><p>0.7</p></td>
+</tr>
+<tr class="row-even"><td><p>dill (optional for serialization)</p></td>
+<td><p><a class="reference external" href="https://github.com/uqfoundation/dill/">dill</a></p></td>
+<td><p>0.3.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>psutil (optional for coupling)</p></td>
+<td><p><a class="reference external" href="https://github.com/giampaolo/psutil/">psutil</a></p></td>
+<td><p>N/A</p></td>
+</tr>
+</tbody>
+</table>
+<p>The versions given here are only meant as indications of minimum version and newer ones
+may be used.</p>
+</section>
+<section id="internal-dependencies">
+<h3>Internal dependencies<a class="headerlink" href="#internal-dependencies" title="Permalink to this heading">¶</a></h3>
+<p>We would like to acknowledge the following codes that are included into the library:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Optimization</p></td>
+<td><p><a class="reference external" href="https://www.zhangzk.net/software.html">COBYLA</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Mersenne twister RNG</p></td>
+<td><p><a class="reference external" href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/">DSFMT</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Differenciation</p></td>
+<td><p><a class="reference external" href="http://www.lix.polytechnique.fr/~liberti/academic.html">Ev3</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Symbolic parser</p></td>
+<td><p><a class="reference external" href="https://www.partow.net/programming/exprtk/index.html">ExprTk</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Faddeeva function</p></td>
+<td><p><a class="reference external" href="http://ab-initio.mit.edu/Faddeeva">Fadeeva</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Kendall Tau</p></td>
+<td><p><a class="reference external" href="https://afni.nimh.nih.gov/pub/dist/src/ktaub.c">Kendall</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFT</p></td>
+<td><p><a class="reference external" href="https://github.com/mborgerding/kissfft">KissFFT</a></p></td>
+</tr>
+<tr class="row-even"><td><p>KS distribution</p></td>
+<td><p><a class="reference external" href="https://www.jstatsoft.org/article/view/v039i11">KolmogorovSmirnovDist</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Poisson inverse CDF</p></td>
+<td><p><a class="reference external" href="http://people.maths.ox.ac.uk/gilesm/codes/poissinv/">poissinv</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Optimization</p></td>
+<td><p><a class="reference external" href="http://js2007.free.fr/code/index.html#TNC">TNC</a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="compilation-infrastructure">
+<h3>Compilation infrastructure<a class="headerlink" href="#compilation-infrastructure" title="Permalink to this heading">¶</a></h3>
+<p>The compilation infrastructure uses CMake, it covers:</p>
+<ul class="simple">
+<li><p>The detection and configuration aspects of the platform;</p></li>
+<li><p>The dependency management of the sources;</p></li>
+<li><p>The generation of parallel makefiles;</p></li>
+<li><p>The regression tests.</p></li>
+</ul>
+</section>
+<section id="version-control">
+<h3>Version control<a class="headerlink" href="#version-control" title="Permalink to this heading">¶</a></h3>
+<p>The project uses Git version-control system.
+The code repositories are hosted on GitHub (<a class="reference external" href="https://github.com/openturns/">https://github.com/openturns/</a>).</p>
+</section>
+<section id="continuous-integration">
+<h3>Continuous integration<a class="headerlink" href="#continuous-integration" title="Permalink to this heading">¶</a></h3>
+<p>The git code repository is monitored for changes by automated builds,
+allowing developers to detect problems early.</p>
+<p>Each pull-request on the GitHub code repository triggers continuous integration
+jobs for the different target platforms to be run on several free
+continuous integration services:</p>
+<ul class="simple">
+<li><p>CircleCI (<a class="reference external" href="https://circleci.com/">https://circleci.com/</a>) for Linux/MinGW</p></li>
+<li><p>Github Actions (<a class="reference external" href="https://github.com/actions">https://github.com/actions</a>) for macOS/Windows</p></li>
+</ul>
+<p>Each of these jobs checks that the library can be successfully compiled and
+that all unit tests pass. All jobs passing is one of the necessary conditions
+for the code to be integrated.</p>
+</section>
+<section id="packaging">
+<h3>Packaging<a class="headerlink" href="#packaging" title="Permalink to this heading">¶</a></h3>
+<p>The team officially provides binaries for the Debian operating system,
+and Windows. Note that is officially supported in Debian: it can be
+installed easily from the debian software repositories. Packages
+are also available for some RPM-based distributions such as
+Fedora, CentOS and openSUSE.</p>
+</section>
+</section>
+<section id="design-patterns">
+<h2>Design patterns<a class="headerlink" href="#design-patterns" title="Permalink to this heading">¶</a></h2>
+<section id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h3>
+<p>Software design shows the recurrence of some patterns, whether within
+the same piece of software or in several applications (which can differ
+in many ways). These patterns have been catalogued, described and
+implemented in numerous situations that prove their universality and
+their ability to solve recurring problems that the software architect is
+faced with.</p>
+<p>The following sections give an overview intended as much for the
+reader’s understanding of the document as to establish a common
+vocabulary for software architect. The latter ones will find here
+standard design diagrams applied to the specific case of , which can
+help them better apprehend the tool’s specificities and the design and
+implementation choices that were made.</p>
+</section>
+<section id="bridge-pattern">
+<span id="id1"></span><h3>Bridge pattern<a class="headerlink" href="#bridge-pattern" title="Permalink to this heading">¶</a></h3>
+<div class="line-block">
+<div class="line">The bridge pattern is a design pattern used in software engineering
+which is meant to “decouple an abstraction from its implementation so
+that the two can vary independently”. The bridge uses encapsulation,
+aggregation, and can use inheritance to separate responsibilities into
+different classes.</div>
+<div class="line">When a class varies often, the features of object-oriented programming
+become very useful because changes to a program’s code can be made
+easily with minimal prior knowledge about the program. The bridge
+pattern is useful when both the class as well as what it does vary
+often. The class itself can be thought of as the implementation and
+what the class can do as the abstraction. The bridge pattern can also
+be thought of as two layers of abstraction.</div>
+</div>
+<p>This pattern is one of the most widely used in . Some examples are:</p>
+<ul class="simple">
+<li><p>Drawable, that separate the generic high level interface of a
+drawable from the specific low level interface of the several
+drawable specializations;</p></li>
+<li><p>Distribution, see [fig:bridge], that exposes a high level interface
+of the concept of probability distribution whereas the
+DistributionImplementation class exposes the low level interface of
+the same concept.</p></li>
+</ul>
+<figure class="align-default">
+<img alt="Bridge pattern example." src="../_images/bridge.png" />
+</figure>
+</section>
+<section id="singleton-pattern">
+<h3>Singleton pattern<a class="headerlink" href="#singleton-pattern" title="Permalink to this heading">¶</a></h3>
+<p>The Singleton is a pattern used to ensure that at any given time, there
+is only one instance of a class (A); it provides an access point for
+this unique instance.</p>
+<p>This is implemented by creating a class (Singleton) with a static
+private attribute (uniqueInstance) initialized with an instance of class
+A and whose reference (or pointer) is returned by a static method
+(instance). Figure [fig:singleton] illustrates the Singleton pattern.</p>
+<figure class="align-default">
+<img alt="Singleton structure." src="../_images/singleton.png" />
+</figure>
+<p>It is a very common pattern that allows one to find and share an object
+(which must remain unique) in different portions of code. Examples of
+such objects include shared hardware resources (standard output, error,
+log, etc.), but also internal functions that cannot or must not be
+duplicated (e.g. a random number generator). For example, the classes
+ResourceMap and IdFactory follow this pattern.</p>
+</section>
+<section id="factory-pattern">
+<h3>Factory pattern<a class="headerlink" href="#factory-pattern" title="Permalink to this heading">¶</a></h3>
+<p>This pattern allows one to define a unique interface for the creation of
+objects belonging to a class hierarchy without knowing in advance their
+exact type. Figure [fig:factory] illustrates this pattern. The creation
+of the concrete object (ClassA or ClassB) is delegated to a sub-class
+(ClassAFactory or ClassBFactory) which chooses the type of object to be
+created and the strategy to be used to create it.</p>
+<figure class="align-default">
+<img alt="Factory structure." src="../_images/factory.png" />
+</figure>
+<p>This pattern is often used to dynamically create objects belonging to
+related types (e.g. to instantiate objects within a GUI according to the
+user’s behavior). It can also be used to back up and read again a
+document written in a file by automatically re-instantiating objects. It
+is a pattern that makes code maintenance easier by clearly separating
+the objects and their instantiation in distinct and parallel class
+hierarchies. For example, the classes DistributionFactory,
+ApproximationAlgorithmImplementationFactory, BasisSequenceFactory follow
+this pattern.</p>
+</section>
+<section id="strategy-pattern">
+<h3>Strategy pattern<a class="headerlink" href="#strategy-pattern" title="Permalink to this heading">¶</a></h3>
+<p>The Strategy pattern defines a family of algorithm and makes them
+interchangeable as far as the client is concerned. Access to these
+algorithms is provided by a unique interface which encapsulates the
+algorithms’ implementation. Therefore, the implementation can change
+without the client being aware of it.</p>
+<figure class="align-default">
+<img alt="Strategy structure." src="../_images/strategy.png" />
+</figure>
+<p>This pattern is very useful to provide a client with different
+implementations of an algorithm which are equivalent from a functional
+point of view. It can be noted that the Factory pattern described
+earlier makes use of the Strategy pattern. For example, the classes
+ComparisonOperator, HistoryStrategy follow this pattern.</p>
+</section>
+<section id="composite-pattern">
+<h3>Composite pattern<a class="headerlink" href="#composite-pattern" title="Permalink to this heading">¶</a></h3>
+<p>The Composite pattern is used to organize objects into a tree structure
+that represents the hierarchies between component and composite objects.
+It hides the complex structure of the object from the client handling
+the object.</p>
+<figure class="align-default">
+<img alt="Composite structure." src="../_images/composite.png" />
+</figure>
+<p>The Composite pattern is an essential element of the design model for the platform.
+It can be found in several modeling bricks, such as function composition (ComposedFunction)
+random vector composition (CompositeRandomVector), joint distributions (ComposedDistribution), etc.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="library_development.html" title="Library development"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Contribute"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenTURNS 1.21.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../contents.html" >Contents</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="developer_guide.html" >Contribute</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Architecture</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2005-2023 Airbus-EDF-IMACS-ONERA-Phimeca.
+      Last updated on Dec 04, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
