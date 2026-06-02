@@ -30,7 +30,7 @@ This example shows how to create a metamodel of the
 
 Metamodeling a model with time-dependent output is a difficult problem. We
 will combine two methods: Karhunen-Loeve dimension reduction should precede
-the chaos metamodeling.
+the Kriging metamodeling.
 
 We will proceed the following way:
 
@@ -50,13 +50,14 @@ References
 Create the metamodel
 ++++++++++++++++++++
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-38
+.. GENERATED FROM PYTHON SOURCE LINES 34-39
 
 .. code-block:: Python
 
     import otfmi.example.utility
     import openturns as ot
     import openturns.viewer as otv
+    import numpy as np
 
 
 
@@ -65,13 +66,13 @@ Create the metamodel
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-42
+.. GENERATED FROM PYTHON SOURCE LINES 40-43
 
 We load the FMU as a :class:`~otfmi.FMUPointToFieldFunction`.
 We concentrate on the first time unit of the epidemiological model output.
 The single uncertain input of the model is the ``ìnfection_rate``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-52
+.. GENERATED FROM PYTHON SOURCE LINES 43-53
 
 .. code-block:: Python
 
@@ -92,23 +93,30 @@ The single uncertain input of the model is the ``ìnfection_rate``.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-55
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
 
 We create a Monte-Carlo design of experiment, on which we simulate the FMU.
 The simulation inputs and outputs will be used to train the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-71
+.. GENERATED FROM PYTHON SOURCE LINES 56-79
 
 .. code-block:: Python
 
     inputLaw = ot.Uniform(1.5, 2.5)
-    inputSample = inputLaw.getSample(100)
+    inputSample = inputLaw.getSample(10)
     outputFMUSample = function(inputSample)
 
-    outputFMUSample10 = ot.ProcessSample(outputFMUSample.getMesh(), 10, 1)
-    for i in range(10):
-        outputFMUSample10.setField(outputFMUSample.getField(i), i)
-    graph = outputFMUSample10.draw().getGraph(0, 0)
+
+    def centerProcessSample(processSample, mean=None):
+        if mean is None:
+            mean = processSample.computeMean()
+        centeredCollection = [
+            ot.Sample(np.array(field) - np.array(mean)) for field in processSample
+        ]
+        centeredSample = ot.ProcessSample(processSample.getMesh(), centeredCollection)
+        return centeredSample, mean
+
+    graph = outputFMUSample.draw().getGraph(0, 0)
     graph.setTitle("FMU simulations")
     graph.setXTitle("Time")
     graph.setYTitle("Number of infected")
@@ -129,11 +137,11 @@ The simulation inputs and outputs will be used to train the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-73
+.. GENERATED FROM PYTHON SOURCE LINES 80-81
 
 We define a function to visualize the upcoming Karhunen-Loeve modes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-98
+.. GENERATED FROM PYTHON SOURCE LINES 81-106
 
 .. code-block:: Python
 
@@ -169,18 +177,19 @@ We define a function to visualize the upcoming Karhunen-Loeve modes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-102
+.. GENERATED FROM PYTHON SOURCE LINES 107-110
 
 We compute the Karhunen-Loeve decomposition of the model outputs.
 The underlying assumption is that these outputs are realizations of a
 stochastic process.
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-107
+.. GENERATED FROM PYTHON SOURCE LINES 110-116
 
 .. code-block:: Python
 
-    threshold = 0.0
-    algoKL = ot.KarhunenLoeveSVDAlgorithm(outputFMUSample, threshold)
+    threshold = 1e-4
+    centeredOutputFMUSample, meanOutput = centerProcessSample(outputFMUSample)
+    algoKL = ot.KarhunenLoeveSVDAlgorithm(centeredOutputFMUSample, threshold)
     algoKL.run()
     resultKL = algoKL.getResult()
 
@@ -191,11 +200,11 @@ stochastic process.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-109
+.. GENERATED FROM PYTHON SOURCE LINES 117-118
 
 Let be curious and plot the Karhunen-Loeve modes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-114
+.. GENERATED FROM PYTHON SOURCE LINES 118-123
 
 .. code-block:: Python
 
@@ -216,16 +225,16 @@ Let be curious and plot the Karhunen-Loeve modes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-117
+.. GENERATED FROM PYTHON SOURCE LINES 124-126
 
 Now that Karhunen-Loeve algorithm is trained, we can project them
 in the smaller-dimension space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-121
+.. GENERATED FROM PYTHON SOURCE LINES 126-130
 
 .. code-block:: Python
 
-    projectionSample = resultKL.project(outputFMUSample)
+    projectionSample = resultKL.project(centeredOutputFMUSample)
     n_mode = projectionSample.getDimension()
     print(f"Karhunen-Loeve projection in dimension {n_mode}")
 
@@ -237,18 +246,18 @@ in the smaller-dimension space:
 
  .. code-block:: none
 
-    Karhunen-Loeve projection in dimension 99
+    Karhunen-Loeve projection in dimension 3
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-125
+.. GENERATED FROM PYTHON SOURCE LINES 131-134
 
 We keep on following our road map, by metamodeling the projection
 of the curves on the smaller-dimension space.
-We metamodel the Karhunen-Loeve coefficients using ordinary chaos.
+We metamodel the Karhunen-Loeve coefficients using ordinary Kriging.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-138
+.. GENERATED FROM PYTHON SOURCE LINES 134-149
 
 .. code-block:: Python
 
@@ -260,7 +269,9 @@ We metamodel the Karhunen-Loeve coefficients using ordinary chaos.
     basis = ot.Basis(coll)  # multivariate basis
     covarianceModel = ot.SquaredExponential(dim)
     covarianceModel = ot.TensorizedCovarianceModel([covarianceModel] * n_mode)
-    algo = ot.FunctionalChaosAlgorithm(inputSample, projectionSample, inputLaw)
+
+
+    algo = ot.KrigingAlgorithm(inputSample, projectionSample, covarianceModel, basis)
     algo.run()
     result = algo.getResult()
     metamodel = result.getMetaModel()
@@ -272,12 +283,12 @@ We metamodel the Karhunen-Loeve coefficients using ordinary chaos.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-141
+.. GENERATED FROM PYTHON SOURCE LINES 150-152
 
 We have created all pieces for a "PointToField" metamodel.
 Let put these pieces together:
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-150
+.. GENERATED FROM PYTHON SOURCE LINES 152-161
 
 .. code-block:: Python
 
@@ -286,7 +297,7 @@ Let put these pieces together:
     def globalMetamodel(sample):
         emulatedCoefficients = metamodel(sample)
         restoreFunction = ot.KarhunenLoeveLifting(resultKL)
-        emulatedProcessSample = restoreFunction(emulatedCoefficients)
+        emulatedProcessSample = restoreFunction(emulatedCoefficients) + meanOutput
         return emulatedProcessSample
 
 
@@ -297,17 +308,17 @@ Let put these pieces together:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-153
+.. GENERATED FROM PYTHON SOURCE LINES 162-164
 
 Validate the metamodel
 ++++++++++++++++++++++
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-158
+.. GENERATED FROM PYTHON SOURCE LINES 167-169
 
 We create a new Monte-Carlo design of experiment. On this design of
 experiment, the FMU is simulated as well as the metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-162
+.. GENERATED FROM PYTHON SOURCE LINES 169-173
 
 .. code-block:: Python
 
@@ -322,11 +333,11 @@ experiment, the FMU is simulated as well as the metamodel.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-164
+.. GENERATED FROM PYTHON SOURCE LINES 174-175
 
 First, we have a visual check:
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-181
+.. GENERATED FROM PYTHON SOURCE LINES 175-192
 
 .. code-block:: Python
 
@@ -359,17 +370,18 @@ First, we have a visual check:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-185
+.. GENERATED FROM PYTHON SOURCE LINES 193-196
 
 We validate the pertinence of Karhunen-Loeve decomposition:
 As the epidemiological model considers a population size of 763, the residual
 mean error on the field is acceptable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-190
+.. GENERATED FROM PYTHON SOURCE LINES 196-202
 
 .. code-block:: Python
 
-    validationKL = ot.KarhunenLoeveValidation(outputFMUTestSample, resultKL)
+    centeredOutputFMUTestSample, _ = centerProcessSample(outputFMUTestSample, meanOutput)
+    validationKL = ot.KarhunenLoeveValidation(centeredOutputFMUTestSample, resultKL)
     graph = validationKL.computeResidualMean().draw()
     graph.setYTitle("infected residual mean")
     view = otv.View(graph)
@@ -386,17 +398,17 @@ mean error on the field is acceptable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-193
+.. GENERATED FROM PYTHON SOURCE LINES 203-205
 
-We validate the chaos (using the Karhunen-Loeve coefficients of the test
+We validate the Kriging (using the Karhunen-Loeve coefficients of the test
 sample):
 
-.. GENERATED FROM PYTHON SOURCE LINES 193-201
+.. GENERATED FROM PYTHON SOURCE LINES 205-213
 
 .. code-block:: Python
 
     projectFunction = ot.KarhunenLoeveProjection(resultKL)
-    coefficientSample = projectFunction(outputFMUTestSample)
+    coefficientSample = projectFunction(centeredOutputFMUTestSample)
     predictions = metamodel(inputTestSample)
 
     validation = ot.MetaModelValidation(coefficientSample, predictions)
@@ -411,19 +423,19 @@ sample):
 
  .. code-block:: none
 
-    0.9999999999999941
+    0.9999998697591596
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-206
+.. GENERATED FROM PYTHON SOURCE LINES 214-218
 
 The predictivity factor is very close to 1, which is satisfying.
 Further statistical tests exist in
 `OpenTURNS <http://openturns.github.io/openturns/master/contents.html>`_ to
 assert the quality of the obtained metamodel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-218
+.. GENERATED FROM PYTHON SOURCE LINES 220-230
 
 ----------------------
 
@@ -436,7 +448,7 @@ the above script can now be used as a faster substitute to the FMU for
 
 etc.
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-222
+.. GENERATED FROM PYTHON SOURCE LINES 233-234
 
 .. code-block:: Python
 
@@ -451,7 +463,7 @@ etc.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.965 seconds)
+   **Total running time of the script:** (0 minutes 0.782 seconds)
 
 
 .. _sphx_glr_download_auto_example_application_plot_metamodel.py:
