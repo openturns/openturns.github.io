@@ -21,7 +21,7 @@
 Calibration example
 ===================
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-59
+.. GENERATED FROM PYTHON SOURCE LINES 7-51
 
 The objective of this example is to define a physical model using the otfmi library
 and to calibrate its parameters to fit the observed data.
@@ -47,19 +47,11 @@ Other variables:
 Setup finite difference step
 ----------------------------
 
-There is no scaling issue with the healing rate, which value is close to 0.5.
-The problem is that the infection rate has an order of magnitude close to 10^{-3}.
-This can cause problems in the optimization step, if the
-optimization algorithm uses the gradient (which is far more efficient).
-Indeed, the finite different method may use a wrong differentiation
-step which can produce inaccurate gradients.
-
-In the current code, we use the near to optimal values of the step.
+The infection rate and healing rate are both of order 1, so no rescaling is needed.
+We use near-optimal finite difference steps for the gradient computation.
 These values were computed using numericalderivative, a Python
 package which computes the near to optimal differentiation
 step of a computer code (see https://github.com/mbaudin47/numericalderivative).
-Another method would be to scale up the infection rate so that
-its order of magnitude is close to 1.
 
 Cache memory
 ------------
@@ -76,7 +68,7 @@ References
   Février 2019, https://sylvaingirard.net/pdf/girard17-probabilistic_modelica_python.pdf
 - [anonymous1978]_
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-68
+.. GENERATED FROM PYTHON SOURCE LINES 53-60
 
 .. code-block:: Python
 
@@ -94,7 +86,7 @@ References
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
+.. GENERATED FROM PYTHON SOURCE LINES 61-63
 
 .. code-block:: Python
 
@@ -107,16 +99,16 @@ References
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-73
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 Define bounds for parameters
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-79
+.. GENERATED FROM PYTHON SOURCE LINES 65-71
 
 .. code-block:: Python
 
-    infection_rate_min = 1.0e-3  # beta
-    infection_rate_max = 10.0e-3
+    infection_rate_min = 1.0  # beta
+    infection_rate_max = 3.0
     healing_rate_min = 0.1  # gamma
     healing_rate_max = 0.9
 
@@ -128,12 +120,12 @@ Define bounds for parameters
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-88
+.. GENERATED FROM PYTHON SOURCE LINES 72-80
 
 .. code-block:: Python
 
-    infection_rate = 7.0e-3  # beta (/ day)
-    healing_rate = 0.3  # gamma (/ day)
+    infection_rate = 2.0  # beta (/ day)
+    healing_rate = 0.5  # gamma (/ day)
     total_population = 763.0
     reference_parameters = [infection_rate, healing_rate]
     print("References parameters = ")
@@ -149,13 +141,13 @@ Define bounds for parameters
  .. code-block:: none
 
     References parameters = 
-    infection_rate = 0.007
-    healing_rate = 0.3
+    infection_rate = 2.0
+    healing_rate = 0.5
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-94
+.. GENERATED FROM PYTHON SOURCE LINES 81-86
 
 .. code-block:: Python
 
@@ -172,13 +164,13 @@ Define bounds for parameters
 
  .. code-block:: none
 
-    average_infection_duration = 3.3333 (days)
-    R0 = 0.0233
+    average_infection_duration = 2.0000 (days)
+    R0 = 4.0000
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-102
+.. GENERATED FROM PYTHON SOURCE LINES 87-94
 
 .. code-block:: Python
 
@@ -196,11 +188,11 @@ Define bounds for parameters
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-104
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
 
 Select the FMU
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-107
+.. GENERATED FROM PYTHON SOURCE LINES 96-99
 
 .. code-block:: Python
 
@@ -220,11 +212,11 @@ Select the FMU
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-109
+.. GENERATED FROM PYTHON SOURCE LINES 100-101
 
 Inspect variables
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-114
+.. GENERATED FROM PYTHON SOURCE LINES 101-106
 
 .. code-block:: Python
 
@@ -254,11 +246,11 @@ Inspect variables
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-116
+.. GENERATED FROM PYTHON SOURCE LINES 107-108
 
 Create function
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-125
+.. GENERATED FROM PYTHON SOURCE LINES 108-117
 
 .. code-block:: Python
 
@@ -278,11 +270,11 @@ Create function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-127
+.. GENERATED FROM PYTHON SOURCE LINES 118-119
 
 Evaluate model
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-129
+.. GENERATED FROM PYTHON SOURCE LINES 119-121
 
 .. code-block:: Python
 
@@ -295,14 +287,14 @@ Evaluate model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-136
+.. GENERATED FROM PYTHON SOURCE LINES 122-128
 
 .. code-block:: Python
 
     graph = ot.Graph("SIR model", "Time (days)", "Infected", True)
     curve = ot.Curve(vertices, y)
     graph.add(curve)
-    _ = otv.View(graph, figure_kw={"figsize": (5.0, 3.0)})
+    _ = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
 
 
 
@@ -317,11 +309,11 @@ Evaluate model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-138
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
 Get the number of infected
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-142
+.. GENERATED FROM PYTHON SOURCE LINES 130-134
 
 .. code-block:: Python
 
@@ -338,15 +330,15 @@ Get the number of infected
  .. code-block:: none
 
 
-    [1.0, 0.9621144526886833, 0.9256640819317842, 0.8905945256819641, 0.8568534808389988]
+    [1.0, 1.2127536582343519, 1.470616046944194, 1.7830796913368827, 2.161601387286066]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-144
+.. GENERATED FROM PYTHON SOURCE LINES 135-136
 
 Data (time, confined, convalescent)
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-160
+.. GENERATED FROM PYTHON SOURCE LINES 136-152
 
 .. code-block:: Python
 
@@ -373,12 +365,12 @@ Data (time, confined, convalescent)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-163
+.. GENERATED FROM PYTHON SOURCE LINES 153-155
 
 Select the number of observations to consider
 full dataset : number_of_observations = 14
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-168
+.. GENERATED FROM PYTHON SOURCE LINES 155-160
 
 .. code-block:: Python
 
@@ -400,7 +392,7 @@ full dataset : number_of_observations = 14
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-172
+.. GENERATED FROM PYTHON SOURCE LINES 161-164
 
 .. code-block:: Python
 
@@ -437,7 +429,7 @@ full dataset : number_of_observations = 14
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-176
+.. GENERATED FROM PYTHON SOURCE LINES 165-168
 
 .. code-block:: Python
 
@@ -474,7 +466,7 @@ full dataset : number_of_observations = 14
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-186
+.. GENERATED FROM PYTHON SOURCE LINES 169-178
 
 .. code-block:: Python
 
@@ -484,7 +476,7 @@ full dataset : number_of_observations = 14
     cloud = ot.Cloud(timeObservations, populationObservations)
     cloud.setPointStyle("circle")
     graph.add(cloud)
-    _ = otv.View(graph, figure_kw={"figsize": (4.0, 3.0)})
+    _ = otv.View(graph, figure_kw={"figsize": (4.0, 4.0)})
 
 
 
@@ -499,11 +491,11 @@ full dataset : number_of_observations = 14
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-188
+.. GENERATED FROM PYTHON SOURCE LINES 179-180
 
 Create an epidemiological model, evaluated at one single time.
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-313
+.. GENERATED FROM PYTHON SOURCE LINES 180-294
 
 .. code-block:: Python
 
@@ -612,19 +604,8 @@ Create an epidemiological model, evaluated at one single time.
                 raise ValueError(
                     f"Time t = {t} is not in time range [{self.start_time}, {self.final_time}]"
                 )
-            # Calcul direct de l'indice le plus proche.
-            # Actuellement, les données sont disponibles au pas de temps
-            # égal à 1 seconde.
-            # C'est la raison pour laquelle la discrétisation utilise
-            # également une seconde.
-            # Si le pas de temps est différent de 1, alors le calcul de l'indice
-            # correspondant est un peu plus compliqué.
-            # Nous utilisons la fonction round pour obtenir l'entier le plus
-            # proche du ratio.
             relative_time_step = (t - self.start_time) / self.step
             time_index = int(round(relative_time_step))
-
-            # Sécurité pour ne pas dépasser la taille du vecteur current_infected.
             time_index = min(time_index, self.number_of_time_steps - 1)
             current_infected = self.current_infected[time_index]
             if self.verbose:
@@ -639,7 +620,7 @@ Create an epidemiological model, evaluated at one single time.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 314-319
+.. GENERATED FROM PYTHON SOURCE LINES 295-300
 
 .. code-block:: Python
 
@@ -661,7 +642,7 @@ Create an epidemiological model, evaluated at one single time.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 320-322
+.. GENERATED FROM PYTHON SOURCE LINES 301-303
 
 .. code-block:: Python
 
@@ -674,19 +655,15 @@ Create an epidemiological model, evaluated at one single time.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-328
+.. GENERATED FROM PYTHON SOURCE LINES 304-305
 
 Setup finite difference step.
-This is crucial here because infection rate has a scale close to
-10^{-3}.
-An alternative would be to scale up the infection rate so that
-its order of magnitude is close to 1.
 
-.. GENERATED FROM PYTHON SOURCE LINES 328-331
+.. GENERATED FROM PYTHON SOURCE LINES 305-308
 
 .. code-block:: Python
 
-    gradStep = ot.ConstantStep([1.0, 1.335e-08, 5.722e-07])  # Constant gradient step
+    gradStep = ot.ConstantStep([1.0, 3.0e-08, 7.4e-09])  # Constant gradient step
     model.setGradient(ot.CenteredFiniteDifferenceGradient(gradStep, model.getEvaluation()))
 
 
@@ -696,7 +673,7 @@ its order of magnitude is close to 1.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 332-335
+.. GENERATED FROM PYTHON SOURCE LINES 309-312
 
 .. code-block:: Python
 
@@ -717,12 +694,12 @@ its order of magnitude is close to 1.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 336-344
+.. GENERATED FROM PYTHON SOURCE LINES 313-321
 
 .. code-block:: Python
 
-    infection_rate = 0.007
-    healing_rate = 0.3
+    infection_rate = 1.0
+    healing_rate = 0.2
     thetaPrior = [infection_rate, healing_rate]
     epidParametric = ot.ParametricFunction(model, [1, 2], thetaPrior)
     print("Parametric Model Inputs:", epidParametric.getInputDescription())
@@ -743,7 +720,7 @@ its order of magnitude is close to 1.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-349
+.. GENERATED FROM PYTHON SOURCE LINES 322-326
 
 .. code-block:: Python
 
@@ -760,25 +737,25 @@ its order of magnitude is close to 1.
  .. code-block:: none
 
          [ Infected  ]
-     0 : [ 1         ]
-     1 : [ 0.745184  ]
-     2 : [ 0.555293  ]
-     3 : [ 0.413794  ]
-     4 : [ 0.30835   ]
-     5 : [ 0.229776  ]
-     6 : [ 0.171224  ]
-     7 : [ 0.127593  ]
-     8 : [ 0.0950794 ]
-     9 : [ 0.070851  ]
-    10 : [ 0.0527968 ]
-    11 : [ 0.0393429 ]
-    12 : [ 0.0293176 ]
-    13 : [ 0.0218467 ]
+     0 : [   1       ]
+     1 : [   2.20284 ]
+     2 : [   4.83798 ]
+     3 : [  10.5589  ]
+     4 : [  22.7305  ]
+     5 : [  47.5492  ]
+     6 : [  93.9596  ]
+     7 : [ 167.753   ]
+     8 : [ 257.453   ]
+     9 : [ 331.277   ]
+    10 : [ 364.39    ]
+    11 : [ 358.5     ]
+    12 : [ 329.127   ]
+    13 : [ 290.144   ]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 350-368
+.. GENERATED FROM PYTHON SOURCE LINES 327-345
 
 .. code-block:: Python
 
@@ -798,7 +775,7 @@ its order of magnitude is close to 1.
     graph.setLegendPosition("upper left")
     graph.setLegendCorner([1.0, 1.0])
     graph.setIntegerXTick(True)
-    view = otv.View(graph, figure_kw={"figsize": (5.0, 3.0)})
+    view = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
 
 
 
@@ -812,11 +789,11 @@ its order of magnitude is close to 1.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 369-370
+.. GENERATED FROM PYTHON SOURCE LINES 346-347
 
 Evaluate the model at a single time
 
-.. GENERATED FROM PYTHON SOURCE LINES 370-374
+.. GENERATED FROM PYTHON SOURCE LINES 347-351
 
 .. code-block:: Python
 
@@ -832,12 +809,12 @@ Evaluate the model at a single time
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    class=Point name=Unnamed dimension=1 values=[0.555293]
+    class=Point name=Unnamed dimension=1 values=[4.83798]
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 375-411
+.. GENERATED FROM PYTHON SOURCE LINES 352-388
 
 .. code-block:: Python
 
@@ -884,12 +861,12 @@ Evaluate the model at a single time
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 412-414
+.. GENERATED FROM PYTHON SOURCE LINES 389-391
 
 Calibration with non linear least squares
 Check that we can evaluate the parametric function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 414-423
+.. GENERATED FROM PYTHON SOURCE LINES 391-400
 
 .. code-block:: Python
 
@@ -909,24 +886,23 @@ Check that we can evaluate the parametric function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-442
+.. GENERATED FROM PYTHON SOURCE LINES 402-418
 
 .. code-block:: Python
 
     number_of_observations = calibrationResult.getInputObservations().getSize()
     # Print theta
-    infection_rate_factor = 1.0e3
     print(f"Analyse calibration : n.obs.= {number_of_observations}")
     thetaPrior = calibrationResult.getParameterPrior().getMean()
     thetaMAP = calibrationResult.getParameterMAP()
     infection_rate_prior, healing_rate_prior = thetaPrior
     infection_rate_MAP, healing_rate_MAP = thetaMAP
     print(
-        f"- theta Before = [{infection_rate_prior * infection_rate_factor:.3f} * {1.0 / infection_rate_factor:.1e}, "
+        f"- theta Before = [{infection_rate_prior:.4f}, "
         f"{healing_rate_prior:.4f}]"
     )
     print(
-        f"- theta After = [{infection_rate_MAP * infection_rate_factor:.3f} * {1.0 / infection_rate_factor:.1e}, "
+        f"- theta After = [{infection_rate_MAP:.4f}, "
         f"{healing_rate_MAP:.4f}]"
     )
 
@@ -939,17 +915,17 @@ Check that we can evaluate the parametric function.
  .. code-block:: none
 
     Analyse calibration : n.obs.= 14
-    - theta Before = [7.000 * 1.0e-03, 0.3000]
-    - theta After = [1979.327 * 1.0e-03, 0.4755]
+    - theta Before = [1.0000, 0.2000]
+    - theta After = [1.9793, 0.4755]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 443-444
+.. GENERATED FROM PYTHON SOURCE LINES 419-420
 
 Compute confidence interval of theta
 
-.. GENERATED FROM PYTHON SOURCE LINES 444-458
+.. GENERATED FROM PYTHON SOURCE LINES 420-434
 
 .. code-block:: Python
 
@@ -962,8 +938,8 @@ Compute confidence interval of theta
     upper_bound = interval.getUpperBound()
     print(f"Confidence interval with level {alpha}")
     print(
-        f"- infection_rate in [{lower_bound[0] * infection_rate_factor:.3f}, \
-                               {upper_bound[0] * infection_rate_factor:.3f}] * {1.0 / infection_rate_factor:.1e}"
+        f"- infection_rate in [{lower_bound[0]:.4f}, \
+                               {upper_bound[0]:.4f}]"
     )
     print(f"- healing_rate in [{lower_bound[1]:.4f}, {upper_bound[1]:.4f}]")
 
@@ -976,25 +952,23 @@ Compute confidence interval of theta
  .. code-block:: none
 
     Confidence interval with level 0.95
-    - infection_rate in [1901.607,                            2057.046] * 1.0e-03
+    - infection_rate in [1.9016,                            2.0570]
     - healing_rate in [0.4322, 0.5188]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 459-460
+.. GENERATED FROM PYTHON SOURCE LINES 435-436
 
 Print optimum parameters
 
-.. GENERATED FROM PYTHON SOURCE LINES 460-473
+.. GENERATED FROM PYTHON SOURCE LINES 436-447
 
 .. code-block:: Python
 
     infection_rate, healing_rate = thetaMAP
     print("Optimum parameters = ")
-    print(
-        f"- infection_rate = {infection_rate * infection_rate_factor:.3f} * {1.0 / infection_rate_factor:.1e}"
-    )
+    print(f"- infection_rate = {infection_rate:.4f}")
     print(f"- healing_rate = {healing_rate:.4f}")
     #
     print("Other parameters :")
@@ -1012,20 +986,20 @@ Print optimum parameters
  .. code-block:: none
 
     Optimum parameters = 
-    - infection_rate = 1979.327 * 1.0e-03
+    - infection_rate = 1.9793
     - healing_rate = 0.4755
     Other parameters :
     - average_infection_duration = 2.103 (days)
-    - R0 = 4.162639
+    - R0 = 4.162539
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 474-475
+.. GENERATED FROM PYTHON SOURCE LINES 448-449
 
 Compute confidence interval of the residuals
 
-.. GENERATED FROM PYTHON SOURCE LINES 475-485
+.. GENERATED FROM PYTHON SOURCE LINES 449-459
 
 .. code-block:: Python
 
@@ -1052,11 +1026,11 @@ Compute confidence interval of the residuals
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 486-487
+.. GENERATED FROM PYTHON SOURCE LINES 460-461
 
 Draw observations vs predictions
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-495
+.. GENERATED FROM PYTHON SOURCE LINES 461-469
 
 .. code-block:: Python
 
@@ -1066,7 +1040,7 @@ Draw observations vs predictions
     graph.setLegendCorner([1.0, 1.0])
     graph.setIntegerXTick(True)
     graph.setTitle(f"nb. obs. = {number_of_observations}")
-    _ = otv.View(graph, figure_kw={"figsize": (5.0, 3.0)})
+    _ = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
 
 
 
@@ -1080,11 +1054,11 @@ Draw observations vs predictions
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 496-497
+.. GENERATED FROM PYTHON SOURCE LINES 470-471
 
 Draw residuals
 
-.. GENERATED FROM PYTHON SOURCE LINES 497-503
+.. GENERATED FROM PYTHON SOURCE LINES 471-477
 
 .. code-block:: Python
 
@@ -1092,7 +1066,7 @@ Draw residuals
     graph.setLegendPosition("upper left")
     graph.setLegendCorner([1.0, 1.0])
     graph.setTitle(f"nb. obs. = {number_of_observations}")
-    _ = otv.View(graph, figure_kw={"figsize": (6.0, 3.0)})
+    _ = otv.View(graph, figure_kw={"figsize": (6.0, 4.0)})
 
 
 
@@ -1106,11 +1080,11 @@ Draw residuals
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 504-505
+.. GENERATED FROM PYTHON SOURCE LINES 478-479
 
 Plot parameters distributions
 
-.. GENERATED FROM PYTHON SOURCE LINES 505-514
+.. GENERATED FROM PYTHON SOURCE LINES 479-488
 
 .. code-block:: Python
 
@@ -1118,7 +1092,7 @@ Plot parameters distributions
     graph.setTitle(f"nb. obs. = {number_of_observations}")
     _ = otv.View(
         graph,
-        figure_kw={"figsize": (7.0, 3.0)},
+        figure_kw={"figsize": (7.0, 4.0)},
         legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
     )
     plt.subplots_adjust(right=0.8, bottom=0.2)
@@ -1135,29 +1109,33 @@ Plot parameters distributions
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 515-516
+.. GENERATED FROM PYTHON SOURCE LINES 489-490
 
 Plot parameters distributions
 
-.. GENERATED FROM PYTHON SOURCE LINES 516-523
+.. GENERATED FROM PYTHON SOURCE LINES 490-496
 
 .. code-block:: Python
 
     parameterDistribution = calibrationResult.getParameterPosterior()
-    if 0:  # disabled temporarily because of pybind11/contourpy bug
-        grid = plotDistributionGridPDF(parameterDistribution)
-        grid.setTitle(f"nb. obs. = {number_of_observations}")
-        _ = otv.View(grid, figure_kw={"figsize": (7.0, 5.0)})
-        plt.subplots_adjust(wspace=0.5, hspace=0.5)
+    grid = plotDistributionGridPDF(parameterDistribution)
+    grid.setTitle(f"nb. obs. = {number_of_observations}")
+    _ = otv.View(grid, figure_kw={"figsize": (7.0, 5.0)})
+    plt.subplots_adjust(wspace=0.5, hspace=0.5)
+
+
+
+
+.. image-sg:: /auto_example/application/images/sphx_glr_plot_calibration_007.png
+   :alt: nb. obs. = 14
+   :srcset: /auto_example/application/images/sphx_glr_plot_calibration_007.png
+   :class: sphx-glr-single-img
 
 
 
 
 
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 524-525
+.. GENERATED FROM PYTHON SOURCE LINES 497-498
 
 .. code-block:: Python
 
@@ -1172,7 +1150,7 @@ Plot parameters distributions
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.241 seconds)
+   **Total running time of the script:** (0 minutes 7.793 seconds)
 
 
 .. _sphx_glr_download_auto_example_application_plot_calibration.py:
