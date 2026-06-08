@@ -164,18 +164,36 @@ Default is <a class="reference internal" href="openturns.AbdoRackwitz.html#opent
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>The meshing algorithm is based on the <a class="reference internal" href="openturns.IntervalMesher.html#openturns.IntervalMesher" title="openturns.IntervalMesher"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntervalMesher</span></code></a> class.
-First, the bounding box of the level set (provided by the user or automatically
-computed) is meshed. Then, all the simplices with all vertices outside of the
-level set are rejected, while the simplices with all vertices inside of the level
+<p>The meshing algorithm is based either on a <a class="reference internal" href="openturns.Field.html#openturns.Field" title="openturns.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a> or on the
+<a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> class.</p>
+<blockquote>
+<div><ul>
+<li><p>Using a field allows one to mesh a level set reusing previously computed
+values and starting from an arbitrary mesh.
+If the values of the field are of dimension 1 they are supposed to
+be the evaluation of the function defining the level set at the vertices of
+the mesh, otherwise they are recomputed.</p></li>
+<li><p>Using a bounding box (provided by the user or automatically computed) is a
+shortcut. The interval is meshed using the <a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> class
+and the function defining the level set is evaluated at the vertices of the
+resulting mesh to create a field.</p></li>
+<li><p>Then, all the simplices with all vertices outside of the level set are
+rejected, while the simplices with all vertices inside of the level
 set are kept. The remaining simplices are adapted the following way:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>The mean point of the vertices inside of the level set is computed</p></li>
 <li><p>Each vertex outside of the level set is projected onto the level set using
 a linear interpolation</p></li>
-<li><p>If the <em>project</em> flag is <em>True</em>, then the projection is refined using an
-optimization solver.</p></li>
+<li><p>If the <em>project</em> flag is <em>True</em>, then the projection is refined using first
+a nonlinear equation solver <a class="reference internal" href="openturns.Brent.html#openturns.Brent" title="openturns.Brent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brent</span></code></a> depending on the
+<cite>LevelSetMesher-SolveEquation</cite> key in <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> class.
+If this key is set to <em>False</em> or if the solver fails, then the projection is
+done using the provided optimization algorithm.
+If it fails then the <a class="reference internal" href="openturns.Cobyla.html#openturns.Cobyla" title="openturns.Cobyla"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cobyla</span></code></a> optimization algorithm is used.</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </div></blockquote>
 <p class="rubric">Examples</p>
@@ -197,13 +215,22 @@ optimization solver.</p></li>
 <dt class="sig sig-object py" id="openturns.LevelSetMesher.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LevelSetMesher.build" title="Link to this definition">¶</a></dt>
 <dd><p>Build the mesh of level set type.</p>
+<p><strong>Available usages</strong>:</p>
+<blockquote>
+<div><p>build(<em>levelSet, project</em>)</p>
+<p>build(<em>levelSet, boundingBox, project</em>)</p>
+<p>build(<em>levelSet, field, project</em>)</p>
+</div></blockquote>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>levelSet</strong><span class="classifier"><a class="reference internal" href="openturns.LevelSet.html#openturns.LevelSet" title="openturns.LevelSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">LevelSet</span></code></a></span></dt><dd><p>The level set to be meshed, of dimension equal to the dimension
 of <cite>discretization</cite>.</p>
 </dd>
-<dt><strong>boundingBox</strong><span class="classifier"><a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a></span></dt><dd><p>The bounding box used to mesh the level set.</p>
+<dt><strong>boundingBox</strong><span class="classifier"><a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a></span></dt><dd><p>The bounding box used to mesh the level set. It is automatically computed
+if not provided.</p>
+</dd>
+<dt><strong>field</strong><span class="classifier"><a class="reference internal" href="openturns.Field.html#openturns.Field" title="openturns.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></span></dt><dd><p>The field used to mesh the level set.</p>
 </dd>
 <dt><strong>project</strong><span class="classifier">bool</span></dt><dd><p>Flag to tell if the vertices outside of the level set of a simplex partially included into the level set have to be projected onto the level set. Default is <em>True</em>.</p>
 </dd>
