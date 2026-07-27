@@ -100,18 +100,15 @@ Algorithm used for all the intersection computation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-52
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Algorithm used for all the convex decomposition computation
-We force the use of simplices decomposition to avoid a bug in the 3D convex
-decomposition (which is correct but awfully slow)
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-55
+.. GENERATED FROM PYTHON SOURCE LINES 50-52
 
 .. code-block:: Python
 
     algoDecomp = otm.ConvexDecompositionMesher()
-    algoDecomp.setUseSimplicesDecomposition(True)
 
 
 
@@ -120,12 +117,32 @@ decomposition (which is correct but awfully slow)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-58
+.. GENERATED FROM PYTHON SOURCE LINES 53-55
+
+the default is simplicial decomposition but with coacd enabled
+(instead of cgal) the decomposition step becomes interesting
+
+.. GENERATED FROM PYTHON SOURCE LINES 55-59
+
+.. code-block:: Python
+
+    if otm.ConvexDecompositionMesher.HasFeature("coacd"):
+        algoDecomp.setUseSimplicesDecomposition(False)
+        algoInter.setUseSimplicesDecomposition(False)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 60-62
 
 Define the first constraint :math:`C_1` as the interior of the convex hull of a set of points in 2D
 :math:`C_1` acts on :math:`(x_0, x_1)`
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-77
+.. GENERATED FROM PYTHON SOURCE LINES 62-81
 
 .. code-block:: Python
 
@@ -160,12 +177,12 @@ Define the first constraint :math:`C_1` as the interior of the convex hull of a 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
 
 Define :math:`C_2` as being inside of a polygon given by the vertices of its boundary
 It acts on :math:`(x_0, x_2)`
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-114
+.. GENERATED FROM PYTHON SOURCE LINES 84-118
 
 .. code-block:: Python
 
@@ -215,12 +232,12 @@ It acts on :math:`(x_0, x_2)`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-117
+.. GENERATED FROM PYTHON SOURCE LINES 119-121
 
 Define :math:`C_3` as being inside of a mesh built with LevelSetMesher
 It acts on :math:`(x_1, x_2)`
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-132
+.. GENERATED FROM PYTHON SOURCE LINES 121-136
 
 .. code-block:: Python
 
@@ -251,37 +268,29 @@ It acts on :math:`(x_1, x_2)`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-134
+.. GENERATED FROM PYTHON SOURCE LINES 137-138
 
 Now the admissible domain
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-139
+.. GENERATED FROM PYTHON SOURCE LINES 138-141
 
 .. code-block:: Python
 
     meshAllCylinders = algoInter.buildCylinder([C_1, C_2, C_3])
     ot.BoundaryMesher().build(meshAllCylinders).exportToVTKFile("cylindersIntersection.vtk")
-    meshAllCylindersConvexParts = algoDecomp.build(meshAllCylinders)
-    print("Number of convex parts=", len(meshAllCylindersConvexParts))
 
 
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Number of convex parts= 5051
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 140-141
+.. GENERATED FROM PYTHON SOURCE LINES 142-143
 
 Create a uniform distribution over mesh and sample it
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-145
+.. GENERATED FROM PYTHON SOURCE LINES 143-147
 
 .. code-block:: Python
 
@@ -296,11 +305,11 @@ Create a uniform distribution over mesh and sample it
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-147
+.. GENERATED FROM PYTHON SOURCE LINES 148-149
 
 Check if all the constraints are satisfied
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-160
+.. GENERATED FROM PYTHON SOURCE LINES 149-162
 
 .. code-block:: Python
 
@@ -329,7 +338,7 @@ Check if all the constraints are satisfied
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-176
+.. GENERATED FROM PYTHON SOURCE LINES 163-181
 
 .. code-block:: Python
 
@@ -345,8 +354,11 @@ Check if all the constraints are satisfied
     mesh = mesher.build(f, outputDimension, a[2], b[2], 1)
     ot.BoundaryMesher().build(mesh).exportToVTKFile("func_graph.vtk")
 
+    t0 = time()
     meshConvexParts = algoDecomp.build(mesh)
+    t1 = time()
     print("Number of convex parts=", len(meshConvexParts))
+    print(f"t={t1 - t0} s")
 
 
 
@@ -356,20 +368,32 @@ Check if all the constraints are satisfied
 
  .. code-block:: none
 
-    Number of convex parts= 10086
+    Number of convex parts= 78
+    t=30.808516263961792 s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-183
+.. GENERATED FROM PYTHON SOURCE LINES 182-189
+
+Compute the intersection of the function graph with domain
+
+pass directly the cylinder intersection as decomposition of convexes to avoid
+the final assembly step yielding incompatible topology on shared faces
+because of the independent triangulations of each convex component
+(every edge must be shared by exactly two triangles with opposite orientation)
+else CoACD would throw "The mesh is not a 2-manifold!".
+
+.. GENERATED FROM PYTHON SOURCE LINES 189-196
 
 .. code-block:: Python
 
     t0 = time()
-    globalMesh = algoInter.build([mesh, meshAllCylinders])
+    convexPiecesAllCylinders = algoInter.buildCylinderConvex([C_1, C_2, C_3])
+    globalMesh = algoInter.buildWithConvexParts(mesh, convexPiecesAllCylinders)
     t1 = time()
     ot.BoundaryMesher().build(globalMesh).exportToVTKFile("global.vtk")
-    print("t=", t1 - t0, "s")
+    print(f"t={t1 - t0} s")
 
 
 
@@ -379,16 +403,16 @@ Check if all the constraints are satisfied
 
  .. code-block:: none
 
-    t= 39.3065767288208 s
+    t=31.873762130737305 s
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-185
+.. GENERATED FROM PYTHON SOURCE LINES 197-198
 
 Create a uniform distribution over mesh and sample it
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-205
+.. GENERATED FROM PYTHON SOURCE LINES 198-218
 
 .. code-block:: Python
 
@@ -424,7 +448,7 @@ Create a uniform distribution over mesh and sample it
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-207
+.. GENERATED FROM PYTHON SOURCE LINES 219-220
 
 .. code-block:: Python
 
