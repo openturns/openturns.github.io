@@ -2,6 +2,7 @@ import openturns as ot
 from matplotlib import pyplot as plt
 import openturns.viewer as otv
 
+import openturns.experimental as otexp
 ot.RandomGenerator.SetSeed(0)
 title = None
 if "InverseChiSquare" == "Bernoulli":
@@ -43,7 +44,10 @@ elif "InverseChiSquare" == "Normal":
     distribution = ot.Normal([0.0, 0.0], cov)
     title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
 else:
-    distribution = ot.InverseChiSquare()
+    if hasattr(ot, "InverseChiSquare"):
+        distribution = ot.InverseChiSquare()
+    else:
+        distribution = otexp.InverseChiSquare()
 
 dimension = distribution.getDimension()
 if title is None:

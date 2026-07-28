@@ -2,6 +2,7 @@ import openturns as ot
 from matplotlib import pyplot as plt
 import openturns.viewer as otv
 
+import openturns.experimental as otexp
 ot.RandomGenerator.SetSeed(0)
 title = None
 if "Wishart" == "Bernoulli":
@@ -43,7 +44,10 @@ elif "Wishart" == "Normal":
     distribution = ot.Normal([0.0, 0.0], cov)
     title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
 else:
-    distribution = ot.Wishart()
+    if hasattr(ot, "Wishart"):
+        distribution = ot.Wishart()
+    else:
+        distribution = otexp.Wishart()
 
 dimension = distribution.getDimension()
 if title is None:

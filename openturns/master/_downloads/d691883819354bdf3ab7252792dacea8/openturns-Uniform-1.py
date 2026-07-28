@@ -2,6 +2,7 @@ import openturns as ot
 from matplotlib import pyplot as plt
 import openturns.viewer as otv
 
+import openturns.experimental as otexp
 ot.RandomGenerator.SetSeed(0)
 title = None
 if "Uniform" == "Bernoulli":
@@ -43,7 +44,10 @@ elif "Uniform" == "Normal":
     distribution = ot.Normal([0.0, 0.0], cov)
     title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
 else:
-    distribution = ot.Uniform()
+    if hasattr(ot, "Uniform"):
+        distribution = ot.Uniform()
+    else:
+        distribution = otexp.Uniform()
 
 dimension = distribution.getDimension()
 if title is None:

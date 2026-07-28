@@ -2,6 +2,7 @@ import openturns as ot
 from matplotlib import pyplot as plt
 import openturns.viewer as otv
 
+import openturns.experimental as otexp
 ot.RandomGenerator.SetSeed(0)
 title = None
 if "Dirac" == "Bernoulli":
@@ -43,7 +44,10 @@ elif "Dirac" == "Normal":
     distribution = ot.Normal([0.0, 0.0], cov)
     title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
 else:
-    distribution = ot.Dirac()
+    if hasattr(ot, "Dirac"):
+        distribution = ot.Dirac()
+    else:
+        distribution = otexp.Dirac()
 
 dimension = distribution.getDimension()
 if title is None:

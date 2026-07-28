@@ -2,6 +2,7 @@ import openturns as ot
 from matplotlib import pyplot as plt
 import openturns.viewer as otv
 
+import openturns.experimental as otexp
 ot.RandomGenerator.SetSeed(0)
 title = None
 if "ProductDistribution" == "Bernoulli":
@@ -43,7 +44,10 @@ elif "ProductDistribution" == "Normal":
     distribution = ot.Normal([0.0, 0.0], cov)
     title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
 else:
-    distribution = ot.ProductDistribution()
+    if hasattr(ot, "ProductDistribution"):
+        distribution = ot.ProductDistribution()
+    else:
+        distribution = otexp.ProductDistribution()
 
 dimension = distribution.getDimension()
 if title is None:
