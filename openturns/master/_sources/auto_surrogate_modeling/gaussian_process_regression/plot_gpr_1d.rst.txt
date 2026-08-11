@@ -557,7 +557,7 @@ We define two small lists to draw three different confidence intervals (defined 
 
 .. code-block:: Python
 
-    alphas = [0.05, 0.1, 0.2]
+    alphas = [0.95, 0.90, 0.80]
     # three different alpha transparencies
     transparencyList = [0.1, 0.2, 0.4]
 
@@ -576,7 +576,7 @@ We are ready to display all the previous information and the three confidence in
 
 sphinx_gallery_thumbnail_number = 5
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-326
+.. GENERATED FROM PYTHON SOURCE LINES 299-331
 
 .. code-block:: Python
 
@@ -590,14 +590,19 @@ sphinx_gallery_thumbnail_number = 5
 
     # Now we loop over the different values :
     for idx, v in enumerate(alphas):
-        quantileAlpha = computeQuantileAlpha(v)
+        """
+        Draw the confidence interval of level "v"
+        As the draw method provides both the mean and confidence,
+        we only keep the confidence graph. It corresponds to the bounds
+        [vLow, vUp] where respectively vLow & vUp are defined by:
+          - vLow = yTestMM - quantileAlpha * conditionalSigma
+          - vUp = yTestMM + quantileAlpha * conditionalSigma
+        with quantileAlpha = computeQuantileAlpha(v)
+        """
         # Compute the bounds of the interval.
-        vLow = yTestMM - quantileAlpha * conditionalSigma
-        vUp = yTestMM + quantileAlpha * conditionalSigma
-        boundsPoly = ot.Polygon.FillBetween(x_test, vLow, vUp)
+        boundsPoly = gccc.draw(x_test, v).getDrawable(1)
         boundsPoly.setColor("forestgreen")
         boundsPoly.setAlpha(transparencyList[idx])
-        boundsPoly.setLegend(" %d%% bounds" % ((1.0 - v) * 100))
         graph.add(boundsPoly)
 
     graph.add(plot_test_data(x_test, y_test))
@@ -619,7 +624,7 @@ sphinx_gallery_thumbnail_number = 5
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 327-332
+.. GENERATED FROM PYTHON SOURCE LINES 332-337
 
 We see that the confidence intervals are small in the regions where two
 consecutive training points are close to each other
@@ -627,11 +632,11 @@ consecutive training points are close to each other
 are not (e.g. between :math:`x=8.` and :math:`x=11`) or when the curvature
 of the function is large (between :math:`x=4` and :math:`x=6`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 334-335
+.. GENERATED FROM PYTHON SOURCE LINES 339-340
 
 Display all figures.
 
-.. GENERATED FROM PYTHON SOURCE LINES 335-336
+.. GENERATED FROM PYTHON SOURCE LINES 340-341
 
 .. code-block:: Python
 
