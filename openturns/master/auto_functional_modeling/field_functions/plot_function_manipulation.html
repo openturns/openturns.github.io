@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/openturns.css?v=105494d3" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=c83e6b79" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -131,107 +131,95 @@ to download the full example code.</p>
 <li><p>to extract output components</p></li>
 <li><p>to get a graphical representation</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otv</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span><span class="w">
+</span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="nn">.</span><span class="nn">viewer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otv</span><span class="w">
+</span></pre></div></div>
 <p>Create a vectorial function R ^n –&gt; R^p
 for example R^2 –&gt; R^2</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"1+2*x1+x2"</span><span class="p">,</span> <span class="s2">"2+x1+2*x2"</span><span class="p">])</span>
-
-<span class="c1"># Create a scalar function R --&gt; R</span>
-<span class="n">func1</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x^2"</span><span class="p">])</span>
-
-<span class="c1"># Create another function R^2 --&gt; R</span>
-<span class="n">func2</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x*y"</span><span class="p">])</span>
-
-<span class="c1"># Create a vectorial function R ^3 --&gt; R^2</span>
-<span class="n">func3</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">(</span>
-    <span class="p">[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">,</span> <span class="s2">"x3"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"1+2*x1+x2+x3^3"</span><span class="p">,</span> <span class="s2">"2+sin(x1+2*x2)-sin(x3) * x3^4"</span><span class="p">]</span>
-<span class="p">)</span>
-
-<span class="c1"># Create a second vectorial function R ^n --&gt; R^p</span>
-<span class="c1"># for example R^2 --&gt; R^2</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="p">([</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x1+x2"</span><span class="p">,</span> <span class="s2">"x1^2+2*x2^2"</span><span class="p">])</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">python_eval</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">X</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span>
-
-
-<span class="n">func4</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">python_eval</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">f</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span></a><span class="p">(</span><span class="p">[</span><span class="s2">&quot;</span><span class="s2">x1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">x2</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="s2">1+2*x1+x2</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">2+x1+2*x2</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># Create a scalar function R --&gt; R</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">func1</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span></a><span class="p">(</span><span class="p">[</span><span class="s2">&quot;</span><span class="s2">x</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="s2">x^2</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># Create another function R^2 --&gt; R</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">func2</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span></a><span class="p">(</span><span class="p">[</span><span class="s2">&quot;</span><span class="s2">x</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">y</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="s2">x*y</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># Create a vectorial function R ^3 --&gt; R^2</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">func3</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span></a><span class="p">(</span><span class="w">
+</span>    <span class="p">[</span><span class="s2">&quot;</span><span class="s2">x1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">x2</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">x3</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="s2">1+2*x1+x2+x3^3</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">2+sin(x1+2*x2)-sin(x3) * x3^4</span><span class="s2">&quot;</span><span class="p">]</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># Create a second vectorial function R ^n --&gt; R^p</span><span class="w">
+</span><span class="c1"># for example R^2 --&gt; R^2</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">g</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span></a><span class="p">(</span><span class="p">[</span><span class="s2">&quot;</span><span class="s2">x1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">x2</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="s2">x1+x2</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">x1^2+2*x2^2</span><span class="s2">&quot;</span><span class="p">]</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="k">def</span><span class="w"> </span><span class="nf">python_eval</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">X</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point"><span class="n">y</span></a> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="w">
+</span>    <span class="k">return</span> <span class="p">[</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point"><span class="n">y</span></a><span class="p">]</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function"><span class="n">func4</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.PythonFunction.html#openturns.PythonFunction" title="openturns.PythonFunction"><span class="n">ot</span><span class="o">.</span><span class="n">PythonFunction</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">python_eval</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Ask for the dimension of the input and output vectors</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getOutputDimension</span><span class="p">())</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="nb">print</span><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getInputDimension" title="openturns.MemoizeFunction.getInputDimension"><span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span></a><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="nb">print</span><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getOutputDimension" title="openturns.MemoizeFunction.getOutputDimension"><span class="n">f</span><span class="o">.</span><span class="n">getOutputDimension</span></a><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2
 2
 </pre></div>
 </div>
 <p>Enable the history mechanism</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">f</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">f</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Evaluate the function at a particular point</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span><span class="p">()</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"x="</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"y="</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getInputDimension" title="openturns.MemoizeFunction.getInputDimension"><span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point"><span class="n">y</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">f</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w">
+</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s2">x=</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">y=</span><span class="s2">&quot;</span><span class="p">,</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Point.html#openturns.Point" title="openturns.Point"><span class="n">y</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>x= [1.0, 1.0] y= [4,5]
 </pre></div>
 </div>
 <p>Get the history</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">samplex</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getInputHistory</span><span class="p">()</span>
-<span class="n">sampley</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getOutputHistory</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"evaluation history = "</span><span class="p">,</span> <span class="n">samplex</span><span class="p">,</span> <span class="n">sampley</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample"><span class="n">samplex</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getInputHistory" title="openturns.MemoizeFunction.getInputHistory"><span class="n">f</span><span class="o">.</span><span class="n">getInputHistory</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample"><span class="n">sampley</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getOutputHistory" title="openturns.MemoizeFunction.getOutputHistory"><span class="n">f</span><span class="o">.</span><span class="n">getOutputHistory</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s2">evaluation history = </span><span class="s2">&quot;</span><span class="p">,</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample"><span class="n">samplex</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Sample.html#openturns.Sample" title="openturns.Sample"><span class="n">sampley</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>evaluation history =  0 : [ 1 1 ] 0 : [ 4 5 ]
 </pre></div>
 </div>
 <p>Clear the history mechanism</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">clearHistory</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.clearHistory" title="openturns.MemoizeFunction.clearHistory"><span class="n">f</span><span class="o">.</span><span class="n">clearHistory</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Disable the history mechanism</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">disableHistory</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.disableHistory" title="openturns.MemoizeFunction.disableHistory"><span class="n">f</span><span class="o">.</span><span class="n">disableHistory</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Enable the cache mechanism</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f4</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span><span class="p">(</span><span class="n">func4</span><span class="p">)</span>
-<span class="n">f4</span><span class="o">.</span><span class="n">enableCache</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">f4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">f4</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">ot</span><span class="o">.</span><span class="n">MemoizeFunction</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Function.html#openturns.Function" title="openturns.Function"><span class="n">func4</span></a><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.enableCache" title="openturns.MemoizeFunction.enableCache"><span class="n">f4</span><span class="o">.</span><span class="n">enableCache</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">f4</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Get the number of times cached values are reused</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f4</span><span class="o">.</span><span class="n">getCacheHits</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getCacheHits" title="openturns.MemoizeFunction.getCacheHits"><span class="n">f4</span><span class="o">.</span><span class="n">getCacheHits</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>9
 </pre></div>
 </div>
 <p>Evaluate the gradient of the function at a particular point</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gradientMatrix</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="n">gradientMatrix</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Matrix.html#openturns.Matrix" title="openturns.Matrix"><span class="n">gradientMatrix</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.gradient" title="openturns.MemoizeFunction.gradient"><span class="n">f</span><span class="o">.</span><span class="n">gradient</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Matrix.html#openturns.Matrix" title="openturns.Matrix"><span class="n">gradientMatrix</span></a><span class="w">
+</span></pre></div></div>
 <div class="output_subarea output_html rendered_html output_result">
 <p>[[ 2 1 ]<br>
  [ 1 2 ]]</p>
 </div>
 <br />
 <br /><p>Evaluate the hessian of the function at a particular point</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hessianMatrix</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="n">hessianMatrix</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.SymmetricTensor.html#openturns.SymmetricTensor" title="openturns.SymmetricTensor"><span class="n">hessianMatrix</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.hessian" title="openturns.MemoizeFunction.hessian"><span class="n">f</span><span class="o">.</span><span class="n">hessian</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.SymmetricTensor.html#openturns.SymmetricTensor" title="openturns.SymmetricTensor"><span class="n">hessianMatrix</span></a><span class="w">
+</span></pre></div></div>
 <div class="output_subarea output_html rendered_html output_result">
 <p>sheet #0<br>
 [[ 0 0 ]<br>
@@ -242,52 +230,46 @@ sheet #1<br>
 </div>
 <br />
 <br /><p>Change the gradient method to a non centered finite difference method</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-7</span><span class="p">]</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span><span class="p">()</span>
-<span class="n">gradient</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">NonCenteredFiniteDifferenceGradient</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getEvaluation</span><span class="p">())</span>
-<span class="n">f</span><span class="o">.</span><span class="n">setGradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">)</span>
-<span class="n">gradient</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-7</span><span class="p">]</span> <span class="o">*</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getInputDimension" title="openturns.MemoizeFunction.getInputDimension"><span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.NonCenteredFiniteDifferenceGradient.html#openturns.NonCenteredFiniteDifferenceGradient" title="openturns.NonCenteredFiniteDifferenceGradient"><span class="n">gradient</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.NonCenteredFiniteDifferenceGradient.html#openturns.NonCenteredFiniteDifferenceGradient" title="openturns.NonCenteredFiniteDifferenceGradient"><span class="n">ot</span><span class="o">.</span><span class="n">NonCenteredFiniteDifferenceGradient</span></a><span class="p">(</span><span class="n">step</span><span class="p">,</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getEvaluation" title="openturns.MemoizeFunction.getEvaluation"><span class="n">f</span><span class="o">.</span><span class="n">getEvaluation</span></a><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.setGradient" title="openturns.MemoizeFunction.setGradient"><span class="n">f</span><span class="o">.</span><span class="n">setGradient</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.NonCenteredFiniteDifferenceGradient.html#openturns.NonCenteredFiniteDifferenceGradient" title="openturns.NonCenteredFiniteDifferenceGradient"><span class="n">gradient</span></a><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.NonCenteredFiniteDifferenceGradient.html#openturns.NonCenteredFiniteDifferenceGradient" title="openturns.NonCenteredFiniteDifferenceGradient"><span class="n">gradient</span></a><span class="w">
+</span></pre></div></div>
 <div class="output_subarea output_html rendered_html output_result">
 class=NonCenteredFiniteDifferenceGradient name=Unnamed epsilon=class=Point name=Unnamed dimension=2 values=[1e-07,1e-07] evaluation=MemoizeEvaluation(class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x1,x2] outputVariablesNames=[y0,y1] formulas=[1+2*x1+x2,2+x1+2*x2])
 </div>
 <br />
 <br /><p>Change the hessian method to a centered finite difference method</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-7</span><span class="p">]</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span><span class="p">()</span>
-<span class="n">hessian</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">CenteredFiniteDifferenceHessian</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getEvaluation</span><span class="p">())</span>
-<span class="n">f</span><span class="o">.</span><span class="n">setHessian</span><span class="p">(</span><span class="n">hessian</span><span class="p">)</span>
-<span class="n">hessian</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-7</span><span class="p">]</span> <span class="o">*</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getInputDimension" title="openturns.MemoizeFunction.getInputDimension"><span class="n">f</span><span class="o">.</span><span class="n">getInputDimension</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.CenteredFiniteDifferenceHessian.html#openturns.CenteredFiniteDifferenceHessian" title="openturns.CenteredFiniteDifferenceHessian"><span class="n">hessian</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.CenteredFiniteDifferenceHessian.html#openturns.CenteredFiniteDifferenceHessian" title="openturns.CenteredFiniteDifferenceHessian"><span class="n">ot</span><span class="o">.</span><span class="n">CenteredFiniteDifferenceHessian</span></a><span class="p">(</span><span class="n">step</span><span class="p">,</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getEvaluation" title="openturns.MemoizeFunction.getEvaluation"><span class="n">f</span><span class="o">.</span><span class="n">getEvaluation</span></a><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.setHessian" title="openturns.MemoizeFunction.setHessian"><span class="n">f</span><span class="o">.</span><span class="n">setHessian</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.CenteredFiniteDifferenceHessian.html#openturns.CenteredFiniteDifferenceHessian" title="openturns.CenteredFiniteDifferenceHessian"><span class="n">hessian</span></a><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.CenteredFiniteDifferenceHessian.html#openturns.CenteredFiniteDifferenceHessian" title="openturns.CenteredFiniteDifferenceHessian"><span class="n">hessian</span></a><span class="w">
+</span></pre></div></div>
 <div class="output_subarea output_html rendered_html output_result">
 class=CenteredFiniteDifferenceHessian name=Unnamed epsilon=class=Point name=Unnamed dimension=2 values=[1e-07,1e-07] evaluation=MemoizeEvaluation(class=SymbolicEvaluation name=Unnamed inputVariablesNames=[x1,x2] outputVariablesNames=[y0,y1] formulas=[1+2*x1+x2,2+x1+2*x2])
 </div>
 <br />
 <br /><p>Get the number of times the function has been evaluated</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getEvaluationCallsNumber" title="openturns.MemoizeFunction.getEvaluationCallsNumber"><span class="n">f</span><span class="o">.</span><span class="n">getEvaluationCallsNumber</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 <p>Get the number of times the gradient has been evaluated</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">getGradientCallsNumber</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getGradientCallsNumber" title="openturns.MemoizeFunction.getGradientCallsNumber"><span class="n">f</span><span class="o">.</span><span class="n">getGradientCallsNumber</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0
 </pre></div>
 </div>
 <p>Get the number of times the hessian has been evaluated</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">getHessianCallsNumber</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getHessianCallsNumber" title="openturns.MemoizeFunction.getHessianCallsNumber"><span class="n">f</span><span class="o">.</span><span class="n">getHessianCallsNumber</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0
 </pre></div>
 </div>
 <p>Get the component i</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">getMarginal</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction.getMarginal" title="openturns.MemoizeFunction.getMarginal"><span class="n">f</span><span class="o">.</span><span class="n">getMarginal</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="output_subarea output_html rendered_html output_result">
 <ul>
   <li> Input dimension = 2  </li>
@@ -300,17 +282,15 @@ class=CenteredFiniteDifferenceHessian name=Unnamed epsilon=class=Point name=Unna
 </div>
 <br />
 <br /><p>Compose two functions : h = f o g</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">ComposedFunction</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.ComposedFunction.html#openturns.ComposedFunction" title="openturns.ComposedFunction"><span class="n">ot</span><span class="o">.</span><span class="n">ComposedFunction</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.MemoizeFunction.html#openturns.MemoizeFunction" title="openturns.MemoizeFunction"><span class="n">f</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction" title="openturns.SymbolicFunction"><span class="n">g</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="output_subarea output_html rendered_html output_result">
 (MemoizeEvaluation([x1,x2]->[1+2*x1+x2,2+x1+2*x2]))o([x1,x2]->[x1+x2,x1^2+2*x2^2])
 </div>
 <br />
 <br /><p>Get the valid symbolic constants</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="o">.</span><span class="n">GetValidConstants</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns-SymbolicFunction sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction.GetValidConstants" title="openturns.SymbolicFunction.GetValidConstants"><span class="n">ot</span><span class="o">.</span><span class="n">SymbolicFunction</span><span class="o">.</span><span class="n">GetValidConstants</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="output_subarea output_html rendered_html output_result">
 [e_ -> Euler's constant (2.71828...),pi_ -> Pi constant (3.14159...)]
 </div>
@@ -319,74 +299,69 @@ class=CenteredFiniteDifferenceHessian name=Unnamed epsilon=class=Point name=Unna
 for z in [-1.5, 1.5] and y_0 = 2. and z_0 = 2.5
 Specify the input component that varies
 Care : numerotation begins at 0</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">inputMarg</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="c1"># Give its variation intervall</span>
-<span class="n">zMin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span>
-<span class="n">zMax</span> <span class="o">=</span> <span class="mf">1.5</span>
-<span class="c1"># Give the coordinates of the fixed input components</span>
-<span class="n">centralPt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>
-<span class="c1"># Specify the output marginal function</span>
-<span class="c1"># Care : numerotation begins at 0</span>
-<span class="n">outputMarg</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="c1"># Specify the point number of the final curve</span>
-<span class="n">ptNb</span> <span class="o">=</span> <span class="mi">101</span>
-<span class="c1"># Draw the curve!</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">func3</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">inputMarg</span><span class="p">,</span> <span class="n">outputMarg</span><span class="p">,</span> <span class="n">centralPt</span><span class="p">,</span> <span class="n">zMin</span><span class="p">,</span> <span class="n">zMax</span><span class="p">,</span> <span class="n">ptNb</span><span class="p">)</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">inputMarg</span> <span class="o">=</span> <span class="mi">2</span><span class="w">
+</span><span class="c1"># Give its variation intervall</span><span class="w">
+</span><span class="n">zMin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span><span class="w">
+</span><span class="n">zMax</span> <span class="o">=</span> <span class="mf">1.5</span><span class="w">
+</span><span class="c1"># Give the coordinates of the fixed input components</span><span class="w">
+</span><span class="n">centralPt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span><span class="w">
+</span><span class="c1"># Specify the output marginal function</span><span class="w">
+</span><span class="c1"># Care : numerotation begins at 0</span><span class="w">
+</span><span class="n">outputMarg</span> <span class="o">=</span> <span class="mi">1</span><span class="w">
+</span><span class="c1"># Specify the point number of the final curve</span><span class="w">
+</span><span class="n">ptNb</span> <span class="o">=</span> <span class="mi">101</span><span class="w">
+</span><span class="c1"># Draw the curve!</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction.draw" title="openturns.SymbolicFunction.draw"><span class="n">func3</span><span class="o">.</span><span class="n">draw</span></a><span class="p">(</span><span class="n">inputMarg</span><span class="p">,</span> <span class="n">outputMarg</span><span class="p">,</span> <span class="n">centralPt</span><span class="p">,</span> <span class="n">zMin</span><span class="p">,</span> <span class="n">zMax</span><span class="p">,</span> <span class="n">ptNb</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">view</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../_images/sphx_glr_plot_function_manipulation_001.svg" srcset="../../_images/sphx_glr_plot_function_manipulation_001.svg" alt="y1 as a function of x3 around [1,2,2.5]" class = "sphx-glr-single-img"/><p>Graph 2 : (x,z) –&gt;  f_1(x,y_0,z)
 for x in [-1.5, 1.5], z in [-2.5, 2.5]
 and y_0 = 2.5
 Specify the input components that vary</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">firstInputMarg</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">secondInputMarg</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="c1"># Give their variation interval</span>
-<span class="n">inputMin2</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">]</span>
-<span class="n">inputMax2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>
-<span class="c1"># Give the coordinates of the fixed input components</span>
-<span class="n">centralPt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>
-<span class="c1"># Specify the output marginal function</span>
-<span class="n">outputMarg</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="c1"># Specify the point number of the final curve</span>
-<span class="n">ptNb</span> <span class="o">=</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">101</span><span class="p">]</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">func3</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
-    <span class="n">firstInputMarg</span><span class="p">,</span> <span class="n">secondInputMarg</span><span class="p">,</span> <span class="n">outputMarg</span><span class="p">,</span> <span class="n">centralPt</span><span class="p">,</span> <span class="n">inputMin2</span><span class="p">,</span> <span class="n">inputMax2</span><span class="p">,</span> <span class="n">ptNb</span>
-<span class="p">)</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">firstInputMarg</span> <span class="o">=</span> <span class="mi">0</span><span class="w">
+</span><span class="n">secondInputMarg</span> <span class="o">=</span> <span class="mi">2</span><span class="w">
+</span><span class="c1"># Give their variation interval</span><span class="w">
+</span><span class="n">inputMin2</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">]</span><span class="w">
+</span><span class="n">inputMax2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span><span class="w">
+</span><span class="c1"># Give the coordinates of the fixed input components</span><span class="w">
+</span><span class="n">centralPt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span><span class="w">
+</span><span class="c1"># Specify the output marginal function</span><span class="w">
+</span><span class="n">outputMarg</span> <span class="o">=</span> <span class="mi">1</span><span class="w">
+</span><span class="c1"># Specify the point number of the final curve</span><span class="w">
+</span><span class="n">ptNb</span> <span class="o">=</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">101</span><span class="p">]</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction.draw" title="openturns.SymbolicFunction.draw"><span class="n">func3</span><span class="o">.</span><span class="n">draw</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">firstInputMarg</span><span class="p">,</span> <span class="n">secondInputMarg</span><span class="p">,</span> <span class="n">outputMarg</span><span class="p">,</span> <span class="n">centralPt</span><span class="p">,</span> <span class="n">inputMin2</span><span class="p">,</span> <span class="n">inputMax2</span><span class="p">,</span> <span class="n">ptNb</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">view</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../_images/sphx_glr_plot_function_manipulation_002.svg" srcset="../../_images/sphx_glr_plot_function_manipulation_002.svg" alt="y1 as a function of (x1,x3) around [0,2,2.5]" class = "sphx-glr-single-img"/><p>Graph 3 : simplified method for x –&gt;  func1(x)
 for x in [-1.5, 1.5]
 Give the variation interval</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">xMin3</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span>
-<span class="n">xMax3</span> <span class="o">=</span> <span class="mf">1.5</span>
-<span class="c1"># Specify the point number of the final curve</span>
-<span class="n">ptNb</span> <span class="o">=</span> <span class="mi">101</span>
-<span class="c1"># Draw the curve!</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">func1</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">xMin3</span><span class="p">,</span> <span class="n">xMax3</span><span class="p">,</span> <span class="n">ptNb</span><span class="p">)</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">xMin3</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span><span class="w">
+</span><span class="n">xMax3</span> <span class="o">=</span> <span class="mf">1.5</span><span class="w">
+</span><span class="c1"># Specify the point number of the final curve</span><span class="w">
+</span><span class="n">ptNb</span> <span class="o">=</span> <span class="mi">101</span><span class="w">
+</span><span class="c1"># Draw the curve!</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction.draw" title="openturns.SymbolicFunction.draw"><span class="n">func1</span><span class="o">.</span><span class="n">draw</span></a><span class="p">(</span><span class="n">xMin3</span><span class="p">,</span> <span class="n">xMax3</span><span class="p">,</span> <span class="n">ptNb</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">view</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../_images/sphx_glr_plot_function_manipulation_003.svg" srcset="../../_images/sphx_glr_plot_function_manipulation_003.svg" alt="y0 as a function of x" class = "sphx-glr-single-img"/><p>Graph 4 : (x,y) –&gt;  func2(x,y)
 for x in [-1.5, 1.5], y in [-2.5, 2.5]
 Give their variation interval</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">inputMin4</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">]</span>
-<span class="n">inputMax4</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>
-<span class="c1"># Give the coordinates of the fixed input components</span>
-<span class="n">centralPt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>
-<span class="c1"># Specify the output marginal function</span>
-<span class="n">outputMarg</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="c1"># Specify the point number of the final curve</span>
-<span class="n">ptNb</span> <span class="o">=</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">101</span><span class="p">]</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">func2</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">inputMin4</span><span class="p">,</span> <span class="n">inputMax4</span><span class="p">,</span> <span class="n">ptNb</span><span class="p">)</span>
-<span class="n">view</span> <span class="o">=</span> <span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">inputMin4</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">]</span><span class="w">
+</span><span class="n">inputMax4</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span><span class="w">
+</span><span class="c1"># Give the coordinates of the fixed input components</span><span class="w">
+</span><span class="n">centralPt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span><span class="w">
+</span><span class="c1"># Specify the output marginal function</span><span class="w">
+</span><span class="n">outputMarg</span> <span class="o">=</span> <span class="mi">1</span><span class="w">
+</span><span class="c1"># Specify the point number of the final curve</span><span class="w">
+</span><span class="n">ptNb</span> <span class="o">=</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">101</span><span class="p">]</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.SymbolicFunction.html#openturns.SymbolicFunction.draw" title="openturns.SymbolicFunction.draw"><span class="n">func2</span><span class="o">.</span><span class="n">draw</span></a><span class="p">(</span><span class="n">inputMin4</span><span class="p">,</span> <span class="n">inputMax4</span><span class="p">,</span> <span class="n">ptNb</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">view</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-openturns-viewer sphx-glr-backref-type-py-class reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View" title="openturns.viewer.View"><span class="n">otv</span><span class="o">.</span><span class="n">View</span></a><span class="p">(</span><a class="sphx-glr-backref-module-openturns sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../user_manual/_generated/openturns.Graph.html#openturns.Graph" title="openturns.Graph"><span class="n">graph</span></a><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../_images/sphx_glr_plot_function_manipulation_004.svg" srcset="../../_images/sphx_glr_plot_function_manipulation_004.svg" alt="y0 as a function of (x,y)" class = "sphx-glr-single-img"/><p>Display all figures</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-openturns-viewer-View sphx-glr-backref-type-py-method reference internal" href="../../user_manual/_generated/openturns.viewer.View.html#openturns.viewer.View.ShowAll" title="openturns.viewer.View.ShowAll"><span class="n">otv</span><span class="o">.</span><span class="n">View</span><span class="o">.</span><span class="n">ShowAll</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-functional-modeling-field-functions-plot-function-manipulation-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/39f2261ff0cc3ec66682ce2fa02a4685/plot_function_manipulation.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_function_manipulation.ipynb</span></code></a></p>
