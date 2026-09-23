@@ -34,7 +34,7 @@ elif "Binomial" == "LinearCombinationDistribution":
 elif "Binomial" == "SmoothedUniform":
     distribution = ot.SmoothedUniform(-1.0, 10.0, 1.0)
 elif "Binomial" == "TruncatedDistribution":
-    distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), ot.Interval(1.0, 4.0))
 elif "Binomial" == "FiniteDiscreteDistribution":
     distribution = ot.FiniteDiscreteDistribution([[1.0], [2.0], [3.0]], [0.4, 0.5, 1.0])
 elif "Binomial" == "ZipfMandelbrot":
