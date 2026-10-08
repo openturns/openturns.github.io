@@ -95,7 +95,7 @@ Define an independent joint distribution
 
 .. code-block:: Python
 
-    X_ind = ot.ComposedDistribution([X0, X1])
+    X_ind = ot.JointDistribution([X0, X1])
 
 
 
@@ -113,7 +113,7 @@ Define a dependent joint distribution using a copula (e.g., Frank copula)
 .. code-block:: Python
 
     copula = ot.FrankCopula(5)
-    X_dep = ot.ComposedDistribution([X0, X1], copula)
+    X_dep = ot.JointDistribution([X0, X1], copula)
 
 
 
@@ -471,7 +471,7 @@ ThresholdEvent
 
  .. code-block:: none
 
-    Pf =  0.16262135922330098
+    Pf =  0.1497584541062803
 
 
 
@@ -491,7 +491,7 @@ ThresholdEvent
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 42.626 seconds)
+   **Total running time of the script:** (0 minutes 46.104 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_uncecomp_ot_examples.py:

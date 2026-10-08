@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:44.022** total execution time for 11 files **from auto_examples/sensitivity_problems**:
+**00:12.243** total execution time for 11 files **from auto_examples/sensitivity_problems**:
 
 .. container::
 
@@ -32,36 +32,36 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_morris_sensitivity.py` (``plot_morris_sensitivity.py``)
-     - 00:24.004
-     - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_nloscillator_sensitivity.py` (``plot_nloscillator_sensitivity.py``)
-     - 00:05.645
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py` (``plot_dirichlet_sensitivity.py``)
-     - 00:02.330
+     - 00:02.486
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_flood_sensitivity.py` (``plot_flood_sensitivity.py``)
-     - 00:02.181
+     - 00:01.680
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py` (``plot_dirichlet_sensitivity.py``)
+     - 00:01.478
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borehole_sensitivity.py` (``plot_borehole_sensitivity.py``)
-     - 00:02.121
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_sum.py` (``plot_gaussian_sum.py``)
-     - 00:01.794
-     - 0.0
-   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gsobol_sensitivity.py` (``plot_gsobol_sensitivity.py``)
-     - 00:01.462
+     - 00:01.266
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_oakleyohagan_sensitivity.py` (``plot_oakleyohagan_sensitivity.py``)
-     - 00:01.395
+     - 00:01.164
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gsobol_sensitivity.py` (``plot_gsobol_sensitivity.py``)
+     - 00:01.098
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_sum.py` (``plot_gaussian_sum.py``)
+     - 00:01.077
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_gaussian_product_sensitivity.py` (``plot_gaussian_product_sensitivity.py``)
-     - 00:01.104
+     - 00:00.770
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_morris_sensitivity.py` (``plot_morris_sensitivity.py``)
+     - 00:00.485
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py` (``plot_ishigami_sensitivity.py``)
-     - 00:01.037
+     - 00:00.378
      - 0.0
    * - :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py` (``plot_borgonovo_sensitivity.py``)
-     - 00:00.950
+     - 00:00.360
      - 0.0

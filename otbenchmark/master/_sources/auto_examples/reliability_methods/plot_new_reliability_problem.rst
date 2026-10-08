@@ -102,7 +102,7 @@ create a new class which derives from ReliabilityBenchmarkProblem.
             for i, (mu, cov) in enumerate(zip(mean_list, cov_list)):
                 parameters = ot.LogNormalMuSigma(mu, mu * cov, 0.0)
                 myCollection[i] = ot.ParametrizedDistribution(parameters)
-            distribution = ot.ComposedDistribution(myCollection)
+            distribution = ot.JointDistribution(myCollection)
             inputRandomVector = ot.RandomVector(distribution)
             outputRandomVector = ot.CompositeRandomVector(
                 limitStateFunction, inputRandomVector
@@ -253,7 +253,7 @@ achieve a satisfactory accuracy.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.014 seconds)
+   **Total running time of the script:** (0 minutes 0.009 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_methods_plot_new_reliability_problem.py:

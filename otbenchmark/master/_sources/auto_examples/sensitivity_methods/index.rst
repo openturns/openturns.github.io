@@ -49,23 +49,6 @@ Sensitivity methods
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Convergence of estimators on Ishigami">
-
-.. only:: html
-
-  .. image:: /auto_examples/sensitivity_methods/images/thumb/sphx_glr_plot_convergence_ishigami_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_convergence_ishigami.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Convergence of estimators on Ishigami</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark sensitivity analysis methods">
 
 .. only:: html
@@ -81,6 +64,23 @@ Sensitivity methods
     </div>
 
 
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Convergence of estimators on Ishigami">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_methods/images/thumb/sphx_glr_plot_convergence_ishigami_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_convergence_ishigami.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Convergence of estimators on Ishigami</div>
+    </div>
+
+
 .. thumbnail-parent-div-close
 
 .. raw:: html
@@ -93,6 +93,6 @@ Sensitivity methods
 
    /auto_examples/sensitivity_methods/plot_print_problems
    /auto_examples/sensitivity_methods/plot_sensitivity_distribution_ishigami
-   /auto_examples/sensitivity_methods/plot_convergence_ishigami
    /auto_examples/sensitivity_methods/plot_benchmark_sensitivity_methods
+   /auto_examples/sensitivity_methods/plot_convergence_ishigami
 

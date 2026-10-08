@@ -52,7 +52,7 @@ Benchmark the Borgonovo test function
  .. code-block:: none
 
     name = Borgonovo
-    distribution = ComposedDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 3))
+    distribution = JointDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 3))
     function = [x1,x2,x3]->[x1 * x2 + x3]
     firstOrderIndices = [0.157895,0.157895,0.631579]
     totalOrderIndices = [0.210526,0.210526,0.631579]
@@ -166,7 +166,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -277,9 +277,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.157603,0.15728,0.631181]
+    Computed first order =  [0.166136,0.157381,0.623798]
     Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.21068,0.210519,0.632092]
+    Computed total order =  [0.207054,0.2159,0.623765]
     Exact total order =  [0.210526,0.210526,0.631579]
 
 
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.950 seconds)
+   **Total running time of the script:** (0 minutes 0.360 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_borgonovo_sensitivity.py:

@@ -84,8 +84,8 @@ Exact first and total order
 
 .. code-block:: Python
 
-    exact_first_order = problem.getFirstOrderIndices()
-    exact_total_order = problem.getTotalOrderIndices()
+    exactFirstOrder = problem.getFirstOrderIndices()
+    exactTotalOrder = problem.getTotalOrderIndices()
 
 
 
@@ -103,7 +103,7 @@ Saltelli estimator with Monte-Carlo sample
 
 .. code-block:: Python
 
-    sample_size = 10000
+    sampleSize = 10000
 
 
 
@@ -116,7 +116,7 @@ Saltelli estimator with Monte-Carlo sample
 
 .. code-block:: Python
 
-    inputDesign = ot.SobolIndicesExperiment(distribution, sample_size).generate()
+    inputDesign = ot.SobolIndicesExperiment(distribution, sampleSize).generate()
     outputDesign = model(inputDesign)
 
 
@@ -135,10 +135,10 @@ Compute first order indices using the Saltelli estimator
 .. code-block:: Python
 
     sensitivityAnalysis = ot.SaltelliSensitivityAlgorithm(
-        inputDesign, outputDesign, sample_size
+        inputDesign, outputDesign, sampleSize
     )
-    computed_first_order = sensitivityAnalysis.getFirstOrderIndices()
-    computed_total_order = sensitivityAnalysis.getTotalOrderIndices()
+    computedFirstOrder = sensitivityAnalysis.getFirstOrderIndices()
+    computedTotalOrder = sensitivityAnalysis.getTotalOrderIndices()
 
 
 
@@ -155,13 +155,13 @@ Compare with exact results
 
 .. code-block:: Python
 
-    print("Sample size : ", sample_size)
+    print(f"Sample size : {sampleSize}")
     # First order
-    print("Computed first order = ", computed_first_order)
-    print("Exact first order = ", exact_first_order)
+    print(f"Computed first order = {computedFirstOrder}")
+    print(f"Exact first order = {exactFirstOrder}")
     # Total order
-    print("Computed total order = ", computed_total_order)
-    print("Exact total order = ", exact_total_order)
+    print(f"Computed total order = {computedTotalOrder}")
+    print(f"Exact total order = {exactTotalOrder}")
 
 
 
@@ -171,11 +171,11 @@ Compare with exact results
 
  .. code-block:: none
 
-    Sample size :  10000
-    Computed first order =  [0.156356,0.150228,0.634876]
-    Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.207763,0.205055,0.639286]
-    Exact total order =  [0.210526,0.210526,0.631579]
+    Sample size : 10000
+    Computed first order = [0.166136,0.157381,0.623798]
+    Exact first order = [0.157895,0.157895,0.631579]
+    Computed total order = [0.207054,0.2159,0.623765]
+    Exact total order = [0.210526,0.210526,0.631579]
 
 
 
@@ -189,7 +189,7 @@ Saltelli estimator with Quasi Monte-Carlo sample
 
 .. code-block:: Python
 
-    sample_size = 500
+    sampleSize = 500
 
 
 
@@ -205,7 +205,7 @@ Saltelli estimator with Quasi Monte-Carlo sample
     dimension = distribution.getDimension()
     sequence = ot.SobolSequence(dimension)
     restart = True
-    experiment = ot.LowDiscrepancyExperiment(sequence, distribution, sample_size, restart)
+    experiment = ot.LowDiscrepancyExperiment(sequence, distribution, sampleSize, restart)
 
 
 
@@ -237,10 +237,10 @@ Compute first order indices using the Saltelli estimator
 .. code-block:: Python
 
     sensitivityAnalysis = ot.SaltelliSensitivityAlgorithm(
-        inputDesign, outputDesign, sample_size
+        inputDesign, outputDesign, sampleSize
     )
-    first_order = sensitivityAnalysis.getFirstOrderIndices()
-    total_order = sensitivityAnalysis.getTotalOrderIndices()
+    computedFirstOrder = sensitivityAnalysis.getFirstOrderIndices()
+    computedTotalOrder = sensitivityAnalysis.getTotalOrderIndices()
 
 
 
@@ -257,13 +257,13 @@ Compare with exact results
 
 .. code-block:: Python
 
-    print("Sample size : ", sample_size)
+    print(f"Sample size : {sampleSize}")
     # First order
-    print("Computed first order = ", computed_first_order)
-    print("Exact first order = ", exact_first_order)
+    print(f"Computed first order = {computedFirstOrder}")
+    print(f"Exact first order = {exactFirstOrder}")
     # Total order
-    print("Computed total order = ", computed_total_order)
-    print("Exact total order = ", exact_total_order)
+    print(f"Computed total order = {computedTotalOrder}")
+    print(f"Exact total order = {exactTotalOrder}")
 
 
 
@@ -273,11 +273,11 @@ Compare with exact results
 
  .. code-block:: none
 
-    Sample size :  500
-    Computed first order =  [0.156356,0.150228,0.634876]
-    Exact first order =  [0.157895,0.157895,0.631579]
-    Computed total order =  [0.207763,0.205055,0.639286]
-    Exact total order =  [0.210526,0.210526,0.631579]
+    Sample size : 500
+    Computed first order = [0.147144,0.151326,0.624455]
+    Exact first order = [0.157895,0.157895,0.631579]
+    Computed total order = [0.212622,0.209087,0.643622]
+    Exact total order = [0.210526,0.210526,0.631579]
 
 
 
@@ -334,13 +334,13 @@ Loop over the estimators
     print("Monte-Carlo sampling")
     for sobolAlgorithm in estimators_list:
         (
-            computed_first_order,
-            computed_total_order,
-        ) = metaSAAlgorithm.runSamplingEstimator(sample_size)
+            computedFirstOrder,
+            computedTotalOrder,
+        ) = metaSAAlgorithm.runSamplingEstimator(sampleSize)
         name = sobolAlgorithm.getClassName()
         print(name)
-        print("    S = ", computed_first_order)
-        print("    T = ", computed_total_order)
+        print("    S = ", computedFirstOrder)
+        print("    T = ", computedTotalOrder)
 
 
 
@@ -352,17 +352,17 @@ Loop over the estimators
 
     Monte-Carlo sampling
     SaltelliSensitivityAlgorithm
-        S =  [0.14465,0.0999962,0.625487]
-        T =  [0.24804,0.217538,0.674237]
+        S =  [0.146135,0.139029,0.657612]
+        T =  [0.224719,0.240232,0.642326]
     MartinezSensitivityAlgorithm
-        S =  [0.168487,0.119565,0.651924]
-        T =  [0.21305,0.22557,0.628727]
+        S =  [0.153514,0.139747,0.66382]
+        T =  [0.251203,0.263947,0.597202]
     JansenSensitivityAlgorithm
-        S =  [0.187849,0.238909,0.728889]
-        T =  [0.217937,0.229321,0.513397]
+        S =  [0.1084,0.114513,0.445419]
+        T =  [0.262191,0.219558,0.592405]
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.183941,0.167166,0.817777]
-        T =  [0.200823,0.206945,0.684744]
+        S =  [0.132499,0.172125,0.610951]
+        T =  [0.130792,0.196478,0.726522]
 
 
 
@@ -374,15 +374,15 @@ Loop over the estimators
     print("Quasi Monte-Carlo sampling")
     for estimator in ["Saltelli", "Martinez", "Jansen", "MauntzKucherenko"]:
         (
-            computed_first_order,
-            computed_total_order,
+            computedFirstOrder,
+            computedTotalOrder,
         ) = metaSAAlgorithm.runSamplingEstimator(
-            sample_size, estimator=estimator, sampling_method="QMC"
+            sampleSize, estimator=estimator, samplingMethod="QMC"
         )
         name = sobolAlgorithm.getClassName()
         print(name)
-        print("    S = ", computed_first_order)
-        print("    T = ", computed_total_order)
+        print(f"    S = {computedFirstOrder}")
+        print(f"    T = {computedTotalOrder}")
 
 
 
@@ -394,17 +394,17 @@ Loop over the estimators
 
     Quasi Monte-Carlo sampling
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.147144,0.151326,0.624455]
-        T =  [0.212622,0.209087,0.643622]
+        S = [0.147144,0.151326,0.624455]
+        T = [0.212622,0.209087,0.643622]
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.147601,0.150976,0.629051]
-        T =  [0.210037,0.210799,0.640943]
+        S = [0.147601,0.150976,0.629051]
+        T = [0.210037,0.210799,0.640943]
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.151099,0.149846,0.632098]
-        T =  [0.20915,0.21105,0.635553]
+        S = [0.151099,0.149846,0.632098]
+        T = [0.20915,0.21105,0.635553]
     MauntzKucherenkoSensitivityAlgorithm
-        S =  [0.159027,0.163209,0.636338]
-        T =  [0.212622,0.209087,0.643622]
+        S = [0.159027,0.163209,0.636338]
+        T = [0.212622,0.209087,0.643622]
 
 
 
@@ -414,18 +414,18 @@ Loop over the estimators
 .. code-block:: Python
 
     print("Polynomial chaos")
-    sample_size = 500
+    sampleSize = 500
     (
-        computed_first_order,
-        computed_total_order,
+        computedFirstOrder,
+        computedTotalOrder,
     ) = metaSAAlgorithm.runPolynomialChaosEstimator(
-        sample_size_train=sample_size,
-        sample_size_test=2,
-        total_degree=5,
-        hyperbolic_quasinorm=0.5,
+        sampleSizeTrain=sampleSize,
+        sampleSizeTest=2,
+        totalDegree=5,
+        hyperbolicQuasiNorm=0.5,
     )
-    print("    S = ", computed_first_order)
-    print("    T = ", computed_total_order)
+    print(f"    S = {computedFirstOrder}")
+    print(f"    T = {computedTotalOrder}")
 
 
 
@@ -436,8 +436,8 @@ Loop over the estimators
  .. code-block:: none
 
     Polynomial chaos
-        S =  [0.157895,0.157895,0.631579]
-        T =  [0.210526,0.210526,0.631579]
+        S = [0.157895,0.157895,0.631579]
+        T = [0.210526,0.210526,0.631579]
 
 
 
@@ -469,10 +469,10 @@ The average mean LRE represents the mean LRE for both first and total order indi
     T_LRE = ot.Point(dimension)
     for i in range(dimension):
         S_LRE[i] = otb.ComputeLogRelativeError(
-            computed_first_order[i], exact_first_order[i]
+            computedFirstOrder[i], exactFirstOrder[i]
         )
         T_LRE[i] = otb.ComputeLogRelativeError(
-            computed_total_order[i], exact_total_order[i]
+            computedTotalOrder[i], exactTotalOrder[i]
         )
 
 
@@ -486,8 +486,8 @@ The average mean LRE represents the mean LRE for both first and total order indi
 
 .. code-block:: Python
 
-    print("LRE S = ", S_LRE)
-    print("LRE T = ", T_LRE)
+    print(f"LRE S = {S_LRE}")
+    print(f"LRE T = {T_LRE}")
 
 
 
@@ -497,8 +497,8 @@ The average mean LRE represents the mean LRE for both first and total order indi
 
  .. code-block:: none
 
-    LRE S =  [15.056,14.755,15.153]
-    LRE T =  [15.5789,15.0349,15.153]
+    LRE S = [14.4997,14.755,14.9099]
+    LRE T = [14.6247,14.88,14.9099]
 
 
 
@@ -510,9 +510,9 @@ The average mean LRE represents the mean LRE for both first and total order indi
     mean_LRE_S = sum(S_LRE) / dimension
     mean_LRE_T = sum(T_LRE) / dimension
     mean_LRE = (mean_LRE_S + mean_LRE_T) / 2.0
-    print("Mean LRE S = %.2f" % (mean_LRE_S))
-    print("Mean LRE T = %.2f" % (mean_LRE_T))
-    print("Mean LRE = %.2f" % (mean_LRE))
+    print(f"Mean LRE S = {mean_LRE_S:.2f}")
+    print(f"Mean LRE T = {mean_LRE_T:.2f}")
+    print(f"Mean LRE = {mean_LRE:.2f}")
 
 
 
@@ -522,9 +522,9 @@ The average mean LRE represents the mean LRE for both first and total order indi
 
  .. code-block:: none
 
-    Mean LRE S = 14.99
-    Mean LRE T = 15.26
-    Mean LRE = 15.12
+    Mean LRE S = 14.72
+    Mean LRE T = 14.80
+    Mean LRE = 14.76
 
 
 
@@ -537,8 +537,8 @@ The digit per point ratio measure the number of digits relatively to the sample 
 
 .. code-block:: Python
 
-    digit_per_point_ratio = mean_LRE / sample_size
-    print("Digit / point = %.3e" % (digit_per_point_ratio))
+    digitPerPointRatio = mean_LRE / sampleSize
+    print(f"Digit / point = {digitPerPointRatio:.3e}")
 
 
 
@@ -547,7 +547,7 @@ The digit per point ratio measure the number of digits relatively to the sample 
 
  .. code-block:: none
 
-    Digit / point = 3.024e-02
+    Digit / point = 2.953e-02
 
 
 
@@ -555,7 +555,7 @@ The digit per point ratio measure the number of digits relatively to the sample 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.030 seconds)
+   **Total running time of the script:** (0 minutes 0.196 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_methods_plot_benchmark_sensitivity_methods.py:

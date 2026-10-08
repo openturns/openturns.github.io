@@ -48,7 +48,7 @@ Create a Funky distribution
     copula = ot.NormalCopula(corr)
     x1 = ot.Normal(-1.0, 1.0)
     x2 = ot.Normal(2.0, 1.0)
-    x_funk = ot.ComposedDistribution([x1, x2], copula)
+    x_funk = ot.JointDistribution([x1, x2], copula)
 
 
 
@@ -67,7 +67,7 @@ Create a Punk distribution
 
     x1 = ot.Normal(1.0, 1.0)
     x2 = ot.Normal(-2.0, 1.0)
-    x_punk = ot.ComposedDistribution([x1, x2], copula)
+    x_punk = ot.JointDistribution([x1, x2], copula)
 
 
 
@@ -152,7 +152,7 @@ Plot cross-cuts of the distribution
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.276 seconds)
+   **Total running time of the script:** (0 minutes 0.478 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_crosscut_distribution_2d.py:

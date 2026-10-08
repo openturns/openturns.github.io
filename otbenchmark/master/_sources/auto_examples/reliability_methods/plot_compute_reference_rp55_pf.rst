@@ -414,14 +414,15 @@ From integration
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <table>
+    <table><thead>
       <tr><td></td><th>y0</th></tr>
+    </thead><tbody>
       <tr><th>0</th><td>0.25</td></tr>
-      <tr><th>1</th><td>0.25</td></tr>
+      <tr><th>1</th><td>0</td></tr>
       <tr><th>2</th><td>0.25</td></tr>
       <tr><th>3</th><td>0.25</td></tr>
-      <tr><th>4</th><td>0</td></tr>
-    </table>
+      <tr><th>4</th><td>0.25</td></tr>
+    </tbody></table>
     </div>
     <br />
     <br />
@@ -776,8 +777,9 @@ Then we set the corners of the polygons in the failure domain.
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <table>
+    <table><thead>
       <tr><td></td><th>v0</th><th>v1</th></tr>
+    </thead><tbody>
       <tr><th>0</th><td>-1</td><td>1</td></tr>
       <tr><th>1</th><td>1</td><td>0.7112594</td></tr>
       <tr><th>2</th><td>1</td><td>0.06295162</td></tr>
@@ -792,7 +794,7 @@ Then we set the corners of the polygons in the failure domain.
       <tr><th>11</th><td>0.7112594</td><td>1</td></tr>
       <tr><th>12</th><td>0.06295162</td><td>1</td></tr>
       <tr><th>13</th><td>1</td><td>-1</td></tr>
-    </table>
+    </tbody></table>
     </div>
     <br />
     <br />
@@ -1049,7 +1051,7 @@ The area of each polygon is computed based on the shapely module.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.692 seconds)
+   **Total running time of the script:** (0 minutes 2.379 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_methods_plot_compute_reference_rp55_pf.py:

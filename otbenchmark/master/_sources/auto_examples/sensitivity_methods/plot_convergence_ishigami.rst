@@ -21,17 +21,18 @@
 Convergence of estimators on Ishigami
 =====================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-14
+.. GENERATED FROM PYTHON SOURCE LINES 7-15
 
 In this example, we present the convergence of the sensitivity indices of the Ishigami test function.
 
 We compare different estimators.
+
 * Sampling methods with different estimators: Saltelli, Mauntz-Kucherenko, Martinez, Jansen,
 * Sampling methods with different design of experiments: Monte-Carlo, LHS, Quasi-Monte-Carlo,
 * Polynomial chaos.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-22
+.. GENERATED FROM PYTHON SOURCE LINES 17-22
 
 .. code-block:: Python
 
@@ -47,8 +48,20 @@ We compare different estimators.
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 23-25
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-29
+.. code-block:: Python
+
+    maximumElapsedTime = 0.5
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 26-32
 
 When we estimate Sobol' indices, we may encounter the following warning messages:
 ```
@@ -57,7 +70,7 @@ WRN - The estimated total order Sobol index (2) is lesser than first order index
 ```
 Lots of these messages are printed in the current Notebook. This is why we disable them with:
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-32
+.. GENERATED FROM PYTHON SOURCE LINES 32-35
 
 .. code-block:: Python
 
@@ -71,7 +84,7 @@ Lots of these messages are printed in the current Notebook. This is why we disab
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-36
+.. GENERATED FROM PYTHON SOURCE LINES 36-39
 
 .. code-block:: Python
 
@@ -87,7 +100,7 @@ Lots of these messages are printed in the current Notebook. This is why we disab
  .. code-block:: none
 
     name = Ishigami
-    distribution = ComposedDistribution(Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), IndependentCopula(dimension = 3))
+    distribution = JointDistribution(Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), IndependentCopula(dimension = 3))
     function = ParametricEvaluation([X1,X2,X3,a,b]->[sin(X1) + a * sin(X2)^2 + b * X3^4 * sin(X1)], parameters positions=[3,4], parameters=[a : 7, b : 0.1], input positions=[0,1,2])
     firstOrderIndices = [0.313905,0.442411,0]
     totalOrderIndices = [0.557589,0.442411,0.243684]
@@ -95,7 +108,7 @@ Lots of these messages are printed in the current Notebook. This is why we disab
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-40
+.. GENERATED FROM PYTHON SOURCE LINES 40-43
 
 .. code-block:: Python
 
@@ -109,18 +122,18 @@ Lots of these messages are printed in the current Notebook. This is why we disab
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 Exact first and total order
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-50
 
 .. code-block:: Python
 
-    exact_first_order = problem.getFirstOrderIndices()
-    print(exact_first_order)
-    exact_total_order = problem.getTotalOrderIndices()
-    print(exact_total_order)
+    exactFirstOrder = problem.getFirstOrderIndices()
+    print(exactFirstOrder)
+    exactTotalOrder = problem.getTotalOrderIndices()
+    print(exactTotalOrder)
 
 
 
@@ -136,16 +149,16 @@ Exact first and total order
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-53
 
 Perform sensitivity analysis
 ----------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Create X/Y data
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-58
+.. GENERATED FROM PYTHON SOURCE LINES 56-61
 
 .. code-block:: Python
 
@@ -161,17 +174,17 @@ Create X/Y data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Compute first order indices using the Saltelli estimator
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 63-67
 
 .. code-block:: Python
 
     sensitivityAnalysis = ot.SaltelliSensitivityAlgorithm(inputDesign, outputDesign, size)
-    computed_first_order = sensitivityAnalysis.getFirstOrderIndices()
-    computed_total_order = sensitivityAnalysis.getTotalOrderIndices()
+    computedFirstOrder = sensitivityAnalysis.getFirstOrderIndices()
+    computedTotalOrder = sensitivityAnalysis.getTotalOrderIndices()
 
 
 
@@ -180,11 +193,11 @@ Compute first order indices using the Saltelli estimator
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Compare with exact results
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-76
+.. GENERATED FROM PYTHON SOURCE LINES 69-79
 
 .. code-block:: Python
 
@@ -192,11 +205,11 @@ Compare with exact results
     # First order
     # Compute absolute error (the LRE cannot be computed,
     # because S can be zero)
-    print("Computed first order = ", computed_first_order)
-    print("Exact first order    = ", exact_first_order)
+    print("Computed first order = ", computedFirstOrder)
+    print("Exact first order    = ", exactFirstOrder)
     # Total order
-    print("Computed total order = ", computed_total_order)
-    print("Exact total order    = ", exact_total_order)
+    print("Computed total order = ", computedTotalOrder)
+    print("Exact total order    = ", exactTotalOrder)
 
 
 
@@ -215,7 +228,7 @@ Compare with exact results
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-79
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
 
 .. code-block:: Python
 
@@ -228,16 +241,16 @@ Compare with exact results
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-81
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
 
 Compute componentwise absolute error.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-84
+.. GENERATED FROM PYTHON SOURCE LINES 84-87
 
 .. code-block:: Python
 
-    first_order_AE = ot.Point(np.abs(exact_first_order - computed_first_order))
-    total_order_AE = ot.Point(np.abs(exact_total_order - computed_total_order))
+    firstOrderAE = ot.Point(np.abs(exactFirstOrder - computedFirstOrder))
+    totalOrderAE = ot.Point(np.abs(exactTotalOrder - computedTotalOrder))
 
 
 
@@ -246,14 +259,14 @@ Compute componentwise absolute error.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-91
+.. GENERATED FROM PYTHON SOURCE LINES 88-94
 
 .. code-block:: Python
 
     print("Absolute error")
     for i in range(dimension):
         print(
-            "AE(S%d) = %.4f, AE(T%d) = %.4f" % (i, first_order_AE[i], i, total_order_AE[i])
+            f"AE(S{i}) = {firstOrderAE[i]:.4f}, AE(T{i}) = {totalOrderAE[i]:.4f}"
         )
 
 
@@ -272,25 +285,37 @@ Compute componentwise absolute error.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-111
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 .. code-block:: Python
 
     metaSAAlgorithm = otb.SensitivityBenchmarkMetaAlgorithm(problem)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 98-116
+
+.. code-block:: Python
+
     for estimator in ["Saltelli", "Martinez", "Jansen", "MauntzKucherenko", "Janon"]:
         print("Estimator:", estimator)
         benchmark = otb.SensitivityConvergence(
             problem,
             metaSAAlgorithm,
             numberOfRepetitions=4,
-            maximum_elapsed_time=2.0,
-            sample_size_initial=20,
+            maximumElapsedTime=maximumElapsedTime,
+            sampleSizeInitial=20,
             estimator=estimator,
         )
         grid = benchmark.plotConvergenceGrid(verbose=False)
         view = otv.View(grid)
         figure = view.getFigure()
-        _ = figure.suptitle("%s, %s" % (problem.getName(), estimator))
+        _ = figure.suptitle(f"{problem.getName()}, {estimator}")
         figure.set_figwidth(10.0)
         figure.set_figheight(5.0)
         figure.subplots_adjust(wspace=0.4, hspace=0.4)
@@ -350,7 +375,7 @@ Compute componentwise absolute error.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-124
+.. GENERATED FROM PYTHON SOURCE LINES 117-131
 
 .. code-block:: Python
 
@@ -358,13 +383,15 @@ Compute componentwise absolute error.
         problem,
         metaSAAlgorithm,
         numberOfRepetitions=4,
-        maximum_elapsed_time=2.0,
-        sample_size_initial=20,
+        maximumElapsedTime=maximumElapsedTime,
+        sampleSizeInitial=20,
         estimator="Saltelli",
-        sampling_method="MonteCarlo",
+        samplingMethod="MonteCarlo",
     )
     graph = benchmark.plotConvergenceCurve()
-    _ = otv.View(graph)
+    graph.setLegendPosition("upper left")
+    graph.setLegendCorner((1.0, 1.0))
+    _ = otv.View(graph, figure_kw={"figsize": (4.0, 3.0)})
 
 
 
@@ -378,43 +405,53 @@ Compute componentwise absolute error.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-153
+.. GENERATED FROM PYTHON SOURCE LINES 132-170
 
 .. code-block:: Python
 
     grid = ot.GridLayout(1, 3)
-    maximum_absolute_error = 1.0
-    minimum_absolute_error = 1.0e-5
-    sampling_method_list = ["MonteCarlo", "LHS", "QMC"]
-    for sampling_method_index in range(3):
-        sampling_method = sampling_method_list[sampling_method_index]
+    maximumAbsoluteError = 1.0
+    minimumAbsoluteError = 1.0e-5
+    samplingMethodList = ["MonteCarlo", "LHS", "QMC"]
+    estimator = "Saltelli"
+    for samplingMethodIndex, samplingMethod in enumerate(samplingMethodList):
+        samplingMethod = samplingMethodList[samplingMethodIndex]
         benchmark = otb.SensitivityConvergence(
             problem,
             metaSAAlgorithm,
             numberOfRepetitions=4,
-            maximum_elapsed_time=2.0,
-            sample_size_initial=20,
-            estimator="Saltelli",
-            sampling_method=sampling_method,
+            maximumElapsedTime=maximumElapsedTime,
+            sampleSizeInitial=20,
+            estimator=estimator,
+            samplingMethod=samplingMethod,
         )
         graph = benchmark.plotConvergenceCurve()
         # Change bounding box
         box = graph.getBoundingBox()
         bound = box.getLowerBound()
-        bound[1] = minimum_absolute_error
+        bound[1] = minimumAbsoluteError
         box.setLowerBound(bound)
         bound = box.getUpperBound()
-        bound[1] = maximum_absolute_error
+        bound[1] = maximumAbsoluteError
         box.setUpperBound(bound)
         graph.setBoundingBox(box)
-        grid.setGraph(0, sampling_method_index, graph)
-    _ = otv.View(grid)
+        if samplingMethodIndex < len(samplingMethodList) - 1:
+            graph.setLegends([""])
+        else:
+            graph.setLegendPosition("upper left")
+            graph.setLegendCorner((1.0, 1.0))
+        if samplingMethodIndex > 0:
+            graph.setYTitle("")
+        graph.setTitle(f"{samplingMethod}")
+        grid.setGraph(0, samplingMethodIndex, graph)
+    grid.setTitle(f"Ishigami, {estimator}")
+    _ = otv.View(grid, figure_kw={"figsize": (8.0, 4.0)})
 
 
 
 
 .. image-sg:: /auto_examples/sensitivity_methods/images/sphx_glr_plot_convergence_ishigami_007.png
-   :alt: , Ishigami, Saltelli, MonteCarlo, Ishigami, Saltelli, LHS, Ishigami, Saltelli, QMC
+   :alt: Ishigami, Saltelli, MonteCarlo, LHS, QMC
    :srcset: /auto_examples/sensitivity_methods/images/sphx_glr_plot_convergence_ishigami_007.png
    :class: sphx-glr-single-img
 
@@ -422,34 +459,39 @@ Compute componentwise absolute error.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-155
+.. GENERATED FROM PYTHON SOURCE LINES 171-172
 
 Use polynomial chaos.
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-170
+.. GENERATED FROM PYTHON SOURCE LINES 172-192
 
 .. code-block:: Python
 
+    sparse = True
     benchmark = otb.SensitivityConvergence(
         problem,
         metaSAAlgorithm,
         numberOfExperiments=12,
         numberOfRepetitions=1,
-        maximum_elapsed_time=5.0,
-        sample_size_initial=20,
-        use_sampling=False,
-        total_degree=20,
-        hyperbolic_quasinorm=1.0,
+        maximumElapsedTime=5.0,
+        sampleSizeInitial=80,
+        useSampling=False,
+        totalDegree=8,
+        hyperbolicQuasiNorm=1.0,
+        sampleSizeFactor=1.5,
+        sparse=sparse,
     )
     graph = benchmark.plotConvergenceCurve(verbose=True)
-    graph.setLegendPosition("bottomleft")
-    _ = otv.View(graph)
+    graph.setLegendPosition("upper left")
+    graph.setLogScale(ot.GraphImplementation.LOGX)
+    graph.setLegendCorner((1.0, 1.0))
+    _ = otv.View(graph, figure_kw={"figsize": (4.0, 3.0)})
 
 
 
 
 .. image-sg:: /auto_examples/sensitivity_methods/images/sphx_glr_plot_convergence_ishigami_008.png
-   :alt: Ishigami, P.C., Degree=20
+   :alt: Ishigami, P.C., Degree=8
    :srcset: /auto_examples/sensitivity_methods/images/sphx_glr_plot_convergence_ishigami_008.png
    :class: sphx-glr-single-img
 
@@ -458,17 +500,24 @@ Use polynomial chaos.
 
  .. code-block:: none
 
-    Elapsed = 0.0 (s), Sample size = 40
     Elapsed = 0.0 (s), Sample size = 80
-    Elapsed = 0.1 (s), Sample size = 160
-    Elapsed = 0.6 (s), Sample size = 320
-    Elapsed = 3.1 (s), Sample size = 640
-    Elapsed = 18.60 (s)
+    Error in experiment 0, repetition 0, sample size 80: The number of candidate coefficients is 165 is larger or equal to the sample size 80
+    Elapsed = 0.0 (s), Sample size = 120
+    Error in experiment 1, repetition 0, sample size 120: The number of candidate coefficients is 165 is larger or equal to the sample size 120
+    Elapsed = 0.0 (s), Sample size = 180
+    Elapsed = 0.0 (s), Sample size = 270
+    Elapsed = 0.1 (s), Sample size = 405
+    Elapsed = 0.3 (s), Sample size = 608
+    Elapsed = 0.6 (s), Sample size = 912
+    Elapsed = 1.6 (s), Sample size = 1368
+    Elapsed = 3.8 (s), Sample size = 2052
+    Elapsed = 7.3 (s) > 5.0 (s), stopping the simulation.
+    Elapsed = 7.33 (s)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-172
+.. GENERATED FROM PYTHON SOURCE LINES 193-194
 
 .. code-block:: Python
 
@@ -483,7 +532,7 @@ Use polynomial chaos.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 56.400 seconds)
+   **Total running time of the script:** (0 minutes 17.804 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_methods_plot_convergence_ishigami.py:
