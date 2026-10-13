@@ -720,7 +720,7 @@ be seen from the very large spread of the distribution of this parameter.
 This may reveal that there are identifiability issues with this parameter
 when we use a linearization of the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 384-423
+.. GENERATED FROM PYTHON SOURCE LINES 384-434
 
 .. code-block:: Python
 
@@ -739,6 +739,14 @@ when we use a linearization of the model.
             The grid of plots.
 
         """
+        # Draw the grid with fewer points: the 300-point default set above for
+        # the spiky residual densities would make these 9 PDF plots (called 4
+        # times in this example) needlessly expensive, while smooth iso-PDF
+        # contours look identical with a coarser grid
+        defaultPointNumber = ot.ResourceMap.GetAsUnsignedInteger(
+            "Distribution-DefaultPointNumber"
+        )
+        ot.ResourceMap.SetAsUnsignedInteger("Distribution-DefaultPointNumber", 50)
         dimension = distribution.getDimension()
         grid = ot.GridLayout(dimension, dimension)
         for i in range(dimension):
@@ -760,6 +768,9 @@ when we use a linearization of the model.
                     graph.setYTitle("")
                 grid.setGraph(i, j, graph)
         grid.setTitle("Iso-PDF values")
+        ot.ResourceMap.SetAsUnsignedInteger(
+            "Distribution-DefaultPointNumber", defaultPointNumber
+        )
         return grid
 
 
@@ -770,11 +781,11 @@ when we use a linearization of the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 424-425
+.. GENERATED FROM PYTHON SOURCE LINES 435-436
 
 Plot the PDF values of the distribution of the optimum parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-434
+.. GENERATED FROM PYTHON SOURCE LINES 436-445
 
 .. code-block:: Python
 
@@ -799,7 +810,7 @@ Plot the PDF values of the distribution of the optimum parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 435-441
+.. GENERATED FROM PYTHON SOURCE LINES 446-452
 
 Since linear least squares calibration perform well, the study
 could stop here.
@@ -808,7 +819,7 @@ the results.
 We are going to see that the lack of identifiability of the :math:`\gamma`
 parameter can be regularized using Gausssian calibration methods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 443-448
+.. GENERATED FROM PYTHON SOURCE LINES 454-459
 
 Calibration with nonlinear least squares
 ----------------------------------------
@@ -816,7 +827,7 @@ The :class:`~openturns.NonLinearLeastSquaresCalibration` class performs
 the non linear least squares calibration by minimizing the squared
 Euclidian norm between the predictions and the observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 450-454
+.. GENERATED FROM PYTHON SOURCE LINES 461-465
 
 .. code-block:: Python
 
@@ -831,14 +842,14 @@ Euclidian norm between the predictions and the observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 455-459
+.. GENERATED FROM PYTHON SOURCE LINES 466-470
 
 The optimization algorithm is automatically selected using
 the default solver which can build a :class:`~openturns.LeastSquaresProblem`.
 We can see which solved is used using
 :meth:`~openturns.NonLinearLeastSquaresCalibration.getOptimizationAlgorithm`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 461-463
+.. GENERATED FROM PYTHON SOURCE LINES 472-474
 
 .. code-block:: Python
 
@@ -857,12 +868,12 @@ We can see which solved is used using
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 464-466
+.. GENERATED FROM PYTHON SOURCE LINES 475-477
 
 The :meth:`~openturns.NonLinearLeastSquaresCalibration.run` method computes
 the solution of the problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-471
+.. GENERATED FROM PYTHON SOURCE LINES 479-482
 
 .. code-block:: Python
 
@@ -876,17 +887,17 @@ the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 472-474
+.. GENERATED FROM PYTHON SOURCE LINES 483-485
 
 Analysis of the results
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 476-478
+.. GENERATED FROM PYTHON SOURCE LINES 487-489
 
 The :meth:`~openturns.CalibrationResult.getParameterMAP` method
 returns the maximum of the posterior distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 480-483
+.. GENERATED FROM PYTHON SOURCE LINES 491-494
 
 .. code-block:: Python
 
@@ -906,11 +917,11 @@ returns the maximum of the posterior distribution of :math:`\theta`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 484-485
+.. GENERATED FROM PYTHON SOURCE LINES 495-496
 
 We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-494
+.. GENERATED FROM PYTHON SOURCE LINES 498-505
 
 .. code-block:: Python
 
@@ -937,7 +948,7 @@ We can compute a 95% confidence interval of the parameter :math:`\theta^\star`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 495-503
+.. GENERATED FROM PYTHON SOURCE LINES 506-514
 
 We can see that :math:`R` and :math:`C` are accurately estimated
 and that :math:`\gamma` is estimated with a relatively large confidence
@@ -948,11 +959,11 @@ This is because the optimization algorithm that we used implicitly
 introduced some regularization that was absent from
 linear least squares.
 
-.. GENERATED FROM PYTHON SOURCE LINES 505-506
+.. GENERATED FROM PYTHON SOURCE LINES 516-517
 
 We now check the observations depending on the inputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 508-512
+.. GENERATED FROM PYTHON SOURCE LINES 519-523
 
 .. code-block:: Python
 
@@ -972,12 +983,12 @@ We now check the observations depending on the inputs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 513-515
+.. GENERATED FROM PYTHON SOURCE LINES 524-526
 
 We see that there is a good fit after calibration, since the predictions
 after calibration are close to the observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 517-520
+.. GENERATED FROM PYTHON SOURCE LINES 528-531
 
 .. code-block:: Python
 
@@ -996,16 +1007,16 @@ after calibration are close to the observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 521-523
+.. GENERATED FROM PYTHON SOURCE LINES 532-534
 
 We see that there is a much better fit after calibration, since the
 predictions are close to the diagonal of the graphics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 525-526
+.. GENERATED FROM PYTHON SOURCE LINES 536-537
 
 We now focus on the distribution of the errors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 528-531
+.. GENERATED FROM PYTHON SOURCE LINES 539-542
 
 .. code-block:: Python
 
@@ -1025,18 +1036,18 @@ We now focus on the distribution of the errors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 532-536
+.. GENERATED FROM PYTHON SOURCE LINES 543-547
 
 We see that the distribution is Gaussian (this is by hypothesis)
 with a mean relatively close to zero.
 Indeed, please consider that the stress has an order of magnitude close to
 :math:`10^8`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 538-539
+.. GENERATED FROM PYTHON SOURCE LINES 549-550
 
 As with any other distribution, we can draw its PDF.
 
-.. GENERATED FROM PYTHON SOURCE LINES 539-542
+.. GENERATED FROM PYTHON SOURCE LINES 550-553
 
 .. code-block:: Python
 
@@ -1055,7 +1066,7 @@ As with any other distribution, we can draw its PDF.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 543-551
+.. GENERATED FROM PYTHON SOURCE LINES 554-562
 
 .. code-block:: Python
 
@@ -1079,7 +1090,7 @@ As with any other distribution, we can draw its PDF.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 552-557
+.. GENERATED FROM PYTHON SOURCE LINES 563-568
 
 The analysis of the residuals shows that the distribution is centered
 on zero and symmetric.
@@ -1087,7 +1098,7 @@ This indicates that the calibration performed well.
 Moreover, the distribution of the residuals is close to being Gaussian.
 This indicates that the observation error might be Gaussian.
 
-.. GENERATED FROM PYTHON SOURCE LINES 559-567
+.. GENERATED FROM PYTHON SOURCE LINES 570-578
 
 .. code-block:: Python
 
@@ -1111,7 +1122,7 @@ This indicates that the observation error might be Gaussian.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 568-571
+.. GENERATED FROM PYTHON SOURCE LINES 579-582
 
 .. code-block:: Python
 
@@ -1130,11 +1141,11 @@ This indicates that the observation error might be Gaussian.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 572-573
+.. GENERATED FROM PYTHON SOURCE LINES 583-584
 
 Plot the PDF values of the distribution of the optimum parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 575-584
+.. GENERATED FROM PYTHON SOURCE LINES 586-595
 
 .. code-block:: Python
 
@@ -1159,7 +1170,7 @@ Plot the PDF values of the distribution of the optimum parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 585-592
+.. GENERATED FROM PYTHON SOURCE LINES 596-603
 
 We see that the parameters are relatively well estimated,
 although the parameter :math:`\gamma` still has a significant
@@ -1169,14 +1180,14 @@ Since this parameter cannot be identified easily, it may be appropriate
 to consider Gaussian calibration, which adds some regularity
 to the problem that may solve identificability issues.
 
-.. GENERATED FROM PYTHON SOURCE LINES 594-598
+.. GENERATED FROM PYTHON SOURCE LINES 605-609
 
 Gaussian calibration parameters
 -------------------------------
 In this part, we set the parameters of the Gaussian calibration.
 We first set the standard deviation of the observations errors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 600-602
+.. GENERATED FROM PYTHON SOURCE LINES 611-613
 
 .. code-block:: Python
 
@@ -1189,13 +1200,13 @@ We first set the standard deviation of the observations errors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 603-606
+.. GENERATED FROM PYTHON SOURCE LINES 614-617
 
 Define the covariance matrix of the output Y of the model.
 Since the dimension of the output is equal to 1, this must be
 a 1-by-1 covariance matrix.
 
-.. GENERATED FROM PYTHON SOURCE LINES 608-611
+.. GENERATED FROM PYTHON SOURCE LINES 619-622
 
 .. code-block:: Python
 
@@ -1209,11 +1220,11 @@ a 1-by-1 covariance matrix.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 612-613
+.. GENERATED FROM PYTHON SOURCE LINES 623-624
 
 Define the covariance matrix of the parameters :math:`\theta` to calibrate.
 
-.. GENERATED FROM PYTHON SOURCE LINES 615-619
+.. GENERATED FROM PYTHON SOURCE LINES 626-630
 
 .. code-block:: Python
 
@@ -1228,12 +1239,12 @@ Define the covariance matrix of the parameters :math:`\theta` to calibrate.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 620-622
+.. GENERATED FROM PYTHON SOURCE LINES 631-633
 
 Since there are 3 parameters, the prior covariance matrix is a
 3-by-3 covariance matrix.
 
-.. GENERATED FROM PYTHON SOURCE LINES 624-630
+.. GENERATED FROM PYTHON SOURCE LINES 635-641
 
 .. code-block:: Python
 
@@ -1258,7 +1269,7 @@ Since there are 3 parameters, the prior covariance matrix is a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 631-636
+.. GENERATED FROM PYTHON SOURCE LINES 642-647
 
 Gaussian linear calibration
 ---------------------------
@@ -1266,7 +1277,7 @@ The :class:`~openturns.GaussianLinearCalibration` class performs the Gaussian
 linear calibration by linearizing the model in the neighbourhood of the prior.
 This is also known as the Kalman filter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 638-642
+.. GENERATED FROM PYTHON SOURCE LINES 649-653
 
 .. code-block:: Python
 
@@ -1281,12 +1292,12 @@ This is also known as the Kalman filter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 643-645
+.. GENERATED FROM PYTHON SOURCE LINES 654-656
 
 The :meth:`~openturns.GaussianLinearCalibration.run` method computes
 the solution of the problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 647-650
+.. GENERATED FROM PYTHON SOURCE LINES 658-661
 
 .. code-block:: Python
 
@@ -1300,14 +1311,14 @@ the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 651-655
+.. GENERATED FROM PYTHON SOURCE LINES 662-666
 
 Analysis of the results
 -----------------------
 The :meth:`~openturns.CalibrationResult.getParameterMAP` method returns the
 maximum of the posterior distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 657-660
+.. GENERATED FROM PYTHON SOURCE LINES 668-671
 
 .. code-block:: Python
 
@@ -1327,7 +1338,7 @@ maximum of the posterior distribution of :math:`\theta`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 661-666
+.. GENERATED FROM PYTHON SOURCE LINES 672-677
 
 We can compute a 95% credibility interval of the parameter :math:`\theta^\star`
 (when we consider Bayesian methods, confidence intervals are called
@@ -1335,7 +1346,7 @@ credibility intervals).
 This interval reflects the interval that contains 95%
 of the posterior distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 668-675
+.. GENERATED FROM PYTHON SOURCE LINES 679-686
 
 .. code-block:: Python
 
@@ -1362,16 +1373,16 @@ of the posterior distribution.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 676-678
+.. GENERATED FROM PYTHON SOURCE LINES 687-689
 
 We can see that all three parameters are estimated with a relatively
 small confidence interval (including :math:`\gamma`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 680-681
+.. GENERATED FROM PYTHON SOURCE LINES 691-692
 
 Let us analyze the validation graphics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 683-687
+.. GENERATED FROM PYTHON SOURCE LINES 694-698
 
 .. code-block:: Python
 
@@ -1391,12 +1402,12 @@ Let us analyze the validation graphics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 688-690
+.. GENERATED FROM PYTHON SOURCE LINES 699-701
 
 We see that there is a good fit after calibration, since the predictions
 after calibration are close to the observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 692-695
+.. GENERATED FROM PYTHON SOURCE LINES 703-706
 
 .. code-block:: Python
 
@@ -1415,18 +1426,18 @@ after calibration are close to the observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 696-698
+.. GENERATED FROM PYTHON SOURCE LINES 707-709
 
 We see that there is a much better fit after calibration, since the
 predictions are close to the diagonal of the graphics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 700-703
+.. GENERATED FROM PYTHON SOURCE LINES 711-714
 
 The observation error is an hypothesis of the Gaussian calibration.
 This is the Gaussian distribution that we introduced in the
 model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 705-708
+.. GENERATED FROM PYTHON SOURCE LINES 716-719
 
 .. code-block:: Python
 
@@ -1446,7 +1457,7 @@ model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 709-717
+.. GENERATED FROM PYTHON SOURCE LINES 720-728
 
 .. code-block:: Python
 
@@ -1470,20 +1481,20 @@ model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 718-722
+.. GENERATED FROM PYTHON SOURCE LINES 729-733
 
 The analysis of the Gaussian distribution of the observation
 errors is close to the posterior distribution of the residuals.
 Moreover, the posterior distribution is centered.
 These information indicate that the calibration performed well.
 
-.. GENERATED FROM PYTHON SOURCE LINES 724-727
+.. GENERATED FROM PYTHON SOURCE LINES 735-738
 
 The posterior distribution of the parameters allows one to see if
 the observations bring significant information compared to the prior
 Gaussian distributions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 729-737
+.. GENERATED FROM PYTHON SOURCE LINES 740-748
 
 .. code-block:: Python
 
@@ -1507,7 +1518,7 @@ Gaussian distributions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 738-748
+.. GENERATED FROM PYTHON SOURCE LINES 749-759
 
 We see that the posterior distribution of :math:`R` is spiky.
 For the :math:`R` variable, the observations are much more important than
@@ -1520,11 +1531,11 @@ One potential solution to estimate this parameter is, if it can be
 identified, to use a larger sample size (but this is not always easy
 in practice).
 
-.. GENERATED FROM PYTHON SOURCE LINES 750-751
+.. GENERATED FROM PYTHON SOURCE LINES 761-762
 
 We can check that if the residuals after calibration are normal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 753-756
+.. GENERATED FROM PYTHON SOURCE LINES 764-767
 
 .. code-block:: Python
 
@@ -1543,11 +1554,11 @@ We can check that if the residuals after calibration are normal.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 757-758
+.. GENERATED FROM PYTHON SOURCE LINES 768-769
 
 Plot the PDF values of the distribution of the optimum parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 760-769
+.. GENERATED FROM PYTHON SOURCE LINES 771-780
 
 .. code-block:: Python
 
@@ -1572,7 +1583,7 @@ Plot the PDF values of the distribution of the optimum parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 770-775
+.. GENERATED FROM PYTHON SOURCE LINES 781-786
 
 Gaussian nonlinear calibration
 ------------------------------
@@ -1580,7 +1591,7 @@ The :class:`~openturns.GaussianNonLinearCalibration` class
 performs the Gaussian nonlinear calibration.
 This algorithm is also known as 3DVar.
 
-.. GENERATED FROM PYTHON SOURCE LINES 777-781
+.. GENERATED FROM PYTHON SOURCE LINES 788-792
 
 .. code-block:: Python
 
@@ -1595,12 +1606,12 @@ This algorithm is also known as 3DVar.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 782-784
+.. GENERATED FROM PYTHON SOURCE LINES 793-795
 
 The :meth:`~openturns.GaussianNonLinearCalibration.run` method computes
 the solution of the problem.
 
-.. GENERATED FROM PYTHON SOURCE LINES 786-789
+.. GENERATED FROM PYTHON SOURCE LINES 797-800
 
 .. code-block:: Python
 
@@ -1614,17 +1625,17 @@ the solution of the problem.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 790-792
+.. GENERATED FROM PYTHON SOURCE LINES 801-803
 
 Analysis of the results
 -----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 794-796
+.. GENERATED FROM PYTHON SOURCE LINES 805-807
 
 The :meth:`~openturns.CalibrationResult.getParameterMAP` method
 returns the maximum of the posterior distribution of :math:`\theta`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 798-801
+.. GENERATED FROM PYTHON SOURCE LINES 809-812
 
 .. code-block:: Python
 
@@ -1644,11 +1655,11 @@ returns the maximum of the posterior distribution of :math:`\theta`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 802-803
+.. GENERATED FROM PYTHON SOURCE LINES 813-814
 
 We can compute a 95% credibility interval of the parameter :math:`\theta^\star`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 803-810
+.. GENERATED FROM PYTHON SOURCE LINES 814-821
 
 .. code-block:: Python
 
@@ -1675,12 +1686,12 @@ We can compute a 95% credibility interval of the parameter :math:`\theta^\star`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 811-813
+.. GENERATED FROM PYTHON SOURCE LINES 822-824
 
 The previous credibility interval can be compared to the one that we previously
 obtains with the linear Gaussian calibration method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 815-819
+.. GENERATED FROM PYTHON SOURCE LINES 826-830
 
 .. code-block:: Python
 
@@ -1700,12 +1711,12 @@ obtains with the linear Gaussian calibration method.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 820-822
+.. GENERATED FROM PYTHON SOURCE LINES 831-833
 
 We see that there is a good fit after calibration, since the predictions
 after calibration are close to the observations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 824-827
+.. GENERATED FROM PYTHON SOURCE LINES 835-838
 
 .. code-block:: Python
 
@@ -1724,18 +1735,18 @@ after calibration are close to the observations.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 828-830
+.. GENERATED FROM PYTHON SOURCE LINES 839-841
 
 We see that there is a much better fit after calibration, since the
 predictions are close to the diagonal of the graphics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 832-835
+.. GENERATED FROM PYTHON SOURCE LINES 843-846
 
 The method to compute the distribution of the error and the posterior
 distribution of the parameter depends on the default
 value of the bootstrap size.
 
-.. GENERATED FROM PYTHON SOURCE LINES 835-837
+.. GENERATED FROM PYTHON SOURCE LINES 846-848
 
 .. code-block:: Python
 
@@ -1754,16 +1765,16 @@ value of the bootstrap size.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 838-839
+.. GENERATED FROM PYTHON SOURCE LINES 849-850
 
 The default value of the parameter uses bootstrap to estimate the distribution.
 
-.. GENERATED FROM PYTHON SOURCE LINES 841-843
+.. GENERATED FROM PYTHON SOURCE LINES 852-854
 
 By default, the observation error is predicted by bootstraping the
 problem at the posterior.
 
-.. GENERATED FROM PYTHON SOURCE LINES 845-848
+.. GENERATED FROM PYTHON SOURCE LINES 856-859
 
 .. code-block:: Python
 
@@ -1783,11 +1794,11 @@ problem at the posterior.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 849-850
+.. GENERATED FROM PYTHON SOURCE LINES 860-861
 
 This can be compared to the residuals distribution, which is computed at the posterior.
 
-.. GENERATED FROM PYTHON SOURCE LINES 852-860
+.. GENERATED FROM PYTHON SOURCE LINES 863-871
 
 .. code-block:: Python
 
@@ -1811,11 +1822,11 @@ This can be compared to the residuals distribution, which is computed at the pos
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 861-862
+.. GENERATED FROM PYTHON SOURCE LINES 872-873
 
 The analysis is very similar to the linear Gaussian calibration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 864-872
+.. GENERATED FROM PYTHON SOURCE LINES 875-883
 
 .. code-block:: Python
 
@@ -1839,7 +1850,7 @@ The analysis is very similar to the linear Gaussian calibration.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 873-876
+.. GENERATED FROM PYTHON SOURCE LINES 884-887
 
 .. code-block:: Python
 
@@ -1858,11 +1869,11 @@ The analysis is very similar to the linear Gaussian calibration.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 877-878
+.. GENERATED FROM PYTHON SOURCE LINES 888-889
 
 Plot the PDF values of the distribution of the optimum parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 880-889
+.. GENERATED FROM PYTHON SOURCE LINES 891-900
 
 .. code-block:: Python
 
@@ -1887,14 +1898,14 @@ Plot the PDF values of the distribution of the optimum parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 890-894
+.. GENERATED FROM PYTHON SOURCE LINES 901-905
 
 We see that the prior and posterior distribution for the :math:`\gamma`
 parameter are close to each other, but not superimposed: the observations
 significantly brought information to the variable :math:`\gamma` during
 the calibration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 894-895
+.. GENERATED FROM PYTHON SOURCE LINES 905-906
 
 .. code-block:: Python
 

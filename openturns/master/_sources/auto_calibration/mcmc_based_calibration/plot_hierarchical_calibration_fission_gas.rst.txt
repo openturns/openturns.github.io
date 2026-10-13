@@ -550,12 +550,13 @@ The Gibbs algorithm combines all these samplers.
 Run this Metropolis-within-Gibbs algorithm and check the acceptance rates
 for the Random walk Metropolis-Hastings samplers.
 
-.. GENERATED FROM PYTHON SOURCE LINES 351-368
+.. GENERATED FROM PYTHON SOURCE LINES 351-369
 
 .. code-block:: Python
 
 
-    samples = sampler.getSample(2000)
+    # a smaller sample is enough to illustrate the posterior distributions
+    samples = sampler.getSample(500)
     acceptance = [
         sampler.getMetropolisHastingsCollection()[i].getAcceptanceRate()
         for i in range(6, len(samplers))
@@ -579,13 +580,13 @@ for the Random walk Metropolis-Hastings samplers.
 
  .. code-block:: none
 
-    Minimum acceptance rate =  0.239
-    Maximum acceptance rate for random walk MH =  0.333
+    Minimum acceptance rate =  0.156
+    Maximum acceptance rate for random walk MH =  0.372
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 369-377
+.. GENERATED FROM PYTHON SOURCE LINES 370-378
 
 Plot the posterior distribution
 -------------------------------
@@ -596,7 +597,7 @@ diagnostics should be run on the MCMC sample to assess the convergence of the Ma
 
 We only represent the :math:`\mu` and :math:`\sigma` parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 377-380
+.. GENERATED FROM PYTHON SOURCE LINES 378-381
 
 .. code-block:: Python
 
@@ -610,12 +611,12 @@ We only represent the :math:`\mu` and :math:`\sigma` parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-383
+.. GENERATED FROM PYTHON SOURCE LINES 382-384
 
 It is possible to quickly draw pair plots.
 Here we tweak the rendering a little.
 
-.. GENERATED FROM PYTHON SOURCE LINES 383-395
+.. GENERATED FROM PYTHON SOURCE LINES 384-396
 
 .. code-block:: Python
 
@@ -643,11 +644,11 @@ Here we tweak the rendering a little.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-397
+.. GENERATED FROM PYTHON SOURCE LINES 397-398
 
 Create an enhanced pair plots grid with histograms of the marginals on the diagonal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-415
+.. GENERATED FROM PYTHON SOURCE LINES 398-416
 
 .. code-block:: Python
 
@@ -681,11 +682,11 @@ Create an enhanced pair plots grid with histograms of the marginals on the diago
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 416-417
+.. GENERATED FROM PYTHON SOURCE LINES 417-418
 
 Finally superimpose contour plots of the KDE-estimated 2D marginal PDFs on the pairplots.
 
-.. GENERATED FROM PYTHON SOURCE LINES 417-437
+.. GENERATED FROM PYTHON SOURCE LINES 418-438
 
 .. code-block:: Python
 
@@ -721,14 +722,14 @@ Finally superimpose contour plots of the KDE-estimated 2D marginal PDFs on the p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 438-442
+.. GENERATED FROM PYTHON SOURCE LINES 439-443
 
 Post-calibration prediction
 ---------------------------
 
 Retrieve the :math:`\mu` and :math:`\sigma^2` columns in the sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 442-447
+.. GENERATED FROM PYTHON SOURCE LINES 443-448
 
 .. code-block:: Python
 
@@ -744,7 +745,7 @@ Retrieve the :math:`\mu` and :math:`\sigma^2` columns in the sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 448-455
+.. GENERATED FROM PYTHON SOURCE LINES 449-456
 
 Build the joint distribution of the latent variables :math:`x_{\mathrm{diff}}, x_{\mathrm{crack}}`
 obtained when :math:`\mu_{\mathrm{diff}}`, :math:`\sigma_{\mathrm{diff}}`,
@@ -754,7 +755,7 @@ It is estimated as a mixture of truncated :math:`\sampleSize_{\mathrm{exp}}`-dim
 corresponding to the posterior samples of the :math:`\mu_{\mathrm{diff}}`, :math:`\mu_{\mathrm{crack}}`,
 :math:`\sigma_{\mathrm{diff}}` and :math:`\sigma_{\mathrm{crack}}` parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 455-464
+.. GENERATED FROM PYTHON SOURCE LINES 456-465
 
 .. code-block:: Python
 
@@ -774,13 +775,13 @@ corresponding to the posterior samples of the :math:`\mu_{\mathrm{diff}}`, :math
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 465-468
+.. GENERATED FROM PYTHON SOURCE LINES 466-469
 
 Build a collection of random vectors such that the distribution
 of each is the push-forward of the marginal distribution of :math:`(x_{\mathrm{diff}}, x_{\mathrm{crack}})`
 defined above through one of the :math:`\sampleSize_{\mathrm{exp}}` models.
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-472
+.. GENERATED FROM PYTHON SOURCE LINES 469-473
 
 .. code-block:: Python
 
@@ -795,17 +796,18 @@ defined above through one of the :math:`\sampleSize_{\mathrm{exp}}` models.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 473-475
+.. GENERATED FROM PYTHON SOURCE LINES 474-476
 
 Get a Monte-Carlo estimate of the median, 0.05 quantile and 0.95 quantile
 of these push-forward distributions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 475-481
+.. GENERATED FROM PYTHON SOURCE LINES 476-483
 
 .. code-block:: Python
 
 
-    predictions = [rv.getSample(200) for rv in rv_models]
+    # 50 push-forward draws are enough for the median/quantile error bars below
+    predictions = [rv.getSample(50) for rv in rv_models]
     prediction_medians = [sam.computeMedian()[0] for sam in predictions]
     prediction_lb = [sam.computeQuantile(0.05)[0] for sam in predictions]
     prediction_ub = [sam.computeQuantile(0.95)[0] for sam in predictions]
@@ -817,7 +819,7 @@ of these push-forward distributions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 482-487
+.. GENERATED FROM PYTHON SOURCE LINES 484-489
 
 These push-forward distributions are the distributions
 of the model predictions when :math:`\mu_{\mathrm{diff}}`, :math:`\mu_{\mathrm{crack}}`,
@@ -825,7 +827,7 @@ of the model predictions when :math:`\mu_{\mathrm{diff}}`, :math:`\mu_{\mathrm{c
 their joint posterior distribution.
 They can be compared to the actual measurements to represent predictive accuracy.
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-500
+.. GENERATED FROM PYTHON SOURCE LINES 489-502
 
 .. code-block:: Python
 
@@ -854,7 +856,7 @@ They can be compared to the actual measurements to represent predictive accuracy
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 501-508
+.. GENERATED FROM PYTHON SOURCE LINES 503-510
 
 For the sake of comparison, we now consider the distributions
 of the model predictions when :math:`\mu_{\mathrm{diff}}`, :math:`\mu_{\mathrm{crack}}`,
@@ -864,7 +866,7 @@ Because the actual prior distribution of :math:`\sigma_{\mathrm{diff}}` and :mat
 cannot be represented, we approximate them by choosing a very large :math:`\lambda` parameter
 and a very small :math:`k` parameter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 508-557
+.. GENERATED FROM PYTHON SOURCE LINES 510-560
 
 .. code-block:: Python
 
@@ -883,7 +885,8 @@ and a very small :math:`k` parameter.
             ),
         ]
     )
-    prior_sample = prior.getSample(2000)
+    # a smaller prior sample is enough for the predictive error bars below
+    prior_sample = prior.getSample(500)
 
     # As before, build a mixture of truncated normal distributions from the sample.
     normal_collection_prior = [
@@ -899,7 +902,7 @@ and a very small :math:`k` parameter.
         ot.CompositeRandomVector(model, rv_normal_mixture_prior) for model in models
     ]
 
-    predictions_prior = [rv.getSample(100) for rv in rv_models_prior]
+    predictions_prior = [rv.getSample(50) for rv in rv_models_prior]
     prediction_medians_prior = [sam.computeMedian()[0] for sam in predictions_prior]
     prediction_lb_prior = [sam.computeQuantile(0.05)[0] for sam in predictions_prior]
     prediction_ub_prior = [sam.computeQuantile(0.95)[0] for sam in predictions_prior]
@@ -929,11 +932,11 @@ and a very small :math:`k` parameter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 558-559
+.. GENERATED FROM PYTHON SOURCE LINES 561-562
 
 To facilitate the comparison, we plot the median value of the predictive distributions only.
 
-.. GENERATED FROM PYTHON SOURCE LINES 559-568
+.. GENERATED FROM PYTHON SOURCE LINES 562-571
 
 .. code-block:: Python
 
@@ -958,11 +961,11 @@ To facilitate the comparison, we plot the median value of the predictive distrib
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 569-570
+.. GENERATED FROM PYTHON SOURCE LINES 572-573
 
 Display all figures
 
-.. GENERATED FROM PYTHON SOURCE LINES 570-571
+.. GENERATED FROM PYTHON SOURCE LINES 573-574
 
 .. code-block:: Python
 
