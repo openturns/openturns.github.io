@@ -111,7 +111,7 @@ Generate a learning sample with Monte-Carlo simulations (or retrieve the design 
 
 .. code-block:: Python
 
-    N = 35  # size of the experimental design
+    N = 50  # size of the experimental design
     X = distribution.getSample(N)
     Y = g(X)
 
@@ -240,7 +240,7 @@ Plot the observed versus the predicted outputs.
 
 
 .. image-sg:: /auto_surrogate_modeling/polynomial_chaos/images/sphx_glr_plot_chaos_sobol_confidence_001.svg
-   :alt: Chaos validation - R2=99.99%
+   :alt: Chaos validation - R2=100.00%
    :srcset: /auto_surrogate_modeling/polynomial_chaos/images/sphx_glr_plot_chaos_sobol_confidence_001.svg
    :class: sphx-glr-single-img
 
@@ -335,17 +335,17 @@ Generate input/output bootstrap samples from the initial design.
  .. code-block:: none
 
         [ E             F             L             I             ]
-    0 : [   6.55024e+10 271.687         2.5167        1.50459e-07 ]
-    1 : [   6.67128e+10 275.381         2.55415       1.52604e-07 ]
-    2 : [   6.50413e+10 336.232         2.50571       1.59259e-07 ]
-    3 : [   6.52506e+10 303.077         2.54005       1.47589e-07 ]
-    4 : [   6.50726e+10 318.139         2.59105       1.34966e-07 ]
+    0 : [   6.92198e+10 323.701         2.56656       1.50657e-07 ]
+    1 : [   6.94281e+10 340.056         2.51891       1.56234e-07 ]
+    2 : [   6.56412e+10 261.449         2.57766       1.44196e-07 ]
+    3 : [   6.64392e+10 304.05          2.50098       1.51565e-07 ]
+    4 : [   6.65646e+10 318.139         2.58666       1.45586e-07 ]
         [ y0       ]
-    0 : [ 0.146476 ]
-    1 : [ 0.150237 ]
-    2 : [ 0.170224 ]
-    3 : [ 0.171917 ]
-    4 : [ 0.210041 ]
+    0 : [ 0.174928 ]
+    1 : [ 0.167016 ]
+    2 : [ 0.157693 ]
+    3 : [ 0.157446 ]
+    4 : [ 0.189387 ]
 
 
 
@@ -391,7 +391,7 @@ Generate input/output bootstrap samples from the initial design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-238
+.. GENERATED FROM PYTHON SOURCE LINES 202-241
 
 .. code-block:: Python
 
@@ -419,12 +419,15 @@ Generate input/output bootstrap samples from the initial design.
         dim_input = X.getDimension()
         fo_sample = ot.Sample(0, dim_input)
         to_sample = ot.Sample(0, dim_input)
-        unit_eps = ot.Interval([1e-9] * dim_input, [1 - 1e-9] * dim_input)
+        unit_eps = ot.Interval([-1e-9] * dim_input, [1 + 1e-9] * dim_input)
         for i in range(bootstrap_size):
             X_boot, Y_boot = multiBootstrap(X, Y)
-            first_order, total_order = computeChaosSensitivity(
-                X_boot, Y_boot, basis, total_degree, distribution
-            )
+            try:
+                first_order, total_order = computeChaosSensitivity(
+                    X_boot, Y_boot, basis, total_degree, distribution
+                )
+            except Exception:
+                continue
             if unit_eps.contains(first_order) and unit_eps.contains(total_order):
                 fo_sample.add(first_order)
                 to_sample.add(total_order)
@@ -438,11 +441,11 @@ Generate input/output bootstrap samples from the initial design.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 239-240
+.. GENERATED FROM PYTHON SOURCE LINES 242-243
 
 Compute sample of Sobol' indices by boostrap.
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-245
+.. GENERATED FROM PYTHON SOURCE LINES 243-248
 
 .. code-block:: Python
 
@@ -458,7 +461,7 @@ Compute sample of Sobol' indices by boostrap.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-293
+.. GENERATED FROM PYTHON SOURCE LINES 249-298
 
 .. code-block:: Python
 
@@ -489,6 +492,8 @@ Compute sample of Sobol' indices by boostrap.
         to_interval : ot.Interval
             The confidence interval of total order Sobol' indices
         """
+        if fo_sample.getSize() == 0:
+            raise ValueError("Empty bootstrap sample: cannot compute confidence intervals.")
         dim_input = fo_sample.getDimension()
         fo_lb = [0] * dim_input
         fo_ub = [0] * dim_input
@@ -516,11 +521,11 @@ Compute sample of Sobol' indices by boostrap.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-295
+.. GENERATED FROM PYTHON SOURCE LINES 299-300
 
 Compute confidence intervals from the indices samples.
 
-.. GENERATED FROM PYTHON SOURCE LINES 295-297
+.. GENERATED FROM PYTHON SOURCE LINES 300-302
 
 .. code-block:: Python
 
@@ -533,7 +538,7 @@ Compute confidence intervals from the indices samples.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 298-330
+.. GENERATED FROM PYTHON SOURCE LINES 303-335
 
 .. code-block:: Python
 
@@ -576,16 +581,16 @@ Compute confidence intervals from the indices samples.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 331-333
+.. GENERATED FROM PYTHON SOURCE LINES 336-338
 
 Plot the boostrap Sobol' indices mean and the confidence intervals.
 The confidence length will shrink if we increase the initial sample size.
 
-.. GENERATED FROM PYTHON SOURCE LINES 335-336
+.. GENERATED FROM PYTHON SOURCE LINES 340-341
 
 sphinx_gallery_thumbnail_number = 3
 
-.. GENERATED FROM PYTHON SOURCE LINES 336-341
+.. GENERATED FROM PYTHON SOURCE LINES 341-346
 
 .. code-block:: Python
 
@@ -606,7 +611,7 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 342-349
+.. GENERATED FROM PYTHON SOURCE LINES 347-354
 
 We see that the variable `F` has the highest sensitivity indices and that confidence intervals
 do not change this conclusion.
