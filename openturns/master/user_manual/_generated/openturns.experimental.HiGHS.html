@@ -131,11 +131,92 @@
 To use it, import the <code class="docutils literal notranslate"><span class="pre">openturns.experimental</span></code> submodule.</p>
 </div>
 <p>This class exposes the linear solver from the <a class="reference external" href="https://highs.dev/">HiGHS</a> library.
-It is only meant to be used with linear mixed-integer optimization problems.</p>
+It solves continuous linear problems and mixed-integer linear problems.</p>
+<p>The recognized LP solver names are listed by <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Solver</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Supported variables</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">choose</span></code></p></td>
+<td><p>Default automatic choice: dual revised simplex for LP, branch-and-bound MIP for discrete problems.</p></td>
+<td><p>Continuous and discrete</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">simplex</span></code></p></td>
+<td><p>Primal/dual simplex, always returns a basic solution.</p></td>
+<td><p>Continuous only</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ipm</span></code></p></td>
+<td><p>Interior point (HiPO or IPX depending on the HiGHS build).</p></td>
+<td><p>Continuous only</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ipx</span></code></p></td>
+<td><p>Serial interior point solver.</p></td>
+<td><p>Continuous only</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hipo</span></code></p></td>
+<td><p>Parallel interior point solver, best on large problems.</p></td>
+<td><p>Continuous only</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pdlp</span></code></p></td>
+<td><p>First-order primal-dual hybrid gradient method (cuPDLP-C), no basic solution.</p></td>
+<td><p>Continuous only</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hipdlp</span></code></p></td>
+<td><p>HiGHS native first-order primal-dual method, no basic solution.</p></td>
+<td><p>Continuous only</p></td>
+</tr>
+</tbody>
+</table>
+<p>See the <a class="reference external" href="https://ergo-code.github.io/HiGHS/">HiGHS documentation</a> for solver details.
+Whether a name is accepted at runtime depends on the HiGHS build
+(e.g. <code class="docutils literal notranslate"><span class="pre">hipo</span></code> requires a HiGHS build with HiPO support); an
+unsupported name raises an error.</p>
+<p>All solvers accept finite and infinite bounds on variables and linear constraints;
+mark infinite bounds with finite flags set to <code class="docutils literal notranslate"><span class="pre">False</span></code> in the
+<a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> (see <a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearProblem</span></code></a>).</p>
+<p>By default the interior point solvers run a crossover procedure to return
+a basic solution; this can be tuned with the <code class="docutils literal notranslate"><span class="pre">run_crossover</span></code> option below.
+The first-order solvers never return a basic solution.
+Use <a class="reference internal" href="#openturns.experimental.HiGHS.getSimplexIterationNumber" title="openturns.experimental.HiGHS.getSimplexIterationNumber"><code class="xref py py-func docutils literal notranslate"><span class="pre">getSimplexIterationNumber()</span></code></a>, <a class="reference internal" href="#openturns.experimental.HiGHS.getIPMIterationNumber" title="openturns.experimental.HiGHS.getIPMIterationNumber"><code class="xref py py-func docutils literal notranslate"><span class="pre">getIPMIterationNumber()</span></code></a>,
+<a class="reference internal" href="#openturns.experimental.HiGHS.getCrossoverIterationNumber" title="openturns.experimental.HiGHS.getCrossoverIterationNumber"><code class="xref py py-func docutils literal notranslate"><span class="pre">getCrossoverIterationNumber()</span></code></a>, <a class="reference internal" href="#openturns.experimental.HiGHS.getPDLPIterationNumber" title="openturns.experimental.HiGHS.getPDLPIterationNumber"><code class="xref py py-func docutils literal notranslate"><span class="pre">getPDLPIterationNumber()</span></code></a> and
+<a class="reference internal" href="#openturns.experimental.HiGHS.getQPIterationNumber" title="openturns.experimental.HiGHS.getQPIterationNumber"><code class="xref py py-func docutils literal notranslate"><span class="pre">getQPIterationNumber()</span></code></a> to compare per-solver work; their sum is the
+result iteration number.</p>
+<p>After <a class="reference internal" href="#openturns.experimental.HiGHS.run" title="openturns.experimental.HiGHS.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a>, the HiGHS model status (<code class="docutils literal notranslate"><span class="pre">Optimal</span></code> on success) is
+available as the status message of the <a class="reference internal" href="openturns.OptimizationResult.html#openturns.OptimizationResult" title="openturns.OptimizationResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationResult</span></code></a>,
+whose status is set to <code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code>, <code class="docutils literal notranslate"><span class="pre">FAILURE</span></code>, <code class="docutils literal notranslate"><span class="pre">TIMEOUT</span></code>, <code class="docutils literal notranslate"><span class="pre">INTERRUPTION</span></code>
+or <code class="docutils literal notranslate"><span class="pre">MAXIMUMCALLS</span></code> accordingly.
+Call <code class="docutils literal notranslate"><span class="pre">setCheckStatus(False)</span></code> before <a class="reference internal" href="#openturns.experimental.HiGHS.run" title="openturns.experimental.HiGHS.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> to inspect a non-success
+status instead of raising an exception.
+On continuous problems with a valid dual solution, <a class="reference internal" href="#openturns.experimental.HiGHS.getDualPoint" title="openturns.experimental.HiGHS.getDualPoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDualPoint()</span></code></a>
+returns the constraint duals (shadow prices) and <a class="reference internal" href="#openturns.experimental.HiGHS.getReducedCosts" title="openturns.experimental.HiGHS.getReducedCosts"><code class="xref py py-func docutils literal notranslate"><span class="pre">getReducedCosts()</span></code></a>
+the per-variable reduced costs; <a class="reference internal" href="#openturns.experimental.HiGHS.getConstraintValues" title="openturns.experimental.HiGHS.getConstraintValues"><code class="xref py py-func docutils literal notranslate"><span class="pre">getConstraintValues()</span></code></a> returns the
+linear constraint activity row values.
+There is no dual solution on problems with discrete variables.</p>
+<p>HiGHS solver can be adapted using the parameters described <a class="reference external" href="https://ergo-code.github.io/HiGHS/dev/options/definitions/">here</a>.
+These parameters can be modified through the <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>.
+For every option <code class="docutils literal notranslate"><span class="pre">optionName</span></code>, simply add a key named <code class="docutils literal notranslate"><span class="pre">HiGHS-optionName</span></code> with the value to use, as shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">AddAsBool</span><span class="p">(</span><span class="s1">'HiGHS-output_flag'</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">AddAsUnsignedInteger</span><span class="p">(</span><span class="s1">'HiGHS-threads'</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>problem</strong><span class="classifier"><a class="reference internal" href="openturns.OptimizationProblem.html#openturns.OptimizationProblem" title="openturns.OptimizationProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationProblem</span></code></a></span></dt><dd><p>The problem</p>
+<dt><strong>problem</strong><span class="classifier"><a class="reference internal" href="openturns.OptimizationProblem.html#openturns.OptimizationProblem" title="openturns.OptimizationProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationProblem</span></code></a></span></dt><dd><p>The problem, must be linear (see <a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearProblem</span></code></a>).</p>
+</dd>
+<dt><strong>algoName</strong><span class="classifier">str, default is <code class="docutils literal notranslate"><span class="pre">choose</span></code></span></dt><dd><p>The LP solver, use <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a> to list the recognized names.
+Problems with discrete variables are solved by the MIP solver,
+which ignores this choice: use <code class="docutils literal notranslate"><span class="pre">choose</span></code> on such problems.</p>
 </dd>
 </dl>
 </dd>
@@ -143,11 +224,29 @@ It is only meant to be used with linear mixed-integer optimization problems.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetAlgorithmNames</span></code></a>()</p></td>
+<td><p>Accessor to the list of recognized LP solver names, by names.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getAlgorithmName" title="openturns.experimental.HiGHS.getAlgorithmName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getAlgorithmName</span></code></a>()</p></td>
+<td><p>Accessor to the LP solver name.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getCheckStatus" title="openturns.experimental.HiGHS.getCheckStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCheckStatus</span></code></a>()</p></td>
 <td><p>Accessor to check status flag.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getClassName" title="openturns.experimental.HiGHS.getClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getClassName</span></code></a>()</p></td>
 <td><p>Accessor to the object's name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getConstraintValues" title="openturns.experimental.HiGHS.getConstraintValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getConstraintValues</span></code></a>()</p></td>
+<td><p>Accessor to the linear constraint activity of the last run.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getCrossoverIterationNumber" title="openturns.experimental.HiGHS.getCrossoverIterationNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCrossoverIterationNumber</span></code></a>()</p></td>
+<td><p>Accessor to the crossover iteration count of the last run.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getDualPoint" title="openturns.experimental.HiGHS.getDualPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getDualPoint</span></code></a>()</p></td>
+<td><p>Accessor to the constraint duals of the last run.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getIPMIterationNumber" title="openturns.experimental.HiGHS.getIPMIterationNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getIPMIterationNumber</span></code></a>()</p></td>
+<td><p>Accessor to the interior point iteration count of the last run.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getMaximumAbsoluteError" title="openturns.experimental.HiGHS.getMaximumAbsoluteError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMaximumAbsoluteError</span></code></a>()</p></td>
 <td><p>Accessor to maximum allowed absolute error.</p></td>
@@ -173,11 +272,23 @@ It is only meant to be used with linear mixed-integer optimization problems.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getName" title="openturns.experimental.HiGHS.getName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getName</span></code></a>()</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getProblem" title="openturns.experimental.HiGHS.getProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getProblem</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getPDLPIterationNumber" title="openturns.experimental.HiGHS.getPDLPIterationNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getPDLPIterationNumber</span></code></a>()</p></td>
+<td><p>Accessor to the PDLP iteration count of the last run.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getProblem" title="openturns.experimental.HiGHS.getProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getProblem</span></code></a>()</p></td>
 <td><p>Accessor to optimization problem.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getResult" title="openturns.experimental.HiGHS.getResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResult</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getQPIterationNumber" title="openturns.experimental.HiGHS.getQPIterationNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getQPIterationNumber</span></code></a>()</p></td>
+<td><p>Accessor to the QP iteration count of the last run.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getReducedCosts" title="openturns.experimental.HiGHS.getReducedCosts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getReducedCosts</span></code></a>()</p></td>
+<td><p>Accessor to the reduced costs of the last run.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getResult" title="openturns.experimental.HiGHS.getResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getResult</span></code></a>()</p></td>
 <td><p>Accessor to optimization result.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getSimplexIterationNumber" title="openturns.experimental.HiGHS.getSimplexIterationNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getSimplexIterationNumber</span></code></a>()</p></td>
+<td><p>Accessor to the simplex iteration count of the last run.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getStartingPoint" title="openturns.experimental.HiGHS.getStartingPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getStartingPoint</span></code></a>()</p></td>
 <td><p>Accessor to starting point.</p></td>
@@ -191,49 +302,52 @@ It is only meant to be used with linear mixed-integer optimization problems.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.run" title="openturns.experimental.HiGHS.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>()</p></td>
 <td><p>Launch the optimization.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setCheckStatus" title="openturns.experimental.HiGHS.setCheckStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setCheckStatus</span></code></a>(checkStatus)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setAlgorithmName" title="openturns.experimental.HiGHS.setAlgorithmName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setAlgorithmName</span></code></a>(algoName)</p></td>
+<td><p>Accessor to the LP solver name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setCheckStatus" title="openturns.experimental.HiGHS.setCheckStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setCheckStatus</span></code></a>(checkStatus)</p></td>
 <td><p>Accessor to check status flag.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumAbsoluteError" title="openturns.experimental.HiGHS.setMaximumAbsoluteError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumAbsoluteError</span></code></a>(maximumAbsoluteError)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumAbsoluteError" title="openturns.experimental.HiGHS.setMaximumAbsoluteError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumAbsoluteError</span></code></a>(maximumAbsoluteError)</p></td>
 <td><p>Accessor to maximum allowed absolute error.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumCallsNumber" title="openturns.experimental.HiGHS.setMaximumCallsNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumCallsNumber</span></code></a>(maximumCallsNumber)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumCallsNumber" title="openturns.experimental.HiGHS.setMaximumCallsNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumCallsNumber</span></code></a>(maximumCallsNumber)</p></td>
 <td><p>Accessor to maximum allowed number of calls</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumConstraintError" title="openturns.experimental.HiGHS.setMaximumConstraintError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumConstraintError</span></code></a>(maximumConstraintError)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumConstraintError" title="openturns.experimental.HiGHS.setMaximumConstraintError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumConstraintError</span></code></a>(maximumConstraintError)</p></td>
 <td><p>Accessor to maximum allowed constraint error.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumIterationNumber" title="openturns.experimental.HiGHS.setMaximumIterationNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumIterationNumber</span></code></a>(maximumIterationNumber)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumIterationNumber" title="openturns.experimental.HiGHS.setMaximumIterationNumber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumIterationNumber</span></code></a>(maximumIterationNumber)</p></td>
 <td><p>Accessor to maximum allowed number of iterations.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumRelativeError" title="openturns.experimental.HiGHS.setMaximumRelativeError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumRelativeError</span></code></a>(maximumRelativeError)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumRelativeError" title="openturns.experimental.HiGHS.setMaximumRelativeError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumRelativeError</span></code></a>(maximumRelativeError)</p></td>
 <td><p>Accessor to maximum allowed relative error.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumResidualError" title="openturns.experimental.HiGHS.setMaximumResidualError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumResidualError</span></code></a>(maximumResidualError)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumResidualError" title="openturns.experimental.HiGHS.setMaximumResidualError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumResidualError</span></code></a>(maximumResidualError)</p></td>
 <td><p>Accessor to maximum allowed residual error.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumTimeDuration" title="openturns.experimental.HiGHS.setMaximumTimeDuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumTimeDuration</span></code></a>(maximumTime)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setMaximumTimeDuration" title="openturns.experimental.HiGHS.setMaximumTimeDuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setMaximumTimeDuration</span></code></a>(maximumTime)</p></td>
 <td><p>Accessor to the maximum duration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setName" title="openturns.experimental.HiGHS.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setName" title="openturns.experimental.HiGHS.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setProblem" title="openturns.experimental.HiGHS.setProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProblem</span></code></a>(problem)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setProblem" title="openturns.experimental.HiGHS.setProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProblem</span></code></a>(problem)</p></td>
 <td><p>Accessor to optimization problem.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setProgressCallback" title="openturns.experimental.HiGHS.setProgressCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProgressCallback</span></code></a>(*args)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setProgressCallback" title="openturns.experimental.HiGHS.setProgressCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setProgressCallback</span></code></a>(*args)</p></td>
 <td><p>Set up a progress callback.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setResult" title="openturns.experimental.HiGHS.setResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResult</span></code></a>(result)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setResult" title="openturns.experimental.HiGHS.setResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResult</span></code></a>(result)</p></td>
 <td><p>Accessor to optimization result.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setStartingPoint" title="openturns.experimental.HiGHS.setStartingPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingPoint</span></code></a>(startingPoint)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setStartingPoint" title="openturns.experimental.HiGHS.setStartingPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingPoint</span></code></a>(startingPoint)</p></td>
 <td><p>Accessor to starting point.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setStartingSample" title="openturns.experimental.HiGHS.setStartingSample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingSample</span></code></a>(startingSample)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setStartingSample" title="openturns.experimental.HiGHS.setStartingSample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStartingSample</span></code></a>(startingSample)</p></td>
 <td><p>Accessor to starting sample.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setStopCallback" title="openturns.experimental.HiGHS.setStopCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStopCallback</span></code></a>(*args)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setStopCallback" title="openturns.experimental.HiGHS.setStopCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setStopCallback</span></code></a>(*args)</p></td>
 <td><p>Set up a stop callback.</p></td>
 </tr>
 </tbody>
@@ -245,15 +359,15 @@ It is only meant to be used with linear mixed-integer optimization problems.</p>
 </dl>
 </div>
 <p class="rubric">Notes</p>
-<p>HiGHS solver can be adapted using the parameters described <a class="reference external" href="https://ergo-code.github.io/HiGHS/dev/options/definitions/">here</a>.
-These parameters can be modified through the <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>.
-For every option <code class="docutils literal notranslate"><span class="pre">optionName</span></code>, simply add a key named <code class="docutils literal notranslate"><span class="pre">HiGHS-optionName</span></code> with the value to use, as shown below:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">AddAsBool</span><span class="p">(</span><span class="s1">'HiGHS-output_flag'</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ot</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">AddAsUnsignedInteger</span><span class="p">(</span><span class="s1">'HiGHS-threads'</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>HiGHS prefers to solve problems with at least one integer (or binary) variable, but this is not actually enforced.</p>
+<p>The following <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> keys are used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">HiGHS-solver</span></code> (<code class="docutils literal notranslate"><span class="pre">String</span></code>, default: <code class="docutils literal notranslate"><span class="pre">choose</span></code>): overrides the <code class="docutils literal notranslate"><span class="pre">algoName</span></code> constructor argument, use <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a> to list the recognized names.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HiGHS-run_crossover</span></code> (<code class="docutils literal notranslate"><span class="pre">String</span></code>, default: <code class="docutils literal notranslate"><span class="pre">on</span></code>): crossover of the interior point solvers, possible values are <code class="docutils literal notranslate"><span class="pre">off</span></code>, <code class="docutils literal notranslate"><span class="pre">choose</span></code> and <code class="docutils literal notranslate"><span class="pre">on</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HiGHS-mip_lp_solver</span></code> (<code class="docutils literal notranslate"><span class="pre">String</span></code>, default: <code class="docutils literal notranslate"><span class="pre">choose</span></code>): MIP subsolver choice on discrete problems, possible values are <code class="docutils literal notranslate"><span class="pre">choose</span></code>, <code class="docutils literal notranslate"><span class="pre">simplex</span></code>, <code class="docutils literal notranslate"><span class="pre">ipm</span></code>, <code class="docutils literal notranslate"><span class="pre">ipx</span></code> and <code class="docutils literal notranslate"><span class="pre">hipo</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HiGHS-mip_ipm_solver</span></code> (<code class="docutils literal notranslate"><span class="pre">String</span></code>, default: <code class="docutils literal notranslate"><span class="pre">choose</span></code>): MIP interior point subsolver choice on discrete problems, possible values are <code class="docutils literal notranslate"><span class="pre">choose</span></code>, <code class="docutils literal notranslate"><span class="pre">ipx</span></code> and <code class="docutils literal notranslate"><span class="pre">hipo</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HiGHS-mip_rel_gap</span></code> (<code class="docutils literal notranslate"><span class="pre">Scalar</span></code>, default: <code class="docutils literal notranslate"><span class="pre">1e-4</span></code>): relative MIP gap tolerance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HiGHS-mip_abs_gap</span></code> (<code class="docutils literal notranslate"><span class="pre">Scalar</span></code>, default: <code class="docutils literal notranslate"><span class="pre">1e-6</span></code>): absolute MIP gap tolerance.</p></li>
+</ul>
 <p class="rubric">Examples</p>
 <p>Solve a mixed integer linear optimization problem with objective:</p>
 <div class="math">
@@ -274,9 +388,9 @@ For every option <code class="docutils literal notranslate"><span class="pre">op
 </div><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns.experimental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otexp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cost</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1e30</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1e30</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cb</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="o">-</span><span class="mf">1e9</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">1e9</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cb</span> <span class="o">=</span> <span class="n">ot</span><span class="o">.</span><span class="n">Interval</span><span class="p">([</span><span class="o">-</span><span class="mf">1e9</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">1e9</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">LinearProblem</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">cb</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span><span class="o">.</span><span class="n">setVariablesType</span><span class="p">([</span><span class="n">ot</span><span class="o">.</span><span class="n">OptimizationProblemImplementation</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">otexp</span><span class="o">.</span><span class="n">HiGHS</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
@@ -290,6 +404,41 @@ For every option <code class="docutils literal notranslate"><span class="pre">op
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.__init__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.GetAlgorithmNames">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">GetAlgorithmNames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the list of recognized LP solver names, by names.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>names</strong><span class="classifier"><a class="reference internal" href="openturns.Description.html#openturns.Description" title="openturns.Description"><code class="xref py py-class docutils literal notranslate"><span class="pre">Description</span></code></a></span></dt><dd><p>List of recognized LP solver names. Whether a name is accepted at
+runtime depends on the HiGHS build.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns.experimental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otexp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">otexp</span><span class="o">.</span><span class="n">HiGHS</span><span class="o">.</span><span class="n">GetAlgorithmNames</span><span class="p">())</span>
+<span class="go">[choose,simplex,ipm,ipx,hipo,pdlp,hipdlp]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getAlgorithmName">
+<span class="sig-name descname"><span class="pre">getAlgorithmName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getAlgorithmName" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the LP solver name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>algoName</strong><span class="classifier">str</span></dt><dd><p>The LP solver name.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.getCheckStatus">
@@ -319,6 +468,73 @@ does not fully converge and will allow one to still find a feasible candidate.</
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getConstraintValues">
+<span class="sig-name descname"><span class="pre">getConstraintValues</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getConstraintValues" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the linear constraint activity of the last run.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>values</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>The linear constraint row values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available after a run with linear constraints and a valid primal
+solution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getCrossoverIterationNumber">
+<span class="sig-name descname"><span class="pre">getCrossoverIterationNumber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getCrossoverIterationNumber" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the crossover iteration count of the last run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>count</strong><span class="classifier">int</span></dt><dd><p>Number of crossover iterations reported by HiGHS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available after a run. Crossover runs after the interior point solvers
+to return a basic solution, depending on the <code class="docutils literal notranslate"><span class="pre">run_crossover</span></code> option.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getDualPoint">
+<span class="sig-name descname"><span class="pre">getDualPoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getDualPoint" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the constraint duals of the last run.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>duals</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>The linear constraint duals (shadow prices).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available on continuous problems with a valid dual solution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getIPMIterationNumber">
+<span class="sig-name descname"><span class="pre">getIPMIterationNumber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getIPMIterationNumber" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the interior point iteration count of the last run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>count</strong><span class="classifier">int</span></dt><dd><p>Number of interior point iterations reported by HiGHS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available after a run. A value of 0 means HiGHS reported 0 interior
+point iterations, not untraced work.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -442,6 +658,22 @@ if <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBl
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getPDLPIterationNumber">
+<span class="sig-name descname"><span class="pre">getPDLPIterationNumber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getPDLPIterationNumber" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the PDLP iteration count of the last run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>count</strong><span class="classifier">int</span></dt><dd><p>Number of PDLP iterations reported by HiGHS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available after a run. Non-zero only for the first-order solvers.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.getProblem">
 <span class="sig-name descname"><span class="pre">getProblem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getProblem" title="Link to this definition">¶</a></dt>
 <dd><p>Accessor to optimization problem.</p>
@@ -456,6 +688,38 @@ if <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBl
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getQPIterationNumber">
+<span class="sig-name descname"><span class="pre">getQPIterationNumber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getQPIterationNumber" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the QP iteration count of the last run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>count</strong><span class="classifier">int</span></dt><dd><p>Number of QP iterations reported by HiGHS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available after a run.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getReducedCosts">
+<span class="sig-name descname"><span class="pre">getReducedCosts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getReducedCosts" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the reduced costs of the last run.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>costs</strong><span class="classifier"><a class="reference internal" href="openturns.Point.html#openturns.Point" title="openturns.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span></dt><dd><p>The per-variable reduced costs.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available on continuous problems with a valid dual solution.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.getResult">
 <span class="sig-name descname"><span class="pre">getResult</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getResult" title="Link to this definition">¶</a></dt>
 <dd><p>Accessor to optimization result.</p>
@@ -467,6 +731,23 @@ if <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBl
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.getSimplexIterationNumber">
+<span class="sig-name descname"><span class="pre">getSimplexIterationNumber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getSimplexIterationNumber" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the simplex iteration count of the last run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>count</strong><span class="classifier">int</span></dt><dd><p>Number of simplex iterations reported by HiGHS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Only available after a run. A value of 0 means HiGHS reported 0 simplex
+iterations (e.g. presolve or another solver did the work), not untraced work.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -515,6 +796,21 @@ if <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBl
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.run" title="Link to this definition">¶</a></dt>
 <dd><p>Launch the optimization.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.experimental.HiGHS.setAlgorithmName">
+<span class="sig-name descname"><span class="pre">setAlgorithmName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algoName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.setAlgorithmName" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the LP solver name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>algoName</strong><span class="classifier">str</span></dt><dd><p>The LP solver name, see <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a>.
+Problems with discrete variables require <code class="docutils literal notranslate"><span class="pre">choose</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -772,9 +1068,9 @@ if <img class="math" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBl
 
 <section id="examples-using-the-class">
 <h2>Examples using the class<a class="headerlink" href="#examples-using-the-class" title="Link to this heading">¶</a></h2>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Optimization using HiGHS solver"><img alt="" src="../../_images/sphx_glr_plot_optimization_highs_thumb.png" />
-<p><a class="reference internal" href="../../auto_numerical_methods/optimization/plot_optimization_highs.html"><span class="doc">Optimization using HiGHS solver</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Optimization using HiGHS solver</div>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Optimization using HiGHS solvers"><img alt="" src="../../_images/sphx_glr_plot_optimization_highs_thumb.png" />
+<p><a class="reference internal" href="../../auto_numerical_methods/optimization/plot_optimization_highs.html"><span class="doc">Optimization using HiGHS solvers</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Optimization using HiGHS solvers</div>
 </div></div></section>
 </section>
 
