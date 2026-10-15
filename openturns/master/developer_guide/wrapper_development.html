@@ -206,20 +206,23 @@ coupling_tools module, it can wrap external program easily too.</p>
 <p>Here is a simple example of wrapper where compute is made in an external
 program with the help of openturns.coupling_tools module:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.coupling_tools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openturns.coupling_tools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="n">external_program</span> <span class="o">=</span> <span class="s1">'python external_program.py'</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">exec</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="c1"># create input file</span>
     <span class="n">in_file</span> <span class="o">=</span> <span class="s1">'input.py'</span>
-    <span class="n">ct</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'input_template.py'</span><span class="p">,</span> <span class="n">in_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">'@E'</span><span class="p">,</span> <span class="s1">'@F'</span><span class="p">],</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">otct</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'input_template.py'</span><span class="p">,</span> <span class="n">in_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">'@E'</span><span class="p">,</span> <span class="s1">'@F'</span><span class="p">],</span> <span class="n">X</span><span class="p">)</span>
 
     <span class="c1"># compute</span>
-    <span class="n">ct</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">external_program</span> <span class="o">+</span> <span class="s1">' '</span> <span class="o">+</span> <span class="n">in_file</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">'external_program.py'</span><span class="p">,</span> <span class="n">in_file</span><span class="p">]</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># parse output file</span>
-    <span class="n">Y</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'output.py'</span><span class="p">,</span> <span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s1">'Z='</span><span class="p">])</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">otct</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'output.py'</span><span class="p">,</span> <span class="n">tokens</span><span class="o">=</span><span class="p">[</span><span class="s1">'Z='</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">Y</span>
 
@@ -234,7 +237,7 @@ program with the help of openturns.coupling_tools module:</p>
 in <code class="docutils literal notranslate"><span class="pre">input_template.py</span></code> file and write the result to <code class="docutils literal notranslate"><span class="pre">infile</span></code>
 file. <code class="docutils literal notranslate"><span class="pre">X[0]</span></code> value will replace <code class="docutils literal notranslate"><span class="pre">'&#64;E'</span></code> token and <code class="docutils literal notranslate"><span class="pre">X[1]</span></code> will
 replace <code class="docutils literal notranslate"><span class="pre">'&#64;F'</span></code> token.</p></li>
-<li><p>The external program is launched with <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.execute.html#openturns.coupling_tools.execute" title="openturns.coupling_tools.execute"><code class="xref py py-meth docutils literal notranslate"><span class="pre">execute()</span></code></a>.
+<li><p>The external program is launched with <cite>subprocess.run</cite>.
 The input filename is passed by parameters to the program.</p></li>
 <li><p><a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.get.html#openturns.coupling_tools.get" title="openturns.coupling_tools.get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code></a> get the value following <code class="docutils literal notranslate"><span class="pre">'Z='</span></code> token in
 <code class="docutils literal notranslate"><span class="pre">output.py</span></code> file.</p></li>
@@ -305,8 +308,6 @@ function:</p>
 <span class="c1"># =&gt; prgm_data.in = 'E=1 EE=2')</span>
 </pre></div>
 </div>
-<p>The <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.execute.html#openturns.coupling_tools.execute" title="openturns.coupling_tools.execute"><code class="xref py py-meth docutils literal notranslate"><span class="pre">execute()</span></code></a> function
-can launch an external code.</p>
 <p>The <a class="reference internal" href="../user_manual/_generated/openturns.coupling_tools.get_value.html#openturns.coupling_tools.get_value" title="openturns.coupling_tools.get_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_value()</span></code></a> function
 can deal with several type of output file.</p>
 <ul>

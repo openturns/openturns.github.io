@@ -26,7 +26,7 @@ Link to a computer code with coupling tools
 In this example we show how to use the `coupling_tools` module, which allows one to create a function from a computer code based on text file exchanges.
 We show the main features of the module on a simple example and focus on the `replace` and `get` functions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-36
+.. GENERATED FROM PYTHON SOURCE LINES 11-35
 
 Introduction
 ------------
@@ -42,7 +42,6 @@ The `coupling_tools` module is useful when the external computer code reads (on 
 The main features of the `coupling_tools` module are:
 
 * `replace`: writes a file based on a file template, by replacing tokens with values,
-* `execute`: executes an external computer code,
 * `get` (and `get_line_col`): reads values from a file.
 
 Moreover, the `coupling_tools` module can be useful outside the library, for example to evaluate a design of experiments on a cluster.
@@ -54,7 +53,7 @@ There are several advantages over basic Python scripting while using the module.
 
 It is easy to use if the input or output files are based on structured text files. With a little more Python scripting, it is even possible to parallelize it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-50
+.. GENERATED FROM PYTHON SOURCE LINES 37-49
 
 Example
 -------
@@ -69,12 +68,13 @@ The command line to evaluate the code is:
 
 `python external_program.py input.py`
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-57
+.. GENERATED FROM PYTHON SOURCE LINES 51-57
 
 .. code-block:: Python
 
     import openturns as ot
-    import openturns.coupling_tools as ct
+    import openturns.coupling_tools as otct
+    import subprocess
     import sys
 
 
@@ -247,25 +247,24 @@ The `input_template.py` file is a template which will be used to generate the ac
 The simulator is implemented this way:
 
 * we first use the `replace` function in order to generate the actual input file,
-* then we evaluate the external computer code with a system command with the `execute` function,
+* then we evaluate the external computer code with a system command,
 * and we read the output file with the `get` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-154
+.. GENERATED FROM PYTHON SOURCE LINES 139-153
 
 .. code-block:: Python
 
     def mySimulator(X):
         # 1. Create input file
-        infile = "input_template.txt"
-        outfile = "input.txt"
+        tplfile = "input_template.txt"
+        infile = "input.txt"
         tokens = ["@X0@", "@X1@", "@X2@"]
-        ct.replace(infile, outfile, tokens, X)
-        # 2. Compute
-        program = sys.executable + " external_program.py"
-        cmd = program + " " + outfile
-        ct.execute(cmd)
+        otct.replace(tplfile, infile, tokens, X)
+        # 2. Run program with input file
+        cmd = [sys.executable, "external_program.py", infile]
+        subprocess.run(cmd, check=True)
         # 3. Parse output file
-        Y = ct.get("output.txt", tokens=["Y0=", "Y1="])
+        Y = otct.get("output.txt", tokens=["Y0=", "Y1="])
         return Y
 
 
@@ -276,11 +275,11 @@ The simulator is implemented this way:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-156
+.. GENERATED FROM PYTHON SOURCE LINES 154-155
 
 In order to create the function, we simply use the `PythonFunction` class.
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-160
+.. GENERATED FROM PYTHON SOURCE LINES 157-159
 
 .. code-block:: Python
 
@@ -293,11 +292,11 @@ In order to create the function, we simply use the `PythonFunction` class.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-162
+.. GENERATED FROM PYTHON SOURCE LINES 160-161
 
 We can check that this function can be evaluated.
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-168
+.. GENERATED FROM PYTHON SOURCE LINES 163-167
 
 .. code-block:: Python
 
@@ -318,7 +317,7 @@ We can check that this function can be evaluated.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-182
+.. GENERATED FROM PYTHON SOURCE LINES 168-181
 
 Write the input file with the replace function
 ----------------------------------------------
@@ -334,15 +333,15 @@ where
 * `tokens` is a list of N items, the regular expressions to find,
 * `values` is a list of N items (strings, floats, etc...), the values to replace.
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-190
+.. GENERATED FROM PYTHON SOURCE LINES 183-189
 
 .. code-block:: Python
 
     X = [1.2, 45, 91.8]
-    infile = "input_template.txt"
-    outfile = "input.txt"
+    tplfile = "input_template.txt"
+    infile = "input.txt"
     tokens = ["@X0@", "@X1@", "@X2@"]
-    ct.replace(infile, outfile, tokens, X)
+    otct.replace(tplfile, infile, tokens, X)
 
 
 
@@ -351,15 +350,15 @@ where
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-192
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
 
 To see the change, let us look at the `input.txt` file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-197
+.. GENERATED FROM PYTHON SOURCE LINES 193-196
 
 .. code-block:: Python
 
-    f = open("input.txt", "r")
+    f = open(infile, "r")
     print(f.read())
 
 
@@ -379,7 +378,7 @@ To see the change, let us look at the `input.txt` file.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-217
+.. GENERATED FROM PYTHON SOURCE LINES 197-216
 
 Read the output with the get function
 -------------------------------------
@@ -401,11 +400,11 @@ And to get a single value:
 
 `Y = get_value(filename, token=None, skip_token=0, skip_line=0, skip_col=0)`
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-220
+.. GENERATED FROM PYTHON SOURCE LINES 218-219
 
 Consider for example the following file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-228
+.. GENERATED FROM PYTHON SOURCE LINES 221-227
 
 .. code-block:: Python
 
@@ -422,7 +421,7 @@ Consider for example the following file.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-233
+.. GENERATED FROM PYTHON SOURCE LINES 228-232
 
 .. code-block:: Python
 
@@ -437,15 +436,15 @@ Consider for example the following file.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 234-235
+.. GENERATED FROM PYTHON SOURCE LINES 233-234
 
 We want to read the number `9`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-239
+.. GENERATED FROM PYTHON SOURCE LINES 236-238
 
 .. code-block:: Python
 
-    Y = ct.get_value("results.txt", skip_line=1, skip_col=2)
+    Y = otct.get_value("results.txt", skip_line=1, skip_col=2)
     Y
 
 
