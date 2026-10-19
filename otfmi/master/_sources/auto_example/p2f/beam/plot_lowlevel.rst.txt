@@ -30,7 +30,7 @@ First, retrieve the path to the example FMU *deviation.fmu*.
 
 .. code-block:: Python
 
-    import pyfmi
+    import otfmi
     import otfmi.example.utility
 
     path_fmu = otfmi.example.utility.get_path_fmu("deviation")
@@ -67,15 +67,17 @@ favoured.
 This choice, **opposite to PyFMI's default**, enables the CoSimulation
 to impose a solver not available in PyFMI.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 25-28
 
-All options of `pyfmi.load_fmu` can be passed on to otfmi:
+otfmi drives the FMU through an FMI backend, PyFMI by default, FMPy as a
+fallback. Both expose the same interface, so the code below is
+backend-independent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-28
+.. GENERATED FROM PYTHON SOURCE LINES 28-30
 
 .. code-block:: Python
 
-    print(help(pyfmi.load_fmu))
+    print(f"backend = {otfmi.backend.BACKEND}")
 
 
 
@@ -85,66 +87,17 @@ All options of `pyfmi.load_fmu` can be passed on to otfmi:
 
  .. code-block:: none
 
-    Help on method descriptor load_fmu in module pyfmi.fmi:
-
-    load_fmu(
-        fmu: Union[str, Path],
-        log_file_name=None,
-        kind='auto',
-        log_level=2,
-        allow_unzipped_fmu=False
-    )
-        Helper method for creating a model instance.
-
-        Parameters::
-
-            fmu --
-                Path to the fmu.
-
-            log_file_name --
-                Filename for file used to save log messages.
-                This argument can also be a stream if it supports 'write', for full functionality
-                it must also support 'seek' and 'readlines'. If the stream requires use of other methods, such as 'drain'
-                for asyncio-streams, then this needs to be implemented on the user-side, there is no additional methods invoked
-                on the stream instance after 'write' has been invoked on the PyFMI side.
-                The stream must also be open and writable during the entire time.
-                Default: None = Generates automatically as <model_identifier>_log.txt
-
-            kind --
-                String indicating the kind of model to create. This is only
-                needed if a FMU contains multiple models.
-                Available options:
-                    - 'me'
-                    - 'cs'
-                    - 'se'
-                    - 'auto'
-                Default: 'auto' (Chooses 'me' > 'cs' > 'se', if multiple are available)
-
-            log_level --
-                Determines the logging output. Can be set between 0
-                (no logging) and 7 (everything).
-                Default: 2 (log error messages)
-            allow_unzipped_fmu --
-                If set to True, the argument 'fmu' can be a path specifying a directory
-                to an unzipped FMU. The structure of the unzipped FMU must conform
-                to the FMI specification.
-                Default: False
-
-        Returns::
-
-            A model instance corresponding to the loaded FMU.
-
-    None
+    backend = pyfmi
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
-
-For instance, enforce CoSimulation kind and specify the filename for the
-logs writing:
 
 .. GENERATED FROM PYTHON SOURCE LINES 31-33
+
+Backend-specific loading options can be passed on to otfmi.
+With PyFMI, for instance, the log file name can be specified:
+
+.. GENERATED FROM PYTHON SOURCE LINES 33-35
 
 .. code-block:: Python
 
@@ -157,22 +110,22 @@ logs writing:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-37
+.. GENERATED FROM PYTHON SOURCE LINES 36-39
 
 .. note::
-   otfmi `load_fmu` is an overlay of PyFMI `load_fmu` function.
-   Hence the FMU loaded here upper benefits of all PyFMI's methods.
+   otfmi `load_fmu` is an overlay of the backend `load_fmu` function.
+   Hence the FMU loaded here upper benefits of all the backend methods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-41
+.. GENERATED FROM PYTHON SOURCE LINES 41-43
 
-For example, ``get_description`` is a PyFMI method (not re-implemented in
-otfmi):
+The model object also gives access to the underlying backend model, e.g. to
+inspect the variables it exposes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 .. code-block:: Python
 
-    model.get_description()
+    sorted(model.get_model_variables().keys())
 
 
 
@@ -182,14 +135,14 @@ otfmi):
  .. code-block:: none
 
 
-    'Model from here: http://openturns.github.io/openturns/master/usecases/use_case_cantilever_beam.html'
+    ['E', 'F', 'I', 'L', 'der(_D_outputAlias_y)', 'y']
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.066 seconds)
+   **Total running time of the script:** (0 minutes 0.082 seconds)
 
 
 .. _sphx_glr_download_auto_example_p2f_beam_plot_lowlevel.py:
