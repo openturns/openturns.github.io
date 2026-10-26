@@ -119,6 +119,55 @@
 <dt class="sig sig-object py" id="openturns.LevelSetMesher">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">LevelSetMesher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LevelSetMesher" title="Link to this definition">¶</a></dt>
 <dd><p>Creation of mesh from a level set.</p>
+<p>The meshing algorithm is based either on a <a class="reference internal" href="openturns.Field.html#openturns.Field" title="openturns.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a> or on the
+<a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> class.</p>
+<blockquote>
+<div><ul>
+<li><p>Using a field allows one to mesh a level set reusing previously computed
+values and starting from an arbitrary mesh.
+If the values of the field are of dimension 1 they are supposed to
+be the evaluation of the function defining the level set at the vertices of
+the mesh, otherwise they are recomputed.</p></li>
+<li><p>Using a bounding box (provided by the user or automatically computed) is a
+shortcut. The interval is meshed using the <a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> class
+and the function defining the level set is evaluated at the vertices of the
+resulting mesh to create a field.</p></li>
+<li><p>Then, all the simplices with all vertices outside of the level set are
+rejected, while the simplices with all vertices inside of the level
+set are kept. The remaining simplices are adapted the following way:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The mean point of the vertices inside of the level set is computed</p></li>
+<li><p>Each vertex outside of the level set is projected onto the level set using
+a linear interpolation</p></li>
+<li><p>If the <em>project</em> flag is <em>True</em>, then the projection is refined using first
+a nonlinear equation solver <a class="reference internal" href="openturns.Brent.html#openturns.Brent" title="openturns.Brent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brent</span></code></a> depending on the
+<code class="docutils literal notranslate"><span class="pre">LevelSetMesher-SolveEquation</span></code> key in <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> class.
+If this key is set to <em>False</em> or if the solver fails, then the projection is
+done using the provided optimization algorithm.
+If it fails then the <a class="reference internal" href="openturns.Cobyla.html#openturns.Cobyla" title="openturns.Cobyla"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cobyla</span></code></a> optimization algorithm is used.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">LevelSetMesher-UseQEF</span></code> flag selects the vertex placement used for
+the projection: <code class="docutils literal notranslate"><span class="pre">False</span></code> (default) keeps the legacy placement, <code class="docutils literal notranslate"><span class="pre">True</span></code>
+enables the QEF placement. With QEF, tangent planes from Brent crossings
+and function gradients are combined in one quadratic error function per
+cut cell or moved vertex, so sharp edges and corners are recovered
+instead of chamfered. The default value is given by
+<a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>, and can be changed per instance with
+<a class="reference internal" href="#openturns.LevelSetMesher.setUseQEF" title="openturns.LevelSetMesher.setUseQEF"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setUseQEF()</span></code></a>.</p></li>
+<li><p>When <code class="docutils literal notranslate"><span class="pre">LevelSetMesher-MaxRefinementLevels</span></code> is positive, the background
+grid is adaptively refined: dropped simplices sharing a facet with a kept
+one are bisected at their longest edge, and the meshing is repeated on
+the refined grid.</p></li>
+<li><p>A collection of level sets can be meshed as well: the meshed domain is
+then the intersection of the level sets. Each level function is assumed
+smooth, so per-constraint crossings and gradients stay reliable across
+sharp junctions (see the QEF placement above). When a field is
+provided, its values must have one column per level set.</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -149,53 +198,40 @@ Default is <a class="reference internal" href="openturns.AbdoRackwitz.html#opent
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.getOptimizationAlgorithm" title="openturns.LevelSetMesher.getOptimizationAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getOptimizationAlgorithm</span></code></a>()</p></td>
 <td><p>Accessor to the optimization solver.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.hasName" title="openturns.LevelSetMesher.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.getUseQEF" title="openturns.LevelSetMesher.getUseQEF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getUseQEF</span></code></a>()</p></td>
+<td><p>Accessor to the QEF sharp-edge recovery flag.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.hasName" title="openturns.LevelSetMesher.hasName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasName</span></code></a>()</p></td>
 <td><p>Test if the object is named.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.setDiscretization" title="openturns.LevelSetMesher.setDiscretization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDiscretization</span></code></a>(discretization)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.setDiscretization" title="openturns.LevelSetMesher.setDiscretization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDiscretization</span></code></a>(discretization)</p></td>
 <td><p>Accessor to the discretization.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.setName" title="openturns.LevelSetMesher.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.setName" title="openturns.LevelSetMesher.setName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code></a>(name)</p></td>
 <td><p>Accessor to the object's name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.setOptimizationAlgorithm" title="openturns.LevelSetMesher.setOptimizationAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setOptimizationAlgorithm</span></code></a>(solver)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.setOptimizationAlgorithm" title="openturns.LevelSetMesher.setOptimizationAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setOptimizationAlgorithm</span></code></a>(solver)</p></td>
 <td><p>Accessor to the optimization solver.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#openturns.LevelSetMesher.setUseQEF" title="openturns.LevelSetMesher.setUseQEF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setUseQEF</span></code></a>(useQEF)</p></td>
+<td><p>Accessor to the QEF sharp-edge recovery flag.</p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>The meshing algorithm is based either on a <a class="reference internal" href="openturns.Field.html#openturns.Field" title="openturns.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a> or on the
-<a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> class.</p>
-<blockquote>
-<div><ul>
-<li><p>Using a field allows one to mesh a level set reusing previously computed
-values and starting from an arbitrary mesh.
-If the values of the field are of dimension 1 they are supposed to
-be the evaluation of the function defining the level set at the vertices of
-the mesh, otherwise they are recomputed.</p></li>
-<li><p>Using a bounding box (provided by the user or automatically computed) is a
-shortcut. The interval is meshed using the <a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> class
-and the function defining the level set is evaluated at the vertices of the
-resulting mesh to create a field.</p></li>
-<li><p>Then, all the simplices with all vertices outside of the level set are
-rejected, while the simplices with all vertices inside of the level
-set are kept. The remaining simplices are adapted the following way:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>The mean point of the vertices inside of the level set is computed</p></li>
-<li><p>Each vertex outside of the level set is projected onto the level set using
-a linear interpolation</p></li>
-<li><p>If the <em>project</em> flag is <em>True</em>, then the projection is refined using first
-a nonlinear equation solver <a class="reference internal" href="openturns.Brent.html#openturns.Brent" title="openturns.Brent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brent</span></code></a> depending on the
-<cite>LevelSetMesher-SolveEquation</cite> key in <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> class.
-If this key is set to <em>False</em> or if the solver fails, then the projection is
-done using the provided optimization algorithm.
-If it fails then the <a class="reference internal" href="openturns.Cobyla.html#openturns.Cobyla" title="openturns.Cobyla"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cobyla</span></code></a> optimization algorithm is used.</p></li>
+<p>The following <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> keys are used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LevelSetMesher-MaxRefinementLevels</span></code> (<code class="docutils literal notranslate"><span class="pre">UnsignedInteger</span></code>, default: <code class="docutils literal notranslate"><span class="pre">0</span></code>):
+maximum number of adaptive background refinement levels; each level bisects
+dropped neighbours of the kept domain at their longest edge, recovering
+dropped-cell strips (<code class="docutils literal notranslate"><span class="pre">0</span></code> keeps the legacy single pass). Cut simplices are
+not bisected: they already cover maximally, and the mesh volume is
+non-decreasing across levels on convex domains.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LevelSetMesher-SolveEquation</span></code> (<code class="docutils literal notranslate"><span class="pre">Bool</span></code>, default: <code class="docutils literal notranslate"><span class="pre">True</span></code>): whether the
+projection is first refined with the <a class="reference internal" href="openturns.Brent.html#openturns.Brent" title="openturns.Brent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Brent</span></code></a> equation solver.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LevelSetMesher-UseQEF</span></code> (<code class="docutils literal notranslate"><span class="pre">Bool</span></code>, default: <code class="docutils literal notranslate"><span class="pre">False</span></code>): whether the QEF
+sharp-edge placement is enabled.</p></li>
 </ul>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
 <p class="rubric">Examples</p>
 <p>Create a mesh:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ot</span>
@@ -220,12 +256,19 @@ If it fails then the <a class="reference internal" href="openturns.Cobyla.html#o
 <div><p>build(<em>levelSet, project</em>)</p>
 <p>build(<em>levelSet, boundingBox, project</em>)</p>
 <p>build(<em>levelSet, field, project</em>)</p>
+<p>build(<em>collection, project</em>)</p>
+<p>build(<em>collection, boundingBox, project</em>)</p>
+<p>build(<em>collection, field, project</em>)</p>
 </div></blockquote>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>levelSet</strong><span class="classifier"><a class="reference internal" href="openturns.LevelSet.html#openturns.LevelSet" title="openturns.LevelSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">LevelSet</span></code></a></span></dt><dd><p>The level set to be meshed, of dimension equal to the dimension
 of <cite>discretization</cite>.</p>
+</dd>
+<dt><strong>collection</strong><span class="classifier">sequence of <a class="reference internal" href="openturns.LevelSet.html#openturns.LevelSet" title="openturns.LevelSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">LevelSet</span></code></a></span></dt><dd><p>The level sets to be meshed, through their intersection. All level sets
+must share the same dimension, equal to the dimension of <cite>discretization</cite>.
+Each level function is assumed smooth.</p>
 </dd>
 <dt><strong>boundingBox</strong><span class="classifier"><a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a></span></dt><dd><p>The bounding box used to mesh the level set. It is automatically computed
 if not provided.</p>
@@ -302,6 +345,20 @@ if not provided.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="openturns.LevelSetMesher.getUseQEF">
+<span class="sig-name descname"><span class="pre">getUseQEF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LevelSetMesher.getUseQEF" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the QEF sharp-edge recovery flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>useQEF</strong><span class="classifier">bool</span></dt><dd><p>Whether the QEF vertex placement is used on top of the projection.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="openturns.LevelSetMesher.hasName">
 <span class="sig-name descname"><span class="pre">hasName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LevelSetMesher.hasName" title="Link to this definition">¶</a></dt>
 <dd><p>Test if the object is named.</p>
@@ -351,6 +408,20 @@ if not provided.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>solver</strong><span class="classifier"><a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm" title="openturns.OptimizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationAlgorithm</span></code></a></span></dt><dd><p>The optimization solver used to project vertices onto the level set.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="openturns.LevelSetMesher.setUseQEF">
+<span class="sig-name descname"><span class="pre">setUseQEF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">useQEF</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.LevelSetMesher.setUseQEF" title="Link to this definition">¶</a></dt>
+<dd><p>Accessor to the QEF sharp-edge recovery flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>useQEF</strong><span class="classifier">bool</span></dt><dd><p>Whether the QEF vertex placement is used on top of the projection.</p>
 </dd>
 </dl>
 </dd>
