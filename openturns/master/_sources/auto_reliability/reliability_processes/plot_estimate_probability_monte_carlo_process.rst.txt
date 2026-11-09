@@ -45,9 +45,9 @@ estimator.
 The Monte Carlo algorithm is manipulated the same way as in the case
 where the event is based on a random variable independent of time.
 
-We illustrate the algorithm on the example of the bidimensionnal white
+We illustrate the algorithm on the example of the bidimensional white
 noise process :math:`\varepsilon: \Omega \times \mathcal{D} \rightarrow \mathbb{R}^2` where
-:math:`\mathcal{D}\in \mathbb{R}`, distributed according to the bidimensionnal standard
+:math:`\mathcal{D}\in \mathbb{R}`, distributed according to the bidimensional standard
 normal distribution (with zero mean, unit variance and independent
 marginals).
 
@@ -80,13 +80,14 @@ at each time :math:`t`, the final probability :math:`p` writes:
 With :math:`K=10^4` realizations, using the Monte Carlo estimator, we obtain :math:`p_K = 0.1627`,
 to be compared to the exact value :math:`p=0.17008` for a time grid of size :math:`N=10`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-68
+.. GENERATED FROM PYTHON SOURCE LINES 65-70
 
 .. code-block:: Python
 
     import openturns as ot
     import openturns.viewer as otv
 
+    ot.RandomGenerator.SetSeed(0)
 
 
 
@@ -94,18 +95,19 @@ to be compared to the exact value :math:`p=0.17008` for a time grid of size :mat
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
-Create a time grid
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-75
+Create a time grid of size :math:`N = 10`
+
+.. GENERATED FROM PYTHON SOURCE LINES 72-77
 
 .. code-block:: Python
 
     tMin = 0.0
     timeStep = 0.1
-    n = 100
-    tgrid = ot.RegularGrid(tMin, timeStep, n)
+    N = 10
+    tgrid = ot.RegularGrid(tMin, timeStep, N)
 
 
 
@@ -114,36 +116,36 @@ Create a time grid
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 78-80
 
-Create a normal process
+Create the bidimensional white noise process: independent standard normal
+marginals at each time stamp
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-82
-
-.. code-block:: Python
-
-    amplitude = [5.0]
-    scale = [3.0]
-    model = ot.ExponentialModel(scale, amplitude)
-    process = ot.GaussianProcess(model, tgrid)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
-
-Create the 1-d domain A: [2.,5.]
-
-.. GENERATED FROM PYTHON SOURCE LINES 84-88
+.. GENERATED FROM PYTHON SOURCE LINES 80-84
 
 .. code-block:: Python
 
-    lowerBound = [2.0]
-    upperBound = [5.0]
+    marginals = [ot.Normal()] * 2
+    distribution = ot.JointDistribution(marginals)
+    process = ot.WhiteNoise(distribution, tgrid)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 85-86
+
+Create the 2-d domain :math:`\mathcal{A} = [1,2] \times [1,2]`
+
+.. GENERATED FROM PYTHON SOURCE LINES 86-90
+
+.. code-block:: Python
+
+    lowerBound = [1.0] * 2
+    upperBound = [2.0] * 2
     domain = ot.Interval(lowerBound, upperBound)
 
 
@@ -153,11 +155,11 @@ Create the 1-d domain A: [2.,5.]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-90
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 Create an event from a Process and a Domain
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-92
+.. GENERATED FROM PYTHON SOURCE LINES 92-94
 
 .. code-block:: Python
 
@@ -170,49 +172,77 @@ Create an event from a Process and a Domain
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-94
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
 
-Create the Monte-Carlo algorithm
+Compute the exact probability
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-111
+.. GENERATED FROM PYTHON SOURCE LINES 96-102
 
 .. code-block:: Python
 
+    Phi = ot.Normal().computeCDF
+    p1 = (Phi(2.0) - Phi(1.0)) ** 2
+    pexact = 1.0 - (1.0 - p1) ** N
+    print("p1=%.6f" % p1)
+    print("p_exact=%.5f" % pexact)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    p1=0.018470
+    p_exact=0.17008
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
+
+Create the Monte-Carlo algorithm
+
+.. GENERATED FROM PYTHON SOURCE LINES 104-118
+
+.. code-block:: Python
+
+
+    # Define the total number of simulations
+    K = 10 ** 4
     montecarlo = ot.ProbabilitySimulationAlgorithm(event)
-
-    # Define the maximum number of simulations
-    montecarlo.setMaximumOuterSampling(1000)
-
-    # Define the block size
-    montecarlo.setBlockSize(100)
-
-    # Define the maximum coefficient of variation
-    montecarlo.setMaximumCoefficientOfVariation(0.0025)
+    montecarlo.setMaximumOuterSampling(K)
+    montecarlo.setBlockSize(1)
 
     # Run the algorithm
     montecarlo.run()
 
     # Get the result
-    montecarlo.getResult()
+    result = montecarlo.getResult()
+    print("p_MC=%.4f" % result.getProbabilityEstimate())
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
 
-.. raw:: html
+ .. code-block:: none
 
-    <div class="output_subarea output_html rendered_html output_result">
-    probabilityEstimate=9.295122e-01 varianceEstimate=5.380082e-06 standard deviation=2.32e-03 coefficient of variation=2.50e-03 confidenceLength(0.95)=9.09e-03 outerSampling=123 blockSize=100
-    </div>
-    <br />
-    <br />
+    p_MC=0.1622
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-115
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 119-125
 
 .. code-block:: Python
 
     graph = montecarlo.drawProbabilityConvergence(0.95)
+    exact_line = ot.Curve([-10, 530], [pexact, pexact], "exact probability")
+    exact_line.setColor("black")
+    graph.add(exact_line)
     view = otv.View(graph)
 
 
@@ -227,7 +257,7 @@ Create the Monte-Carlo algorithm
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-117
+.. GENERATED FROM PYTHON SOURCE LINES 126-127
 
 .. code-block:: Python
 

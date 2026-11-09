@@ -52,10 +52,10 @@ Benchmark the Morris test function
  .. code-block:: none
 
     name = Morris
-    distribution = ComposedDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 20))
+    distribution = JointDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 20))
     function = class=PythonEvaluation name=MorrisFunction
-    firstOrderIndices = [0.08,0.08,0.06,0.08,0.06,0.13,0.06,0.13,0.13,0.12,0,0,0,0,0,0,0,0,0,0]#20
-    totalOrderIndices = [0.11,0.11,0.06,0.11,0.06,0.13,0.06,0.13,0.13,0.12,0,0,0,0,0,0,0,0,0,0]#20
+    firstOrderIndices = [0.0061257,0.0068268,0.0148127,0.0097981,0.0125528,1.41e-05,0.0559007,0.141909,0.117441,0.123611,4.7e-06,3.06e-05,0.0014462,0.0044277,0.0001056,0.0002988,0.0018635,1.2e-06,9.32e-05,0.0006815]#20
+    totalOrderIndices = [0.245404,0.245113,0.105865,0.249405,0.103829,0.091275,0.0575356,0.144465,0.119821,0.126461,0.0016405,0.0014999,0.0028601,0.0068092,0.0018924,0.0029526,0.0032192,0.0018433,0.0015019,0.0019601]#20
 
 
 
@@ -93,7 +93,7 @@ Exact first and total order
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    class=Point name=Unnamed dimension=20 values=[0.08,0.08,0.06,0.08,0.06,0.13,0.06,0.13,0.13,0.12,0,0,0,0,0,0,0,0,0,0]
+    class=Point name=Unnamed dimension=20 values=[0.0061257,0.0068268,0.0148127,0.0097981,0.0125528,1.41e-05,0.0559007,0.141909,0.117441,0.123611,4.7e-06,3.06e-05,0.0014462,0.0044277,0.0001056,0.0002988,0.0018635,1.2e-06,9.32e-05,0.0006815]
     </div>
     <br />
     <br />
@@ -113,7 +113,7 @@ Exact first and total order
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    class=Point name=Unnamed dimension=20 values=[0.11,0.11,0.06,0.11,0.06,0.13,0.06,0.13,0.13,0.12,0,0,0,0,0,0,0,0,0,0]
+    class=Point name=Unnamed dimension=20 values=[0.245404,0.245113,0.105865,0.249405,0.103829,0.091275,0.0575356,0.144465,0.119821,0.126461,0.0016405,0.0014999,0.0028601,0.0068092,0.0018924,0.0029526,0.0032192,0.0018433,0.0015019,0.0019601]
     </div>
     <br />
     <br />
@@ -267,10 +267,10 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  30
-    Computed first order =  [0.0607395,0.20637,0.267428,0.262258,0.314109,0.61827,0.294943,0.439378,0.246433,0.274413,0.221509,0.18807,0.218819,0.228214,0.208058,0.215507,0.23585,0.21719,0.237087,0.214426]#20
-    Exact first order =  [0.08,0.08,0.06,0.08,0.06,0.13,0.06,0.13,0.13,0.12,0,0,0,0,0,0,0,0,0,0]#20
-    Computed total order =  [0.0311589,0.22498,0.219259,0.078154,-0.0539979,-0.0392477,-0.0216198,0.20086,0.311105,0.0877451,-0.0160964,-0.000247103,-0.0276497,0.000406818,-0.0165498,-0.0183569,-0.0308313,-0.0264689,-0.00283312,-0.00660521]#20
-    Exact total order =  [0.11,0.11,0.06,0.11,0.06,0.13,0.06,0.13,0.13,0.12,0,0,0,0,0,0,0,0,0,0]#20
+    Computed first order =  [0.0413107,0.341659,0.223284,0.226236,0.237565,0.0933184,0.254577,0.440998,0.230921,0.24593,0.199562,0.186567,0.212842,0.219807,0.217282,0.213096,0.207136,0.214633,0.212578,0.212067]#20
+    Exact first order =  [0.0061257,0.0068268,0.0148127,0.0097981,0.0125528,1.41e-05,0.0559007,0.141909,0.117441,0.123611,4.7e-06,3.06e-05,0.0014462,0.0044277,0.0001056,0.0002988,0.0018635,1.2e-06,9.32e-05,0.0006815]#20
+    Computed total order =  [0.332513,0.44494,0.32691,0.180088,-0.0418676,0.0326762,0.0128154,0.0742036,0.0663578,0.0987545,0.0137192,0.0174896,-0.0188307,0.000667087,0.0222983,-0.00491485,0.0154232,0.0015813,0.00707231,0.00853714]#20
+    Exact total order =  [0.245404,0.245113,0.105865,0.249405,0.103829,0.091275,0.0575356,0.144465,0.119821,0.126461,0.0016405,0.0014999,0.0028601,0.0068092,0.0018924,0.0029526,0.0032192,0.0018433,0.0015019,0.0019601]#20
 
 
 
@@ -308,7 +308,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 24.004 seconds)
+   **Total running time of the script:** (0 minutes 0.485 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_morris_sensitivity.py:

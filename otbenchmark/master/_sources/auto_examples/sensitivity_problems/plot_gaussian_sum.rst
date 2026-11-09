@@ -64,7 +64,7 @@ Benchmark the gaussian sum test function
  .. code-block:: none
 
     name = GaussianSum
-    distribution = ComposedDistribution(Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), IndependentCopula(dimension = 2))
+    distribution = JointDistribution(Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), IndependentCopula(dimension = 2))
     function = class=PythonEvaluation name=OpenTURNSPythonFunction
     firstOrderIndices = [0.5,0.5]
     totalOrderIndices = [0.5,0.5]
@@ -178,7 +178,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -289,9 +289,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.513373,0.504889]
+    Computed first order =  [0.498869,0.498748]
     Exact first order =  [0.5,0.5]
-    Computed total order =  [0.50317,0.494875]
+    Computed total order =  [0.501114,0.500623]
     Exact total order =  [0.5,0.5]
 
 
@@ -330,7 +330,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.794 seconds)
+   **Total running time of the script:** (0 minutes 1.077 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_gaussian_sum.py:

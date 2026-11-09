@@ -52,7 +52,7 @@ Benchmark the Dirichlet test function
  .. code-block:: none
 
     name = Dirichlet
-    distribution = ComposedDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 3))
+    distribution = JointDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 3))
     function = class=PythonEvaluation name=DirichletFunction
     firstOrderIndices = [0.525547,0.233577,0.131387]
     totalOrderIndices = [0.620438,0.310219,0.182482]
@@ -166,7 +166,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -277,9 +277,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.5332,0.240662,0.130402]
+    Computed first order =  [0.52456,0.232827,0.133084]
     Exact first order =  [0.525547,0.233577,0.131387]
-    Computed total order =  [0.616112,0.301247,0.180961]
+    Computed total order =  [0.618361,0.311775,0.181005]
     Exact total order =  [0.620438,0.310219,0.182482]
 
 
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.330 seconds)
+   **Total running time of the script:** (0 minutes 1.478 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py:

@@ -52,7 +52,7 @@ Benchmark the G-Sobol test function
  .. code-block:: none
 
     name = GSobol
-    distribution = ComposedDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 3))
+    distribution = JointDistribution(Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), Uniform(a = 0, b = 1), IndependentCopula(dimension = 3))
     function = class=PythonEvaluation name=OpenTURNSPythonFunction
     firstOrderIndices = [0.986712,0.00986712,9.86712e-05]
     totalOrderIndices = [0.990034,0.0131566,0.000132]
@@ -166,7 +166,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -298,9 +298,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.986334,0.00987357,0.000469649]
+    Computed first order =  [0.978665,0.021486,0.0124414]
     Exact first order =  [0.986712,0.00986712,9.86712e-05]
-    Computed total order =  [0.989564,0.0132758,0.000141576]
+    Computed total order =  [0.979669,0.0104535,-4.12658e-05]
     Exact total order =  [0.990034,0.0131566,0.000132]
 
 
@@ -339,7 +339,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.462 seconds)
+   **Total running time of the script:** (0 minutes 1.098 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_gsobol_sensitivity.py:

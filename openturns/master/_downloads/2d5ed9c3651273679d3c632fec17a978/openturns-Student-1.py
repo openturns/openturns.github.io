@@ -2,6 +2,7 @@ import openturns as ot
 from matplotlib import pyplot as plt
 import openturns.viewer as otv
 
+import openturns.experimental as otexp
 ot.RandomGenerator.SetSeed(0)
 title = None
 if "Student" == "Bernoulli":
@@ -33,7 +34,7 @@ elif "Student" == "LinearCombinationDistribution":
 elif "Student" == "SmoothedUniform":
     distribution = ot.SmoothedUniform(-1.0, 10.0, 1.0)
 elif "Student" == "TruncatedDistribution":
-    distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), 1.0, 4.0)
+    distribution = ot.TruncatedDistribution(ot.Normal(2.0, 1.5), ot.Interval(1.0, 4.0))
 elif "Student" == "FiniteDiscreteDistribution":
     distribution = ot.FiniteDiscreteDistribution([[1.0], [2.0], [3.0]], [0.4, 0.5, 1.0])
 elif "Student" == "ZipfMandelbrot":
@@ -43,7 +44,10 @@ elif "Student" == "Normal":
     distribution = ot.Normal([0.0, 0.0], cov)
     title = "Normal dist. with correlation coefficient {}".format(cov[0, 1])
 else:
-    distribution = ot.Student()
+    if hasattr(ot, "Student"):
+        distribution = ot.Student()
+    else:
+        distribution = otexp.Student()
 
 dimension = distribution.getDimension()
 if title is None:

@@ -64,7 +64,7 @@ Benchmark the Ishigami test function
  .. code-block:: none
 
     name = Ishigami
-    distribution = ComposedDistribution(Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), IndependentCopula(dimension = 3))
+    distribution = JointDistribution(Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), IndependentCopula(dimension = 3))
     function = ParametricEvaluation([X1,X2,X3,a,b]->[sin(X1) + a * sin(X2)^2 + b * X3^4 * sin(X1)], parameters positions=[3,4], parameters=[a : 7, b : 0.1], input positions=[0,1,2])
     firstOrderIndices = [0.313905,0.442411,0]
     totalOrderIndices = [0.557589,0.442411,0.243684]
@@ -178,7 +178,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -289,9 +289,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [0.31427,0.444138,0.00146169]
+    Computed first order =  [0.302745,0.460846,0.0066916]
     Exact first order =  [0.313905,0.442411,0]
-    Computed total order =  [0.557129,0.443124,0.243082]
+    Computed total order =  [0.574996,0.427126,0.256689]
     Exact total order =  [0.557589,0.442411,0.243684]
 
 
@@ -330,7 +330,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.037 seconds)
+   **Total running time of the script:** (0 minutes 0.378 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_ishigami_sensitivity.py:

@@ -122,7 +122,7 @@ def computeSparsityRate(multivariateBasis, totalDegree, chaosResult):
     """Compute the sparsity rate, assuming a FixedStrategy."""
     # Get basisSize, the number of candidate coefficients
     enumfunc = multivariateBasis.getEnumerateFunction()
-    basisSize = enumfunc.getStrataCumulatedCardinal(totalDegree)
+    basisSize = enumfunc.getBasisSizeFromTotalDegree(totalDegree)
     # Get number of coefficients in the selection
     indices = chaosResult.getIndices()
     nbcoeffs = indices.getSize()
@@ -174,7 +174,9 @@ multivariateBasis = ot.OrthogonalProductPolynomialFactory(
 N = 20  # size of the train design
 
 # %%
-n_valid = 1000  # size of the test design
+# 500 test points are enough: the R2 Monte Carlo noise is negligible
+# compared to the variability across training samples below
+n_valid = 500  # size of the test design
 
 # %%
 # The seed is selected to get *interesting* results.

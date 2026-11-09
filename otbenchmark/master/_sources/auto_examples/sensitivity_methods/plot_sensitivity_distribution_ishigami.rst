@@ -87,7 +87,7 @@ Lots of these messages are printed in the current Notebook. This is why we disab
  .. code-block:: none
 
     name = Ishigami
-    distribution = ComposedDistribution(Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), IndependentCopula(dimension = 3))
+    distribution = JointDistribution(Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), Uniform(a = -3.14159, b = 3.14159), IndependentCopula(dimension = 3))
     function = ParametricEvaluation([X1,X2,X3,a,b]->[sin(X1) + a * sin(X2)^2 + b * X3^4 * sin(X1)], parameters positions=[3,4], parameters=[a : 7, b : 0.1], input positions=[0,1,2])
     firstOrderIndices = [0.313905,0.442411,0]
     totalOrderIndices = [0.557589,0.442411,0.243684]
@@ -437,7 +437,7 @@ the reference distribution used for this verification is accurate enough.
     Estimator: MauntzKucherenko
     Asymptotic
     Estimator: Saltelli
-    /opt/hostedtoolcache/Python/3.9.25/x64/lib/python3.9/site-packages/openturns/viewer.py:287: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    /opt/hostedtoolcache/Python/3.9.25/x64/lib/python3.9/site-packages/openturns/viewer.py:289: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
       self._fig = plt.figure(**figure_kw)
     Estimator: Martinez
     Estimator: Jansen
@@ -504,7 +504,7 @@ This proves that the computation of the distribution is correct, for both the as
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.499 seconds)
+   **Total running time of the script:** (0 minutes 7.398 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_methods_plot_sensitivity_distribution_ishigami.py:

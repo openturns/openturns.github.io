@@ -52,7 +52,7 @@ Benchmark the Oakley-O'Hagan test function
  .. code-block:: none
 
     name = Oakley-O'Hagan
-    distribution = ComposedDistribution(Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), IndependentCopula(dimension = 15))
+    distribution = JointDistribution(Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), IndependentCopula(dimension = 15))
     function = class=PythonEvaluation name=OpenTURNSPythonFunction
     firstOrderIndices = [0,0,0,0,0,0.02,0.02,0.03,0.05,0.01,0.1,0.14,0.1,0.11,0.12]#15
     totalOrderIndices = [0.06,0.06,0.04,0.05,0.02,0.04,0.06,0.08,0.1,0.04,0.15,0.15,0.14,0.14,0.16]#15
@@ -311,7 +311,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.395 seconds)
+   **Total running time of the script:** (0 minutes 1.164 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_oakleyohagan_sensitivity.py:

@@ -145,8 +145,8 @@ Get the results
  .. code-block:: none
 
     Number of function calls = 1000
-    Failure Probability = 0.0020
-    95.0 % confidence interval :[-0.0008,0.0048] 
+    Failure Probability = 0.0010
+    95.0 % confidence interval :[-0.0010,0.0030] 
 
 
 
@@ -351,7 +351,7 @@ Draw the limit state surface
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.947 seconds)
+   **Total running time of the script:** (0 minutes 1.296 seconds)
 
 
 .. _sphx_glr_download_auto_examples_reliability_problems_plot_rp35.py:

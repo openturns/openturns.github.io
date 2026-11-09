@@ -469,23 +469,6 @@ Reliability problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="RP35 analysis and 2D graphics">
-
-.. only:: html
-
-  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp35_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp35.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">RP35 analysis and 2D graphics</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="RP111 analysis and 2D graphics">
 
 .. only:: html
@@ -498,6 +481,23 @@ Reliability problems
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">RP111 analysis and 2D graphics</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="RP35 analysis and 2D graphics">
+
+.. only:: html
+
+  .. image:: /auto_examples/reliability_problems/images/thumb/sphx_glr_plot_rp35_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_reliability_problems_plot_rp35.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">RP35 analysis and 2D graphics</div>
     </div>
 
 
@@ -673,23 +673,6 @@ Sensitivity methods
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Convergence of estimators on Ishigami">
-
-.. only:: html
-
-  .. image:: /auto_examples/sensitivity_methods/images/thumb/sphx_glr_plot_convergence_ishigami_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_convergence_ishigami.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Convergence of estimators on Ishigami</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark sensitivity analysis methods">
 
 .. only:: html
@@ -702,6 +685,23 @@ Sensitivity methods
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Benchmark sensitivity analysis methods</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Convergence of estimators on Ishigami">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_methods/images/thumb/sphx_glr_plot_convergence_ishigami_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_methods_plot_convergence_ishigami.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Convergence of estimators on Ishigami</div>
     </div>
 
 
@@ -741,23 +741,6 @@ Sensitivity problems
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Dirichlet test function">
-
-.. only:: html
-
-  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_dirichlet_sensitivity_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Benchmark the Dirichlet test function</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Borgonovo test function">
 
 .. only:: html
@@ -770,6 +753,23 @@ Sensitivity problems
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Benchmark the Borgonovo test function</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Benchmark the Dirichlet test function">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensitivity_problems/images/thumb/sphx_glr_plot_dirichlet_sensitivity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensitivity_problems_plot_dirichlet_sensitivity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Benchmark the Dirichlet test function</div>
     </div>
 
 

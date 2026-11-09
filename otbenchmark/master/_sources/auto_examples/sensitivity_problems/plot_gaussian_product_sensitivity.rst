@@ -64,7 +64,7 @@ Benchmark the gaussian product test function
  .. code-block:: none
 
     name = GaussianProduct
-    distribution = ComposedDistribution(Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), IndependentCopula(dimension = 2))
+    distribution = JointDistribution(Normal(mu = 0, sigma = 1), Normal(mu = 0, sigma = 1), IndependentCopula(dimension = 2))
     function = class=PythonEvaluation name=OpenTURNSPythonFunction
     firstOrderIndices = [0,0]
     totalOrderIndices = [1,1]
@@ -178,7 +178,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -289,9 +289,9 @@ Compare with exact results
  .. code-block:: none
 
     Sample size :  10000
-    Computed first order =  [-0.00181798,-0.00311334]
+    Computed first order =  [0.00444004,-0.030873]
     Exact first order =  [0,0]
-    Computed total order =  [1.00086,1.00496]
+    Computed total order =  [1.02181,0.996161]
     Exact total order =  [1,1]
 
 
@@ -330,7 +330,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.104 seconds)
+   **Total running time of the script:** (0 minutes 0.770 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_gaussian_product_sensitivity.py:

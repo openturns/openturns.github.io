@@ -64,7 +64,7 @@ Benchmark the Flooding test function
  .. code-block:: none
 
     name = Flooding
-    distribution = ComposedDistribution(TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[), TruncatedDistribution(Normal(mu = 30, sigma = 7.5), bounds = [0, (87.3797) +inf[), Uniform(a = 49, b = 51), Uniform(a = 54, b = 56), Uniform(a = 7, b = 9), Triangular(a = 55, m = 55.5, b = 56), Triangular(a = 4990, m = 5000, b = 5010), Triangular(a = 295, m = 300, b = 305), IndependentCopula(dimension = 8))
+    distribution = JointDistribution(TruncatedDistribution(Gumbel(beta = 558, gamma = 1013), bounds = [0, (19000.8) +inf[), TruncatedDistribution(Normal(mu = 30, sigma = 7.5), bounds = [0, (87.3797) +inf[), Uniform(a = 49, b = 51), Uniform(a = 54, b = 56), Uniform(a = 7, b = 9), Triangular(a = 55, m = 55.5, b = 56), Triangular(a = 4990, m = 5000, b = 5010), Triangular(a = 295, m = 300, b = 305), IndependentCopula(dimension = 8))
     function = [Q,Ks,Zv,Zm,Hd,Zb,L,B]->[(Q / (Ks * B * sqrt((Zm - Zv) / L)))^(3.0 / 5.0) + Zv - Zb - Hd]
     firstOrderIndices = [0.38,0.13,0.25,0,0.19,0.02,0,0]
     totalOrderIndices = [0.4,0.15,0.25,0.01,0.19,0.02,0,0]
@@ -178,7 +178,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -328,7 +328,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.181 seconds)
+   **Total running time of the script:** (0 minutes 1.680 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_flood_sensitivity.py:

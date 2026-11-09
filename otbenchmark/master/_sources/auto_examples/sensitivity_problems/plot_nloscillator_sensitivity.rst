@@ -52,7 +52,7 @@ Benchmark the NLOscillator test function
  .. code-block:: none
 
     name = N.L. Oscillator
-    distribution = ComposedDistribution(ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 21.5, sigma = 2.15, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 1.5, sigma = 0.15, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.01, sigma = 0.001, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 1, sigma = 0.2, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.01, sigma = 0.002, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.05, sigma = 0.02, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.02, sigma = 0.01, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 100, sigma = 10, gamma = 0)), IndependentCopula(dimension = 8))
+    distribution = JointDistribution(ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 21.5, sigma = 2.15, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 1.5, sigma = 0.15, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.01, sigma = 0.001, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 1, sigma = 0.2, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.01, sigma = 0.002, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.05, sigma = 0.02, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 0.02, sigma = 0.01, gamma = 0)), ParametrizedDistribution(parameters = LogNormalMuSigma(mu = 100, sigma = 10, gamma = 0)), IndependentCopula(dimension = 8))
     function = class=PythonEvaluation name=OpenTURNSPythonFunction
     firstOrderIndices = [0.4,0.03,0.09,0.18,0.12,0.05,0.05,0]
     totalOrderIndices = [0.4,0.04,0.1,0.23,0.16,0.07,0.06,0.01]
@@ -166,7 +166,7 @@ Create X/Y data
 
 .. code-block:: Python
 
-    marginal_distribution = ot.ComposedDistribution(
+    marginal_distribution = ot.JointDistribution(
         [
             ot.KernelSmoothing().build(full_sample.getMarginal(i))
             for i in range(1 + dimension)
@@ -318,7 +318,7 @@ Compare with exact results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.645 seconds)
+   **Total running time of the script:** (0 minutes 2.486 seconds)
 
 
 .. _sphx_glr_download_auto_examples_sensitivity_problems_plot_nloscillator_sensitivity.py:

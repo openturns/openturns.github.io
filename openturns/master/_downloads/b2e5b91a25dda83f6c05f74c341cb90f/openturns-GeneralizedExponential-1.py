@@ -1,6 +1,7 @@
 import openturns as ot
 from matplotlib import pyplot as plt
 import openturns.viewer as otv
+
 if "GeneralizedExponential" == "ExponentialModel":
     covarianceModel = ot.ExponentialModel([0.5], [5.0])
 elif "GeneralizedExponential" == "GeneralizedExponential":
@@ -20,7 +21,9 @@ elif "GeneralizedExponential" == "StationaryFunctionalCovarianceModel":
     rho = ot.SymbolicFunction(["tau"], ["exp(-tau)*cos(2*pi_*tau)"])
     covarianceModel = ot.StationaryFunctionalCovarianceModel([1.0], [1.0], rho)
 else:
+
     covarianceModel = ot.GeneralizedExponential()
+
 title = str(covarianceModel)[:100]
 if covarianceModel.getInputDimension() == 1:
     scale = covarianceModel.getScale()[0]

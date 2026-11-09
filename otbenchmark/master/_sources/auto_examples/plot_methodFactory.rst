@@ -156,7 +156,7 @@ we can do it now, prior to the call to the `run` method.
  .. code-block:: none
 
 
-    0.0006598990293278664
+    0.0006598990293277901
 
 
 
@@ -235,7 +235,7 @@ The `SORM` class creates a `SORM` object.
  .. code-block:: none
 
 
-    0.0007837113128747817
+    0.0007837113128746987
 
 
 
@@ -271,7 +271,7 @@ using the FORM design point with gaussian importance distribution.
  .. code-block:: none
 
 
-    0.0008619170758804403
+    0.0008619170758803441
 
 
 
@@ -331,7 +331,7 @@ Create a LHS algorithm
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.612 seconds)
+   **Total running time of the script:** (0 minutes 0.335 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_methodFactory.py:

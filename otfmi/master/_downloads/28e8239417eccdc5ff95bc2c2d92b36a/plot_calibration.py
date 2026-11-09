@@ -28,19 +28,11 @@ Calibration example
 # Setup finite difference step
 # ----------------------------
 #
-# There is no scaling issue with the healing rate, which value is close to 0.5.
-# The problem is that the infection rate has an order of magnitude close to 10^{-3}.
-# This can cause problems in the optimization step, if the
-# optimization algorithm uses the gradient (which is far more efficient).
-# Indeed, the finite different method may use a wrong differentiation
-# step which can produce inaccurate gradients.
-#
-# In the current code, we use the near to optimal values of the step.
+# The infection rate and healing rate are both of order 1, so no rescaling is needed.
+# We use near-optimal finite difference steps for the gradient computation.
 # These values were computed using numericalderivative, a Python
 # package which computes the near to optimal differentiation
 # step of a computer code (see https://github.com/mbaudin47/numericalderivative).
-# Another method would be to scale up the infection rate so that
-# its order of magnitude is close to 1.
 #
 # Cache memory
 # ------------
@@ -51,10 +43,10 @@ Calibration example
 #
 # References
 # ----------
-# - Girard2024: OtFMI: interfacing OpenTURNS with the leading standard for model exchange
+# - Girard2024: OtFMI: *interfacing OpenTURNS with the leading standard for model exchange*
 #   14th June 2024, Sylvain Girard (girard@phimeca.com), Pascal Borel (pascal.borel@edf.fr)
-# - Girard2019: S. Girard, “A probabilistic take on system modeling with Modelica and Python”,
-#   Février 2019, https://sylvaingirard.net/pdf/girard17-probabilistic_modelica_python.pdf
+# - Girard2019: S. Girard, *A probabilistic take on system modeling with Modelica and Python*,
+#   February 2019, https://sylvaingirard.net/pdf/girard17-probabilistic_modelica_python.pdf
 # - [anonymous1978]_
 
 # %%
@@ -62,7 +54,6 @@ import otfmi
 import otfmi.example.utility
 import openturns as ot
 import openturns.viewer as otv
-import pyfmi
 from matplotlib import pylab as plt
 
 # %%
@@ -70,15 +61,15 @@ ot.ResourceMap.SetAsString("Contour-DefaultColorMap", "viridis")
 
 # %%
 # Define bounds for parameters
-infection_rate_min = 1.0e-3  # beta
-infection_rate_max = 10.0e-3
+infection_rate_min = 1.0  # beta
+infection_rate_max = 3.0
 healing_rate_min = 0.1  # gamma
 healing_rate_max = 0.9
 
 
 # %%
-infection_rate = 7.0e-3  # beta (/ day)
-healing_rate = 0.3  # gamma (/ day)
+infection_rate = 2.0  # beta (/ day)
+healing_rate = 0.5  # gamma (/ day)
 total_population = 763.0
 reference_parameters = [infection_rate, healing_rate]
 print("References parameters = ")
@@ -106,7 +97,7 @@ print(f"path_fmu = {path_fmu}")
 
 # %%
 # Inspect variables
-check_model = pyfmi.load_fmu(path_fmu)
+check_model = otfmi.fmi.load_fmu(path_fmu)
 list_of_variables = list(check_model.get_model_variables().keys())
 for i in range(len(list_of_variables)):
     print(f"Variable #{i} / {len(list_of_variables)} = {list_of_variables[i]}")
@@ -130,7 +121,7 @@ y = p2f([infection_rate, healing_rate, total_population])
 graph = ot.Graph("SIR model", "Time (days)", "Infected", True)
 curve = ot.Curve(vertices, y)
 graph.add(curve)
-_ = otv.View(graph, figure_kw={"figsize": (5.0, 3.0)})
+_ = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
 
 
 # %%
@@ -180,7 +171,7 @@ graph = ot.Graph(
 cloud = ot.Cloud(timeObservations, populationObservations)
 cloud.setPointStyle("circle")
 graph.add(cloud)
-_ = otv.View(graph, figure_kw={"figsize": (4.0, 3.0)})
+_ = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
 
 
 # %%
@@ -290,19 +281,8 @@ class SIRModelPointwise(ot.OpenTURNSPythonFunction):
             raise ValueError(
                 f"Time t = {t} is not in time range [{self.start_time}, {self.final_time}]"
             )
-        # Calcul direct de l'indice le plus proche.
-        # Actuellement, les données sont disponibles au pas de temps
-        # égal à 1 seconde.
-        # C'est la raison pour laquelle la discrétisation utilise
-        # également une seconde.
-        # Si le pas de temps est différent de 1, alors le calcul de l'indice
-        # correspondant est un peu plus compliqué.
-        # Nous utilisons la fonction round pour obtenir l'entier le plus
-        # proche du ratio.
         relative_time_step = (t - self.start_time) / self.step
         time_index = int(round(relative_time_step))
-
-        # Sécurité pour ne pas dépasser la taille du vecteur current_infected.
         time_index = min(time_index, self.number_of_time_steps - 1)
         current_infected = self.current_infected[time_index]
         if self.verbose:
@@ -321,11 +301,7 @@ model = ot.Function(epidemiologicModel)
 
 # %%
 # Setup finite difference step.
-# This is crucial here because infection rate has a scale close to
-# 10^{-3}.
-# An alternative would be to scale up the infection rate so that
-# its order of magnitude is close to 1.
-gradStep = ot.ConstantStep([1.0, 1.335e-08, 5.722e-07])  # Constant gradient step
+gradStep = ot.ConstantStep([1.0, 3.0e-08, 7.4e-09])  # Constant gradient step
 model.setGradient(ot.CenteredFiniteDifferenceGradient(gradStep, model.getEvaluation()))
 
 # %%
@@ -333,8 +309,8 @@ print("Physical Model Inputs:", model.getInputDescription())
 print("Physical Model Parameters:", model.getParameterDescription())
 
 # %%
-infection_rate = 0.007
-healing_rate = 0.3
+infection_rate = 1.0
+healing_rate = 0.2
 thetaPrior = [infection_rate, healing_rate]
 epidParametric = ot.ParametricFunction(model, [1, 2], thetaPrior)
 print("Parametric Model Inputs:", epidParametric.getInputDescription())
@@ -363,7 +339,7 @@ graph.add(cloud)
 graph.setLegendPosition("upper left")
 graph.setLegendCorner([1.0, 1.0])
 graph.setIntegerXTick(True)
-view = otv.View(graph, figure_kw={"figsize": (5.0, 3.0)})
+view = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
 
 # %%
 # Evaluate the model at a single time
@@ -412,9 +388,6 @@ def plotDistributionGridPDF(distribution):
 # Calibration with non linear least squares
 # Check that we can evaluate the parametric function.
 ot.ResourceMap.SetAsUnsignedInteger("NonLinearLeastSquaresCalibration-BootstrapSize", 0)
-# ot.ResourceMap.SetAsUnsignedInteger(
-#     "NonLinearLeastSquaresCalibration-MultiStartSize", 10
-# )
 calibrationAlgorithm = ot.NonLinearLeastSquaresCalibration(
     epidParametric, timeObservations, populationObservations, thetaPrior
 )
@@ -426,18 +399,17 @@ calibrationResult = calibrationAlgorithm.getResult()
 #
 number_of_observations = calibrationResult.getInputObservations().getSize()
 # Print theta
-infection_rate_factor = 1.0e3
 print(f"Analyse calibration : n.obs.= {number_of_observations}")
 thetaPrior = calibrationResult.getParameterPrior().getMean()
 thetaMAP = calibrationResult.getParameterMAP()
 infection_rate_prior, healing_rate_prior = thetaPrior
 infection_rate_MAP, healing_rate_MAP = thetaMAP
 print(
-    f"- theta Before = [{infection_rate_prior * infection_rate_factor:.3f} * {1.0 / infection_rate_factor:.1e}, "
+    f"- theta Before = [{infection_rate_prior:.4f}, "
     f"{healing_rate_prior:.4f}]"
 )
 print(
-    f"- theta After = [{infection_rate_MAP * infection_rate_factor:.3f} * {1.0 / infection_rate_factor:.1e}, "
+    f"- theta After = [{infection_rate_MAP:.4f}, "
     f"{healing_rate_MAP:.4f}]"
 )
 
@@ -452,8 +424,8 @@ lower_bound = interval.getLowerBound()
 upper_bound = interval.getUpperBound()
 print(f"Confidence interval with level {alpha}")
 print(
-    f"- infection_rate in [{lower_bound[0] * infection_rate_factor:.3f}, \
-                           {upper_bound[0] * infection_rate_factor:.3f}] * {1.0 / infection_rate_factor:.1e}"
+    f"- infection_rate in [{lower_bound[0]:.4f}, \
+                           {upper_bound[0]:.4f}]"
 )
 print(f"- healing_rate in [{lower_bound[1]:.4f}, {upper_bound[1]:.4f}]")
 
@@ -461,9 +433,7 @@ print(f"- healing_rate in [{lower_bound[1]:.4f}, {upper_bound[1]:.4f}]")
 # Print optimum parameters
 infection_rate, healing_rate = thetaMAP
 print("Optimum parameters = ")
-print(
-    f"- infection_rate = {infection_rate * infection_rate_factor:.3f} * {1.0 / infection_rate_factor:.1e}"
-)
+print(f"- infection_rate = {infection_rate:.4f}")
 print(f"- healing_rate = {healing_rate:.4f}")
 #
 print("Other parameters :")
@@ -492,7 +462,7 @@ graph.setLegendPosition("upper left")
 graph.setLegendCorner([1.0, 1.0])
 graph.setIntegerXTick(True)
 graph.setTitle(f"nb. obs. = {number_of_observations}")
-_ = otv.View(graph, figure_kw={"figsize": (5.0, 3.0)})
+_ = otv.View(graph, figure_kw={"figsize": (5.0, 4.0)})
 
 # %%
 # Draw residuals
@@ -500,7 +470,7 @@ graph = calibrationResult.drawResiduals().getGraph(0, 0)
 graph.setLegendPosition("upper left")
 graph.setLegendCorner([1.0, 1.0])
 graph.setTitle(f"nb. obs. = {number_of_observations}")
-_ = otv.View(graph, figure_kw={"figsize": (6.0, 3.0)})
+_ = otv.View(graph, figure_kw={"figsize": (6.0, 4.0)})
 
 # %%
 # Plot parameters distributions
@@ -508,7 +478,7 @@ graph = calibrationResult.drawParameterDistributions()
 graph.setTitle(f"nb. obs. = {number_of_observations}")
 _ = otv.View(
     graph,
-    figure_kw={"figsize": (7.0, 3.0)},
+    figure_kw={"figsize": (7.0, 4.0)},
     legend_kw={"bbox_to_anchor": (1.0, 1.0), "loc": "upper left"},
 )
 plt.subplots_adjust(right=0.8, bottom=0.2)
@@ -516,11 +486,10 @@ plt.subplots_adjust(right=0.8, bottom=0.2)
 # %%
 # Plot parameters distributions
 parameterDistribution = calibrationResult.getParameterPosterior()
-if 0:  # disabled temporarily because of pybind11/contourpy bug
-    grid = plotDistributionGridPDF(parameterDistribution)
-    grid.setTitle(f"nb. obs. = {number_of_observations}")
-    _ = otv.View(grid, figure_kw={"figsize": (7.0, 5.0)})
-    plt.subplots_adjust(wspace=0.5, hspace=0.5)
+grid = plotDistributionGridPDF(parameterDistribution)
+grid.setTitle(f"nb. obs. = {number_of_observations}")
+_ = otv.View(grid, figure_kw={"figsize": (7.0, 5.0)})
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
 
 # %%
 otv.View.ShowAll()

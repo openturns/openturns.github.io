@@ -106,7 +106,7 @@ mu_desc = [f"$\\mu$_{{{label}}}" for label in desc]
 # Let us prepare a random vector to sample the conditional posterior
 # distribution of :math:`\sigma_{\mathrm{diff}}^2` and :math:`\sigma_{\mathrm{crack}}^2`.
 
-sigma_square_rv = ot.RandomVector(ot.TruncatedDistribution(ot.InverseGamma(), 0.0, 1.0))
+sigma_square_rv = ot.RandomVector(ot.TruncatedDistribution(ot.InverseGamma(), ot.Interval(0.0, 1.0)))
 sigma_square_desc = [f"$\\sigma$_{{{label}}}^2" for label in desc]
 
 
@@ -260,7 +260,7 @@ ubs = [40.0, 1.0]
 # %%
 # Lower and upper bounds for :math:`\sigma_{\mathrm{diff}}^2, \sigma_{\mathrm{crack}}^2`
 lbs_sigma_square = np.array([0.1, 0.1]) ** 2
-ubs_sigma_square = np.array([40, 10]) ** 2
+ubs_sigma_square = np.array([40.0, 10.0]) ** 2
 
 # %%
 # Initial state
@@ -349,7 +349,8 @@ sampler.setDescription(mu_desc + sigma_square_desc + x_desc)
 # Run this Metropolis-within-Gibbs algorithm and check the acceptance rates
 # for the Random walk Metropolis-Hastings samplers.
 
-samples = sampler.getSample(2000)
+# a smaller sample is enough to illustrate the posterior distributions
+samples = sampler.getSample(500)
 acceptance = [
     sampler.getMetropolisHastingsCollection()[i].getAcceptanceRate()
     for i in range(6, len(samplers))
@@ -473,7 +474,8 @@ rv_models = [ot.CompositeRandomVector(model, rv_normal_mixture) for model in mod
 # Get a Monte-Carlo estimate of the median, 0.05 quantile and 0.95 quantile
 # of these push-forward distributions.
 
-predictions = [rv.getSample(200) for rv in rv_models]
+# 50 push-forward draws are enough for the median/quantile error bars below
+predictions = [rv.getSample(50) for rv in rv_models]
 prediction_medians = [sam.computeMedian()[0] for sam in predictions]
 prediction_lb = [sam.computeQuantile(0.05)[0] for sam in predictions]
 prediction_ub = [sam.computeQuantile(0.95)[0] for sam in predictions]
@@ -512,17 +514,16 @@ prior = ot.JointDistribution(
         ot.Uniform(lbs[1], ubs[1]),
         ot.TruncatedDistribution(
             ot.InverseGamma(0.01, 1e7),
-            lbs_sigma_square[0],
-            float(ubs_sigma_square[0]),
+            ot.Interval(lbs_sigma_square[0], ubs_sigma_square[0])
         ),
         ot.TruncatedDistribution(
             ot.InverseGamma(0.01, 1e7),
-            lbs_sigma_square[1],
-            float(ubs_sigma_square[1]),
+            ot.Interval(lbs_sigma_square[1], ubs_sigma_square[1])
         ),
     ]
 )
-prior_sample = prior.getSample(2000)
+# a smaller prior sample is enough for the predictive error bars below
+prior_sample = prior.getSample(500)
 
 # As before, build a mixture of truncated normal distributions from the sample.
 normal_collection_prior = [
@@ -538,7 +539,7 @@ rv_models_prior = [
     ot.CompositeRandomVector(model, rv_normal_mixture_prior) for model in models
 ]
 
-predictions_prior = [rv.getSample(100) for rv in rv_models_prior]
+predictions_prior = [rv.getSample(50) for rv in rv_models_prior]
 prediction_medians_prior = [sam.computeMedian()[0] for sam in predictions_prior]
 prediction_lb_prior = [sam.computeQuantile(0.05)[0] for sam in predictions_prior]
 prediction_ub_prior = [sam.computeQuantile(0.95)[0] for sam in predictions_prior]
