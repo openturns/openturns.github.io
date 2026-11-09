@@ -8,7 +8,12 @@ if hasattr(ot, "FisherSnedecorFactory"):
     factory = ot.FisherSnedecorFactory()
 else:
     factory = otexp.FisherSnedecorFactory()
-ref = factory.build()
+if "FisherSnedecorFactory" == "DirichletFactory":
+    # The default Dirichlet distribution is the uniform Beta(1, 1)
+    # distribution: use a non-trivial 2D distribution instead
+    ref = ot.Dirichlet([2.0, 5.0, 3.0])
+else:
+    ref = factory.build()
 dimension = ref.getDimension()
 if dimension <= 2:
     a = ref.getRange().getLowerBound()
@@ -34,7 +39,10 @@ if dimension <= 2:
     else:
         sample = ref.getSample(500)
         distribution = factory.build(sample)
-        distribution.setDescription(['$t_0$', '$t_1$'])
+        if "FisherSnedecorFactory" == "DirichletFactory":
+            distribution.setDescription(['$x_1$', '$x_2$'])
+        else:
+            distribution.setDescription(['$t_0$', '$t_1$'])
         if not(aFinite[0] and bFinite[0] and aFinite[1] and bFinite[1]) or (a[0] >= b[0]) or (a[1] >= b[1]):
             pdf_graph = distribution.drawPDF([256]*2)
         else:
