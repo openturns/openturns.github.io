@@ -124,15 +124,18 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">HiGHS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS" title="Link to this definition">¶</a></dt>
-<dd><p>Linear optimization solver.</p>
+<dd><p>Linear and quadratic optimization solver.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This class is experimental and likely to be modified in future releases.
 To use it, import the <code class="docutils literal notranslate"><span class="pre">openturns.experimental</span></code> submodule.</p>
 </div>
-<p>This class exposes the linear solver from the <a class="reference external" href="https://highs.dev/">HiGHS</a> library.
-It solves continuous linear problems and mixed-integer linear problems.</p>
-<p>The recognized LP solver names are listed by <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a>:</p>
+<p>This class exposes the linear and quadratic solvers from the
+<a class="reference external" href="https://highs.dev/">HiGHS</a> library. It solves continuous linear problems,
+mixed-integer linear problems and continuous convex quadratic problems.
+HiGHS support is optional at build time: in a build without it,
+<a class="reference internal" href="#openturns.experimental.HiGHS.run" title="openturns.experimental.HiGHS.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> raises an exception.</p>
+<p>The recognized solver names are listed by <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a>:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 15.0%" />
@@ -147,30 +150,34 @@ It solves continuous linear problems and mixed-integer linear problems.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">choose</span></code></p></td>
-<td><p>Default automatic choice: dual revised simplex for LP, branch-and-bound MIP for discrete problems.</p></td>
+<td><p>Default automatic choice: dual revised simplex for LP, interior point or active set for QP, branch-and-bound MIP for discrete problems.</p></td>
 <td><p>Continuous and discrete</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">simplex</span></code></p></td>
 <td><p>Primal/dual simplex, always returns a basic solution.</p></td>
-<td><p>Continuous only</p></td>
+<td><p>Continuous LP only</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ipm</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">qpasm</span></code></p></td>
+<td><p>Active-set quadratic programming solver (HiGHS 1.14 or later).</p></td>
+<td><p>Continuous QP only</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ipm</span></code></p></td>
 <td><p>Interior point (HiPO or IPX depending on the HiGHS build).</p></td>
 <td><p>Continuous only</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ipx</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ipx</span></code></p></td>
 <td><p>Serial interior point solver.</p></td>
 <td><p>Continuous only</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hipo</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hipo</span></code></p></td>
 <td><p>Parallel interior point solver, best on large problems.</p></td>
 <td><p>Continuous only</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pdlp</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pdlp</span></code></p></td>
 <td><p>First-order primal-dual hybrid gradient method (cuPDLP-C), no basic solution.</p></td>
 <td><p>Continuous only</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hipdlp</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hipdlp</span></code></p></td>
 <td><p>HiGHS native first-order primal-dual method, no basic solution.</p></td>
 <td><p>Continuous only</p></td>
 </tr>
@@ -182,7 +189,17 @@ Whether a name is accepted at runtime depends on the HiGHS build
 unsupported name raises an error.</p>
 <p>All solvers accept finite and infinite bounds on variables and linear constraints;
 mark infinite bounds with finite flags set to <code class="docutils literal notranslate"><span class="pre">False</span></code> in the
-<a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> (see <a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearProblem</span></code></a>).</p>
+<a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a> (see <a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearProblem</span></code></a>
+and <a class="reference internal" href="openturns.experimental.QuadraticProblem.html#openturns.experimental.QuadraticProblem" title="openturns.experimental.QuadraticProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuadraticProblem</span></code></a>).</p>
+<p>Quadratic problems are solved by <code class="docutils literal notranslate"><span class="pre">qpasm</span></code> or <code class="docutils literal notranslate"><span class="pre">hipo</span></code>. The <code class="docutils literal notranslate"><span class="pre">choose</span></code>
+default selects the quadratic solver available in the linked HiGHS build.
+The active-set <code class="docutils literal notranslate"><span class="pre">qpasm</span></code> name requires HiGHS 1.14 or later. Earlier versions
+(HiGHS 1.13) already use an active-set solver for quadratic problems but do
+not accept the explicit <code class="docutils literal notranslate"><span class="pre">qpasm</span></code> name: use <code class="docutils literal notranslate"><span class="pre">choose</span></code> with these versions.
+Mixed-integer quadratic problems are not supported, and the linear-only
+solver names are rejected on a quadratic problem.
+The constant term of a quadratic objective is taken into account in the
+reported optimal value.</p>
 <p>By default the interior point solvers run a crossover procedure to return
 a basic solution; this can be tuned with the <code class="docutils literal notranslate"><span class="pre">run_crossover</span></code> option below.
 The first-order solvers never return a basic solution.
@@ -212,9 +229,10 @@ For every option <code class="docutils literal notranslate"><span class="pre">op
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>problem</strong><span class="classifier"><a class="reference internal" href="openturns.OptimizationProblem.html#openturns.OptimizationProblem" title="openturns.OptimizationProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationProblem</span></code></a></span></dt><dd><p>The problem, must be linear (see <a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearProblem</span></code></a>).</p>
+<dt><strong>problem</strong><span class="classifier"><a class="reference internal" href="openturns.OptimizationProblem.html#openturns.OptimizationProblem" title="openturns.OptimizationProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationProblem</span></code></a></span></dt><dd><p>The problem, must be linear (see <a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearProblem</span></code></a>)
+or quadratic (see <a class="reference internal" href="openturns.experimental.QuadraticProblem.html#openturns.experimental.QuadraticProblem" title="openturns.experimental.QuadraticProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuadraticProblem</span></code></a>).</p>
 </dd>
-<dt><strong>algoName</strong><span class="classifier">str, default is <code class="docutils literal notranslate"><span class="pre">choose</span></code></span></dt><dd><p>The LP solver, use <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a> to list the recognized names.
+<dt><strong>algoName</strong><span class="classifier">str, default is <code class="docutils literal notranslate"><span class="pre">choose</span></code></span></dt><dd><p>The solver, use <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a> to list the recognized names.
 Problems with discrete variables are solved by the MIP solver,
 which ignores this choice: use <code class="docutils literal notranslate"><span class="pre">choose</span></code> on such problems.</p>
 </dd>
@@ -225,10 +243,10 @@ which ignores this choice: use <code class="docutils literal notranslate"><span 
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetAlgorithmNames</span></code></a>()</p></td>
-<td><p>Accessor to the list of recognized LP solver names, by names.</p></td>
+<td><p>Accessor to the list of recognized solver names.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getAlgorithmName" title="openturns.experimental.HiGHS.getAlgorithmName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getAlgorithmName</span></code></a>()</p></td>
-<td><p>Accessor to the LP solver name.</p></td>
+<td><p>Accessor to the solver name.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.getCheckStatus" title="openturns.experimental.HiGHS.getCheckStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getCheckStatus</span></code></a>()</p></td>
 <td><p>Accessor to check status flag.</p></td>
@@ -303,7 +321,7 @@ which ignores this choice: use <code class="docutils literal notranslate"><span 
 <td><p>Launch the optimization.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setAlgorithmName" title="openturns.experimental.HiGHS.setAlgorithmName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setAlgorithmName</span></code></a>(algoName)</p></td>
-<td><p>Accessor to the LP solver name.</p></td>
+<td><p>Accessor to the solver name.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#openturns.experimental.HiGHS.setCheckStatus" title="openturns.experimental.HiGHS.setCheckStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setCheckStatus</span></code></a>(checkStatus)</p></td>
 <td><p>Accessor to check status flag.</p></td>
@@ -355,7 +373,7 @@ which ignores this choice: use <code class="docutils literal notranslate"><span 
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openturns.experimental.LinearProblem</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="openturns.experimental.LinearProblem.html#openturns.experimental.LinearProblem" title="openturns.experimental.LinearProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openturns.experimental.LinearProblem</span></code></a>, <a class="reference internal" href="openturns.experimental.QuadraticProblem.html#openturns.experimental.QuadraticProblem" title="openturns.experimental.QuadraticProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openturns.experimental.QuadraticProblem</span></code></a></dt><dd></dd>
 </dl>
 </div>
 <p class="rubric">Examples</p>
@@ -398,11 +416,11 @@ which ignores this choice: use <code class="docutils literal notranslate"><span 
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.GetAlgorithmNames">
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">GetAlgorithmNames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="Link to this definition">¶</a></dt>
-<dd><p>Accessor to the list of recognized LP solver names, by names.</p>
+<dd><p>Accessor to the list of recognized solver names.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>names</strong><span class="classifier"><a class="reference internal" href="openturns.Description.html#openturns.Description" title="openturns.Description"><code class="xref py py-class docutils literal notranslate"><span class="pre">Description</span></code></a></span></dt><dd><p>List of recognized LP solver names. Whether a name is accepted at
+<dt><strong>names</strong><span class="classifier"><a class="reference internal" href="openturns.Description.html#openturns.Description" title="openturns.Description"><code class="xref py py-class docutils literal notranslate"><span class="pre">Description</span></code></a></span></dt><dd><p>List of recognized solver names. Whether a name is accepted at
 runtime depends on the HiGHS build.</p>
 </dd>
 </dl>
@@ -411,7 +429,7 @@ runtime depends on the HiGHS build.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">openturns.experimental</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">otexp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">otexp</span><span class="o">.</span><span class="n">HiGHS</span><span class="o">.</span><span class="n">GetAlgorithmNames</span><span class="p">())</span>
-<span class="go">[choose,simplex,ipm,ipx,hipo,pdlp,hipdlp]</span>
+<span class="go">[choose,simplex,qpasm,ipm,ipx,hipo,pdlp,hipdlp]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -419,11 +437,11 @@ runtime depends on the HiGHS build.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.getAlgorithmName">
 <span class="sig-name descname"><span class="pre">getAlgorithmName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.getAlgorithmName" title="Link to this definition">¶</a></dt>
-<dd><p>Accessor to the LP solver name.</p>
+<dd><p>Accessor to the solver name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>algoName</strong><span class="classifier">str</span></dt><dd><p>The LP solver name.</p>
+<dt><strong>algoName</strong><span class="classifier">str</span></dt><dd><p>The solver name.</p>
 </dd>
 </dl>
 </dd>
@@ -791,12 +809,14 @@ iterations (e.g. presolve or another solver did the work), not untraced work.</p
 <dl class="py method">
 <dt class="sig sig-object py" id="openturns.experimental.HiGHS.setAlgorithmName">
 <span class="sig-name descname"><span class="pre">setAlgorithmName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algoName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openturns.experimental.HiGHS.setAlgorithmName" title="Link to this definition">¶</a></dt>
-<dd><p>Accessor to the LP solver name.</p>
+<dd><p>Accessor to the solver name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>algoName</strong><span class="classifier">str</span></dt><dd><p>The LP solver name, see <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a>.
-Problems with discrete variables require <code class="docutils literal notranslate"><span class="pre">choose</span></code>.</p>
+<dt><strong>algoName</strong><span class="classifier">str</span></dt><dd><p>The solver name, see <a class="reference internal" href="#openturns.experimental.HiGHS.GetAlgorithmNames" title="openturns.experimental.HiGHS.GetAlgorithmNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">GetAlgorithmNames()</span></code></a>.
+Problems with discrete variables require <code class="docutils literal notranslate"><span class="pre">choose</span></code>.
+Quadratic problems require <code class="docutils literal notranslate"><span class="pre">choose</span></code>, <code class="docutils literal notranslate"><span class="pre">qpasm</span></code> or <code class="docutils literal notranslate"><span class="pre">hipo</span></code>;
+<code class="docutils literal notranslate"><span class="pre">qpasm</span></code> requires HiGHS 1.14 or later.</p>
 </dd>
 </dl>
 </dd>

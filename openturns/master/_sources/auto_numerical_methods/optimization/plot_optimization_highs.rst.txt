@@ -175,7 +175,7 @@ subject to:
 
  .. code-block:: none
 
-     -- Recognized LP solver names = [choose,simplex,ipm,ipx,hipo,pdlp,hipdlp]
+     -- Recognized LP solver names = [choose,simplex,qpasm,ipm,ipx,hipo,pdlp,hipdlp]
 
 
 
@@ -256,6 +256,7 @@ solvers are compared on final point, value, status and per-solver iterations.
 
      -- [choose] point = [1,2.5] value = [3.5] status = Optimal iterations = 0 (simplex=0, ipm=0, crossover=0, pdlp=0, qp=0)
      -- [simplex] point = [1,2.5] value = [3.5] status = Optimal iterations = 0 (simplex=0, ipm=0, crossover=0, pdlp=0, qp=0)
+     -- [qpasm] skipped: InvalidArgumentException : HiGHS solver qpasm only applies to quadratic problems
      -- [ipm] point = [1,2.5] value = [3.5] status = Optimal iterations = 0 (simplex=0, ipm=0, crossover=0, pdlp=0, qp=0)
      -- [ipx] point = [1,2.5] value = [3.5] status = Optimal iterations = 0 (simplex=0, ipm=0, crossover=0, pdlp=0, qp=0)
      -- [hipo] skipped: InvalidArgumentException : HiGHS solver hipo is not supported by this HiGHS version
@@ -271,7 +272,7 @@ A basic-solution solver also exposes the dual solution:
 constraint duals and per-variable reduced costs
 (first-order solvers without crossover have no dual to expose).
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-140
+.. GENERATED FROM PYTHON SOURCE LINES 136-141
 
 .. code-block:: Python
 
@@ -283,12 +284,54 @@ constraint duals and per-variable reduced costs
 
 
 
+
 .. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
      -- Duals = [0.5]
      -- Reduced costs = [0.5,0]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 142-154
+
+Solve a quadratic problem
+-------------------------
+
+The :class:`~openturns.experimental.QuadraticProblem` class defines a convex
+quadratic problem:
+
+.. math::
+   \min_{\vect{x} \in B} \frac{1}{2} \vect{x}^T \mat{Q} \vect{x} + \vect{c}^T \vect{x}
+
+where :math:`\mat{Q}` is a symmetric positive semi-definite matrix and
+:math:`B` are bound constraints. The ``choose`` solver selects the
+quadratic solver available in the linked HiGHS build.
+
+.. GENERATED FROM PYTHON SOURCE LINES 154-162
+
+.. code-block:: Python
+
+    Q = ot.SymmetricMatrix([[2.0, 0.0], [0.0, 2.0]])
+    boundsQP = ot.Interval([0.0, 0.0], [0.5, 10.0])
+    problemQP = otexp.QuadraticProblem(Q, [-2.0, -4.0], boundsQP)
+    algoQP = otexp.HiGHS(problemQP, "choose")
+    algoQP.run()
+    resultQP = algoQP.getResult()
+    print(" -- QP optimal point = " + str(resultQP.getOptimalPoint()))
+    print(" -- QP optimal value = " + str(resultQP.getOptimalValue()))
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+     -- QP optimal point = [0.5,2]
+     -- QP optimal value = [-4.75]
 
 
 
