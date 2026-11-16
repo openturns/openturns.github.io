@@ -228,7 +228,43 @@ dimension of the model, or <em>global</em>, i.e. the matrix describes the full s
 observation errors, in which case its dimension is the product of the output
 dimension of the model and the number of observations.</p>
 <p>The prior distribution of the parameter is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>.</p>
-<p>The posterior distribution of the parameter is also <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>.</p>
+<p>The posterior distribution of the parameter is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a> when
+no bounds are set, or when the bounds are handled with the default active-set
+approach.</p>
+<p>Bounds can be set with <a class="reference internal" href="#openturns.GaussianNonLinearCalibration.setBounds" title="openturns.GaussianNonLinearCalibration.setBounds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setBounds()</span></code></a>. Their handling is selected by the
+<code class="docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration-BoundsHandling</span></code> key of the
+<a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ActiveSet</span></code> (default): the optimization is constrained, and the posterior
+covariance is computed from the free block of the extended design matrix at
+the MAP. Parameters fixed at a bound have a zero variance. This is a
+first-order active-set approximation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Truncated</span></code>: the Gaussian surrogate of the Gauss-Newton Laplace
+approximation at the MAP is truncated to the bounds, which returns a
+<a class="reference internal" href="openturns.TruncatedDistribution.html#openturns.TruncatedDistribution" title="openturns.TruncatedDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">TruncatedDistribution</span></code></a>. Its mean is shifted by the
+first-order gradient term at the constrained MAP, so that an affine model
+reproduces the <a class="reference internal" href="openturns.GaussianLinearCalibration.html#openturns.GaussianLinearCalibration" title="openturns.GaussianLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code></a> truncated
+posterior. This is the exact posterior of the Gaussian (Laplace) surrogate,
+not of the nonlinear model. The MAP is the mode of the truncated
+distribution, not its mean. The current
+<a class="reference internal" href="openturns.TruncatedDistribution.html#openturns.TruncatedDistribution" title="openturns.TruncatedDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">TruncatedDistribution</span></code></a> computes its moments by numerical
+integration, which is practical only up to about three dimensions, so this
+option is not the default; the calibration result computes them only when
+they are requested. Moreover, the truncated distribution is numerically
+representable only if the bounds leave a non-negligible probability under
+the Gaussian surrogate; when the MAP lies far at a bound, the <code class="docutils literal notranslate"><span class="pre">ActiveSet</span></code>
+handling is more robust.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">Truncated</span></code> handling is ignored when
+<code class="docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration-BootstrapSize</span></code> is nonzero, because the
+posterior is then estimated from the bootstrap sample.</p>
+<p>When the linearization at the MAP is ill-conditioned, the MAP and the active set
+are determined only up to the resolution of the residual sum of squares: a
+direction whose contribution is below the machine precision is not identified,
+the returned MAP depends on the optimization algorithm and on its tolerances,
+and the posterior variance in that direction is large. Rescaling the
+parameterization or relying on the prior distribution resolves the direction.
+See <a class="reference internal" href="../../theory/data_analysis/gaussian_calibration.html#ill-conditioned-calibration"><span class="std std-ref">Ill-conditioned linearization</span></a> for details.</p>
 <p>Depending on the value of the <cite>GaussianNonLinearCalibration-BootstrapSize</cite> key 
 in the <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>, the parameters are estimated differently.</p>
 <ul class="simple">
@@ -247,6 +283,13 @@ meaning that a bootstrap is used by default.
 This can be costly in some practical use cases, because it requires
 several runs of the optimization algorithm.
 In this case, please set the bootstrap size to zero.</p>
+<p>The following <a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> keys are used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration-BootstrapSize</span></code> (<code class="docutils literal notranslate"><span class="pre">UnsignedInteger</span></code>, default: <code class="docutils literal notranslate"><span class="pre">100</span></code>): number of bootstrap resamples used to estimate the posterior distribution; zero selects the Laplace approximation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration-BoundsHandling</span></code> (<code class="docutils literal notranslate"><span class="pre">String</span></code>, default: <code class="docutils literal notranslate"><span class="pre">ActiveSet</span></code>): handling of the posterior distribution when bounds are set and the bootstrap size is zero. The possible values are <code class="docutils literal notranslate"><span class="pre">ActiveSet</span></code> and <code class="docutils literal notranslate"><span class="pre">Truncated</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GaussianLinearCalibration-Method</span></code> (<code class="docutils literal notranslate"><span class="pre">String</span></code>, default: <code class="docutils literal notranslate"><span class="pre">QR</span></code>): name of the decomposition method used for the Laplace approximation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LinearLeastSquaresCalibration-ActiveBoundTolerance</span></code> (<code class="docutils literal notranslate"><span class="pre">Scalar</span></code>, default: <code class="docutils literal notranslate"><span class="pre">1e-6</span></code>): absolute distance to a bound below which a parameter is considered fixed at this bound when bounds are set</p></li>
+</ul>
 <p>The resulting error distribution is <a class="reference internal" href="openturns.Normal.html#openturns.Normal" title="openturns.Normal"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>
 with a mean estimated from the sample mean of the residuals and with a
 covariance matrix equal to the <cite>errorCovariance</cite> input argument.</p>
@@ -303,8 +346,8 @@ algorithm at the maximum a posteriori estimate.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>bounds</strong><span class="classifier"><a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a></span></dt><dd><p>Parameter bounds used to constrain the optimization.
-An empty interval means no bounds are applied.</p>
+<dt><strong>bounds</strong><span class="classifier"><a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a></span></dt><dd><p>Parameter bounds used to constrain the calibration.
+An empty interval means that no bounds are applied.</p>
 </dd>
 </dl>
 </dd>
@@ -528,23 +571,47 @@ algorithm at the maximum a posteriori estimate.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>bounds</strong><span class="classifier"><a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a></span></dt><dd><p>Parameter bounds used to constrain the optimization.
-An empty interval means no bounds are applied.
+<dt><strong>bounds</strong><span class="classifier"><a class="reference internal" href="openturns.Interval.html#openturns.Interval" title="openturns.Interval"><code class="xref py py-class docutils literal notranslate"><span class="pre">Interval</span></code></a></span></dt><dd><p>Parameter bounds used to constrain the calibration.
+An empty interval means that no bounds are applied.
 A non-empty interval must have the calibration parameter dimension.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p><a class="reference internal" href="#openturns.GaussianNonLinearCalibration.setOptimizationAlgorithm" title="openturns.GaussianNonLinearCalibration.setOptimizationAlgorithm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setOptimizationAlgorithm()</span></code></a>
-adopts the bounds carried by the given algorithm problem when it has some
-and keeps the current bounds otherwise. Call this method after
-<a class="reference internal" href="#openturns.GaussianNonLinearCalibration.setOptimizationAlgorithm" title="openturns.GaussianNonLinearCalibration.setOptimizationAlgorithm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setOptimizationAlgorithm()</span></code></a>
-to enforce specific bounds. With a zero bootstrap size, parameters active
-at a bound up to the absolute <code class="docutils literal notranslate"><span class="pre">LinearLeastSquaresCalibration-ActiveBoundTolerance</span></code>
-tolerance are considered fixed: the posterior covariance is computed from
-the free block of the extended design matrix only and is zero in the
-fixed directions.</p>
+<p>Setting bounds changes the calibration:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="openturns.LinearLeastSquaresCalibration.html#openturns.LinearLeastSquaresCalibration" title="openturns.LinearLeastSquaresCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearLeastSquaresCalibration</span></code></a> and
+<a class="reference internal" href="openturns.GaussianLinearCalibration.html#openturns.GaussianLinearCalibration" title="openturns.GaussianLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code></a> solve a bounded linear
+least-squares problem as a convex quadratic problem, using the first
+algorithm selected by <a class="reference internal" href="openturns.OptimizationAlgorithm.html#openturns.OptimizationAlgorithm.Build" title="openturns.OptimizationAlgorithm.Build"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Build()</span></code></a>. This
+is the <a class="reference internal" href="openturns.experimental.HiGHS.html#openturns.experimental.HiGHS" title="openturns.experimental.HiGHS"><code class="xref py py-class docutils literal notranslate"><span class="pre">HiGHS</span></code></a> quadratic solver when
+OpenTURNS is built with HiGHS support. When the design matrix is so
+ill-conditioned that its normal matrix would lose an identified direction,
+the problem is solved directly on the design matrix with a bounded-variable
+active-set method instead, so that the result agrees with the unconstrained
+least-squares solution when no bound is active.</p></li>
+<li><p><a class="reference internal" href="openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration" title="openturns.NonLinearLeastSquaresCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">NonLinearLeastSquaresCalibration</span></code></a> and
+<a class="reference internal" href="#openturns.GaussianNonLinearCalibration" title="openturns.GaussianNonLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration</span></code></a> constrain the optimization
+algorithm.</p></li>
+<li><p>A parameter is considered fixed at a bound when its distance to the bound
+is lower than the absolute tolerance
+<code class="docutils literal notranslate"><span class="pre">LinearLeastSquaresCalibration-ActiveBoundTolerance</span></code> of the
+<a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a> (1.0e-6 by default). A rank-deficient free
+Jacobian block raises an exception.</p></li>
+</ul>
+<p>For the non-linear least-squares and Gaussian non-linear calibrations,
+<a class="reference internal" href="openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration.setOptimizationAlgorithm" title="openturns.NonLinearLeastSquaresCalibration.setOptimizationAlgorithm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setOptimizationAlgorithm()</span></code></a>
+adopts the bounds carried by the given algorithm problem when it has some and
+keeps the current bounds otherwise. Call <a class="reference internal" href="#openturns.GaussianNonLinearCalibration.setBounds" title="openturns.GaussianNonLinearCalibration.setBounds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setBounds()</span></code></a> after
+<a class="reference internal" href="openturns.NonLinearLeastSquaresCalibration.html#openturns.NonLinearLeastSquaresCalibration.setOptimizationAlgorithm" title="openturns.NonLinearLeastSquaresCalibration.setOptimizationAlgorithm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setOptimizationAlgorithm()</span></code></a>
+to enforce specific bounds.</p>
+<p>The posterior distribution of the Gaussian calibrations depends on the
+<code class="docutils literal notranslate"><span class="pre">GaussianLinearCalibration-BoundsHandling</span></code> and
+<code class="docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration-BoundsHandling</span></code> keys of the
+<a class="reference internal" href="openturns.ResourceMap.html#openturns.ResourceMap" title="openturns.ResourceMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResourceMap</span></code></a>. See
+<a class="reference internal" href="openturns.GaussianLinearCalibration.html#openturns.GaussianLinearCalibration" title="openturns.GaussianLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianLinearCalibration</span></code></a> and
+<a class="reference internal" href="#openturns.GaussianNonLinearCalibration" title="openturns.GaussianNonLinearCalibration"><code class="xref py py-class docutils literal notranslate"><span class="pre">GaussianNonLinearCalibration</span></code></a> for details.</p>
 </dd></dl>
 
 <dl class="py method">
