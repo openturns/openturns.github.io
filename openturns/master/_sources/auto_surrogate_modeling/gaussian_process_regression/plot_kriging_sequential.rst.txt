@@ -81,14 +81,17 @@ Define the function.
 
 Create the design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-39
+.. GENERATED FROM PYTHON SOURCE LINES 33-42
 
 .. code-block:: Python
 
     xMin = -0.9
     xMax = 1.9
     X_distr = ot.Uniform(xMin, xMax)
-    X = ot.LHSExperiment(X_distr, sampleSize, False, False).generate()
+    experiment = ot.LHSExperiment(X_distr, sampleSize)
+    experiment.setAlwaysShuffle(False)
+    experiment.setRandomShift(False)
+    X = experiment.generate()
     Y = g(X)
 
 
@@ -98,7 +101,7 @@ Create the design of experiments.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-47
+.. GENERATED FROM PYTHON SOURCE LINES 43-50
 
 .. code-block:: Python
 
@@ -121,12 +124,12 @@ Create the design of experiments.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-53
 
 Create the algorithms
 ---------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-68
+.. GENERATED FROM PYTHON SOURCE LINES 56-71
 
 .. code-block:: Python
 
@@ -152,7 +155,7 @@ Create the algorithms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-78
+.. GENERATED FROM PYTHON SOURCE LINES 72-81
 
 .. code-block:: Python
 
@@ -172,11 +175,11 @@ Create the algorithms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-80
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
 The following `sqrt` function will be used later to compute the standard deviation from the variance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-85
+.. GENERATED FROM PYTHON SOURCE LINES 85-88
 
 .. code-block:: Python
 
@@ -190,7 +193,7 @@ The following `sqrt` function will be used later to compute the standard deviati
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-149
+.. GENERATED FROM PYTHON SOURCE LINES 89-148
 
 .. code-block:: Python
 
@@ -218,12 +221,8 @@ The following `sqrt` function will be used later to compute the standard deviati
         quantileAlpha = ot.DistFunc.qNormal(alpha)
         # Graphics of the bounds
         epsilon = 1.0e-8
-        dataLower = [
-            yKrig[i, 0] - quantileAlpha * conditionalSigma[i, 0] for i in range(nbpoints)
-        ]
-        dataUpper = [
-            yKrig[i, 0] + quantileAlpha * conditionalSigma[i, 0] for i in range(nbpoints)
-        ]
+        dataLower = np.subtract(yKrig, quantileAlpha * conditionalSigma)[:, 0]
+        dataUpper = np.add(yKrig, quantileAlpha * conditionalSigma)[:, 0]
         # Compute the Polygon graphics
         boundsPoly = ot.Polygon.FillBetween(xGrid.asPoint(), dataLower, dataUpper)
         boundsPoly.setLegend("95% bounds")
@@ -264,11 +263,11 @@ The following `sqrt` function will be used later to compute the standard deviati
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-151
+.. GENERATED FROM PYTHON SOURCE LINES 149-150
 
 We start by creating the initial GP fitter metamodel on the 4 points in the design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-158
+.. GENERATED FROM PYTHON SOURCE LINES 152-157
 
 .. code-block:: Python
 
@@ -289,16 +288,16 @@ We start by creating the initial GP fitter metamodel on the 4 points in the desi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-161
+.. GENERATED FROM PYTHON SOURCE LINES 158-160
 
 Sequentially add new points
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-164
+.. GENERATED FROM PYTHON SOURCE LINES 162-163
 
 The following function is the building block of the algorithm. It returns a new point which maximizes the conditional variance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-182
+.. GENERATED FROM PYTHON SOURCE LINES 166-181
 
 .. code-block:: Python
 
@@ -324,11 +323,11 @@ The following function is the building block of the algorithm. It returns a new 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-184
+.. GENERATED FROM PYTHON SOURCE LINES 182-183
 
 We first call `getNewPoint` to get a point to add to the design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-190
+.. GENERATED FROM PYTHON SOURCE LINES 186-189
 
 .. code-block:: Python
 
@@ -348,11 +347,11 @@ We first call `getNewPoint` to get a point to add to the design of experiments.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-192
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
 
 Then we evaluate the function on the new point and add it to the training design of experiments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-198
+.. GENERATED FROM PYTHON SOURCE LINES 193-197
 
 .. code-block:: Python
 
@@ -367,15 +366,15 @@ Then we evaluate the function on the new point and add it to the training design
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-200
+.. GENERATED FROM PYTHON SOURCE LINES 198-199
 
 We now plot the updated GP fitter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-203
+.. GENERATED FROM PYTHON SOURCE LINES 201-202
 
 sphinx_gallery_thumbnail_number = 3
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-208
+.. GENERATED FROM PYTHON SOURCE LINES 202-207
 
 .. code-block:: Python
 
@@ -396,11 +395,11 @@ sphinx_gallery_thumbnail_number = 3
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-210
+.. GENERATED FROM PYTHON SOURCE LINES 208-209
 
 The algorithm added a point to the right bound of the domain.
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-222
+.. GENERATED FROM PYTHON SOURCE LINES 211-221
 
 .. code-block:: Python
 
@@ -459,14 +458,14 @@ The algorithm added a point to the right bound of the domain.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-227
+.. GENERATED FROM PYTHON SOURCE LINES 222-226
 
 We observe that the second added point is the left bound of the domain.
 The remaining points were added strictly inside the domain where the accuracy was drastically improved.
 
 With only 10 points, the metamodel accuracy is already very good with a :math:`Q^2` which is equal to 99.9%.
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-234
+.. GENERATED FROM PYTHON SOURCE LINES 228-233
 
 Conclusion
 ----------
@@ -474,7 +473,7 @@ Conclusion
 The current example presents the naive implementation on the creation of a sequential design of experiments based on Gaussian Process metamodel.
 More practical algorithms are presented in [ginsbourger2018]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 234-236
+.. GENERATED FROM PYTHON SOURCE LINES 233-235
 
 .. code-block:: Python
 
