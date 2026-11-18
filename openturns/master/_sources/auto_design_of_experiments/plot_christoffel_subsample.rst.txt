@@ -82,15 +82,17 @@ We work on the square with the tensor Legendre basis. The function to
 approximate is a Gaussian bump, and we look at the Christoffel density of
 a 10-function space to see where the optimal sampling concentrates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-47
+.. GENERATED FROM PYTHON SOURCE LINES 41-49
 
 .. code-block:: Python
 
     measure = ot.JointDistribution([ot.Uniform(-1.0, 1.0)] * 2)
-    basis = ot.OrthogonalBasis(ot.OrthogonalProductPolynomialFactory([ot.Uniform(-1.0, 1.0)] * 2))
+    basis = ot.OrthogonalBasis(
+        ot.OrthogonalProductPolynomialFactory([ot.Uniform(-1.0, 1.0)] * 2)
+    )
     spaceDimension = 10
     christoffel = otexp.ChristoffelDistribution(basis, spaceDimension)
-    target = ot.SymbolicFunction(['x0', 'x1'], ['exp(-(x0^2 + x1^2))'])
+    target = ot.SymbolicFunction(["x0", "x1"], ["exp(-(x0^2 + x1^2))"])
 
 
 
@@ -99,13 +101,13 @@ a 10-function space to see where the optimal sampling concentrates.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-51
+.. GENERATED FROM PYTHON SOURCE LINES 50-53
 
 We evaluate the normalized Christoffel function on a fine grid and draw it
 as a contour map. We observe that the optimal density concentrates at the
 corners of the square, where the Legendre polynomials take large values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-61
+.. GENERATED FROM PYTHON SOURCE LINES 53-63
 
 .. code-block:: Python
 
@@ -131,14 +133,14 @@ corners of the square, where the Legendre polynomials take large values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-66
+.. GENERATED FROM PYTHON SOURCE LINES 64-68
 
 We now build a subsampled design and a uniform design with the same budget
 of model evaluations. The experiment works with as many basis functions as
 points (m = n here), and the weighted least squares expansion is fitted on
 that space for both designs, so the comparison is at equal cost.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-84
+.. GENERATED FROM PYTHON SOURCE LINES 68-94
 
 .. code-block:: Python
 
@@ -149,10 +151,18 @@ that space for both designs, so the comparison is at equal cost.
     expansionSize = experiment.getSpaceDimension()
 
 
-    def fit(design, designWeights, expansionBasis=basis, expansionMeasure=measure, expansionSize=expansionSize):
+    def fit(
+        design,
+        designWeights,
+        expansionBasis=basis,
+        expansionMeasure=measure,
+        expansionSize=expansionSize,
+    ):
         observations = target(design)
         weights = ot.Point(designWeights)
-        expansion = ot.LeastSquaresExpansion(design, weights, observations, expansionMeasure, expansionBasis, expansionSize)
+        expansion = ot.LeastSquaresExpansion(
+            design, weights, observations, expansionMeasure, expansionBasis, expansionSize
+        )
         expansion.run()
         return expansion.getResult().getMetaModel()
 
@@ -167,7 +177,7 @@ that space for both designs, so the comparison is at equal cost.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-90
+.. GENERATED FROM PYTHON SOURCE LINES 95-100
 
 We assess both metamodels on a large validation sample drawn from the
 reference measure, using the relative :math:`L^2` error. We also monitor the
@@ -175,7 +185,7 @@ conditioning of the weighted design Gramian on each design: it is the
 stability certificate of the least squares solve, and we expect it to be
 close to 1 on the subsampled design and much larger on the uniform one.
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-105
+.. GENERATED FROM PYTHON SOURCE LINES 100-121
 
 .. code-block:: Python
 
@@ -183,16 +193,22 @@ close to 1 on the subsampled design and much larger on the uniform one.
     reference = target(validation)
     norm = reference.computeRawMoment(2)[0] ** 0.5
     error = ((metamodel(validation) - reference).computeRawMoment(2)[0]) ** 0.5 / norm
-    uniformError = ((uniformMetamodel(validation) - reference).computeRawMoment(2)[0]) ** 0.5 / norm
+    uniformError = (
+        (uniformMetamodel(validation) - reference).computeRawMoment(2)[0]
+    ) ** 0.5 / norm
     print(f"subsampled error={error:.3e} uniform error={uniformError:.3e}")
 
 
     def condition(design, designWeights, designExperiment=experiment):
-        eigenvalues = sorted(designExperiment.computeDesignEigenvalues(design, ot.Point(designWeights)))
+        eigenvalues = sorted(
+            designExperiment.computeDesignEigenvalues(design, ot.Point(designWeights))
+        )
         return eigenvalues[-1] / eigenvalues[0]
 
 
-    print(f"subsampled conditioning={condition(sample, weights):.3f} uniform conditioning={condition(uniformSample, [1.0] * budget):.3f}")
+    print(
+        f"subsampled conditioning={condition(sample, weights):.3f} uniform conditioning={condition(uniformSample, [1.0] * budget):.3f}"
+    )
 
 
 
@@ -208,22 +224,26 @@ close to 1 on the subsampled design and much larger on the uniform one.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-110
+.. GENERATED FROM PYTHON SOURCE LINES 122-126
 
 In practice simulation points may already be available from a previous study.
 We recycle a larger uniform candidate set: since it contains more than
 budget points, the experiment selects exactly budget of them by exact volume
 sampling and draws no fresh point. The selected subset is fitted below.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-116
+.. GENERATED FROM PYTHON SOURCE LINES 126-136
 
 .. code-block:: Python
 
     candidatePool = measure.getSample(2 * budget)
     givenSample, givenWeights = experiment.generateWithWeights(candidatePool)
     givenMetamodel = fit(givenSample, list(givenWeights))
-    givenError = ((givenMetamodel(validation) - reference).computeRawMoment(2)[0]) ** 0.5 / norm
-    print(f"recycled error={givenError:.3e} conditioning={condition(givenSample, list(givenWeights)):.3f}")
+    givenError = (
+        (givenMetamodel(validation) - reference).computeRawMoment(2)[0]
+    ) ** 0.5 / norm
+    print(
+        f"recycled error={givenError:.3e} conditioning={condition(givenSample, list(givenWeights)):.3f}"
+    )
 
 
 
@@ -238,27 +258,39 @@ sampling and draws no fresh point. The selected subset is fitted below.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-121
+.. GENERATED FROM PYTHON SOURCE LINES 137-141
 
 The workflow is not specific to polynomials. We repeat the same test case
 with a tensor Fourier basis: its family is orthonormal on [-pi, pi], so the
 experiment draws its design on that wider square and the validation is
 performed there as well.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-132
+.. GENERATED FROM PYTHON SOURCE LINES 141-164
 
 .. code-block:: Python
 
-    fourierBasis = ot.OrthogonalBasis(ot.OrthogonalProductFunctionFactory([ot.FourierSeriesFactory()] * 2))
+    fourierBasis = ot.OrthogonalBasis(
+        ot.OrthogonalProductFunctionFactory([ot.FourierSeriesFactory()] * 2)
+    )
     fourierMeasure = fourierBasis.getMeasure()
     fourierExperiment = otexp.ChristoffelSubsampleExperiment(fourierBasis, budget)
     fourierSample, fourierWeights = fourierExperiment.generateWithWeights()
-    fourierMetamodel = fit(fourierSample, fourierWeights, fourierBasis, fourierMeasure, fourierExperiment.getSpaceDimension())
+    fourierMetamodel = fit(
+        fourierSample,
+        fourierWeights,
+        fourierBasis,
+        fourierMeasure,
+        fourierExperiment.getSpaceDimension(),
+    )
     fourierValidation = fourierMeasure.getSample(2000)
     fourierReference = target(fourierValidation)
     fourierNorm = fourierReference.computeRawMoment(2)[0] ** 0.5
-    fourierError = ((fourierMetamodel(fourierValidation) - fourierReference).computeRawMoment(2)[0]) ** 0.5 / fourierNorm
-    print(f"fourier error={fourierError:.3e} conditioning={condition(fourierSample, fourierWeights, fourierExperiment):.3f}")
+    fourierError = (
+        (fourierMetamodel(fourierValidation) - fourierReference).computeRawMoment(2)[0]
+    ) ** 0.5 / fourierNorm
+    print(
+        f"fourier error={fourierError:.3e} conditioning={condition(fourierSample, fourierWeights, fourierExperiment):.3f}"
+    )
 
 
 
@@ -273,13 +305,13 @@ performed there as well.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-136
+.. GENERATED FROM PYTHON SOURCE LINES 165-168
 
 We display the three designs together. We observe that the sampled designs
 cluster where the Christoffel density is large, at the corners, while the
 uniform design covers the square evenly.
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-146
+.. GENERATED FROM PYTHON SOURCE LINES 168-178
 
 .. code-block:: Python
 
@@ -305,11 +337,11 @@ uniform design covers the square evenly.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-148
+.. GENERATED FROM PYTHON SOURCE LINES 179-180
 
 Display all figures
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-149
+.. GENERATED FROM PYTHON SOURCE LINES 180-181
 
 .. code-block:: Python
 

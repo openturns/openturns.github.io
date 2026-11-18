@@ -86,7 +86,7 @@ functions with respect to the target measure.
 Define the target measure and the initial functions
 ---------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-71
+.. GENERATED FROM PYTHON SOURCE LINES 58-69
 
 .. code-block:: Python
 
@@ -97,9 +97,7 @@ Define the target measure and the initial functions
 
     # The tensorized Legendre basis is orthonormal with respect to the product
     # uniform measure on [-1, 1]^2, not with respect to the target measure.
-    initialBasis = ot.OrthogonalProductPolynomialFactory(
-        [ot.LegendreFactory()] * dimension
-    )
+    initialBasis = ot.OrthogonalProductPolynomialFactory([ot.LegendreFactory()] * dimension)
     print(f"Instrumental measure of the initial basis: {initialBasis.getMeasure()}")
     basisSize = 6
 
@@ -117,7 +115,7 @@ Define the target measure and the initial functions
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-78
+.. GENERATED FROM PYTHON SOURCE LINES 70-76
 
 Build the orthonormal basis
 ---------------------------
@@ -126,7 +124,7 @@ The factory is built from the initial basis, the target measure and the
 number of first elements of the initial basis to orthonormalize. Then each
 orthonormal function is built from its index.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-84
+.. GENERATED FROM PYTHON SOURCE LINES 76-82
 
 .. code-block:: Python
 
@@ -151,7 +149,7 @@ orthonormal function is built from its index.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-92
+.. GENERATED FROM PYTHON SOURCE LINES 83-90
 
 Check orthonormality
 --------------------
@@ -161,7 +159,7 @@ Gauss-Legendre rule. The initial Legendre functions are not orthonormal
 with respect to this measure: their Gram matrix is not the identity because
 the Frank copula introduces dependence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-118
+.. GENERATED FROM PYTHON SOURCE LINES 90-113
 
 .. code-block:: Python
 
@@ -174,12 +172,9 @@ the Frank copula introduces dependence.
         gram = ot.SymmetricMatrix(len(functions))
         for i in range(len(functions)):
             for j in range(i + 1):
+
                 def integrand(x, i=i, j=j):
-                    return [
-                        functions[i](x)[0]
-                        * functions[j](x)[0]
-                        * measure.computePDF(x)
-                    ]
+                    return [functions[i](x)[0] * functions[j](x)[0] * measure.computePDF(x)]
 
                 function = ot.PythonFunction(dimension, 1, integrand)
                 gram[i, j] = integration.integrate(function, measure.getRange())[0]
@@ -211,14 +206,14 @@ the Frank copula introduces dependence.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+.. GENERATED FROM PYTHON SOURCE LINES 114-118
 
 The non-zero off-diagonal entries confirm that the initial Legendre
 functions are not orthogonal with respect to the target measure. After
 orthonormalization, the Gram matrix is the identity matrix up to numerical
 precision.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-126
+.. GENERATED FROM PYTHON SOURCE LINES 118-121
 
 .. code-block:: Python
 
@@ -245,14 +240,14 @@ precision.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-131
+.. GENERATED FROM PYTHON SOURCE LINES 122-126
 
 The six orthonormal functions are shown in the next figure. They span the
 same space as the initial Legendre functions, but their contours reflect
 the dependence structure of the target measure.
 Omit color bars and enlarge fonts to keep the gallery vignette readable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-165
+.. GENERATED FROM PYTHON SOURCE LINES 126-160
 
 .. code-block:: Python
 
@@ -302,7 +297,7 @@ Omit color bars and enlarge fonts to keep the gallery vignette readable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-188
+.. GENERATED FROM PYTHON SOURCE LINES 161-183
 
 Build a quadrature rule
 -----------------------
@@ -327,7 +322,7 @@ example
 shows this direct construction, its moment reproduction and its use on a
 function outside the moments list.
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-197
+.. GENERATED FROM PYTHON SOURCE LINES 183-194
 
 .. code-block:: Python
 
@@ -337,7 +332,9 @@ function outside the moments list.
     print(f"Sum of weights: {sum(weights):.6f}")
 
     for k in range(n):
-        integral = sum(weights[i] * orthonormalFunctions[k](nodes[i])[0] for i in range(len(nodes)))
+        integral = sum(
+            weights[i] * orthonormalFunctions[k](nodes[i])[0] for i in range(len(nodes))
+        )
         print(f"Integral of phi_{k}: {integral:.3e}")
 
 
@@ -358,12 +355,12 @@ function outside the moments list.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-200
+.. GENERATED FROM PYTHON SOURCE LINES 195-197
 
 The quadrature nodes are represented in the next figure. The rule is sparse:
 it integrates the first four orthonormal functions with only two nodes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-208
+.. GENERATED FROM PYTHON SOURCE LINES 197-205
 
 .. code-block:: Python
 
@@ -387,7 +384,7 @@ it integrates the first four orthonormal functions with only two nodes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 209-227
+.. GENERATED FROM PYTHON SOURCE LINES 206-224
 
 The Christoffel distribution
 ----------------------------
@@ -408,7 +405,7 @@ optimal sampling measure for least squares approximations in this space.
 We build it from the orthonormal functions and the target measure, then
 draw its PDF over a cloud of points sampled from it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 227-253
+.. GENERATED FROM PYTHON SOURCE LINES 224-246
 
 .. code-block:: Python
 
@@ -418,9 +415,7 @@ draw its PDF over a cloud of points sampled from it.
     christoffel = otexp.ChristoffelDistribution(christoffelBasis, basisSize)
     sample = christoffel.getSample(1000)
 
-    graph = christoffel.drawPDF(
-        [-1.0] * dimension, [1.0] * dimension, [101] * dimension
-    )
+    graph = christoffel.drawPDF([-1.0] * dimension, [1.0] * dimension, [101] * dimension)
     contour = graph.getDrawable(0).getImplementation()
     contour.setIsFilled(True)
     contour.setColorMapNorm("rank")
@@ -434,9 +429,7 @@ draw its PDF over a cloud of points sampled from it.
     cloud.setLegend("Sample")
     graph.add(cloud)
     # White edges keep the red circles readable on the filled contours.
-    view = otv.View(
-        graph, scatter_kw={"s": 18, "edgecolors": "white", "linewidths": 0.5}
-    )
+    view = otv.View(graph, scatter_kw={"s": 18, "edgecolors": "white", "linewidths": 0.5})
 
 
 
@@ -450,7 +443,7 @@ draw its PDF over a cloud of points sampled from it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-255
+.. GENERATED FROM PYTHON SOURCE LINES 247-248
 
 .. code-block:: Python
 
