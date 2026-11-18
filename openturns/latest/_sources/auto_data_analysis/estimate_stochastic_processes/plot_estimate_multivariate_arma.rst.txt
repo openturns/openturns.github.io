@@ -78,7 +78,7 @@ Create a 2-d ARMA process
 
     # Tmin , Tmax and N points for TimeGrid
     dt = 1.0
-    size = 400
+    size = 100
     timeGrid = ot.RegularGrid(0.0, dt, size)
 
     # white noise
@@ -105,7 +105,7 @@ Create a 2-d ARMA process
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    class= ARMA timeGrid=class=RegularGrid name=Unnamed start=0 step=1 n=400 coefficients AR=class=ARMACoefficients, shift=0, value=class=SquareMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[-0.5,-0.4,-0.1,-0.5], shift=1, value=class=SquareMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[0,-0.25,0,0] coefficients MA=class=ARMACoefficients, shift=0, value=class=SquareMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[-0.4,0,0,-0.4] noiseDistribution= class=Normal name=Normal dimension=2 mean=class=Point name=Unnamed dimension=2 values=[0,0] sigma=class=Point name=Unnamed dimension=2 values=[0.316228,0.447214] correlationMatrix=class=CorrelationMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[1,0,0,1] state= class= ARMAState x= class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2 dimension=2 data=[[-0.458508,-0.542927],[-0.661498,0.142981]] epsilon= class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1 dimension=2 data=[[-0.541164,0.421868]]
+    class= ARMA timeGrid=class=RegularGrid name=Unnamed start=0 step=1 n=100 coefficients AR=class=ARMACoefficients, shift=0, value=class=SquareMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[-0.5,-0.4,-0.1,-0.5], shift=1, value=class=SquareMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[0,-0.25,0,0] coefficients MA=class=ARMACoefficients, shift=0, value=class=SquareMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[-0.4,0,0,-0.4] noiseDistribution= class=Normal name=Normal dimension=2 mean=class=Point name=Unnamed dimension=2 values=[0,0] sigma=class=Point name=Unnamed dimension=2 values=[0.316228,0.447214] correlationMatrix=class=CorrelationMatrix dimension=2 implementation=class=MatrixImplementation name=Unnamed rows=2 columns=2 values=[1,0,0,1] state= class= ARMAState x= class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=2 dimension=2 data=[[-0.458508,-0.542927],[-0.661498,0.142981]] epsilon= class=Sample name=Unnamed implementation=class=SampleImplementation name=Unnamed size=1 dimension=2 data=[[-0.541164,0.421868]]
     </div>
     <br />
     <br />
@@ -127,14 +127,19 @@ Create a realization
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-71
+.. GENERATED FROM PYTHON SOURCE LINES 70-73
 
 Estimate the process from the previous realization
+Cap the likelihood optimization budget: with starting conditions at the
+true coefficients, fewer evaluations still produce a sensible estimate
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-76
+.. GENERATED FROM PYTHON SOURCE LINES 73-81
 
 .. code-block:: Python
 
+    ot.ResourceMap.SetAsUnsignedInteger(
+        "ARMALikelihoodFactory-DefaultMaximumCallsNumber", 2000
+    )
     factory = ot.ARMALikelihoodFactory(p, q, dim)
     factory.setInitialConditions(ar, ma, cov)
 
@@ -148,9 +153,9 @@ Estimate the process from the previous realization
 
  .. code-block:: none
 
-    Estimated ARMA=  ARMA(X_{0,t} - 0.742903 X_{0,t-1} - 0.0963103 X_{1,t-1} + 0.0701952 X_{0,t-2} + 0.0115163 X_{1,t-2} = E_{0,t} - 0.657293 E_{0,t-1} - 0.0145324 E_{1,t-1}
-    X_{1,t} - 0.315679 X_{0,t-1} - 0.527055 X_{1,t-1} - 0.143773 X_{0,t-2} - 0.0458559 X_{1,t-2} = E_{1,t} + 0.120722 E_{0,t-1} - 0.424976 E_{1,t-1}, E_t ~ Normal(mu = [0,0], sigma = [0.312626,0.429057], R = [[ 1         0.0452876 ]
-     [ 0.0452876 1         ]]))
+    Estimated ARMA=  ARMA(X_{0,t} - 0.542105 X_{0,t-1} - 0.211262 X_{1,t-1} + 0.0685506 X_{0,t-2} - 0.00262219 X_{1,t-2} = E_{0,t} - 0.494857 E_{0,t-1} - 0.135967 E_{1,t-1}
+    X_{1,t} - 0.407779 X_{0,t-1} - 0.452827 X_{1,t-1} - 0.0431048 X_{0,t-2} - 0.148856 X_{1,t-2} = E_{1,t} + 0.0951005 E_{0,t-1} - 0.260824 E_{1,t-1}, E_t ~ Normal(mu = [0,0], sigma = [0.332492,0.408221], R = [[ 1        0.142419 ]
+     [ 0.142419 1        ]]))
 
 
 

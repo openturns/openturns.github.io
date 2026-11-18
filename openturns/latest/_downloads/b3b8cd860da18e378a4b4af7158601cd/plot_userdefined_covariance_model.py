@@ -25,10 +25,10 @@ import math as m
 #
 # We define the covariance model from:
 #
-# - a mesh :math:`\mathcal{M}` of dimension :math:`n` defined by the vertices :math:`(\vect{\tau}_0,\dots, \vect{\tau}_{N-1})`
+# - a mesh :math:`\mathcal{M}` of dimension :math:`\domainDim` defined by the vertices :math:`(\vect{\tau}_0,\dots, \vect{\tau}_{N-1})`
 #   and the associated simplices,
 # - a collection of covariance matrices stored in the object :class:`~openturns.CovarianceMatrixCollection` denoted by
-#   :math:`\vect{C}_0, \dots, \vect{C}_{N-1}`, where :math:`\vect{C}_k \in \mathcal{M}_{d \times d}(\mathbb{R})`
+#   :math:`\vect{C}_0, \dots, \vect{C}_{N-1}`, where :math:`\vect{C}_k \in \mathcal{M}_{\processDim \times \processDim}(\mathbb{R})`
 #   for :math:`0 \leq k \leq N-1`.
 #
 # Then we build a stationary covariance function which is a piecewise constant function on :math:`\mathcal{D}` defined by:
@@ -118,7 +118,7 @@ func.setDescription(["$s$", "$t$", "$cov$"])
 
 # %%
 # Then we can draw the function with default options.
-cov_graph = func.draw([-a] * 2, [a] * 2, [512] * 2)
+cov_graph = func.draw([-a] * 2, [a] * 2, [256] * 2)
 cov_graph.setLegendPosition("")
 view = otv.View(cov_graph)
 
@@ -127,7 +127,7 @@ view = otv.View(cov_graph)
 # We can draw the function in a filled contour graph.
 # sphinx_gallery_thumbnail_number = 3
 cov_graph = func.draw(
-    0, 1, 0, [0] * 2, [-a] * 2, [a] * 2, [512] * 2, ot.GraphImplementation.NONE, True
+    0, 1, 0, [0] * 2, [-a] * 2, [a] * 2, [256] * 2, ot.GraphImplementation.NONE, True
 )
 view = otv.View(cov_graph)
 

@@ -8,14 +8,26 @@ if hasattr(ot, "DirichletFactory"):
     factory = ot.DirichletFactory()
 else:
     factory = otexp.DirichletFactory()
-ref = factory.build()
+if "DirichletFactory" == "DirichletFactory":
+    # The default Dirichlet distribution is the uniform Beta(1, 1)
+    # distribution: use a non-trivial 2D distribution instead
+    ref = ot.Dirichlet([2.0, 5.0, 3.0])
+else:
+    ref = factory.build()
 dimension = ref.getDimension()
 if dimension <= 2:
+    a = ref.getRange().getLowerBound()
+    b = ref.getRange().getUpperBound()
+    aFinite = ref.getRange().getFiniteLowerBound()
+    bFinite = ref.getRange().getFiniteUpperBound()
     if dimension == 1:
         sample = ref.getSample(50)
         distribution = factory.build(sample)
         distribution.setDescription(['$t$'])
-        pdf_graph = distribution.drawPDF(256)
+        if not(aFinite[0] and bFinite[0]) or a[0] >= b[0]:
+            pdf_graph = distribution.drawPDF(256)
+        else:
+            pdf_graph = distribution.drawPDF(a[0], b[0], 256)
         cloud = ot.Cloud(sample, ot.Sample(sample.getSize(), 1))
         cloud.setColor('blue')
         cloud.setPointStyle('fcircle')
@@ -27,8 +39,14 @@ if dimension <= 2:
     else:
         sample = ref.getSample(500)
         distribution = factory.build(sample)
-        distribution.setDescription(['$t_0$', '$t_1$'])
-        pdf_graph = distribution.drawPDF([256]*2)
+        if "DirichletFactory" == "DirichletFactory":
+            distribution.setDescription(['$x_1$', '$x_2$'])
+        else:
+            distribution.setDescription(['$t_0$', '$t_1$'])
+        if not(aFinite[0] and bFinite[0] and aFinite[1] and bFinite[1]) or (a[0] >= b[0]) or (a[1] >= b[1]):
+            pdf_graph = distribution.drawPDF([256]*2)
+        else:
+            pdf_graph = distribution.drawPDF(a, b, [256]*2)
         cloud = ot.Cloud(sample)
         cloud.setColor('red')
         cloud.setPointStyle('fcircle')

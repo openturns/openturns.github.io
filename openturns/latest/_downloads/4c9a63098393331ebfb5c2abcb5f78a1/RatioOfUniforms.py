@@ -1,5 +1,4 @@
 import openturns as ot
-import openturns.experimental as otexp
 import openturns.viewer as otv
 
 from math import pi
@@ -9,7 +8,7 @@ log_UnscaledPDF = ot.SymbolicFunction("x", "log(cos(x)) + x")
 
 eps = 1e-5
 rangePDF = ot.Interval(-pi / 2.0 + eps, pi / 2.0 - eps)
-ratioAlgo = otexp.RatioOfUniforms(log_UnscaledPDF, rangePDF)
+ratioAlgo = ot.RatioOfUniforms(log_UnscaledPDF, rangePDF)
 
 unscaled_PDF = ot.ComposedFunction(ot.SymbolicFunction("x", "exp(x)"), log_UnscaledPDF)
 norm_fact = ot.GaussLegendre().integrate(unscaled_PDF, rangePDF)[0]
@@ -19,7 +18,7 @@ size = 100000
 sample = ratioAlgo.getSample(size)
 
 ks_algo = ot.KernelSmoothing()
-ks_algo.setBoundaryCorrection(True)
+ks_algo.setBoundingOption(ot.KernelSmoothing.BOTH)
 ks_algo.setLowerBound(-pi / 2.0)
 ks_algo.setUpperBound(pi / 2.0)
 ks_pdf = ks_algo.build(sample)

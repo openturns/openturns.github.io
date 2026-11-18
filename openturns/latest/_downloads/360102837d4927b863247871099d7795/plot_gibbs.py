@@ -77,7 +77,7 @@ _ = otv.View(graph)
 
 
 def nor0post(pt):
-    z = np.array(pt)[2:]
+    z = np.asarray(pt)[2:]
     x0 = observations[z == 0]
     mu0 = x0.sum() / (0.1 + len(x0))
     sigma0 = 1.0 / (0.1 + len(x0))
@@ -85,7 +85,7 @@ def nor0post(pt):
 
 
 def nor1post(pt):
-    z = np.array(pt)[2:]
+    z = np.asarray(pt)[2:]
     x1 = observations[z == 1]
     mu1 = x1.sum() / (0.1 + len(x1))
     sigma1 = 1.0 / (0.1 + len(x1))
@@ -129,7 +129,9 @@ gibbs = ot.Gibbs([sampler0, sampler1, sampler2])
 # %%
 # Run the Gibbs algorithm
 
-s = gibbs.getSample(10000)
+# 2000 draws are enough for the KDE contour plot below, which is
+# visually identical with fewer points
+s = gibbs.getSample(2000)
 
 # %%
 # Extract the relevant marginals: the first (:math:`mu_0`) and the second (:math:`\mu_1`).

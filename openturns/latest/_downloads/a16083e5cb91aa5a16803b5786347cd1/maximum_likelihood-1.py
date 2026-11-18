@@ -9,7 +9,7 @@ fig = plt.figure(figsize=(6, 4))
 axis = fig.add_subplot(111)
 axis.set_xlim(auto=True)
 
-N=6
+N = 6
 # coordinates of points
 x = [v[0] for v in distribution.getSample(N)]
 y = [distribution.computePDF([v]) for v in x]
@@ -21,7 +21,7 @@ for dot_x, dot_y in zip(x, y):
 
 # draw labels
 for i in range(N):
-    plt.text(x[i]-0.1, -0.015, 'x'+str(i+1))
-    plt.text(0.0, y[i]-0.01, 'f_X(x'+str(i+1)+')')
+    plt.text(x[i] - 0.1, -0.015, f'x{i + 1}')
+    plt.text(0.0, y[i] - 0.01, f'$f_X$(x{i + 1})')
 
 otv.View(graph, figure=fig, axes=[axis], add_legend=True)

@@ -11,7 +11,6 @@ LOLA-Voronoi sequential design of experiment
 
 # %%
 import openturns as ot
-import openturns.experimental as otexp
 import openturns.viewer as otv
 
 # %%
@@ -84,7 +83,7 @@ _ = otv.View(graph, square_axes=True)
 # the API documentation. It can have a major impact on the performance
 # of the algorithm. In particular, if your distribution has independent
 # components you may set "LOLAVoronoi-UseTruncatedDistribution" to True.
-algo = otexp.LOLAVoronoi(x0, y0, distribution)
+algo = ot.LOLAVoronoi(x0, y0, distribution)
 
 # %%
 # Iteratively generate new samples: add 50 points, in 10 blocks of 5 points.
@@ -138,7 +137,10 @@ def runMetaModel(x, y, tag):
 
 # %%
 # Generate a large validation sample by Monte Carlo
-nRef = int(1e6)
+# 1e5 points are enough: the LOLA/Sobol error gap is orders of magnitude
+# larger than the Monte Carlo noise, and the metamodel evaluation cost is
+# linear in the sample size
+nRef = int(1e5)
 xRef = distribution.getSample(nRef)
 yRef = f1(xRef)
 

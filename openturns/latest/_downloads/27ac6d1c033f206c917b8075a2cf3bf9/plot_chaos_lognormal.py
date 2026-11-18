@@ -1,6 +1,6 @@
 """
-See pitfalls due to the input distribution
-==========================================
+FCE: pitfalls due to the input distribution
+===========================================
 """
 
 # %%
@@ -144,7 +144,7 @@ print("max sample = ", input_train.getMax()[0])
 # the value of the surrogate model in the vicinity of :math:`x = 0` will be obtained as the sum of real
 # values with opposite signs and large magnitudes. As such, it will be prone to cancellation.
 basis_LN = ot.OrthogonalProductPolynomialFactory(
-    [ot.StandardDistributionPolynomialFactory(ot.LogNormal())]
+    [ot.UniVariateDistributionPolynomialFactory(ot.LogNormal())]
 )
 basis_size_LN = 6
 chaos_algo_LN = ot.LeastSquaresExpansion(
@@ -270,9 +270,7 @@ view = otv.View(graph_LN)
 # approximation converges very quickly and does not require many polynomials to get spectral convergence.
 #
 # We construct the surrogate model as before, using only the polynomials up to degree 5.
-basis_N = ot.OrthogonalProductPolynomialFactory(
-    [ot.StandardDistributionPolynomialFactory(ot.Normal())]
-)
+basis_N = ot.OrthogonalProductPolynomialFactory([ot.HermiteFactory()])
 basis_size_N = 6
 chaos_algo_N = ot.LeastSquaresExpansion(
     input_train, output_train, dist_X, basis_N, basis_size_N
